@@ -1,0 +1,296 @@
+{
+  "name": "Cursor Webhook Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cursor-webhook",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Cursor Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "cursor-webhook-trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate webhook signature\nconst crypto = require('crypto');\nconst signature = $request.headers['x-cursor-signature'];\nconst payload = JSON.stringify($json);\nconst expectedSignature = crypto\n  .createHmac('sha256', 'your-secret-key')\n  .update(payload)\n  .digest('hex');\n\nif (signature !== expectedSignature) {\n  throw new Error('Invalid webhook signature');\n}\n\n// Extract and structure data\nreturn {\n  validated: true,\n  event: $json.event,\n  timestamp: $json.timestamp,\n  user: $json.user,\n  file: $json.file || null,\n  command: $json.command || null,\n  project: $json.project || null,\n  raw_data: $json\n};"
+      },
+      "id": "validate-signature",
+      "name": "Validate & Extract",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "file-save",
+              "leftValue": "={{ $json.event }}",
+              "rightValue": "file.save",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "file-open",
+              "leftValue": "={{ $json.event }}",
+              "rightValue": "file.open",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "command-execute",
+              "leftValue": "={{ $json.event }}",
+              "rightValue": "command.execute",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "project-open",
+              "leftValue": "={{ $json.event }}",
+              "rightValue": "project.open",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "route-events",
+      "name": "Route Events",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process file save event\nconst fileData = $json.file;\nconst user = $json.user;\n\n// Log the file save event\nconsole.log(`File saved by ${user}: ${fileData.path}`);\n\n// You can add custom logic here like:\n// - Send to code analysis service\n// - Update documentation\n// - Trigger CI/CD pipeline\n// - Send notification\n\nreturn {\n  action: 'file_save_processed',\n  file_path: fileData.path,\n  file_name: fileData.name,\n  user: user,\n  timestamp: new Date().toISOString(),\n  content_length: fileData.content ? fileData.content.length : 0,\n  processed: true\n};"
+      },
+      "id": "process-file-save",
+      "name": "Process File Save",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process file open event\nconst fileData = $json.file;\nconst user = $json.user;\n\n// Log the file open event\nconsole.log(`File opened by ${user}: ${fileData.path}`);\n\n// You can add custom logic here like:\n// - Track file usage analytics\n// - Load file metadata\n// - Update recent files list\n\nreturn {\n  action: 'file_open_processed',\n  file_path: fileData.path,\n  file_name: fileData.name,\n  user: user,\n  timestamp: new Date().toISOString(),\n  processed: true\n};"
+      },
+      "id": "process-file-open",
+      "name": "Process File Open",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process command execution event\nconst commandData = $json.command;\nconst user = $json.user;\n\n// Log the command execution\nconsole.log(`Command executed by ${user}: ${commandData.name}`);\n\n// You can add custom logic here like:\n// - Track command usage\n// - Log for security audit\n// - Trigger related workflows\n\nreturn {\n  action: 'command_executed',\n  command_name: commandData.name,\n  command_args: commandData.args || [],\n  user: user,\n  timestamp: new Date().toISOString(),\n  processed: true\n};"
+      },
+      "id": "process-command",
+      "name": "Process Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process project open event\nconst projectData = $json.project;\nconst user = $json.user;\n\n// Log the project open event\nconsole.log(`Project opened by ${user}: ${projectData.name}`);\n\n// You can add custom logic here like:\n// - Load project settings\n// - Initialize project-specific tools\n// - Update project analytics\n\nreturn {\n  action: 'project_opened',\n  project_name: projectData.name,\n  project_path: projectData.path,\n  user: user,\n  timestamp: new Date().toISOString(),\n  processed: true\n};"
+      },
+      "id": "process-project",
+      "name": "Process Project",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log all processed events\nconst eventData = $json;\n\n// Create a standardized log entry\nconst logEntry = {\n  timestamp: new Date().toISOString(),\n  workflow_id: 'cursor-webhook-workflow',\n  event_type: eventData.action,\n  user: eventData.user,\n  details: eventData,\n  processed: true,\n  log_level: 'info'\n};\n\n// You can send this to a logging service, database, or monitoring system\nconsole.log('Event logged:', JSON.stringify(logEntry, null, 2));\n\nreturn logEntry;"
+      },
+      "id": "log-event",
+      "name": "Log Event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Webhook processed successfully\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\",\n  \"event_type\": \"{{ $json.event_type }}\",\n  \"user\": \"{{ $json.user }}\"\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle errors gracefully\nconst error = $json;\n\n// Create error log entry\nconst errorLog = {\n  timestamp: new Date().toISOString(),\n  workflow_id: 'cursor-webhook-workflow',\n  error_type: 'webhook_processing_error',\n  error_message: error.message,\n  error_stack: error.stack,\n  original_data: error.original_data || null,\n  log_level: 'error'\n};\n\n// Log the error\nconsole.error('Webhook processing error:', JSON.stringify(errorLog, null, 2));\n\n// You can send error notifications here\n// - Email notification\n// - Slack message\n// - Error tracking service\n\nreturn errorLog;"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"message\": \"Webhook processing failed\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\",\n  \"error\": \"{{ $json.error_message }}\"\n}",
+        "options": {}
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 500]
+    }
+  ],
+  "connections": {
+    "Cursor Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate & Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Extract": {
+      "main": [
+        [
+          {
+            "node": "Route Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Events": {
+      "main": [
+        [
+          {
+            "node": "Process File Save",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Process File Open",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Process Command",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Process Project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process File Save": {
+      "main": [
+        [
+          {
+            "node": "Log Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process File Open": {
+      "main": [
+        [
+          {
+            "node": "Log Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Command": {
+      "main": [
+        [
+          {
+            "node": "Log Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Project": {
+      "main": [
+        [
+          {
+            "node": "Log Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Event": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "cursor-webhook-workflow",
+  "tags": [
+    {
+      "createdAt": "2024-01-25T10:00:00.000Z",
+      "updatedAt": "2024-01-25T10:00:00.000Z",
+      "id": "cursor-integration",
+      "name": "Cursor Integration"
+    }
+  ]
+}
