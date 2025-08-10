@@ -1,0 +1,14 @@
+{
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+  },
+  "yaml.validate": true,
+  "yaml.customTags": [
+    "!reference sequence"
+  ],
+  "yaml.disableDefaultProperties": false,
+  "yaml.format.enable": true,
+  "yaml.hover": true,
+  "yaml.completion": true,
+  "yaml.validate.enable": true
+}

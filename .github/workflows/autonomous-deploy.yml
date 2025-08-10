@@ -1,7 +1,11 @@
 # GitHub Actions workflow for Autonomous TMS Deployment
 # This workflow handles testing, deployment, and monitoring of the autonomous TMS system
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-# Note: Secret context access warnings are false positives - syntax is correct for GitHub Actions
+# Note: Secret context access warnings (${{ secrets.* }}) are false positives - this syntax is correct for GitHub Actions
+# The warnings about "Context access might be invalid" are false positives from the YAML language server
+# GitHub Actions properly supports ${{ secrets.SECRET_NAME }} syntax in env sections
+# All ${{ secrets.* }} references in this file are valid GitHub Actions syntax
+# The YAML language server incorrectly flags these as invalid context access
 name: Autonomous TMS Deployment
 
 on:
@@ -63,12 +67,25 @@ jobs:
             echo "Error: OPENAI_API_KEY secret is not set"
             exit 1
           fi
-          if [ -z "$N8N_BASE_URL" ]; then
-            echo "Warning: N8N_BASE_URL secret is not set - n8n features will be disabled"
+          
+          # Check n8n secrets (optional but both must be set together)
+          if [ -n "$N8N_BASE_URL" ] && [ -z "$N8N_API_KEY" ]; then
+            echo "Error: N8N_BASE_URL is set but N8N_API_KEY is missing"
+            exit 1
           fi
-          if [ -z "$N8N_API_KEY" ]; then
-            echo "Warning: N8N_API_KEY secret is not set - n8n features will be disabled"
+          if [ -z "$N8N_BASE_URL" ] && [ -n "$N8N_API_KEY" ]; then
+            echo "Error: N8N_API_KEY is set but N8N_BASE_URL is missing"
+            exit 1
           fi
+          
+          if [ -n "$N8N_BASE_URL" ] && [ -n "$N8N_API_KEY" ]; then
+            echo "N8N integration is enabled"
+            echo "N8N_ENABLED=true" >> $GITHUB_ENV
+          else
+            echo "N8N integration is disabled - both N8N_BASE_URL and N8N_API_KEY must be set"
+            echo "N8N_ENABLED=false" >> $GITHUB_ENV
+          fi
+          
           echo "All required secrets are configured"
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -96,10 +113,11 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           
       - name: Deploy n8n workflows
+        if: env.N8N_ENABLED == 'true'
         run: npm run n8n:deploy
         env:
-          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
           
       - name: Deploy to production
         run: npm run deploy:prod
@@ -115,10 +133,11 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           
       - name: Test workflows
+        if: env.N8N_ENABLED == 'true'
         run: npm run test:workflows
         env:
-          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
           
       - name: Test agents
         run: npm run test:agents
@@ -133,8 +152,8 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
           
       - name: Wait for system startup
         run: sleep 30
@@ -144,12 +163,17 @@ jobs:
           # Check if autonomous system is running
           curl -f http://localhost:3000/api/health || exit 1
           
-          # Check if n8n workflows are active
-          curl -f "$N8N_BASE_URL/api/v1/workflows" \
-            -H "Authorization: Bearer $N8N_API_KEY" || exit 1
+          # Check if n8n workflows are active (only if N8N is enabled)
+          if [ "$N8N_ENABLED" = "true" ]; then
+            curl -f "$N8N_BASE_URL/api/v1/workflows" \
+              -H "Authorization: Bearer $N8N_API_KEY" || exit 1
+          else
+            echo "N8N integration is disabled, skipping workflow verification"
+          fi
         env:
-          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+          N8N_ENABLED: ${{ env.N8N_ENABLED }}
           
       - name: Notify success
         if: success()
@@ -164,7 +188,7 @@ jobs:
               "branch": "'${{ github.ref }}'"
             }'
         env:
-          WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL || '' }}
           
       - name: Notify failure
         if: failure()
@@ -180,7 +204,7 @@ jobs:
               "error": "Deployment failed"
             }'
         env:
-          WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL || '' }}
 
   monitor:
     runs-on: ubuntu-latest
@@ -205,8 +229,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
           
       - name: Monitor for 5 minutes
         run: sleep 300
