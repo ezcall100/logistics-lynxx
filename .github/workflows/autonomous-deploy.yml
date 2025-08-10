@@ -1,3 +1,7 @@
+# GitHub Actions workflow for Autonomous TMS Deployment
+# This workflow handles testing, deployment, and monitoring of the autonomous TMS system
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# Note: Secret context access warnings are false positives - syntax is correct for GitHub Actions
 name: Autonomous TMS Deployment
 
 on:
@@ -9,11 +13,6 @@ on:
 
 env:
   NODE_VERSION: '18'
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-  N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
-  N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
 
 jobs:
   test:
@@ -49,6 +48,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
+      - name: Validate required secrets
+        run: |
+          # Check if required secrets are set
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "Error: SUPABASE_URL secret is not set"
+            exit 1
+          fi
+          if [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Error: SUPABASE_ANON_KEY secret is not set"
+            exit 1
+          fi
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "Error: OPENAI_API_KEY secret is not set"
+            exit 1
+          fi
+          if [ -z "$N8N_BASE_URL" ]; then
+            echo "Warning: N8N_BASE_URL secret is not set - n8n features will be disabled"
+          fi
+          if [ -z "$N8N_API_KEY" ]; then
+            echo "Warning: N8N_API_KEY secret is not set - n8n features will be disabled"
+          fi
+          echo "All required secrets are configured"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -64,49 +92,49 @@ jobs:
       - name: Setup database
         run: npm run db:setup
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           
       - name: Deploy n8n workflows
         run: npm run n8n:deploy
         env:
-          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
           
       - name: Deploy to production
         run: npm run deploy:prod
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
-          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           
       - name: Health check
         run: npm run health:check
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           
       - name: Test workflows
         run: npm run test:workflows
         env:
-          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
           
       - name: Test agents
         run: npm run test:agents
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
-          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           
       - name: Start autonomous system
         run: npm run start:autonomous &
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
-          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
-          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
           
       - name: Wait for system startup
         run: sleep 30
@@ -120,13 +148,13 @@ jobs:
           curl -f "$N8N_BASE_URL/api/v1/workflows" \
             -H "Authorization: Bearer $N8N_API_KEY" || exit 1
         env:
-          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
           
       - name: Notify success
         if: success()
         run: |
-          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+          curl -X POST "$WEBHOOK_URL" \
             -H "Content-Type: application/json" \
             -d '{
               "status": "deployed",
@@ -141,7 +169,7 @@ jobs:
       - name: Notify failure
         if: failure()
         run: |
-          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+          curl -X POST "$WEBHOOK_URL" \
             -H "Content-Type: application/json" \
             -d '{
               "status": "failed",
@@ -175,10 +203,10 @@ jobs:
       - name: Start monitoring
         run: npm run monitor:start
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
-          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
-          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
           
       - name: Monitor for 5 minutes
         run: sleep 300
@@ -186,8 +214,8 @@ jobs:
       - name: Check system health
         run: npm run health:check
         env:
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           
       - name: Report monitoring results
         run: |
