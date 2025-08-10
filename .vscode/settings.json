@@ -1,18 +1,18 @@
 {
+  "yaml.validate": false,
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },
-  "yaml.validate": true,
   "yaml.customTags": [
     "!reference sequence"
   ],
+  "yaml.disableDefaultProperties": true,
+  "yaml.disableAdditionalProperties": true,
+  "yaml.disableContextAccess": true,
   "yaml.format.enable": true,
-  "yaml.format.singleQuote": false,
-  "yaml.format.bracketSpacing": true,
-  "yaml.format.proseWrap": "preserve",
   "yaml.hover": true,
   "yaml.completion": true,
-  "yaml.validate.enable": true,
+  "yaml.validate.enable": false,
   "yaml.schemaStore.enable": true,
   "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
   "yaml.format.printWidth": 80,

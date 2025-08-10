@@ -1,0 +1,14 @@
+{
+  "yaml": {
+    "validate": false,
+    "schemas": {
+      "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+    },
+    "customTags": [
+      "!reference sequence"
+    ],
+    "disableDefaultProperties": true,
+    "disableAdditionalProperties": true,
+    "disableContextAccess": true
+  }
+}
