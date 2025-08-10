@@ -6,6 +6,10 @@
 # GitHub Actions properly supports ${{ secrets.SECRET_NAME }} syntax in env sections
 # All ${{ secrets.* }} references in this file are valid GitHub Actions syntax
 # The YAML language server incorrectly flags these as invalid context access
+# 
+# IMPORTANT: The "Context access might be invalid" warnings are FALSE POSITIVES
+# These warnings can be safely ignored as they are valid GitHub Actions syntax
+# The workflow will execute correctly despite these warnings
 name: Autonomous TMS Deployment
 
 on:
