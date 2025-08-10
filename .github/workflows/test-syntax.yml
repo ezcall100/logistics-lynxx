@@ -15,10 +15,12 @@ jobs:
           echo "All syntax in autonomous-deploy.yml is correct!"
           echo "The warnings you see are false positives from the YAML language server."
         env:
-          # These are all valid GitHub Actions syntax
-          TEST_SECRET: ${{ secrets.TEST_SECRET || 'default' }}
-          TEST_ENV: ${{ env.TEST_ENV || 'default' }}
+          # Using standard GitHub Actions context syntax
+          # Note: Replace 'EXAMPLE_SECRET' with your actual secret name
+          TEST_SECRET: ${{ secrets.EXAMPLE_SECRET || 'default_value' }}
+          TEST_ENV: ${{ env.TEST_ENV || 'default_value' }}
           COMMIT_SHA: ${{ github.sha }}
+          REPO_NAME: ${{ github.repository }}
           
       - name: Test conditional syntax
         if: env.TEST_ENV == 'test'

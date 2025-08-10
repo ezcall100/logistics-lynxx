@@ -1,0 +1,34 @@
+name: Example Workflow  # Name shown in the GitHub Actions tab
+
+on:
+  push:                  # Trigger workflow on pushes
+    branches:
+      - main             # Only run when pushing to the 'main' branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Use a GitHub Actions secret
+      # Using the actual secret name stored in your repository:
+      # DB_CONNECTION_URL - Your database connection string
+      - name: Use secret and context variables
+        run: |
+          # Display the repository name from GitHub Actions context
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit SHA: ${{ github.sha }}"
+
+          # Use the secret in your application (don't echo it!)
+          # The secret is available as an environment variable
+          echo "Database connection configured using DB_CONNECTION_URL"
+          echo "API key configured"
+        env:
+          DB_CONNECTION_URL: ${{ secrets.DB_CONNECTION_URL }}  # Your stored database connection string
+          API_KEY: ${{ secrets.API_KEY }}                      # Your API key (if you have one)
+          REPO_NAME: ${{ github.repository }}                  # Repository name from context
+          BRANCH_NAME: ${{ github.ref_name }}                  # Current branch name
