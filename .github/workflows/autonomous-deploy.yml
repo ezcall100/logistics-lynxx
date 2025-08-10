@@ -1,0 +1,196 @@
+name: Autonomous TMS Deployment
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:  # Manual trigger
+
+env:
+  NODE_VERSION: '18'
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  N8N_BASE_URL: ${{ secrets.N8N_BASE_URL }}
+  N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run linting
+        run: npm run lint
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Build application
+        run: npm run build
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        
+      - name: Setup database
+        run: npm run db:setup
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          
+      - name: Deploy n8n workflows
+        run: npm run n8n:deploy
+        env:
+          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          
+      - name: Deploy to production
+        run: npm run deploy:prod
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          
+      - name: Health check
+        run: npm run health:check
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          
+      - name: Test workflows
+        run: npm run test:workflows
+        env:
+          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          
+      - name: Test agents
+        run: npm run test:agents
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          
+      - name: Start autonomous system
+        run: npm run start:autonomous &
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          
+      - name: Wait for system startup
+        run: sleep 30
+        
+      - name: Verify deployment
+        run: |
+          # Check if autonomous system is running
+          curl -f http://localhost:3000/api/health || exit 1
+          
+          # Check if n8n workflows are active
+          curl -f "$N8N_BASE_URL/api/v1/workflows" \
+            -H "Authorization: Bearer $N8N_API_KEY" || exit 1
+        env:
+          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          
+      - name: Notify success
+        if: success()
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+            -H "Content-Type: application/json" \
+            -d '{
+              "status": "deployed",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
+              "environment": "production",
+              "commit": "'${{ github.sha }}'",
+              "branch": "'${{ github.ref }}'"
+            }'
+        env:
+          WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL }}
+          
+      - name: Notify failure
+        if: failure()
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+            -H "Content-Type: application/json" \
+            -d '{
+              "status": "failed",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
+              "environment": "production",
+              "commit": "'${{ github.sha }}'",
+              "branch": "'${{ github.ref }}'",
+              "error": "Deployment failed"
+            }'
+        env:
+          WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL }}
+
+  monitor:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Start monitoring
+        run: npm run monitor:start
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          N8N_BASE_URL: ${{ env.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ env.N8N_API_KEY }}
+          
+      - name: Monitor for 5 minutes
+        run: sleep 300
+        
+      - name: Check system health
+        run: npm run health:check
+        env:
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          
+      - name: Report monitoring results
+        run: |
+          echo "Monitoring completed successfully"
+          echo "System is running autonomously"
+        if: success()
