@@ -7,22 +7,18 @@
 # GitHub Actions workflow for Autonomous TMS Deployment
 # This workflow handles testing, deployment, and monitoring of the autonomous TMS system
 # 
-# IMPORTANT: All ${{ secrets.* }} references in this file are valid GitHub Actions syntax
-# The YAML language server may show "Context access might be invalid" warnings, but these are FALSE POSITIVES
-# GitHub Actions properly supports ${{ secrets.SECRET_NAME }} syntax in env sections
+# IMPORTANT: All ${{ vars.* }} and ${{ secrets.* }} references in this file are valid GitHub Actions syntax
+# The YAML language server shows "Context access might be invalid" warnings for these, but these are FALSE POSITIVES
+# GitHub Actions properly supports ${{ vars.VARIABLE_NAME }} and ${{ secrets.SECRET_NAME }} syntax in env sections
 # The workflow will execute correctly despite these warnings
 # 
 # Note: We avoid using the || '' fallback syntax as it can cause YAML language server issues
 # Instead, we handle optional secrets through conditional logic in the workflow steps
 # 
 # YAML Language Server Configuration:
-# - Disable context access warnings for GitHub Actions secrets
+# - Disable context access warnings for GitHub Actions variables and secrets
 # - These warnings are false positives and can be safely ignored
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-# yaml-language-server: disableDefaultProperties: true
-# yaml-language-server: disableAdditionalProperties: true
-# yaml-language-server: disableContextAccess: true
-# yaml-language-server: validate: false
+# - The workflow uses the correct GitHub Actions syntax throughout
 name: Autonomous TMS Deployment
 
 on:
@@ -42,6 +38,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -72,31 +71,55 @@ jobs:
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
+    # Map repo/org Variables & Secrets → env once
+    env:
+      # UI/env info
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME }}
+      APP_URL: ${{ vars.APP_URL }}
+      
+      # Database
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      # n8n + webhooks
+      N8N_ENABLED: ${{ vars.N8N_ENABLED }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL }}
+    
+    # Environment block uses vars.* directly
     environment:
       name: ${{ vars.ENVIRONMENT_NAME == '' && 'production' || vars.ENVIRONMENT_NAME }}
       url: ${{ vars.APP_URL }}
     
-    # ✅ Define everything at the JOB level
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL }}
-      N8N_ENABLED: ${{ vars.N8N_ENABLED }}
+    permissions:
+      contents: read
+      actions: read
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         
+      - name: Mask secrets early
+        run: |
+          echo "::add-mask::$N8N_API_KEY"
+          echo "::add-mask::$OPENAI_API_KEY"
+        
+      - name: Ensure jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+        
+      - name: Normalize N8N_ENABLED
+        run: |
+          if [ "${N8N_ENABLED,,}" = "true" ]; then 
+            echo "N8N_ENABLED=true" >> $GITHUB_ENV
+          else 
+            echo "N8N_ENABLED=false" >> $GITHUB_ENV
+          fi
+        
       - name: Validate required secrets
         run: |
           set -euo pipefail
-          
-          # Mask sensitive values that might appear in logs
-          echo "::add-mask::$N8N_API_KEY"
-          echo "::add-mask::$OPENAI_API_KEY"
           
           # Check if required secrets are set
           if [ -z "$SUPABASE_URL" ]; then
@@ -122,7 +145,7 @@ jobs:
             exit 1
           fi
           
-          # Use env.N8N_ENABLED if set, otherwise determine from secrets
+          # Use normalized N8N_ENABLED if set, otherwise determine from secrets
           if [ "$N8N_ENABLED" = "true" ] || ([ -n "$N8N_BASE_URL" ] && [ -n "$N8N_API_KEY" ]); then
             echo "N8N integration is enabled"
             echo "N8N_ENABLED=true" >> $GITHUB_ENV
@@ -149,7 +172,7 @@ jobs:
         run: npm run db:setup
 
       - name: Validate required env
-        if: env.N8N_ENABLED == 'true'
+        if: ${{ env.N8N_ENABLED == 'true' }}
         run: |
           set -euo pipefail
           : "${N8N_BASE_URL:?Missing N8N_BASE_URL}"
@@ -157,7 +180,7 @@ jobs:
           echo "✅ N8N environment variables validated"
 
       - name: n8n health check
-        if: env.N8N_ENABLED == 'true'
+        if: ${{ env.N8N_ENABLED == 'true' }}
         run: |
           set -euo pipefail
           curl --fail -sS "$N8N_BASE_URL/healthz" >/dev/null
@@ -165,18 +188,22 @@ jobs:
 
       - name: Build deploy payload
         id: payload
-        if: env.N8N_ENABLED == 'true'
+        if: ${{ env.N8N_ENABLED == 'true' }}
         run: |
           set -euo pipefail
-          printf 'payload<<EOF\n%s\nEOF\n' "$(jq -n \
-            --arg repo '${{ github.repository }}' \
-            --arg sha  '${{ github.sha }}' \
-            --arg run  '${{ github.run_id }}' \
-            --arg ref  '${{ github.ref_name }}' \
-            '{repo:$repo, sha:$sha, run_id:$run, branch:$ref}')" >> "$GITHUB_OUTPUT"
+          {
+            echo 'payload<<EOF'
+            jq -n \
+              --arg repo '${{ github.repository }}' \
+              --arg sha  '${{ github.sha }}' \
+              --arg run  '${{ github.run_id }}' \
+              --arg ref  '${{ github.ref_name }}' \
+              '{repo:$repo, sha:$sha, run_id:$run, branch:$ref}'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Trigger N8N
-        if: env.N8N_ENABLED == 'true'
+        if: ${{ env.N8N_ENABLED == 'true' }}
         uses: ./.github/actions/n8n-trigger
         with:
           n8n-base-url: ${{ env.N8N_BASE_URL }}
@@ -190,7 +217,7 @@ jobs:
         run: npm run health:check
 
       - name: Test workflows
-        if: env.N8N_ENABLED == 'true'
+        if: ${{ env.N8N_ENABLED == 'true' }}
         run: npm run test:workflows
 
       - name: Test agents
@@ -233,14 +260,18 @@ jobs:
         if: success() && env.DEPLOYMENT_WEBHOOK_URL != ''
         run: |
           set -euo pipefail
-          printf 'payload<<EOF\n%s\nEOF\n' "$(jq -n \
-            --arg status 'deployed' \
-            --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            --arg env 'production' \
-            --arg commit '${{ steps.meta.outputs.sha }}' \
-            --arg branch '${{ steps.meta.outputs.branch }}' \
-            --arg run_id '${{ steps.meta.outputs.run_id }}' \
-            '{status:$status, timestamp:$timestamp, environment:$env, commit:$commit, branch:$branch, run_id:$run_id}')" >> "$GITHUB_OUTPUT"
+          {
+            echo 'payload<<EOF'
+            jq -n \
+              --arg status 'deployed' \
+              --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --arg env 'production' \
+              --arg commit '${{ steps.meta.outputs.sha }}' \
+              --arg branch '${{ steps.meta.outputs.branch }}' \
+              --arg run_id '${{ steps.meta.outputs.run_id }}' \
+              '{status:$status, timestamp:$timestamp, environment:$env, commit:$commit, branch:$branch, run_id:$run_id}'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Notify success
         if: success() && env.DEPLOYMENT_WEBHOOK_URL != ''
@@ -272,6 +303,19 @@ jobs:
             echo "Webhook notification retry $i/3 in 5s..."; sleep 5
           done
 
+      - name: Summarize
+        if: always()
+        run: |
+          {
+            echo "## Deploy Summary"
+            echo "- Status: ${{ job.status }}"
+            echo "- Run: ${{ github.run_id }}"
+            echo "- SHA:  ${{ github.sha }}"
+            echo "- Branch: ${{ github.ref_name }}"
+            echo "- Env: production"
+            echo "- n8n: $([[ '${{ env.N8N_ENABLED }}' == 'true' ]] && echo 'triggered' || echo 'skipped')"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   monitor:
     runs-on: ubuntu-latest
     needs: deploy
@@ -281,13 +325,16 @@ jobs:
       contents: read
       actions: read
     
-    # ✅ Define everything at the JOB level
+    # Map repo/org Variables & Secrets → env once
     env:
+      # Database
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      
+      # n8n + webhooks
+      N8N_ENABLED: ${{ vars.N8N_ENABLED }}
       N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
       N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
-      N8N_ENABLED: ${{ vars.N8N_ENABLED }}
     
     steps:
       - name: Checkout code
