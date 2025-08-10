@@ -1,0 +1,62 @@
+name: 'N8N Trigger'
+description: 'Trigger N8N workflows with retry logic and health checks'
+
+inputs:
+  n8n-base-url:
+    description: 'N8N base URL'
+    required: true
+  n8n-api-key:
+    description: 'N8N API key'
+    required: true
+  webhook-path:
+    description: 'Webhook path to trigger'
+    required: true
+    default: '/webhook/deploy'
+  payload:
+    description: 'JSON payload to send'
+    required: false
+    default: '{}'
+  max-retries:
+    description: 'Maximum number of retries'
+    required: false
+    default: '3'
+  retry-delay:
+    description: 'Delay between retries in seconds'
+    required: false
+    default: '5'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Health check
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "::add-mask::${{ inputs.n8n-api-key }}"
+        curl --fail -sS "${{ inputs.n8n-base-url }}/healthz" >/dev/null
+        echo "✅ N8N health check passed"
+
+    - name: Trigger workflow
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "::add-mask::${{ inputs.n8n-api-key }}"
+        
+        for i in $(seq 1 ${{ inputs.max-retries }}); do
+          echo "Attempt $i/${{ inputs.max-retries }}"
+          
+          if curl --fail -sS -X POST "${{ inputs.n8n-base-url }}${{ inputs.webhook-path }}" \
+            -H "X-N8N-API-KEY: ${{ inputs.n8n-api-key }}" \
+            -H "Content-Type: application/json" \
+            -d '${{ inputs.payload }}'; then
+            echo "✅ N8N workflow triggered successfully"
+            break
+          else
+            if [ $i -eq ${{ inputs.max-retries }} ]; then
+              echo "❌ Failed to trigger N8N workflow after ${{ inputs.max-retries }} attempts"
+              exit 1
+            fi
+            echo "Retry $i/${{ inputs.max-retries }} in ${{ inputs.retry-delay }}s..."
+            sleep ${{ inputs.retry-delay }}
+          fi
+        done

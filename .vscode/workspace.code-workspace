@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "yaml.validate": false,
+    "yaml.validate.enable": false,
+    "yaml.disableContextAccess": true,
+    "yaml.disableDefaultProperties": true,
+    "yaml.disableAdditionalProperties": true,
+    "yaml.schemas": {
+      "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+    },
+    "yaml.format.enable": true,
+    "yaml.hover": true,
+    "yaml.completion": true,
+    "yaml.schemaStore.enable": true,
+    "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
+    "yaml.validate.enable": false,
+    "yaml.validate": false
+  }
+}

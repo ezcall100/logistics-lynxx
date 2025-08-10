@@ -1,18 +1,20 @@
 {
   "yaml.validate": false,
+  "yaml.validate.enable": false,
+  "yaml.disableContextAccess": true,
+  "yaml.disableDefaultProperties": true,
+  "yaml.disableAdditionalProperties": true,
+  "yaml.maxItemsComputed": 1000,
+  "yaml.maxAliasCount": 1000,
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },
   "yaml.customTags": [
     "!reference sequence"
   ],
-  "yaml.disableDefaultProperties": true,
-  "yaml.disableAdditionalProperties": true,
-  "yaml.disableContextAccess": true,
   "yaml.format.enable": true,
   "yaml.hover": true,
   "yaml.completion": true,
-  "yaml.validate.enable": false,
   "yaml.schemaStore.enable": true,
   "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
   "yaml.format.printWidth": 80,
@@ -26,12 +28,19 @@
   "yaml.format.trailingComma": "none",
   "yaml.format.bracketSameLine": false,
   "yaml.format.semi": true,
+  "[yaml]": {
+    "editor.formatOnSave": true
+  },
+  "[github-actions]": {
+    "editor.formatOnSave": true
+  },
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
   "css.customData": [".vscode/css_custom_data.json"],
   "files.associations": {
-    "*.css": "tailwindcss"
+    "*.css": "tailwindcss",
+    ".github/workflows/*.yml": "github-actions"
   },
   "tailwindCSS.includeLanguages": {
     "css": "css"
@@ -39,5 +48,8 @@
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ]
+  ],
+  
+  // GitHub Actions language server
+  "github-actions.workflows.pinned": true
 }
