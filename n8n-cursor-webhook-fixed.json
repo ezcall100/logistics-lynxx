@@ -1,0 +1,216 @@
+{
+  "name": "Cursor Webhook Integration - Fixed",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cursor-webhook",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Cursor Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "cursor-webhook-trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process incoming webhook data\nconst eventData = $json;\n\n// Log the webhook data for debugging\nconsole.log('Webhook received:', JSON.stringify(eventData, null, 2));\n\n// Extract and structure the data\nconst processedData = {\n  event: eventData.event,\n  timestamp: eventData.timestamp || new Date().toISOString(),\n  user: eventData.user,\n  file: eventData.file || null,\n  command: eventData.command || null,\n  project: eventData.project || null,\n  processed: true,\n  workflow_id: 'cursor-webhook-workflow',\n  log_level: 'info'\n};\n\n// You can add custom logic here based on the event type\nif (eventData.event === 'file.save') {\n  console.log(`File saved by ${eventData.user}: ${eventData.file?.path}`);\n  // Add your custom logic for file save events\n} else if (eventData.event === 'file.open') {\n  console.log(`File opened by ${eventData.user}: ${eventData.file?.path}`);\n  // Add your custom logic for file open events\n} else if (eventData.event === 'command.execute') {\n  console.log(`Command executed by ${eventData.user}: ${eventData.command?.name}`);\n  // Add your custom logic for command execution\n}\n\nreturn processedData;"
+      },
+      "id": "process-data",
+      "name": "Process Webhook Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.example.com/integration",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "action",
+              "value": "{{ $json.event }}"
+            },
+            {
+              "name": "data",
+              "value": "{{ JSON.stringify($json) }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "{{ $json.timestamp }}"
+            },
+            {
+              "name": "user",
+              "value": "{{ $json.user }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "api-call",
+      "name": "API Integration Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-api-success",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-api-response",
+      "name": "Check API Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Webhook processed successfully\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\",\n  \"event_type\": \"{{ $('Process Webhook Data').json.event }}\",\n  \"user\": \"{{ $('Process Webhook Data').json.user }}\",\n  \"api_response\": \"{{ $json }}\",\n  \"processed\": true,\n  \"workflow_id\": \"cursor-webhook-workflow\"\n}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"message\": \"API integration failed\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\",\n  \"event_type\": \"{{ $('Process Webhook Data').json.event }}\",\n  \"user\": \"{{ $('Process Webhook Data').json.user }}\",\n  \"error\": \"{{ $json.error || 'Unknown error' }}\",\n  \"processed\": false,\n  \"workflow_id\": \"cursor-webhook-workflow\"\n}",
+        "options": {}
+      },
+      "id": "respond-error",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Webhook processed successfully (no API call)\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\",\n  \"event_type\": \"{{ $('Process Webhook Data').json.event }}\",\n  \"user\": \"{{ $('Process Webhook Data').json.user }}\",\n  \"processed\": true,\n  \"workflow_id\": \"cursor-webhook-workflow\"\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 500]
+    }
+  ],
+  "connections": {
+    "Cursor Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Webhook Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Webhook Data": {
+      "main": [
+        [
+          {
+            "node": "API Integration Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Integration Call": {
+      "main": [
+        [
+          {
+            "node": "Check API Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "cursor-webhook-workflow-fixed",
+  "tags": [
+    {
+      "createdAt": "2024-01-25T10:00:00.000Z",
+      "updatedAt": "2024-01-25T10:00:00.000Z",
+      "id": "cursor-integration",
+      "name": "Cursor Integration"
+    }
+  ]
+}

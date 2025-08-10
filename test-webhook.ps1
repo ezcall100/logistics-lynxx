@@ -1,7 +1,7 @@
 # PowerShell script to test n8n webhook
 # Test the cursor webhook endpoint
 
-$webhookUrl = "https://pixx100.app.n8n.cloud/webhook-test/cursor-webhook"
+$webhookUrl = "https://pixx100.app.n8n.cloud/webhook/webhook-test/cursor-webhook"
 
 # Test payload for file.save event
 $testPayload = @{

@@ -1,0 +1,87 @@
+{
+  "name": "Cursor Webhook - Simple",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cursor-webhook",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Cursor Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "cursor-webhook-simple"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process incoming webhook data\nconst eventData = $json;\n\n// Log the webhook data for debugging\nconsole.log('Webhook received:', JSON.stringify(eventData, null, 2));\n\n// Extract and structure the data\nconst processedData = {\n  event: eventData.event,\n  timestamp: eventData.timestamp || new Date().toISOString(),\n  user: eventData.user,\n  file: eventData.file || null,\n  command: eventData.command || null,\n  project: eventData.project || null,\n  processed: true,\n  workflow_id: 'cursor-webhook-simple',\n  log_level: 'info'\n};\n\n// You can add custom logic here based on the event type\nif (eventData.event === 'file.save') {\n  console.log(`File saved by ${eventData.user}: ${eventData.file?.path}`);\n  // Add your custom logic for file save events\n} else if (eventData.event === 'file.open') {\n  console.log(`File opened by ${eventData.user}: ${eventData.file?.path}`);\n  // Add your custom logic for file open events\n} else if (eventData.event === 'command.execute') {\n  console.log(`Command executed by ${eventData.user}: ${eventData.command?.name}`);\n  // Add your custom logic for command execution\n}\n\nreturn processedData;"
+      },
+      "id": "process-data",
+      "name": "Process Webhook Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Webhook processed successfully\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\",\n  \"event_type\": \"{{ $json.event }}\",\n  \"user\": \"{{ $json.user }}\",\n  \"file_path\": \"{{ $json.file?.path || 'N/A' }}\",\n  \"processed\": true,\n  \"workflow_id\": \"cursor-webhook-simple\"\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Cursor Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Webhook Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Webhook Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "cursor-webhook-simple",
+  "tags": [
+    {
+      "createdAt": "2024-01-25T10:00:00.000Z",
+      "updatedAt": "2024-01-25T10:00:00.000Z",
+      "id": "cursor-integration",
+      "name": "Cursor Integration"
+    }
+  ]
+}
