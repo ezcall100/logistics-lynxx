@@ -410,10 +410,15 @@ class APIHealthCheck {
     
     try {
       // Check main API endpoint
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
       const response = await fetch(`${process.env.API_BASE_URL}/health`, {
         method: 'GET',
-        timeout: 5000
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       const responseTime = Date.now() - startTime;
 
@@ -446,13 +451,18 @@ class WorkflowHealthCheck {
     
     try {
       // Check n8n workflow status
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
       const response = await fetch(`${process.env.N8N_BASE_URL}/api/v1/executions`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${process.env.N8N_API_KEY}`
         },
-        timeout: 5000
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       const responseTime = Date.now() - startTime;
 

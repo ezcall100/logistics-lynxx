@@ -257,7 +257,7 @@ export class AutonomousTMSController {
   private async startAgents(): Promise<void> {
     console.log('Starting autonomous agents...');
     
-    for (const [name, agent] of this.agents) {
+    for (const [name, agent] of this.agents.entries()) {
       if (agent.enabled) {
         console.log(`Starting ${agent.name}...`);
         agent.lastActivity = new Date();
@@ -271,7 +271,7 @@ export class AutonomousTMSController {
   private async stopAgents(): Promise<void> {
     console.log('Stopping autonomous agents...');
     
-    for (const [name, agent] of this.agents) {
+    for (const [name, agent] of this.agents.entries()) {
       if (agent.enabled) {
         console.log(`Stopping ${agent.name}...`);
         agent.enabled = false;
