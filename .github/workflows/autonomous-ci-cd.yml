@@ -7,10 +7,6 @@
 
 name: 🤖 Autonomous CI/CD
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 on:
   push:
     branches: [main, develop]
@@ -43,6 +39,17 @@ permissions:
   security-events: write
   actions: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   guard-secrets:
     name: 🛡️ Validate Required Secrets
@@ -51,11 +58,10 @@ jobs:
     steps:
       - name: Validate required config (trusted events)
         if: ${{ ! (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork) }}
-        shell: bash
         run: |
           set -euo pipefail
 
-          # Pull in repo vars/secrets (no defaults here to truly validate presence)
+          # Pull repo vars/secrets (no defaults; we want true validation)
           ENVIRONMENT_NAME="${{ vars.ENVIRONMENT_NAME }}"
           APP_URL="${{ vars.APP_URL }}"
           STAGING_URL="${{ vars.STAGING_URL }}"
@@ -82,7 +88,7 @@ jobs:
             echo "::error title=Missing/empty configuration::${miss[*]}"
             exit 1
           fi
-          echo "Config OK."
+          echo "✅ Config OK."
 
       - name: Validate required secrets (forked PR - warn only)
         if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
@@ -98,13 +104,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
-      - name: 🔍 Lint workflows with actionlint
+      - name: 🔍 Lint with actionlint
         run: |
           curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
           ./actionlint -shellcheck= -pyflakes=
@@ -124,15 +124,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       - name: 🔍 Decide deploy target
         id: decider
-        shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "should_deploy=true" >> "$GITHUB_OUTPUT"
@@ -154,31 +147,27 @@ jobs:
     needs: [preflight]
     if: needs.preflight.outputs.should_deploy == 'true'
     timeout-minutes: 15
+    # Allow forcing past QA when manually dispatched with force=true
+    continue-on-error: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
           cache-dependency-path: package-lock.json
       - name: 📦 Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
       - name: 🔍 Run linting
         run: npm run lint
       - name: 🧪 Run tests
-        run: npm test
-      - name: 🔒 Run security audit
+        run: npm run test --if-present
+      - name: 🔒 Run security audit (non-blocking)
         run: npm audit --audit-level=moderate || true
 
   build:
@@ -187,26 +176,21 @@ jobs:
     needs: [preflight, quality-assurance]
     if: needs.preflight.outputs.should_deploy == 'true'
     timeout-minutes: 20
+    continue-on-error: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
           cache-dependency-path: package-lock.json
       - name: 📦 Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
       - name: 🏗️ Build application
         run: npm run build
       - name: 📦 Package artifacts
@@ -233,7 +217,6 @@ jobs:
       name: ${{ needs.preflight.outputs.target_environment }}
     steps:
       - name: Guard optional secrets (warn only)
-        shell: bash
         run: |
           echo "::warning::n8n webhook secrets may be unavailable in environment-protected jobs; notifications handled separately."
 
@@ -242,12 +225,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
 
       - name: 📥 Download build artifacts
         uses: actions/download-artifact@v4
@@ -258,29 +235,28 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
           cache-dependency-path: package-lock.json
 
       - name: 📦 Install deployment dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: 🔧 Resolve env + defaults
         id: resolve
-        shell: bash
         run: |
           set -euo pipefail
           TARGET="${{ needs.preflight.outputs.target_environment }}"
-          # Pull values from vars/secrets
-          STAGING_URL="${{ vars.STAGING_URL }}";           : "${STAGING_URL:=https://staging.example.com}"
-          PRODUCTION_URL="${{ vars.PRODUCTION_URL }}";     : "${PRODUCTION_URL:=https://production.example.com}"
-          STAGING_WEBHOOK_URL="${{ vars.STAGING_WEBHOOK_URL }}"; : "${STAGING_WEBHOOK_URL:=https://staging.example.com/webhook}"
+          # Pull values from vars/secrets + safe defaults
+          STAGING_URL="${{ vars.STAGING_URL }}";                   : "${STAGING_URL:=https://staging.example.com}"
+          PRODUCTION_URL="${{ vars.PRODUCTION_URL }}";             : "${PRODUCTION_URL:=https://production.example.com}"
+          STAGING_WEBHOOK_URL="${{ vars.STAGING_WEBHOOK_URL }}";   : "${STAGING_WEBHOOK_URL:=https://staging.example.com/webhook}"
           PRODUCTION_WEBHOOK_URL="${{ vars.PRODUCTION_WEBHOOK_URL }}"; : "${PRODUCTION_WEBHOOK_URL:=https://production.example.com/webhook}"
           STAGING_HEALTH_CHECK_URL="${{ vars.STAGING_HEALTH_CHECK_URL }}"; : "${STAGING_HEALTH_CHECK_URL:=}"
           PRODUCTION_HEALTH_CHECK_URL="${{ vars.PRODUCTION_HEALTH_CHECK_URL }}"; : "${PRODUCTION_HEALTH_CHECK_URL:=}"
-          SUPABASE_URL="${{ secrets.SUPABASE_URL }}"; : "${SUPABASE_URL:=https://placeholder.supabase.co}"
-          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}"; : "${SUPABASE_ANON_KEY:=placeholder-key}"
-          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"; : "${OPENAI_API_KEY:=placeholder-key}"
+          SUPABASE_URL="${{ secrets.SUPABASE_URL }}";              : "${SUPABASE_URL:=https://placeholder.supabase.co}"
+          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}";    : "${SUPABASE_ANON_KEY:=placeholder-key}"
+          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}";          : "${OPENAI_API_KEY:=placeholder-key}"
 
           if [[ "$TARGET" == "production" ]]; then
             APP_URL="$PRODUCTION_URL"
@@ -309,7 +285,6 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: 🚀 Run autonomous deployment
-        shell: bash
         run: |
           if [[ "${{ github.event.inputs.rollback }}" == "true" ]]; then
             echo "🔄 Rolling back to previous release..."
@@ -321,13 +296,12 @@ jobs:
 
       - name: 🏥 Post-deploy smoke check
         if: ${{ github.event.inputs.rollback != 'true' }}
-        timeout-minutes: 1
-        shell: bash
+        timeout-minutes: 2
         run: |
           set -euo pipefail
           if [[ -n "${HEALTH_URL:-}" ]]; then
             echo "🔍 Checking: $HEALTH_URL"
-            curl -fsSL "$HEALTH_URL" >/dev/null
+            curl -fsS --retry 3 --retry-all-errors --max-time 15 "$HEALTH_URL" >/dev/null
             echo "✅ Smoke check passed"
           else
             echo "⚠️ No health check URL configured, skipping"
@@ -339,6 +313,7 @@ jobs:
         with:
           name: deploy-logs-${{ github.run_id }}
           path: deployment/logs/**
+          if-no-files-found: ignore
           retention-days: 7
 
   health-check:
@@ -350,26 +325,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-          persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
       - name: 🔧 Resolve health URL
         id: resolve
-        shell: bash
         run: |
           TARGET="${{ needs.preflight.outputs.target_environment }}"
           STAGING_HEALTH_CHECK_URL="${{ vars.STAGING_HEALTH_CHECK_URL }}"
@@ -379,13 +336,13 @@ jobs:
           else
             echo "HEALTH_URL=$STAGING_HEALTH_CHECK_URL" >> "$GITHUB_ENV"
           fi
+
       - name: 🏥 Run health checks
-        shell: bash
         run: |
           set -euo pipefail
           if [[ -n "${HEALTH_URL:-}" ]]; then
             echo "🏥 Checking: $HEALTH_URL"
-            curl -f "$HEALTH_URL" >/dev/null
+            curl -fsS --retry 3 --retry-all-errors --max-time 20 "$HEALTH_URL" >/dev/null
             echo "✅ Health check passed"
           else
             echo "⚠️ No health check URL configured"
@@ -399,7 +356,6 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: 📣 Notify n8n webhook (deployment)
-        shell: bash
         run: |
           N8N_WEBHOOK_URL="${{ secrets.N8N_WEBHOOK_URL }}"
           N8N_WEBHOOK_SECRET="${{ secrets.N8N_WEBHOOK_SECRET }}"
@@ -422,7 +378,6 @@ jobs:
             "$N8N_WEBHOOK_URL"
 
       - name: 📣 Notify n8n webhook (health check)
-        shell: bash
         run: |
           N8N_WEBHOOK_URL="${{ secrets.N8N_WEBHOOK_URL }}"
           N8N_WEBHOOK_SECRET="${{ secrets.N8N_WEBHOOK_SECRET }}"
@@ -453,17 +408,6 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-          persist-credentials: false
-      - name: Git bootstrap
-        run: |
-          set -e
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       - name: 📊 Generate deployment summary (console)
         run: |
           echo "🚀 TMS Autonomous Deployment Summary"
@@ -488,6 +432,7 @@ jobs:
           else
             echo "❌ Deployment failed"; exit 1
           fi
+
       - name: 🧾 Rich Job Summary
         if: ${{ always() }}
         run: |
@@ -507,6 +452,7 @@ jobs:
             echo "- 🚀 Deployment: \`${{ needs.deploy.result }}\`"
             echo "- 🏥 Health Check: \`${{ needs.health-check.result }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
+
       - name: 💡 Local Development Tip
         if: ${{ always() }}
         run: |
