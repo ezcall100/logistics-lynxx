@@ -1,0 +1,35 @@
+[Unit]
+Description=Autonomous N8N Monitor - 24/7 Operation
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/path/to/your/project
+ExecStart=/usr/bin/node /path/to/your/project/autonomous-n8n-monitor.cjs
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=autonomous-n8n-monitor
+
+# Environment variables
+Environment=NODE_ENV=production
+Environment=MONITOR_INTERVAL=30000
+Environment=HEALTH_CHECK_INTERVAL=300000
+
+# Resource limits
+LimitNOFILE=65536
+MemoryMax=512M
+CPUQuota=50%
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/path/to/your/project/logs
+
+[Install]
+WantedBy=multi-user.target
