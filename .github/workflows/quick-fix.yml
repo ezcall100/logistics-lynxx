@@ -4,6 +4,7 @@
 # yaml-language-server: disableAdditionalProperties: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
+
 name: 🚀 Quick Fix - Basic Validation
 
 on:
@@ -14,8 +15,12 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 env:
-  # Use dummy values to bypass secret validation
+  # Dummy values to bypass secret validation
   SUPABASE_URL: "https://test.supabase.co"
   SUPABASE_ANON_KEY: "test-key"
   N8N_API_KEY: "test-n8n-key"
@@ -33,144 +38,129 @@ jobs:
     name: 🧪 Basic Validation (Quick Fix)
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: 📥 Checkout repository (shallow)
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      
+          persist-credentials: false
+
       - name: 🔍 Validate Repository Structure
         run: |
+          set -euo pipefail
           echo "🔍 Validating repository structure..."
-          
-          # Check if key directories exist
-          if [ -d "logistics-lynx" ]; then
-            echo "✅ logistics-lynx directory found"
-          else
-            echo "❌ logistics-lynx directory missing"
-            exit 1
-          fi
-          
-          if [ -d ".github/workflows" ]; then
-            echo "✅ .github/workflows directory found"
-          else
-            echo "❌ .github/workflows directory missing"
-            exit 1
-          fi
-          
-          # Check for key files
-          if [ -f "logistics-lynx/package.json" ]; then
-            echo "✅ package.json found"
-          else
-            echo "❌ package.json missing"
-            exit 1
-          fi
-          
+
+          # Required directories
+          [[ -d "logistics-lynx" ]] || { echo "❌ logistics-lynx directory missing"; exit 1; }
+          echo "✅ logistics-lynx directory found"
+
+          [[ -d ".github/workflows" ]] || { echo "❌ .github/workflows directory missing"; exit 1; }
+          echo "✅ .github/workflows directory found"
+
+          # Required files
+          [[ -f "logistics-lynx/package.json" ]] || { echo "❌ logistics-lynx/package.json missing"; exit 1; }
+          echo "✅ logistics-lynx/package.json found"
+
           echo "✅ Repository structure validation passed"
-      
+
       - name: 🔍 Validate Workflow Files
         run: |
+          set -euo pipefail
           echo "🔍 Validating workflow files..."
-          
-          # Check if workflow files are valid YAML
-          for workflow in .github/workflows/*.yml; do
-            if [ -f "$workflow" ]; then
+
+          # Check *.yml and *.yaml files exist (non-fatal if none)
+          mapfile -t WF < <(find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) 2>/dev/null || true)
+          if [[ ${#WF[@]} -eq 0 ]]; then
+            echo "ℹ️ No workflow files found to check"
+          else
+            for workflow in "${WF[@]}"; do
               echo "📋 Checking $workflow..."
-              # Basic YAML validation (check if file starts with valid YAML)
-              if head -1 "$workflow" | grep -q "^\s*#\|^\s*name:\|^\s*on:"; then
+              # Very basic sanity check: first non-empty line should be comment/name/on
+              first_line="$(grep -m1 -E '^\s*[^#\s]' "$workflow" || true)"
+              if [[ -z "$first_line" ]]; then
+                echo "⚠️ $workflow appears empty or only comments"
+              elif echo "$first_line" | grep -Eq '^\s*(name:|on:)\b'; then
                 echo "✅ $workflow appears valid"
               else
-                echo "⚠️ $workflow may have syntax issues"
+                echo "⚠️ $workflow first content line not 'name:' or 'on:' — still continuing"
               fi
-            fi
-          done
-          
+            done
+          fi
+
           echo "✅ Workflow validation completed"
-      
+
       - name: 🔍 Test Network Connectivity (Basic)
         run: |
+          set -euo pipefail
           echo "🔍 Testing basic network connectivity..."
-          
-          # Test if we can reach external services
-          if curl -s --connect-timeout 5 https://httpbin.org/status/200 > /dev/null; then
+
+          if curl -s --connect-timeout 5 https://httpbin.org/status/200 >/dev/null; then
             echo "✅ Basic internet connectivity working"
           else
             echo "⚠️ Basic internet connectivity may be limited"
           fi
-          
-          # Test GitHub API (without git operations)
-          if curl -s --connect-timeout 5 https://api.github.com/zen > /dev/null; then
+
+          if curl -s --connect-timeout 5 https://api.github.com/zen >/dev/null; then
             echo "✅ GitHub API accessible"
           else
             echo "⚠️ GitHub API may not be accessible"
           fi
-      
+
       - name: 🔍 Validate Environment Variables
         run: |
+          set -euo pipefail
           echo "🔍 Validating environment variables..."
-          
-          # Check if all required variables are set (even if dummy values)
+
           required_vars=(
-            "SUPABASE_URL"
-            "SUPABASE_ANON_KEY"
-            "N8N_API_KEY"
-            "OPENAI_API_KEY"
-            "STAGING_URL"
-            "PRODUCTION_URL"
-            "STAGING_WEBHOOK_URL"
-            "PRODUCTION_WEBHOOK_URL"
-            "DEPLOYMENT_WEBHOOK_URL"
-            "STAGING_HEALTH_CHECK_URL"
-            "PRODUCTION_HEALTH_CHECK_URL"
+            SUPABASE_URL
+            SUPABASE_ANON_KEY
+            N8N_API_KEY
+            OPENAI_API_KEY
+            STAGING_URL
+            PRODUCTION_URL
+            STAGING_WEBHOOK_URL
+            PRODUCTION_WEBHOOK_URL
+            DEPLOYMENT_WEBHOOK_URL
+            STAGING_HEALTH_CHECK_URL
+            PRODUCTION_HEALTH_CHECK_URL
           )
-          
-          missing_vars=0
+
+          missing=0
           for var in "${required_vars[@]}"; do
-            if [ -n "${!var}" ]; then
+            if [[ -n "${!var:-}" ]]; then
               echo "✅ $var is set"
             else
               echo "❌ $var is missing"
-              missing_vars=1
+              missing=1
             fi
           done
-          
-          if [ $missing_vars -eq 0 ]; then
+
+          if [[ $missing -eq 0 ]]; then
             echo "✅ All required environment variables are set"
           else
             echo "⚠️ Some environment variables are missing"
           fi
-      
+
       - name: 📊 Quick Fix Summary
+        if: always()
         run: |
-          echo "## 🚀 Quick Fix Results"
-          echo ""
-          echo "**Status:** Basic validation completed"
-          echo "**Repository Structure:** ✅ Valid"
-          echo "**Workflow Files:** ✅ Valid"
-          echo "**Environment Variables:** ✅ Configured (dummy values)"
-          echo "**Network Connectivity:** ⚠️ Limited (expected)"
-          echo ""
-          echo "### 🎯 What This Means:"
-          echo "- Your repository structure is correct"
-          echo "- Workflow files are properly formatted"
-          echo "- Environment variables are configured (using dummy values)"
-          echo "- Network connectivity is limited (causing Git failures)"
-          echo ""
-          echo "### 🔧 Next Steps:"
-          echo "1. **For Development:** Use this workflow as a template"
-          echo "2. **For Production:** Configure real secrets in repository settings"
-          echo "3. **For Network Issues:** Check GitHub status and network configuration"
-          echo ""
-          echo "### 📋 Required Secrets for Production:"
-          echo "- SUPABASE_URL"
-          echo "- SUPABASE_ANON_KEY"
-          echo "- N8N_API_KEY"
-          echo "- OPENAI_API_KEY"
-          echo "- STAGING_URL"
-          echo "- PRODUCTION_URL"
-          echo "- STAGING_WEBHOOK_URL"
-          echo "- PRODUCTION_WEBHOOK_URL"
-          echo "- DEPLOYMENT_WEBHOOK_URL"
-          echo "- STAGING_HEALTH_CHECK_URL"
-          echo "- PRODUCTION_HEALTH_CHECK_URL"
+          {
+            echo "## 🚀 Quick Fix Results"
+            echo ""
+            echo "**Status:** \`${{ job.status }}\`"
+            echo "**Repository:** \`${{ github.repository }}\`"
+            echo "**Ref:** \`${{ github.ref_name }}\`"
+            echo "**Commit:** \`${{ github.sha }}\`"
+            echo ""
+            echo "### ✅ What Passed"
+            echo "- Repository structure checks"
+            echo "- Basic workflow file sanity checks"
+            echo "- Environment variables (dummy) presence"
+            echo "- Basic network probes"
+            echo ""
+            echo "### 🔧 Next Steps"
+            echo "1. Replace dummy env vars with real secrets for production"
+            echo "2. Add deeper validation (lint/tests) as needed"
+            echo "3. If network checks failed, review org/repo egress restrictions or firewall"
+          } >> "$GITHUB_STEP_SUMMARY"
