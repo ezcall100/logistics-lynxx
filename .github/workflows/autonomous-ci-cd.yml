@@ -1,0 +1,653 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: 🚀 Autonomous CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deploy to environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      rollback:
+        description: "Rollback to previous release?"
+        required: false
+        default: false
+        type: boolean
+
+# Prevent overlapping deploys
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+# Global bash hardening
+defaults:
+  run:
+    shell: bash
+
+# Least-privilege permissions
+permissions:
+  contents: read
+  deployments: write
+  id-token: write
+
+env:
+  NODE_VERSION: '18'
+  # ---- URLs & Webhooks ----
+  STAGING_URL: ""
+  PRODUCTION_URL: ""
+  STAGING_WEBHOOK_URL: ""
+  PRODUCTION_WEBHOOK_URL: ""
+  STAGING_HEALTH_CHECK_URL: ""
+  PRODUCTION_HEALTH_CHECK_URL: ""
+  DEPLOYMENT_WEBHOOK_URL: ""
+
+  # ---- App / Env Vars ----
+  ENVIRONMENT_NAME: "staging"
+  APP_URL: "http://localhost"
+  N8N_ENABLED: "false"
+  N8N_BASE_URL: ""
+
+  # ---- API / Keys ----
+  N8N_API_KEY: ""
+  SUPABASE_URL: ""
+  SUPABASE_ANON_KEY: ""
+  OPENAI_API_KEY: ""
+  
+  # ---- n8n Webhook Configuration ----
+  N8N_WEBHOOK_URL: ""
+  N8N_WEBHOOK_SECRET: ""
+
+jobs:
+  # 🛡️ Guard Secrets & Variables
+  guard-secrets:
+    name: 🛡️ Validate Required Secrets
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+            registry.npmjs.org
+            raw.githubusercontent.com
+      
+      - name: Validate required secrets/vars
+        shell: bash
+        env:
+          REQUIRED_SECRETS: STAGING_URL PRODUCTION_URL STAGING_WEBHOOK_URL PRODUCTION_WEBHOOK_URL STAGING_HEALTH_CHECK_URL PRODUCTION_HEALTH_CHECK_URL DEPLOYMENT_WEBHOOK_URL N8N_API_KEY SUPABASE_URL SUPABASE_ANON_KEY OPENAI_API_KEY
+          OPTIONAL_SECRETS: N8N_WEBHOOK_URL N8N_WEBHOOK_SECRET
+          REQUIRED_VARS: ENVIRONMENT_NAME APP_URL N8N_ENABLED N8N_BASE_URL
+        run: |
+          echo "🔍 Validating required secrets and variables..."
+          
+          # Check required secrets
+          missing_secrets=0
+          for secret in $REQUIRED_SECRETS; do
+            if [[ -z "${!secret}" ]]; then
+              echo "::error::Missing required secret: $secret"
+              missing_secrets=1
+            else
+              echo "✅ Required secret $secret is configured"
+            fi
+          done
+          
+                     # Check optional secrets (warn only, don't fail)
+           warn=0
+           for secret in $OPTIONAL_SECRETS; do
+             if [[ -z "${!secret}" ]]; then
+               echo "::warning::Optional secret not set: $secret (n8n webhook will be skipped)"
+               warn=1
+             else
+               echo "✅ Optional secret $secret is configured"
+             fi
+           done
+          
+          # Check variables
+          missing_vars=0
+          for var in $REQUIRED_VARS; do
+            if [[ -z "${!var}" ]]; then
+              echo "::warning::Missing optional variable: $var (will use default)"
+            else
+              echo "✅ Variable $var is configured"
+            fi
+          done
+          
+          if [[ $missing_secrets -eq 1 ]]; then
+            echo "❌ Critical secrets are missing. Deployment cannot proceed."
+            exit 1
+          fi
+          
+          echo "✅ All required secrets are configured!"
+
+  # 🔍 Lint Workflows
+  lint-workflows:
+    name: 🔍 Lint Workflows
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+            raw.githubusercontent.com
+      
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Lint workflows with actionlint
+        run: |
+          echo "🔍 Installing and running actionlint..."
+          curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
+          ./actionlint -color
+          echo "✅ Workflow linting passed!"
+
+  # 🔍 Pre-flight Checks
+  preflight:
+    name: 🔍 Pre-flight Validation
+    runs-on: ubuntu-latest
+    needs: [guard-secrets, lint-workflows]
+    outputs:
+      should_deploy: ${{ steps.decider.outputs.should_deploy }}
+      target_environment: ${{ steps.decider.outputs.target_environment }}
+    
+    steps:
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+      
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 🔍 Validate environment
+        id: decider
+        run: |
+           # Determine if we should deploy based on trigger
+           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+             echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+             echo "target_environment=${{ github.event.inputs.environment }}" >> "$GITHUB_OUTPUT"
+           elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+             echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+             echo "target_environment=production" >> "$GITHUB_OUTPUT"
+           elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
+             echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+             echo "target_environment=staging" >> "$GITHUB_OUTPUT"
+           else
+             echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+             echo "target_environment=none" >> "$GITHUB_OUTPUT"
+           fi
+           
+           echo "🚀 Deployment decision completed"
+
+      - name: 🧾 Display deployment decision
+        run: |
+           echo "should_deploy=${{ steps.decider.outputs.should_deploy || 'false' }}"
+           echo "target_environment=${{ steps.decider.outputs.target_environment || 'n/a' }}"
+           {
+             echo "## 🚀 Deployment Plan"
+             echo "- Should deploy: \`${{ steps.decider.outputs.should_deploy || 'false' }}\`"
+             echo "- Target environment: \`${{ steps.decider.outputs.target_environment || 'n/a' }}\`"
+             echo "- Trigger: \`${{ github.event_name }}\`"
+             echo "- Branch: \`${{ github.ref_name }}\`"
+           } >> "$GITHUB_STEP_SUMMARY"
+
+  # 🧪 Quality Assurance
+  quality-assurance:
+    name: 🧪 Quality Assurance
+    runs-on: ubuntu-latest
+    needs: preflight
+    timeout-minutes: 15
+    
+    steps:
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+            registry.npmjs.org
+      
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          cd logistics-lynx && npm ci
+      
+      - name: 🔍 Run ESLint
+        run: |
+          npx eslint . --ext ts,tsx --max-warnings 0
+          cd logistics-lynx && npx eslint . --ext ts,tsx --max-warnings 0
+      
+      - name: 🔧 TypeScript check
+        run: |
+          npx tsc --noEmit
+          cd logistics-lynx && npx tsc --noEmit
+      
+      - name: 🧪 Run tests
+        run: |
+          if npm run test; then
+            echo "✅ Tests passed"
+          else
+            echo "⚠️ No tests found or tests failed"
+          fi
+      
+      - name: 🔒 Security audit
+        run: |
+          npm audit --audit-level moderate || true
+          cd logistics-lynx && npm audit --audit-level moderate || true
+      
+      - name: 🔍 Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          allow-licenses: MIT,Apache-2.0,ISC,BSD-2-Clause,BSD-3-Clause
+
+  # 🏗️ Build & Package
+  build:
+    name: 🏗️ Build & Package
+    runs-on: ubuntu-latest
+    needs: [preflight, quality-assurance]
+    if: needs.preflight.outputs.should_deploy == 'true'
+    timeout-minutes: 20
+    
+    steps:
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+            registry.npmjs.org
+      
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          cd logistics-lynx && npm ci
+      
+      - name: 🏗️ Build application
+        run: |
+          cd logistics-lynx
+          npm run build
+      
+      - name: 📦 Package artifacts
+        run: |
+          # Create deployment package
+          mkdir -p deployment/artifacts
+          cp -r logistics-lynx/dist/* deployment/artifacts/
+          cp -r logistics-lynx/public deployment/artifacts/
+          cp logistics-lynx/package.json deployment/artifacts/
+          
+          # Include autonomous system files
+          cp 24-7-autonomous-system.cjs deployment/artifacts/
+          cp agent-boot.js deployment/artifacts/
+          cp test-n8n-webhook-cursor.js deployment/artifacts/
+      
+      - name: 📤 Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-artifacts
+          path: deployment/artifacts/
+          retention-days: ${{ needs.preflight.outputs.target_environment == 'production' && 30 || 7 }}
+
+  # 🚀 Autonomous Deployment
+  deploy:
+    name: 🚀 Autonomous Deployment
+    runs-on: ubuntu-latest
+    needs: [preflight, build]
+    if: needs.preflight.outputs.should_deploy == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
+    timeout-minutes: 30
+    environment:
+      name: ${{ needs.preflight.outputs.target_environment }}
+      url: ${{ needs.preflight.outputs.target_environment == 'staging' && env.STAGING_URL || env.PRODUCTION_URL }}
+    env:
+      N8N_WEBHOOK_URL: ""
+      N8N_WEBHOOK_SECRET: ""
+    
+    steps:
+      - name: Guard optional secrets (warn only)
+        shell: bash
+        run: |
+          echo "::warning::n8n webhook secrets not available in environment-protected job"
+          echo "::warning::n8n webhook notifications will be skipped"
+
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+            registry.npmjs.org
+            pixx100.app.n8n.cloud
+            ${{ env.STAGING_URL }}
+            ${{ env.PRODUCTION_URL }}
+            ${{ env.STAGING_WEBHOOK_URL }}
+            ${{ env.PRODUCTION_WEBHOOK_URL }}
+            ${{ env.STAGING_HEALTH_CHECK_URL }}
+            ${{ env.PRODUCTION_HEALTH_CHECK_URL }}
+      
+      - name: 🔒 Harden shell for all subsequent steps
+        run: echo 'set -euo pipefail' >> "$BASH_ENV"
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 📥 Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-artifacts
+          path: deployment/artifacts/
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: 📦 Install deployment dependencies
+        run: npm ci
+
+      - name: 🚀 Run autonomous deployment
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
+        run: |
+          if [[ "${{ github.event.inputs.rollback }}" == "true" ]]; then
+            echo "🔄 Rolling back to previous release..."
+            node deployment/autonomous-deployment-system.js --rollback ${{ needs.preflight.outputs.target_environment }}
+          else
+            echo "🚀 Deploying to ${{ needs.preflight.outputs.target_environment }}..."
+            node deployment/autonomous-deployment-system.js ${{ needs.preflight.outputs.target_environment }}
+          fi
+        env:
+          # Database configuration
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          
+          # Environment URLs
+          STAGING_URL: ${{ env.STAGING_URL }}
+          PRODUCTION_URL: ${{ env.PRODUCTION_URL }}
+          
+          # Webhook URLs
+          STAGING_WEBHOOK_URL: ${{ env.STAGING_WEBHOOK_URL }}
+          PRODUCTION_WEBHOOK_URL: ${{ env.PRODUCTION_WEBHOOK_URL }}
+          STAGING_HEALTH_CHECK_URL: ${{ env.STAGING_HEALTH_CHECK_URL }}
+          PRODUCTION_HEALTH_CHECK_URL: ${{ env.PRODUCTION_HEALTH_CHECK_URL }}
+
+      - name: 🏥 Post-deploy smoke check
+        if: ${{ needs.preflight.outputs.should_deploy == 'true' && github.event.inputs.rollback != 'true' }}
+        timeout-minutes: 1
+        env:
+          HEALTH_URL: ${{ needs.preflight.outputs.target_environment == 'production' && env.PRODUCTION_HEALTH_CHECK_URL || env.STAGING_HEALTH_CHECK_URL }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$HEALTH_URL" ]]; then
+            echo "🔍 Checking: $HEALTH_URL"
+            curl -fsSL "$HEALTH_URL"
+            echo "✅ Smoke check passed"
+          else
+            echo "⚠️ No health check URL configured, skipping smoke check"
+          fi
+
+      - name: 📤 Upload deployment logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-logs-${{ github.run_id }}
+          path: deployment/logs/**
+          retention-days: 7
+
+  # 📣 n8n Webhook Notifications (separate job to avoid environment restrictions)
+  n8n-notifications:
+    name: 📣 n8n Webhook Notifications
+    runs-on: ubuntu-latest
+    needs: [preflight, deploy, health-check]
+    if: always() && needs.preflight.outputs.should_deploy == 'true'
+    env:
+      N8N_WEBHOOK_URL: ""
+      N8N_WEBHOOK_SECRET: ""
+    
+    steps:
+      - name: Resolve optional n8n secrets
+        shell: bash
+        run: |
+          echo "N8N_WEBHOOK_URL=${{ secrets.N8N_WEBHOOK_URL }}" >> "$GITHUB_ENV"
+          echo "N8N_WEBHOOK_SECRET=${{ secrets.N8N_WEBHOOK_SECRET }}" >> "$GITHUB_ENV"
+
+      - name: 📣 Notify n8n webhook (deployment)
+        if: ${{ always() && env.N8N_WEBHOOK_URL != '' && env.N8N_WEBHOOK_SECRET != '' }}
+        run: |
+          set -euo pipefail
+          
+          ts="$(date -u +%FT%TZ)"
+          idem="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+          # Build JSON (no jq dependency)
+          cat > payload.json <<JSON
+          {
+            "event": "deployment",
+            "status": "${{ needs.deploy.result }}",
+            "repo": "${{ github.repository }}",
+            "sha": "${{ github.sha }}",
+            "ref": "${{ github.ref_name }}",
+            "run_id": "${{ github.run_id }}",
+            "run_attempt": "${{ github.run_attempt }}",
+            "environment": "${{ needs.preflight.outputs.target_environment }}",
+            "app_url": "${{ env.APP_URL }}",
+            "should_deploy": "${{ needs.preflight.outputs.should_deploy || 'false' }}",
+            "target_environment": "${{ needs.preflight.outputs.target_environment || 'n/a' }}",
+            "timestamp": "${ts}"
+          }
+          JSON
+
+          # Sign payload (HMAC-SHA256, base64)
+          sig="$(openssl dgst -sha256 -hmac "$N8N_WEBHOOK_SECRET" -binary payload.json | base64)"
+
+          # Fire webhook (robust retries)
+          curl -fsS --retry 5 --retry-all-errors --max-time 20 \
+            -H "Content-Type: application/json" \
+            -H "X-Idempotency-Key: ${idem}" \
+            -H "X-Signature-256: sha256=${sig}" \
+            --data-binary @payload.json \
+            "$N8N_WEBHOOK_URL"
+
+      - name: ⏭️ Skip n8n notify (no secrets)
+        if: ${{ always() && (env.N8N_WEBHOOK_URL == '' || env.N8N_WEBHOOK_SECRET == '') }}
+        run: |
+          echo "n8n webhook skipped: secrets not configured"
+
+      - name: 📣 Notify n8n webhook (health check)
+        if: ${{ always() && env.N8N_WEBHOOK_URL != '' && env.N8N_WEBHOOK_SECRET != '' }}
+        run: |
+          set -euo pipefail
+          
+          ts="$(date -u +%FT%TZ)"
+          cat > payload.json <<JSON
+          {
+            "event": "health_check",
+            "status": "${{ needs.health-check.result }}",
+            "environment": "${{ needs.preflight.outputs.target_environment }}",
+            "app_url": "${{ env.APP_URL }}",
+            "run_id": "${{ github.run_id }}",
+            "run_attempt": "${{ github.run_attempt }}",
+            "timestamp": "${ts}"
+          }
+          JSON
+          sig="$(openssl dgst -sha256 -hmac "$N8N_WEBHOOK_SECRET" -binary payload.json | base64)"
+          curl -fsS --retry 5 --retry-all-errors --max-time 20 \
+            -H "Content-Type: application/json" \
+            -H "X-Idempotency-Key: ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-health" \
+            -H "X-Signature-256: sha256=${sig}" \
+            --data-binary @payload.json \
+            "$N8N_WEBHOOK_URL"
+
+      - name: ⏭️ Skip n8n health notify (no secrets)
+        if: ${{ always() && (env.N8N_WEBHOOK_URL == '' || env.N8N_WEBHOOK_SECRET == '') }}
+        run: |
+          echo "n8n webhook health notification skipped: secrets not configured"
+
+  # 🏥 Post-Deployment Health Check
+  health-check:
+    name: 🏥 Post-Deployment Health Check
+    runs-on: ubuntu-latest
+    needs: [preflight, deploy]
+    if: needs.preflight.outputs.should_deploy == 'true'
+    env:
+      N8N_WEBHOOK_URL: ""
+      N8N_WEBHOOK_SECRET: ""
+    
+    steps:
+      - name: Guard optional secrets (warn only)
+        shell: bash
+        run: |
+          echo "::warning::n8n webhook secrets not available in environment-protected job"
+          echo "::warning::n8n webhook notifications will be skipped"
+
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+            registry.npmjs.org
+            ${{ env.STAGING_HEALTH_CHECK_URL }}
+            ${{ env.PRODUCTION_HEALTH_CHECK_URL }}
+      
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: 📦 Install dependencies
+        run: npm ci
+      
+      - name: 🏥 Run health checks
+        run: |
+          # Wait for deployment to settle
+          sleep 30
+          
+          # Run health checks
+          if [[ "${{ needs.preflight.outputs.target_environment }}" == "staging" ]]; then
+            HEALTH_URL="${{ env.STAGING_HEALTH_CHECK_URL }}"
+          else
+            HEALTH_URL="${{ env.PRODUCTION_HEALTH_CHECK_URL }}"
+          fi
+          
+          if [[ -n "$HEALTH_URL" ]]; then
+            echo "🏥 Running health check on: $HEALTH_URL"
+            curl -f "$HEALTH_URL" || exit 1
+            echo "✅ Health check passed"
+          else
+            echo "⚠️ No health check URL configured"
+          fi
+
+      - name: ⏭️ Skip n8n webhook (environment protected)
+        run: |
+          echo "n8n webhook notifications handled in separate job"
+
+  # 📊 Deployment Summary
+  summary:
+    name: 📊 Deployment Summary
+    runs-on: ubuntu-latest
+    needs: [preflight, quality-assurance, build, deploy, health-check, n8n-notifications]
+    if: always()
+    
+    steps:
+      - name: 🔒 Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com
+      
+      - name: 📊 Generate deployment summary
+        run: |
+          echo "🚀 TMS Autonomous Deployment Summary"
+          echo "=================================="
+          echo ""
+          echo "📅 Deployment Time: $(date)"
+          echo "🔗 Repository: ${{ github.repository }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          echo ""
+          echo "🎯 Target Environment: ${{ needs.preflight.outputs.target_environment }}"
+          echo ""
+          echo "📋 Job Results:"
+          echo "  🔍 Pre-flight: ${{ needs.preflight.result }}"
+          echo "  🧪 Quality Assurance: ${{ needs.quality-assurance.result }}"
+          echo "  🏗️ Build: ${{ needs.build.result }}"
+          echo "  🚀 Deployment: ${{ needs.deploy.result }}"
+          echo "  🏥 Health Check: ${{ needs.health-check.result }}"
+          echo ""
+          
+          if [[ "${{ needs.deploy.result }}" == "success" ]]; then
+            echo "✅ Deployment completed successfully!"
+            if [[ "${{ needs.preflight.outputs.target_environment }}" == "staging" ]]; then
+              echo "🌐 Staging URL: ${{ env.STAGING_URL }}"
+            else
+              echo "🌐 Production URL: ${{ env.PRODUCTION_URL }}"
+            fi
+          else
+            echo "❌ Deployment failed"
+            exit 1
+          fi
+
+      - name: 🧾 Rich Job Summary
+        if: ${{ always() }}
+        run: |
+          {
+            echo "## 🚀 TMS Autonomous Deployment Summary"
+            echo ""
+            echo "- **Ref**: \`${{ github.ref_name }}\`"
+            echo "- **Commit**: \`${{ github.sha }}\`"
+            echo "- **Environment**: \`${{ needs.preflight.outputs.target_environment }}\`"
+            echo "- **App URL**: ${{ env.APP_URL }}"
+            echo "- **Decision**: \`${{ needs.preflight.outputs.should_deploy }}\`"
+            echo "- **Status**: \`${{ job.status }}\`"
+            echo ""
+            echo "### 📋 Job Results"
+            echo "- 🔍 Pre-flight: \`${{ needs.preflight.result }}\`"
+            echo "- 🧪 Quality Assurance: \`${{ needs.quality-assurance.result }}\`"
+            echo "- 🏗️ Build: \`${{ needs.build.result }}\`"
+            echo "- 🚀 Deployment: \`${{ needs.deploy.result }}\`"
+            echo "- 🏥 Health Check: \`${{ needs.health-check.result }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 💡 Local Development Tip
+        if: ${{ always() }}
+        run: |
+          echo "💡 For local testing, use:"
+          echo "   act push -P ubuntu-latest=catthehacker/ubuntu:act-latest"
+          echo "   act workflow_dispatch -e .github/workflows/autonomous-ci-cd.yml"

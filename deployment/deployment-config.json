@@ -1,0 +1,70 @@
+{
+  "environments": {
+    "staging": {
+      "name": "staging",
+      "description": "Staging environment for testing",
+      "url": "https://staging.tms.example.com",
+      "webhook_url": "",
+      "health_check_url": "https://staging.tms.example.com/health",
+      "deployment_method": "file",
+      "auto_rollback": true,
+      "health_check_interval": 60000,
+      "max_retries": 3
+    },
+    "production": {
+      "name": "production",
+      "description": "Production environment",
+      "url": "https://app.tms.example.com",
+      "webhook_url": "",
+      "health_check_url": "https://app.tms.example.com/health",
+      "deployment_method": "platform",
+      "auto_rollback": true,
+      "health_check_interval": 30000,
+      "max_retries": 5,
+      "approval_required": true
+    }
+  },
+  "deployment_platforms": {
+    "vercel": {
+      "enabled": false,
+      "project_id": "",
+      "team_id": "",
+      "api_token": ""
+    },
+    "netlify": {
+      "enabled": false,
+      "site_id": "",
+      "api_token": ""
+    },
+    "aws": {
+      "enabled": false,
+      "region": "us-east-1",
+      "s3_bucket": "",
+      "cloudfront_distribution": ""
+    }
+  },
+  "notifications": {
+    "slack": {
+      "enabled": false,
+      "webhook_url": "",
+      "channel": "#deployments"
+    },
+    "discord": {
+      "enabled": false,
+      "webhook_url": "",
+      "channel": "deployments"
+    },
+    "email": {
+      "enabled": false,
+      "recipients": []
+    }
+  },
+  "autonomous_features": {
+    "auto_deploy_on_push": true,
+    "auto_rollback_on_failure": true,
+    "health_monitoring": true,
+    "performance_monitoring": true,
+    "security_scanning": true,
+    "backup_creation": true
+  }
+}

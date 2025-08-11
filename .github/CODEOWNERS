@@ -1,0 +1,30 @@
+# Global owners
+* @devops-leads
+
+# Pipeline and deployment ownership
+/.github/workflows/ @devops-leads @platform-team
+/deployment/ @platform-team @devops-leads
+
+# Application code ownership
+/src/ @frontend-team @backend-team
+/logistics-lynx/ @frontend-team @backend-team
+
+# Configuration and documentation
+/package.json @devops-leads
+/package-lock.json @devops-leads
+/tsconfig.json @frontend-team
+/.eslintrc* @frontend-team
+/.prettierrc* @frontend-team
+
+# Infrastructure and orchestration
+/orchestration/ @platform-team
+/src/agents/ @platform-team
+/src/autonomous/ @platform-team
+
+# Security and compliance
+/.github/security/ @security-team @devops-leads
+/.github/dependabot.yml @devops-leads
+
+# Documentation
+/README.md @devops-leads
+/*.md @devops-leads

@@ -1,0 +1,237 @@
+{
+  "folders": [
+    {
+      "name": "TMS Root",
+      "path": "."
+    },
+    {
+      "name": "Logistics Lynx",
+      "path": "./logistics-lynx"
+    }
+  ],
+  "settings": {
+    // YAML Language Server warning suppression - Comprehensive
+    "yaml.validate": false,
+    "yaml.validate.enable": false,
+    "yaml.disableContextAccess": true,
+    "yaml.disableDefaultProperties": true,
+    "yaml.disableAdditionalProperties": true,
+    "yaml.disableRequiredProperties": true,
+    "yaml.disableTypeValidation": true,
+    "yaml.disableEnumValidation": true,
+    "yaml.disableFormatValidation": true,
+    "yaml.disablePatternValidation": true,
+    "yaml.disableMaxLengthValidation": true,
+    "yaml.disableMinLengthValidation": true,
+    "yaml.disableMaxItemsValidation": true,
+    "yaml.disableMinItemsValidation": true,
+    "yaml.disableUniqueItemsValidation": true,
+    "yaml.disableMultipleOfValidation": true,
+    "yaml.disableMaximumValidation": true,
+    "yaml.disableMinimumValidation": true,
+    "yaml.disableExclusiveMaximumValidation": true,
+    "yaml.disableExclusiveMinimumValidation": true,
+    "yaml.format.enable": false,
+    "yaml.hover": false,
+    "yaml.completion": false,
+    "yaml.documentSymbols": false,
+    "yaml.folding": false,
+    "yaml.selectionRanges": false,
+    "yaml.schemaStore.enable": false,
+    "yaml.trace": "off",
+
+    // ESLint Integration
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+    "eslint.workingDirectories": ["./logistics-lynx"],
+
+    // Auto-fix on save
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": true
+    },
+
+    // GitHub Actions support - Disabled to prevent false warnings
+    // "yaml.schemas": {
+    //   "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+    // },
+    "files.associations": {
+      ".github/workflows/*.yml": "github-actions"
+    },
+    "github-actions.workflows.pinned": true,
+
+    // Tailwind CSS support
+    "tailwindCSS.includeLanguages": {
+      "css": "css"
+    },
+    "tailwindCSS.experimental.classRegex": [
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+      ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ],
+
+    // TypeScript settings
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "typescript.suggest.autoImports": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+
+    // Auto-save and format
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+
+    // File watching for autonomous agents
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/dist/**": true,
+      "**/.git/**": true
+    },
+
+    // Terminal settings for autonomous operations
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.env.windows": {
+      "NODE_ENV": "development"
+    },
+
+    // Extensions recommendations
+    "extensions.recommendations": [
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "ms-vscode.vscode-typescript-next",
+      "github.vscode-github-actions",
+      "ms-vscode.powershell"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "ms-vscode.vscode-typescript-next",
+      "github.vscode-github-actions",
+      "ms-vscode.powershell"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start Autonomous System",
+        "type": "shell",
+        "command": "node",
+        "args": ["24-7-autonomous-system.cjs"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Test n8n Webhook",
+        "type": "shell",
+        "command": "node",
+        "args": ["test-n8n-webhook-cursor.js"],
+        "group": "test",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Run ESLint",
+        "type": "shell",
+        "command": "npx",
+        "args": ["eslint", ".", "--ext", "ts,tsx", "--fix"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Deploy to Staging",
+        "type": "shell",
+        "command": "node",
+        "args": ["deployment/autonomous-deployment-system.js", "staging"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Deploy to Production",
+        "type": "shell",
+        "command": "node",
+        "args": ["deployment/autonomous-deployment-system.js", "production"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Health Check",
+        "type": "shell",
+        "command": "curl",
+        "args": ["-f", "https://staging.tms.example.com/health"],
+        "group": "test",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Start Predictive Orchestration",
+        "type": "shell",
+        "command": "node",
+        "args": ["orchestration/predictive-agent-orchestrator.js"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Start Master Orchestrator",
+        "type": "shell",
+        "command": "node",
+        "args": ["orchestration/master-orchestrator.js"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      },
+      {
+        "label": "System Status",
+        "type": "shell",
+        "command": "echo",
+        "args": ["🎯 TMS Autonomous Lifecycle Status"],
+        "group": "test",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        }
+      }
+    ]
+  }
+}

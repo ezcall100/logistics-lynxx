@@ -1,0 +1,31 @@
+[Unit]
+Description=TMS n8n Webhook 24/7 Monitor for Autonomous Agents
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/path/to/your/project
+Environment=NODE_VERSION=18
+Environment=N8N_WEBHOOK_SECRET=your-secret-key-here
+ExecStart=/usr/bin/node /path/to/your/project/monitor-n8n-webhook.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=n8n-webhook-monitor
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/path/to/your/project/logs
+
+# Resource limits
+LimitNOFILE=65536
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target

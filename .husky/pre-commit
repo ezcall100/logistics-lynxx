@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 🚀 TMS Pre-commit Hook
+# Automatically runs ESLint and type checking before commits
+
+echo "🔍 Running pre-commit checks..."
+
+# Run ESLint on staged files
+echo "📝 Running ESLint..."
+npx lint-staged
+
+# Run TypeScript type checking
+echo "🔧 Running TypeScript type check..."
+npx tsc --noEmit
+
+# Run tests if they exist
+if [ -f "package.json" ] && grep -q "\"test\":" package.json; then
+    echo "🧪 Running tests..."
+    npm test
+fi
+
+# Check for any remaining issues
+if [ $? -eq 0 ]; then
+    echo "✅ All pre-commit checks passed!"
+    exit 0
+else
+    echo "❌ Pre-commit checks failed. Please fix the issues above."
+    exit 1
+fi

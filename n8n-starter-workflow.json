@@ -1,0 +1,267 @@
+{
+  "name": "GitHub Actions Deployment Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-test/cursor-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "github-actions-deployment"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n HMAC Signature Verification - Production Ready\n// Use with Function node (works on most n8n versions)\n\n// Inputs: item 0 contains { headers, body }\nconst crypto = require('crypto');\n\n// 1) Get signature header (base64), strip optional \"sha256=\"\nconst sigHeader =\n  $json.headers?.['x-signature-256'] ??\n  $json.headers?.['X-Signature-256'];\nif (!sigHeader) {\n  throw new Error('Missing X-Signature-256 header');\n}\nconst received = sigHeader.startsWith('sha256=') ? sigHeader.slice(7) : sigHeader;\n\n// 2) Secret (prefer env var from n8n)\nconst secret = $env.N8N_WEBHOOK_SECRET || '';\nif (!secret) {\n  throw new Error('Missing N8N_WEBHOOK_SECRET');\n}\n\n// 3) Compute expected signature over the exact JSON payload\nconst payload = $json.body ?? $json; // adjust if your Webhook outputs under body\nconst expected = crypto\n  .createHmac('sha256', secret)\n  .update(JSON.stringify(payload))\n  .digest('base64');\n\n// 4) Constant-time compare\nconst a = Buffer.from(received, 'base64');\nconst b = Buffer.from(expected, 'base64');\nif (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {\n  throw new Error('Invalid signature');\n}\n\n// Pass through on success\nreturn items;"
+      },
+      "id": "hmac-verification",
+      "name": "HMAC Verification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "event-type",
+              "leftValue": "={{ $json.event }}",
+              "rightValue": "deployment",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "deployment-filter",
+      "name": "Deployment Events Only",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-success",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "success-filter",
+      "name": "Success Only",
+      "type": "if",
+      "typeVersion": 2,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-failure",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "failure",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "failure-filter",
+      "name": "Failure Only",
+      "type": "if",
+      "typeVersion": 2,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "channel": "={{ $env.SLACK_CHANNEL || '#deployments' }}",
+        "text": "🚀 **Deployment Successful!**\n\n**Repository:** {{ $json.repo }}\n**Environment:** {{ $json.target_environment }}\n**Branch:** {{ $json.ref }}\n**Commit:** `{{ $json.sha.substring(0, 7) }}`\n**Run ID:** {{ $json.run_id }}\n**App URL:** {{ $json.app_url }}\n\n✅ Deployment completed successfully!",
+        "otherOptions": {
+          "username": "GitHub Actions Bot",
+          "icon_emoji": ":rocket:"
+        }
+      },
+      "id": "slack-success",
+      "name": "Slack Success Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "channel": "={{ $env.SLACK_CHANNEL || '#deployments' }}",
+        "text": "❌ **Deployment Failed!**\n\n**Repository:** {{ $json.repo }}\n**Environment:** {{ $json.target_environment }}\n**Branch:** {{ $json.ref }}\n**Commit:** `{{ $json.sha.substring(0, 7) }}`\n**Run ID:** {{ $json.run_id }}\n\n🚨 Deployment failed - please check the logs!",
+        "otherOptions": {
+          "username": "GitHub Actions Bot",
+          "icon_emoji": ":warning:"
+        }
+      },
+      "id": "slack-failure",
+      "name": "Slack Failure Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Webhook processed successfully\",\n  \"event\": \"{{ $json.event }}\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HMAC Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HMAC Verification": {
+      "main": [
+        [
+          {
+            "node": "Deployment Events Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deployment Events Only": {
+      "main": [
+        [
+          {
+            "node": "Success Only",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failure Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success Only": {
+      "main": [
+        [
+          {
+            "node": "Slack Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Failure Only": {
+      "main": [
+        [
+          {
+            "node": "Slack Failure Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Success Notification": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Failure Notification": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "github-actions-deployment-notifications",
+  "tags": [
+    {
+      "createdAt": "2024-12-19T20:00:00.000Z",
+      "updatedAt": "2024-12-19T20:00:00.000Z",
+      "id": "github-actions",
+      "name": "GitHub Actions"
+    },
+    {
+      "createdAt": "2024-12-19T20:00:00.000Z",
+      "updatedAt": "2024-12-19T20:00:00.000Z",
+      "id": "deployments",
+      "name": "Deployments"
+    }
+  ]
+}

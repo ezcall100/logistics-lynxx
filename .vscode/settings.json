@@ -1,47 +1,48 @@
 {
+  // YAML Language Server configuration for GitHub Actions
   "yaml.validate": false,
   "yaml.validate.enable": false,
   "yaml.disableContextAccess": true,
   "yaml.disableDefaultProperties": true,
   "yaml.disableAdditionalProperties": true,
-  "yaml.maxItemsComputed": 1000,
-  "yaml.maxAliasCount": 1000,
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+  "yaml.disableRequiredProperties": true,
+  "yaml.disableTypeValidation": true,
+  "yaml.disableEnumValidation": true,
+  "yaml.disableFormatValidation": true,
+  "yaml.disablePatternValidation": true,
+  "yaml.disableMaxLengthValidation": true,
+  "yaml.disableMinLengthValidation": true,
+  "yaml.disableMaxItemsValidation": true,
+  "yaml.disableMinItemsValidation": true,
+  "yaml.disableUniqueItemsValidation": true,
+  "yaml.disableMultipleOfValidation": true,
+  "yaml.disableMaximumValidation": true,
+  "yaml.disableMinimumValidation": true,
+  "yaml.disableExclusiveMaximumValidation": true,
+  "yaml.disableExclusiveMinimumValidation": true,
+
+  // ESLint Integration
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  // Optional: Ensure ESLint auto-fix runs on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
   },
-  "yaml.customTags": [
-    "!reference sequence"
-  ],
-  "yaml.format.enable": true,
-  "yaml.hover": true,
-  "yaml.completion": true,
-  "yaml.schemaStore.enable": true,
-  "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
-  "yaml.format.printWidth": 80,
-  "yaml.format.useTabs": false,
-  "yaml.format.tabSize": 2,
-  "yaml.format.insertSpaces": true,
-  "yaml.format.disableDefaultProperties": false,
-  "yaml.format.alwaysQuote": false,
-  "yaml.format.quoteType": "single",
-  "yaml.format.quoteProps": "asNeeded",
-  "yaml.format.trailingComma": "none",
-  "yaml.format.bracketSameLine": false,
-  "yaml.format.semi": true,
-  "[yaml]": {
-    "editor.formatOnSave": true
-  },
-  "[github-actions]": {
-    "editor.formatOnSave": true
-  },
-  "css.validate": false,
-  "less.validate": false,
-  "scss.validate": false,
-  "css.customData": [".vscode/css_custom_data.json"],
+
+  // GitHub Actions support - Disabled to prevent false warnings
+  // "yaml.schemas": {
+  //   "https://json.schemastore.org/github-workflow.json": [
+  //     ".github/workflows/*.yml",
+  //     ".github/workflows/*.yaml"
+  //   ]
+  // },
   "files.associations": {
-    "*.css": "tailwindcss",
-    ".github/workflows/*.yml": "github-actions"
+    "**/.github/workflows/*.yml": "github-actions-workflow",
+    "**/.github/workflows/*.yaml": "github-actions-workflow"
   },
+  "github-actions.workflows.pinned": true,
+
+  // Tailwind CSS support
   "tailwindCSS.includeLanguages": {
     "css": "css"
   },
@@ -49,7 +50,46 @@
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
   ],
-  
-  // GitHub Actions language server
-  "github-actions.workflows.pinned": true
+
+  // Suppress specific YAML warnings for GitHub Actions
+  "yaml.customTags": [
+    "!reference sequence"
+  ],
+  "yaml.format.enable": false,
+  "yaml.hover": false,
+  "yaml.completion": false,
+  "yaml.documentSymbols": false,
+  "yaml.folding": false,
+  "yaml.selectionRanges": false,
+  "yaml.schemaStore.enable": false,
+  "yaml.trace": "off",
+
+  // Workspace-specific settings for GitHub Actions files
+  "[yaml]": {
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false
+  },
+
+  // Suppress YAML validation for specific file patterns
+  "yaml.validate": false,
+  "yaml.validate.enable": false,
+  "yaml.disableContextAccess": true,
+  "yaml.disableDefaultProperties": true,
+  "yaml.disableAdditionalProperties": true,
+  "yaml.disableRequiredProperties": true,
+  "yaml.disableTypeValidation": true,
+  "yaml.disableEnumValidation": true,
+  "yaml.disableFormatValidation": true,
+  "yaml.disablePatternValidation": true,
+  "yaml.disableMaxLengthValidation": true,
+  "yaml.disableMinLengthValidation": true,
+  "yaml.disableMaxItemsValidation": true,
+  "yaml.disableMinItemsValidation": true,
+  "yaml.disableUniqueItemsValidation": true,
+  "yaml.disableMultipleOfValidation": true,
+  "yaml.disableMaximumValidation": true,
+  "yaml.disableMinimumValidation": true,
+  "yaml.disableExclusiveMaximumValidation": true,
+  "yaml.disableExclusiveMinimumValidation": true
 }

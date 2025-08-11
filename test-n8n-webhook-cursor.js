@@ -12,7 +12,7 @@ const testData = {
   data: {
     message: 'Testing n8n webhook from TMS system',
     status: 'active',
-    system: 'logistics-lynxx',
+    system: 'logistics-lynx',
     version: '1.0.0'
   }
 };

@@ -1,0 +1,35 @@
+{
+  "yaml.validate": false,
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+  },
+  "yaml.customTags": [
+    "!reference sequence"
+  ],
+  "yaml.format.enable": true,
+  "yaml.hover": true,
+  "yaml.completion": true,
+  "yaml.validate.enable": false,
+  "yaml.schemaStore.enable": true,
+  "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
+  "yaml.format.printWidth": 80,
+  "yaml.format.useTabs": false,
+  "yaml.format.tabWidth": 2,
+  "yaml.format.insertSpaces": true,
+  "yaml.format.semicolons": false,
+  "yaml.format.arrowParens": "avoid",
+  "yaml.format.bracketSameLine": false,
+  "yaml.format.htmlWhitespaceSensitivity": "css",
+  "yaml.format.endOfLine": "lf",
+  "yaml.format.quoteProps": "as-needed",
+  "yaml.format.jsxSingleQuote": false,
+  "yaml.format.trailingComma": "none",
+  "yaml.format.bracketSpacing": true,
+  "yaml.format.singleQuote": false,
+  "yaml.format.proseWrap": "preserve",
+  "yaml.format.htmlWhitespaceSensitivity": "css",
+  "yaml.format.endOfLine": "lf",
+  "yaml.format.quoteProps": "as-needed",
+  "yaml.format.jsxSingleQuote": false,
+  "yaml.format.trailingComma": "none"
+}

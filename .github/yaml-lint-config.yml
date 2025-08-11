@@ -1,0 +1,16 @@
+# YAML Lint Configuration for GitHub Actions
+# This file suppresses false positive warnings for valid GitHub Actions syntax
+
+extends: default
+
+rules:
+  # Suppress warnings for valid GitHub Actions context access
+  no-unrecognized-named-value: off
+  no-unrecognized-function: off
+  no-invalid-context-access: off
+  
+  # Allow GitHub Actions specific syntax
+  no-unrecognized-operator: off
+  
+  # Suppress warnings for GitHub Actions expressions
+  no-unrecognized-expression: off

@@ -1,0 +1,27 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 2
+
+[*.{sh,yml,yaml}]
+end_of_line = lf
+
+[*.{js,ts,tsx,jsx}]
+end_of_line = lf
+indent_size = 2
+
+[*.{json,cjs,mjs}]
+end_of_line = lf
+indent_size = 2
+
+[*.md]
+end_of_line = lf
+trim_trailing_whitespace = false
+
+[*.{sql,toml}]
+end_of_line = lf
+indent_size = 2
