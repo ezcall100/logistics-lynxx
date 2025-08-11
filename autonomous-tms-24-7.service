@@ -1,0 +1,49 @@
+[Unit]
+Description=24/7 Autonomous TMS System
+Documentation=https://github.com/your-org/logistics-lynx
+After=network.target
+Wants=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/path/to/your/project
+ExecStart=/usr/bin/node /path/to/your/project/24-7-autonomous-system.cjs
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=autonomous-tms-24-7
+
+# Environment variables
+Environment=NODE_ENV=production
+Environment=MONITOR_INTERVAL=15000
+Environment=HEALTH_CHECK_INTERVAL=120000
+Environment=AGENT_CYCLE_INTERVAL=5000
+Environment=N8N_WEBHOOK_URL=https://pixx100.app.n8n.cloud/webhook-test/cursor-webhook
+
+# Resource limits
+LimitNOFILE=65536
+MemoryMax=1G
+CPUQuota=75%
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/path/to/your/project/logs
+ReadWritePaths=/var/log/autonomous-tms
+
+# Logging
+StandardOutput=append:/var/log/autonomous-tms/system.log
+StandardError=append:/var/log/autonomous-tms/error.log
+
+# Auto-restart configuration
+StartLimitBurst=5
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target
