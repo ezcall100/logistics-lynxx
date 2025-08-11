@@ -4,11 +4,12 @@
 # yaml-language-server: disableAdditionalProperties: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
+
 name: CodeQL
 
 on:
   schedule:
-    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+    - cron: '0 6 * * 1' # Every Monday at 6 AM UTC
   workflow_dispatch:
   push:
     branches: [main, develop]
@@ -25,37 +26,29 @@ jobs:
     name: CodeQL / Analyze
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    env:
-      # Environment variables with proper fallback values
-      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-      # Secrets (if any are needed for CodeQL) with proper fallbacks
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Detect languages present (js/ts only—add more if needed)
+      # Detect languages (JS/TS covered by "javascript")
       - name: Detect languages
         id: langs
         shell: bash
         run: |
           set -euo pipefail
-          L=""
-          if git ls-files '*.js' '*.jsx' '*.ts' '*.tsx' >/dev/null 2>&1; then L="javascript"; fi
-          if [ -z "$L" ]; then
+          if git ls-files '*.js' '*.jsx' '*.ts' '*.tsx' >/dev/null 2>&1; then
+            echo "has_lang=true" >> "$GITHUB_OUTPUT"
+            echo "langs=javascript" >> "$GITHUB_OUTPUT"
+          else
             echo "::warning title=CodeQL skipped::No JS/TS files detected."
             echo "has_lang=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_lang=true" >> "$GITHUB_OUTPUT"
-            echo "langs=$L" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: github/codeql-action/init@v3
+      - name: Initialize CodeQL
         if: ${{ steps.langs.outputs.has_lang == 'true' }}
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ steps.langs.outputs.langs }}
           queries: +security-and-quality
@@ -66,6 +59,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install & Build (best effort)
         if: ${{ steps.langs.outputs.has_lang == 'true' }}
@@ -73,13 +67,8 @@ jobs:
           npm ci --no-audit --no-fund || true
           npm run build --if-present || true
 
-      - uses: github/codeql-action/analyze@v3
+      - name: Perform CodeQL Analysis
         if: ${{ steps.langs.outputs.has_lang == 'true' }}
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ steps.langs.outputs.langs }}"
-
-      - name: 📊 Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: results-javascript.sarif
