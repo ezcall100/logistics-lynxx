@@ -18,39 +18,20 @@ permissions:
   contents: read
   actions: read
 
-env:
-  # Repository/Org vars with safe fallbacks
-  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-  APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
-  N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-  N8N_BASE_URL: ${{ vars.N8N_BASE_URL || 'https://n8n.example.com' }}
-  DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}
-
-  # Secrets with safe fallbacks (for non-blocking steps)
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
-  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
-  N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
-
-  NODE_VERSION: "18"
-  CI: "true"
-  NPM_CONFIG_FUND: "false"
-  NPM_CONFIG_AUDIT: "false"
-
 defaults:
   run:
     shell: bash
 
 jobs:
-  # 🔍 Pre-flight validation (network-independent)
+  # -------------------- Pre-flight --------------------
   preflight:
     name: 🔍 Pre-flight Validation
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
     steps:
       - name: 🔍 System Information
         run: |
-          echo "🔍 Pre-flight System Check"
           echo "OS: $(uname -a)"
           echo "User: $(whoami)"
           echo "Pwd: $(pwd)"
@@ -59,6 +40,12 @@ jobs:
           echo "Repo:  ${{ github.repository }}"
           echo "Ref:   ${{ github.ref_name }}"
           echo "SHA:   ${{ github.sha }}"
+
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
 
       - name: 🔍 Repository Structure Validation
         run: |
@@ -107,14 +94,15 @@ jobs:
             echo "All required checks passed ✅"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  # 🧪 Testing phase (with network fallback)
+  # -------------------- Test --------------------
   test:
     name: 🧪 Testing & Validation
     runs-on: ubuntu-latest
     needs: preflight
     timeout-minutes: 15
+
     steps:
-      - name: 🔍 Network Connectivity Test
+      - name: 🌐 Network Probe
         id: net
         run: |
           set -euo pipefail
@@ -125,13 +113,13 @@ jobs:
           echo "github_api_available=$gh"       >> "$GITHUB_OUTPUT"
           echo "Basic network: $basic; GitHub API: $gh"
 
-      - name: 📥 Checkout Code (if network OK)
+      - name: 📦 Checkout (if network OK)
         if: steps.net.outputs.github_api_available == 'true'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 📁 Use existing workspace (if offline)
+      - name: 📁 Use existing workspace (offline)
         if: steps.net.outputs.github_api_available == 'false'
         run: |
           echo "⚠️ Network limited; using current workspace"
@@ -141,7 +129,7 @@ jobs:
         if: steps.net.outputs.github_api_available == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '18'
           cache: npm
           cache-dependency-path: logistics-lynx/package-lock.json
 
@@ -175,7 +163,7 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
-  # 🚀 Deployment phase (use step outputs for runtime decisions)
+  # -------------------- Deploy --------------------
   deploy:
     name: 🚀 Deploy to Production
     runs-on: ubuntu-latest
@@ -185,37 +173,65 @@ jobs:
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
+    # Use literal values here to avoid YAML LSP errors about ${{ env.* }}
     environment:
-      name: ${{ env.ENVIRONMENT_NAME }}
-      url: ${{ env.APP_URL }}
+      name: production
+      url: https://app.example.com
+
     steps:
-      - name: 📥 Checkout Code
+      - name: 📦 Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 🔐 Validate secrets & decide N8N
-        id: validate
+      # Resolve configuration using contexts safely (no ${{ env.* }} in schema-checked places)
+      - name: 🔧 Resolve configuration
+        id: cfg
+        env:
+          VAR_ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME }}
+          VAR_APP_URL: ${{ vars.APP_URL }}
+          VAR_N8N_ENABLED: ${{ vars.N8N_ENABLED }}
+          VAR_N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
+          VAR_DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL }}
+          SEC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SEC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SEC_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SEC_N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
         run: |
           set -euo pipefail
-          echo "::add-mask::${OPENAI_API_KEY}"
-          echo "::add-mask::${N8N_API_KEY}"
-          miss=0
-          for k in SUPABASE_URL SUPABASE_ANON_KEY OPENAI_API_KEY; do
-            v="${!k:-}"; if [ -z "$v" ]; then echo "❌ $k missing"; miss=1; else echo "✅ $k set"; fi
-          done
-          # n8n decision
-          n8n_enabled_input="${{ env.N8N_ENABLED }}"
-          case "${n8n_enabled_input,,}" in true|1|yes|y) n8n_flag=true;; *) n8n_flag=false;; esac
-          if [ -n "${N8N_BASE_URL:-}" ] && [ -n "${N8N_API_KEY:-}" ]; then n8n_flag=true; fi
-          echo "n8n_enabled=$n8n_flag" >> "$GITHUB_OUTPUT"
-          echo "missing_required=$miss"  >> "$GITHUB_OUTPUT"
-          [ "$miss" -eq 0 ] || echo "⚠️ Some required secrets missing; continuing with limited functionality"
+          ENVIRONMENT_NAME="${VAR_ENVIRONMENT_NAME:-production}"
+          APP_URL="${VAR_APP_URL:-https://app.example.com}"
+          N8N_ENABLED_RAW="${VAR_N8N_ENABLED:-false}"
+          N8N_BASE_URL="${VAR_N8N_BASE_URL:-}"
+          DEPLOYMENT_WEBHOOK_URL="${VAR_DEPLOYMENT_WEBHOOK_URL:-}"
+
+          SUPABASE_URL="${SEC_SUPABASE_URL:-}"
+          SUPABASE_ANON_KEY="${SEC_SUPABASE_ANON_KEY:-}"
+          OPENAI_API_KEY="${SEC_OPENAI_API_KEY:-}"
+          N8N_API_KEY="${SEC_N8N_API_KEY:-}"
+
+          # Normalize boolean-ish input
+          case "${N8N_ENABLED_RAW,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
+          if [[ -n "$N8N_BASE_URL" && -n "$N8N_API_KEY" ]]; then N8N_ENABLED=true; fi
+
+          {
+            echo "ENVIRONMENT_NAME=$ENVIRONMENT_NAME"
+            echo "APP_URL=$APP_URL"
+            echo "N8N_ENABLED=$N8N_ENABLED"
+            echo "N8N_BASE_URL=$N8N_BASE_URL"
+            echo "DEPLOYMENT_WEBHOOK_URL=$DEPLOYMENT_WEBHOOK_URL"
+            echo "SUPABASE_URL=$SUPABASE_URL"
+            echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
+            echo "OPENAI_API_KEY=$OPENAI_API_KEY"
+            echo "N8N_API_KEY=$N8N_API_KEY"
+          } >> "$GITHUB_ENV"
+
+          echo "n8n_enabled=$N8N_ENABLED" >> "$GITHUB_OUTPUT"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '18'
           cache: npm
           cache-dependency-path: logistics-lynx/package-lock.json
 
@@ -227,45 +243,46 @@ jobs:
         working-directory: logistics-lynx
         run: npm run build
 
-      - name: 🗄️ Setup Database (if script present)
+      - name: 🗄️ Setup Database (if present)
         working-directory: logistics-lynx
         run: npm run db:setup --if-present
 
       - name: 🔍 N8N Health Check (if enabled)
-        if: steps.validate.outputs.n8n_enabled == 'true'
+        if: steps.cfg.outputs.n8n_enabled == 'true'
         run: |
           set -euo pipefail
           for i in 1 2 3; do
             if curl -fsS "${N8N_BASE_URL}/healthz" >/dev/null; then
-              echo "✅ N8N healthy"; break
+              echo "✅ N8N healthy"; exit 0
             fi
             echo "⚠️ n8n health attempt $i/3…"; sleep 5
           done
+          echo "⚠️ Proceeding without confirmed n8n health"
 
-      - name: 🚀 Deploy to Production (if script present)
+      - name: 🚀 Deploy (if script present)
         working-directory: logistics-lynx
         run: |
           npm run deploy:prod --if-present || echo "ℹ️ deploy:prod not defined; skipping"
 
-      - name: 🔎 Health Check (if script present)
+      - name: 🏥 Health Check (if script present)
         working-directory: logistics-lynx
         run: |
           npm run health:check --if-present || echo "ℹ️ health:check not defined; skipping"
 
-      - name: 🤖 Test Agents (if script present)
+      - name: 🤖 Test Agents (if present)
         working-directory: logistics-lynx
         run: |
           npm run test:agents --if-present || echo "ℹ️ test:agents not defined; skipping"
 
-      - name: 🚀 Start Autonomous System (background, if script present)
+      - name: 🚀 Start Autonomous (background, if present)
         working-directory: logistics-lynx
         run: |
           npm run start:autonomous --if-present &
 
-      - name: ⏳ Wait for System Startup
+      - name: ⏳ Wait for Startup
         run: sleep 30
 
-      - name: 🔍 Verify Deployment
+      - name: 🔎 Verify Local Health (best-effort)
         id: verify
         run: |
           ok=true
@@ -274,25 +291,26 @@ jobs:
           else
             echo "⚠️ Local health endpoint not responding"; ok=false
           fi
-          if [ "${{ steps.validate.outputs.n8n_enabled }}" = "true" ]; then
-            curl -fsS "${N8N_BASE_URL}/api/v1/workflows" -H "Authorization: Bearer ${N8N_API_KEY}" >/dev/null 2>&1 \
-              && echo "✅ n8n workflows reachable" \
-              || echo "⚠️ n8n workflows not reachable"
-          fi
           echo "ok=$ok" >> "$GITHUB_OUTPUT"
 
       - name: 📢 Notify (success)
         if: success() && env.DEPLOYMENT_WEBHOOK_URL != ''
         run: |
           ts="$(date -u +%FT%TZ)"
-          payload=$(jq -n --arg status "deployed" --arg ts "$ts" \
-                         --arg env "${{ env.ENVIRONMENT_NAME }}" \
-                         --arg sha "${{ github.sha }}" \
-                         --arg ref "${{ github.ref_name }}" \
-                         --arg run "${{ github.run_id }}" \
-                         '{status:$status,timestamp:$ts,environment:$env,commit:$sha,branch:$ref,run_id:$run}')
+          cat > payload.json <<JSON
+          {
+            "status": "deployed",
+            "timestamp": "$ts",
+            "environment": "${ENVIRONMENT_NAME}",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "run_id": "${{ github.run_id }}"
+          }
+          JSON
           for i in 1 2 3; do
-            curl -fsS -X POST "${DEPLOYMENT_WEBHOOK_URL}" -H "Content-Type: application/json" -d "$payload" && break
+            curl -fsS -X POST "${DEPLOYMENT_WEBHOOK_URL}" \
+              -H "Content-Type: application/json" \
+              --data-binary @payload.json && break
             echo "retry $i/3…"; sleep 5
           done
 
@@ -300,14 +318,20 @@ jobs:
         if: failure() && env.DEPLOYMENT_WEBHOOK_URL != ''
         run: |
           ts="$(date -u +%FT%TZ)"
-          payload=$(jq -n --arg status "failed" --arg ts "$ts" \
-                         --arg env "${{ env.ENVIRONMENT_NAME }}" \
-                         --arg sha "${{ github.sha }}" \
-                         --arg ref "${{ github.ref_name }}" \
-                         --arg run "${{ github.run_id }}" \
-                         '{status:$status,timestamp:$ts,environment:$env,commit:$sha,branch:$ref,run_id:$run}')
+          cat > payload.json <<JSON
+          {
+            "status": "failed",
+            "timestamp": "$ts",
+            "environment": "${ENVIRONMENT_NAME}",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "run_id": "${{ github.run_id }}"
+          }
+          JSON
           for i in 1 2 3; do
-            curl -fsS -X POST "${DEPLOYMENT_WEBHOOK_URL}" -H "Content-Type: application/json" -d "$payload" && break
+            curl -fsS -X POST "${DEPLOYMENT_WEBHOOK_URL}" \
+              -H "Content-Type: application/json" \
+              --data-binary @payload.json && break
             echo "retry $i/3…"; sleep 5
           done
 
@@ -317,31 +341,31 @@ jobs:
           {
             echo "## 🚀 Deployment Summary"
             echo "- Status: \`${{ job.status }}\`"
-            echo "- Env: \`${{ env.ENVIRONMENT_NAME }}\`"
-            echo "- URL: \`${{ env.APP_URL }}\`"
+            echo "- Env: \`${ENVIRONMENT_NAME:-production}\`"
+            echo "- URL: \`${APP_URL:-https://app.example.com}\`"
             echo "- Repo: \`${{ github.repository }}\`"
             echo "- Ref:  \`${{ github.ref_name }}\`"
             echo "- SHA:  \`${{ github.sha }}\`"
             echo "- Run:  \`${{ github.run_id }}\`"
-            echo "- n8n enabled (decision): \`${{ steps.validate.outputs.n8n_enabled }}\`"
             echo "- Local verify ok: \`${{ steps.verify.outputs.ok }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  # 📊 Monitoring phase
+  # -------------------- Monitor --------------------
   monitor:
     name: 📊 System Monitoring
     runs-on: ubuntu-latest
     needs: deploy
     if: always()
     timeout-minutes: 15
+
     steps:
-      - name: 📥 Checkout Code
+      - name: 📦 Checkout
         uses: actions/checkout@v4
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '18'
           cache: npm
           cache-dependency-path: logistics-lynx/package-lock.json
 
@@ -349,14 +373,14 @@ jobs:
         working-directory: logistics-lynx
         run: npm ci
 
-      - name: 📈 Start Monitoring (if script present)
+      - name: 📈 Start Monitoring (if present)
         working-directory: logistics-lynx
         run: npm run monitor:start --if-present || echo "ℹ️ monitor:start not defined; skipping"
 
       - name: ⏳ Observe
         run: sleep 60
 
-      - name: 🏥 Final Health (if script present)
+      - name: 🏥 Final Health (if present)
         working-directory: logistics-lynx
         run: npm run health:check --if-present || echo "ℹ️ health:check not defined; skipping"
 
@@ -367,5 +391,5 @@ jobs:
             echo "## 📊 Monitoring Report"
             echo "- Status: \`${{ job.status }}\`"
             echo "- Duration: 1 minute"
-            echo "- Env: \`${{ env.ENVIRONMENT_NAME }}\`"
+            echo "- Env: \`${ENVIRONMENT_NAME:-production}\`"
           } >> "$GITHUB_STEP_SUMMARY"
