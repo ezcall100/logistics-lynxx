@@ -20,7 +20,7 @@
 # - These warnings are false positives and can be safely ignored
 # - The workflow uses the correct GitHub Actions syntax throughout
 # - All variable references are properly formatted for GitHub Actions execution
-name: Autonomous TMS Deployment
+name: 🚀 Autonomous Deploy
 
 on:
   push:
@@ -33,29 +33,26 @@ permissions:
   contents: read
   actions: read
 
-env:
-  # Vars (environment-scoped or repository vars)
-  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-  APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
-  N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-  N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-  DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
-
-  # Secrets
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-  N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
-
-  # Node version
-  NODE_VERSION: '18'
-
 jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: read
+    env:
+      # Environment variables with proper fallback values
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
+      APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
+      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
+      # Secrets
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+      # Node version
+      NODE_VERSION: '18'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,6 +83,20 @@ jobs:
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      # Environment variables with proper fallback values
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
+      APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
+      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
+      # Secrets
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+      # Node version
+      NODE_VERSION: '18'
     
     environment:
       name: ${{ vars.ENVIRONMENT_NAME || 'production' }}

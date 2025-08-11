@@ -20,20 +20,18 @@ permissions:
   actions: read
   security-events: write
 
-env:
-  # Vars (environment-scoped or repository vars)
-  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-  APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-
-  # Secrets (if any are needed for CodeQL)
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-
 jobs:
   codeql:
     name: CodeQL / Analyze
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # Environment variables with proper fallback values
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
+      # Secrets (if any are needed for CodeQL)
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
     
     steps:
       - uses: actions/checkout@v4

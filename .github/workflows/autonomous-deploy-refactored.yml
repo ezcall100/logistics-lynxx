@@ -315,8 +315,8 @@ jobs:
         run: |
           echo "🔍 Deployment Environment Check"
           echo "==============================="
-          echo "Environment: $ENVIRONMENT_NAME"
-          echo "App URL: $APP_URL"
+          echo "Environment: ${{ env.ENVIRONMENT_NAME }}"
+          echo "App URL: ${{ env.APP_URL }}"
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
@@ -486,7 +486,7 @@ jobs:
           {
             "status": "deployed",
             "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "environment": "$ENVIRONMENT_NAME",
+            "environment": "${{ env.ENVIRONMENT_NAME }}",
             "commit": "${{ github.sha }}",
             "branch": "${{ github.ref_name }}",
             "run_id": "${{ github.run_id }}",
@@ -521,7 +521,7 @@ jobs:
           {
             "status": "failed",
             "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "environment": "$ENVIRONMENT_NAME",
+            "environment": "${{ env.ENVIRONMENT_NAME }}",
             "commit": "${{ github.sha }}",
             "branch": "${{ github.ref_name }}",
             "run_id": "${{ github.run_id }}",
@@ -552,12 +552,12 @@ jobs:
           echo "## 🚀 Deployment Summary"
           echo ""
           echo "**Status:** ${{ job.status }}"
-          echo "**Environment:** $ENVIRONMENT_NAME"
+          echo "**Environment:** ${{ env.ENVIRONMENT_NAME }}"
           echo "**Repository:** ${{ github.repository }}"
           echo "**Branch:** ${{ github.ref_name }}"
           echo "**Commit:** ${{ github.sha }}"
           echo "**Run ID:** ${{ github.run_id }}"
-          echo "**N8N Integration:** $([[ '$N8N_ENABLED' == 'true' ]] && echo 'Enabled' || echo 'Disabled')"
+          echo "**N8N Integration:** $([[ '${{ env.N8N_ENABLED }}' == 'true' ]] && echo 'Enabled' || echo 'Disabled')"
           echo ""
           echo "### 🎯 Deployment Results:"
           if [ "${{ job.status }}" = "success" ]; then

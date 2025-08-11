@@ -1,7 +1,26 @@
 {
-  // YAML Language Server configuration for GitHub Actions
   "yaml.validate": false,
   "yaml.validate.enable": false,
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": [
+      ".github/workflows/*.yml",
+      ".github/workflows/*.yaml"
+    ]
+  },
+  "yaml.customTags": [
+    "!reference sequence"
+  ],
+  "yaml.format.enable": false,
+  "yaml.format.singleQuote": false,
+  "yaml.format.bracketSpacing": true,
+  "yaml.format.proseWrap": "preserve",
+  "yaml.hover": false,
+  "yaml.completion": false,
+  "yaml.documentSymbols": false,
+  "yaml.folding": false,
+  "yaml.selectionRanges": false,
+  "yaml.schemaStore.enable": false,
+  "yaml.trace": "off",
   "yaml.disableContextAccess": true,
   "yaml.disableDefaultProperties": true,
   "yaml.disableAdditionalProperties": true,
@@ -20,76 +39,14 @@
   "yaml.disableMinimumValidation": true,
   "yaml.disableExclusiveMaximumValidation": true,
   "yaml.disableExclusiveMinimumValidation": true,
-
-  // ESLint Integration
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-
-  // Optional: Ensure ESLint auto-fix runs on save
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-
-  // GitHub Actions support - Disabled to prevent false warnings
-  // "yaml.schemas": {
-  //   "https://json.schemastore.org/github-workflow.json": [
-  //     ".github/workflows/*.yml",
-  //     ".github/workflows/*.yaml"
-  //   ]
-  // },
   "files.associations": {
     "**/.github/workflows/*.yml": "github-actions-workflow",
     "**/.github/workflows/*.yaml": "github-actions-workflow"
   },
   "github-actions.workflows.pinned": true,
-
-  // Tailwind CSS support
-  "tailwindCSS.includeLanguages": {
-    "css": "css"
-  },
-  "tailwindCSS.experimental.classRegex": [
-    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ],
-
-  // Suppress specific YAML warnings for GitHub Actions
-  "yaml.customTags": [
-    "!reference sequence"
-  ],
-  "yaml.format.enable": false,
-  "yaml.hover": false,
-  "yaml.completion": false,
-  "yaml.documentSymbols": false,
-  "yaml.folding": false,
-  "yaml.selectionRanges": false,
-  "yaml.schemaStore.enable": false,
-  "yaml.trace": "off",
-
-  // Workspace-specific settings for GitHub Actions files
   "[yaml]": {
     "editor.formatOnSave": false,
     "editor.formatOnPaste": false,
     "editor.formatOnType": false
-  },
-
-  // Suppress YAML validation for specific file patterns
-  "yaml.validate": false,
-  "yaml.validate.enable": false,
-  "yaml.disableContextAccess": true,
-  "yaml.disableDefaultProperties": true,
-  "yaml.disableAdditionalProperties": true,
-  "yaml.disableRequiredProperties": true,
-  "yaml.disableTypeValidation": true,
-  "yaml.disableEnumValidation": true,
-  "yaml.disableFormatValidation": true,
-  "yaml.disablePatternValidation": true,
-  "yaml.disableMaxLengthValidation": true,
-  "yaml.disableMinLengthValidation": true,
-  "yaml.disableMaxItemsValidation": true,
-  "yaml.disableMinItemsValidation": true,
-  "yaml.disableUniqueItemsValidation": true,
-  "yaml.disableMultipleOfValidation": true,
-  "yaml.disableMaximumValidation": true,
-  "yaml.disableMinimumValidation": true,
-  "yaml.disableExclusiveMaximumValidation": true,
-  "yaml.disableExclusiveMinimumValidation": true
+  }
 }

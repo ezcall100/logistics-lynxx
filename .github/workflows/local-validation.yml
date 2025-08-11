@@ -13,16 +13,15 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  # Vars (environment-scoped or repository vars)
-  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-  APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-
 jobs:
   local_validation:
     name: 🏠 Local Code Validation
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      # Environment variables with proper fallback values
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
     
     steps:
       - uses: actions/checkout@v4

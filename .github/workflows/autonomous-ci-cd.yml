@@ -4,7 +4,7 @@
 # yaml-language-server: disableAdditionalProperties: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
-name: 🚀 Autonomous CI/CD Pipeline
+name: 🤖 Autonomous CI/CD
 
 on:
   push:
@@ -14,55 +14,57 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deploy to environment'
+        description: 'Environment to deploy to'
         required: true
         default: 'staging'
         type: choice
         options:
-          - staging
-          - production
-      rollback:
-        description: "Rollback to previous release?"
+        - staging
+        - production
+      force:
+        description: 'Force deployment even if checks fail'
         required: false
         default: false
         type: boolean
 
-# Prevent overlapping deploys
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-# Global bash hardening
-defaults:
-  run:
-    shell: bash
-
-# Least-privilege permissions
 permissions:
   contents: read
+  pull-requests: write
   deployments: write
   id-token: write
   security-events: write
   actions: read
-
-env:
-  # Node version
-  NODE_VERSION: '18'
-
 jobs:
   # 🛡️ Guard Secrets & Variables
   guard-secrets:
     name: 🛡️ Validate Required Secrets
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      # Node version
+      NODE_VERSION: '18'
     
     steps:
       - name: Validate required config (trusted events)
         if: ${{ ! (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork) }}
         shell: bash
         env:
-          REQUIRED: ENVIRONMENT_NAME,APP_URL,N8N_ENABLED
+          REQUIRED: ENVIRONMENT_NAME,APP_URL
           REQUIRED_SECRETS: STAGING_URL,PRODUCTION_URL,STAGING_WEBHOOK_URL,PRODUCTION_WEBHOOK_URL,STAGING_HEALTH_CHECK_URL,PRODUCTION_HEALTH_CHECK_URL,DEPLOYMENT_WEBHOOK_URL,N8N_API_KEY,SUPABASE_URL,SUPABASE_ANON_KEY,OPENAI_API_KEY
+          # GitHub variables and secrets
+          ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'staging' }}
+          APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
+          STAGING_URL: ${{ vars.STAGING_URL || '' }}
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL || '' }}
+          STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || '' }}
+          PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || '' }}
+          STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || '' }}
+          PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || '' }}
+          DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
         run: |
           set -euo pipefail
           miss=()
@@ -85,6 +87,9 @@ jobs:
     name: 🔍 Lint Workflows
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      # Environment variables with proper fallback values
+      NODE_VERSION: '18'
     
     steps:
       - uses: actions/checkout@v4
@@ -116,6 +121,9 @@ jobs:
     outputs:
       should_deploy: ${{ steps.decider.outputs.should_deploy }}
       target_environment: ${{ steps.decider.outputs.target_environment }}
+    env:
+      # Environment variables with proper fallback values
+      NODE_VERSION: '18'
     
     steps:
       - uses: actions/checkout@v4
@@ -148,34 +156,24 @@ jobs:
              echo "should_deploy=false" >> "$GITHUB_OUTPUT"
              echo "target_environment=none" >> "$GITHUB_OUTPUT"
            fi
-           
-           echo "🚀 Deployment decision completed"
-
-      - name: 🧾 Display deployment decision
-        run: |
-           echo "should_deploy=${{ steps.decider.outputs.should_deploy || 'false' }}"
-           echo "target_environment=${{ steps.decider.outputs.target_environment || 'n/a' }}"
-           {
-             echo "## 🚀 Deployment Plan"
-             echo "- Should deploy: \`${{ steps.decider.outputs.should_deploy || 'false' }}\`"
-             echo "- Target environment: \`${{ steps.decider.outputs.target_environment || 'n/a' }}\`"
-             echo "- Trigger: \`${{ github.event_name }}\`"
-             echo "- Branch: \`${{ github.ref_name }}\`"
-           } >> "$GITHUB_STEP_SUMMARY"
 
   # 🧪 Quality Assurance
   quality-assurance:
     name: 🧪 Quality Assurance
     runs-on: ubuntu-latest
-    needs: preflight
+    needs: [preflight]
+    if: needs.preflight.outputs.should_deploy == 'true'
     timeout-minutes: 15
+    env:
+      # Node version
+      NODE_VERSION: '18'
     
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: false   # monitor must not push
+          persist-credentials: false
 
       - name: Git bootstrap
         run: |
@@ -183,61 +181,41 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
           git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
-      
+
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+        
       - name: 📦 Install dependencies
-        run: |
-          npm ci
-          cd logistics-lynx && npm ci
-      
-      - name: 🔍 Run ESLint
-        run: |
-          npx eslint . --ext ts,tsx --max-warnings 0
-          cd logistics-lynx && npx eslint . --ext ts,tsx --max-warnings 0
-      
-      - name: 🔧 TypeScript check
-        run: |
-          npx tsc --noEmit
-          cd logistics-lynx && npx tsc --noEmit
-      
+        run: npm ci
+        
+      - name: 🔍 Run linting
+        run: npm run lint
+        
       - name: 🧪 Run tests
-        run: |
-          if npm run test; then
-            echo "✅ Tests passed"
-          else
-            echo "⚠️ No tests found or tests failed"
-          fi
-      
-      - name: 🔒 Security audit
-        run: |
-          npm audit --audit-level moderate || true
-          cd logistics-lynx && npm audit --audit-level moderate || true
-      
-      - name: 🔍 Dependency Review
-        uses: actions/dependency-review-action@v4
-        with:
-          fail-on-severity: high
-          allow-licenses: MIT,Apache-2.0,ISC,BSD-2-Clause,BSD-3-Clause
+        run: npm test
+        
+      - name: 🔒 Run security audit
+        run: npm audit --audit-level=moderate || true
 
-  # 🏗️ Build & Package
+  # 🏗️ Build
   build:
-    name: 🏗️ Build & Package
+    name: 🏗️ Build Application
     runs-on: ubuntu-latest
     needs: [preflight, quality-assurance]
     if: needs.preflight.outputs.should_deploy == 'true'
     timeout-minutes: 20
+    env:
+      # Node version
+      NODE_VERSION: '18'
     
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: false   # monitor must not push
+          persist-credentials: false
 
       - name: Git bootstrap
         run: |
@@ -245,42 +223,29 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
           git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
-      
+
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+        
       - name: 📦 Install dependencies
-        run: |
-          npm ci
-          cd logistics-lynx && npm ci
-      
+        run: npm ci
+        
       - name: 🏗️ Build application
-        run: |
-          cd logistics-lynx
-          npm run build
-      
+        run: npm run build
+        
       - name: 📦 Package artifacts
         run: |
-          # Create deployment package
           mkdir -p deployment/artifacts
-          cp -r logistics-lynx/dist/* deployment/artifacts/
-          cp -r logistics-lynx/public deployment/artifacts/
-          cp logistics-lynx/package.json deployment/artifacts/
-          
-          # Include autonomous system files
-          cp 24-7-autonomous-system.cjs deployment/artifacts/
-          cp agent-boot.js deployment/artifacts/
-          cp test-n8n-webhook-cursor.js deployment/artifacts/
-      
-      - name: 📤 Upload artifacts
+          tar -czf deployment/artifacts/build.tar.gz dist/ node_modules/ package*.json
+        
+      - name: 📤 Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: deployment-artifacts
           path: deployment/artifacts/
-          retention-days: ${{ needs.preflight.outputs.target_environment == 'production' && 30 || 7 }}
+          retention-days: 1
 
   # 🚀 Autonomous Deployment
   deploy:
@@ -292,9 +257,22 @@ jobs:
     permissions:
       contents: write
       deployments: write
+    env:
+      # Node version
+      NODE_VERSION: '18'
+      # Deployment environment variables
+      STAGING_URL: ${{ vars.STAGING_URL || '' }}
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || '' }}
+      STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || '' }}
+      PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || '' }}
+      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || '' }}
+      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || '' }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
     environment:
       name: ${{ needs.preflight.outputs.target_environment }}
-      url: ${{ needs.preflight.outputs.target_environment == 'staging' && vars.STAGING_URL || vars.PRODUCTION_URL }}
+      url: ${{ needs.preflight.outputs.target_environment == 'staging' && env.STAGING_URL || env.PRODUCTION_URL }}
     
     steps:
       - name: Guard optional secrets (warn only)
@@ -342,25 +320,25 @@ jobs:
           fi
         env:
           # Database configuration
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
           
           # Environment URLs
-          STAGING_URL: ${{ vars.STAGING_URL }}
-          PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
+          STAGING_URL: ${{ env.STAGING_URL }}
+          PRODUCTION_URL: ${{ env.PRODUCTION_URL }}
           
           # Webhook URLs
-          STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL }}
-          PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL }}
-          STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL }}
-          PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL }}
+          STAGING_WEBHOOK_URL: ${{ env.STAGING_WEBHOOK_URL }}
+          PRODUCTION_WEBHOOK_URL: ${{ env.PRODUCTION_WEBHOOK_URL }}
+          STAGING_HEALTH_CHECK_URL: ${{ env.STAGING_HEALTH_CHECK_URL }}
+          PRODUCTION_HEALTH_CHECK_URL: ${{ env.PRODUCTION_HEALTH_CHECK_URL }}
 
       - name: 🏥 Post-deploy smoke check
         if: ${{ needs.preflight.outputs.should_deploy == 'true' && github.event.inputs.rollback != 'true' }}
         timeout-minutes: 1
         env:
-          HEALTH_URL: ${{ needs.preflight.outputs.target_environment == 'production' && vars.PRODUCTION_HEALTH_CHECK_URL || vars.STAGING_HEALTH_CHECK_URL }}
+          HEALTH_URL: ${{ needs.preflight.outputs.target_environment == 'production' && env.PRODUCTION_HEALTH_CHECK_URL || env.STAGING_HEALTH_CHECK_URL }}
         run: |
           set -euo pipefail
           if [[ -n "$HEALTH_URL" ]]; then
@@ -384,8 +362,11 @@ jobs:
     name: 📣 n8n Webhook Notifications
     runs-on: ubuntu-latest
     needs: [preflight, deploy, health-check]
-    if: always() && needs.preflight.outputs.should_deploy == 'true'
-    timeout-minutes: 10
+    if: always()
+    timeout-minutes: 5
+    env:
+      # App URL for notifications
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
     
     steps:
       - name: 📣 Notify n8n webhook (deployment)
@@ -395,15 +376,15 @@ jobs:
           N8N_WEBHOOK_SECRET: ${{ secrets.N8N_WEBHOOK_SECRET }}
         run: |
           if [[ -z "$N8N_WEBHOOK_URL" || -z "$N8N_WEBHOOK_SECRET" ]]; then
-            echo "n8n webhook skipped: secrets not configured"
+            echo "n8n webhook deployment notification skipped: secrets not configured"
             exit 0
           fi
           
           set -euo pipefail
           
           ts="$(date -u +%FT%TZ)"
-          idem="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-
+          idem="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-deploy"
+          
           # Build JSON (no jq dependency)
           cat > payload.json <<JSON
           {
@@ -415,7 +396,7 @@ jobs:
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "environment": "${{ needs.preflight.outputs.target_environment }}",
-            "app_url": "${{ vars.APP_URL }}",
+            "app_url": "${{ env.APP_URL }}",
             "should_deploy": "${{ needs.preflight.outputs.should_deploy || 'false' }}",
             "target_environment": "${{ needs.preflight.outputs.target_environment || 'n/a' }}",
             "timestamp": "${ts}"
@@ -452,7 +433,7 @@ jobs:
             "event": "health_check",
             "status": "${{ needs.health-check.result }}",
             "environment": "${{ needs.preflight.outputs.target_environment }}",
-            "app_url": "${{ vars.APP_URL }}",
+            "app_url": "${{ env.APP_URL }}",
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "timestamp": "${ts}"
@@ -475,6 +456,12 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+    env:
+      # Node version
+      NODE_VERSION: '18'
+      # Health check URLs
+      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || '' }}
+      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || '' }}
     
     steps:
       - name: Guard optional secrets (warn only)
@@ -506,14 +493,12 @@ jobs:
       
       - name: 🏥 Run health checks
         run: |
-          # Wait for deployment to settle
-          sleep 30
+          set -euo pipefail
           
-          # Run health checks
           if [[ "${{ needs.preflight.outputs.target_environment }}" == "staging" ]]; then
-            HEALTH_URL="${{ vars.STAGING_HEALTH_CHECK_URL }}"
+            HEALTH_URL="${{ env.STAGING_HEALTH_CHECK_URL }}"
           else
-            HEALTH_URL="${{ vars.PRODUCTION_HEALTH_CHECK_URL }}"
+            HEALTH_URL="${{ env.PRODUCTION_HEALTH_CHECK_URL }}"
           fi
           
           if [[ -n "$HEALTH_URL" ]]; then
@@ -537,6 +522,11 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+    env:
+      # Summary URLs
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
+      STAGING_URL: ${{ vars.STAGING_URL || '' }}
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || '' }}
     
     steps:
       - uses: actions/checkout@v4
@@ -575,9 +565,9 @@ jobs:
           if [[ "${{ needs.deploy.result }}" == "success" ]]; then
             echo "✅ Deployment completed successfully!"
             if [[ "${{ needs.preflight.outputs.target_environment }}" == "staging" ]]; then
-              echo "🌐 Staging URL: ${{ vars.STAGING_URL }}"
+              echo "🌐 Staging URL: ${{ env.STAGING_URL }}"
             else
-              echo "🌐 Production URL: ${{ vars.PRODUCTION_URL }}"
+              echo "🌐 Production URL: ${{ env.PRODUCTION_URL }}"
             fi
           else
             echo "❌ Deployment failed"

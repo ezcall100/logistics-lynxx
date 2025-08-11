@@ -1,5 +1,10 @@
 {
   "recommendations": [
-    "redhat.vscode-yaml"
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "github.vscode-github-actions",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode"
   ]
 }

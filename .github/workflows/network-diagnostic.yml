@@ -14,16 +14,15 @@ on:
 permissions:
   contents: read
 
-env:
-  # Environment variables with fallback values
-  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-  APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-
 jobs:
   network-test:
     name: 🔍 Network Connectivity Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      # Environment variables with proper fallback values
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
     
     steps:
       - name: 🔍 Test Basic Connectivity
