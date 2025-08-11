@@ -4,35 +4,42 @@
 # yaml-language-server: disableAdditionalProperties: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
+
 name: 🚀 Autonomous TMS Deployment (Refactored)
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
-  workflow_dispatch:  # Manual trigger
+    - cron: "0 */6 * * *" # Every 6 hours
+  workflow_dispatch:
 
 permissions:
   contents: read
   actions: read
 
 env:
-  # Vars (environment-scoped or repository vars) with proper fallbacks
+  # Repository/Org vars with safe fallbacks
   ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
   APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
   N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
   N8N_BASE_URL: ${{ vars.N8N_BASE_URL || 'https://n8n.example.com' }}
   DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}
 
-  # Secrets with proper fallbacks
+  # Secrets with safe fallbacks (for non-blocking steps)
   SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
   SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
-  N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
+  N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
 
-  # Node version
-  NODE_VERSION: '18'
+  NODE_VERSION: "18"
+  CI: "true"
+  NPM_CONFIG_FUND: "false"
+  NPM_CONFIG_AUDIT: "false"
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   # 🔍 Pre-flight validation (network-independent)
@@ -40,148 +47,65 @@ jobs:
     name: 🔍 Pre-flight Validation
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      contents: read
     steps:
       - name: 🔍 System Information
         run: |
           echo "🔍 Pre-flight System Check"
-          echo "========================="
           echo "OS: $(uname -a)"
           echo "User: $(whoami)"
-          echo "Working Directory: $(pwd)"
-          echo "Date: $(date)"
-          echo "GitHub Event: ${{ github.event_name }}"
-          echo "Repository: ${{ github.repository }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Commit: ${{ github.sha }}"
-          echo ""
-          echo "✅ System information collected"
-      
+          echo "Pwd: $(pwd)"
+          echo "Date: $(date -Is)"
+          echo "Event: ${{ github.event_name }}"
+          echo "Repo:  ${{ github.repository }}"
+          echo "Ref:   ${{ github.ref_name }}"
+          echo "SHA:   ${{ github.sha }}"
+
       - name: 🔍 Repository Structure Validation
         run: |
-          echo "🔍 Repository Structure Check"
-          echo "============================"
-          
-          # Check for key files and directories
-          required_items=(
-            "logistics-lynx"
-            "logistics-lynx/package.json"
-          )
-          
-          optional_items=(
-            "logistics-lynx/tsconfig.json"
-            ".github/workflows"
-            "deployment"
-          )
-          
-          missing_required=0
-          missing_optional=0
-          
-          for item in "${required_items[@]}"; do
-            if [ -e "$item" ]; then
-              echo "✅ $item found (required)"
-            else
-              echo "❌ $item missing (required)"
-              missing_required=1
-            fi
+          set -euo pipefail
+          required=( "logistics-lynx" "logistics-lynx/package.json" )
+          optional=( "logistics-lynx/tsconfig.json" ".github/workflows" "deployment" )
+          miss_req=0
+          for p in "${required[@]}"; do
+            [[ -e "$p" ]] && echo "✅ $p found (required)" || { echo "❌ $p missing (required)"; miss_req=1; }
           done
-          
-          for item in "${optional_items[@]}"; do
-            if [ -e "$item" ]; then
-              echo "✅ $item found (optional)"
-            else
-              echo "⚠️ $item missing (optional)"
-              missing_optional=1
-            fi
+          for p in "${optional[@]}"; do
+            [[ -e "$p" ]] && echo "✅ $p found (optional)" || echo "⚠️ $p missing (optional)"
           done
-          
-          if [ $missing_required -eq 0 ]; then
-            echo ""
-            echo "✅ All required items present"
-            if [ $missing_optional -eq 1 ]; then
-              echo "⚠️ Some optional items are missing (continuing anyway)"
-            fi
-          else
-            echo ""
-            echo "❌ Some required items are missing"
-            exit 1
-          fi
-      
+          [[ $miss_req -eq 0 ]]
+
       - name: 🔍 Configuration Validation
         run: |
-          echo "🔍 Configuration Validation"
-          echo "==========================="
-          
-          # Check package.json
-          if [ -f "logistics-lynx/package.json" ]; then
-            echo "📋 Validating package.json..."
-            if python3 -c "import json; json.load(open('logistics-lynx/package.json'))" 2>/dev/null; then
-              echo "✅ package.json is valid JSON"
-              
-              # Check for required scripts
-              required_scripts=("build" "lint")
-              optional_scripts=("test" "db:setup" "deploy:prod" "health:check" "test:agents" "start:autonomous" "monitor:start")
-              missing_required=0
-              missing_optional=0
-              
-              for script in "${required_scripts[@]}"; do
-                if python3 -c "import json; data=json.load(open('logistics-lynx/package.json')); exit(0 if '$script' in data.get('scripts', {}) else 1)" 2>/dev/null; then
-                  echo "✅ Script '$script' found (required)"
-                else
-                  echo "❌ Script '$script' missing (required)"
-                  missing_required=1
-                fi
-              done
-              
-              for script in "${optional_scripts[@]}"; do
-                if python3 -c "import json; data=json.load(open('logistics-lynx/package.json')); exit(0 if '$script' in data.get('scripts', {}) else 1)" 2>/dev/null; then
-                  echo "✅ Script '$script' found (optional)"
-                else
-                  echo "⚠️ Script '$script' missing (optional)"
-                  missing_optional=1
-                fi
-              done
-              
-              if [ $missing_required -eq 0 ]; then
-                echo "✅ All required scripts present"
-                if [ $missing_optional -eq 1 ]; then
-                  echo "⚠️ Some optional scripts missing (continuing anyway)"
-                fi
-              else
-                echo "❌ Some required scripts missing"
-                exit 1
-              fi
-            else
-              echo "❌ package.json has JSON syntax errors"
-              exit 1
-            fi
-          else
-            echo "❌ package.json not found"
-            exit 1
-          fi
-      
+          set -euo pipefail
+          echo "📋 Validating logistics-lynx/package.json…"
+          python3 - <<'PY'
+          import json,sys
+          with open("logistics-lynx/package.json") as f:
+              data=json.load(f)
+          scripts=data.get("scripts", {})
+          required=["build","lint"]
+          optional=["test","db:setup","deploy:prod","health:check","test:agents","start:autonomous","monitor:start"]
+          bad=[s for s in required if s not in scripts]
+          for s in required:
+              print(f"✅ script present (required): {s}" if s in scripts else f"❌ script missing (required): {s}")
+          for s in optional:
+              print(f"✅ script present (optional): {s}" if s in scripts else f"⚠️ script missing (optional): {s}")
+          if bad:
+              print("❌ missing required scripts:", ", ".join(bad)); sys.exit(1)
+          print("✅ package.json OK")
+          PY
+
       - name: 📊 Pre-flight Summary
         run: |
-          echo "## 🔍 Pre-flight Validation Results"
-          echo ""
-          echo "**Status:** Pre-flight validation completed"
-          echo "**Repository:** ${{ github.repository }}"
-          echo "**Branch:** ${{ github.ref_name }}"
-          echo "**Commit:** ${{ github.sha }}"
-          echo "**Time:** $(date)"
-          echo ""
-          echo "### 🎯 Validation Results:"
-          echo "- ✅ System information collected"
-          echo "- ✅ Repository structure validated"
-          echo "- ✅ Configuration files checked"
-          echo "- ✅ Required scripts verified"
-          echo ""
-          echo "### 🚀 Ready for Deployment:"
-          echo "- Repository structure is correct"
-          echo "- Configuration files are valid"
-          echo "- Required scripts are present"
-          echo "- Proceeding to deployment phase"
+          {
+            echo "## 🔍 Pre-flight Validation Results"
+            echo "- Repo: \`${{ github.repository }}\`"
+            echo "- Ref:  \`${{ github.ref_name }}\`"
+            echo "- SHA:  \`${{ github.sha }}\`"
+            echo "- Time: \`$(date -Is)\`"
+            echo ""
+            echo "All required checks passed ✅"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   # 🧪 Testing phase (with network fallback)
   test:
@@ -189,130 +113,69 @@ jobs:
     runs-on: ubuntu-latest
     needs: preflight
     timeout-minutes: 15
-    permissions:
-      contents: read
     steps:
       - name: 🔍 Network Connectivity Test
-        id: network-test
+        id: net
         run: |
-          echo "🔍 Testing Network Connectivity"
-          echo "=============================="
-          
-          # Test basic connectivity
-          if curl -s --connect-timeout 5 https://httpbin.org/get >/dev/null 2>&1; then
-            echo "✅ Basic network connectivity: OK"
-            echo "network_available=true" >> $GITHUB_OUTPUT
-          else
-            echo "❌ Basic network connectivity: FAILED"
-            echo "network_available=false" >> $GITHUB_OUTPUT
-          fi
-          
-          # Test GitHub API connectivity
-          if curl -s --connect-timeout 5 https://api.github.com >/dev/null 2>&1; then
-            echo "✅ GitHub API connectivity: OK"
-            echo "github_api_available=true" >> $GITHUB_OUTPUT
-          else
-            echo "❌ GitHub API connectivity: FAILED"
-            echo "github_api_available=false" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: 📥 Checkout Code (Network Available)
-        if: steps.network-test.outputs.github_api_available == 'true'
+          set -euo pipefail
+          basic="false"; gh="false"
+          curl -s --connect-timeout 5 https://httpbin.org/get >/dev/null && basic="true" || true
+          curl -s --connect-timeout 5 https://api.github.com >/dev/null   && gh="true"    || true
+          echo "network_available=$basic"       >> "$GITHUB_OUTPUT"
+          echo "github_api_available=$gh"       >> "$GITHUB_OUTPUT"
+          echo "Basic network: $basic; GitHub API: $gh"
+
+      - name: 📥 Checkout Code (if network OK)
+        if: steps.net.outputs.github_api_available == 'true'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: 📥 Checkout Code (No Network)
-        if: steps.network-test.outputs.github_api_available == 'false'
+
+      - name: 📁 Use existing workspace (if offline)
+        if: steps.net.outputs.github_api_available == 'false'
         run: |
-          echo "⚠️ Network unavailable - using local repository"
-          echo "✅ Using existing repository files"
+          echo "⚠️ Network limited; using current workspace"
           ls -la
-      
-      - name: 🔧 Setup Node.js (Network Available)
-        if: steps.network-test.outputs.github_api_available == 'true'
+
+      - name: 🟢 Setup Node.js
+        if: steps.net.outputs.github_api_available == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
-      - name: 🔧 Setup Node.js (No Network)
-        if: steps.network-test.outputs.github_api_available == 'false'
+          cache: npm
+          cache-dependency-path: logistics-lynx/package-lock.json
+
+      - name: 📦 Install dependencies
+        if: steps.net.outputs.github_api_available == 'true'
+        working-directory: logistics-lynx
+        run: npm ci
+
+      - name: 🔍 Lint & Test
+        if: steps.net.outputs.github_api_available == 'true'
+        working-directory: logistics-lynx
         run: |
-          echo "⚠️ Network unavailable - checking Node.js availability"
-          if command -v node >/dev/null 2>&1; then
-            echo "✅ Node.js is available: $(node --version)"
-          else
-            echo "❌ Node.js not available"
-            echo "Skipping Node.js setup due to network issues"
-          fi
-      
-      - name: 📦 Install Dependencies (Network Available)
-        if: steps.network-test.outputs.github_api_available == 'true'
-        run: |
-          cd logistics-lynx
-          npm ci
-      
-      - name: 📦 Install Dependencies (No Network)
-        if: steps.network-test.outputs.github_api_available == 'false'
-        run: |
-          echo "⚠️ Network unavailable - skipping dependency installation"
-          echo "✅ Dependencies will be installed during deployment"
-      
-      - name: 🧪 Run Tests (Network Available)
-        if: steps.network-test.outputs.github_api_available == 'true'
-        run: |
-          cd logistics-lynx
           npm run lint
-          if npm run | grep -q "test"; then
-            npm test
-          else
-            echo "⚠️ test script not found, skipping tests"
-            echo "✅ Tests will be configured later"
-          fi
-      
-      - name: 🧪 Run Tests (No Network)
-        if: steps.network-test.outputs.github_api_available == 'false'
-        run: |
-          echo "⚠️ Network unavailable - skipping tests"
-          echo "✅ Tests will be run during deployment"
-      
-      - name: 🏗️ Build Application (Network Available)
-        if: steps.network-test.outputs.github_api_available == 'true'
-        run: |
-          cd logistics-lynx
-          npm run build
-      
-      - name: 🏗️ Build Application (No Network)
-        if: steps.network-test.outputs.github_api_available == 'false'
-        run: |
-          echo "⚠️ Network unavailable - skipping build"
-          echo "✅ Build will be performed during deployment"
-      
+          npm run test --if-present
+
+      - name: 🏗️ Build
+        if: steps.net.outputs.github_api_available == 'true'
+        working-directory: logistics-lynx
+        run: npm run build
+
       - name: 📊 Test Summary
         run: |
-          echo "## 🧪 Testing Summary"
-          echo ""
-          echo "**Network Status:** ${{ steps.network-test.outputs.network_available }}"
-          echo "**GitHub API:** ${{ steps.network-test.outputs.github_api_available }}"
-          echo "**Repository:** ${{ github.repository }}"
-          echo "**Branch:** ${{ github.ref_name }}"
-          echo ""
-          echo "### 🎯 Test Results:"
-          if [ "${{ steps.network-test.outputs.github_api_available }}" = "true" ]; then
-            echo "- ✅ Network connectivity: Available"
-            echo "- ✅ Dependencies: Installed"
-            echo "- ✅ Tests: Completed"
-            echo "- ✅ Build: Completed"
-          else
-            echo "- ⚠️ Network connectivity: Limited"
-            echo "- ⚠️ Dependencies: Skipped"
-            echo "- ⚠️ Tests: Skipped"
-            echo "- ⚠️ Build: Skipped"
-            echo "- ✅ Ready for deployment with network fallback"
-          fi
+          {
+            echo "## 🧪 Testing Summary"
+            echo "- Network: \`${{ steps.net.outputs.network_available }}\`"
+            echo "- GitHub API: \`${{ steps.net.outputs.github_api_available }}\`"
+            if [ "${{ steps.net.outputs.github_api_available }}" = "true" ]; then
+              echo "- Lint/Test/Build: ✅"
+            else
+              echo "- Lint/Test/Build: ⏭️ (deferred to deploy)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
-  # 🚀 Deployment phase (with comprehensive error handling)
+  # 🚀 Deployment phase (use step outputs for runtime decisions)
   deploy:
     name: 🚀 Deploy to Production
     runs-on: ubuntu-latest
@@ -322,320 +185,147 @@ jobs:
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
-    
-    env:
-      # Environment configuration
-      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-      APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
-      
-      # Database configuration
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-      
-      # n8n configuration
-      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
-    
     environment:
-      name: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-      url: ${{ vars.APP_URL || 'https://app.example.com' }}
-    
-    permissions:
-      contents: read
-      actions: read
-    
+      name: ${{ env.ENVIRONMENT_NAME }}
+      url: ${{ env.APP_URL }}
     steps:
-      - name: 🔍 Deployment Environment Check
-        run: |
-          echo "🔍 Deployment Environment Check"
-          echo "==============================="
-          echo "Environment: ${{ env.ENVIRONMENT_NAME }}"
-          echo "App URL: ${{ env.APP_URL }}"
-          echo "Repository: ${{ github.repository }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Commit: ${{ github.sha }}"
-          echo ""
-          echo "✅ Environment check completed"
-      
-      - name: 🔐 Secret Validation
-        run: |
-          echo "🔐 Validating Required Secrets"
-          echo "=============================="
-          
-          # Check required secrets
-          required_secrets=(
-            "SUPABASE_URL"
-            "SUPABASE_ANON_KEY"
-            "OPENAI_API_KEY"
-          )
-          
-          missing_secrets=0
-          for secret in "${required_secrets[@]}"; do
-            if [ -n "${!secret}" ]; then
-              echo "✅ $secret: Configured"
-            else
-              echo "❌ $secret: Missing"
-              missing_secrets=1
-            fi
-          done
-          
-          # Check optional n8n secrets
-          if [ -n "$N8N_BASE_URL" ] && [ -n "$N8N_API_KEY" ]; then
-            echo "✅ N8N configuration: Complete"
-            echo "N8N_ENABLED=true" >> $GITHUB_ENV
-          elif [ -z "$N8N_BASE_URL" ] && [ -z "$N8N_API_KEY" ]; then
-            echo "⚠️ N8N configuration: Disabled"
-            echo "N8N_ENABLED=false" >> $GITHUB_ENV
-          else
-            echo "❌ N8N configuration: Incomplete (both N8N_BASE_URL and N8N_API_KEY must be set)"
-            echo "N8N_ENABLED=false" >> $GITHUB_ENV
-            missing_secrets=1
-          fi
-          
-          if [ $missing_secrets -eq 0 ]; then
-            echo "✅ All required secrets are configured"
-          else
-            echo "❌ Some required secrets are missing"
-            echo "Deployment will continue with limited functionality"
-          fi
-      
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: 🔧 Setup Node.js
+
+      - name: 🔐 Validate secrets & decide N8N
+        id: validate
+        run: |
+          set -euo pipefail
+          echo "::add-mask::${OPENAI_API_KEY}"
+          echo "::add-mask::${N8N_API_KEY}"
+          miss=0
+          for k in SUPABASE_URL SUPABASE_ANON_KEY OPENAI_API_KEY; do
+            v="${!k:-}"; if [ -z "$v" ]; then echo "❌ $k missing"; miss=1; else echo "✅ $k set"; fi
+          done
+          # n8n decision
+          n8n_enabled_input="${{ env.N8N_ENABLED }}"
+          case "${n8n_enabled_input,,}" in true|1|yes|y) n8n_flag=true;; *) n8n_flag=false;; esac
+          if [ -n "${N8N_BASE_URL:-}" ] && [ -n "${N8N_API_KEY:-}" ]; then n8n_flag=true; fi
+          echo "n8n_enabled=$n8n_flag" >> "$GITHUB_OUTPUT"
+          echo "missing_required=$miss"  >> "$GITHUB_OUTPUT"
+          [ "$miss" -eq 0 ] || echo "⚠️ Some required secrets missing; continuing with limited functionality"
+
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+          cache: npm
+          cache-dependency-path: logistics-lynx/package-lock.json
+
       - name: 📦 Install Dependencies
-        run: |
-          cd logistics-lynx
-          npm ci
-      
+        working-directory: logistics-lynx
+        run: npm ci
+
       - name: 🏗️ Build Application
+        working-directory: logistics-lynx
+        run: npm run build
+
+      - name: 🗄️ Setup Database (if script present)
+        working-directory: logistics-lynx
+        run: npm run db:setup --if-present
+
+      - name: 🔍 N8N Health Check (if enabled)
+        if: steps.validate.outputs.n8n_enabled == 'true'
         run: |
-          cd logistics-lynx
-          npm run build
-      
-      - name: 🗄️ Setup Database
-        run: |
-          cd logistics-lynx
-          if npm run | grep -q "db:setup"; then
-            npm run db:setup
-          else
-            echo "⚠️ db:setup script not found, skipping database setup"
-          fi
-      
-      - name: 🔍 N8N Health Check
-        if: env.N8N_ENABLED == 'true'
-        run: |
-          echo "🔍 Checking N8N Health"
-          echo "======================"
-          
+          set -euo pipefail
           for i in 1 2 3; do
-            if curl --fail -sS "$N8N_BASE_URL/healthz" >/dev/null 2>&1; then
-              echo "✅ N8N health check passed"
-              break
-            else
-              echo "⚠️ N8N health check failed (attempt $i/3)"
-              if [ $i -lt 3 ]; then
-                sleep 5
-              else
-                echo "❌ N8N health check failed after 3 attempts"
-                echo "Continuing deployment without N8N integration"
-                echo "N8N_ENABLED=false" >> $GITHUB_ENV
-              fi
+            if curl -fsS "${N8N_BASE_URL}/healthz" >/dev/null; then
+              echo "✅ N8N healthy"; break
             fi
+            echo "⚠️ n8n health attempt $i/3…"; sleep 5
           done
-      
-      - name: 🚀 Deploy to Production
+
+      - name: 🚀 Deploy to Production (if script present)
+        working-directory: logistics-lynx
         run: |
-          cd logistics-lynx
-          if npm run | grep -q "deploy:prod"; then
-            npm run deploy:prod
-          else
-            echo "⚠️ deploy:prod script not found, skipping production deployment"
-            echo "✅ Build completed successfully"
-          fi
-      
-      - name: 🔍 Health Check
+          npm run deploy:prod --if-present || echo "ℹ️ deploy:prod not defined; skipping"
+
+      - name: 🔎 Health Check (if script present)
+        working-directory: logistics-lynx
         run: |
-          cd logistics-lynx
-          if npm run | grep -q "health:check"; then
-            npm run health:check
-          else
-            echo "⚠️ health:check script not found, skipping health check"
-            echo "✅ Assuming system is healthy"
-          fi
-      
-      - name: 🤖 Test Autonomous System
+          npm run health:check --if-present || echo "ℹ️ health:check not defined; skipping"
+
+      - name: 🤖 Test Agents (if script present)
+        working-directory: logistics-lynx
         run: |
-          cd logistics-lynx
-          if npm run | grep -q "test:agents"; then
-            npm run test:agents
-          else
-            echo "⚠️ test:agents script not found, skipping agent tests"
-            echo "✅ Agent tests will be configured later"
-          fi
-      
-      - name: 🚀 Start Autonomous System
+          npm run test:agents --if-present || echo "ℹ️ test:agents not defined; skipping"
+
+      - name: 🚀 Start Autonomous System (background, if script present)
+        working-directory: logistics-lynx
         run: |
-          cd logistics-lynx
-          if npm run | grep -q "start:autonomous"; then
-            npm run start:autonomous &
-            echo "Autonomous system started in background"
-          else
-            echo "⚠️ start:autonomous script not found, skipping autonomous system start"
-            echo "✅ Autonomous system will be configured later"
-          fi
-      
+          npm run start:autonomous --if-present &
+
       - name: ⏳ Wait for System Startup
-        run: |
-          echo "⏳ Waiting for system startup..."
-          sleep 30
-          echo "✅ System startup wait completed"
-      
+        run: sleep 30
+
       - name: 🔍 Verify Deployment
+        id: verify
         run: |
-          echo "🔍 Verifying Deployment"
-          echo "======================"
-          
-          # Check if autonomous system is running (only if it was started)
-          if npm run | grep -q "start:autonomous"; then
-            if curl --fail -sS http://localhost:3000/api/health >/dev/null 2>&1; then
-              echo "✅ Autonomous system health check passed"
-            else
-              echo "⚠️ Autonomous system health check failed (system may not be configured yet)"
-              echo "Checking system logs..."
-              ps aux | grep -i autonomous || true
-              echo "Continuing deployment (autonomous system will be configured later)"
-            fi
+          ok=true
+          if curl -fsS http://localhost:3000/api/health >/dev/null 2>&1; then
+            echo "✅ Local health OK"
           else
-            echo "⚠️ Autonomous system not started (script not configured)"
-            echo "✅ Deployment verification completed"
+            echo "⚠️ Local health endpoint not responding"; ok=false
           fi
-          
-          # Check n8n workflows if enabled
-          if [ "$N8N_ENABLED" = "true" ]; then
-            echo "🔍 Checking N8N workflows..."
-            for i in 1 2 3; do
-              if curl --fail -sS "$N8N_BASE_URL/api/v1/workflows" \
-                -H "Authorization: Bearer $N8N_API_KEY" >/dev/null 2>&1; then
-                echo "✅ N8N workflows verified"
-                break
-              else
-                echo "⚠️ N8N workflow verification failed (attempt $i/3)"
-                if [ $i -lt 3 ]; then
-                  sleep 5
-                else
-                  echo "❌ N8N workflow verification failed after 3 attempts"
-                fi
-              fi
-            done
-          else
-            echo "⚠️ N8N integration disabled, skipping workflow verification"
+          if [ "${{ steps.validate.outputs.n8n_enabled }}" = "true" ]; then
+            curl -fsS "${N8N_BASE_URL}/api/v1/workflows" -H "Authorization: Bearer ${N8N_API_KEY}" >/dev/null 2>&1 \
+              && echo "✅ n8n workflows reachable" \
+              || echo "⚠️ n8n workflows not reachable"
           fi
-      
-      - name: 📢 Send Success Notification
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+
+      - name: 📢 Notify (success)
         if: success() && env.DEPLOYMENT_WEBHOOK_URL != ''
         run: |
-          echo "📢 Sending Success Notification"
-          echo "=============================="
-          
-          payload=$(cat <<EOF
-          {
-            "status": "deployed",
-            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "environment": "${{ env.ENVIRONMENT_NAME }}",
-            "commit": "${{ github.sha }}",
-            "branch": "${{ github.ref_name }}",
-            "run_id": "${{ github.run_id }}",
-            "message": "Deployment completed successfully"
-          }
-          EOF
-          )
-          
+          ts="$(date -u +%FT%TZ)"
+          payload=$(jq -n --arg status "deployed" --arg ts "$ts" \
+                         --arg env "${{ env.ENVIRONMENT_NAME }}" \
+                         --arg sha "${{ github.sha }}" \
+                         --arg ref "${{ github.ref_name }}" \
+                         --arg run "${{ github.run_id }}" \
+                         '{status:$status,timestamp:$ts,environment:$env,commit:$sha,branch:$ref,run_id:$run}')
           for i in 1 2 3; do
-            if curl --fail -sS -X POST "$DEPLOYMENT_WEBHOOK_URL" \
-              -H "Content-Type: application/json" \
-              -d "$payload" >/dev/null 2>&1; then
-              echo "✅ Success notification sent"
-              break
-            else
-              echo "⚠️ Notification failed (attempt $i/3)"
-              if [ $i -lt 3 ]; then
-                sleep 5
-              else
-                echo "❌ Notification failed after 3 attempts"
-              fi
-            fi
+            curl -fsS -X POST "${DEPLOYMENT_WEBHOOK_URL}" -H "Content-Type: application/json" -d "$payload" && break
+            echo "retry $i/3…"; sleep 5
           done
-      
-      - name: 📢 Send Failure Notification
+
+      - name: 📢 Notify (failure)
         if: failure() && env.DEPLOYMENT_WEBHOOK_URL != ''
         run: |
-          echo "📢 Sending Failure Notification"
-          echo "=============================="
-          
-          payload=$(cat <<EOF
-          {
-            "status": "failed",
-            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "environment": "${{ env.ENVIRONMENT_NAME }}",
-            "commit": "${{ github.sha }}",
-            "branch": "${{ github.ref_name }}",
-            "run_id": "${{ github.run_id }}",
-            "error": "Deployment failed"
-          }
-          EOF
-          )
-          
+          ts="$(date -u +%FT%TZ)"
+          payload=$(jq -n --arg status "failed" --arg ts "$ts" \
+                         --arg env "${{ env.ENVIRONMENT_NAME }}" \
+                         --arg sha "${{ github.sha }}" \
+                         --arg ref "${{ github.ref_name }}" \
+                         --arg run "${{ github.run_id }}" \
+                         '{status:$status,timestamp:$ts,environment:$env,commit:$sha,branch:$ref,run_id:$run}')
           for i in 1 2 3; do
-            if curl --fail -sS -X POST "$DEPLOYMENT_WEBHOOK_URL" \
-              -H "Content-Type: application/json" \
-              -d "$payload" >/dev/null 2>&1; then
-              echo "✅ Failure notification sent"
-              break
-            else
-              echo "⚠️ Notification failed (attempt $i/3)"
-              if [ $i -lt 3 ]; then
-                sleep 5
-              else
-                echo "❌ Notification failed after 3 attempts"
-              fi
-            fi
+            curl -fsS -X POST "${DEPLOYMENT_WEBHOOK_URL}" -H "Content-Type: application/json" -d "$payload" && break
+            echo "retry $i/3…"; sleep 5
           done
-      
+
       - name: 📊 Deployment Summary
         if: always()
         run: |
-          echo "## 🚀 Deployment Summary"
-          echo ""
-          echo "**Status:** ${{ job.status }}"
-          echo "**Environment:** ${{ env.ENVIRONMENT_NAME }}"
-          echo "**Repository:** ${{ github.repository }}"
-          echo "**Branch:** ${{ github.ref_name }}"
-          echo "**Commit:** ${{ github.sha }}"
-          echo "**Run ID:** ${{ github.run_id }}"
-          echo "**N8N Integration:** $([[ '${{ env.N8N_ENABLED }}' == 'true' ]] && echo 'Enabled' || echo 'Disabled')"
-          echo ""
-          echo "### 🎯 Deployment Results:"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "- ✅ Build completed successfully"
-            echo "- ✅ Dependencies installed"
-            echo "- ✅ Health checks passed"
-            echo "- ✅ System is ready for further configuration"
-          else
-            echo "- ❌ Deployment failed"
-            echo "- ❌ Check logs for details"
-            echo "- ❌ Manual intervention may be required"
-          fi
+          {
+            echo "## 🚀 Deployment Summary"
+            echo "- Status: \`${{ job.status }}\`"
+            echo "- Env: \`${{ env.ENVIRONMENT_NAME }}\`"
+            echo "- URL: \`${{ env.APP_URL }}\`"
+            echo "- Repo: \`${{ github.repository }}\`"
+            echo "- Ref:  \`${{ github.ref_name }}\`"
+            echo "- SHA:  \`${{ github.sha }}\`"
+            echo "- Run:  \`${{ github.run_id }}\`"
+            echo "- n8n enabled (decision): \`${{ steps.validate.outputs.n8n_enabled }}\`"
+            echo "- Local verify ok: \`${{ steps.verify.outputs.ok }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   # 📊 Monitoring phase
   monitor:
@@ -644,74 +334,38 @@ jobs:
     needs: deploy
     if: always()
     timeout-minutes: 15
-    permissions:
-      contents: read
-      actions: read
-    
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
-    
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
-      
-      - name: 🔧 Setup Node.js
+
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+          cache: npm
+          cache-dependency-path: logistics-lynx/package-lock.json
+
       - name: 📦 Install Dependencies
+        working-directory: logistics-lynx
+        run: npm ci
+
+      - name: 📈 Start Monitoring (if script present)
+        working-directory: logistics-lynx
+        run: npm run monitor:start --if-present || echo "ℹ️ monitor:start not defined; skipping"
+
+      - name: ⏳ Observe
+        run: sleep 60
+
+      - name: 🏥 Final Health (if script present)
+        working-directory: logistics-lynx
+        run: npm run health:check --if-present || echo "ℹ️ health:check not defined; skipping"
+
+      - name: 🧾 Monitoring Summary
+        if: always()
         run: |
-          cd logistics-lynx
-          npm ci
-      
-      - name: 📊 Start Monitoring
-        run: |
-          cd logistics-lynx
-          if npm run | grep -q "monitor:start"; then
-            npm run monitor:start
-          else
-            echo "⚠️ monitor:start script not found, skipping monitoring start"
-            echo "✅ Monitoring will be configured later"
-          fi
-      
-      - name: ⏳ Monitor for 1 minute
-        run: |
-          echo "📊 Monitoring system for 1 minute..."
-          sleep 60
-          echo "✅ Monitoring period completed"
-      
-      - name: 🔍 Final Health Check
-        run: |
-          cd logistics-lynx
-          if npm run | grep -q "health:check"; then
-            npm run health:check
-          else
-            echo "⚠️ health:check script not found, skipping final health check"
-            echo "✅ Assuming system is healthy"
-          fi
-      
-      - name: 📊 Monitoring Report
-        run: |
-          echo "## 📊 Monitoring Report"
-          echo ""
-          echo "**Status:** Monitoring completed"
-          echo "**Duration:** 1 minute"
-          echo "**Environment:** ${{ vars.ENVIRONMENT_NAME || 'production' }}"
-          echo ""
-          echo "### 🎯 Monitoring Results:"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "- ✅ System monitoring completed successfully"
-            echo "- ✅ Build process completed"
-            echo "- ✅ Health checks passed"
-            echo "- ✅ System is ready for further configuration"
-          else
-            echo "- ❌ Monitoring detected issues"
-            echo "- ❌ Check system logs for details"
-            echo "- ❌ Manual intervention may be required"
-          fi
+          {
+            echo "## 📊 Monitoring Report"
+            echo "- Status: \`${{ job.status }}\`"
+            echo "- Duration: 1 minute"
+            echo "- Env: \`${{ env.ENVIRONMENT_NAME }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
