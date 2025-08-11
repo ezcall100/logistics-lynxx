@@ -4,6 +4,9 @@
 # yaml-language-server: disableContextAccess: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
+# yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableContextAccess: true
 # GitHub Actions workflow for Autonomous TMS Deployment
 # This workflow handles testing, deployment, and monitoring of the autonomous TMS system
 # 
@@ -12,13 +15,14 @@
 # GitHub Actions properly supports ${{ vars.VARIABLE_NAME }} and ${{ secrets.SECRET_NAME }} syntax in env sections
 # The workflow will execute correctly despite these warnings
 # 
-# Note: We avoid using the || '' fallback syntax as it can cause YAML language server issues
-# Instead, we handle optional secrets through conditional logic in the workflow steps
+# Note: We use fallback values (|| 'default') for optional variables to prevent workflow failures
+# when variables are not set in GitHub repository settings
 # 
 # YAML Language Server Configuration:
 # - Disable context access warnings for GitHub Actions variables and secrets
 # - These warnings are false positives and can be safely ignored
 # - The workflow uses the correct GitHub Actions syntax throughout
+# - All variable references are properly formatted for GitHub Actions execution
 name: Autonomous TMS Deployment
 
 on:
@@ -74,8 +78,8 @@ jobs:
     # Map repo/org Variables & Secrets → env once
     env:
       # UI/env info
-      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME }}
-      APP_URL: ${{ vars.APP_URL }}
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
+      APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
       
       # Database
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -83,15 +87,15 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       
       # n8n + webhooks
-      N8N_ENABLED: ${{ vars.N8N_ENABLED }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL }}
+      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
     
     # Environment block uses vars.* directly
     environment:
-      name: ${{ vars.ENVIRONMENT_NAME == '' && 'production' || vars.ENVIRONMENT_NAME }}
-      url: ${{ vars.APP_URL }}
+      name: ${{ vars.ENVIRONMENT_NAME || 'production' }}
+      url: ${{ vars.APP_URL || 'https://app.example.com' }}
     
     permissions:
       contents: read
@@ -332,9 +336,9 @@ jobs:
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       
       # n8n + webhooks
-      N8N_ENABLED: ${{ vars.N8N_ENABLED }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
     
     steps:
       - name: Checkout code
