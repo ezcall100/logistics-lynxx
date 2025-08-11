@@ -173,9 +173,6 @@ jobs:
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
-    environment:
-      name: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-      url: ${{ vars.APP_URL || 'https://app.example.com' }}
 
     steps:
       - name: 📦 Checkout
@@ -183,34 +180,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Resolve configuration using contexts safely (no ${{ env.* }} in schema-checked places)
-      # Context access is safe here with default values - YAML LSP warnings can be ignored
+      # Resolve configuration into env and step outputs (no expressions used in job-level env/if)
       - name: 🔧 Resolve configuration
         id: cfg
-        env:
-          VAR_ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-          VAR_APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
-          VAR_N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-          VAR_N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-          VAR_DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
-          SEC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-          SEC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-          SEC_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-          SEC_N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
         run: |
           set -euo pipefail
-          ENVIRONMENT_NAME="${VAR_ENVIRONMENT_NAME:-production}"
-          APP_URL="${VAR_APP_URL:-https://app.example.com}"
-          N8N_ENABLED_RAW="${VAR_N8N_ENABLED:-false}"
-          N8N_BASE_URL="${VAR_N8N_BASE_URL:-}"
-          DEPLOYMENT_WEBHOOK_URL="${VAR_DEPLOYMENT_WEBHOOK_URL:-}"
 
-          SUPABASE_URL="${SEC_SUPABASE_URL:-}"
-          SUPABASE_ANON_KEY="${SEC_SUPABASE_ANON_KEY:-}"
-          OPENAI_API_KEY="${SEC_OPENAI_API_KEY:-}"
-          N8N_API_KEY="${SEC_N8N_API_KEY:-}"
+          ENVIRONMENT_NAME="${{ vars.ENVIRONMENT_NAME || 'production' }}"
+          APP_URL="${{ vars.APP_URL || 'https://app.example.com' }}"
+          N8N_ENABLED_RAW="${{ vars.N8N_ENABLED || 'false' }}"
+          N8N_BASE_URL="${{ vars.N8N_BASE_URL || '' }}"
+          DEPLOYMENT_WEBHOOK_URL="${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}"
 
-          # Normalize boolean-ish input
+          SUPABASE_URL="${{ secrets.SUPABASE_URL || '' }}"
+          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY || '' }}"
+          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY || '' }}"
+          N8N_API_KEY="${{ secrets.N8N_API_KEY || '' }}"
+
           case "${N8N_ENABLED_RAW,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
           if [[ -n "$N8N_BASE_URL" && -n "$N8N_API_KEY" ]]; then N8N_ENABLED=true; fi
 
@@ -227,6 +213,9 @@ jobs:
           } >> "$GITHUB_ENV"
 
           echo "n8n_enabled=$N8N_ENABLED" >> "$GITHUB_OUTPUT"
+          echo "deployment_webhook_url=$DEPLOYMENT_WEBHOOK_URL" >> "$GITHUB_OUTPUT"
+          echo "env_name=$ENVIRONMENT_NAME" >> "$GITHUB_OUTPUT"
+          echo "app_url=$APP_URL" >> "$GITHUB_OUTPUT"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -294,7 +283,7 @@ jobs:
           echo "ok=$ok" >> "$GITHUB_OUTPUT"
 
       - name: 📢 Notify (success)
-        if: ${{ success() && (vars.DEPLOYMENT_WEBHOOK_URL != '') }}
+        if: ${{ success() && (steps.cfg.outputs.deployment_webhook_url != '') }}
         run: |
           ts="$(date -u +%FT%TZ)"
           cat > payload.json <<JSON
@@ -315,7 +304,7 @@ jobs:
           done
 
       - name: 📢 Notify (failure)
-        if: ${{ failure() && (vars.DEPLOYMENT_WEBHOOK_URL != '') }}
+        if: ${{ failure() && (steps.cfg.outputs.deployment_webhook_url != '') }}
         run: |
           ts="$(date -u +%FT%TZ)"
           cat > payload.json <<JSON
@@ -387,9 +376,10 @@ jobs:
       - name: 🧾 Monitoring Summary
         if: always()
         run: |
+          ENVIRONMENT_NAME="${{ vars.ENVIRONMENT_NAME || 'production' }}"
           {
             echo "## 📊 Monitoring Report"
             echo "- Status: \`${{ job.status }}\`"
             echo "- Duration: 1 minute"
-            echo "- Env: \`${ENVIRONMENT_NAME:-production}\`"
+            echo "- Env: \`${ENVIRONMENT_NAME}\`"
           } >> "$GITHUB_STEP_SUMMARY"
