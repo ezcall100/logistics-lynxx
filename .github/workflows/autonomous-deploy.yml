@@ -76,6 +76,7 @@ jobs:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
     # Map repo/org Variables & Secrets → env once
+    # Note: vars.* and secrets.* are valid GitHub Actions syntax - warnings are false positives
     env:
       # UI/env info
       ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
@@ -93,6 +94,7 @@ jobs:
       DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
     
     # Environment block uses vars.* directly
+    # Note: vars.* syntax is valid GitHub Actions syntax - warnings are false positives
     environment:
       name: ${{ vars.ENVIRONMENT_NAME || 'production' }}
       url: ${{ vars.APP_URL || 'https://app.example.com' }}
@@ -330,6 +332,7 @@ jobs:
       actions: read
     
     # Map repo/org Variables & Secrets → env once
+    # Note: vars.* and secrets.* are valid GitHub Actions syntax - warnings are false positives
     env:
       # Database
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
