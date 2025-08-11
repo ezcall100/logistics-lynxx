@@ -4,6 +4,7 @@
 # yaml-language-server: disableAdditionalProperties: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
+
 name: 🔒 Self-Contained Test (No Git)
 
 on:
@@ -14,12 +15,16 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   self-contained-test:
     name: 🔒 Self-Contained Validation
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    
+
     steps:
       - name: 🔍 System Information
         run: |
@@ -28,42 +33,39 @@ jobs:
           echo "OS: $(uname -a)"
           echo "User: $(whoami)"
           echo "Working Directory: $(pwd)"
-          echo "Date: $(date)"
+          echo "Date: $(date -Is)"
           echo "GitHub Event: ${{ github.event_name }}"
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
           echo ""
           echo "✅ System information collected"
-      
+
       - name: 🔍 Current Directory Analysis
         run: |
           echo "🔍 Current Directory Analysis"
           echo "============================"
-          
-          # Check current directory structure
           echo "📁 Current directory contents:"
           ls -la
-          
-          # Check if we have any files at all
-          file_count=$(find . -type f -name "*.yml" -o -name "*.json" -o -name "*.md" | wc -l)
-          echo "📊 Total files found: $file_count"
-          
-          if [ $file_count -gt 0 ]; then
+          echo ""
+
+          # Count common file types safely
+          file_count=$(find . -type f \( -name "*.yml" -o -name "*.yaml" -o -name "*.json" -o -name "*.md" \) | wc -l | tr -d ' ')
+          echo "📊 Total files found (yml,yaml,json,md): $file_count"
+
+          if [ "$file_count" -gt 0 ]; then
             echo "✅ Files are present in the workspace"
           else
             echo "❌ No files found in the workspace"
           fi
-          
+
           echo ""
           echo "✅ Directory analysis completed"
-      
+
       - name: 🔍 Environment Variables
         run: |
           echo "🔍 Environment Variables"
           echo "======================"
-          
-          # Check GitHub environment variables
           echo "📋 GitHub Context:"
           echo "- Event: ${{ github.event_name }}"
           echo "- Repository: ${{ github.repository }}"
@@ -71,160 +73,109 @@ jobs:
           echo "- Commit: ${{ github.sha }}"
           echo "- Run ID: ${{ github.run_id }}"
           echo "- Actor: ${{ github.actor }}"
-          
-          # Check system environment
           echo ""
           echo "📋 System Environment:"
           echo "- HOME: $HOME"
-          echo "- PWD: $PWD"
-          echo "- USER: $USER"
+          echo "- PWD:  $PWD"
+          echo "- USER: ${USER:-unknown}"
           echo "- PATH: $PATH"
-          
           echo ""
           echo "✅ Environment variables checked"
-      
+
       - name: 🔍 Network Connectivity Test
         run: |
           echo "🔍 Network Connectivity Test"
           echo "==========================="
-          
-          # Test basic connectivity
-          echo "🌐 Testing network connectivity..."
-          
-          # Test DNS resolution
-          if nslookup github.com >/dev/null 2>&1; then
+
+          echo "📡 DNS resolution (getent)"
+          if getent hosts github.com >/dev/null 2>&1; then
             echo "✅ DNS resolution: OK"
           else
             echo "❌ DNS resolution: FAILED"
           fi
-          
-          # Test basic HTTP connectivity
-          if curl -s --connect-timeout 5 https://httpbin.org/get >/dev/null 2>&1; then
+
+          echo ""
+          echo "🌐 Basic HTTP connectivity (httpbin)"
+          if curl -fsS --connect-timeout 5 https://httpbin.org/get >/dev/null 2>&1; then
             echo "✅ Basic HTTP connectivity: OK"
           else
             echo "❌ Basic HTTP connectivity: FAILED"
           fi
-          
-          # Test GitHub API connectivity
-          if curl -s --connect-timeout 5 https://api.github.com >/dev/null 2>&1; then
+
+          echo ""
+          echo "🔒 GitHub API reachability"
+          if curl -fsS --connect-timeout 5 https://api.github.com/zen >/dev/null 2>&1; then
             echo "✅ GitHub API connectivity: OK"
           else
             echo "❌ GitHub API connectivity: FAILED"
           fi
-          
-          # Test GitHub.com connectivity
-          if curl -s --connect-timeout 5 https://github.com >/dev/null 2>&1; then
+
+          echo ""
+          echo "🔒 GitHub.com reachability"
+          if curl -fsS --connect-timeout 5 https://github.com >/dev/null 2>&1; then
             echo "✅ GitHub.com connectivity: OK"
           else
             echo "❌ GitHub.com connectivity: FAILED"
           fi
-          
+
           echo ""
           echo "✅ Network connectivity test completed"
-      
+
       - name: 🔍 Available Tools
         run: |
           echo "🔍 Available Tools"
           echo "=================="
-          
-          # Check for common tools
           tools=("python3" "node" "npm" "git" "curl" "wget" "jq" "yq")
-          
           for tool in "${tools[@]}"; do
             if command -v "$tool" >/dev/null 2>&1; then
-              version=$("$tool" --version 2>/dev/null | head -1 || echo "version unknown")
-              echo "✅ $tool: $version"
+              v="$("$tool" --version 2>/dev/null | head -1 || echo "version unknown")"
+              echo "✅ $tool: $v"
             else
               echo "❌ $tool: not available"
             fi
           done
-          
           echo ""
           echo "✅ Available tools checked"
-      
+
       - name: 🔍 File System Permissions
         run: |
           echo "🔍 File System Permissions"
           echo "=========================="
-          
-          # Check current directory permissions
           echo "📁 Current directory permissions:"
           ls -ld .
-          
-          # Check if we can read files
           echo ""
-          echo "📋 File read permissions:"
-          if [ -r . ]; then
-            echo "✅ Can read current directory"
-          else
-            echo "❌ Cannot read current directory"
-          fi
-          
-          # Check if we can write files
+          echo "📋 Read permission:"
+          [ -r . ] && echo "✅ Can read current directory" || echo "❌ Cannot read current directory"
           echo ""
-          echo "📋 File write permissions:"
-          if [ -w . ]; then
-            echo "✅ Can write to current directory"
-          else
-            echo "❌ Cannot write to current directory"
-          fi
-          
-          # Check if we can execute commands
+          echo "📋 Write permission:"
+          [ -w . ] && echo "✅ Can write to current directory" || echo "❌ Cannot write to current directory"
           echo ""
-          echo "📋 Execute permissions:"
-          if [ -x . ]; then
-            echo "✅ Can execute in current directory"
-          else
-            echo "❌ Cannot execute in current directory"
-          fi
-          
+          echo "📋 Execute/search permission:"
+          [ -x . ] && echo "✅ Can execute/search in current directory" || echo "❌ Cannot execute/search in current directory"
           echo ""
           echo "✅ File system permissions checked"
-      
+
       - name: 📊 Self-Contained Test Summary
+        if: always()
         run: |
           echo "## 🔒 Self-Contained Test Results"
           echo ""
           echo "**Status:** Self-contained test completed"
           echo "**Git Operations:** ❌ Not attempted"
           echo "**External Actions:** ❌ Not used"
-          echo "**Repository:** ${{ github.repository }}"
-          echo "**Branch:** ${{ github.ref_name }}"
-          echo "**Commit:** ${{ github.sha }}"
-          echo "**Time:** $(date)"
+          echo "**Repository:** \`${{ github.repository }}\`"
+          echo "**Branch:** \`${{ github.ref_name }}\`"
+          echo "**Commit:** \`${{ github.sha }}\`"
+          echo "**Time:** \`$(date -Is)\`"
           echo ""
-          echo "### 🎯 What Was Tested:"
-          echo "- ✅ System information collected"
-          echo "- ✅ Current directory analyzed"
-          echo "- ✅ Environment variables checked"
-          echo "- ✅ Network connectivity tested"
-          echo "- ✅ Available tools verified"
-          echo "- ✅ File system permissions checked"
+          echo "### 🎯 What Was Tested"
+          echo "- System information collected"
+          echo "- Current directory analyzed"
+          echo "- Environment variables checked"
+          echo "- Network connectivity tested"
+          echo "- Available tools verified"
+          echo "- File system permissions checked"
           echo ""
-          echo "### 🔧 Key Findings:"
-          echo "- System environment is functional"
-          echo "- Basic tools are available"
-          echo "- Network connectivity is limited"
-          echo "- File system permissions are working"
-          echo ""
-          echo "### 💡 Network Issue Status:"
-          echo "- **Problem:** GitHub Actions cannot access external resources"
-          echo "- **Impact:** CI/CD workflows are blocked"
-          echo "- **Solution:** Use local development or GitHub Codespaces"
-          echo ""
-          echo "### 🚀 Immediate Actions:"
-          echo "1. **Continue development** - Your system is functional"
-          echo "2. **Use local development** - npm install && npm run dev"
-          echo "3. **Use GitHub Codespaces** - For cloud development"
-          echo "4. **Wait for network issues to resolve** - For CI/CD"
-          echo ""
-          echo "### 📞 Support:"
-          echo "- Check GitHub status: https://www.githubstatus.com/"
-          echo "- Use local development: npm install && npm run dev"
-          echo "- Use GitHub Codespaces for cloud development"
-          echo ""
-          echo "### 🎯 Success Criteria:"
-          echo "- ✅ This workflow completed successfully"
-          echo "- ✅ No external dependencies required"
-          echo "- ✅ System environment validated"
-          echo "- ✅ Ready for development"
+          echo "### 💡 Notes"
+          echo "- This workflow avoids git operations and external actions"
+          echo "- Suitable for quick runner diagnostics without dependencies"
