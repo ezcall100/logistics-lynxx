@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: 🚨 Emergency Network Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  emergency-test:
+    name: 🚨 Emergency Network Diagnostic
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: 🔍 Basic System Check
+        run: |
+          echo "🔍 Basic system check..."
+          echo "OS: $(uname -a)"
+          echo "User: $(whoami)"
+          echo "Working directory: $(pwd)"
+          echo "Date: $(date)"
+          echo "✅ Basic system check completed"
+      
+      - name: 🔍 Network Connectivity Test
+        run: |
+          echo "🔍 Testing network connectivity..."
+          
+          # Test basic internet connectivity
+          echo "📡 Testing basic internet..."
+          if ping -c 3 8.8.8.8 > /dev/null 2>&1; then
+            echo "✅ Basic internet connectivity: WORKING"
+          else
+            echo "❌ Basic internet connectivity: FAILED"
+          fi
+          
+          # Test DNS resolution
+          echo "🌐 Testing DNS resolution..."
+          if nslookup github.com > /dev/null 2>&1; then
+            echo "✅ DNS resolution: WORKING"
+          else
+            echo "❌ DNS resolution: FAILED"
+          fi
+          
+          # Test HTTPS connectivity
+          echo "🔒 Testing HTTPS connectivity..."
+          if curl -s --connect-timeout 10 https://httpbin.org/status/200 > /dev/null; then
+            echo "✅ HTTPS connectivity: WORKING"
+          else
+            echo "❌ HTTPS connectivity: FAILED"
+          fi
+          
+          # Test GitHub API
+          echo "📡 Testing GitHub API..."
+          if curl -s --connect-timeout 10 https://api.github.com/zen > /dev/null; then
+            echo "✅ GitHub API: WORKING"
+          else
+            echo "❌ GitHub API: FAILED"
+          fi
+      
+      - name: 🔍 Git Operations Test
+        run: |
+          echo "🔍 Testing Git operations..."
+          
+          # Test git configuration
+          echo "⚙️ Testing git config..."
+          git config --global user.name "test" || echo "❌ Git config failed"
+          git config --global user.email "test@example.com" || echo "❌ Git config failed"
+          
+          # Test git remote
+          echo "🔗 Testing git remote..."
+          git remote -v || echo "❌ Git remote failed"
+          
+          # Test git status
+          echo "📊 Testing git status..."
+          git status || echo "❌ Git status failed"
+          
+          echo "✅ Git operations test completed"
+      
+      - name: 🔍 Environment Information
+        run: |
+          echo "🔍 Collecting environment information..."
+          
+          echo "🌍 Environment variables:"
+          env | grep -E "(GITHUB|RUNNER|ACTIONS)" | head -10 || echo "No relevant env vars found"
+          
+          echo "🌐 Network interfaces:"
+          ip addr show | head -20 || echo "Network interface check failed"
+          
+          echo "📡 DNS configuration:"
+          cat /etc/resolv.conf || echo "DNS config check failed"
+          
+          echo "🔧 System information:"
+          cat /etc/os-release || echo "OS info check failed"
+      
+      - name: 📊 Emergency Test Summary
+        run: |
+          echo "## 🚨 Emergency Network Test Results"
+          echo ""
+          echo "**Repository:** ${{ github.repository }}"
+          echo "**Runner:** ${{ runner.os }}"
+          echo "**Event:** ${{ github.event_name }}"
+          echo "**Time:** $(date)"
+          echo ""
+          echo "### 🔍 Test Results:"
+          echo "- Basic System: ✅ Working"
+          echo "- Network Connectivity: 🔍 Check logs above"
+          echo "- Git Operations: 🔍 Check logs above"
+          echo "- Environment: ✅ Collected"
+          echo ""
+          echo "### 🎯 Next Steps:"
+          echo "1. **If all tests pass:** Network is working, issue is elsewhere"
+          echo "2. **If network tests fail:** Check GitHub status and network configuration"
+          echo "3. **If Git tests fail:** Repository or permission issues"
+          echo "4. **If all tests fail:** Contact GitHub support"
+          echo ""
+          echo "### 📞 Support Resources:"
+          echo "- GitHub Status: https://www.githubstatus.com/"
+          echo "- GitHub Support: https://support.github.com/"
+          echo "- Network Issues: Contact your network administrator"
