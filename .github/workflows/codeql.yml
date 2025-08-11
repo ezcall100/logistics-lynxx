@@ -13,6 +13,7 @@ on:
 permissions:
   contents: read
   security-events: write
+  actions: read
 
 jobs:
   analyze:
@@ -21,23 +22,17 @@ jobs:
     timeout-minutes: 30
     
     steps:
-      - name: 🛡️ Harden Runner
-        uses: step-security/harden-runner@v2
-        with:
-          allowed-endpoints: |
-            github.com:443
-            api.github.com:443
-            *.githubusercontent.com:443
-            *.github.com:443
-            registry.npmjs.org:443
-            raw.githubusercontent.com:443
-            objects.githubusercontent.com:443
-            codeload.github.com:443
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: true
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: 🔍 Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -45,8 +40,11 @@ jobs:
           languages: javascript
           queries: security-extended,security-and-quality
       
-      - name: 🔍 Autobuild
-        uses: github/codeql-action/autobuild@v3
+      # If you build the project (recommended for better results)
+      - name: Install & build
+        run: |
+          npm ci
+          npm run build --if-present
       
       - name: 🔍 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
