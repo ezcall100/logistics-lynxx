@@ -23,9 +23,6 @@ jobs:
     name: 🏠 Local Code Validation
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
 
     steps:
       - name: 📥 Checkout
@@ -49,6 +46,7 @@ jobs:
             echo "::error title=package.json not found::Place package.json at repo root or specify a working directory."
             exit 1
           fi
+
           # Normalize working directory ('.' for root) and cache dependency path
           if [ -z "$FOUND" ]; then
             WD="."
@@ -61,11 +59,11 @@ jobs:
               LOCK="package-lock.json"
             fi
           fi
+
           echo "dir=$FOUND" >> "$GITHUB_OUTPUT"
           echo "wd=$WD"     >> "$GITHUB_OUTPUT"
           echo "lock=$LOCK" >> "$GITHUB_OUTPUT"
           echo "Detected working directory: '$WD'"
-          test -f "${ROOT}/${WD}/package.json" && jq -r '.name // "unknown-package"' "${ROOT}/${WD}/package.json" || true
 
       - name: 🟢 Setup Node
         uses: actions/setup-node@v4
@@ -96,11 +94,12 @@ jobs:
         run: npm run build --if-present
 
       - name: 📊 Validation summary
+        if: always()
         run: |
           {
             echo "## 🏠 Local Code Validation Summary"
             echo ""
-            echo "- **Project Root:** \`${{ steps.detect.outputs.wd || '.' }}\`"
+            echo "- **Project Root:** \`${{ steps.detect.outputs.wd }}\`"
             echo "- **Ref:** \`${{ github.ref_name }}\`"
             echo "- **Commit:** \`${{ github.sha }}\`"
             echo "- **Status:** \`${{ job.status }}\`"
