@@ -4,6 +4,14 @@ export declare class SystemHealthMonitor {
     private isRunning;
     private alertThresholds;
     constructor();
+    initialize(): Promise<void>;
+    shutdown(): Promise<void>;
+    checkSystemHealth(): Promise<{
+        isHealthy: boolean;
+        score: number;
+        components: string[];
+        issues: string[];
+    }>;
     startMonitoring(intervalMs?: number): Promise<void>;
     stopMonitoring(): void;
     private runHealthChecks;

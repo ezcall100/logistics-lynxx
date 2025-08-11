@@ -36,6 +36,39 @@ export class SystemHealthMonitor {
     );
   }
 
+  public async initialize(): Promise<void> {
+    console.log('Initializing System Health Monitor...');
+    // Initialize monitoring system
+    await this.startMonitoring();
+  }
+
+  public async shutdown(): Promise<void> {
+    console.log('Shutting down System Health Monitor...');
+    this.stopMonitoring();
+  }
+
+  public async checkSystemHealth(): Promise<{
+    isHealthy: boolean;
+    score: number;
+    components: string[];
+    issues: string[];
+  }> {
+    const results = await this.runHealthChecks();
+    
+    const healthyComponents = results.filter(r => r.healthy).map(r => r.component);
+    const issues = results.filter(r => !r.healthy).map(r => `${r.component}: ${r.error || 'Unknown error'}`);
+    
+    const score = Math.round((healthyComponents.length / results.length) * 100);
+    const isHealthy = issues.length === 0;
+    
+    return {
+      isHealthy,
+      score,
+      components: healthyComponents,
+      issues
+    };
+  }
+
   public async startMonitoring(intervalMs: number = 300000) { // 5 minutes default
     if (this.isRunning) {
       console.log('System monitoring is already running');

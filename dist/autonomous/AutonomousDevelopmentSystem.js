@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AutonomousDevelopmentSystem = void 0;
-const supabase_js_1 = require("@supabase/supabase-js");
-const TMSDecisionAgent_1 = require("../agents/TMSDecisionAgent");
-const SystemHealthMonitor_1 = require("../monitoring/SystemHealthMonitor");
-class AutonomousDevelopmentSystem {
+import { createClient } from '@supabase/supabase-js';
+import { TMSDecisionAgent } from '../agents/TMSDecisionAgent';
+import { SystemHealthMonitor } from '../monitoring/SystemHealthMonitor';
+export class AutonomousDevelopmentSystem {
     constructor(config = {}) {
         this.isRunning = false;
         this.activeTasks = new Map();
         this.agents = new Map();
         this.taskQueue = [];
-        this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
         this.config = {
             enableResearch: true,
             enableFrontend: true,
@@ -28,8 +25,8 @@ class AutonomousDevelopmentSystem {
             qualityThreshold: 0.8,
             ...config
         };
-        this.decisionAgent = new TMSDecisionAgent_1.TMSDecisionAgent();
-        this.healthMonitor = new SystemHealthMonitor_1.SystemHealthMonitor();
+        this.decisionAgent = new TMSDecisionAgent();
+        this.healthMonitor = new SystemHealthMonitor();
         this.metrics = {
             totalTasks: 0,
             completedTasks: 0,
@@ -43,6 +40,16 @@ class AutonomousDevelopmentSystem {
             activeAgents: []
         };
         this.initializeAgents();
+    }
+    async initialize() {
+        console.log('🚀 Initializing Autonomous Development System...');
+        await this.initializeSystem();
+        console.log('✅ Autonomous Development System initialized');
+    }
+    async shutdown() {
+        console.log('🛑 Shutting down Autonomous Development System...');
+        await this.stop();
+        console.log('✅ Autonomous Development System shut down');
     }
     async start() {
         if (this.isRunning) {
@@ -558,5 +565,4 @@ class AutonomousDevelopmentSystem {
         });
     }
 }
-exports.AutonomousDevelopmentSystem = AutonomousDevelopmentSystem;
 //# sourceMappingURL=AutonomousDevelopmentSystem.js.map

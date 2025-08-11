@@ -53,6 +53,8 @@ export declare class AutonomousDevelopmentSystem {
     private agents;
     private taskQueue;
     constructor(config?: Partial<AutonomousConfig>);
+    initialize(): Promise<void>;
+    shutdown(): Promise<void>;
     start(): Promise<void>;
     stop(): Promise<void>;
     getMetrics(): DevelopmentMetrics;

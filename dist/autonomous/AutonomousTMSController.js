@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AutonomousTMSController = void 0;
-const TMSDecisionAgent_1 = require("../agents/TMSDecisionAgent");
-const SystemHealthMonitor_1 = require("../monitoring/SystemHealthMonitor");
-const supabase_js_1 = require("@supabase/supabase-js");
-class AutonomousTMSController {
+import { TMSDecisionAgent } from '../agents/TMSDecisionAgent';
+import { SystemHealthMonitor } from '../monitoring/SystemHealthMonitor';
+import { createClient } from '@supabase/supabase-js';
+export class AutonomousTMSController {
     constructor(config = {}) {
         this.isRunning = false;
         this.agents = new Map();
-        this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
         this.config = {
             enableShipmentProcessing: true,
             enableCustomerService: true,
@@ -19,8 +16,8 @@ class AutonomousTMSController {
             escalationThreshold: 5,
             ...config
         };
-        this.decisionAgent = new TMSDecisionAgent_1.TMSDecisionAgent();
-        this.healthMonitor = new SystemHealthMonitor_1.SystemHealthMonitor();
+        this.decisionAgent = new TMSDecisionAgent();
+        this.healthMonitor = new SystemHealthMonitor();
         this.status = {
             isRunning: false,
             uptime: 0,
@@ -31,6 +28,16 @@ class AutonomousTMSController {
             errors: []
         };
         this.initializeAgents();
+    }
+    async initialize() {
+        console.log('🚀 Initializing Autonomous TMS Controller...');
+        await this.initializeSystem();
+        console.log('✅ Autonomous TMS Controller initialized');
+    }
+    async shutdown() {
+        console.log('🛑 Shutting down Autonomous TMS Controller...');
+        await this.stop();
+        console.log('✅ Autonomous TMS Controller shut down');
     }
     async start() {
         if (this.isRunning) {
@@ -401,5 +408,4 @@ class AutonomousTMSController {
         });
     }
 }
-exports.AutonomousTMSController = AutonomousTMSController;
 //# sourceMappingURL=AutonomousTMSController.js.map

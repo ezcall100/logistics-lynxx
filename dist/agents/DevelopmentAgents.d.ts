@@ -116,5 +116,14 @@ export declare class SecurityAgent implements BaseAgent {
     scanVulnerabilities(): Promise<any>;
     implementEncryption(): Promise<any>;
 }
+export declare class DevelopmentAgents {
+    private agents;
+    private supabase;
+    constructor();
+    initialize(): Promise<void>;
+    shutdown(): Promise<void>;
+    getAgents(): BaseAgent[];
+    getActiveAgents(): BaseAgent[];
+}
 export {};
 //# sourceMappingURL=DevelopmentAgents.d.ts.map

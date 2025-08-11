@@ -25,6 +25,8 @@ export declare class AutonomousTMSController {
     private isRunning;
     private agents;
     constructor(config?: Partial<AutonomousConfig>);
+    initialize(): Promise<void>;
+    shutdown(): Promise<void>;
     start(): Promise<void>;
     stop(): Promise<void>;
     getStatus(): SystemStatus;

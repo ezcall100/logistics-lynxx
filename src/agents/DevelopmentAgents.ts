@@ -790,3 +790,61 @@ export class SecurityAgent implements BaseAgent {
     return encryption;
   }
 }
+
+// Main Development Agents Manager
+export class DevelopmentAgents {
+  private agents: BaseAgent[] = [];
+  private supabase: any;
+
+  constructor() {
+    this.supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_ANON_KEY!
+    );
+    
+    // Initialize all agents
+    this.agents = [
+      new ResearchAgent(),
+      new FrontendAgent(),
+      new BackendAgent(),
+      new DatabaseAgent(),
+      new TestingAgent(),
+      new DeploymentAgent(),
+      new UIUXAgent(),
+      new PortalAgent(),
+      new APIAgent(),
+      new SecurityAgent()
+    ];
+  }
+
+  public async initialize(): Promise<void> {
+    console.log('🔧 Initializing Development Agents...');
+    
+    // Activate all agents
+    for (const agent of this.agents) {
+      agent.isActive = true;
+      agent.lastActivity = new Date();
+    }
+    
+    console.log(`✅ Initialized ${this.agents.length} development agents`);
+  }
+
+  public async shutdown(): Promise<void> {
+    console.log('🛑 Shutting down Development Agents...');
+    
+    // Deactivate all agents
+    for (const agent of this.agents) {
+      agent.isActive = false;
+    }
+    
+    console.log('✅ Development agents shut down');
+  }
+
+  public getAgents(): BaseAgent[] {
+    return this.agents;
+  }
+
+  public getActiveAgents(): BaseAgent[] {
+    return this.agents.filter(agent => agent.isActive);
+  }
+}

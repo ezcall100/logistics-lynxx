@@ -64,6 +64,18 @@ export class AutonomousTMSController {
     this.initializeAgents();
   }
 
+  public async initialize(): Promise<void> {
+    console.log('🚀 Initializing Autonomous TMS Controller...');
+    await this.initializeSystem();
+    console.log('✅ Autonomous TMS Controller initialized');
+  }
+
+  public async shutdown(): Promise<void> {
+    console.log('🛑 Shutting down Autonomous TMS Controller...');
+    await this.stop();
+    console.log('✅ Autonomous TMS Controller shut down');
+  }
+
   public async start(): Promise<void> {
     if (this.isRunning) {
       console.log('Autonomous TMS system is already running');

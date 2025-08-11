@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SystemHealthMonitor = void 0;
-const supabase_js_1 = require("@supabase/supabase-js");
-class SystemHealthMonitor {
+import { createClient } from '@supabase/supabase-js';
+export class SystemHealthMonitor {
     constructor() {
         this.checkInterval = null;
         this.isRunning = false;
@@ -12,7 +9,29 @@ class SystemHealthMonitor {
             memoryUsage: 0.9, // 90%
             cpuUsage: 0.8 // 80%
         };
-        this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+    }
+    async initialize() {
+        console.log('Initializing System Health Monitor...');
+        // Initialize monitoring system
+        await this.startMonitoring();
+    }
+    async shutdown() {
+        console.log('Shutting down System Health Monitor...');
+        this.stopMonitoring();
+    }
+    async checkSystemHealth() {
+        const results = await this.runHealthChecks();
+        const healthyComponents = results.filter(r => r.healthy).map(r => r.component);
+        const issues = results.filter(r => !r.healthy).map(r => `${r.component}: ${r.error || 'Unknown error'}`);
+        const score = Math.round((healthyComponents.length / results.length) * 100);
+        const isHealthy = issues.length === 0;
+        return {
+            isHealthy,
+            score,
+            components: healthyComponents,
+            issues
+        };
     }
     async startMonitoring(intervalMs = 300000) {
         if (this.isRunning) {
@@ -287,13 +306,12 @@ class SystemHealthMonitor {
         console.log('Sending webhook alert:', alertData);
     }
 }
-exports.SystemHealthMonitor = SystemHealthMonitor;
 // Health Check Implementations
 class DatabaseHealthCheck {
     async execute() {
         const startTime = Date.now();
         try {
-            const supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+            const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
             const { data, error } = await supabase
                 .from('system_health')
                 .select('id')

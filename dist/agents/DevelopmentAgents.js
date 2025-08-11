@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SecurityAgent = exports.APIAgent = exports.PortalAgent = exports.UIUXAgent = exports.DeploymentAgent = exports.TestingAgent = exports.DatabaseAgent = exports.BackendAgent = exports.FrontendAgent = exports.ResearchAgent = void 0;
+import { createClient } from '@supabase/supabase-js';
 // Research Agent
-class ResearchAgent {
+export class ResearchAgent {
     constructor() {
         this.name = 'Research Agent';
         this.type = 'research';
@@ -62,9 +60,8 @@ class ResearchAgent {
         return competitors;
     }
 }
-exports.ResearchAgent = ResearchAgent;
 // Frontend Development Agent
-class FrontendAgent {
+export class FrontendAgent {
     constructor() {
         this.name = 'Frontend Development Agent';
         this.type = 'frontend';
@@ -125,9 +122,8 @@ export const ${componentType}: React.FC<${componentType}Props> = ({ ${Object.key
         return optimizations;
     }
 }
-exports.FrontendAgent = FrontendAgent;
 // Backend Development Agent
-class BackendAgent {
+export class BackendAgent {
     constructor() {
         this.name = 'Backend Development Agent';
         this.type = 'backend';
@@ -206,9 +202,8 @@ export default router;
         return businessLogic;
     }
 }
-exports.BackendAgent = BackendAgent;
 // Database Agent
-class DatabaseAgent {
+export class DatabaseAgent {
     constructor() {
         this.name = 'Database Agent';
         this.type = 'database';
@@ -270,9 +265,8 @@ COMMIT;
         return backup;
     }
 }
-exports.DatabaseAgent = DatabaseAgent;
 // Testing Agent
-class TestingAgent {
+export class TestingAgent {
     constructor() {
         this.name = 'Testing Agent';
         this.type = 'testing';
@@ -331,9 +325,8 @@ class TestingAgent {
         return results;
     }
 }
-exports.TestingAgent = TestingAgent;
 // Deployment Agent
-class DeploymentAgent {
+export class DeploymentAgent {
     constructor() {
         this.name = 'Deployment Agent';
         this.type = 'deployment';
@@ -385,9 +378,8 @@ class DeploymentAgent {
         return monitoring;
     }
 }
-exports.DeploymentAgent = DeploymentAgent;
 // UI/UX Design Agent
-class UIUXAgent {
+export class UIUXAgent {
     constructor() {
         this.name = 'UI/UX Design Agent';
         this.type = 'uiux';
@@ -466,9 +458,8 @@ class UIUXAgent {
         return research;
     }
 }
-exports.UIUXAgent = UIUXAgent;
 // Portal Management Agent
-class PortalAgent {
+export class PortalAgent {
     constructor() {
         this.name = 'Portal Management Agent';
         this.type = 'portal';
@@ -546,9 +537,8 @@ class PortalAgent {
         return permissions;
     }
 }
-exports.PortalAgent = PortalAgent;
 // API Integration Agent
-class APIAgent {
+export class APIAgent {
     constructor() {
         this.name = 'API Integration Agent';
         this.type = 'api';
@@ -643,9 +633,8 @@ All errors return appropriate HTTP status codes and error messages.
         return documentation;
     }
 }
-exports.APIAgent = APIAgent;
 // Security & Compliance Agent
-class SecurityAgent {
+export class SecurityAgent {
     constructor() {
         this.name = 'Security & Compliance Agent';
         this.type = 'security';
@@ -711,5 +700,47 @@ class SecurityAgent {
         return encryption;
     }
 }
-exports.SecurityAgent = SecurityAgent;
+// Main Development Agents Manager
+export class DevelopmentAgents {
+    constructor() {
+        this.agents = [];
+        this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        // Initialize all agents
+        this.agents = [
+            new ResearchAgent(),
+            new FrontendAgent(),
+            new BackendAgent(),
+            new DatabaseAgent(),
+            new TestingAgent(),
+            new DeploymentAgent(),
+            new UIUXAgent(),
+            new PortalAgent(),
+            new APIAgent(),
+            new SecurityAgent()
+        ];
+    }
+    async initialize() {
+        console.log('🔧 Initializing Development Agents...');
+        // Activate all agents
+        for (const agent of this.agents) {
+            agent.isActive = true;
+            agent.lastActivity = new Date();
+        }
+        console.log(`✅ Initialized ${this.agents.length} development agents`);
+    }
+    async shutdown() {
+        console.log('🛑 Shutting down Development Agents...');
+        // Deactivate all agents
+        for (const agent of this.agents) {
+            agent.isActive = false;
+        }
+        console.log('✅ Development agents shut down');
+    }
+    getAgents() {
+        return this.agents;
+    }
+    getActiveAgents() {
+        return this.agents.filter(agent => agent.isActive);
+    }
+}
 //# sourceMappingURL=DevelopmentAgents.js.map

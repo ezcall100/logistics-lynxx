@@ -24,6 +24,8 @@ export declare class TMSDecisionAgent {
     private decisionHistory;
     private learningRate;
     constructor();
+    initialize(): Promise<void>;
+    shutdown(): Promise<void>;
     makeDecision(input: DecisionInput): Promise<DecisionResult>;
     private initializeContext;
     private updateContext;

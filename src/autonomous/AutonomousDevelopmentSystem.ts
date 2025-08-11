@@ -103,6 +103,18 @@ export class AutonomousDevelopmentSystem {
     this.initializeAgents();
   }
 
+  public async initialize(): Promise<void> {
+    console.log('🚀 Initializing Autonomous Development System...');
+    await this.initializeSystem();
+    console.log('✅ Autonomous Development System initialized');
+  }
+
+  public async shutdown(): Promise<void> {
+    console.log('🛑 Shutting down Autonomous Development System...');
+    await this.stop();
+    console.log('✅ Autonomous Development System shut down');
+  }
+
   public async start(): Promise<void> {
     if (this.isRunning) {
       console.log('Autonomous Development System is already running');

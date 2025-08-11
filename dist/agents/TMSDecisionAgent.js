@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TMSDecisionAgent = void 0;
-const supabase_js_1 = require("@supabase/supabase-js");
-class TMSDecisionAgent {
+import { createClient } from '@supabase/supabase-js';
+export class TMSDecisionAgent {
     constructor() {
         this.decisionHistory = [];
         this.learningRate = 0.1;
-        this.supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
         this.context = {
             shipmentHistory: [],
             carrierPerformance: {},
@@ -15,6 +12,16 @@ class TMSDecisionAgent {
             systemMetrics: {}
         };
         this.initializeContext();
+    }
+    async initialize() {
+        console.log('🧠 Initializing TMS Decision Agent...');
+        await this.initializeContext();
+        console.log('✅ TMS Decision Agent initialized');
+    }
+    async shutdown() {
+        console.log('🛑 Shutting down TMS Decision Agent...');
+        // Clean up any resources
+        console.log('✅ TMS Decision Agent shut down');
     }
     async makeDecision(input) {
         console.log(`Making decision for ${input.type} with priority ${input.priority}`);
@@ -360,5 +367,4 @@ class TMSDecisionAgent {
         return { ...this.context };
     }
 }
-exports.TMSDecisionAgent = TMSDecisionAgent;
 //# sourceMappingURL=TMSDecisionAgent.js.map

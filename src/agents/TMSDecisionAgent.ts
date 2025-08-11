@@ -46,6 +46,18 @@ export class TMSDecisionAgent {
     this.initializeContext();
   }
 
+  public async initialize(): Promise<void> {
+    console.log('🧠 Initializing TMS Decision Agent...');
+    await this.initializeContext();
+    console.log('✅ TMS Decision Agent initialized');
+  }
+
+  public async shutdown(): Promise<void> {
+    console.log('🛑 Shutting down TMS Decision Agent...');
+    // Clean up any resources
+    console.log('✅ TMS Decision Agent shut down');
+  }
+
   public async makeDecision(input: DecisionInput): Promise<DecisionResult> {
     console.log(`Making decision for ${input.type} with priority ${input.priority}`);
 
