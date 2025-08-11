@@ -14,6 +14,33 @@ on:
   schedule:
     - cron: "0 */6 * * *" # Every 6 hours
   workflow_dispatch:
+    inputs:
+      env_name:
+        description: "Target environment name"
+        type: choice
+        options: [production, staging]
+        default: production
+        required: false
+      app_url:
+        description: "Public app URL"
+        type: string
+        default: "https://app.example.com"
+        required: false
+      n8n_enabled:
+        description: "Enable n8n integration"
+        type: boolean
+        default: false
+        required: false
+      n8n_base_url:
+        description: "n8n base URL (if enabled)"
+        type: string
+        default: ""
+        required: false
+      deployment_webhook_url:
+        description: "Webhook URL to notify after deploy (optional)"
+        type: string
+        default: ""
+        required: false
 
 permissions:
   contents: read
@@ -42,21 +69,41 @@ jobs:
       app_url: ${{ steps.cfg.outputs.app_url }}
       n8n_enabled: ${{ steps.cfg.outputs.n8n_enabled }}
       n8n_base_url: ${{ steps.cfg.outputs.n8n_base_url }}
+      deployment_webhook_url: ${{ steps.cfg.outputs.deployment_webhook_url }}
+      has_webhook: ${{ steps.cfg.outputs.has_webhook }}
     steps:
       - id: cfg
+        env:
+          IN_ENV_NAME: ${{ github.event.inputs.env_name }}
+          IN_APP_URL: ${{ github.event.inputs.app_url }}
+          IN_N8N_ENABLED: ${{ github.event.inputs.n8n_enabled }}
+          IN_N8N_BASE_URL: ${{ github.event.inputs.n8n_base_url }}
+          IN_DEPLOY_HOOK: ${{ github.event.inputs.deployment_webhook_url }}
         run: |
           set -euo pipefail
-          ENV_NAME="${{ vars.ENVIRONMENT_NAME || 'production' }}"
-          APP_URL="${{ vars.APP_URL || 'https://app.example.com' }}"
-          N8N_ENABLED_IN="${{ vars.N8N_ENABLED || 'false' }}"
-          N8N_BASE_URL="${{ vars.N8N_BASE_URL || '' }}"
-          # normalize boolean-ish values
-          case "${N8N_ENABLED_IN,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
+
+          # Pull from workflow_dispatch inputs when present; otherwise fall back to safe defaults
+          ENV_NAME="${IN_ENV_NAME:-production}"
+          APP_URL="${IN_APP_URL:-https://app.example.com}"
+          N8N_ENABLED_RAW="${IN_N8N_ENABLED:-false}"
+          N8N_BASE_URL="${IN_N8N_BASE_URL:-}"
+          DEPLOYMENT_WEBHOOK_URL="${IN_DEPLOY_HOOK:-}"
+
+          # Normalize boolean-ish input
+          case "${N8N_ENABLED_RAW,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
+          if [[ -n "$N8N_BASE_URL" ]]; then
+            # If a base URL is provided, assume n8n is intended to be enabled (secrets still validated later)
+            N8N_ENABLED=true
+          fi
+
+          # Expose as job outputs
           {
             echo "env_name=$ENV_NAME"
             echo "app_url=$APP_URL"
             echo "n8n_enabled=$N8N_ENABLED"
             echo "n8n_base_url=$N8N_BASE_URL"
+            echo "deployment_webhook_url=$DEPLOYMENT_WEBHOOK_URL"
+            echo "has_webhook=$([[ -n "$DEPLOYMENT_WEBHOOK_URL" ]] && echo true || echo false)"
           } >> "$GITHUB_OUTPUT"
 
   # 2) Test & build once, upload artifact
@@ -91,6 +138,7 @@ jobs:
         run: |
           mkdir -p .artifact
           tar -czf .artifact/build.tar.gz dist/ package*.json node_modules/
+
       - name: ⬆️ Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -114,28 +162,32 @@ jobs:
 
       - name: 🔐 Load secrets & validate
         id: secrets
+        env:
+          N8N_BASE_URL: ${{ needs.config.outputs.n8n_base_url }}
         run: |
           set -euo pipefail
-          # map secrets (fallbacks only for local safety)
-          SUPABASE_URL="${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}"
-          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}"
-          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}"
-          N8N_API_KEY="${{ secrets.N8N_API_KEY || '' }}"
-          N8N_BASE_URL="${{ needs.config.outputs.n8n_base_url }}"
-          # mask sensitive
-          echo "::add-mask::$OPENAI_API_KEY"
-          echo "::add-mask::$N8N_API_KEY"
-          # hard-validate required deployment secrets
-          [[ -n "$SUPABASE_URL" ]] || { echo "❌ SUPABASE_URL missing"; exit 1; }
-          [[ -n "$SUPABASE_ANON_KEY" ]] || { echo "❌ SUPABASE_ANON_KEY missing"; exit 1; }
-          [[ -n "$OPENAI_API_KEY" ]] || { echo "❌ OPENAI_API_KEY missing"; exit 1; }
-          # export for later steps
+          # Map secrets (use empty fallback; validation below)
+          SUPABASE_URL="${{ secrets.SUPABASE_URL }}"
+          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}"
+          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+          N8N_API_KEY="${{ secrets.N8N_API_KEY }}"
+
+          # Mask sensitive
+          [[ -n "${OPENAI_API_KEY:-}" ]] && echo "::add-mask::$OPENAI_API_KEY"
+          [[ -n "${N8N_API_KEY:-}" ]] && echo "::add-mask::$N8N_API_KEY"
+
+          # Hard-validate required deployment secrets
+          [[ -n "${SUPABASE_URL:-}" ]] || { echo "❌ SUPABASE_URL missing"; exit 1; }
+          [[ -n "${SUPABASE_ANON_KEY:-}" ]] || { echo "❌ SUPABASE_ANON_KEY missing"; exit 1; }
+          [[ -n "${OPENAI_API_KEY:-}" ]] || { echo "❌ OPENAI_API_KEY missing"; exit 1; }
+
+          # Export for later steps
           {
             echo "SUPABASE_URL=$SUPABASE_URL"
             echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
             echo "OPENAI_API_KEY=$OPENAI_API_KEY"
-            echo "N8N_API_KEY=$N8N_API_KEY"
-            echo "N8N_BASE_URL=$N8N_BASE_URL"
+            echo "N8N_API_KEY=${N8N_API_KEY:-}"
+            echo "N8N_BASE_URL=${N8N_BASE_URL:-}"
           } >> "$GITHUB_ENV"
 
       - name: 🟢 Setup Node
@@ -155,52 +207,48 @@ jobs:
         run: tar -xzf .artifact/build.tar.gz
 
       - name: 🚀 Deploy app
-        run: |
-          # Replace with your real deploy command/script
-          npm run deploy:prod
+        run: npm run deploy:prod
 
       - name: 🏥 Health check
         run: npm run health:check
 
       - name: 🔔 Build payload (success)
         id: hook_ok
-        if: ${{ success() && (vars.DEPLOYMENT_WEBHOOK_URL != '') }}
+        if: ${{ success() && needs.config.outputs.has_webhook == 'true' }}
         run: |
           ts="$(date -u +%FT%TZ)"
-          cat <<JSON >> "$GITHUB_OUTPUT"
-          payload<<EOF
-          {"status":"deployed","timestamp":"$ts","environment":"${{ needs.config.outputs.env_name }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","run_id":"${{ github.run_id }}"}
-          EOF
-          JSON
+          {
+            echo 'payload<<EOF'
+            echo "{\"status\":\"deployed\",\"timestamp\":\"$ts\",\"environment\":\"${{ needs.config.outputs.env_name }}\",\"commit\":\"${{ github.sha }}\",\"branch\":\"${{ github.ref_name }}\",\"run_id\":\"${{ github.run_id }}\"}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: 🔔 Notify webhook (success)
-        if: ${{ success() && (vars.DEPLOYMENT_WEBHOOK_URL != '') }}
+        if: ${{ success() && needs.config.outputs.has_webhook == 'true' }}
         run: |
+          url='${{ needs.config.outputs.deployment_webhook_url }}'
           for i in 1 2 3; do
-            curl -fsS -X POST "${{ vars.DEPLOYMENT_WEBHOOK_URL }}" \
-              -H "Content-Type: application/json" \
-              -d '${{ steps.hook_ok.outputs.payload }}' && break
+            curl -fsS -X POST "$url" -H "Content-Type: application/json" -d '${{ steps.hook_ok.outputs.payload }}' && break
             echo "retry $i/3…"; sleep 5
           done
 
       - name: 🔔 Build payload (failure)
         id: hook_fail
-        if: ${{ failure() && (vars.DEPLOYMENT_WEBHOOK_URL != '') }}
+        if: ${{ failure() && needs.config.outputs.has_webhook == 'true' }}
         run: |
           ts="$(date -u +%FT%TZ)"
-          cat <<JSON >> "$GITHUB_OUTPUT"
-          payload<<EOF
-          {"status":"failed","timestamp":"$ts","environment":"${{ needs.config.outputs.env_name }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","run_id":"${{ github.run_id }}"}
-          EOF
-          JSON
+          {
+            echo 'payload<<EOF'
+            echo "{\"status\":\"failed\",\"timestamp\":\"$ts\",\"environment\":\"${{ needs.config.outputs.env_name }}\",\"commit\":\"${{ github.sha }}\",\"branch\":\"${{ github.ref_name }}\",\"run_id\":\"${{ github.run_id }}\"}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: 🔔 Notify webhook (failure)
-        if: ${{ failure() && (vars.DEPLOYMENT_WEBHOOK_URL != '') }}
+        if: ${{ failure() && needs.config.outputs.has_webhook == 'true' }}
         run: |
+          url='${{ needs.config.outputs.deployment_webhook_url }}'
           for i in 1 2 3; do
-            curl -fsS -X POST "${{ vars.DEPLOYMENT_WEBHOOK_URL }}" \
-              -H "Content-Type: application/json" \
-              -d '${{ steps.hook_fail.outputs.payload }}' && break
+            curl -fsS -X POST "$url" -H "Content-Type: application/json" -d '${{ steps.hook_fail.outputs.payload }}' && break
             echo "retry $i/3…"; sleep 5
           done
 
@@ -250,6 +298,8 @@ jobs:
       - name: 🧾 Monitoring summary
         if: always()
         run: |
-          echo "## Monitoring" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Status: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Health check executed" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Monitoring"
+            echo "- Status: ${{ job.status }}"
+            echo "- Health check executed"
+          } >> "$GITHUB_STEP_SUMMARY"
