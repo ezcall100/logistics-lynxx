@@ -1,15 +1,15 @@
-# Ensure consistent line endings
-*.yml  text eol=lf
+# Ensure proper line endings for YAML files and shell scripts
+*.yml text eol=lf
 *.yaml text eol=lf
-*.sh   text eol=lf
-*.js   text eol=lf
-*.ts   text eol=lf
-*.tsx  text eol=lf
-*.jsx  text eol=lf
+*.sh text eol=lf
+
+# Ensure consistent line endings for other common files
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
 *.json text eol=lf
-*.md   text eol=lf
-*.sql  text eol=lf
-*.toml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
 
 # Binary files
 *.png binary

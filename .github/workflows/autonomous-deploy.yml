@@ -44,13 +44,13 @@ jobs:
       ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
       APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
       N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
-      # Secrets
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || 'https://n8n.example.com' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}
+      # Secrets with proper fallbacks
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
       # Node version
       NODE_VERSION: '18'
     steps:
@@ -88,13 +88,13 @@ jobs:
       ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
       APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
       N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
-      # Secrets
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || 'https://n8n.example.com' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}
+      # Secrets with proper fallbacks
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
       # Node version
       NODE_VERSION: '18'
     

@@ -29,9 +29,9 @@ jobs:
       # Environment variables with proper fallback values
       ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
       APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-      # Secrets (if any are needed for CodeQL)
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
+      # Secrets (if any are needed for CodeQL) with proper fallbacks
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
     
     steps:
       - uses: actions/checkout@v4

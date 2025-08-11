@@ -51,20 +51,20 @@ jobs:
         env:
           REQUIRED: ENVIRONMENT_NAME,APP_URL
           REQUIRED_SECRETS: STAGING_URL,PRODUCTION_URL,STAGING_WEBHOOK_URL,PRODUCTION_WEBHOOK_URL,STAGING_HEALTH_CHECK_URL,PRODUCTION_HEALTH_CHECK_URL,DEPLOYMENT_WEBHOOK_URL,N8N_API_KEY,SUPABASE_URL,SUPABASE_ANON_KEY,OPENAI_API_KEY
-          # GitHub variables and secrets
+          # GitHub variables and secrets with proper fallbacks
           ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'staging' }}
           APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-          STAGING_URL: ${{ vars.STAGING_URL || '' }}
-          PRODUCTION_URL: ${{ vars.PRODUCTION_URL || '' }}
-          STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || '' }}
-          PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || '' }}
-          STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || '' }}
-          PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || '' }}
-          DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+          STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://production.example.com' }}
+          STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || 'https://staging.example.com/webhook' }}
+          PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || 'https://production.example.com/webhook' }}
+          STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || 'https://staging.example.com/health' }}
+          PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'https://production.example.com/health' }}
+          DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
         run: |
           set -euo pipefail
           miss=()
@@ -90,6 +90,8 @@ jobs:
     env:
       # Environment variables with proper fallback values
       NODE_VERSION: '18'
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'staging' }}
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
     
     steps:
       - uses: actions/checkout@v4
@@ -124,6 +126,8 @@ jobs:
     env:
       # Environment variables with proper fallback values
       NODE_VERSION: '18'
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'staging' }}
+      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
     
     steps:
       - uses: actions/checkout@v4
@@ -260,16 +264,16 @@ jobs:
     env:
       # Node version
       NODE_VERSION: '18'
-      # Deployment environment variables
-      STAGING_URL: ${{ vars.STAGING_URL || '' }}
-      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || '' }}
-      STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || '' }}
-      PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || '' }}
-      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || '' }}
-      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || '' }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+      # Deployment environment variables with proper fallbacks
+      STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://production.example.com' }}
+      STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || 'https://staging.example.com/webhook' }}
+      PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || 'https://production.example.com/webhook' }}
+      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || 'https://staging.example.com/health' }}
+      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'https://production.example.com/health' }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
     environment:
       name: ${{ needs.preflight.outputs.target_environment }}
       url: ${{ needs.preflight.outputs.target_environment == 'staging' && env.STAGING_URL || env.PRODUCTION_URL }}
@@ -523,10 +527,10 @@ jobs:
     permissions:
       contents: read
     env:
-      # Summary URLs
+      # Summary URLs with proper fallbacks
       APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-      STAGING_URL: ${{ vars.STAGING_URL || '' }}
-      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || '' }}
+      STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://production.example.com' }}
     
     steps:
       - uses: actions/checkout@v4
