@@ -1,0 +1,33 @@
+extends: default
+
+rules:
+  # Disable warnings for GitHub Actions context expressions
+  line-length: disable
+  trailing-spaces: disable
+  truthy:
+    check-keys: false
+  comments-indentation: disable
+  document-start: disable
+  empty-lines:
+    max: 2
+    max-end: 1
+  hyphens:
+    max-spaces-before: 1
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+  key-duplicates: enable
+  new-line-at-end-of-file: enable
+  new-lines:
+    type: unix
+  no-trailing-spaces: enable
+  quoted-strings:
+    required: only-when-needed
+    extra-allowed: [''', '"']
+  trailing-spaces: disable
+
+# Ignore GitHub Actions context expressions
+ignore:
+  - '**/workflows/*.yml'
+  - '**/workflows/*.yaml'
