@@ -39,15 +39,20 @@ jobs:
           ROOT="$GITHUB_WORKSPACE"
           CANDIDATES=("" "app" "frontend" "packages/app" "apps/web" "logistics-lynx")
           FOUND=""
+          FOUND_SET=0
           for p in "${CANDIDATES[@]}"; do
-            if [ -f "${ROOT}/${p}/package.json" ]; then FOUND="$p"; break; fi
+            if [ -f "${ROOT}/${p}/package.json" ]; then
+              FOUND="$p"
+              FOUND_SET=1
+              break
+            fi
           done
-          if [ -z "$FOUND" ]; then
+          if [ "$FOUND_SET" -ne 1 ]; then
             echo "::error title=package.json not found::Place package.json at repo root or specify a working directory."
             exit 1
           fi
 
-          # Normalize working directory ('.' for root) and cache dependency path
+          # Normalize working directory ('.' for repo root) and cache dependency path
           if [ -z "$FOUND" ]; then
             WD="."
             LOCK="package-lock.json"
