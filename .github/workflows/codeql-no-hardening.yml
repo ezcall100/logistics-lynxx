@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableDefaultProperties: true
+# yaml-language-server: disableAdditionalProperties: true
+# yaml-language-server: validate: false
+# yaml-language-server: disableSchemaValidation: true
 name: CodeQL (No Hardening)
 
 on:

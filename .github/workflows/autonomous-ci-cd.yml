@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableDefaultProperties: true
+# yaml-language-server: disableAdditionalProperties: true
+# yaml-language-server: validate: false
+# yaml-language-server: disableSchemaValidation: true
 name: 🚀 Autonomous CI/CD Pipeline
 
 on:
@@ -41,31 +46,8 @@ permissions:
   actions: read
 
 env:
+  # Node version
   NODE_VERSION: '18'
-  # ---- URLs & Webhooks ----
-  STAGING_URL: ""
-  PRODUCTION_URL: ""
-  STAGING_WEBHOOK_URL: ""
-  PRODUCTION_WEBHOOK_URL: ""
-  STAGING_HEALTH_CHECK_URL: ""
-  PRODUCTION_HEALTH_CHECK_URL: ""
-  DEPLOYMENT_WEBHOOK_URL: ""
-
-  # ---- App / Env Vars ----
-  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-  APP_URL: "http://localhost"
-  N8N_ENABLED: "false"
-  N8N_BASE_URL: ""
-
-  # ---- API / Keys ----
-  N8N_API_KEY: ""
-  SUPABASE_URL: ""
-  SUPABASE_ANON_KEY: ""
-  OPENAI_API_KEY: ""
-  
-  # ---- n8n Webhook Configuration ----
-  N8N_WEBHOOK_URL: ""
-  N8N_WEBHOOK_SECRET: ""
 
 jobs:
   # 🛡️ Guard Secrets & Variables
@@ -75,43 +57,23 @@ jobs:
     timeout-minutes: 5
     
     steps:
-      - name: Secret matrix (map secrets/vars here)
-        run: |
-          {
-            echo "STAGING_URL=${{ secrets.STAGING_URL }}"
-            echo "PRODUCTION_URL=${{ secrets.PRODUCTION_URL }}"
-            echo "STAGING_WEBHOOK_URL=${{ secrets.STAGING_WEBHOOK_URL }}"
-            echo "PRODUCTION_WEBHOOK_URL=${{ secrets.PRODUCTION_WEBHOOK_URL }}"
-            echo "STAGING_HEALTH_CHECK_URL=${{ secrets.STAGING_HEALTH_CHECK_URL }}"
-            echo "PRODUCTION_HEALTH_CHECK_URL=${{ secrets.PRODUCTION_HEALTH_CHECK_URL }}"
-            echo "DEPLOYMENT_WEBHOOK_URL=${{ secrets.DEPLOYMENT_WEBHOOK_URL }}"
-            echo "N8N_API_KEY=${{ secrets.N8N_API_KEY }}"
-            echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}"
-            echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}"
-            echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"
-            echo "N8N_WEBHOOK_URL=${{ secrets.N8N_WEBHOOK_URL }}"
-            echo "N8N_WEBHOOK_SECRET=${{ secrets.N8N_WEBHOOK_SECRET }}"
-            echo "ENVIRONMENT_NAME=${{ vars.ENVIRONMENT_NAME || 'development' }}"
-          } >> "$GITHUB_ENV"
-
-      - name: Validate required secrets (PR-safe)
+      - name: Validate required config (trusted events)
         if: ${{ ! (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork) }}
         shell: bash
         env:
-          REQUIRED: STAGING_URL,PRODUCTION_URL,STAGING_WEBHOOK_URL,PRODUCTION_WEBHOOK_URL,STAGING_HEALTH_CHECK_URL,PRODUCTION_HEALTH_CHECK_URL,DEPLOYMENT_WEBHOOK_URL,N8N_API_KEY,SUPABASE_URL,SUPABASE_ANON_KEY,OPENAI_API_KEY
+          REQUIRED: ENVIRONMENT_NAME,APP_URL,N8N_ENABLED
+          REQUIRED_SECRETS: STAGING_URL,PRODUCTION_URL,STAGING_WEBHOOK_URL,PRODUCTION_WEBHOOK_URL,STAGING_HEALTH_CHECK_URL,PRODUCTION_HEALTH_CHECK_URL,DEPLOYMENT_WEBHOOK_URL,N8N_API_KEY,SUPABASE_URL,SUPABASE_ANON_KEY,OPENAI_API_KEY
         run: |
           set -euo pipefail
-          missing=()
-          IFS=',' read -ra keys <<< "$REQUIRED"
-          for k in "${keys[@]}"; do
-            v="${!k-}"
-            if [ -z "$v" ]; then missing+=("$k"); fi
-          done
-          if [ ${#missing[@]} -gt 0 ]; then
-            echo "::error title=Missing secrets::${missing[*]} not set (repo/org/environment)."
+          miss=()
+          check() { for k in "$@"; do v="${!k-}"; if [ -z "${v:-}" ] || [ "$v" = "null" ] || [ "$v" = "undefined" ]; then miss+=("$k"); fi; done; }
+          IFS=',' read -ra A <<< "$REQUIRED"; check "${A[@]}"
+          IFS=',' read -ra B <<< "$REQUIRED_SECRETS"; check "${B[@]}"
+          if [ ${#miss[@]} -gt 0 ]; then
+            echo "::error title=Missing/empty configuration::${miss[*]}"
             exit 1
           fi
-          echo "All required secrets present."
+          echo "Config OK."
 
       - name: Validate required secrets (forked PR - warn only)
         if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
@@ -125,28 +87,18 @@ jobs:
     timeout-minutes: 5
     
     steps:
-      - name: Git bootstrap
-        run: |
-          set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-      
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false   # monitor must not push
+
+      - name: Git bootstrap
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 🔍 Lint workflows with actionlint
         run: |
@@ -166,28 +118,18 @@ jobs:
       target_environment: ${{ steps.decider.outputs.target_environment }}
     
     steps:
-      - name: Git bootstrap
-        run: |
-          set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-      
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false   # monitor must not push
+
+      - name: Git bootstrap
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 🔍 Validate environment
         id: decider
@@ -229,28 +171,18 @@ jobs:
     timeout-minutes: 15
     
     steps:
-      - name: Git bootstrap
-        run: |
-          set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-      
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false   # monitor must not push
+
+      - name: Git bootstrap
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -301,28 +233,18 @@ jobs:
     timeout-minutes: 20
     
     steps:
-      - name: Git bootstrap
-        run: |
-          set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-      
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false   # monitor must not push
+
+      - name: Git bootstrap
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -372,10 +294,7 @@ jobs:
       deployments: write
     environment:
       name: ${{ needs.preflight.outputs.target_environment }}
-      url: ${{ needs.preflight.outputs.target_environment == 'staging' && env.STAGING_URL || env.PRODUCTION_URL }}
-    env:
-      N8N_WEBHOOK_URL: ""
-      N8N_WEBHOOK_SECRET: ""
+      url: ${{ needs.preflight.outputs.target_environment == 'staging' && vars.STAGING_URL || vars.PRODUCTION_URL }}
     
     steps:
       - name: Guard optional secrets (warn only)
@@ -384,28 +303,18 @@ jobs:
           echo "::warning::n8n webhook secrets not available in environment-protected job"
           echo "::warning::n8n webhook notifications will be skipped"
 
-      - name: Git bootstrap
-        run: |
-          set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-      
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false   # monitor must not push
+
+      - name: Git bootstrap
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 📥 Download artifacts
         uses: actions/download-artifact@v4
@@ -433,25 +342,25 @@ jobs:
           fi
         env:
           # Database configuration
-          SUPABASE_URL: ${{ env.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
-          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           
           # Environment URLs
-          STAGING_URL: ${{ env.STAGING_URL }}
-          PRODUCTION_URL: ${{ env.PRODUCTION_URL }}
+          STAGING_URL: ${{ vars.STAGING_URL }}
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
           
           # Webhook URLs
-          STAGING_WEBHOOK_URL: ${{ env.STAGING_WEBHOOK_URL }}
-          PRODUCTION_WEBHOOK_URL: ${{ env.PRODUCTION_WEBHOOK_URL }}
-          STAGING_HEALTH_CHECK_URL: ${{ env.STAGING_HEALTH_CHECK_URL }}
-          PRODUCTION_HEALTH_CHECK_URL: ${{ env.PRODUCTION_HEALTH_CHECK_URL }}
+          STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL }}
+          PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL }}
+          STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL }}
+          PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL }}
 
       - name: 🏥 Post-deploy smoke check
         if: ${{ needs.preflight.outputs.should_deploy == 'true' && github.event.inputs.rollback != 'true' }}
         timeout-minutes: 1
         env:
-          HEALTH_URL: ${{ needs.preflight.outputs.target_environment == 'production' && env.PRODUCTION_HEALTH_CHECK_URL || env.STAGING_HEALTH_CHECK_URL }}
+          HEALTH_URL: ${{ needs.preflight.outputs.target_environment == 'production' && vars.PRODUCTION_HEALTH_CHECK_URL || vars.STAGING_HEALTH_CHECK_URL }}
         run: |
           set -euo pipefail
           if [[ -n "$HEALTH_URL" ]]; then
@@ -477,20 +386,19 @@ jobs:
     needs: [preflight, deploy, health-check]
     if: always() && needs.preflight.outputs.should_deploy == 'true'
     timeout-minutes: 10
-    env:
-      N8N_WEBHOOK_URL: ""
-      N8N_WEBHOOK_SECRET: ""
     
     steps:
-      - name: Resolve optional n8n secrets
-        shell: bash
-        run: |
-          echo "N8N_WEBHOOK_URL=${{ secrets.N8N_WEBHOOK_URL }}" >> "$GITHUB_ENV"
-          echo "N8N_WEBHOOK_SECRET=${{ secrets.N8N_WEBHOOK_SECRET }}" >> "$GITHUB_ENV"
-
       - name: 📣 Notify n8n webhook (deployment)
-        if: ${{ always() && env.N8N_WEBHOOK_URL != '' && env.N8N_WEBHOOK_SECRET != '' }}
+        if: ${{ always() }}
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
+          N8N_WEBHOOK_SECRET: ${{ secrets.N8N_WEBHOOK_SECRET }}
         run: |
+          if [[ -z "$N8N_WEBHOOK_URL" || -z "$N8N_WEBHOOK_SECRET" ]]; then
+            echo "n8n webhook skipped: secrets not configured"
+            exit 0
+          fi
+          
           set -euo pipefail
           
           ts="$(date -u +%FT%TZ)"
@@ -507,7 +415,7 @@ jobs:
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "environment": "${{ needs.preflight.outputs.target_environment }}",
-            "app_url": "${{ env.APP_URL }}",
+            "app_url": "${{ vars.APP_URL }}",
             "should_deploy": "${{ needs.preflight.outputs.should_deploy || 'false' }}",
             "target_environment": "${{ needs.preflight.outputs.target_environment || 'n/a' }}",
             "timestamp": "${ts}"
@@ -525,14 +433,17 @@ jobs:
             --data-binary @payload.json \
             "$N8N_WEBHOOK_URL"
 
-      - name: ⏭️ Skip n8n notify (no secrets)
-        if: ${{ always() && (env.N8N_WEBHOOK_URL == '' || env.N8N_WEBHOOK_SECRET == '') }}
-        run: |
-          echo "n8n webhook skipped: secrets not configured"
-
       - name: 📣 Notify n8n webhook (health check)
-        if: ${{ always() && env.N8N_WEBHOOK_URL != '' && env.N8N_WEBHOOK_SECRET != '' }}
+        if: ${{ always() }}
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
+          N8N_WEBHOOK_SECRET: ${{ secrets.N8N_WEBHOOK_SECRET }}
         run: |
+          if [[ -z "$N8N_WEBHOOK_URL" || -z "$N8N_WEBHOOK_SECRET" ]]; then
+            echo "n8n webhook health notification skipped: secrets not configured"
+            exit 0
+          fi
+          
           set -euo pipefail
           
           ts="$(date -u +%FT%TZ)"
@@ -541,7 +452,7 @@ jobs:
             "event": "health_check",
             "status": "${{ needs.health-check.result }}",
             "environment": "${{ needs.preflight.outputs.target_environment }}",
-            "app_url": "${{ env.APP_URL }}",
+            "app_url": "${{ vars.APP_URL }}",
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "timestamp": "${ts}"
@@ -555,11 +466,6 @@ jobs:
             --data-binary @payload.json \
             "$N8N_WEBHOOK_URL"
 
-      - name: ⏭️ Skip n8n health notify (no secrets)
-        if: ${{ always() && (env.N8N_WEBHOOK_URL == '' || env.N8N_WEBHOOK_SECRET == '') }}
-        run: |
-          echo "n8n webhook health notification skipped: secrets not configured"
-
   # 🏥 Post-Deployment Health Check
   health-check:
     name: 🏥 Post-Deployment Health Check
@@ -569,9 +475,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-    env:
-      N8N_WEBHOOK_URL: ""
-      N8N_WEBHOOK_SECRET: ""
     
     steps:
       - name: Guard optional secrets (warn only)
@@ -580,28 +483,18 @@ jobs:
           echo "::warning::n8n webhook secrets not available in environment-protected job"
           echo "::warning::n8n webhook notifications will be skipped"
 
-      - name: Git bootstrap
-        run: |
-          set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
-          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
-      
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false   # monitor must not push
+
+      - name: Git bootstrap
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -618,9 +511,9 @@ jobs:
           
           # Run health checks
           if [[ "${{ needs.preflight.outputs.target_environment }}" == "staging" ]]; then
-            HEALTH_URL="${{ env.STAGING_HEALTH_CHECK_URL }}"
+            HEALTH_URL="${{ vars.STAGING_HEALTH_CHECK_URL }}"
           else
-            HEALTH_URL="${{ env.PRODUCTION_HEALTH_CHECK_URL }}"
+            HEALTH_URL="${{ vars.PRODUCTION_HEALTH_CHECK_URL }}"
           fi
           
           if [[ -n "$HEALTH_URL" ]]; then
@@ -646,20 +539,18 @@ jobs:
       contents: read
     
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false   # monitor must not push
+
       - name: Git bootstrap
         run: |
           set -e
-          echo "Workspace: $GITHUB_WORKSPACE"
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          pwd && ls -la
-          if ! git -C "$GITHUB_WORKSPACE" rev-parse --git-dir >/dev/null 2>&1; then
-            echo "::error title=Missing .git::Not a git repository at $GITHUB_WORKSPACE"
-            exit 1
-          fi
-          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune
           git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD
+          git -C "$GITHUB_WORKSPACE" fetch --tags --force --prune || true
       
       - name: 📊 Generate deployment summary
         run: |
@@ -684,9 +575,9 @@ jobs:
           if [[ "${{ needs.deploy.result }}" == "success" ]]; then
             echo "✅ Deployment completed successfully!"
             if [[ "${{ needs.preflight.outputs.target_environment }}" == "staging" ]]; then
-              echo "🌐 Staging URL: ${{ env.STAGING_URL }}"
+              echo "🌐 Staging URL: ${{ vars.STAGING_URL }}"
             else
-              echo "🌐 Production URL: ${{ env.PRODUCTION_URL }}"
+              echo "🌐 Production URL: ${{ vars.PRODUCTION_URL }}"
             fi
           else
             echo "❌ Deployment failed"

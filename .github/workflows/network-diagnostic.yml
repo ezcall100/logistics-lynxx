@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableDefaultProperties: true
+# yaml-language-server: disableAdditionalProperties: true
+# yaml-language-server: validate: false
+# yaml-language-server: disableSchemaValidation: true
 name: 🔍 Network Diagnostic
 
 on:
@@ -8,6 +13,11 @@ on:
 
 permissions:
   contents: read
+
+env:
+  # Environment variables with fallback values
+  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
+  APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
 
 jobs:
   network-test:
@@ -90,7 +100,7 @@ jobs:
           echo "## 🔍 Network Diagnostic Summary"
           echo ""
           echo "**Runner:** ${{ runner.os }}"
-          echo "**Environment:** ${{ runner.environment }}"
+          echo "**Environment:** ${{ vars.ENVIRONMENT_NAME || 'development' }}"
           echo "**Repository:** ${{ github.repository }}"
           echo "**Event:** ${{ github.event_name }}"
           echo ""

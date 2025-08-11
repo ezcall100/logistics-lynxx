@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableDefaultProperties: true
+# yaml-language-server: disableAdditionalProperties: true
+# yaml-language-server: validate: false
+# yaml-language-server: disableSchemaValidation: true
 name: 🚀 Autonomous TMS Deployment (Refactored)
 
 on:
@@ -13,6 +18,20 @@ permissions:
   actions: read
 
 env:
+  # Vars (environment-scoped or repository vars)
+  ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
+  APP_URL: ${{ vars.APP_URL || 'https://app.example.com' }}
+  N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+  N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+  DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}
+
+  # Secrets
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || '' }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+  N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+
+  # Node version
   NODE_VERSION: '18'
 
 jobs:
