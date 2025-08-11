@@ -32,13 +32,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Detect languages (JS/TS covered by "javascript")
+      # Detect languages (JS/TS covered under "javascript") without using git
       - name: Detect languages
         id: langs
         shell: bash
         run: |
           set -euo pipefail
-          if git ls-files '*.js' '*.jsx' '*.ts' '*.tsx' >/dev/null 2>&1; then
+          shopt -s nullglob globstar
+          files=(**/*.js **/*.jsx **/*.ts **/*.tsx)
+          if (( ${#files[@]} )); then
             echo "has_lang=true" >> "$GITHUB_OUTPUT"
             echo "langs=javascript" >> "$GITHUB_OUTPUT"
           else
