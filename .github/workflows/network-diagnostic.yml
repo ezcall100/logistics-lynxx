@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: 🔍 Network Diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  network-test:
+    name: 🔍 Network Connectivity Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 🔍 Test Basic Connectivity
+        run: |
+          echo "🔍 Testing basic network connectivity..."
+          
+          # Test DNS resolution
+          echo "📡 Testing DNS resolution..."
+          nslookup github.com || echo "❌ DNS resolution failed"
+          nslookup api.github.com || echo "❌ API DNS resolution failed"
+          
+          # Test basic connectivity
+          echo "🌐 Testing basic connectivity..."
+          ping -c 3 github.com || echo "❌ Ping failed"
+          
+          # Test HTTPS connectivity
+          echo "🔒 Testing HTTPS connectivity..."
+          curl -I https://github.com || echo "❌ HTTPS connection failed"
+          curl -I https://api.github.com || echo "❌ API HTTPS connection failed"
+          
+          echo "✅ Basic connectivity tests completed"
+      
+      - name: 🔍 Test Git Operations
+        run: |
+          echo "🔍 Testing Git operations..."
+          
+          # Test git config
+          git config --global user.name "test"
+          git config --global user.email "test@example.com"
+          
+          # Test git clone (shallow)
+          echo "📥 Testing git clone..."
+          git clone --depth 1 https://github.com/actions/checkout.git /tmp/test-repo || echo "❌ Git clone failed"
+          
+          # Test git fetch
+          echo "📡 Testing git fetch..."
+          cd /tmp/test-repo
+          git fetch --depth 1 || echo "❌ Git fetch failed"
+          
+          echo "✅ Git operation tests completed"
+      
+      - name: 🔍 Test StepSecurity Permissions
+        run: |
+          echo "🔍 Testing StepSecurity network permissions..."
+          
+          # Test with StepSecurity enabled
+          echo "🛡️ Testing with StepSecurity..."
+          
+          # Test allowed endpoints
+          curl -I https://github.com || echo "❌ GitHub.com access failed"
+          curl -I https://api.github.com || echo "❌ API access failed"
+          curl -I https://raw.githubusercontent.com || echo "❌ Raw content access failed"
+          
+          echo "✅ StepSecurity permission tests completed"
+      
+      - name: 🔍 Environment Information
+        run: |
+          echo "🔍 Collecting environment information..."
+          
+          echo "🌍 Environment variables:"
+          env | grep -E "(GITHUB|RUNNER|ACTIONS)" || echo "No relevant env vars found"
+          
+          echo "🔧 Git configuration:"
+          git config --list || echo "Git config failed"
+          
+          echo "🌐 Network interfaces:"
+          ip addr show || echo "Network interface check failed"
+          
+          echo "📡 DNS configuration:"
+          cat /etc/resolv.conf || echo "DNS config check failed"
+      
+      - name: 📊 Diagnostic Summary
+        run: |
+          echo "## 🔍 Network Diagnostic Summary"
+          echo ""
+          echo "**Runner:** ${{ runner.os }}"
+          echo "**Environment:** ${{ runner.environment }}"
+          echo "**Repository:** ${{ github.repository }}"
+          echo "**Event:** ${{ github.event_name }}"
+          echo ""
+          echo "### 🔧 Troubleshooting Steps:"
+          echo "1. Check GitHub Status: https://www.githubstatus.com/"
+          echo "2. Verify repository permissions"
+          echo "3. Check network firewall settings"
+          echo "4. Try different runner type if available"
+          echo ""
+          echo "### 🛠️ Next Actions:"
+          echo "- If tests pass: Network is working correctly"
+          echo "- If tests fail: Check GitHub status and network configuration"
+          echo "- For persistent issues: Contact GitHub support"

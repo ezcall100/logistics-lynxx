@@ -20,12 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['javascript', 'typescript']
-    
     steps:
+      - name: 🛡️ Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          allowed-endpoints: |
+            github.com:443
+            api.github.com:443
+            *.githubusercontent.com:443
+            *.github.com:443
+      
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
@@ -34,7 +38,7 @@ jobs:
       - name: 🔍 Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: javascript
           queries: security-extended,security-and-quality
       
       - name: 🔍 Autobuild
@@ -43,10 +47,10 @@ jobs:
       - name: 🔍 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{ matrix.language }}"
+          category: "/language:javascript"
       
       - name: 📊 Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: ../results-${{ matrix.language }}.sarif
+          sarif_file: results-javascript.sarif

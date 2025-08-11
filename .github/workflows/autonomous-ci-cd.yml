@@ -139,9 +139,11 @@ jobs:
         uses: step-security/harden-runner@v2
         with:
           egress-policy: block
-          allowed-endpoints: >
-            api.github.com
-            raw.githubusercontent.com
+          allowed-endpoints: |
+            github.com:443
+            api.github.com:443
+            *.githubusercontent.com:443
+            raw.githubusercontent.com:443
       
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -167,8 +169,10 @@ jobs:
         uses: step-security/harden-runner@v2
         with:
           egress-policy: block
-          allowed-endpoints: >
-            api.github.com
+          allowed-endpoints: |
+            github.com:443
+            api.github.com:443
+            *.githubusercontent.com:443
       
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -219,9 +223,11 @@ jobs:
         uses: step-security/harden-runner@v2
         with:
           egress-policy: block
-          allowed-endpoints: >
-            api.github.com
-            registry.npmjs.org
+          allowed-endpoints: |
+            github.com:443
+            api.github.com:443
+            *.githubusercontent.com:443
+            registry.npmjs.org:443
       
       - name: 📥 Checkout code
         uses: actions/checkout@v4
