@@ -4,6 +4,7 @@
 # yaml-language-server: disableAdditionalProperties: true
 # yaml-language-server: validate: false
 # yaml-language-server: disableSchemaValidation: true
+
 name: CodeQL (No Hardening)
 
 on:
@@ -20,33 +21,41 @@ jobs:
     name: Analyze (No Hardening)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: 🔍 Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: javascript
           queries: security-extended,security-and-quality
-      
-      - name: 🔍 Autobuild
-        uses: github/codeql-action/autobuild@v3
-      
+
+      # For JS/TS, a build isn't strictly required, but installing deps improves results.
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: 📦 Install dependencies (best effort)
+        run: |
+          if [ -f package.json ]; then
+            npm ci --no-audit --no-fund || true
+            npm run build --if-present || true
+          else
+            echo "No package.json found; skipping install/build."
+          fi
+
       - name: 🔍 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:javascript"
-      
-      - name: 📊 Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: results-javascript.sarif
-      
+
       - name: 📊 Test Results Summary
         run: |
           echo "## 🔍 CodeQL Test Results"
@@ -56,11 +65,11 @@ jobs:
           echo "**Network Access:** Unrestricted"
           echo ""
           echo "### 🎯 What This Means:"
-          echo "- CodeQL can access all required endpoints"
+          echo "- CodeQL can access required endpoints"
           echo "- No network restrictions applied"
           echo "- Analysis should complete successfully"
           echo ""
           echo "### 🔧 Next Steps:"
-          echo "1. If this works: StepSecurity was blocking legitimate access"
-          echo "2. If this fails: There's a deeper network connectivity issue"
-          echo "3. Configure StepSecurity with proper endpoints if needed"
+          echo "1. If this works: Previous hardening blocked access"
+          echo "2. If this fails: There may be a deeper network issue"
+          echo "3. Re-enable hardening later with proper allowlists"
