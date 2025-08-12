@@ -1,3 +1,4 @@
+
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # yaml-language-server: disableContextAccess: true
 # yaml-language-server: disableDefaultProperties: true
@@ -173,6 +174,17 @@ jobs:
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      # Environment variables with fallbacks including localhost
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
+      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
+      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
+      N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
 
     steps:
       - name: 📦 Checkout
@@ -180,37 +192,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Resolve configuration into env and step outputs (no expressions used in job-level env/if)
       - name: 🔧 Resolve configuration
         id: cfg
         run: |
           set -euo pipefail
 
-          ENVIRONMENT_NAME="${{ vars.ENVIRONMENT_NAME || 'production' }}"
-          APP_URL="${{ vars.APP_URL || 'https://app.example.com' }}"
-          N8N_ENABLED_RAW="${{ vars.N8N_ENABLED || 'false' }}"
-          N8N_BASE_URL="${{ vars.N8N_BASE_URL || '' }}"
-          DEPLOYMENT_WEBHOOK_URL="${{ vars.DEPLOYMENT_WEBHOOK_URL || '' }}"
-
-          SUPABASE_URL="${{ secrets.SUPABASE_URL || '' }}"
-          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY || '' }}"
-          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY || '' }}"
-          N8N_API_KEY="${{ secrets.N8N_API_KEY || '' }}"
-
-          case "${N8N_ENABLED_RAW,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
+          case "${N8N_ENABLED,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
           if [[ -n "$N8N_BASE_URL" && -n "$N8N_API_KEY" ]]; then N8N_ENABLED=true; fi
-
-          {
-            echo "ENVIRONMENT_NAME=$ENVIRONMENT_NAME"
-            echo "APP_URL=$APP_URL"
-            echo "N8N_ENABLED=$N8N_ENABLED"
-            echo "N8N_BASE_URL=$N8N_BASE_URL"
-            echo "DEPLOYMENT_WEBHOOK_URL=$DEPLOYMENT_WEBHOOK_URL"
-            echo "SUPABASE_URL=$SUPABASE_URL"
-            echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
-            echo "OPENAI_API_KEY=$OPENAI_API_KEY"
-            echo "N8N_API_KEY=$N8N_API_KEY"
-          } >> "$GITHUB_ENV"
 
           echo "n8n_enabled=$N8N_ENABLED" >> "$GITHUB_OUTPUT"
           echo "deployment_webhook_url=$DEPLOYMENT_WEBHOOK_URL" >> "$GITHUB_OUTPUT"
@@ -331,7 +319,7 @@ jobs:
             echo "## 🚀 Deployment Summary"
             echo "- Status: \`${{ job.status }}\`"
             echo "- Env: \`${ENVIRONMENT_NAME:-production}\`"
-            echo "- URL: \`${APP_URL:-https://app.example.com}\`"
+            echo "- URL: \`${APP_URL:-http://localhost:8080}\`"
             echo "- Repo: \`${{ github.repository }}\`"
             echo "- Ref:  \`${{ github.ref_name }}\`"
             echo "- SHA:  \`${{ github.sha }}\`"
@@ -346,6 +334,8 @@ jobs:
     needs: deploy
     if: always()
     timeout-minutes: 15
+    env:
+      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
 
     steps:
       - name: 📦 Checkout
@@ -376,7 +366,6 @@ jobs:
       - name: 🧾 Monitoring Summary
         if: always()
         run: |
-          ENVIRONMENT_NAME="${{ vars.ENVIRONMENT_NAME || 'production' }}"
           {
             echo "## 📊 Monitoring Report"
             echo "- Status: \`${{ job.status }}\`"

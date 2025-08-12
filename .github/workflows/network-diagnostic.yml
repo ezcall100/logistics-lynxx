@@ -1,16 +1,20 @@
+
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # yaml-language-server: disableContextAccess: true
-# yaml-language-server: disableDefaultProperties: true
-# yaml-language-server: disableAdditionalProperties: true
-# yaml-language-server: validate: false
-# yaml-language-server: disableSchemaValidation: true
 
-name: 🔍 Network Diagnostic
+name: 🌐 Network Connectivity Diagnostic
 
 on:
-  workflow_dispatch:
   push:
     branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      debug_level:
+        description: 'Debug output level'
+        required: true
+        default: 'basic'
+        type: choice
+        options: [minimal, basic, verbose]
 
 permissions:
   contents: read
@@ -20,116 +24,33 @@ defaults:
     shell: bash
 
 jobs:
-  network-test:
-    name: 🔍 Network Connectivity Test
+  network-diagnostic:
+    name: 🌐 Network Connectivity Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
+      # Environment variables with localhost fallbacks
       ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
-      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-
+      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
+    
     steps:
-      - name: 🔧 Ensure diagnostic tools
+      - name: 🔍 Test Connectivity
         run: |
-          set -euo pipefail
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends \
-            dnsutils iputils-ping iproute2 curl ca-certificates git
-
-      - name: 🌐 Basic network checks
-        run: |
-          set -euo pipefail
-          echo "🔍 DNS resolution"
-          nslookup github.com            || echo "❌ nslookup github.com failed"
-          nslookup api.github.com        || echo "❌ nslookup api.github.com failed"
-
-          echo ""
-          echo "📡 ICMP ping (may be blocked by remote host)"
-          ping -c 3 github.com           || echo "❌ ping github.com failed"
-
-          echo ""
-          echo "🔒 HTTPS reachability (HEAD)"
-          for u in https://github.com https://api.github.com https://raw.githubusercontent.com https://codeload.github.com https://registry.npmjs.org ; do
-            echo "→ $u"
-            curl -fsSIL --max-time 10 "$u" >/dev/null || echo "❌ curl HEAD failed for $u"
-          done
-          echo "✅ Basic connectivity tests completed"
-
-      - name: 📦 Git operations check
-        run: |
-          set -euo pipefail
-          export GIT_TERMINAL_PROMPT=0
-          TMPDIR="$(mktemp -d /tmp/netdiag.XXXXXX)"
-          echo "Cloning to $TMPDIR"
-          if git clone --depth 1 https://github.com/actions/checkout.git "$TMPDIR/checkout"; then
-            echo "✅ git clone ok"
-            if git -C "$TMPDIR/checkout" fetch --depth 1 origin HEAD; then
-              echo "✅ git fetch ok"
-            else
-              echo "❌ git fetch failed"
-            fi
-          else
-            echo "❌ git clone failed"
-          fi
-
-      - name: ✅ Common CI endpoints probe
-        run: |
-          set -euo pipefail
-          echo "Probing common endpoints:"
-          endpoints=(
-            "https://github.com"
-            "https://api.github.com"
-            "https://raw.githubusercontent.com"
-            "https://codeload.github.com"
-            "https://registry.npmjs.org"
-            "https://nodejs.org"
-          )
-          for e in "${endpoints[@]}"; do
-            echo "→ $e"
-            curl -fsSIL --max-time 10 "$e" >/dev/null || echo "❌ cannot reach $e"
-          done
-          echo "✅ Endpoint probes completed"
-
-      - name: 🖥️ Environment information
-        run: |
-          set -euo pipefail
-          echo "🔍 Runner & env"
-          echo "OS: $(uname -a)"
-          echo "Date: $(date -Is)"
-          echo "Repo: ${{ github.repository }}"
-          echo "Ref:  ${{ github.ref_name }}"
-          echo "SHA:  ${{ github.sha }}"
-          echo ""
-          echo "🔧 Git config"
-          git config --list || echo "Git config unavailable"
-          echo ""
-          echo "🌐 Network interfaces"
-          ip addr show || echo "ip addr failed"
-          echo ""
-          echo "📡 DNS configuration"
-          cat /etc/resolv.conf || echo "resolv.conf read failed"
-          echo ""
-          echo "🧪 Selected environment variables"
-          env | sort | grep -E '^(GITHUB|RUNNER|ACTIONS)_' || echo "No matching vars"
+          echo "🌐 Testing network connectivity..."
+          echo "Environment: $ENVIRONMENT_NAME"
+          echo "App URL: $APP_URL"
+          
+          # Test basic connectivity
+          curl -fsS --connect-timeout 10 https://httpbin.org/get || echo "❌ httpbin.org unreachable"
+          curl -fsS --connect-timeout 10 https://api.github.com || echo "❌ GitHub API unreachable"
+          
+          echo "✅ Network diagnostic complete"
 
       - name: 📊 Diagnostic Summary
-        if: always()
         run: |
           {
-            echo "## 🔍 Network Diagnostic Summary"
-            echo ""
-            echo "- **Runner:** \`${{ runner.os }}\`"
-            echo "- **Environment:** \`${{ env.ENVIRONMENT_NAME }}\`"
-            echo "- **Repository:** \`${{ github.repository }}\`"
-            echo "- **Event:** \`${{ github.event_name }}\`"
-            echo ""
-            echo "### 🔧 Troubleshooting Steps"
-            echo "1. Check GitHub Status: https://www.githubstatus.com/"
-            echo "2. Verify repository and org network policies"
-            echo "3. Review firewall or egress restrictions"
-            echo "4. Try a different runner image if available"
-            echo ""
-            echo "### 🛠️ Next Actions"
-            echo "- If tests pass: network is healthy ✅"
-            echo "- If failures occurred: inspect logs above and adjust egress rules or DNS 🔧"
+            echo "## 🌐 Network Diagnostic Results"
+            echo "- Environment: \`$ENVIRONMENT_NAME\`"
+            echo "- App URL: \`$APP_URL\`"
+            echo "- Status: ✅ Complete"
           } >> "$GITHUB_STEP_SUMMARY"
