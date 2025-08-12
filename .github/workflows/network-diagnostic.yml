@@ -94,6 +94,7 @@ jobs:
         run: |
           # Set environment variables from GitHub variables, secrets, and inputs
           # Using shell variables to avoid YAML language server warnings
+          # Updated to eliminate all context access warnings
           ENV_NAME="development"
           APP_URL_VAR="http://localhost:8080"
           STAGING_URL_VAR="http://localhost:8080"
