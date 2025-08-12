@@ -11,7 +11,7 @@ jobs:
     steps:
       # Step 1: Checkout the repository code
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Use a GitHub Actions secret
       # Using the actual secret name stored in your repository:
