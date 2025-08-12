@@ -83,10 +83,10 @@ jobs:
       N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
       
       # Network configuration
-      TIMEOUT_SECONDS: ${{ env.TIMEOUT_SECONDS || '30' }}
-      DEBUG_LEVEL: ${{ env.DEBUG_LEVEL || 'basic' }}
-      TARGET_ENV: ${{ env.TARGET_ENV || 'all' }}
-      INCLUDE_EXTERNAL: ${{ env.INCLUDE_EXTERNAL || 'true' }}
+      TIMEOUT_SECONDS: ${{ github.event.inputs.timeout_seconds || 30 }}
+      DEBUG_LEVEL: ${{ github.event.inputs.debug_level || 'basic' }}
+      TARGET_ENV: ${{ github.event.inputs.target_environment || 'all' }}
+      INCLUDE_EXTERNAL: ${{ github.event.inputs.include_external || true }}
     
     steps:
       - name: 🔍 System Information
@@ -295,7 +295,6 @@ jobs:
           done
 
       - name: 🔐 Supabase Connectivity Test
-        if: ${{ secrets.SUPABASE_URL != 'https://placeholder.supabase.co' && secrets.SUPABASE_URL != '' }}
         run: |
           set -euo pipefail
           echo "🔐 Testing Supabase connectivity..."
@@ -322,7 +321,6 @@ jobs:
           fi
 
       - name: 🤖 N8N Connectivity Test
-        if: ${{ vars.N8N_BASE_URL != '' }}
         run: |
           set -euo pipefail
           echo "🤖 Testing N8N connectivity..."
@@ -349,7 +347,6 @@ jobs:
           fi
 
       - name: 📊 Network Performance Test
-        if: ${{ env.DEBUG_LEVEL == 'verbose' || env.DEBUG_LEVEL == 'comprehensive' }}
         run: |
           set -euo pipefail
           echo "📊 Testing network performance..."
@@ -376,7 +373,6 @@ jobs:
           done
 
       - name: 🔍 Comprehensive Network Analysis
-        if: ${{ env.DEBUG_LEVEL == 'comprehensive' }}
         run: |
           set -euo pipefail
           echo "🔍 Performing comprehensive network analysis..."
