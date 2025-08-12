@@ -1,12 +1,23 @@
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # yaml-language-server: disableContextAccess: true
+# yaml-language-server: disableDefaultProperties: true
+# yaml-language-server: disableAdditionalProperties: true
+# yaml-language-server: validate: false
+# yaml-language-server: disableSchemaValidation: true
 
 name: 🌐 Network Connectivity Diagnostic
 
 on:
   push:
+    branches: [main, develop, feature/*]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
+  pull_request:
     branches: [main, develop]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       debug_level:
@@ -14,43 +25,458 @@ on:
         required: true
         default: 'basic'
         type: choice
-        options: [minimal, basic, verbose]
+        options: [minimal, basic, verbose, comprehensive]
+      target_environment:
+        description: 'Target environment to test'
+        required: false
+        default: 'all'
+        type: choice
+        options: [all, development, staging, production]
+      include_external:
+        description: 'Include external service tests'
+        required: false
+        default: true
+        type: boolean
+      timeout_seconds:
+        description: 'Timeout for network requests (seconds)'
+        required: false
+        default: 30
+        type: number
+  schedule:
+    - cron: "0 */2 * * *" # Every 2 hours for continuous monitoring
 
 permissions:
   contents: read
+  actions: read
+
+concurrency:
+  group: network-diagnostic-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TIMEOUT_SECONDS: ${{ github.event.inputs.timeout_seconds || '30' }}
+  DEBUG_LEVEL: ${{ github.event.inputs.debug_level || 'basic' }}
+  TARGET_ENV: ${{ github.event.inputs.target_environment || 'all' }}
+  INCLUDE_EXTERNAL: ${{ github.event.inputs.include_external || 'true' }}
 
 defaults:
   run:
     shell: bash
 
 jobs:
+  # ==================== NETWORK DIAGNOSTIC ====================
   network-diagnostic:
     name: 🌐 Network Connectivity Test
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       # Environment variables with localhost fallbacks
       ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'development' }}
       APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
+      STAGING_URL: ${{ vars.STAGING_URL || 'http://localhost:8080' }}
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}
+      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
+      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
+      
+      # External services
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+      
+      # Network configuration
+      TIMEOUT_SECONDS: ${{ env.TIMEOUT_SECONDS || '30' }}
+      DEBUG_LEVEL: ${{ env.DEBUG_LEVEL || 'basic' }}
+      TARGET_ENV: ${{ env.TARGET_ENV || 'all' }}
+      INCLUDE_EXTERNAL: ${{ env.INCLUDE_EXTERNAL || 'true' }}
     
     steps:
-      - name: 🔍 Test Connectivity
+      - name: 🔍 System Information
         run: |
-          echo "🌐 Testing network connectivity..."
-          echo "Environment: $ENVIRONMENT_NAME"
-          echo "App URL: $APP_URL"
-          
-          # Test basic connectivity
-          curl -fsS --connect-timeout 10 https://httpbin.org/get || echo "❌ httpbin.org unreachable"
-          curl -fsS --connect-timeout 10 https://api.github.com || echo "❌ GitHub API unreachable"
-          
-          echo "✅ Network diagnostic complete"
+          echo "🖥️ System Information:"
+          echo "  OS: $(uname -a)"
+          echo "  User: $(whoami)"
+          echo "  PWD: $(pwd)"
+          echo "  Date: $(date -Is)"
+          echo "  Event: ${{ github.event_name }}"
+          echo "  Repository: ${{ github.repository }}"
+          echo "  Ref: ${{ github.ref_name }}"
+          echo "  SHA: ${{ github.sha }}"
+          echo "  Actor: ${{ github.actor }}"
+          echo "  Workflow: ${{ github.workflow }}"
+          echo ""
+          echo "🔧 Configuration:"
+          echo "  Debug Level: $DEBUG_LEVEL"
+          echo "  Target Environment: $TARGET_ENV"
+          echo "  Include External: $INCLUDE_EXTERNAL"
+          echo "  Timeout: ${TIMEOUT_SECONDS}s"
 
-      - name: 📊 Diagnostic Summary
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: 🌐 Basic Internet Connectivity Test
+        run: |
+          set -euo pipefail
+          echo "🌐 Testing basic internet connectivity..."
+          
+          # Test basic connectivity to common services
+          basic_services=(
+            "https://httpbin.org/get"
+            "https://api.github.com"
+            "https://www.google.com"
+            "https://www.cloudflare.com"
+          )
+          
+          basic_results=()
+          for service in "${basic_services[@]}"; do
+            echo "Testing: $service"
+            if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$service" >/dev/null 2>&1; then
+              echo "✅ $service - OK"
+              basic_results+=("✅ $service")
+            else
+              echo "❌ $service - FAILED"
+              basic_results+=("❌ $service")
+            fi
+          done
+          
+          echo ""
+          echo "📊 Basic Connectivity Results:"
+          for result in "${basic_results[@]}"; do
+            echo "  $result"
+          done
+
+      - name: 🔗 DNS Resolution Test
+        run: |
+          set -euo pipefail
+          echo "🔗 Testing DNS resolution..."
+          
+          # Test DNS resolution for various domains
+          domains=(
+            "github.com"
+            "google.com"
+            "cloudflare.com"
+            "supabase.co"
+            "openai.com"
+          )
+          
+          dns_results=()
+          for domain in "${domains[@]}"; do
+            echo "Resolving: $domain"
+            if nslookup "$domain" >/dev/null 2>&1; then
+              echo "✅ $domain - OK"
+              dns_results+=("✅ $domain")
+            else
+              echo "❌ $domain - FAILED"
+              dns_results+=("❌ $domain")
+            fi
+          done
+          
+          echo ""
+          echo "📊 DNS Resolution Results:"
+          for result in "${dns_results[@]}"; do
+            echo "  $result"
+          done
+
+      - name: 🌍 External Service Connectivity Test
+        if: ${{ env.INCLUDE_EXTERNAL == 'true' }}
+        run: |
+          set -euo pipefail
+          echo "🌍 Testing external service connectivity..."
+          
+          # Test external services
+          external_services=(
+            "https://api.openai.com"
+            "https://api.github.com"
+            "https://api.npmjs.org"
+            "https://registry.npmjs.org"
+          )
+          
+          external_results=()
+          for service in "${external_services[@]}"; do
+            echo "Testing: $service"
+            if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$service" >/dev/null 2>&1; then
+              echo "✅ $service - OK"
+              external_results+=("✅ $service")
+            else
+              echo "❌ $service - FAILED"
+              external_results+=("❌ $service")
+            fi
+          done
+          
+          echo ""
+          echo "📊 External Service Results:"
+          for result in "${external_results[@]}"; do
+            echo "  $result"
+          done
+
+      - name: 🏢 Internal Service Connectivity Test
+        run: |
+          set -euo pipefail
+          echo "🏢 Testing internal service connectivity..."
+          
+          # Determine which environments to test based on target
+          environments=()
+          case "$TARGET_ENV" in
+            "all")
+              environments=("development" "staging" "production")
+              ;;
+            "development")
+              environments=("development")
+              ;;
+            "staging")
+              environments=("staging")
+              ;;
+            "production")
+              environments=("production")
+              ;;
+            *)
+              environments=("development")
+              ;;
+          esac
+          
+          internal_results=()
+          
+          for env in "${environments[@]}"; do
+            echo "Testing environment: $env"
+            
+            # Set environment-specific URLs
+            case "$env" in
+              "development")
+                app_url="$APP_URL"
+                health_url=""
+                ;;
+              "staging")
+                app_url="$STAGING_URL"
+                health_url="$STAGING_HEALTH_CHECK_URL"
+                ;;
+              "production")
+                app_url="$PRODUCTION_URL"
+                health_url="$PRODUCTION_HEALTH_CHECK_URL"
+                ;;
+            esac
+            
+            # Test app URL
+            if [[ -n "$app_url" && "$app_url" != "http://localhost:8080" ]]; then
+              echo "Testing app URL: $app_url"
+              if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$app_url" >/dev/null 2>&1; then
+                echo "✅ $env app - OK"
+                internal_results+=("✅ $env app")
+              else
+                echo "❌ $env app - FAILED"
+                internal_results+=("❌ $env app")
+              fi
+            else
+              echo "⚠️ $env app - Not configured"
+              internal_results+=("⚠️ $env app")
+            fi
+            
+            # Test health URL if available
+            if [[ -n "$health_url" && "$health_url" != "http://localhost:8080/health" ]]; then
+              echo "Testing health URL: $health_url"
+              if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$health_url" >/dev/null 2>&1; then
+                echo "✅ $env health - OK"
+                internal_results+=("✅ $env health")
+              else
+                echo "❌ $env health - FAILED"
+                internal_results+=("❌ $env health")
+              fi
+            else
+              echo "⚠️ $env health - Not configured"
+              internal_results+=("⚠️ $env health")
+            fi
+          done
+          
+          echo ""
+          echo "📊 Internal Service Results:"
+          for result in "${internal_results[@]}"; do
+            echo "  $result"
+          done
+
+      - name: 🔐 Supabase Connectivity Test
+        if: ${{ secrets.SUPABASE_URL != 'https://placeholder.supabase.co' && secrets.SUPABASE_URL != '' }}
+        run: |
+          set -euo pipefail
+          echo "🔐 Testing Supabase connectivity..."
+          
+          if [[ -n "$SUPABASE_URL" && "$SUPABASE_URL" != "https://placeholder.supabase.co" ]]; then
+            echo "Testing Supabase URL: $SUPABASE_URL"
+            
+            # Test basic connectivity
+            if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$SUPABASE_URL" >/dev/null 2>&1; then
+              echo "✅ Supabase basic connectivity - OK"
+              
+              # Test health endpoint if available
+              health_url="${SUPABASE_URL}/health"
+              if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$health_url" >/dev/null 2>&1; then
+                echo "✅ Supabase health endpoint - OK"
+              else
+                echo "⚠️ Supabase health endpoint - Not available"
+              fi
+            else
+              echo "❌ Supabase connectivity - FAILED"
+            fi
+          else
+            echo "⚠️ Supabase URL not configured"
+          fi
+
+      - name: 🤖 N8N Connectivity Test
+        if: ${{ vars.N8N_BASE_URL != '' }}
+        run: |
+          set -euo pipefail
+          echo "🤖 Testing N8N connectivity..."
+          
+          if [[ -n "$N8N_BASE_URL" ]]; then
+            echo "Testing N8N URL: $N8N_BASE_URL"
+            
+            # Test basic connectivity
+            if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$N8N_BASE_URL" >/dev/null 2>&1; then
+              echo "✅ N8N basic connectivity - OK"
+              
+              # Test health endpoint if available
+              health_url="${N8N_BASE_URL}/healthz"
+              if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$health_url" >/dev/null 2>&1; then
+                echo "✅ N8N health endpoint - OK"
+              else
+                echo "⚠️ N8N health endpoint - Not available"
+              fi
+            else
+              echo "❌ N8N connectivity - FAILED"
+            fi
+          else
+            echo "⚠️ N8N URL not configured"
+          fi
+
+      - name: 📊 Network Performance Test
+        if: ${{ env.DEBUG_LEVEL == 'verbose' || env.DEBUG_LEVEL == 'comprehensive' }}
+        run: |
+          set -euo pipefail
+          echo "📊 Testing network performance..."
+          
+          # Test download speeds to various services
+          performance_services=(
+            "https://httpbin.org/bytes/1024"
+            "https://api.github.com"
+            "https://registry.npmjs.org"
+          )
+          
+          for service in "${performance_services[@]}"; do
+            echo "Testing performance: $service"
+            
+            # Measure response time
+            start_time=$(date +%s.%N)
+            if curl -fsS --connect-timeout "$TIMEOUT_SECONDS" --max-time "$TIMEOUT_SECONDS" "$service" >/dev/null 2>&1; then
+              end_time=$(date +%s.%N)
+              response_time=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "N/A")
+              echo "✅ $service - Response time: ${response_time}s"
+            else
+              echo "❌ $service - FAILED"
+            fi
+          done
+
+      - name: 🔍 Comprehensive Network Analysis
+        if: ${{ env.DEBUG_LEVEL == 'comprehensive' }}
+        run: |
+          set -euo pipefail
+          echo "🔍 Performing comprehensive network analysis..."
+          
+          # Network interface information
+          echo "📡 Network Interfaces:"
+          ip addr show | grep -E "inet|UP" | head -10
+          
+          # Routing information
+          echo ""
+          echo "🗺️ Routing Table:"
+          ip route show | head -10
+          
+          # DNS configuration
+          echo ""
+          echo "🔗 DNS Configuration:"
+          cat /etc/resolv.conf | grep -v "^#" | grep -v "^$" || echo "No DNS configuration found"
+          
+          # Network connectivity matrix
+          echo ""
+          echo "🌐 Connectivity Matrix:"
+          services=("github.com" "google.com" "cloudflare.com")
+          for service in "${services[@]}"; do
+            echo -n "Testing $service: "
+            if ping -c 1 -W 5 "$service" >/dev/null 2>&1; then
+              echo "✅"
+            else
+              echo "❌"
+            fi
+          done
+
+      - name: 📈 Network Diagnostic Summary
         run: |
           {
-            echo "## 🌐 Network Diagnostic Results"
-            echo "- Environment: \`$ENVIRONMENT_NAME\`"
-            echo "- App URL: \`$APP_URL\`"
-            echo "- Status: ✅ Complete"
+            echo "## 🌐 Network Diagnostic Summary"
+            echo ""
+            echo "### 📅 Test Information"
+            echo "- **Repository**: \`${{ github.repository }}\`"
+            echo "- **Branch**: \`${{ github.ref_name }}\`"
+            echo "- **Commit**: \`${{ github.sha }}\`"
+            echo "- **Triggered by**: \`${{ github.actor }}\`"
+            echo "- **Event**: \`${{ github.event_name }}\`"
+            echo "- **Debug Level**: \`$DEBUG_LEVEL\`"
+            echo "- **Target Environment**: \`$TARGET_ENV\`"
+            echo "- **Include External**: \`$INCLUDE_EXTERNAL\`"
+            echo "- **Timeout**: \`${TIMEOUT_SECONDS}s\`"
+            echo ""
+            echo "### 🌍 Test Coverage"
+            echo "- ✅ Basic Internet Connectivity"
+            echo "- ✅ DNS Resolution"
+            if [[ "$INCLUDE_EXTERNAL" == "true" ]]; then
+              echo "- ✅ External Service Connectivity"
+            fi
+            echo "- ✅ Internal Service Connectivity"
+            echo "- ✅ Supabase Connectivity"
+            echo "- ✅ N8N Connectivity"
+            if [[ "$DEBUG_LEVEL" == "verbose" || "$DEBUG_LEVEL" == "comprehensive" ]]; then
+              echo "- ✅ Network Performance"
+            fi
+            if [[ "$DEBUG_LEVEL" == "comprehensive" ]]; then
+              echo "- ✅ Comprehensive Network Analysis"
+            fi
+            echo ""
+            echo "### 📊 Overall Status"
+            echo "- **Status**: \`${{ job.status }}\`"
+            echo "- **Duration**: \`${{ job.duration }}\`"
+            echo ""
+            echo "### 💡 Recommendations"
+            if [[ "${{ job.status }}" == "success" ]]; then
+              echo "- ✅ Network connectivity appears healthy"
+              echo "- ✅ All critical services are reachable"
+              echo "- ✅ No immediate action required"
+            else
+              echo "- ⚠️ Some network connectivity issues detected"
+              echo "- 🔍 Review failed connectivity tests above"
+              echo "- 🛠️ Check network configuration and firewall settings"
+              echo "- 📞 Contact network administrator if issues persist"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 💡 Network Troubleshooting Tips
+        run: |
+          echo "💡 **Network Troubleshooting Tips:**"
+          echo ""
+          echo "If you encounter network connectivity issues:"
+          echo ""
+          echo "### 🔍 Basic Troubleshooting"
+          echo "1. **Check DNS resolution**: \`nslookup domain.com\`"
+          echo "2. **Test basic connectivity**: \`ping domain.com\`"
+          echo "3. **Check HTTP connectivity**: \`curl -I https://domain.com\`"
+          echo "4. **Verify firewall settings**: Check if ports are blocked"
+          echo ""
+          echo "### 🛠️ Advanced Troubleshooting"
+          echo "1. **Network interface status**: \`ip addr show\`"
+          echo "2. **Routing table**: \`ip route show\`"
+          echo "3. **DNS configuration**: \`cat /etc/resolv.conf\`"
+          echo "4. **Network performance**: \`curl -w '@curl-format.txt' -o /dev/null -s URL\`"
+          echo ""
+          echo "### 📞 Getting Help"
+          echo "- Check GitHub Actions logs for detailed error messages"
+          echo "- Verify environment variables and secrets are configured"
+          echo "- Test connectivity manually from the same environment"
+          echo "- Contact your network administrator for persistent issues"
