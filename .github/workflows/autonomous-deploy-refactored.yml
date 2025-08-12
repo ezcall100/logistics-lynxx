@@ -197,8 +197,26 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Handle missing or placeholder values gracefully
+          if [[ "$N8N_ENABLED" == "placeholder-key" || -z "$N8N_ENABLED" ]]; then
+            N8N_ENABLED=false
+          fi
+          
           case "${N8N_ENABLED,,}" in true|1|yes|y) N8N_ENABLED=true ;; *) N8N_ENABLED=false ;; esac
-          if [[ -n "$N8N_BASE_URL" && -n "$N8N_API_KEY" ]]; then N8N_ENABLED=true; fi
+          if [[ -n "$N8N_BASE_URL" && -n "$N8N_API_KEY" && "$N8N_API_KEY" != "placeholder-key" ]]; then N8N_ENABLED=true; fi
+
+          # Set fallback values for missing environment variables
+          if [[ "$DEPLOYMENT_WEBHOOK_URL" == "placeholder-key" || -z "$DEPLOYMENT_WEBHOOK_URL" ]]; then
+            DEPLOYMENT_WEBHOOK_URL=""
+          fi
+          
+          if [[ "$ENVIRONMENT_NAME" == "placeholder-key" || -z "$ENVIRONMENT_NAME" ]]; then
+            ENVIRONMENT_NAME="development"
+          fi
+          
+          if [[ "$APP_URL" == "placeholder-key" || -z "$APP_URL" ]]; then
+            APP_URL="http://localhost:8080"
+          fi
 
           echo "n8n_enabled=$N8N_ENABLED" >> "$GITHUB_OUTPUT"
           echo "deployment_webhook_url=$DEPLOYMENT_WEBHOOK_URL" >> "$GITHUB_OUTPUT"
