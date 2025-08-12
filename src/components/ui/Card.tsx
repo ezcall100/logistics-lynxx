@@ -19,15 +19,21 @@ interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   badge?: React.ReactNode;
 }
 
-interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  // Extends HTMLAttributes for standard div element props
+}
 
 interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   actions?: React.ReactNode;
 }
 
-interface CardActionsProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface CardActionsProps extends React.HTMLAttributes<HTMLDivElement> {
+  // Extends HTMLAttributes for standard div element props
+}
 
-interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {
+  // Extends HTMLAttributes for standard paragraph element props
+}
 
 // Main Card component
 export function Card({
