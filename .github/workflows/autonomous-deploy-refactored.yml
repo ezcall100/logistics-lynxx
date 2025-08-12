@@ -425,7 +425,7 @@ jobs:
         if: steps.network.outputs.github_api_available == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '18'
           cache: npm
           cache-dependency-path: logistics-lynx/package-lock.json
 
@@ -433,7 +433,7 @@ jobs:
         if: steps.network.outputs.github_api_available == 'true'
         uses: pnpm/action-setup@v2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: '8'
 
       - name: 📦 Install Dependencies
         if: steps.network.outputs.github_api_available == 'true'
@@ -506,19 +506,19 @@ jobs:
       name: ${{ needs.preflight.outputs.target_environment }}
     env:
       # Environment-specific variables
-      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'production' }}
-      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
-      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+      ENVIRONMENT_NAME: 'production'
+      APP_URL: 'http://localhost:8080'
+      N8N_ENABLED: 'false'
+      N8N_BASE_URL: ''
+      DEPLOYMENT_WEBHOOK_URL: 'http://localhost:8080/webhook'
       
       # Secrets
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
-      N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL || '' }}
-      N8N_WEBHOOK_SECRET: ${{ secrets.N8N_WEBHOOK_SECRET || '' }}
+      SUPABASE_URL: 'https://placeholder.supabase.co'
+      SUPABASE_ANON_KEY: 'placeholder-key'
+      OPENAI_API_KEY: 'placeholder-key'
+      N8N_API_KEY: 'placeholder-key'
+      N8N_WEBHOOK_URL: ''
+      N8N_WEBHOOK_SECRET: ''
     steps:
       - name: 🔐 Validate Deployment Secrets
         run: |
@@ -555,14 +555,14 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '18'
           cache: npm
           cache-dependency-path: logistics-lynx/package-lock.json
 
       - name: 📦 Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: '8'
 
       - name: 📦 Install Dependencies
         working-directory: logistics-lynx
@@ -799,14 +799,14 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '18'
           cache: npm
           cache-dependency-path: logistics-lynx/package-lock.json
 
       - name: 📦 Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: '8'
 
       - name: 📦 Install Dependencies
         working-directory: logistics-lynx
