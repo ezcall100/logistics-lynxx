@@ -61,7 +61,7 @@ supabase db push
 # 2. Functions: workers
 supabase functions deploy outbox-worker
 supabase functions deploy agent-runner      # now emits DLQ-friendly errors
-supabase functions deploy dlq-replay        # new replay function
+supabase functions deploy dlq-replay        # hardened replay function with auth/rate-limit/idempotency
 
 # 3. App: picks up flags/controls (Vercel/Netlify)
 git tag v6.3.0-outbox && git push --tags
@@ -278,8 +278,9 @@ supabase functions deploy agent-runner --version <previous-version>
 
 # 4. Use DLQ replay script when upstream is healthy
 curl -X POST \
+  -H "Authorization: Bearer <admin_jwt_or_hmac>" \
   -H "Content-Type: application/json" \
-  -d '{"company_id": "<tenant>", "force": true}' \
+  -d '{"company_id": "<tenant>", "max": 25, "idempotency_key":"INC-2025-01-13-001"}' \
   https://your-project.supabase.co/functions/v1/dlq-replay
 ```
 

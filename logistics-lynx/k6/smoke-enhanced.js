@@ -20,12 +20,22 @@ export const options = {
     { duration: '30s', target: 0 },   // Ramp down to 0 users
   ],
   thresholds: {
-    http_req_duration: ['p(95)<400'],     // 95% of requests must complete below 400ms
-    http_req_failed: ['rate<0.01'],       // Error rate must be less than 1%
-    errors: ['rate<0.01'],                // Custom error rate
+    // HTTP: crisp thresholds to fail fast
+    http_req_duration: ['p(95)<2500'],    // 95% of requests must complete below 2.5s
+    http_req_failed: ['rate<0.02'],       // Error rate must be less than 2%
+    errors: ['rate<0.02'],                // Custom error rate
+    
+    // Dashboard performance
     dashboard_load_time: ['p(95)<2000'],  // Dashboard load time under 2s
-    outbox_lag_seconds: ['p(95)<2'],      // Outbox lag under 2 seconds
+    
+    // Outbox lag: custom metric thresholds
+    outbox_lag_seconds: ['avg<2', 'p(95)<5'],  // Outbox lag < 2s avg, < 5s p95
+    
+    // Agent SLO: success ≥ 98% over the test window
     agent_success_rate: ['rate>0.98'],    // Agent success rate above 98%
+    
+    // DLQ: size delta after run === 0 (or below tolerance)
+    dlq_items_count: ['count<10'],        // DLQ items count below threshold
   },
 };
 

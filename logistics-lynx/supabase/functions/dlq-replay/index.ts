@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { createHmac } from 'crypto';
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
@@ -23,12 +24,75 @@ interface ReplayRequest {
   company_id?: string;
   error_type?: string;
   force?: boolean;
+  max?: number;
+  idempotency_key?: string;
+  dry_run?: boolean;
+}
+
+interface ReplayRun {
+  id: string;
+  idempotency_key: string;
+  company_id: string;
+  requested_at: string;
+  actor: string;
+  payload_hash: string;
+  status: 'pending' | 'completed' | 'failed';
+  total_processed: number;
+  successful: number;
+  failed: number;
 }
 
 Deno.serve(async (req) => {
   try {
-    const { dlq_ids, company_id, error_type, force = false }: ReplayRequest = await req.json();
+    // 1. AUTHZ GUARD
+    const authResult = await validateAuthorization(req);
+    if (!authResult.authorized) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { 
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const { dlq_ids, company_id, error_type, force = false, max = 50, idempotency_key, dry_run = false }: ReplayRequest = await req.json();
     
+    // 2. RATE LIMIT & BUDGET
+    const rateLimitResult = await checkRateLimit(authResult.actor, company_id, req.headers.get('x-forwarded-for') || 'unknown');
+    if (!rateLimitResult.allowed) {
+      return new Response(JSON.stringify({ 
+        error: 'Rate limit exceeded', 
+        retry_after: rateLimitResult.retry_after 
+      }), { 
+        status: 429,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Retry-After': rateLimitResult.retry_after.toString()
+        }
+      });
+    }
+
+    // 3. REPLAY IDEMPOTENCY
+    if (idempotency_key) {
+      const existingRun = await checkReplayIdempotency(idempotency_key, company_id);
+      if (existingRun) {
+        return new Response(JSON.stringify({
+          message: 'Replay already processed',
+          replay_run: existingRun
+        }), { 
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Create replay run record
+    const replayRunId = await createReplayRun({
+      idempotency_key: idempotency_key || `replay-${Date.now()}`,
+      company_id: company_id || 'all',
+      requested_at: new Date().toISOString(),
+      actor: authResult.actor,
+      payload_hash: await hashPayload({ dlq_ids, company_id, error_type, force, max })
+    });
+
     // Build query for retryable DLQ items
     let query = supabase
       .from('dead_letter_queue')
@@ -48,10 +112,11 @@ Deno.serve(async (req) => {
       query = query.lte('retry_after', new Date().toISOString());
     }
     
-    const { data: dlqItems, error } = await query.order('priority', { ascending: true }).limit(50);
+    const { data: dlqItems, error } = await query.order('priority', { ascending: true }).limit(max);
     
     if (error) {
       console.error('Failed to fetch DLQ items:', error);
+      await updateReplayRun(replayRunId, 'failed', 0, 0, 0);
       return new Response(JSON.stringify({ error: 'Database error' }), { 
         status: 500,
         headers: { 'Content-Type': 'application/json' }
@@ -59,9 +124,39 @@ Deno.serve(async (req) => {
     }
     
     if (!dlqItems || dlqItems.length === 0) {
+      await updateReplayRun(replayRunId, 'completed', 0, 0, 0);
       return new Response(JSON.stringify({ 
         message: 'No retryable DLQ items found',
-        count: 0 
+        count: 0,
+        replay_run_id: replayRunId
+      }), { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // 4. SAFETY RAILS
+    const totalBytes = JSON.stringify(dlqItems).length;
+    if (totalBytes > 2 * 1024 * 1024) { // 2MB limit
+      await updateReplayRun(replayRunId, 'failed', 0, 0, 0);
+      return new Response(JSON.stringify({ error: 'Payload too large (max 2MB)' }), { 
+        status: 413,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (dry_run) {
+      await updateReplayRun(replayRunId, 'completed', dlqItems.length, 0, 0);
+      return new Response(JSON.stringify({
+        message: 'Dry run completed',
+        items_found: dlqItems.length,
+        replay_run_id: replayRunId,
+        preview: dlqItems.slice(0, 5).map(item => ({
+          id: item.id,
+          company_id: item.company_id,
+          error_type: item.error_type,
+          retry_count: item.retry_count
+        }))
       }), { 
         status: 200,
         headers: { 'Content-Type': 'application/json' }
@@ -71,6 +166,7 @@ Deno.serve(async (req) => {
     const results = [];
     let successCount = 0;
     let failureCount = 0;
+    let immediateFailCount = 0;
     
     for (const item of dlqItems) {
       try {
@@ -107,6 +203,7 @@ Deno.serve(async (req) => {
             .eq('id', item.id);
           
           failureCount++;
+          immediateFailCount++;
           results.push({
             dlq_id: item.id,
             original_task_id: item.original_task_id,
@@ -115,9 +212,16 @@ Deno.serve(async (req) => {
             next_retry_at: nextRetryAt
           });
         }
+
+        // Safety rail: stop if >20% immediate fails
+        if (immediateFailCount > dlqItems.length * 0.2) {
+          console.warn(`Stopping replay due to high failure rate: ${immediateFailCount}/${dlqItems.length}`);
+          break;
+        }
       } catch (error) {
         console.error(`Failed to retry DLQ item ${item.id}:`, error);
         failureCount++;
+        immediateFailCount++;
         results.push({
           dlq_id: item.id,
           original_task_id: item.original_task_id,
@@ -127,6 +231,20 @@ Deno.serve(async (req) => {
       }
     }
     
+    // Update replay run with final results
+    await updateReplayRun(replayRunId, 'completed', dlqItems.length, successCount, failureCount);
+    
+    // Write audit log
+    await writeAuditLog({
+      actor: authResult.actor,
+      action: 'dlq_replay',
+      scope: company_id || 'all',
+      target_count: dlqItems.length,
+      success_count: successCount,
+      failure_count: failureCount,
+      replay_run_id: replayRunId
+    });
+    
     // Send Slack notification if configured
     if (Deno.env.get('SLACK_WEBHOOK_URL')) {
       await sendSlackNotification({
@@ -135,7 +253,9 @@ Deno.serve(async (req) => {
           fields: [
             { title: 'Success Count', value: successCount.toString(), short: true },
             { title: 'Failure Count', value: failureCount.toString(), short: true },
-            { title: 'Total Processed', value: dlqItems.length.toString(), short: true }
+            { title: 'Total Processed', value: dlqItems.length.toString(), short: true },
+            { title: 'Actor', value: authResult.actor, short: true },
+            { title: 'Replay Run ID', value: replayRunId, short: true }
           ]
         }]
       });
@@ -148,6 +268,7 @@ Deno.serve(async (req) => {
         successful: successCount,
         failed: failureCount
       },
+      replay_run_id: replayRunId,
       results
     }), { 
       status: 200,
@@ -162,6 +283,219 @@ Deno.serve(async (req) => {
     });
   }
 });
+
+// AUTHZ GUARD: Validate HMAC signature or JWT
+async function validateAuthorization(req: Request): Promise<{ authorized: boolean; actor: string }> {
+  const signature = req.headers.get('x-transbot-signature');
+  const authHeader = req.headers.get('authorization');
+  
+  // Option 1: HMAC signature validation
+  if (signature) {
+    const body = await req.clone().text();
+    const expectedSignature = createHmac('sha256', Deno.env.get('DLQ_REPLAY_SECRET') || 'default-secret')
+      .update(body)
+      .digest('hex');
+    
+    if (signature === expectedSignature) {
+      return { authorized: true, actor: 'hmac-authenticated' };
+    }
+  }
+  
+  // Option 2: JWT validation for super-admin or tenant admin
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser(token);
+      if (error || !user) {
+        return { authorized: false, actor: 'unknown' };
+      }
+      
+      // Check if user is super admin
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      
+      if (profile?.role === 'super_admin') {
+        return { authorized: true, actor: `super_admin:${user.id}` };
+      }
+      
+      // For tenant-specific replays, check if user is company admin
+      const body = await req.clone().json();
+      if (body.company_id) {
+        const isAdmin = await checkCompanyAdmin(user.id, body.company_id);
+        if (isAdmin) {
+          return { authorized: true, actor: `company_admin:${user.id}` };
+        }
+      }
+    } catch (error) {
+      console.error('JWT validation error:', error);
+    }
+  }
+  
+  return { authorized: false, actor: 'unknown' };
+}
+
+// RATE LIMIT: Check edge rate limits
+async function checkRateLimit(actor: string, company_id: string, ip: string): Promise<{ allowed: boolean; retry_after: number }> {
+  const key = `replay:${company_id}:${ip}`;
+  const now = Date.now();
+  const windowMs = 5 * 60 * 1000; // 5 minutes
+  const maxRequests = 3;
+  
+  try {
+    // Get current rate limit state
+    const { data: rateLimit } = await supabase
+      .from('edge_rate_limits')
+      .select('*')
+      .eq('key', key)
+      .single();
+    
+    if (!rateLimit) {
+      // First request
+      await supabase
+        .from('edge_rate_limits')
+        .insert({
+          key,
+          requests: 1,
+          window_start: new Date(now).toISOString(),
+          window_end: new Date(now + windowMs).toISOString()
+        });
+      return { allowed: true, retry_after: 0 };
+    }
+    
+    // Check if window has expired
+    if (new Date(rateLimit.window_end).getTime() < now) {
+      // Reset window
+      await supabase
+        .from('edge_rate_limits')
+        .update({
+          requests: 1,
+          window_start: new Date(now).toISOString(),
+          window_end: new Date(now + windowMs).toISOString()
+        })
+        .eq('key', key);
+      return { allowed: true, retry_after: 0 };
+    }
+    
+    // Check if limit exceeded
+    if (rateLimit.requests >= maxRequests) {
+      const retryAfter = Math.ceil((new Date(rateLimit.window_end).getTime() - now) / 1000);
+      return { allowed: false, retry_after: retryAfter };
+    }
+    
+    // Increment request count
+    await supabase
+      .from('edge_rate_limits')
+      .update({ requests: rateLimit.requests + 1 })
+      .eq('key', key);
+    
+    return { allowed: true, retry_after: 0 };
+  } catch (error) {
+    console.error('Rate limit check error:', error);
+    // Fail open if rate limiting fails
+    return { allowed: true, retry_after: 0 };
+  }
+}
+
+// REPLAY IDEMPOTENCY: Check for existing replay runs
+async function checkReplayIdempotency(idempotency_key: string, company_id: string): Promise<ReplayRun | null> {
+  try {
+    const { data: existingRun } = await supabase
+      .from('replay_runs')
+      .select('*')
+      .eq('idempotency_key', idempotency_key)
+      .eq('company_id', company_id)
+      .single();
+    
+    return existingRun;
+  } catch (error) {
+    return null;
+  }
+}
+
+// Create replay run record
+async function createReplayRun(run: Omit<ReplayRun, 'id' | 'status' | 'total_processed' | 'successful' | 'failed'>): Promise<string> {
+  const { data, error } = await supabase
+    .from('replay_runs')
+    .insert({
+      ...run,
+      status: 'pending',
+      total_processed: 0,
+      successful: 0,
+      failed: 0
+    })
+    .select('id')
+    .single();
+  
+  if (error) throw error;
+  return data.id;
+}
+
+// Update replay run with results
+async function updateReplayRun(id: string, status: string, total: number, successful: number, failed: number): Promise<void> {
+  await supabase
+    .from('replay_runs')
+    .update({
+      status,
+      total_processed: total,
+      successful,
+      failed,
+      completed_at: new Date().toISOString()
+    })
+    .eq('id', id);
+}
+
+// Write audit log
+async function writeAuditLog(log: {
+  actor: string;
+  action: string;
+  scope: string;
+  target_count: number;
+  success_count: number;
+  failure_count: number;
+  replay_run_id: string;
+}): Promise<void> {
+  await supabase
+    .from('audit_logs')
+    .insert({
+      actor: log.actor,
+      action: log.action,
+      scope: log.scope,
+      target_count: log.target_count,
+      success_count: log.success_count,
+      failure_count: log.failure_count,
+      metadata: { replay_run_id: log.replay_run_id },
+      created_at: new Date().toISOString()
+    });
+}
+
+// Hash payload for idempotency
+async function hashPayload(payload: any): Promise<string> {
+  const payloadStr = JSON.stringify(payload);
+  const encoder = new TextEncoder();
+  const data = encoder.encode(payloadStr);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Check if user is company admin
+async function checkCompanyAdmin(userId: string, companyId: string): Promise<boolean> {
+  try {
+    const { data: membership } = await supabase
+      .from('company_memberships')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('company_id', companyId)
+      .single();
+    
+    return membership?.role === 'admin';
+  } catch (error) {
+    return false;
+  }
+}
 
 async function retryTask(dlqItem: DLQItem): Promise<{ success: boolean; error?: string }> {
   try {
