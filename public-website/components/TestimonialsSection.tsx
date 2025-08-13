@@ -19,7 +19,7 @@ export function TestimonialsSection() {
       name: 'Michael Chen',
       role: 'Fleet Manager',
       company: 'Express Trucking',
-      content: 'The real-time tracking and route optimization features are game-changers. Our drivers love the mobile app, and we've seen a 40% reduction in fuel costs. The ROI was immediate.',
+      content: 'The real-time tracking and route optimization features are game-changers. Our drivers love the mobile app, and we have seen a 40% reduction in fuel costs. The ROI was immediate.',
       rating: 5,
       avatar: '/avatars/michael.jpg'
     },
@@ -43,7 +43,7 @@ export function TestimonialsSection() {
       name: 'Lisa Wang',
       role: 'Supply Chain Manager',
       company: 'Tech Manufacturing Inc',
-      content: 'The integration with our ERP system was seamless, and the automated documentation has saved us countless hours. The platform's reliability and 24/7 support are exceptional.',
+      content: 'The integration with our ERP system was seamless, and the automated documentation has saved us countless hours. The platform reliability and 24/7 support are exceptional.',
       rating: 5,
       avatar: '/avatars/lisa.jpg'
     }
