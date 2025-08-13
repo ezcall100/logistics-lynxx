@@ -1,37 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Export environment secrets based on the environment name
-# This script is called from the GitHub Actions workflow
+# This script is called from the GitHub Actions workflow with secrets as arguments
 
-ENVIRONMENT_NAME="$1"
+env_name="${1:-}"
+supabase_url="${2:-}"
+service_key="${3:-}"
+anon_key="${4:-}"
+n8n_url="${5:-}"
+slack_webhook="${6:-}"
 
-case "$ENVIRONMENT_NAME" in
-  prod)
-    echo "SUPABASE_URL=$PROD_SUPABASE_URL" >> $GITHUB_ENV
-    echo "SUPABASE_SERVICE_ROLE_KEY=$PROD_SUPABASE_SERVICE_ROLE_KEY" >> $GITHUB_ENV
-    echo "SUPABASE_ANON_KEY=$PROD_SUPABASE_ANON_KEY" >> $GITHUB_ENV
-    echo "N8N_URL=$PROD_N8N_URL" >> $GITHUB_ENV
-    echo "SLACK_WEBHOOK_URL=$PROD_SLACK_WEBHOOK_URL" >> $GITHUB_ENV
-    ;;
-  staging)
-    echo "SUPABASE_URL=$STAGING_SUPABASE_URL" >> $GITHUB_ENV
-    echo "SUPABASE_SERVICE_ROLE_KEY=$STAGING_SUPABASE_SERVICE_ROLE_KEY" >> $GITHUB_ENV
-    echo "SUPABASE_ANON_KEY=$STAGING_SUPABASE_ANON_KEY" >> $GITHUB_ENV
-    echo "N8N_URL=$STAGING_N8N_URL" >> $GITHUB_ENV
-    echo "SLACK_WEBHOOK_URL=$STAGING_SLACK_WEBHOOK_URL" >> $GITHUB_ENV
-    ;;
-  dev)
-    echo "SUPABASE_URL=$DEV_SUPABASE_URL" >> $GITHUB_ENV
-    echo "SUPABASE_SERVICE_ROLE_KEY=$DEV_SUPABASE_SERVICE_ROLE_KEY" >> $GITHUB_ENV
-    echo "SUPABASE_ANON_KEY=$DEV_SUPABASE_ANON_KEY" >> $GITHUB_ENV
-    echo "N8N_URL=$DEV_N8N_URL" >> $GITHUB_ENV
-    echo "SLACK_WEBHOOK_URL=$DEV_SLACK_WEBHOOK_URL" >> $GITHUB_ENV
-    ;;
-  *)
-    echo "Unknown environment: $ENVIRONMENT_NAME"
-    exit 1
-    ;;
-esac
+if [[ -z "$env_name" || -z "$supabase_url" || -z "$service_key" || -z "$anon_key" ]]; then
+  echo "Missing required args" >&2
+  exit 1
+fi
 
-echo "✅ Environment secrets exported for $ENVIRONMENT_NAME"
+# Export to GITHUB_ENV so later steps see them as $VARS
+{
+  echo "ENVIRONMENT_NAME=$env_name"
+  echo "SUPABASE_URL=$supabase_url"
+  echo "SUPABASE_SERVICE_ROLE_KEY=$service_key"
+  echo "SUPABASE_ANON_KEY=$anon_key"
+  echo "N8N_URL=${n8n_url:-}"
+  echo "SLACK_WEBHOOK_URL=${slack_webhook:-}"
+} >> "$GITHUB_ENV"
+
+echo "✅ Environment secrets exported for $env_name"

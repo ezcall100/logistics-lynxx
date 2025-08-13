@@ -143,28 +143,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Export per-env secrets into $GITHUB_ENV using external script
+      # Export per-env secrets into $GITHUB_ENV (no env block)
       - name: 🔐 Export environment secrets
         shell: bash
         run: |
-          chmod +x scripts/export-env-secrets.sh
-          ./scripts/export-env-secrets.sh "${{ matrix.environment }}"
-        env:
-          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
-          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-          PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
-          PROD_N8N_URL: ${{ secrets.PROD_N8N_URL }}
-          PROD_SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
-          STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
-          STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
-          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
-          STAGING_N8N_URL: ${{ secrets.STAGING_N8N_URL }}
-          STAGING_SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
-          DEV_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
-          DEV_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}
-          DEV_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
-          DEV_N8N_URL: ${{ secrets.DEV_N8N_URL }}
-          DEV_SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
+          set -euo pipefail
+          case "${{ matrix.environment }}" in
+            prod)
+              bash scripts/export-env-secrets.sh prod \
+                "${{ secrets.PROD_SUPABASE_URL }}" \
+                "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" \
+                "${{ secrets.PROD_SUPABASE_ANON_KEY }}" \
+                "${{ secrets.PROD_N8N_URL }}" \
+                "${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+              ;;
+            staging)
+              bash scripts/export-env-secrets.sh staging \
+                "${{ secrets.STAGING_SUPABASE_URL }}" \
+                "${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" \
+                "${{ secrets.STAGING_SUPABASE_ANON_KEY }}" \
+                "${{ secrets.STAGING_N8N_URL }}" \
+                "${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+              ;;
+            dev)
+              bash scripts/export-env-secrets.sh dev \
+                "${{ secrets.DEV_SUPABASE_URL }}" \
+                "${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" \
+                "${{ secrets.DEV_SUPABASE_ANON_KEY }}" \
+                "${{ secrets.DEV_N8N_URL }}" \
+                "${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+              ;;
+          esac
 
       - name: 🔍 Show selected environment
         run: |
