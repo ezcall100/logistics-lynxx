@@ -11,12 +11,18 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      tsDecorators: true,
+    }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  esbuild: {
+    jsx: 'automatic',
+    target: 'es2020',
   },
 }));
