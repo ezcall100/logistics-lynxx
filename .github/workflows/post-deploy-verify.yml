@@ -147,25 +147,6 @@ jobs:
       # Export per-env secrets into $GITHUB_ENV
       - name: 🔐 Export environment secrets
         shell: bash
-        env:
-          # Production secrets
-          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
-          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-          PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
-          PROD_N8N_URL: ${{ secrets.PROD_N8N_URL }}
-          PROD_SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
-          # Staging secrets
-          STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
-          STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
-          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
-          STAGING_N8N_URL: ${{ secrets.STAGING_N8N_URL }}
-          STAGING_SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
-          # Development secrets
-          DEV_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
-          DEV_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}
-          DEV_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
-          DEV_N8N_URL: ${{ secrets.DEV_N8N_URL }}
-          DEV_SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
         run: |
           set -euo pipefail
           
@@ -185,45 +166,84 @@ jobs:
             exit 0
           fi
           
-          # Export secrets based on environment
+          # Export secrets based on environment - only access secrets for the current environment
           case "$CURRENT_ENV" in
             prod)
-              if [[ -n "${PROD_SUPABASE_URL:-}" ]]; then
-                bash scripts/export-env-secrets.sh prod \
-                  "$PROD_SUPABASE_URL" \
-                  "$PROD_SUPABASE_SERVICE_ROLE_KEY" \
-                  "$PROD_SUPABASE_ANON_KEY" \
-                  "$PROD_N8N_URL" \
-                  "$PROD_SLACK_WEBHOOK_URL"
+              # Only access production secrets when processing prod environment for main branch
+              if [[ "$TRIGGER_BRANCH" == "main" ]]; then
+                # Access production secrets
+                SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+                SUPABASE_SERVICE_ROLE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+                SUPABASE_ANON_KEY="${{ secrets.PROD_SUPABASE_ANON_KEY }}"
+                N8N_URL="${{ secrets.PROD_N8N_URL }}"
+                SLACK_WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+                
+                if [[ -n "${SUPABASE_URL:-}" ]]; then
+                  bash scripts/export-env-secrets.sh prod \
+                    "$SUPABASE_URL" \
+                    "$SUPABASE_SERVICE_ROLE_KEY" \
+                    "$SUPABASE_ANON_KEY" \
+                    "$N8N_URL" \
+                    "$SLACK_WEBHOOK_URL"
+                else
+                  echo "❌ Production secrets not available"
+                  exit 1
+                fi
               else
-                echo "❌ Production secrets not available"
-                exit 1
+                echo "⏭️ Skipping prod environment for non-main branch"
+                exit 0
               fi
               ;;
             staging)
-              if [[ -n "${STAGING_SUPABASE_URL:-}" ]]; then
-                bash scripts/export-env-secrets.sh staging \
-                  "$STAGING_SUPABASE_URL" \
-                  "$STAGING_SUPABASE_SERVICE_ROLE_KEY" \
-                  "$STAGING_SUPABASE_ANON_KEY" \
-                  "$STAGING_N8N_URL" \
-                  "$STAGING_SLACK_WEBHOOK_URL"
+              # Only access staging secrets when processing staging environment for develop branch
+              if [[ "$TRIGGER_BRANCH" == "develop" ]]; then
+                # Access staging secrets
+                SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+                SUPABASE_SERVICE_ROLE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+                SUPABASE_ANON_KEY="${{ secrets.STAGING_SUPABASE_ANON_KEY }}"
+                N8N_URL="${{ secrets.STAGING_N8N_URL }}"
+                SLACK_WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+                
+                if [[ -n "${SUPABASE_URL:-}" ]]; then
+                  bash scripts/export-env-secrets.sh staging \
+                    "$SUPABASE_URL" \
+                    "$SUPABASE_SERVICE_ROLE_KEY" \
+                    "$SUPABASE_ANON_KEY" \
+                    "$N8N_URL" \
+                    "$SLACK_WEBHOOK_URL"
+                else
+                  echo "❌ Staging secrets not available"
+                  exit 1
+                fi
               else
-                echo "❌ Staging secrets not available"
-                exit 1
+                echo "⏭️ Skipping staging environment for non-develop branch"
+                exit 0
               fi
               ;;
             dev)
-              if [[ -n "${DEV_SUPABASE_URL:-}" ]]; then
-                bash scripts/export-env-secrets.sh dev \
-                  "$DEV_SUPABASE_URL" \
-                  "$DEV_SUPABASE_SERVICE_ROLE_KEY" \
-                  "$DEV_SUPABASE_ANON_KEY" \
-                  "$DEV_N8N_URL" \
-                  "$DEV_SLACK_WEBHOOK_URL"
+              # Only access development secrets when processing dev environment for feature branches
+              if [[ "$TRIGGER_BRANCH" != "main" && "$TRIGGER_BRANCH" != "develop" ]]; then
+                # Access development secrets
+                SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+                SUPABASE_SERVICE_ROLE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+                SUPABASE_ANON_KEY="${{ secrets.DEV_SUPABASE_ANON_KEY }}"
+                N8N_URL="${{ secrets.DEV_N8N_URL }}"
+                SLACK_WEBHOOK_URL="${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+                
+                if [[ -n "${SUPABASE_URL:-}" ]]; then
+                  bash scripts/export-env-secrets.sh dev \
+                    "$SUPABASE_URL" \
+                    "$SUPABASE_SERVICE_ROLE_KEY" \
+                    "$SUPABASE_ANON_KEY" \
+                    "$N8N_URL" \
+                    "$SLACK_WEBHOOK_URL"
+                else
+                  echo "❌ Development secrets not available"
+                  exit 1
+                fi
               else
-                echo "❌ Development secrets not available"
-                exit 1
+                echo "⏭️ Skipping dev environment for main/develop branch"
+                exit 0
               fi
               ;;
           esac
@@ -354,13 +374,6 @@ jobs:
 
       - name: 📣 Send Verification Results
         if: always()
-        env:
-          # Production secrets
-          PROD_SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
-          # Staging secrets
-          STAGING_SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
-          # Development secrets
-          DEV_SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
         run: |
           echo "📣 Sending verification results..."
           
@@ -375,19 +388,8 @@ jobs:
             COLOR="danger"
           fi
           
-          # Determine the appropriate Slack webhook URL based on environment
-          SLACK_WEBHOOK_URL=""
-          case "$ENVIRONMENT_NAME" in
-            prod)
-              SLACK_WEBHOOK_URL="$PROD_SLACK_WEBHOOK_URL"
-              ;;
-            staging)
-              SLACK_WEBHOOK_URL="$STAGING_SLACK_WEBHOOK_URL"
-              ;;
-            dev)
-              SLACK_WEBHOOK_URL="$DEV_SLACK_WEBHOOK_URL"
-              ;;
-          esac
+          # Use the SLACK_WEBHOOK_URL that was already set in the environment secrets step
+          # It will be empty if the environment doesn't match the branch
           
           # Send to Slack if webhook is configured
           if [[ -n "$SLACK_WEBHOOK_URL" ]]; then
