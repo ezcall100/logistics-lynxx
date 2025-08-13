@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { initTracerIfEnabled, withSpan, injectHeaders } from "../_shared/otel.ts";
+import { initTracerIfEnabled, withSpan, injectHeaders, getTraceId } from "../_shared/otel.ts";
 import { resolveFlag } from "../_shared/flags.ts";
 
 serve(async (req) => {
@@ -37,16 +37,20 @@ serve(async (req) => {
     for (const task of tasks) {
       console.log(`Processing task ${task.id} (${task.fn_name})`);
       
+      // Get trace ID for this task
+      const traceId = await getTraceId();
+      
       // Set span attributes for this task
       span.setAttribute("app.task_id", String(task.id));
       span.setAttribute("app.company_id", String(task.company_id));
       span.setAttribute("app.fn_name", String(task.fn_name));
       
-      // Update task status to running
+      // Update task status to running with trace ID
       await supabase.from('agent_tasks').update({ 
         status:'running', 
         attempts: task.attempts + 1, 
-        updated_at: new Date().toISOString() 
+        updated_at: new Date().toISOString(),
+        trace_id: traceId
       }).eq('id', task.id);
 
       const fn = fnMap.get(task.fn_name);
@@ -95,12 +99,13 @@ serve(async (req) => {
         finished_at: new Date().toISOString() 
       });
 
-      // Update task status
+      // Update task status with trace ID
       const finalStatus = ok ? 'success' : (task.attempts + 1 >= 5 ? 'quarantined' : 'queued');
       await supabase.from('agent_tasks').update({ 
         status: finalStatus, 
         last_error: ok ? null : log, 
-        updated_at: new Date().toISOString() 
+        updated_at: new Date().toISOString(),
+        trace_id: traceId
       }).eq('id', task.id);
 
       // Add span event for task completion

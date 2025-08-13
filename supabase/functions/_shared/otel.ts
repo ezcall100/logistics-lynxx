@@ -84,3 +84,15 @@ export function injectHeaders(init?: RequestInit): RequestInit {
     headers: { ...(init?.headers || {}), ...carrier },
   };
 }
+
+// Get current trace ID for storage
+export async function getTraceId(): Promise<string | null> {
+  try {
+    // Deno + npm interop; safe if OTEL is disabled
+    const api = await import("npm:@opentelemetry/api");
+    const span = api.trace.getSpan(api.context.active());
+    return span?.spanContext().traceId ?? null;
+  } catch {
+    return null;
+  }
+}
