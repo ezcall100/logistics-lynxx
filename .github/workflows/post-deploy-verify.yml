@@ -126,42 +126,51 @@ jobs:
         environment: [prod, staging, dev]
         include:
           - environment: prod
-            SUPABASE_URL: ${{ vars.PROD_SUPABASE_URL || secrets.PROD_SUPABASE_URL }}
-            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-            SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
-            N8N_URL: ${{ vars.PROD_N8N_URL || secrets.PROD_N8N_URL }}
-            SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
             ENV_DISPLAY: Production
           - environment: staging
-            SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
-            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
-            SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
-            N8N_URL: ${{ vars.STAGING_N8N_URL || secrets.STAGING_N8N_URL }}
-            SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
             ENV_DISPLAY: Staging
           - environment: dev
-            SUPABASE_URL: ${{ vars.DEV_SUPABASE_URL || secrets.DEV_SUPABASE_URL }}
-            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}
-            SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
-            N8N_URL: ${{ vars.DEV_N8N_URL || secrets.DEV_N8N_URL }}
-            SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
             ENV_DISPLAY: Development
 
-    # 2) Hoist everything to job.env, then steps can use $SUPABASE_URL, etc.
+    # 2) Only include non-secret environment variables
     env:
       ENVIRONMENT_NAME: ${{ matrix.environment }}
       ENV_DISPLAY: ${{ matrix.ENV_DISPLAY }}
-      SUPABASE_URL: ${{ matrix.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ matrix.SUPABASE_SERVICE_ROLE_KEY }}
-      SUPABASE_ANON_KEY: ${{ matrix.SUPABASE_ANON_KEY }}
-      N8N_URL: ${{ matrix.N8N_URL }}
-      SLACK_WEBHOOK_URL: ${{ matrix.SLACK_WEBHOOK_URL }}
     
     steps:
       - name: 📦 Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      # Export per-env secrets into $GITHUB_ENV (linter-safe: secrets only inside run)
+      - name: 🔐 Export environment secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ matrix.environment }}" in
+            prod)
+              echo "SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }}" >> $GITHUB_ENV
+              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
+              echo "SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+              echo "N8N_URL=${{ secrets.PROD_N8N_URL }}" >> $GITHUB_ENV
+              echo "SLACK_WEBHOOK_URL=${{ secrets.PROD_SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+              ;;
+            staging)
+              echo "SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }}" >> $GITHUB_ENV
+              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
+              echo "SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+              echo "N8N_URL=${{ secrets.STAGING_N8N_URL }}" >> $GITHUB_ENV
+              echo "SLACK_WEBHOOK_URL=${{ secrets.STAGING_SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+              ;;
+            dev)
+              echo "SUPABASE_URL=${{ secrets.DEV_SUPABASE_URL }}" >> $GITHUB_ENV
+              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
+              echo "SUPABASE_ANON_KEY=${{ secrets.DEV_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+              echo "N8N_URL=${{ secrets.DEV_N8N_URL }}" >> $GITHUB_ENV
+              echo "SLACK_WEBHOOK_URL=${{ secrets.DEV_SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+              ;;
+          esac
 
       - name: 🔍 Show selected environment
         run: |
