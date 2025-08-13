@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo pipefail
+
+# Export environment secrets based on the environment name
+# This script is called from the GitHub Actions workflow
+
+ENVIRONMENT_NAME="$1"
+
+case "$ENVIRONMENT_NAME" in
+  prod)
+    echo "SUPABASE_URL=$PROD_SUPABASE_URL" >> $GITHUB_ENV
+    echo "SUPABASE_SERVICE_ROLE_KEY=$PROD_SUPABASE_SERVICE_ROLE_KEY" >> $GITHUB_ENV
+    echo "SUPABASE_ANON_KEY=$PROD_SUPABASE_ANON_KEY" >> $GITHUB_ENV
+    echo "N8N_URL=$PROD_N8N_URL" >> $GITHUB_ENV
+    echo "SLACK_WEBHOOK_URL=$PROD_SLACK_WEBHOOK_URL" >> $GITHUB_ENV
+    ;;
+  staging)
+    echo "SUPABASE_URL=$STAGING_SUPABASE_URL" >> $GITHUB_ENV
+    echo "SUPABASE_SERVICE_ROLE_KEY=$STAGING_SUPABASE_SERVICE_ROLE_KEY" >> $GITHUB_ENV
+    echo "SUPABASE_ANON_KEY=$STAGING_SUPABASE_ANON_KEY" >> $GITHUB_ENV
+    echo "N8N_URL=$STAGING_N8N_URL" >> $GITHUB_ENV
+    echo "SLACK_WEBHOOK_URL=$STAGING_SLACK_WEBHOOK_URL" >> $GITHUB_ENV
+    ;;
+  dev)
+    echo "SUPABASE_URL=$DEV_SUPABASE_URL" >> $GITHUB_ENV
+    echo "SUPABASE_SERVICE_ROLE_KEY=$DEV_SUPABASE_SERVICE_ROLE_KEY" >> $GITHUB_ENV
+    echo "SUPABASE_ANON_KEY=$DEV_SUPABASE_ANON_KEY" >> $GITHUB_ENV
+    echo "N8N_URL=$DEV_N8N_URL" >> $GITHUB_ENV
+    echo "SLACK_WEBHOOK_URL=$DEV_SLACK_WEBHOOK_URL" >> $GITHUB_ENV
+    ;;
+  *)
+    echo "Unknown environment: $ENVIRONMENT_NAME"
+    exit 1
+    ;;
+esac
+
+echo "✅ Environment secrets exported for $ENVIRONMENT_NAME"

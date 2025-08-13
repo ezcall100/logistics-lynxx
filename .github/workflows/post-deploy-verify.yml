@@ -143,34 +143,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Export per-env secrets into $GITHUB_ENV (linter-safe: secrets only inside run)
+      # Export per-env secrets into $GITHUB_ENV using external script
       - name: 🔐 Export environment secrets
         shell: bash
         run: |
-          set -euo pipefail
-          case "${{ matrix.environment }}" in
-            prod)
-              echo "SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }}" >> $GITHUB_ENV
-              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
-              echo "SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
-              echo "N8N_URL=${{ secrets.PROD_N8N_URL }}" >> $GITHUB_ENV
-              echo "SLACK_WEBHOOK_URL=${{ secrets.PROD_SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
-              ;;
-            staging)
-              echo "SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }}" >> $GITHUB_ENV
-              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
-              echo "SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
-              echo "N8N_URL=${{ secrets.STAGING_N8N_URL }}" >> $GITHUB_ENV
-              echo "SLACK_WEBHOOK_URL=${{ secrets.STAGING_SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
-              ;;
-            dev)
-              echo "SUPABASE_URL=${{ secrets.DEV_SUPABASE_URL }}" >> $GITHUB_ENV
-              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
-              echo "SUPABASE_ANON_KEY=${{ secrets.DEV_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
-              echo "N8N_URL=${{ secrets.DEV_N8N_URL }}" >> $GITHUB_ENV
-              echo "SLACK_WEBHOOK_URL=${{ secrets.DEV_SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
-              ;;
-          esac
+          chmod +x scripts/export-env-secrets.sh
+          ./scripts/export-env-secrets.sh "${{ matrix.environment }}"
+        env:
+          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+          PROD_N8N_URL: ${{ secrets.PROD_N8N_URL }}
+          PROD_SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+          STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          STAGING_N8N_URL: ${{ secrets.STAGING_N8N_URL }}
+          STAGING_SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
+          DEV_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
+          DEV_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}
+          DEV_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
+          DEV_N8N_URL: ${{ secrets.DEV_N8N_URL }}
+          DEV_SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
 
       - name: 🔍 Show selected environment
         run: |
