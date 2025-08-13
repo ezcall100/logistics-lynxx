@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { useFlag } from "@/hooks/useFlag";
+import { buildTraceLink } from "@/lib/otelLinks";
 
 type DlqItem = {
   id: string;
@@ -12,6 +13,7 @@ type DlqItem = {
   last_error: string | null;
   payload_bytes: number;
   status: string;
+  trace_id?: string | null;
 };
 
 async function fetchItems(companyId: string | null, limit = 50, status?: string) {
@@ -116,6 +118,7 @@ export default function DlqAdminPage() {
             <th className="p-2">Attempts</th>
             <th className="p-2">Payload</th>
             <th className="p-2">Last Error</th>
+            <th className="p-2">Trace</th>
             <th className="p-2">Created</th>
           </tr>
           </thead>
@@ -130,11 +133,26 @@ export default function DlqAdminPage() {
               <td className="p-2 text-center">{it.attempts}</td>
               <td className="p-2 text-center">{it.payload_bytes} B</td>
               <td className="p-2 truncate max-w-[420px]" title={it.last_error || ""}>{it.last_error || "-"}</td>
+              <td className="p-2">
+                {it.trace_id ? (
+                  <a 
+                    className="text-blue-600 hover:text-blue-800 underline font-mono text-xs" 
+                    href={buildTraceLink(it.trace_id) || "#"} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    title="Open in OTEL backend"
+                  >
+                    {it.trace_id}
+                  </a>
+                ) : (
+                  <span className="text-muted-foreground text-xs">n/a</span>
+                )}
+              </td>
               <td className="p-2">{new Date(it.created_at).toLocaleString()}</td>
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td className="p-4 text-center text-slate-500" colSpan={7}>No items</td></tr>
+            <tr><td className="p-4 text-center text-slate-500" colSpan={8}>No items</td></tr>
           )}
           </tbody>
         </table>

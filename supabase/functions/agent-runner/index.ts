@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { initTracerIfEnabled, withSpan, injectHeaders, getTraceId } from "../_shared/otel.ts";
 import { resolveFlag } from "../_shared/flags.ts";
+import { agentSlackError } from "./lib/slack.ts";
 
 serve(async (req) => {
   // enable OTEL if flag is on (global/env scope)
@@ -107,6 +108,17 @@ serve(async (req) => {
         updated_at: new Date().toISOString(),
         trace_id: traceId
       }).eq('id', task.id);
+
+      // Send Slack notification for failed tasks
+      if (!ok) {
+        await agentSlackError({
+          company_id: task.company_id,
+          task_id: task.id,
+          msg: `Task failed: ${task.fn_name} - ${log}`,
+          meta: { fn_name: task.fn_name, payload: task.payload },
+          trace_id: traceId
+        });
+      }
 
       // Add span event for task completion
       span.addEvent("task_completed", { 
