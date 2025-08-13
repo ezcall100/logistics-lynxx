@@ -42,6 +42,7 @@ try {
     
     $response = Invoke-RestMethod -Uri "$SupabaseUrl/functions/v1/agent-runner" -Method POST -Headers $headers -Body $body
     Write-Host "✅ Synthetic task triggered successfully" -ForegroundColor Green
+    Write-Host "   Response: $($response | ConvertTo-Json -Depth 1)" -ForegroundColor Gray
 } catch {
     Write-Host "⚠️  Synthetic task failed (this is expected if no tasks exist): $($_.Exception.Message)" -ForegroundColor Yellow
 }
