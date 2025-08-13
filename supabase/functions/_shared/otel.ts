@@ -47,6 +47,10 @@ export function tracer() {
   return trace.getTracer(Deno.env.get("OTEL_SERVICE_NAME") ?? "transbot-ai");
 }
 
+export function getTracer() {
+  return trace.getTracer(Deno.env.get("OTEL_SERVICE_NAME") ?? "transbot-ai");
+}
+
 // Extract incoming trace context from Request headers
 export function ctxFromRequest(req: Request) {
   const carrier: Record<string, string> = {};
@@ -95,6 +99,33 @@ export async function getTraceId(): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+// PII-safe sanitizer (noop for non-PII fields)
+export function sanitizeAttrs<T extends Record<string, unknown>>(obj?: T): T {
+  const clone = structuredClone(obj ?? {}) as any;
+  if (clone?.email)   clone.email   = "[redacted]";
+  if (clone?.doc_url) clone.doc_url = "[redacted]";
+  if (clone?.name)    clone.name    = "[redacted]";
+  return clone as T;
+}
+
+export function setHttpAttrs(span: Span, code: number, route = "agent-runner") {
+  span.setAttribute("http.route", route);
+  span.setAttribute("http.response.status_code", code);
+}
+
+export function markOk(span: Span, msg?: string) {
+  if (msg) span.addEvent("ok", { message: msg });
+  span.setStatus({ code: SpanStatusCode.OK });
+}
+
+export function markError(span: Span, err: unknown, extra?: Record<string, unknown>) {
+  const e = err instanceof Error ? err : new Error(String(err));
+  // OTEL recommended: recordException + ERROR status
+  span.recordException(e, sanitizeAttrs(extra));
+  span.setStatus({ code: SpanStatusCode.ERROR, message: e.message });
+  span.addEvent("exception.recorded", { message: e.message });
 }
 
 // Canonical span names (short, action-first, consistent)
