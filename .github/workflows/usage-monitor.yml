@@ -37,8 +37,8 @@ jobs:
 
       - name: Run usage monitor
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || '' }}
           DRY_RUN: ${{ env.DRY_RUN }}
         run: |
           echo "Running usage monitor..."
@@ -77,8 +77,18 @@ jobs:
             echo "✅ No usage issues found"
           fi
 
+      - name: Check Slack webhook availability
+        id: check-slack
+        run: |
+          # Check if SLACK_WEBHOOK_URL secret is configured
+          if [ "${{ secrets.SLACK_WEBHOOK_URL || '' }}" != "" ]; then
+            echo "slack_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "slack_available=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send Slack notification (if breaches)
-        if: steps.check-breaches.outputs.breaches > '0' && env.DRY_RUN == 'false'
+        if: steps.check-breaches.outputs.breaches > '0' && env.DRY_RUN == 'false' && steps.check-slack.outputs.slack_available == 'true'
         uses: 8398a7/action-slack@v3
         with:
           status: failure
@@ -91,10 +101,10 @@ jobs:
             Run: ${{ github.run_id }}
             Workflow: ${{ github.workflow }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL || '' }}
 
       - name: Send Slack notification (if warnings only)
-        if: steps.check-breaches.outputs.breaches == '0' && steps.check-breaches.outputs.warnings > '0' && env.DRY_RUN == 'false'
+        if: steps.check-breaches.outputs.breaches == '0' && steps.check-breaches.outputs.warnings > '0' && env.DRY_RUN == 'false' && steps.check-slack.outputs.slack_available == 'true'
         uses: 8398a7/action-slack@v3
         with:
           status: success
@@ -107,7 +117,13 @@ jobs:
             Run: ${{ github.run_id }}
             Workflow: ${{ github.workflow }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL || '' }}
+
+      - name: Log missing Slack webhook
+        if: (steps.check-breaches.outputs.breaches > '0' || steps.check-breaches.outputs.warnings > '0') && env.DRY_RUN == 'false' && steps.check-slack.outputs.slack_available == 'false'
+        run: |
+          echo "⚠️ Slack webhook URL not configured - notifications skipped"
+          echo "Please configure SLACK_WEBHOOK_URL secret in repository settings"
 
       - name: Update monitoring dashboard
         if: always()

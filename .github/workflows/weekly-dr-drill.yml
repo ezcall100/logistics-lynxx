@@ -72,7 +72,7 @@ jobs:
         run: |
           echo "📣 Sending DR drill notification..."
           
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           ISSUE_URL="${{ steps.create-dr-issue.outputs.issue-url }}"
           
           # Send to Slack notification
@@ -155,17 +155,17 @@ jobs:
         run: |
           echo "🗄️ Running backup verification test..."
           
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           fi
           
           # Test backup accessibility
@@ -214,17 +214,17 @@ jobs:
         run: |
           echo "🏥 Running health check test..."
           
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           fi
           
           # Test health endpoint
@@ -249,7 +249,7 @@ jobs:
             echo "## 🔄 DR Drill Test Summary"
             echo ""
             echo "### 📋 Test Results"
-            echo "- **Environment**: \`${{ steps.env.outputs.environment }}\`"
+            echo "- **Environment**: \`${{ steps.env.outputs.environment || 'development' }}\`"
             echo "- **Date**: \`$(date -u +%Y-%m-%d)\`"
             echo "- **Status**: \`${{ job.status }}\`"
             echo ""

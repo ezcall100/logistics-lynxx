@@ -33,7 +33,7 @@ jobs:
             echo "environment=development" >> $GITHUB_OUTPUT
           fi
           
-          echo "Deployment environment: ${{ steps.env.outputs.environment }}"
+          echo "Deployment environment: ${{ steps.env.outputs.environment || 'unknown' }}"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -53,17 +53,17 @@ jobs:
           echo "🏥 Running health check verification..."
           
           # Get environment-specific variables
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           fi
           
           # Test health endpoint
@@ -110,17 +110,17 @@ jobs:
           echo "🛡️ Running RLS security verification..."
           
           # Get environment-specific variables
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           fi
           
           # Run RLS verification script
@@ -153,17 +153,17 @@ jobs:
           echo "🔧 Running edge functions verification..."
           
           # Get environment-specific variables
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
           fi
           
           # Test edge functions
@@ -192,26 +192,26 @@ jobs:
           echo "📊 Running smoke tests..."
           
           # Set environment variables for smoke tests
-          export ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          export ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            export SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
-            export SUPABASE_ANON_KEY="${{ secrets.PROD_SUPABASE_ANON_KEY }}"
-            export N8N_URL="${{ secrets.PROD_N8N_URL }}"
-            export SLACK_WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+            export SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
+            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
+            export SUPABASE_ANON_KEY="${{ secrets.PROD_SUPABASE_ANON_KEY || '' }}"
+            export N8N_URL="${{ secrets.PROD_N8N_URL || '' }}"
+            export SLACK_WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL || '' }}"
           elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            export SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
-            export SUPABASE_ANON_KEY="${{ secrets.STAGING_SUPABASE_ANON_KEY }}"
-            export N8N_URL="${{ secrets.STAGING_N8N_URL }}"
-            export SLACK_WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+            export SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
+            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
+            export SUPABASE_ANON_KEY="${{ secrets.STAGING_SUPABASE_ANON_KEY || '' }}"
+            export N8N_URL="${{ secrets.STAGING_N8N_URL || '' }}"
+            export SLACK_WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL || '' }}"
           else
-            export SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
-            export SUPABASE_ANON_KEY="${{ secrets.DEV_SUPABASE_ANON_KEY }}"
-            export N8N_URL="${{ secrets.DEV_N8N_URL }}"
-            export SLACK_WEBHOOK_URL="${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+            export SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
+            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
+            export SUPABASE_ANON_KEY="${{ secrets.DEV_SUPABASE_ANON_KEY || '' }}"
+            export N8N_URL="${{ secrets.DEV_N8N_URL || '' }}"
+            export SLACK_WEBHOOK_URL="${{ secrets.DEV_SLACK_WEBHOOK_URL || '' }}"
           fi
           
           # Run smoke tests
@@ -222,7 +222,7 @@ jobs:
         run: |
           echo "📣 Sending verification results..."
           
-          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           STATUS="${{ job.status }}"
           
           # Create summary
@@ -235,8 +235,8 @@ jobs:
           fi
           
           # Send to Slack if webhook is configured
-          if [[ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]]; then
-            curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+          if [[ -n "${{ secrets.SLACK_WEBHOOK_URL || '' }}" ]]; then
+            curl -X POST "${{ secrets.SLACK_WEBHOOK_URL || '' }}" \
               -H "Content-Type: application/json" \
               -d "{
                 \"text\": \"$MESSAGE\",
@@ -271,7 +271,7 @@ jobs:
             echo "## 🔍 Post-Deploy Verification Summary"
             echo ""
             echo "### 📋 Verification Results"
-            echo "- **Environment**: \`${{ steps.env.outputs.environment }}\`"
+            echo "- **Environment**: \`${{ steps.env.outputs.environment || 'development' }}\`"
             echo "- **Status**: \`${{ job.status }}\`"
             echo "- **Workflow Run**: [${{ github.event.workflow_run.head_branch }}](${{ github.event.workflow_run.html_url }})"
             echo ""

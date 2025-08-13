@@ -194,7 +194,18 @@ jobs:
     if: needs.slo-gate.outputs.slo-status == 'breached'
     
     steps:
+      - name: Check Slack webhook availability
+        id: check-slack-alert
+        run: |
+          # Check if SLACK_WEBHOOK_URL secret is configured
+          if [ "${{ secrets.SLACK_WEBHOOK_URL || '' }}" != "" ]; then
+            echo "slack_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "slack_available=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send SLO Breach Alert
+        if: steps.check-slack-alert.outputs.slack_available == 'true'
         run: |
           echo "🚨 SLO BREACH DETECTED - DEPLOYMENT BLOCKED"
           echo ""
@@ -206,24 +217,25 @@ jobs:
           echo ""
           echo "Please investigate and resolve SLO issues before proceeding."
           
-          # Here you would integrate with your alerting system
-          # Examples: Slack, PagerDuty, email, etc.
-          
-          # Example Slack notification (if SLACK_WEBHOOK_URL is configured)
-          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
-            curl -X POST -H 'Content-type: application/json' \
-              --data "{
-                'text': '🚨 SLO Breach Alert - Deployment Blocked',
-                'attachments': [{
-                  'color': 'danger',
-                  'fields': [
-                    {'title': 'Environment', 'value': '$ENVIRONMENT', 'short': true},
-                    {'title': 'Agent Success Rate', 'value': '${{ needs.slo-gate.outputs.agent-success }}%', 'short': true},
-                    {'title': 'Quote Response Time', 'value': '${{ needs.slo-gate.outputs.quote-response-time }}ms', 'short': true},
-                    {'title': 'System Uptime', 'value': '${{ needs.slo-gate.outputs.system-uptime }}%', 'short': true},
-                    {'title': 'API Error Rate', 'value': '${{ needs.slo-gate.outputs.error-rate }}%', 'short': true}
-                  ]
-                }]
-              }" \
-              "${{ secrets.SLACK_WEBHOOK_URL }}"
-          fi
+          # Send Slack notification
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{
+              'text': '🚨 SLO Breach Alert - Deployment Blocked',
+              'attachments': [{
+                'color': 'danger',
+                'fields': [
+                  {'title': 'Environment', 'value': '$ENVIRONMENT', 'short': true},
+                  {'title': 'Agent Success Rate', 'value': '${{ needs.slo-gate.outputs.agent-success }}%', 'short': true},
+                  {'title': 'Quote Response Time', 'value': '${{ needs.slo-gate.outputs.quote-response-time }}ms', 'short': true},
+                  {'title': 'System Uptime', 'value': '${{ needs.slo-gate.outputs.system-uptime }}%', 'short': true},
+                  {'title': 'API Error Rate', 'value': '${{ needs.slo-gate.outputs.error-rate }}%', 'short': true}
+                ]
+              }]
+            }" \
+            "${{ secrets.SLACK_WEBHOOK_URL || '' }}"
+
+      - name: Log missing Slack webhook
+        if: steps.check-slack-alert.outputs.slack_available == 'false'
+        run: |
+          echo "⚠️ SLACK_WEBHOOK_URL secret not configured - skipping Slack notification"
+          echo "Please configure SLACK_WEBHOOK_URL secret in repository settings"
