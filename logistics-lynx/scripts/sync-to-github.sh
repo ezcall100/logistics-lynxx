@@ -35,15 +35,7 @@ warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-# Check if we're in the right directory
-if [ ! -f "package.json" ] || [ ! -d "src" ]; then
-    error "This script must be run from the logistics-lynx project root directory"
-    exit 1
-fi
-
-log "Starting auto-sync to GitHub repository..."
-
-# Get the git root directory
+# Get the git root directory first
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 if [ $? -ne 0 ]; then
     error "Git repository not found. Please ensure you're in a git repository."
@@ -51,6 +43,14 @@ if [ $? -ne 0 ]; then
 fi
 
 log "Git root directory: $GIT_ROOT"
+
+# Check if we're in the right directory (logistics-lynx subdirectory)
+if [ ! -f "package.json" ] || [ ! -d "src" ]; then
+    error "This script must be run from the logistics-lynx project root directory"
+    exit 1
+fi
+
+log "Starting auto-sync to GitHub repository..."
 
 # Check if remote is configured
 if ! git remote get-url origin > /dev/null 2>&1; then

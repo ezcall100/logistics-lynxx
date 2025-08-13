@@ -51,12 +51,13 @@ function Setup-WindowsTask {
         New-Item -ItemType Directory -Path $LogsDir -Force | Out-Null
     }
     
-    # Create PowerShell script for task scheduler
-    $RunScriptPath = Join-Path $ScriptDir "run-sync.ps1"
+    # Create batch file for task scheduler
+    $RunScriptPath = Join-Path $ScriptDir "run-sync.bat"
     $RunScriptContent = @"
-# Windows Task Scheduler wrapper for auto-sync
-Set-Location "$ProjectDir"
-& "$SyncScript" | Tee-Object -FilePath "$LogsDir\auto-sync.log" -Append
+@echo off
+REM Windows Task Scheduler wrapper for auto-sync
+cd /d "%~dp0.."
+powershell.exe -ExecutionPolicy Bypass -File "logistics-lynx\scripts\sync-to-github.ps1" >> "logistics-lynx\logs\auto-sync.log" 2>&1
 "@
     
     Set-Content -Path $RunScriptPath -Value $RunScriptContent
@@ -70,26 +71,36 @@ Set-Location "$ProjectDir"
     }
     
     # Create new task based on interval
-    $Trigger = switch ($Interval) {
-        "hourly" { "/sc hourly" }
-        "daily" { "/sc daily" }
-        "weekly" { "/sc weekly" }
-        "every-15-min" { "/sc minute /mo 15" }
-        "every-30-min" { "/sc minute /mo 30" }
+    $BatchCommand = "`"$RunScriptPath`""
+    $Arguments = @("/create", "/tn", $TaskName, "/tr", $BatchCommand, "/f")
+    
+    switch ($Interval) {
+        "hourly" { $Arguments += @("/sc", "hourly") }
+        "daily" { $Arguments += @("/sc", "daily") }
+        "weekly" { $Arguments += @("/sc", "weekly") }
+        "every-15-min" { $Arguments += @("/sc", "minute", "/mo", "15") }
+        "every-30-min" { $Arguments += @("/sc", "minute", "/mo", "30") }
         default { throw "Invalid interval: $Interval" }
     }
     
-    $Command = "schtasks /create /tn `"$TaskName`" /tr `"powershell.exe -ExecutionPolicy Bypass -File `"$RunScriptPath`"`" $Trigger /f"
-    
     Write-Log "Creating Windows Task Scheduler task..." $Blue
-    Invoke-Expression $Command
     
-    if ($LASTEXITCODE -eq 0) {
+    # Use a simpler approach with cmd
+    $CmdCommand = "schtasks /create /tn `"$TaskName`" /tr `"$BatchCommand`" /sc hourly /f"
+    Write-Log "Command: $CmdCommand" $Blue
+    
+    $Result = cmd /c $CmdCommand 2>&1
+    $ExitCode = $LASTEXITCODE
+    
+    if ($ExitCode -eq 0) {
+        Write-Log "Task created successfully" $Blue
+        Write-Log "Output: $Result" $Blue
         Write-Success "Windows Task Scheduler task created successfully!"
         Write-Log "Auto-sync will run $Interval" $Blue
         Write-Log "Logs will be saved to: $LogsDir\auto-sync.log" $Blue
     } else {
-        Write-Error "Failed to create Windows Task Scheduler task"
+        Write-Error "Failed to create task. Exit code: $ExitCode"
+        Write-Error "Error: $Result"
         exit 1
     }
 }

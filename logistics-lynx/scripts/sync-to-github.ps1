@@ -39,15 +39,7 @@ function Write-Warning {
     Write-Host "[WARNING] $Message" -ForegroundColor $Yellow
 }
 
-# Check if we're in the right directory
-if (-not (Test-Path "package.json") -or -not (Test-Path "src")) {
-    Write-Error "This script must be run from the logistics-lynx project root directory"
-    exit 1
-}
-
-Write-Log "Starting auto-sync to GitHub repository..." $Blue
-
-# Get the git root directory
+# Get the git root directory first
 try {
     $GitRoot = git rev-parse --show-toplevel 2>$null
     if ($LASTEXITCODE -ne 0) {
@@ -59,6 +51,14 @@ try {
     Write-Error "Git repository not found. Please ensure you're in a git repository."
     exit 1
 }
+
+# Check if we're in the right directory (logistics-lynx subdirectory)
+if (-not (Test-Path "package.json") -or -not (Test-Path "src")) {
+    Write-Error "This script must be run from the logistics-lynx project root directory"
+    exit 1
+}
+
+Write-Log "Starting auto-sync to GitHub repository..." $Blue
 
 # Check if remote is configured
 try {
