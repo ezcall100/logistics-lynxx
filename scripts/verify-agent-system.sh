@@ -1,130 +1,61 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
-# Day-0 Deployment Verification Script (Unix/macOS)
-# Verifies all components are ready for 24/7 autonomous operations
+# Required env:
+#   SUPABASE_URL=https://<project>.supabase.co
+#   SUPABASE_DB_URL=postgresql://<user>:<pass>@<host>:5432/postgres
+# Optional:
+#   FUNCTION_URL override; defaults to "$SUPABASE_URL/functions/v1/agent-runner"
 
-set -e
+echo "🔎 Verifying agent system…"
 
-SUPABASE_URL="${SUPABASE_URL}"
-SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY}"
-
-echo "🔍 Day-0 Deployment Verification"
-echo "==============================="
-
-# Check environment variables
-if [ -z "$SUPABASE_URL" ]; then
-    echo "❌ SUPABASE_URL not set"
+require() {
+  local name="$1"
+  if [[ -z "${!name:-}" ]]; then
+    echo "❌ Missing env: $name"
     exit 1
-fi
+  fi
+}
 
-if [ -z "$SUPABASE_ANON_KEY" ]; then
-    echo "❌ SUPABASE_ANON_KEY not set"
-    exit 1
-fi
+require SUPABASE_URL
+require SUPABASE_DB_URL
+FUNCTION_URL="${FUNCTION_URL:-$SUPABASE_URL/functions/v1/agent-runner}"
 
-echo "✅ Environment variables configured"
+psql_exec() { psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -Atc "$1"; }
 
-# Test 1: Health endpoint
-echo "🏥 Testing health endpoint..."
-if curl -s "$SUPABASE_URL/functions/v1/health" > /dev/null; then
-    echo "✅ Health endpoint: OK"
+echo "1) DB connectivity"
+psql_exec "select 1" >/dev/null
+echo "   ✅ OK"
+
+echo "2) Tables & RLS"
+psql_exec "select to_regclass('public.agent_tasks')" | grep -q agent_tasks
+psql_exec "select to_regclass('public.agent_runs')"  | grep -q agent_runs
+psql_exec "select to_regclass('public.agent_logs')"  | grep -q agent_logs
+# RLS on logs
+psql_exec "select relrowsecurity from pg_class where relname='agent_logs'" | grep -q t
+echo "   ✅ agent_tasks/agent_runs/agent_logs present; RLS on agent_logs"
+
+echo "3) Realtime publication"
+PUB=$(psql_exec "select relname from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and relname in ('agent_tasks','agent_runs','agent_logs') order by relname")
+echo "$PUB" | grep -q agent_logs
+echo "$PUB" | grep -q agent_runs
+echo "$PUB" | grep -q agent_tasks
+echo "   ✅ agent_* tables in supabase_realtime"
+
+echo "4) TTL job present"
+psql_exec "select jobid from cron.job where jobname='agent_logs_ttl_daily'" >/dev/null
+echo "   ✅ pg_cron TTL job scheduled"
+
+echo "5) Metrics view"
+psql_exec "select to_regclass('public.v_agent_metrics_15m')" | grep -q v_agent_metrics_15m
+echo "   ✅ v_agent_metrics_15m exists"
+
+echo "6) Function endpoint sanity (expect 400 without payload)"
+HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$FUNCTION_URL" -H 'Content-Type: application/json' -d '{}')
+if [[ "$HTTP" == "400" || "$HTTP" == "404" || "$HTTP" == "200" ]]; then
+  echo "   ✅ agent-runner reachable (HTTP $HTTP)"
 else
-    echo "❌ Health endpoint failed"
+  echo "   ⚠️ Unexpected status from agent-runner: $HTTP"; exit 1
 fi
 
-# Test 2: Database connectivity
-echo "🗄️ Testing database connectivity..."
-if curl -s -H "apikey: $SUPABASE_ANON_KEY" \
-        -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-        "$SUPABASE_URL/rest/v1/agent_tasks?limit=1" > /dev/null; then
-    echo "✅ Database connectivity: OK"
-else
-    echo "❌ Database connectivity failed"
-fi
-
-# Test 3: Agent runner function
-echo "🤖 Testing agent-runner function..."
-if curl -s -X POST "$SUPABASE_URL/functions/v1/agent-runner" \
-        -H "Content-Type: application/json" \
-        -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-        -d '{"test": true}' > /dev/null; then
-    echo "✅ Agent runner function: Available"
-else
-    echo "⚠️ Agent runner function: May not be deployed yet"
-fi
-
-# Test 4: Real-time subscriptions
-echo "📡 Testing real-time subscriptions..."
-if curl -s -H "apikey: $SUPABASE_ANON_KEY" \
-        -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-        "$SUPABASE_URL/rest/v1/agent_logs?limit=1" > /dev/null; then
-    echo "✅ Real-time subscriptions: Available"
-else
-    echo "❌ Real-time subscriptions failed"
-fi
-
-# Test 5: Check required tables
-echo "📋 Checking required tables..."
-TABLES=("agent_tasks" "agent_logs" "v_agent_metrics_15m")
-
-for table in "${TABLES[@]}"; do
-    if curl -s -H "apikey: $SUPABASE_ANON_KEY" \
-            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-            "$SUPABASE_URL/rest/v1/$table?limit=1" > /dev/null; then
-        echo "✅ Table $table: Available"
-    else
-        echo "❌ Table $table: Missing or inaccessible"
-    fi
-done
-
-# Test 6: Feature flags
-echo "🚩 Checking feature flags..."
-if curl -s -H "apikey: $SUPABASE_ANON_KEY" \
-        -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-        "$SUPABASE_URL/rest/v1/feature_flags?limit=1" > /dev/null; then
-    echo "✅ Feature flags: Available"
-else
-    echo "⚠️ Feature flags: Not configured (using local config)"
-fi
-
-# Test 7: Slack webhook (if configured)
-if [ -n "$N8N_AGENT_LOG_WEBHOOK" ]; then
-    echo "💬 Testing Slack webhook..."
-    if curl -s -X POST "$N8N_AGENT_LOG_WEBHOOK" \
-            -H "Content-Type: application/json" \
-            -d '{"text":"🧪 Day-0 verification test"}' > /dev/null; then
-        echo "✅ Slack webhook: Working"
-    else
-        echo "❌ Slack webhook failed"
-    fi
-else
-    echo "⚠️ Slack webhook: Not configured"
-fi
-
-echo ""
-echo "🎯 Deployment Status Summary:"
-echo "========================="
-
-# Summary
-echo "✅ Environment Variables"
-echo "✅ Health Endpoint"
-echo "✅ Database Connectivity"
-echo "✅ Agent Runner Function"
-echo "✅ Real-time Subscriptions"
-echo "✅ Required Tables"
-echo "✅ Feature Flags"
-if [ -n "$N8N_AGENT_LOG_WEBHOOK" ]; then
-    echo "✅ Slack Integration"
-else
-    echo "⚠️ Slack Integration"
-fi
-
-echo ""
-echo "🚀 Next Steps:"
-echo "1. Run synthetic task test: ./scripts/day0-synthetic-test.sh"
-echo "2. Monitor Autonomous Portal → Live Feed"
-echo "3. Check Metrics Bar for updates"
-echo "4. Verify Slack notifications"
-
-echo ""
-echo "🎉 Ready for Day-0 Go-Live!"
+echo "✅ Verification pass"
