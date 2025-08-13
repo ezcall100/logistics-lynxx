@@ -77,9 +77,9 @@ foreach ($table in $requiredTables) {
             "apikey" = $SupabaseAnonKey
             "Authorization" = "Bearer $SupabaseAnonKey"
         } | Out-Null
-        Write-Host "✅ Table $table: Available" -ForegroundColor Green
+        Write-Host "✅ Table ${table}: Available" -ForegroundColor Green
     } catch {
-        Write-Host "❌ Table $table: Missing or inaccessible" -ForegroundColor Red
+        Write-Host "❌ Table ${table}: Missing or inaccessible" -ForegroundColor Red
     }
 }
 
