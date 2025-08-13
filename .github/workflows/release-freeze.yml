@@ -1,0 +1,229 @@
+name: Release Freeze - SLO Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to check'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - staging
+        - production
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize, reopened]
+
+env:
+  ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
+
+jobs:
+  slo-gate:
+    name: SLO Health Check
+    runs-on: ubuntu-latest
+    outputs:
+      slo-status: ${{ steps.check-slo.outputs.status }}
+      agent-success: ${{ steps.check-slo.outputs.agent-success }}
+      quote-response-time: ${{ steps.check-slo.outputs.quote-response-time }}
+      system-uptime: ${{ steps.check-slo.outputs.system-uptime }}
+      error-rate: ${{ steps.check-slo.outputs.error-rate }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check SLO Health
+        id: check-slo
+        run: |
+          # Get environment-specific URLs
+          if [ "$ENVIRONMENT" = "production" ]; then
+            HEALTH_URL="https://api.transbotai.com/functions/v1/health"
+            METRICS_URL="https://api.transbotai.com/metrics"
+          else
+            HEALTH_URL="https://staging-api.transbotai.com/functions/v1/health"
+            METRICS_URL="https://staging-api.transbotai.com/metrics"
+          fi
+
+          echo "Checking SLOs for environment: $ENVIRONMENT"
+          echo "Health URL: $HEALTH_URL"
+          echo "Metrics URL: $METRICS_URL"
+
+          # Check system health
+          echo "Checking system health..."
+          HEALTH_RESPONSE=$(curl -s -w "%{http_code}" "$HEALTH_URL" || echo "000")
+          HTTP_CODE="${HEALTH_RESPONSE: -3}"
+          HEALTH_BODY="${HEALTH_RESPONSE%???}"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Health check failed with HTTP $HTTP_CODE"
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "agent-success=0" >> $GITHUB_OUTPUT
+            echo "quote-response-time=9999" >> $GITHUB_OUTPUT
+            echo "system-uptime=0" >> $GITHUB_OUTPUT
+            echo "error-rate=100" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+          # Parse health response
+          echo "Health response: $HEALTH_BODY"
+          
+          # Check agent success rate
+          AGENT_SUCCESS=$(echo "$HEALTH_BODY" | jq -r '.checks.agent_success_rate // 0')
+          if [ "$AGENT_SUCCESS" = "null" ] || [ -z "$AGENT_SUCCESS" ]; then
+            AGENT_SUCCESS=0
+          fi
+          echo "Agent success rate: $AGENT_SUCCESS%"
+
+          # Check quote response time (P95)
+          QUOTE_RESPONSE_TIME=$(echo "$HEALTH_BODY" | jq -r '.checks.quote_response_time_p95 // 9999')
+          if [ "$QUOTE_RESPONSE_TIME" = "null" ] || [ -z "$QUOTE_RESPONSE_TIME" ]; then
+            QUOTE_RESPONSE_TIME=9999
+          fi
+          echo "Quote response time (P95): ${QUOTE_RESPONSE_TIME}ms"
+
+          # Check system uptime
+          SYSTEM_UPTIME=$(echo "$HEALTH_BODY" | jq -r '.checks.system_uptime // 0')
+          if [ "$SYSTEM_UPTIME" = "null" ] || [ -z "$SYSTEM_UPTIME" ]; then
+            SYSTEM_UPTIME=0
+          fi
+          echo "System uptime: $SYSTEM_UPTIME%"
+
+          # Check API error rate
+          ERROR_RATE=$(echo "$HEALTH_BODY" | jq -r '.checks.api_error_rate // 100')
+          if [ "$ERROR_RATE" = "null" ] || [ -z "$ERROR_RATE" ]; then
+            ERROR_RATE=100
+          fi
+          echo "API error rate: $ERROR_RATE%"
+
+          # Define SLO thresholds
+          AGENT_SUCCESS_THRESHOLD=98.0
+          QUOTE_RESPONSE_THRESHOLD=500
+          SYSTEM_UPTIME_THRESHOLD=99.9
+          ERROR_RATE_THRESHOLD=1.0
+
+          # Check if any SLO is breached
+          SLO_BREACHED=false
+          BREACH_MESSAGES=()
+
+          if (( $(echo "$AGENT_SUCCESS < $AGENT_SUCCESS_THRESHOLD" | bc -l) )); then
+            SLO_BREACHED=true
+            BREACH_MESSAGES+=("Agent success rate ($AGENT_SUCCESS%) below threshold ($AGENT_SUCCESS_THRESHOLD%)")
+          fi
+
+          if (( $(echo "$QUOTE_RESPONSE_TIME > $QUOTE_RESPONSE_THRESHOLD" | bc -l) )); then
+            SLO_BREACHED=true
+            BREACH_MESSAGES+=("Quote response time (${QUOTE_RESPONSE_TIME}ms) above threshold (${QUOTE_RESPONSE_THRESHOLD}ms)")
+          fi
+
+          if (( $(echo "$SYSTEM_UPTIME < $SYSTEM_UPTIME_THRESHOLD" | bc -l) )); then
+            SLO_BREACHED=true
+            BREACH_MESSAGES+=("System uptime ($SYSTEM_UPTIME%) below threshold ($SYSTEM_UPTIME_THRESHOLD%)")
+          fi
+
+          if (( $(echo "$ERROR_RATE > $ERROR_RATE_THRESHOLD" | bc -l) )); then
+            SLO_BREACHED=true
+            BREACH_MESSAGES+=("API error rate ($ERROR_RATE%) above threshold ($ERROR_RATE_THRESHOLD%)")
+          fi
+
+          # Set outputs
+          echo "agent-success=$AGENT_SUCCESS" >> $GITHUB_OUTPUT
+          echo "quote-response-time=$QUOTE_RESPONSE_TIME" >> $GITHUB_OUTPUT
+          echo "system-uptime=$SYSTEM_UPTIME" >> $GITHUB_OUTPUT
+          echo "error-rate=$ERROR_RATE" >> $GITHUB_OUTPUT
+
+          if [ "$SLO_BREACHED" = "true" ]; then
+            echo "❌ SLO breach detected!"
+            echo "Breach details:"
+            printf '%s\n' "${BREACH_MESSAGES[@]}"
+            echo "status=breached" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "✅ All SLOs are healthy"
+            echo "status=healthy" >> $GITHUB_OUTPUT
+          fi
+
+      - name: SLO Status Summary
+        if: always()
+        run: |
+          echo "## SLO Health Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** $ENVIRONMENT" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ steps.check-slo.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Metrics:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Agent Success Rate:** ${{ steps.check-slo.outputs.agent-success }}% (Target: ≥98%)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Quote Response Time (P95):** ${{ steps.check-slo.outputs.quote-response-time }}ms (Target: ≤500ms)" >> $GITHUB_STEP_SUMMARY
+          echo "- **System Uptime:** ${{ steps.check-slo.outputs.system-uptime }}% (Target: ≥99.9%)" >> $GITHUB_STEP_SUMMARY
+          echo "- **API Error Rate:** ${{ steps.check-slo.outputs.error-rate }}% (Target: ≤1%)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check-slo.outputs.status }}" = "breached" ]; then
+            echo "🚨 **DEPLOYMENT BLOCKED** - SLO breach detected" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please investigate and resolve SLO issues before proceeding with deployment." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **DEPLOYMENT ALLOWED** - All SLOs are healthy" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  deploy-gate:
+    name: Deploy Gate
+    runs-on: ubuntu-latest
+    needs: slo-gate
+    if: needs.slo-gate.outputs.slo-status == 'healthy'
+    
+    steps:
+      - name: Deploy Allowed
+        run: |
+          echo "✅ SLOs are healthy - deployment can proceed"
+          echo "Proceeding with deployment to $ENVIRONMENT..."
+
+  slo-alert:
+    name: SLO Breach Alert
+    runs-on: ubuntu-latest
+    needs: slo-gate
+    if: needs.slo-gate.outputs.slo-status == 'breached'
+    
+    steps:
+      - name: Send SLO Breach Alert
+        run: |
+          echo "🚨 SLO BREACH DETECTED - DEPLOYMENT BLOCKED"
+          echo ""
+          echo "Environment: $ENVIRONMENT"
+          echo "Agent Success Rate: ${{ needs.slo-gate.outputs.agent-success }}%"
+          echo "Quote Response Time: ${{ needs.slo-gate.outputs.quote-response-time }}ms"
+          echo "System Uptime: ${{ needs.slo-gate.outputs.system-uptime }}%"
+          echo "API Error Rate: ${{ needs.slo-gate.outputs.error-rate }}%"
+          echo ""
+          echo "Please investigate and resolve SLO issues before proceeding."
+          
+          # Here you would integrate with your alerting system
+          # Examples: Slack, PagerDuty, email, etc.
+          
+          # Example Slack notification (if SLACK_WEBHOOK_URL is configured)
+          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data "{
+                'text': '🚨 SLO Breach Alert - Deployment Blocked',
+                'attachments': [{
+                  'color': 'danger',
+                  'fields': [
+                    {'title': 'Environment', 'value': '$ENVIRONMENT', 'short': true},
+                    {'title': 'Agent Success Rate', 'value': '${{ needs.slo-gate.outputs.agent-success }}%', 'short': true},
+                    {'title': 'Quote Response Time', 'value': '${{ needs.slo-gate.outputs.quote-response-time }}ms', 'short': true},
+                    {'title': 'System Uptime', 'value': '${{ needs.slo-gate.outputs.system-uptime }}%', 'short': true},
+                    {'title': 'API Error Rate', 'value': '${{ needs.slo-gate.outputs.error-rate }}%', 'short': true}
+                  ]
+                }]
+              }" \
+              "${{ secrets.SLACK_WEBHOOK_URL }}"
+          fi
