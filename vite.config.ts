@@ -10,7 +10,19 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: [
+          [
+            "@babel/plugin-transform-react-jsx",
+            {
+              runtime: "automatic",
+            },
+          ],
+        ],
+      },
+    }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
@@ -23,5 +35,8 @@ export default defineConfig(({ mode }) => ({
   },
   esbuild: {
     jsx: 'automatic',
+    jsxFactory: 'React.createElement',
+    jsxFragment: 'React.Fragment',
+    jsxImportSource: 'react',
   },
 }));
