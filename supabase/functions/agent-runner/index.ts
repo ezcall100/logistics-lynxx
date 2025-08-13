@@ -1,7 +1,14 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { initTracerIfEnabled, withSpan, injectHeaders } from "../_shared/otel.ts";
+import { resolveFlag } from "../_shared/flags.ts";
 
-serve(async () => {
+serve(async (req) => {
+  // enable OTEL if flag is on (global/env scope)
+  const otelEnabled = await resolveFlag("obs.otelEnabled", true); // default true in staging
+  initTracerIfEnabled(otelEnabled);
+
+  return await withSpan("agent-runner.handle", req, async (span) => {
   const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
   try {
@@ -19,6 +26,7 @@ serve(async () => {
     }
 
     console.log(`Processing ${tasks.length} tasks`);
+    span.setAttribute("app.tasks_count", tasks.length);
 
     // Get function definitions
     const { data: fns } = await supabase.from('agent_functions').select('*');
@@ -28,6 +36,11 @@ serve(async () => {
 
     for (const task of tasks) {
       console.log(`Processing task ${task.id} (${task.fn_name})`);
+      
+      // Set span attributes for this task
+      span.setAttribute("app.task_id", String(task.id));
+      span.setAttribute("app.company_id", String(task.company_id));
+      span.setAttribute("app.fn_name", String(task.fn_name));
       
       // Update task status to running
       await supabase.from('agent_tasks').update({ 
@@ -56,12 +69,12 @@ serve(async () => {
           ok = res.ok;
           
         } else if (fn.target === 'n8n_webhook' || fn.target === 'http') {
-          // Call external webhook/HTTP endpoint
-          const res = await fetch(fn.endpoint, { 
+          // Call external webhook/HTTP endpoint with trace propagation
+          const res = await fetch(fn.endpoint, injectHeaders({ 
             method: 'POST', 
             headers: {'Content-Type':'application/json'}, 
             body: JSON.stringify(task.payload) 
-          });
+          }));
           
           response = await res.text();
           log = `Status: ${res.status}, Response: ${response}`;
@@ -90,6 +103,13 @@ serve(async () => {
         updated_at: new Date().toISOString() 
       }).eq('id', task.id);
 
+      // Add span event for task completion
+      span.addEvent("task_completed", { 
+        task_id: task.id, 
+        status: finalStatus, 
+        success: ok 
+      });
+
       results.push({
         task_id: task.id,
         fn_name: task.fn_name,
@@ -112,6 +132,7 @@ serve(async () => {
 
   } catch (error) {
     console.error('Agent Runner Error:', error);
+    span.recordException(error as Error);
     return new Response(JSON.stringify({ 
       error: String(error),
       timestamp: new Date().toISOString()
@@ -120,4 +141,5 @@ serve(async () => {
       headers: { 'Content-Type': 'application/json' }
     });
   }
+  });
 });
