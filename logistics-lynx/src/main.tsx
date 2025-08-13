@@ -3,13 +3,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import AppAuthenticated from './AppAuthenticated.tsx';
 import './index.css';
-import { initObservability, session } from './observability';
+
+// Temporarily comment out observability to isolate issues
+// import { initObservability, session } from './observability';
 
 // Initialize observability (Sentry, Web Vitals, performance monitoring)
-initObservability();
+// initObservability();
 
 // Start user session tracking
-session.start();
+// session.start();
 
 const container = document.getElementById('root');
 if (!container) {

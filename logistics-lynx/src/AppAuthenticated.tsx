@@ -1,66 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from './components/theme-provider';
-import { AuthProvider } from './context/AuthContext';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from './components/ui/toaster';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Import our new components
-import AppRoutes from './routes/AppRoutes';
-
-// Import existing components
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
-import { HeroSection } from './components/HeroSection';
-import { FeaturesSection } from './components/FeaturesSection';
-import { SolutionsSection } from './components/SolutionsSection';
-import { TestimonialsSection } from './components/TestimonialsSection';
-import { CTASection } from './components/CTASection';
-
-// Create a QueryClient instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
-
-function HomePage() {
+function SimpleHomePage() {
   return (
-    <div className="min-h-screen">
-      <HeroSection />
-      <FeaturesSection />
-      <SolutionsSection />
-      <TestimonialsSection />
-      <CTASection />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">Logistics Lynx TMS</h1>
+        <p className="text-lg text-gray-600 mb-8">
+          Autonomous Transportation Management System
+        </p>
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500">
+            Welcome to the TMS platform. The application is loading...
+          </p>
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 function AppAuthenticated() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <AuthProvider>
-          <Router>
-            <div className="min-h-screen bg-background">
-              <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<div className="container mx-auto py-20 text-center">Login Page Coming Soon</div>} />
-                <Route path="/signup" element={<div className="container mx-auto py-20 text-center">Sign Up Page Coming Soon</div>} />
-                
-                {/* Authenticated routes - all handled by AppRoutes */}
-                <Route path="/*" element={<AppRoutes />} />
-              </Routes>
-              <Toaster />
-            </div>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <Router>
+      <div className="min-h-screen bg-gray-50">
+        <Routes>
+          <Route path="/" element={<SimpleHomePage />} />
+          <Route path="/login" element={<div className="container mx-auto py-20 text-center">Login Page Coming Soon</div>} />
+          <Route path="/signup" element={<div className="container mx-auto py-20 text-center">Sign Up Page Coming Soon</div>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
