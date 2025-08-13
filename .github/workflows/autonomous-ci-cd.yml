@@ -155,66 +155,8 @@ jobs:
           set -euo pipefail
           echo "⚙️ Validating configuration files..."
           
-          # Validate package.json
-          if [[ -f "logistics-lynx/package.json" ]]; then
-            echo "📦 Validating logistics-lynx/package.json..."
-            python3 -c |
-              import json, sys
-              try:
-                  with open('logistics-lynx/package.json') as f:
-                      data = json.load(f)
-                  
-                  # Check required fields
-                  required_fields = ['name', 'version', 'scripts']
-                  for field in required_fields:
-                      if field not in data:
-                          print(f'❌ Missing required field: {field}')
-                          sys.exit(1)
-                  
-                  # Check required scripts
-                  scripts = data.get('scripts', {})
-                  required_scripts = ['build', 'lint']
-                  optional_scripts = ['test', 'dev', 'start', 'deploy']
-                  
-                  for script in required_scripts:
-                      if script in scripts:
-                          print(f'✅ {script} script present')
-                      else:
-                          print(f'❌ Missing required script: {script}')
-                          sys.exit(1)
-                  
-                  for script in optional_scripts:
-                      if script in scripts:
-                          print(f'✅ {script} script present (optional)')
-                      else:
-                          print(f'⚠️ {script} script missing (optional)')
-                  
-                  print('✅ package.json validation passed')
-              except Exception as e:
-                  print(f'❌ package.json validation failed: {e}')
-                  sys.exit(1)
-          fi
-          
-          # Validate TypeScript config
-          if [[ -f "logistics-lynx/tsconfig.json" ]]; then
-            echo "📝 Validating tsconfig.json..."
-            python3 -c |
-              import json, sys
-              try:
-                  with open('logistics-lynx/tsconfig.json') as f:
-                      data = json.load(f)
-                  
-                  required_fields = ['compilerOptions']
-                  for field in required_fields:
-                      if field not in data:
-                          print(f'❌ Missing required field: {field}')
-                          sys.exit(1)
-                  
-                  print('✅ tsconfig.json validation passed')
-              except Exception as e:
-                  print(f'❌ tsconfig.json validation failed: {e}')
-                  sys.exit(1)
-          fi
+          # Run the Python validation script
+          python3 .github/scripts/validate-config.py
 
       - name: 🎯 Deployment Decision Logic
         id: decision
