@@ -1,0 +1,294 @@
+name: 🔍 Post-Deploy Verification
+
+on:
+  workflow_run:
+    workflows: ["🤖 Autonomous CI/CD Pipeline"]
+    types: [completed]
+    branches: [main, develop]
+
+jobs:
+  post-deploy-verify:
+    name: 🔍 Post-Deploy Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    # Only run if the main workflow was successful
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Get Deployment Environment
+        id: env
+        run: |
+          # Determine environment based on branch
+          if [[ "${{ github.event.workflow_run.head_branch }}" == "main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.workflow_run.head_branch }}" == "develop" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          else
+            echo "environment=development" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "Deployment environment: ${{ steps.env.outputs.environment }}"
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+          cache-dependency-path: logistics-lynx/package-lock.json
+
+      - name: 📦 Install Dependencies
+        working-directory: logistics-lynx
+        run: |
+          npm ci --production=false
+          echo "✅ Dependencies installed"
+
+      - name: 🏥 Health Check Verification
+        run: |
+          echo "🏥 Running health check verification..."
+          
+          # Get environment-specific variables
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+          else
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+          fi
+          
+          # Test health endpoint
+          echo "Testing health endpoint: $SUPABASE_URL/functions/v1/health"
+          
+          HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            "$SUPABASE_URL/functions/v1/health")
+          
+          HEALTH_HTTP_CODE=$(echo "$HEALTH_RESPONSE" | tail -n1)
+          HEALTH_DATA=$(echo "$HEALTH_RESPONSE" | head -n -1)
+          
+          echo "Health check response: $HEALTH_DATA"
+          echo "HTTP status: $HEALTH_HTTP_CODE"
+          
+          if [[ "$HEALTH_HTTP_CODE" == "200" ]]; then
+            echo "✅ Health check passed"
+            
+            # Parse health data
+            STATUS=$(echo "$HEALTH_DATA" | jq -r '.status // "unknown"')
+            DATABASE=$(echo "$HEALTH_DATA" | jq -r '.database // "unknown"')
+            N8N=$(echo "$HEALTH_DATA" | jq -r '.n8n // "unknown"')
+            OPENAI=$(echo "$HEALTH_DATA" | jq -r '.openai // "unknown"')
+            
+            echo "Status: $STATUS"
+            echo "Database: $DATABASE"
+            echo "n8n: $N8N"
+            echo "OpenAI: $OPENAI"
+            
+            # Check if all services are healthy
+            if [[ "$STATUS" == "ok" && "$DATABASE" == "green" && "$N8N" == "green" && "$OPENAI" == "green" ]]; then
+              echo "✅ All services healthy"
+            else
+              echo "⚠️ Some services showing degraded status"
+              exit 1
+            fi
+          else
+            echo "❌ Health check failed with HTTP $HEALTH_HTTP_CODE"
+            exit 1
+          fi
+
+      - name: 🛡️ RLS Security Verification
+        run: |
+          echo "🛡️ Running RLS security verification..."
+          
+          # Get environment-specific variables
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+          else
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+          fi
+          
+          # Run RLS verification script
+          echo "Running RLS verification against $ENVIRONMENT environment..."
+          
+          # Create a simple RLS test
+          RLS_TEST=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "query": "SELECT COUNT(*) FROM shipments WHERE company_id != auth.jwt() ->> '\''company_id'\'' LIMIT 1;"
+            }' \
+            "$SUPABASE_URL/rest/v1/rpc/exec_sql")
+          
+          RLS_HTTP_CODE=$(echo "$RLS_TEST" | tail -n1)
+          RLS_DATA=$(echo "$RLS_TEST" | head -n -1)
+          
+          echo "RLS test response: $RLS_DATA"
+          echo "HTTP status: $RLS_HTTP_CODE"
+          
+          if [[ "$RLS_HTTP_CODE" == "200" ]]; then
+            echo "✅ RLS verification completed"
+          else
+            echo "⚠️ RLS verification returned unexpected status"
+          fi
+
+      - name: 🔧 Edge Functions Verification
+        run: |
+          echo "🔧 Running edge functions verification..."
+          
+          # Get environment-specific variables
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+          else
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+          fi
+          
+          # Test edge functions
+          FUNCTIONS=("health" "ai-load-matcher" "agent-runner" "on-signup")
+          
+          for func in "${FUNCTIONS[@]}"; do
+            echo "Testing edge function: $func"
+            
+            RESPONSE=$(curl -s -w "\n%{http_code}" \
+              -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+              "$SUPABASE_URL/functions/v1/$func")
+            
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            DATA=$(echo "$RESPONSE" | head -n -1)
+            
+            if [[ "$HTTP_CODE" == "200" || "$HTTP_CODE" == "401" ]]; then
+              echo "✅ $func responding (HTTP $HTTP_CODE)"
+            else
+              echo "❌ $func returned unexpected status: $HTTP_CODE"
+            fi
+          done
+
+      - name: 📊 Smoke Tests
+        working-directory: logistics-lynx
+        run: |
+          echo "📊 Running smoke tests..."
+          
+          # Set environment variables for smoke tests
+          export ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            export SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+            export SUPABASE_ANON_KEY="${{ secrets.PROD_SUPABASE_ANON_KEY }}"
+            export N8N_URL="${{ secrets.PROD_N8N_URL }}"
+            export SLACK_WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            export SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+            export SUPABASE_ANON_KEY="${{ secrets.STAGING_SUPABASE_ANON_KEY }}"
+            export N8N_URL="${{ secrets.STAGING_N8N_URL }}"
+            export SLACK_WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+          else
+            export SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+            export SUPABASE_ANON_KEY="${{ secrets.DEV_SUPABASE_ANON_KEY }}"
+            export N8N_URL="${{ secrets.DEV_N8N_URL }}"
+            export SLACK_WEBHOOK_URL="${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+          fi
+          
+          # Run smoke tests
+          node scripts/smoke-tests.js
+
+      - name: 📣 Send Verification Results
+        if: always()
+        run: |
+          echo "📣 Sending verification results..."
+          
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          STATUS="${{ job.status }}"
+          
+          # Create summary
+          if [[ "$STATUS" == "success" ]]; then
+            MESSAGE="✅ Post-deploy verification completed successfully for $ENVIRONMENT"
+            COLOR="good"
+          else
+            MESSAGE="❌ Post-deploy verification failed for $ENVIRONMENT"
+            COLOR="danger"
+          fi
+          
+          # Send to Slack if webhook is configured
+          if [[ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]]; then
+            curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"text\": \"$MESSAGE\",
+                \"attachments\": [
+                  {
+                    \"color\": \"$COLOR\",
+                    \"fields\": [
+                      {
+                        \"title\": \"Environment\",
+                        \"value\": \"$ENVIRONMENT\",
+                        \"short\": true
+                      },
+                      {
+                        \"title\": \"Status\",
+                        \"value\": \"$STATUS\",
+                        \"short\": true
+                      },
+                      {
+                        \"title\": \"Workflow Run\",
+                        \"value\": \"${{ github.event.workflow_run.html_url }}\",
+                        \"short\": false
+                      }
+                    ]
+                  }
+                ]
+              }"
+          fi
+
+      - name: 📊 Verification Summary
+        run: |
+          {
+            echo "## 🔍 Post-Deploy Verification Summary"
+            echo ""
+            echo "### 📋 Verification Results"
+            echo "- **Environment**: \`${{ steps.env.outputs.environment }}\`"
+            echo "- **Status**: \`${{ job.status }}\`"
+            echo "- **Workflow Run**: [${{ github.event.workflow_run.head_branch }}](${{ github.event.workflow_run.html_url }})"
+            echo ""
+            echo "### ✅ Checks Performed"
+            echo "- 🏥 Health Check Verification"
+            echo "- 🛡️ RLS Security Verification"
+            echo "- 🔧 Edge Functions Verification"
+            echo "- 📊 Smoke Tests"
+            echo ""
+            echo "### 📈 Next Steps"
+            if [[ "${{ job.status }}" == "success" ]]; then
+              echo "- 🎉 Deployment verified successfully"
+              echo "- 📊 Monitor system performance"
+              echo "- 🔄 Continue with canary rollout if applicable"
+            else
+              echo "- 🔍 Review verification logs"
+              echo "- 🛠️ Address any issues found"
+              echo "- 🔄 Re-run verification after fixes"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

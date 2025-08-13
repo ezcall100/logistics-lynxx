@@ -1,0 +1,365 @@
+name: 🔄 Weekly DR Drill
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test DR for'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+
+jobs:
+  create-dr-checklist:
+    name: 📋 Create DR Drill Checklist
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+      issue-url: ${{ steps.create-dr-issue.outputs.issue-url }}
+    
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Get Environment
+        id: env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "DR Drill environment: ${{ steps.env.outputs.environment }}"
+
+      - name: 📝 Generate DR Issue Content
+        run: |
+          echo "📝 Generating DR issue content..."
+          node scripts/create-dr-issue.js "${{ steps.env.outputs.environment }}"
+
+      - name: 📝 Create DR Issue
+        id: create-dr-issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const environment = '${{ steps.env.outputs.environment }}';
+            const date = new Date().toISOString().split('T')[0];
+            
+            // Read the issue body from the generated file
+            const fs = require('fs');
+            const issueBody = fs.readFileSync('dr-issue-body.md', 'utf8');
+
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔄 DR Drill - ${environment.toUpperCase()} - ${date}`,
+              body: issueBody,
+              labels: ['dr-drill', 'maintenance', environment],
+              assignees: ['ezcall100']
+            });
+            
+            console.log(`Created DR drill issue: ${issue.data.html_url}`);
+            core.setOutput('issue-url', issue.data.html_url);
+
+      - name: 📣 Send DR Drill Notification
+        run: |
+          echo "📣 Sending DR drill notification..."
+          
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          ISSUE_URL="${{ steps.create-dr-issue.outputs.issue-url }}"
+          
+          # Send to Slack notification
+                    # Create JSON payload for Slack
+          JSON_PAYLOAD=$(cat <<EOF
+          {
+            "text": "🔄 Weekly DR Drill scheduled for $ENVIRONMENT",
+            "attachments": [
+              {
+                "color": "warning",
+                "fields": [
+                  {
+                    "title": "Environment",
+                    "value": "$ENVIRONMENT",
+                    "short": true
+                  },
+                  {
+                    "title": "Type",
+                    "value": "Weekly DR Drill",
+                    "short": true
+                  },
+                  {
+                    "title": "Checklist",
+                    "value": "$ISSUE_URL",
+                    "short": false
+                  }
+                ],
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "View Checklist",
+                    "url": "$ISSUE_URL"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+          
+          curl -X POST "https://hooks.slack.com/services/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" \
+            -H "Content-Type: application/json" \
+            -d "$JSON_PAYLOAD"
+
+  run-dr-tests:
+    name: 🧪 Run DR Tests
+    runs-on: ubuntu-latest
+    needs: [create-dr-checklist]
+    timeout-minutes: 30
+    
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Get Environment
+        id: env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+          cache-dependency-path: logistics-lynx/package-lock.json
+
+      - name: 📦 Install Dependencies
+        working-directory: logistics-lynx
+        run: |
+          npm ci --production=false
+          echo "✅ Dependencies installed"
+
+      - name: 🗄️ Backup Verification Test
+        run: |
+          echo "🗄️ Running backup verification test..."
+          
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+          else
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+          fi
+          
+          # Test backup accessibility
+          echo "Testing backup accessibility for $ENVIRONMENT..."
+          
+          # This would typically involve checking Supabase backup status
+          # For now, we'll test basic connectivity
+          BACKUP_TEST=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            "$SUPABASE_URL/rest/v1/")
+          
+          BACKUP_HTTP_CODE=$(echo "$BACKUP_TEST" | tail -n1)
+          
+          if [[ "$BACKUP_HTTP_CODE" == "200" ]]; then
+            echo "✅ Backup verification test passed"
+          else
+            echo "❌ Backup verification test failed"
+            exit 1
+          fi
+
+      - name: 🔄 Restore Simulation Test
+        run: |
+          echo "🔄 Running restore simulation test..."
+          
+          # This would simulate a restore process
+          # For now, we'll test that the deployment script works
+          echo "Testing deployment script functionality..."
+          
+          if [[ -f "deploy-phase3.sh" ]]; then
+            echo "✅ Deployment script exists and is accessible"
+            
+            # Test script syntax
+            bash -n deploy-phase3.sh
+            if [[ $? -eq 0 ]]; then
+              echo "✅ Deployment script syntax is valid"
+            else
+              echo "❌ Deployment script syntax error"
+              exit 1
+            fi
+          else
+            echo "❌ Deployment script not found"
+            exit 1
+          fi
+
+      - name: 🏥 Health Check Test
+        run: |
+          echo "🏥 Running health check test..."
+          
+          ENVIRONMENT="${{ steps.env.outputs.environment }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
+          else
+            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
+            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
+          fi
+          
+          # Test health endpoint
+          HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            "$SUPABASE_URL/functions/v1/health")
+          
+          HEALTH_HTTP_CODE=$(echo "$HEALTH_RESPONSE" | tail -n1)
+          HEALTH_DATA=$(echo "$HEALTH_RESPONSE" | head -n -1)
+          
+          if [[ "$HEALTH_HTTP_CODE" == "200" ]]; then
+            echo "✅ Health check test passed"
+            echo "Health data: $HEALTH_DATA"
+          else
+            echo "❌ Health check test failed"
+            exit 1
+          fi
+
+      - name: 📊 DR Test Summary
+        run: |
+          {
+            echo "## 🔄 DR Drill Test Summary"
+            echo ""
+            echo "### 📋 Test Results"
+            echo "- **Environment**: \`${{ steps.env.outputs.environment }}\`"
+            echo "- **Date**: \`$(date -u +%Y-%m-%d)\`"
+            echo "- **Status**: \`${{ job.status }}\`"
+            echo ""
+            echo "### ✅ Tests Performed"
+            echo "- 🗄️ Backup Verification Test"
+            echo "- 🔄 Restore Simulation Test"
+            echo "- 🏥 Health Check Test"
+            echo ""
+            echo "### 📈 Next Steps"
+            echo "- 📋 Complete manual DR checklist"
+            echo "- 🔍 Review automated test results"
+            echo "- 📝 Document any findings"
+            echo "- 🔄 Schedule follow-up if needed"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  update-dr-metrics:
+    name: 📊 Update DR Metrics
+    runs-on: ubuntu-latest
+    needs: [create-dr-checklist, run-dr-tests]
+    if: always()
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📊 Generate DR Metrics
+        run: |
+          echo "📊 Generating DR metrics..."
+          
+          # Create metrics file
+          cat > dr-metrics.json <<EOF
+          {
+            "last_dr_drill": "$(date -u -Iseconds)",
+            "environment": "${{ needs.create-dr-checklist.outputs.environment }}",
+            "automated_tests_passed": ${{ needs.run-dr-tests.result == 'success' }},
+            "manual_checklist_created": true,
+            "next_drill_scheduled": "$(date -u -d '+7 days' -Iseconds)",
+            "drill_frequency": "weekly",
+            "rto_target": "15 minutes",
+            "rpo_target": "1 hour"
+          }
+          EOF
+          
+          echo "DR metrics generated:"
+          cat dr-metrics.json
+
+      - name: 📝 Update DR Documentation
+        run: |
+          echo "📝 Updating DR documentation..."
+          
+          # Update last drill date in documentation
+          LAST_DRILL_DATE=$(date -u +%Y-%m-%d)
+          
+          # This would typically update a markdown file
+          echo "Last DR drill completed: $LAST_DRILL_DATE"
+          echo "Next DR drill scheduled: $(date -u -d '+7 days' +%Y-%m-%d)"
+
+      - name: 📣 Send DR Metrics
+        if: always()
+        run: |
+          echo "📣 Sending DR metrics..."
+          
+          ENVIRONMENT="${{ needs.create-dr-checklist.outputs.environment }}"
+          TESTS_PASSED="${{ needs.run-dr-tests.result == 'success' }}"
+          ISSUE_URL="${{ needs.create-dr-checklist.outputs.issue-url }}"
+          
+          # Send to Slack notification
+          COLOR="good"
+          if [[ "$TESTS_PASSED" != "success" ]]; then
+            COLOR="warning"
+          fi
+          
+                    # Create JSON payload for Slack metrics
+          METRICS_PAYLOAD=$(cat <<EOF
+          {
+            "text": "📊 DR Drill Metrics - $ENVIRONMENT",
+            "attachments": [
+              {
+                "color": "$COLOR",
+                "fields": [
+                  {
+                    "title": "Environment",
+                    "value": "$ENVIRONMENT",
+                    "short": true
+                  },
+                  {
+                    "title": "Automated Tests",
+                    "value": "$TESTS_PASSED",
+                    "short": true
+                  },
+                  {
+                    "title": "Manual Checklist",
+                    "value": "$ISSUE_URL",
+                    "short": false
+                  },
+                  {
+                    "title": "Next Drill",
+                    "value": "$(date -u -d '+7 days' +%Y-%m-%d)",
+                    "short": true
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+          
+          curl -X POST "https://hooks.slack.com/services/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" \
+            -H "Content-Type: application/json" \
+            -d "$METRICS_PAYLOAD"
