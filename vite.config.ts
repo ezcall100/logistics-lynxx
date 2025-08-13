@@ -4,17 +4,13 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-const mode = process.env.NODE_ENV || 'development';
-
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
   },
   plugins: [
-    react({
-      jsxImportSource: "react"
-    }),
+    react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
@@ -22,11 +18,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  esbuild: {
-    jsx: 'automatic',
-    target: 'es2020'
-  },
   define: {
     global: 'globalThis',
+  },
+  esbuild: {
+    jsx: 'automatic',
   },
 }));
