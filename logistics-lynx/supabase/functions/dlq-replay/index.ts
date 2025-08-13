@@ -55,20 +55,41 @@ Deno.serve(async (req) => {
 
     const { dlq_ids, company_id, error_type, force = false, max = 50, idempotency_key, dry_run = false }: ReplayRequest = await req.json();
     
-    // 2. RATE LIMIT & BUDGET
-    const rateLimitResult = await checkRateLimit(authResult.actor, company_id, req.headers.get('x-forwarded-for') || 'unknown');
-    if (!rateLimitResult.allowed) {
-      return new Response(JSON.stringify({ 
-        error: 'Rate limit exceeded', 
-        retry_after: rateLimitResult.retry_after 
-      }), { 
-        status: 429,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Retry-After': rateLimitResult.retry_after.toString()
-        }
-      });
-    }
+                // 2. RATE LIMIT & BUDGET
+            const rateLimitResult = await checkRateLimit(authResult.actor, company_id, req.headers.get('x-forwarded-for') || 'unknown');
+            if (!rateLimitResult.allowed) {
+              return new Response(JSON.stringify({
+                error: 'Rate limit exceeded',
+                retry_after: rateLimitResult.retry_after
+              }), {
+                status: 429,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Retry-After': rateLimitResult.retry_after.toString()
+                }
+              });
+            }
+
+            // 2.5. REPLAY BUDGET CHECK (if feature flag enabled)
+            if (company_id && company_id !== 'all') {
+              const { data: budgetEnabled } = await supabase
+                .rpc('is_feature_enabled', { feature_key: 'dlq.replay.budget_control', target_company_id: company_id });
+              
+              if (budgetEnabled) {
+                const { data: budgetAvailable } = await supabase
+                  .rpc('check_replay_budget', { target_company_id: company_id });
+                
+                if (!budgetAvailable) {
+                  return new Response(JSON.stringify({
+                    error: 'Replay budget exceeded for today/month',
+                    message: 'Daily or monthly replay limit reached'
+                  }), {
+                    status: 429,
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                }
+              }
+            }
 
     // 3. REPLAY IDEMPOTENCY
     if (idempotency_key) {
@@ -231,19 +252,24 @@ Deno.serve(async (req) => {
       }
     }
     
-    // Update replay run with final results
-    await updateReplayRun(replayRunId, 'completed', dlqItems.length, successCount, failureCount);
-    
-    // Write audit log
-    await writeAuditLog({
-      actor: authResult.actor,
-      action: 'dlq_replay',
-      scope: company_id || 'all',
-      target_count: dlqItems.length,
-      success_count: successCount,
-      failure_count: failureCount,
-      replay_run_id: replayRunId
-    });
+                // Update replay run with final results
+            await updateReplayRun(replayRunId, 'completed', dlqItems.length, successCount, failureCount);
+
+            // Increment replay budget if successful
+            if (company_id && company_id !== 'all' && successCount > 0) {
+              await supabase.rpc('increment_replay_budget', { target_company_id: company_id });
+            }
+
+            // Write audit log
+            await writeAuditLog({
+              actor: authResult.actor,
+              action: 'dlq_replay',
+              scope: company_id || 'all',
+              target_count: dlqItems.length,
+              success_count: successCount,
+              failure_count: failureCount,
+              replay_run_id: replayRunId
+            });
     
     // Send Slack notification if configured
     if (Deno.env.get('SLACK_WEBHOOK_URL')) {

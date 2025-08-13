@@ -10,6 +10,11 @@ const outboxLagTime = new Trend('outbox_lag_seconds');
 const dlqCount = new Counter('dlq_items_count');
 const agentSuccessRate = new Rate('agent_success_rate');
 
+// Enhanced metrics for production hardening
+const httpFailed = new Rate('http_req_failed');
+const outboxLagMs = new Trend('outbox_lag_ms');
+const agentSuccess = new Rate('agent_success');
+
 // Test configuration
 export const options = {
   stages: [
@@ -30,9 +35,11 @@ export const options = {
     
     // Outbox lag: custom metric thresholds
     outbox_lag_seconds: ['avg<2', 'p(95)<5'],  // Outbox lag < 2s avg, < 5s p95
+    outbox_lag_ms: ['p(95)<5000', 'avg<2000'], // Enhanced outbox lag metrics
     
     // Agent SLO: success ≥ 98% over the test window
     agent_success_rate: ['rate>0.98'],    // Agent success rate above 98%
+    agent_success: ['rate>0.98'],         // Enhanced agent success metric
     
     // DLQ: size delta after run === 0 (or below tolerance)
     dlq_items_count: ['count<10'],        // DLQ items count below threshold
