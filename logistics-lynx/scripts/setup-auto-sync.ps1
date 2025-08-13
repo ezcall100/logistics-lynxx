@@ -11,7 +11,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Split-Path -Parent $ScriptDir
 $SyncScript = Join-Path $ScriptDir "sync-to-github.ps1"
 $TaskName = "LogisticsLynxAutoSync"
-$RepoName = "logistics-lynxx"
+$RepoName = "ezcall100/logistics-lynx"
 
 # Colors for output
 $Red = "Red"
@@ -41,8 +41,8 @@ function Write-Warning {
     Write-Host "[WARNING] $Message" -ForegroundColor $Yellow
 }
 
-# Function to setup Windows Task Scheduler
-function Setup-WindowsTask {
+# Function to create Windows Task Scheduler task
+function New-WindowsTask {
     param([string]$Interval)
     
     # Create logs directory
@@ -166,8 +166,8 @@ function Main {
         }
     }
     
-    # Setup Windows Task Scheduler
-    Setup-WindowsTask $Interval
+    # Create Windows Task Scheduler task
+    New-WindowsTask $Interval
     
     # Test the sync script
     Write-Log "Testing sync script..." $Blue
@@ -183,7 +183,7 @@ function Main {
     Write-Success "Auto-sync setup completed!"
     Write-Host ""
     Write-Host "📋 Setup Summary:" -ForegroundColor $Blue
-    Write-Host "   • Repository: ezcall100/logistics-lynx"
+    Write-Host "   • Repository: $RepoName"
     Write-Host "   • Sync interval: $Interval"
     Write-Host "   • Log file: $ProjectDir\logs\auto-sync.log"
     Write-Host "   • Manual sync: $SyncScript"
