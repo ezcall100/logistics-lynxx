@@ -4,7 +4,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
+const mode = process.env.NODE_ENV || 'development';
+
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -27,9 +28,5 @@ export default defineConfig(({ mode }) => ({
   },
   define: {
     global: 'globalThis',
-  },
-  build: {
-    target: 'es2020',
-    outDir: 'dist',
   },
 }));
