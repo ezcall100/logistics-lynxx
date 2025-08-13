@@ -34,10 +34,10 @@ try {
 # Test 2: Database connectivity
 Write-Host "🗄️ Testing database connectivity..." -ForegroundColor Yellow
 try {
-    $dbResponse = Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/agent_tasks?limit=1" -Method GET -Headers @{
+    Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/agent_tasks?limit=1" -Method GET -Headers @{
         "apikey" = $SupabaseAnonKey
         "Authorization" = "Bearer $SupabaseAnonKey"
-    }
+    } | Out-Null
     Write-Host "✅ Database connectivity: OK" -ForegroundColor Green
 } catch {
     Write-Host "❌ Database connectivity failed: $($_.Exception.Message)" -ForegroundColor Red
@@ -46,10 +46,10 @@ try {
 # Test 3: Agent runner function
 Write-Host "🤖 Testing agent-runner function..." -ForegroundColor Yellow
 try {
-    $runnerResponse = Invoke-RestMethod -Uri "$SupabaseUrl/functions/v1/agent-runner" -Method POST -Headers @{
+    Invoke-RestMethod -Uri "$SupabaseUrl/functions/v1/agent-runner" -Method POST -Headers @{
         "Content-Type" = "application/json"
         "Authorization" = "Bearer $SupabaseAnonKey"
-    } -Body '{"test": true}'
+    } -Body '{"test": true}' | Out-Null
     Write-Host "✅ Agent runner function: Available" -ForegroundColor Green
 } catch {
     Write-Host "⚠️ Agent runner function: $($_.Exception.Message)" -ForegroundColor Yellow
@@ -58,10 +58,10 @@ try {
 # Test 4: Real-time subscriptions
 Write-Host "📡 Testing real-time subscriptions..." -ForegroundColor Yellow
 try {
-    $realtimeResponse = Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/agent_logs?limit=1" -Method GET -Headers @{
+    Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/agent_logs?limit=1" -Method GET -Headers @{
         "apikey" = $SupabaseAnonKey
         "Authorization" = "Bearer $SupabaseAnonKey"
-    }
+    } | Out-Null
     Write-Host "✅ Real-time subscriptions: Available" -ForegroundColor Green
 } catch {
     Write-Host "❌ Real-time subscriptions failed: $($_.Exception.Message)" -ForegroundColor Red
@@ -73,10 +73,10 @@ $requiredTables = @("agent_tasks", "agent_logs", "v_agent_metrics_15m")
 
 foreach ($table in $requiredTables) {
     try {
-        $tableResponse = Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/$table?limit=1" -Method GET -Headers @{
+        Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/$table?limit=1" -Method GET -Headers @{
             "apikey" = $SupabaseAnonKey
             "Authorization" = "Bearer $SupabaseAnonKey"
-        }
+        } | Out-Null
         Write-Host "✅ Table $table: Available" -ForegroundColor Green
     } catch {
         Write-Host "❌ Table $table: Missing or inaccessible" -ForegroundColor Red
@@ -86,10 +86,10 @@ foreach ($table in $requiredTables) {
 # Test 6: Feature flags
 Write-Host "🚩 Checking feature flags..." -ForegroundColor Yellow
 try {
-    $flagsResponse = Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/feature_flags?limit=1" -Method GET -Headers @{
+    Invoke-RestMethod -Uri "$SupabaseUrl/rest/v1/feature_flags?limit=1" -Method GET -Headers @{
         "apikey" = $SupabaseAnonKey
         "Authorization" = "Bearer $SupabaseAnonKey"
-    }
+    } | Out-Null
     Write-Host "✅ Feature flags: Available" -ForegroundColor Green
 } catch {
     Write-Host "⚠️ Feature flags: Not configured (using local config)" -ForegroundColor Yellow
@@ -100,9 +100,9 @@ $slackWebhook = $env:N8N_AGENT_LOG_WEBHOOK
 if ($slackWebhook) {
     Write-Host "💬 Testing Slack webhook..." -ForegroundColor Yellow
     try {
-        $slackResponse = Invoke-RestMethod -Uri $slackWebhook -Method POST -Headers @{
+        Invoke-RestMethod -Uri $slackWebhook -Method POST -Headers @{
             "Content-Type" = "application/json"
-        } -Body '{"text":"🧪 Day-0 verification test"}'
+        } -Body '{"text":"🧪 Day-0 verification test"}' | Out-Null
         Write-Host "✅ Slack webhook: Working" -ForegroundColor Green
     } catch {
         Write-Host "❌ Slack webhook failed: $($_.Exception.Message)" -ForegroundColor Red
