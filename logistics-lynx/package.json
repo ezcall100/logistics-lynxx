@@ -23,7 +23,14 @@
     "sync:setup": "bash scripts/setup-auto-sync.sh",
     "sync:windows": "powershell -ExecutionPolicy Bypass -File scripts/sync-to-github.ps1",
     "sync:setup:windows": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1",
-    "sync:remove": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1 -Remove"
+    "sync:remove": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1 -Remove",
+    "start:autonomous": "node --loader ts-node/esm src/start-autonomous-system.ts",
+    "dev:autonomous": "nodemon --exec node --loader ts-node/esm src/start-autonomous-system.ts",
+    "deploy:autonomous": "supabase db push && supabase functions deploy agent-runner && npm run start:autonomous",
+    "supabase:link": "supabase link --project-ref imcyiofodlnbomemvqto",
+    "supabase:status": "supabase status",
+    "supabase:db:push": "supabase db push",
+    "supabase:functions:deploy": "supabase functions deploy agent-runner"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",
