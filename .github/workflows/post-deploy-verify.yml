@@ -1,14 +1,14 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # yaml-validate: disable
 # yaml-lint disable-all
-# yaml-lint disable rule:no-invalid-context-access
 # yaml-lint disable rule:context-access-might-be-invalid
-# yaml-lint disable rule:no-unrecognized-named-value
-# yaml-lint disable rule:no-unrecognized-function
+# yaml-lint disable rule:no-invalid-context-access
 # yaml-lint disable rule:no-unrecognized-expression
 # yaml-lint disable rule:no-unrecognized-variable
 # yaml-lint disable rule:no-unrecognized-property
+# yaml-lint disable rule:no-unrecognized-named-value
 # yaml-lint disable rule:no-unrecognized-method
+# yaml-lint disable rule:no-unrecognized-function
 # yaml-lint disable rule:no-unrecognized-parameter
 # yaml-lint disable rule:no-unrecognized-argument
 # yaml-lint disable rule:no-unrecognized-key
