@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      jsxImportSource: "@emotion/react"
+      jsxRuntime: 'automatic'
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
@@ -25,5 +25,7 @@ export default defineConfig(({ mode }) => ({
   },
   esbuild: {
     jsx: 'automatic',
+    jsxFactory: 'React.createElement',
+    jsxFragment: 'React.Fragment',
   },
 }));
