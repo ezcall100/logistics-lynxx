@@ -1,0 +1,249 @@
+{
+  "name": "POD Received → Invoice → Notify",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pod-uploaded",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-pod-uploaded",
+      "name": "Webhook: POD Uploaded",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "pod-uploaded"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "documents",
+        "columns": {
+          "company_id": "={{ $('Supabase: Get Load').all()[0].json.data[0].company_id }}",
+          "load_id": "={{ $json.load_id }}",
+          "kind": "pod",
+          "url": "={{ $json.doc_url }}",
+          "meta": "={\"uploaded_at\": new Date().toISOString(), \"source\": \"n8n_webhook\"}"
+        }
+      },
+      "id": "supabase-insert-document",
+      "name": "Supabase: Insert Document",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "table": "loads",
+        "updateKey": "id",
+        "columns": {
+          "status": "delivered"
+        }
+      },
+      "id": "supabase-update-load-status",
+      "name": "Supabase: Update Load Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": "loads",
+        "columns": ["id", "company_id", "reference", "rate", "pickup", "dropoff"],
+        "where": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "leftValue": "id",
+                "rightValue": "={{ $json.load_id }}",
+                "operator": {
+                  "type": "string",
+                  "operation": "eq"
+                }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      "id": "supabase-get-load",
+      "name": "Supabase: Get Load",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [680, 500]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Calculate invoice amount based on rate rules\nconst load = $input.all()[0].json.data[0];\nconst baseRate = load.rate || 0;\n\n// Simple calculation - can be enhanced with complex rate rules\nlet invoiceAmount = baseRate;\n\n// Add any additional charges (fuel surcharge, detention, etc.)\n// This is a placeholder for more complex logic\nconst additionalCharges = 0;\n\n// Calculate final amount\nconst finalAmount = invoiceAmount + additionalCharges;\n\n// Set due date to 30 days from now\nconst dueDate = new Date();\ndueDate.setDate(dueDate.getDate() + 30);\n\nreturn {\n  company_id: load.company_id,\n  load_id: load.id,\n  amount: finalAmount,\n  due_date: dueDate.toISOString().split('T')[0],\n  reference: load.reference\n};"
+      },
+      "id": "function-calculate-invoice",
+      "name": "Function: Calculate Invoice",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "invoices",
+        "columns": {
+          "company_id": "={{ $json.company_id }}",
+          "load_id": "={{ $json.load_id }}",
+          "amount": "={{ $json.amount }}",
+          "status": "created",
+          "due_date": "={{ $json.due_date }}"
+        }
+      },
+      "id": "supabase-insert-invoice",
+      "name": "Supabase: Insert Invoice",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "authentication": "none",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "📄 POD received and invoice generated!\n\nLoad: {{ $('Supabase: Get Load').all()[0].json.data[0].reference }}\nAmount: ${{ $('Function: Calculate Invoice').all()[0].json.amount.toFixed(2) }}\nDue Date: {{ $('Function: Calculate Invoice').all()[0].json.due_date }}\n\nView invoice: {{ $env.APP_URL }}/invoices"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "slack-notify-accounting",
+      "name": "Slack: Notify Accounting",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"load_id\": $('Supabase: Get Load').all()[0].json.data[0].id,\n  \"document_created\": true,\n  \"load_status_updated\": true,\n  \"invoice_created\": true,\n  \"invoice_amount\": $('Function: Calculate Invoice').all()[0].json.amount,\n  \"notification_sent\": true\n}"
+      },
+      "id": "response-success",
+      "name": "Response: Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: POD Uploaded": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Insert Document": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Load Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Load Status": {
+      "main": [
+        [
+          {
+            "node": "Function: Calculate Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Load": {
+      "main": [
+        [
+          {
+            "node": "Function: Calculate Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function: Calculate Invoice": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Insert Invoice": {
+      "main": [
+        [
+          {
+            "node": "Slack: Notify Accounting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: Notify Accounting": {
+      "main": [
+        [
+          {
+            "node": "Response: Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "pod-automation",
+      "name": "pod-automation"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

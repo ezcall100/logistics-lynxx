@@ -10,9 +10,14 @@
     "lint": "cd logistics-lynx && npm run lint",
     "test": "cd logistics-lynx && npm run test"
   },
-      "description": "Parent package for Trans Bot AI project",
+  "description": "Parent package for Trans Bot AI project",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.55.0",
+    "jose": "^6.0.12"
   }
 }
