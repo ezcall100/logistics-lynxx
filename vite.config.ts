@@ -24,10 +24,6 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     jsx: 'automatic',
     target: 'es2020',
-    include: /\.(ts|tsx|js|jsx)$/,
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
-    loader: 'tsx',
   },
   define: {
     global: 'globalThis',
