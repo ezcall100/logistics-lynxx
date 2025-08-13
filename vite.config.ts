@@ -11,7 +11,8 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      jsxRuntime: 'automatic'
+      jsxRuntime: 'automatic',
+      jsxImportSource: 'react'
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
@@ -27,5 +28,11 @@ export default defineConfig(({ mode }) => ({
     jsx: 'automatic',
     jsxFactory: 'React.createElement',
     jsxFragment: 'React.Fragment',
+    target: 'esnext',
+    format: 'esm'
   },
+  build: {
+    target: 'esnext',
+    minify: false
+  }
 }));
