@@ -133,7 +133,7 @@ jobs:
           - environment: dev
             ENV_DISPLAY: Development
 
-    # 2) Only include non-secret environment variables
+    # 2) Environment variables
     env:
       ENVIRONMENT_NAME: ${{ matrix.environment }}
       ENV_DISPLAY: ${{ matrix.ENV_DISPLAY }}
@@ -144,37 +144,87 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Export per-env secrets into $GITHUB_ENV (no env block)
-      # yaml-lint disable rule:context-access-might-be-invalid
+      # Export per-env secrets into $GITHUB_ENV
       - name: 🔐 Export environment secrets
         shell: bash
-        # yaml-lint disable rule:context-access-might-be-invalid
+        env:
+          # Production secrets
+          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+          PROD_N8N_URL: ${{ secrets.PROD_N8N_URL }}
+          PROD_SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+          # Staging secrets
+          STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          STAGING_N8N_URL: ${{ secrets.STAGING_N8N_URL }}
+          STAGING_SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
+          # Development secrets
+          DEV_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
+          DEV_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}
+          DEV_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
+          DEV_N8N_URL: ${{ secrets.DEV_N8N_URL }}
+          DEV_SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
         run: |
           set -euo pipefail
-          case "${{ matrix.environment }}" in
+          
+          # Determine which environment to verify based on the triggering branch
+          TRIGGER_BRANCH="${{ github.event.workflow_run.head_branch }}"
+          CURRENT_ENV="${{ matrix.environment }}"
+          
+          # Skip environments that don't match the branch
+          if [[ "$CURRENT_ENV" == "prod" && "$TRIGGER_BRANCH" != "main" ]]; then
+            echo "⏭️ Skipping prod environment for non-main branch"
+            exit 0
+          elif [[ "$CURRENT_ENV" == "staging" && "$TRIGGER_BRANCH" != "develop" ]]; then
+            echo "⏭️ Skipping staging environment for non-develop branch"
+            exit 0
+          elif [[ "$CURRENT_ENV" == "dev" && ("$TRIGGER_BRANCH" == "main" || "$TRIGGER_BRANCH" == "develop") ]]; then
+            echo "⏭️ Skipping dev environment for main/develop branch"
+            exit 0
+          fi
+          
+          # Export secrets based on environment
+          case "$CURRENT_ENV" in
             prod)
-              bash scripts/export-env-secrets.sh prod \
-                "${{ secrets.PROD_SUPABASE_URL }}" \
-                "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" \
-                "${{ secrets.PROD_SUPABASE_ANON_KEY }}" \
-                "${{ secrets.PROD_N8N_URL }}" \
-                "${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+              if [[ -n "${PROD_SUPABASE_URL:-}" ]]; then
+                bash scripts/export-env-secrets.sh prod \
+                  "$PROD_SUPABASE_URL" \
+                  "$PROD_SUPABASE_SERVICE_ROLE_KEY" \
+                  "$PROD_SUPABASE_ANON_KEY" \
+                  "$PROD_N8N_URL" \
+                  "$PROD_SLACK_WEBHOOK_URL"
+              else
+                echo "❌ Production secrets not available"
+                exit 1
+              fi
               ;;
             staging)
-              bash scripts/export-env-secrets.sh staging \
-                "${{ secrets.STAGING_SUPABASE_URL }}" \
-                "${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" \
-                "${{ secrets.STAGING_SUPABASE_ANON_KEY }}" \
-                "${{ secrets.STAGING_N8N_URL }}" \
-                "${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+              if [[ -n "${STAGING_SUPABASE_URL:-}" ]]; then
+                bash scripts/export-env-secrets.sh staging \
+                  "$STAGING_SUPABASE_URL" \
+                  "$STAGING_SUPABASE_SERVICE_ROLE_KEY" \
+                  "$STAGING_SUPABASE_ANON_KEY" \
+                  "$STAGING_N8N_URL" \
+                  "$STAGING_SLACK_WEBHOOK_URL"
+              else
+                echo "❌ Staging secrets not available"
+                exit 1
+              fi
               ;;
             dev)
-              bash scripts/export-env-secrets.sh dev \
-                "${{ secrets.DEV_SUPABASE_URL }}" \
-                "${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" \
-                "${{ secrets.DEV_SUPABASE_ANON_KEY }}" \
-                "${{ secrets.DEV_N8N_URL }}" \
-                "${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+              if [[ -n "${DEV_SUPABASE_URL:-}" ]]; then
+                bash scripts/export-env-secrets.sh dev \
+                  "$DEV_SUPABASE_URL" \
+                  "$DEV_SUPABASE_SERVICE_ROLE_KEY" \
+                  "$DEV_SUPABASE_ANON_KEY" \
+                  "$DEV_N8N_URL" \
+                  "$DEV_SLACK_WEBHOOK_URL"
+              else
+                echo "❌ Development secrets not available"
+                exit 1
+              fi
               ;;
           esac
 
@@ -183,19 +233,6 @@ jobs:
           echo "🔍 Verifying: $ENV_DISPLAY"
           echo "Environment: $ENVIRONMENT_NAME"
           echo "Supabase URL: $SUPABASE_URL"
-          
-          # Check if this environment should run based on the branch
-          if [[ "$ENVIRONMENT_NAME" == "prod" && "${{ github.event.workflow_run.head_branch }}" != "main" ]]; then
-            echo "⏭️ Skipping prod environment for non-main branch"
-            exit 0
-          elif [[ "$ENVIRONMENT_NAME" == "staging" && "${{ github.event.workflow_run.head_branch }}" != "develop" ]]; then
-            echo "⏭️ Skipping staging environment for non-develop branch"
-            exit 0
-          elif [[ "$ENVIRONMENT_NAME" == "dev" && ("${{ github.event.workflow_run.head_branch }}" == "main" || "${{ github.event.workflow_run.head_branch }}" == "develop") ]]; then
-            echo "⏭️ Skipping dev environment for main/develop branch"
-            exit 0
-          fi
-          
           echo "✅ Running verification for $ENV_DISPLAY"
 
       - name: 🟢 Setup Node.js
@@ -317,6 +354,13 @@ jobs:
 
       - name: 📣 Send Verification Results
         if: always()
+        env:
+          # Production secrets
+          PROD_SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+          # Staging secrets
+          STAGING_SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
+          # Development secrets
+          DEV_SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
         run: |
           echo "📣 Sending verification results..."
           
@@ -330,6 +374,20 @@ jobs:
             MESSAGE="❌ Post-deploy verification failed for $ENV_DISPLAY"
             COLOR="danger"
           fi
+          
+          # Determine the appropriate Slack webhook URL based on environment
+          SLACK_WEBHOOK_URL=""
+          case "$ENVIRONMENT_NAME" in
+            prod)
+              SLACK_WEBHOOK_URL="$PROD_SLACK_WEBHOOK_URL"
+              ;;
+            staging)
+              SLACK_WEBHOOK_URL="$STAGING_SLACK_WEBHOOK_URL"
+              ;;
+            dev)
+              SLACK_WEBHOOK_URL="$DEV_SLACK_WEBHOOK_URL"
+              ;;
+          esac
           
           # Send to Slack if webhook is configured
           if [[ -n "$SLACK_WEBHOOK_URL" ]]; then
