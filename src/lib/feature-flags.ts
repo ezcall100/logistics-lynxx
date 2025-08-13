@@ -37,21 +37,21 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   },
   autonomousAgents: {
     enabled: true, // Core feature, always enabled
-    canaryTenants: [],
+    canaryTenants: ['00000000-0000-4000-8000-000000000001', 'transbotai-demo', 'partner-1'], // Added canary tenant for Day-0
     rolloutPercentage: 100,
     description: 'Autonomous AI agents for load matching and task automation',
     lastUpdated: new Date().toISOString()
   },
   aiLoadMatching: {
     enabled: true, // Core feature, always enabled
-    canaryTenants: [],
+    canaryTenants: ['00000000-0000-4000-8000-000000000001', 'transbotai-demo', 'partner-1'], // Added canary tenant for Day-0
     rolloutPercentage: 100,
     description: 'AI-powered load matching and carrier recommendations',
     lastUpdated: new Date().toISOString()
   },
   realTimeNotifications: {
     enabled: true, // Core feature, always enabled
-    canaryTenants: [],
+    canaryTenants: ['00000000-0000-4000-8000-000000000001', 'transbotai-demo', 'partner-1'], // Added canary tenant for Day-0
     rolloutPercentage: 100,
     description: 'Real-time notifications and alerts',
     lastUpdated: new Date().toISOString()
