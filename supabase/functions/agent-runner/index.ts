@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { initTracerIfEnabled, withSpan, injectHeaders, getTraceId } from "../_shared/otel.ts";
+import { initTracerIfEnabled, withSpan, injectHeaders, getTraceId, spanNames, agentAttrs } from "../_shared/otel.ts";
 import { resolveFlag } from "../_shared/flags.ts";
 import { agentSlackError } from "./lib/slack.ts";
 
@@ -9,7 +9,7 @@ serve(async (req) => {
   const otelEnabled = await resolveFlag("obs.otelEnabled", true); // default true in staging
   initTracerIfEnabled(otelEnabled);
 
-  return await withSpan("agent-runner.handle", req, async (span) => {
+  return await withSpan(spanNames.agent.task.execute, req, async (span) => {
   const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
   try {
@@ -27,7 +27,7 @@ serve(async (req) => {
     }
 
     console.log(`Processing ${tasks.length} tasks`);
-    span.setAttribute("app.tasks_count", tasks.length);
+    span.setAttribute("agent.tasks_count", tasks.length);
 
     // Get function definitions
     const { data: fns } = await supabase.from('agent_functions').select('*');
@@ -41,10 +41,16 @@ serve(async (req) => {
       // Get trace ID for this task
       const traceId = await getTraceId();
       
-      // Set span attributes for this task
-      span.setAttribute("app.task_id", String(task.id));
-      span.setAttribute("app.company_id", String(task.company_id));
-      span.setAttribute("app.fn_name", String(task.fn_name));
+      // Set span attributes for this task using semantic conventions
+      span.setAttributes(agentAttrs({
+        companyId: task.company_id,
+        taskId: task.id,
+        fnName: task.fn_name,
+        runner: "edge"
+      }));
+      
+      // Add task start event
+      span.addEvent("agent.task.start", { "agent.fn_name": task.fn_name });
       
       // Update task status to running with trace ID
       await supabase.from('agent_tasks').update({ 
@@ -121,8 +127,7 @@ serve(async (req) => {
       }
 
       // Add span event for task completion
-      span.addEvent("task_completed", { 
-        task_id: task.id, 
+      span.addEvent("agent.task.finish", { 
         status: finalStatus, 
         success: ok 
       });

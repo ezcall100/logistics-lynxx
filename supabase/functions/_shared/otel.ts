@@ -96,3 +96,38 @@ export async function getTraceId(): Promise<string | null> {
     return null;
   }
 }
+
+// Canonical span names (short, action-first, consistent)
+export const spanNames = {
+  agent: {
+    task: {
+      execute: "agent.task.execute",
+      claim:   "agent.task.claim",
+      update:  "agent.task.update",
+    },
+    fn: (fnName: string) => `agent.fn.${fnName}`, // e.g. agent.fn.rates.price_one
+  },
+};
+
+// Common attributes for agent traces (PII-safe)
+export function agentAttrs(input: {
+  env?: string;
+  companyId?: string;
+  taskId?: string;
+  fnName?: string;
+  runner?: "edge" | "worker" | "cron";
+  component?: string; // default: "agent-runner"
+}) {
+  return {
+    "service.name": Deno.env.get("OTEL_SERVICE_NAME") || "transbot-edge",
+    "deployment.environment": input.env ?? (Deno.env.get("DEPLOY_ENV") || "production"),
+    "tenant.id": input.companyId ?? "",
+    "agent.task_id": input.taskId ?? "",
+    "agent.fn_name": input.fnName ?? "",
+    "agent.runner": input.runner ?? "edge",
+    "code.component": input.component ?? "agent-runner",
+    // OTEL semconv-aligned hints
+    "otel.library.name": "transbot-otel",
+    "otel.library.version": "1",
+  };
+}

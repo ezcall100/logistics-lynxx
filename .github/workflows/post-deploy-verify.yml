@@ -145,6 +145,7 @@ jobs:
           fetch-depth: 0
 
       # Export per-env secrets into $GITHUB_ENV (no env block)
+      # yaml-lint disable rule:context-access-might-be-invalid
       - name: 🔐 Export environment secrets
         shell: bash
         run: |
