@@ -38,4 +38,13 @@ export default defineConfig(({ mode }) => ({
       target: 'es2020',
     },
   },
+  build: {
+    target: 'es2020',
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 }));
