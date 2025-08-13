@@ -148,6 +148,7 @@ jobs:
       # yaml-lint disable rule:context-access-might-be-invalid
       - name: 🔐 Export environment secrets
         shell: bash
+        # yaml-lint disable rule:context-access-might-be-invalid
         run: |
           set -euo pipefail
           case "${{ matrix.environment }}" in
