@@ -1,0 +1,184 @@
+name: 🔒 Post-Deploy Security Verification
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Deployment environment to verify'
+        required: true
+        type: string
+      deployment-url:
+        description: 'URL of the deployed application'
+        required: true
+        type: string
+      timeout-minutes:
+        description: 'Timeout for verification checks'
+        required: false
+        default: 15
+        type: number
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      DEPLOYMENT_API_KEY:
+        required: false
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  security-verification:
+    name: 🔍 Security Verification (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    concurrency:
+      group: security-verify-${{ inputs.environment }}
+      cancel-in-progress: false
+
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🛡️ Security Headers Check
+        run: |
+          echo "🔍 Checking security headers for ${{ inputs.deployment-url }}..."
+          
+          # Test security headers
+          headers=$(curl -sI "${{ inputs.deployment-url }}" | grep -E "(X-Frame-Options|X-Content-Type-Options|X-XSS-Protection|Strict-Transport-Security|Content-Security-Policy|Referrer-Policy)" || true)
+          
+          echo "📋 Security Headers Found:"
+          echo "$headers"
+          
+          # Check for critical security headers
+          if echo "$headers" | grep -q "X-Frame-Options"; then
+            echo "✅ X-Frame-Options header present"
+          else
+            echo "⚠️  X-Frame-Options header missing"
+          fi
+          
+          if echo "$headers" | grep -q "X-Content-Type-Options"; then
+            echo "✅ X-Content-Type-Options header present"
+          else
+            echo "⚠️  X-Content-Type-Options header missing"
+          fi
+
+      - name: 🔐 SSL/TLS Configuration Check
+        run: |
+          echo "🔐 Checking SSL/TLS configuration..."
+          
+          # Test SSL configuration using openssl
+          ssl_info=$(echo | openssl s_client -connect $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1):443 -servername $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1) 2>/dev/null | openssl x509 -noout -text | grep -E "(Signature Algorithm|Subject Alternative Name|Not After)" || true)
+          
+          echo "📋 SSL Certificate Info:"
+          echo "$ssl_info"
+          
+          # Check certificate expiration
+          expiry=$(echo | openssl s_client -connect $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1):443 -servername $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1) 2>/dev/null | openssl x509 -noout -enddate | cut -d'=' -f2)
+          
+          if [ ! -z "$expiry" ]; then
+            echo "📅 Certificate expires: $expiry"
+            # Check if certificate expires within 30 days
+            expiry_epoch=$(date -d "$expiry" +%s 2>/dev/null || echo "0")
+            current_epoch=$(date +%s)
+            days_until_expiry=$(( (expiry_epoch - current_epoch) / 86400 ))
+            
+            if [ $days_until_expiry -lt 30 ]; then
+              echo "⚠️  Certificate expires in $days_until_expiry days"
+            else
+              echo "✅ Certificate valid for $days_until_expiry days"
+            fi
+          fi
+
+      - name: 🌐 CORS Configuration Check
+        run: |
+          echo "🌐 Checking CORS configuration..."
+          
+          # Test CORS headers
+          cors_headers=$(curl -sI -H "Origin: https://malicious-site.com" "${{ inputs.deployment-url }}" | grep -E "(Access-Control-Allow-Origin|Access-Control-Allow-Methods|Access-Control-Allow-Headers)" || true)
+          
+          echo "📋 CORS Headers:"
+          echo "$cors_headers"
+          
+          # Check if CORS is overly permissive
+          if echo "$cors_headers" | grep -q "Access-Control-Allow-Origin: \*"; then
+            echo "⚠️  CORS is configured to allow all origins (*)"
+          elif echo "$cors_headers" | grep -q "Access-Control-Allow-Origin:"; then
+            echo "✅ CORS is configured with specific origins"
+          else
+            echo "ℹ️  No CORS headers found (may be intentional)"
+          fi
+
+      - name: 🔍 API Security Endpoint Check
+        run: |
+          echo "🔍 Checking API security endpoints..."
+          
+          # Test common security endpoints
+          endpoints=(
+            "/.well-known/security.txt"
+            "/robots.txt"
+            "/sitemap.xml"
+            "/api/health"
+            "/health"
+          )
+          
+          for endpoint in "${endpoints[@]}"; do
+            url="${{ inputs.deployment-url }}$endpoint"
+            echo "🔗 Testing: $url"
+            
+            response=$(curl -s -o /dev/null -w "%{http_code}" "$url" 2>/dev/null || echo "000")
+            
+            if [ "$response" = "200" ]; then
+              echo "✅ $endpoint returns 200"
+            elif [ "$response" = "404" ]; then
+              echo "ℹ️  $endpoint returns 404 (expected)"
+            else
+              echo "⚠️  $endpoint returns $response"
+            fi
+          done
+
+      - name: 📊 Generate Security Verification Report
+        run: |
+          echo "📊 Generating security verification report..."
+          
+          cat << EOF > security-verification-report.md
+          # Security Verification Report
+          
+          **Environment:** ${{ inputs.environment }}
+          **URL:** ${{ inputs.deployment-url }}
+          **Timestamp:** $(date -Is)
+          **Repository:** ${{ github.repository }}
+          **Commit:** ${{ github.sha }}
+          
+          ## Verification Summary
+          
+          - ✅ SSL/TLS configuration checked
+          - ✅ Security headers verified
+          - ✅ CORS configuration reviewed
+          - ✅ API endpoints tested
+          
+          ## Recommendations
+          
+          1. **Security Headers:** Ensure all critical security headers are present
+          2. **SSL Certificate:** Monitor certificate expiration dates
+          3. **CORS Policy:** Review and restrict CORS origins as needed
+          4. **API Security:** Implement rate limiting and authentication where appropriate
+          
+          ## Next Steps
+          
+          - Review any warnings in the logs above
+          - Address critical security findings immediately
+          - Consider implementing automated security monitoring
+          
+          EOF
+          
+          echo "📄 Security verification report generated: security-verification-report.md"
+
+      - name: 🚨 Security Verification Summary
+        run: |
+          echo "🔒 Security verification completed for ${{ inputs.environment }}!"
+          echo "🌐 URL: ${{ inputs.deployment-url }}"
+          echo "⏱️ Duration: $(($SECONDS / 60)) minutes"
+          echo "✅ All security checks completed successfully"

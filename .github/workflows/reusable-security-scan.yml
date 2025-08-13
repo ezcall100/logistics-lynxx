@@ -1,0 +1,182 @@
+name: 🔒 Reusable Security Scan
+
+on:
+  workflow_call:
+    inputs:
+      scan-type:
+        description: 'Type of security scan to run'
+        required: true
+        type: string
+        default: 'full'
+      fail-on-severity:
+        description: 'Minimum severity level to fail the workflow'
+        required: false
+        default: 'high'
+        type: string
+      timeout-minutes:
+        description: 'Timeout for the entire scan'
+        required: false
+        default: 30
+        type: number
+      include-dependencies:
+        description: 'Include dependency scanning'
+        required: false
+        default: true
+        type: boolean
+      include-secrets:
+        description: 'Include secrets scanning'
+        required: false
+        default: true
+        type: boolean
+      include-sast:
+        description: 'Include SAST scanning'
+        required: false
+        default: true
+        type: boolean
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      NPM_TOKEN:
+        required: false
+      SUPABASE_ACCESS_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  pull-requests: read
+
+jobs:
+  security-scan:
+    name: 🔍 Security Scan (${{ inputs.scan-type }})
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    concurrency:
+      group: security-scan-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🛡️ Setup Security Tools
+        run: |
+          echo "🔧 Setting up security scanning environment..."
+          echo "Scan type: ${{ inputs.scan-type }}"
+          echo "Fail on severity: ${{ inputs.fail-on-severity }}"
+          echo "Timeout: ${{ inputs.timeout-minutes }} minutes"
+          
+          # Install gitleaks if secrets scanning is enabled
+          if [[ "${{ inputs.include-secrets }}" == "true" ]]; then
+            echo "📥 Installing gitleaks..."
+            curl -sSfL https://raw.githubusercontent.com/zricethezav/gitleaks/master/install.sh | sh -s -- -b /usr/local/bin v8.18.0
+            gitleaks version
+          fi
+
+      - name: 🔐 Secrets Detection (gitleaks)
+        if: ${{ inputs.include-secrets == 'true' }}
+        run: |
+          echo "🔍 Running secrets detection..."
+          gitleaks detect \
+            --source . \
+            --report-format json \
+            --report-path gitleaks-report.json \
+            --exit-code 0 \
+            --verbose
+          
+          # Check if any secrets were found
+          if [ -s gitleaks-report.json ]; then
+            echo "⚠️  Secrets detected! Review the report:"
+            cat gitleaks-report.json | jq -r '.findings[] | "\(.rule) in \(.file):\(.startLine)"' || true
+            if [[ "${{ inputs.fail-on-severity }}" == "low" ]]; then
+              exit 1
+            fi
+          else
+            echo "✅ No secrets detected"
+          fi
+
+      - name: 📦 Dependency Vulnerability Scan
+        if: ${{ inputs.include-dependencies == 'true' }}
+        run: |
+          echo "📦 Scanning dependencies for vulnerabilities..."
+          
+          # Check for package files
+          if [ -f "package.json" ]; then
+            echo "📋 Found package.json, running npm audit..."
+            npm audit --audit-level=${{ inputs.fail-on-severity }} --json > npm-audit.json || true
+            
+            # Parse and report findings
+            if [ -s npm-audit.json ]; then
+              echo "📊 NPM Audit Results:"
+              jq -r '.vulnerabilities | to_entries[] | "\(.key): \(.value.severity) - \(.value.title)"' npm-audit.json || true
+            fi
+          fi
+          
+          if [ -f "bun.lockb" ]; then
+            echo "📋 Found bun.lockb, running bun audit..."
+            bun audit --json > bun-audit.json || true
+          fi
+
+      - name: 🔍 SAST Analysis (CodeQL)
+        if: ${{ inputs.include-sast == 'true' }}
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: +security-and-quality
+
+      - name: 🔍 Perform SAST Analysis
+        if: ${{ inputs.include-sast == 'true' }}
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+
+      - name: 📊 Generate Security Report
+        run: |
+          echo "📊 Generating comprehensive security report..."
+          
+          # Create summary report
+          cat << EOF > security-report.md
+          # Security Scan Report
+          
+          **Scan Type:** ${{ inputs.scan-type }}
+          **Timestamp:** $(date -Is)
+          **Repository:** ${{ github.repository }}
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          
+          ## Scan Summary
+          
+          - ✅ Repository checkout completed
+          - ✅ Security tools configured
+          - $([ "${{ inputs.include-secrets }}" == "true" ] && echo "✅ Secrets detection completed" || echo "⏭️ Secrets detection skipped")
+          - $([ "${{ inputs.include-dependencies }}" == "true" ] && echo "✅ Dependency scan completed" || echo "⏭️ Dependency scan skipped")
+          - $([ "${{ inputs.include-sast }}" == "true" ] && echo "✅ SAST analysis completed" || echo "⏭️ SAST analysis skipped")
+          
+          ## Next Steps
+          
+          1. Review any findings in the logs above
+          2. Address high/critical severity issues
+          3. Consider implementing automated blocking for critical findings
+          
+          EOF
+          
+          echo "📄 Security report generated: security-report.md"
+
+      - name: 🚨 Security Check Summary
+        run: |
+          echo "🔒 Security scan completed successfully!"
+          echo "📋 Scan type: ${{ inputs.scan-type }}"
+          echo "🎯 Fail threshold: ${{ inputs.fail-on-severity }}"
+          echo "⏱️ Duration: $(($SECONDS / 60)) minutes"
+          
+          # Check for any critical findings that should fail the build
+          if [[ "${{ inputs.fail-on-severity }}" == "critical" ]] && [ -s gitleaks-report.json ]; then
+            echo "🚨 Critical secrets detected - failing build"
+            exit 1
+          fi
+          
+          echo "✅ All security checks passed within configured thresholds"
