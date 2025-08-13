@@ -1,0 +1,396 @@
+{
+  "name": "ROI Lead → Trial → Slack (Enhanced)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "roi-intake",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "ROI Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "roi-intake-enhanced"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and validate ROI data\nconst roiData = $json;\n\n// Calculate lead score based on multiple factors\nconst monthlyImpact = roiData.calc?.monthlyImpact || 0;\nconst paybackDays = roiData.calc?.paybackDays || 999;\nconst plan = roiData.plan || 'starter';\nconst utmSource = roiData.utm_source || 'unknown';\n\n// Lead scoring algorithm\nlet score = 0;\n\n// Impact weight (0-40 points)\nscore += Math.min(40, (monthlyImpact / 1000) * 10);\n\n// Payback period weight (0-30 points)\nif (paybackDays < 30) score += 30;\nelse if (paybackDays < 90) score += 20;\nelse if (paybackDays < 180) score += 10;\n\n// Plan weight (0-20 points)\nif (plan === 'enterprise') score += 20;\nelse if (plan === 'pro') score += 15;\nelse score += 10;\n\n// Source weight (0-10 points)\nif (utmSource === 'demo') score += 10;\nelse if (utmSource === 'email') score += 8;\nelse if (utmSource === 'webinar') score += 7;\nelse if (utmSource === 'referral') score += 6;\nelse score += 3;\n\n// Round to nearest integer\nscore = Math.round(score);\n\n// Determine lead priority and routing\nlet priority = 'cold';\nlet channel = '#auto-nurture';\nlet message = '';\n\nif (score >= 70) {\n  priority = 'hot';\n  channel = '#ae-hot';\n  message = '\\n<!here> *HOT LEAD* - Immediate follow-up required!';\n} else if (score >= 40) {\n  priority = 'warm';\n  channel = '#sdr-queue';\n} else {\n  priority = 'cold';\n  channel = '#auto-nurture';\n}\n\n// Generate checkout URL\nconst checkoutUrl = `https://app.transbotai.com/checkout?plan=${plan}&email=${encodeURIComponent(roiData.contact_email)}`;\n\n// Generate ROI summary URL\nconst roiSummaryUrl = `https://storage.transbotai.com/roi/${roiData.id}.html`;\n\nreturn {\n  roiData,\n  score,\n  priority,\n  channel,\n  message,\n  checkoutUrl,\n  roiSummaryUrl,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "lead-scoring",
+      "name": "Lead Scoring & Routing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "hot-lead",
+              "leftValue": "={{ $json.priority }}",
+              "rightValue": "hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "hot-lead-check",
+      "name": "Hot Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "warm-lead",
+              "leftValue": "={{ $json.priority }}",
+              "rightValue": "warm",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "warm-lead-check",
+      "name": "Warm Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.channel }}",
+        "text": "={{ $json.slackMessage }}",
+        "otherOptions": {
+          "username": "ROI Lead Bot",
+          "icon_emoji": ":chart_with_upwards_trend:"
+        }
+      },
+      "id": "slack-hot",
+      "name": "Slack Hot Lead",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [900, 100]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.channel }}",
+        "text": "={{ $json.slackMessage }}",
+        "otherOptions": {
+          "username": "ROI Lead Bot",
+          "icon_emoji": ":chart_with_upwards_trend:"
+        }
+      },
+      "id": "slack-warm",
+      "name": "Slack Warm Lead",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.channel }}",
+        "text": "={{ $json.slackMessage }}",
+        "otherOptions": {
+          "username": "ROI Lead Bot",
+          "icon_emoji": ":chart_with_upwards_trend:"
+        }
+      },
+      "id": "slack-cold",
+      "name": "Slack Cold Lead",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Slack message for hot leads\nconst data = $json;\nconst roi = data.roiData;\n\nconst slackMessage = `:fire: *HOT ROI LEAD* — ${roi.company_name} (${roi.contact_email})\n*Score:* ${data.score}/100  •  *Plan:* ${roi.plan}  •  *Impact:* $${roi.calc?.monthlyImpact?.toLocaleString()}/mo  •  *Payback:* ${roi.calc?.paybackDays?.toFixed(0)}d\n*UTM:* ${roi.utm_source}/${roi.utm_medium}/${roi.utm_campaign}\n*Actions:* <${data.checkoutUrl}|Start Checkout>  •  <${data.roiSummaryUrl}|View ROI Summary>${data.message}`;\n\nreturn {\n  ...data,\n  slackMessage\n};"
+      },
+      "id": "format-hot-message",
+      "name": "Format Hot Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Slack message for warm leads\nconst data = $json;\nconst roi = data.roiData;\n\nconst slackMessage = `:new: *ROI Lead* — ${roi.company_name} (${roi.contact_email})\n*Score:* ${data.score}/100  •  *Plan:* ${roi.plan}  •  *Impact:* $${roi.calc?.monthlyImpact?.toLocaleString()}/mo  •  *Payback:* ${roi.calc?.paybackDays?.toFixed(0)}d\n*UTM:* ${roi.utm_source}/${roi.utm_medium}/${roi.utm_campaign}\n*Actions:* <${data.checkoutUrl}|Start Checkout>  •  <${data.roiSummaryUrl}|View ROI Summary>`;\n\nreturn {\n  ...data,\n  slackMessage\n};"
+      },
+      "id": "format-warm-message",
+      "name": "Format Warm Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Slack message for cold leads\nconst data = $json;\nconst roi = data.roiData;\n\nconst slackMessage = `:chart_with_upwards_trend: *ROI Lead* — ${roi.company_name} (${roi.contact_email})\n*Score:* ${data.score}/100  •  *Plan:* ${roi.plan}  •  *Impact:* $${roi.calc?.monthlyImpact?.toLocaleString()}/mo\n*UTM:* ${roi.utm_source}/${roi.utm_medium}/${roi.utm_campaign}\n*Auto-nurture sequence activated*`;\n\nreturn {\n  ...data,\n  slackMessage\n};"
+      },
+      "id": "format-cold-message",
+      "name": "Format Cold Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "resource": "contact",
+        "operation": "create",
+        "additionalFields": {
+          "firstName": "={{ $json.roiData.company_name.split(' ')[0] }}",
+          "lastName": "={{ $json.roiData.company_name.split(' ').slice(1).join(' ') }}",
+          "email": "={{ $json.roiData.contact_email }}",
+          "company": "={{ $json.roiData.company_name }}",
+          "leadSource": "ROI Calculator",
+          "leadScore": "={{ $json.score }}",
+          "description": "ROI Lead - Score: {{ $json.score }}, Plan: {{ $json.roiData.plan }}, Impact: ${{ $json.roiData.calc.monthlyImpact }}/mo"
+        }
+      },
+      "id": "create-crm-lead",
+      "name": "Create CRM Lead",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "resource": "email",
+        "operation": "send",
+        "toEmail": "={{ $json.roiData.contact_email }}",
+        "subject": "Your Trans Bot AI ROI Analysis",
+        "text": "Hi {{ $json.roiData.company_name }},\n\nThank you for using our ROI calculator! Based on your inputs, here's what we found:\n\n📊 Monthly Impact: ${{ $json.roiData.calc.monthlyImpact.toLocaleString() }}\n⏱️ Time Saved: {{ $json.roiData.calc.hrsSaved.toFixed(0) }} hours/month\n💰 Payback Period: {{ $json.roiData.calc.paybackDays.toFixed(0) }} days\n\nView your detailed ROI summary: {{ $json.roiSummaryUrl }}\n\nReady to get started? Start your free trial: {{ $json.checkoutUrl }}\n\nBest regards,\nThe Trans Bot AI Team",
+        "additionalFields": {
+          "fromName": "Trans Bot AI"
+        }
+      },
+      "id": "send-email",
+      "name": "Send ROI Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"ROI lead processed successfully\",\n  \"lead_score\": \"{{ $json.score }}\",\n  \"priority\": \"{{ $json.priority }}\",\n  \"timestamp\": \"{{ $json.timestamp }}\"\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "ROI Webhook": {
+      "main": [
+        [
+          {
+            "node": "Lead Scoring & Routing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Scoring & Routing": {
+      "main": [
+        [
+          {
+            "node": "Format Hot Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Warm Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Cold Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Hot Message": {
+      "main": [
+        [
+          {
+            "node": "Hot Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Warm Message": {
+      "main": [
+        [
+          {
+            "node": "Warm Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Cold Message": {
+      "main": [
+        [
+          {
+            "node": "Slack Cold Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hot Lead?": {
+      "main": [
+        [
+          {
+            "node": "Slack Hot Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Cold Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warm Lead?": {
+      "main": [
+        [
+          {
+            "node": "Slack Warm Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Cold Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Hot Lead": {
+      "main": [
+        [
+          {
+            "node": "Create CRM Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Warm Lead": {
+      "main": [
+        [
+          {
+            "node": "Create CRM Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Cold Lead": {
+      "main": [
+        [
+          {
+            "node": "Create CRM Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create CRM Lead": {
+      "main": [
+        [
+          {
+            "node": "Send ROI Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send ROI Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-17T10:00:00.000Z",
+      "updatedAt": "2025-01-17T10:00:00.000Z",
+      "id": "roi-leads",
+      "name": "ROI Leads"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-17T10:00:00.000Z",
+  "versionId": "1"
+}
