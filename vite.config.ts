@@ -11,13 +11,19 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "react"
+    }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  esbuild: {
+    jsx: 'automatic',
+    target: 'es2020'
   },
   define: {
     global: 'globalThis',
