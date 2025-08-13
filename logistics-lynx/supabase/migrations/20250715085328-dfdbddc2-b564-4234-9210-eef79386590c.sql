@@ -1,0 +1,68 @@
+-- Add autonomous agent tasks for EDI, API, Marketplace, and Documents functionality
+
+INSERT INTO public.autonomous_tasks (task_id, agent_type, portal, task_name, description, priority, estimated_duration_minutes, dependencies, status) VALUES
+
+-- EDI FUNCTIONALITY TASKS (12 tasks)
+('EDI_001', 'Data Processor', 'All', 'EDI Core Engine', 'Build comprehensive EDI processing engine supporting X12 and EDIFACT standards', 1, 300, ARRAY[]::text[], 'pending'),
+('EDI_002', 'Data Processor', 'All', 'EDI 204 Load Tender Integration', 'Implement EDI 204 (Motor Carrier Load Tender) transaction processing', 1, 180, ARRAY['EDI_001'], 'pending'),
+('EDI_003', 'Data Processor', 'All', 'EDI 214 Shipment Status Integration', 'Build EDI 214 (Transportation Carrier Shipment Status Message) processing', 1, 160, ARRAY['EDI_001'], 'pending'),
+('EDI_004', 'Data Processor', 'All', 'EDI 210 Invoice Processing', 'Implement EDI 210 (Motor Carrier Freight Details and Invoice) automation', 1, 200, ARRAY['EDI_001'], 'pending'),
+('EDI_005', 'Data Processor', 'All', 'EDI 990 Response Integration', 'Build EDI 990 (Response to a Load Tender) processing system', 2, 140, ARRAY['EDI_002'], 'pending'),
+('EDI_006', 'UI Builder', 'All', 'EDI Management Dashboard', 'Create dashboard for monitoring EDI transactions, errors, and performance', 1, 180, ARRAY['EDI_001'], 'pending'),
+('EDI_007', 'Data Processor', 'All', 'EDI Mapping Engine', 'Build flexible EDI mapping system for customer-specific requirements', 2, 220, ARRAY['EDI_001'], 'pending'),
+('EDI_008', 'Security', 'All', 'EDI Security & Compliance', 'Implement EDI security protocols, encryption, and audit trails', 1, 160, ARRAY['EDI_001'], 'pending'),
+('EDI_009', 'Data Processor', 'All', 'EDI Error Handling System', 'Create comprehensive error handling and retry mechanisms for EDI failures', 2, 140, ARRAY['EDI_006'], 'pending'),
+('EDI_010', 'Data Processor', 'All', 'EDI Trading Partner Management', 'Build trading partner setup and configuration management system', 2, 160, ARRAY['EDI_007'], 'pending'),
+('EDI_011', 'UI Builder', 'All', 'EDI Analytics & Reporting', 'Create analytics for EDI volume, performance, and compliance reporting', 3, 150, ARRAY['EDI_006'], 'pending'),
+('EDI_012', 'Testing', 'All', 'EDI Integration Testing', 'Comprehensive testing of all EDI transaction types and error scenarios', 1, 240, ARRAY['EDI_002', 'EDI_003', 'EDI_004'], 'pending'),
+
+-- API FUNCTIONALITY TASKS (15 tasks)
+('API_001', 'Data Processor', 'All', 'REST API Core Framework', 'Build comprehensive REST API framework with versioning and documentation', 1, 200, ARRAY[]::text[], 'pending'),
+('API_002', 'Security', 'All', 'API Authentication System', 'Implement OAuth 2.0, JWT, and API key authentication mechanisms', 1, 180, ARRAY['API_001'], 'pending'),
+('API_003', 'Data Processor', 'All', 'Shipment API Endpoints', 'Create complete shipment management API with CRUD operations', 1, 160, ARRAY['API_001'], 'pending'),
+('API_004', 'Data Processor', 'All', 'Rate Quote API', 'Build real-time rate quoting API supporting all transportation modes', 1, 180, ARRAY['API_001'], 'pending'),
+('API_005', 'Data Processor', 'All', 'Tracking API', 'Implement shipment tracking API with real-time status updates', 1, 140, ARRAY['API_003'], 'pending'),
+('API_006', 'Security', 'All', 'API Rate Limiting & Throttling', 'Implement API rate limiting, throttling, and usage monitoring', 2, 120, ARRAY['API_002'], 'pending'),
+('API_007', 'UI Builder', 'All', 'API Documentation Portal', 'Create interactive API documentation with testing capabilities', 2, 180, ARRAY['API_001'], 'pending'),
+('API_008', 'Data Processor', 'All', 'Webhook Management System', 'Build webhook system for real-time event notifications', 2, 160, ARRAY['API_001'], 'pending'),
+('API_009', 'Data Processor', 'All', 'API Analytics & Monitoring', 'Implement API usage analytics, performance monitoring, and alerting', 2, 150, ARRAY['API_006'], 'pending'),
+('API_010', 'Data Processor', 'All', 'Third-Party Integration APIs', 'Create APIs for integrating with ERP, WMS, and CRM systems', 2, 200, ARRAY['API_001'], 'pending'),
+('API_011', 'Security', 'All', 'API Security Scanner', 'Implement automated API security scanning and vulnerability detection', 3, 140, ARRAY['API_002'], 'pending'),
+('API_012', 'Data Processor', 'All', 'API Versioning System', 'Build API versioning and backward compatibility management', 2, 160, ARRAY['API_001'], 'pending'),
+('API_013', 'UI Builder', 'All', 'Developer Portal', 'Create developer portal with API keys, usage dashboards, and support', 3, 200, ARRAY['API_007'], 'pending'),
+('API_014', 'Data Processor', 'All', 'API Gateway Integration', 'Implement API gateway for load balancing, caching, and routing', 3, 180, ARRAY['API_009'], 'pending'),
+('API_015', 'Testing', 'All', 'API Testing Suite', 'Create comprehensive API testing suite with automated validation', 1, 200, ARRAY['API_003', 'API_004', 'API_005'], 'pending'),
+
+-- MARKETPLACE FUNCTIONALITY TASKS (14 tasks)
+('MKT_001', 'UI Builder', 'All', 'Marketplace Core Platform', 'Build core marketplace platform with buyer and seller interfaces', 1, 280, ARRAY[]::text[], 'pending'),
+('MKT_002', 'Data Processor', 'All', 'Service Provider Registration', 'Create comprehensive service provider onboarding and verification system', 1, 200, ARRAY['MKT_001'], 'pending'),
+('MKT_003', 'UI Builder', 'All', 'Service Catalog Management', 'Build service catalog with categories, pricing, and availability management', 1, 180, ARRAY['MKT_001'], 'pending'),
+('MKT_004', 'Data Processor', 'All', 'Marketplace Matching Algorithm', 'Develop AI-powered matching system for service requests and providers', 2, 240, ARRAY['MKT_002', 'MKT_003'], 'pending'),
+('MKT_005', 'UI Builder', 'All', 'Marketplace Search & Discovery', 'Create advanced search and filtering system for marketplace services', 1, 160, ARRAY['MKT_003'], 'pending'),
+('MKT_006', 'Data Processor', 'All', 'Marketplace Bidding System', 'Build competitive bidding system with automated award mechanisms', 2, 200, ARRAY['MKT_004'], 'pending'),
+('MKT_007', 'Security', 'All', 'Marketplace Trust & Safety', 'Implement rating system, background checks, and fraud prevention', 1, 180, ARRAY['MKT_002'], 'pending'),
+('MKT_008', 'Data Processor', 'All', 'Marketplace Payment Processing', 'Create secure payment processing with escrow and fee management', 1, 220, ARRAY['MKT_006'], 'pending'),
+('MKT_009', 'UI Builder', 'All', 'Marketplace Analytics Dashboard', 'Build analytics for marketplace performance, trends, and insights', 2, 160, ARRAY['MKT_006'], 'pending'),
+('MKT_010', 'Data Processor', 'All', 'Marketplace Communication Hub', 'Create messaging system for marketplace participants', 2, 140, ARRAY['MKT_001'], 'pending'),
+('MKT_011', 'Data Processor', 'All', 'Marketplace API Integration', 'Build APIs for third-party marketplace integrations', 3, 180, ARRAY['MKT_001'], 'pending'),
+('MKT_012', 'UI Builder', 'All', 'Mobile Marketplace App', 'Create mobile application for marketplace access and management', 3, 240, ARRAY['MKT_005'], 'pending'),
+('MKT_013', 'Data Processor', 'All', 'Marketplace Performance Tracking', 'Implement performance tracking and SLA monitoring for services', 3, 150, ARRAY['MKT_009'], 'pending'),
+('MKT_014', 'Testing', 'All', 'Marketplace E2E Testing', 'Comprehensive testing of marketplace workflows and integrations', 1, 220, ARRAY['MKT_006', 'MKT_008'], 'pending'),
+
+-- DOCUMENTS FUNCTIONALITY TASKS (16 tasks)
+('DOC_001', 'UI Builder', 'All', 'Document Management System Core', 'Build comprehensive document management system with version control', 1, 240, ARRAY[]::text[], 'pending'),
+('DOC_002', 'Security', 'All', 'Document Security & Access Control', 'Implement role-based access control and document encryption', 1, 180, ARRAY['DOC_001'], 'pending'),
+('DOC_003', 'Data Processor', 'All', 'Document Template Engine', 'Create flexible document template system for contracts, invoices, and forms', 1, 200, ARRAY['DOC_001'], 'pending'),
+('DOC_004', 'UI Builder', 'All', 'Document Workflow System', 'Build document approval workflows with routing and notifications', 1, 220, ARRAY['DOC_001'], 'pending'),
+('DOC_005', 'Data Processor', 'All', 'Electronic Signature Integration', 'Integrate with DocuSign, Adobe Sign, and other e-signature providers', 1, 180, ARRAY['DOC_004'], 'pending'),
+('DOC_006', 'Data Processor', 'All', 'Document OCR & Data Extraction', 'Implement OCR for automatic data extraction from scanned documents', 2, 200, ARRAY['DOC_001'], 'pending'),
+('DOC_007', 'UI Builder', 'All', 'Document Search & Indexing', 'Create advanced document search with full-text indexing and metadata', 2, 160, ARRAY['DOC_001'], 'pending'),
+('DOC_008', 'Data Processor', 'All', 'Document Compliance Tracking', 'Build compliance tracking for document retention and regulatory requirements', 2, 180, ARRAY['DOC_002'], 'pending'),
+('DOC_009', 'UI Builder', 'All', 'Document Collaboration Tools', 'Create collaborative editing, commenting, and review features', 3, 160, ARRAY['DOC_004'], 'pending'),
+('DOC_010', 'Data Processor', 'All', 'Document Auto-Generation', 'Implement automatic document generation from shipment and order data', 2, 180, ARRAY['DOC_003'], 'pending'),
+('DOC_011', 'Security', 'All', 'Document Audit Trail System', 'Create comprehensive audit trails for document access and modifications', 2, 140, ARRAY['DOC_002'], 'pending'),
+('DOC_012', 'Data Processor', 'All', 'Document Storage Optimization', 'Implement intelligent document storage with compression and archiving', 3, 150, ARRAY['DOC_001'], 'pending'),
+('DOC_013', 'UI Builder', 'All', 'Mobile Document Access', 'Create mobile interface for document viewing and basic editing', 3, 180, ARRAY['DOC_007'], 'pending'),
+('DOC_014', 'Data Processor', 'All', 'Document Integration APIs', 'Build APIs for document management integration with external systems', 3, 160, ARRAY['DOC_001'], 'pending'),
+('DOC_015', 'Data Processor', 'All', 'Document Analytics & Reporting', 'Create analytics for document usage, compliance, and performance', 3, 140, ARRAY['DOC_008'], 'pending'),
+('DOC_016', 'Testing', 'All', 'Document System Testing', 'Comprehensive testing of document workflows, security, and integrations', 1, 200, ARRAY['DOC_004', 'DOC_005', 'DOC_010'], 'pending');

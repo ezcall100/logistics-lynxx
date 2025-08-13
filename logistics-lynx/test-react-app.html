@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #react-app {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>React App Test</h1>
+        <p>This page tests if your React application is working properly.</p>
+        
+        <div class="status info">
+            <strong>Current URL:</strong> <span id="current-url"></span>
+        </div>
+        
+        <div class="status info">
+            <strong>Development Server:</strong> <span id="dev-server-status">Checking...</span>
+        </div>
+        
+        <div class="status info">
+            <strong>React App Status:</strong> <span id="react-status">Checking...</span>
+        </div>
+        
+        <div class="test-container">
+            <h3>Quick Tests:</h3>
+            <button onclick="testDevServer()">Test Dev Server</button>
+            <button onclick="testReactApp()">Test React App</button>
+            <button onclick="openReactApp()">Open React App</button>
+            <button onclick="checkConsole()">Check Console</button>
+        </div>
+        
+        <div class="test-container">
+            <h3>React App Container:</h3>
+            <div id="react-app">
+                <p>React app should load here...</p>
+            </div>
+        </div>
+        
+        <div class="test-container">
+            <h3>Console Log:</h3>
+            <div id="console-log" style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; max-height: 200px; overflow-y: auto;">
+                <p>Console messages will appear here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Display current URL
+        document.getElementById('current-url').textContent = window.location.href;
+        
+        // Test development server
+        async function testDevServer() {
+            const statusElement = document.getElementById('dev-server-status');
+            statusElement.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost:5174/');
+                if (response.ok) {
+                    statusElement.textContent = '✅ Running (Status: ' + response.status + ')';
+                    statusElement.className = 'status success';
+                } else {
+                    statusElement.textContent = '❌ Error (Status: ' + response.status + ')';
+                    statusElement.className = 'status error';
+                }
+            } catch (error) {
+                statusElement.textContent = '❌ Not accessible: ' + error.message;
+                statusElement.className = 'status error';
+            }
+        }
+        
+        // Test React app
+        async function testReactApp() {
+            const statusElement = document.getElementById('react-status');
+            statusElement.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost:5174/');
+                const html = await response.text();
+                
+                if (html.includes('root') && html.includes('React')) {
+                    statusElement.textContent = '✅ React app detected';
+                    statusElement.className = 'status success';
+                } else {
+                    statusElement.textContent = '❌ React app not found';
+                    statusElement.className = 'status error';
+                }
+            } catch (error) {
+                statusElement.textContent = '❌ Error: ' + error.message;
+                statusElement.className = 'status error';
+            }
+        }
+        
+        // Open React app
+        function openReactApp() {
+            window.open('http://localhost:5174/', '_blank');
+        }
+        
+        // Check console
+        function checkConsole() {
+            const logElement = document.getElementById('console-log');
+            logElement.innerHTML = '<p>Check your browser\'s developer console (F12) for any JavaScript errors.</p>';
+            logElement.innerHTML += '<p>Common issues:</p>';
+            logElement.innerHTML += '<ul>';
+            logElement.innerHTML += '<li>JavaScript errors preventing React from loading</li>';
+            logElement.innerHTML += '<li>Missing dependencies</li>';
+            logElement.innerHTML += '<li>Import/export issues</li>';
+            logElement.innerHTML += '<li>TypeScript compilation errors</li>';
+            logElement.innerHTML += '</ul>';
+        }
+        
+        // Auto-run tests
+        window.onload = function() {
+            setTimeout(testDevServer, 1000);
+            setTimeout(testReactApp, 2000);
+        };
+        
+        // Log function for debugging
+        function log(message) {
+            const logElement = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // Test if we can access the React app
+        setTimeout(() => {
+            fetch('http://localhost:5174/')
+                .then(response => response.text())
+                .then(html => {
+                    log('Dev server response received');
+                    if (html.includes('root')) {
+                        log('✅ React root element found');
+                    } else {
+                        log('❌ React root element not found');
+                    }
+                })
+                .catch(error => {
+                    log('❌ Error accessing dev server: ' + error.message);
+                });
+        }, 3000);
+    </script>
+</body>
+</html>

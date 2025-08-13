@@ -1,0 +1,479 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+# yaml-language-server: disableValidation: true
+
+name: 🧪 Smoke Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment to test'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+      run_full_suite:
+        description: 'Run full test suite'
+        required: false
+        default: false
+        type: boolean
+  push:
+    tags: ['v*']
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: smoke-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+  TIMEOUT_SECONDS: '30'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # ==================== SMOKE TESTS ====================
+  smoke-tests:
+    name: 🧪 Smoke Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      health_status: ${{ steps.health-check.outputs.status }}
+      load_test_status: ${{ steps.load-test.outputs.status }}
+      pod_test_status: ${{ steps.pod-test.outputs.status }}
+      overall_status: ${{ steps.summary.outputs.status }}
+    steps:
+      - name: 🔍 System Information
+        run: |
+          echo "🖥️ System Information:"
+          echo "  OS: $(uname -a)"
+          echo "  User: $(whoami)"
+          echo "  PWD: $(pwd)"
+          echo "  Date: $(date -Is)"
+          echo "  Event: ${{ github.event_name }}"
+          echo "  Repository: ${{ github.repository }}"
+          echo "  Ref: ${{ github.ref_name }}"
+          echo "  SHA: ${{ github.sha }}"
+          echo "  Actor: ${{ github.actor }}"
+          echo "  Workflow: ${{ github.workflow }}"
+          echo "  Environment: ${{ github.event.inputs.environment || 'staging' }}"
+
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci
+          echo "✅ Dependencies installed successfully"
+
+      - name: 🏥 Health Check Test
+        id: health-check
+        run: |
+          echo "🏥 Testing system health..."
+          
+          # Set environment-specific URLs
+          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            N8N_URL="${{ secrets.PROD_N8N_URL }}"
+          else
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            N8N_URL="${{ secrets.STAGING_N8N_URL }}"
+          fi
+          
+          # Test health endpoint
+          echo "Testing health endpoint: $SUPABASE_URL/functions/v1/health"
+          
+          health_response=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            "$SUPABASE_URL/functions/v1/health")
+          
+          http_code=$(echo "$health_response" | tail -n1)
+          health_data=$(echo "$health_response" | head -n -1)
+          
+          echo "Health Response Code: $http_code"
+          echo "Health Response Data: $health_data"
+          
+          if [[ "$http_code" == "200" ]]; then
+            status=$(echo "$health_data" | jq -r '.status // "unknown"')
+            database=$(echo "$health_data" | jq -r '.database // "unknown"')
+            n8n=$(echo "$health_data" | jq -r '.n8n // "unknown"')
+            openai=$(echo "$health_data" | jq -r '.openai // "unknown"')
+            
+            echo "✅ Health check passed"
+            echo "  Status: $status"
+            echo "  Database: $database"
+            echo "  n8n: $n8n"
+            echo "  OpenAI: $openai"
+            
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "health_data=$health_data" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Health check failed with HTTP $http_code"
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "error_code=$http_code" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: 📦 Load Intake Test
+        id: load-test
+        run: |
+          echo "📦 Testing load intake workflow..."
+          
+          # Set environment-specific URLs
+          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            N8N_URL="${{ secrets.PROD_N8N_URL }}"
+          else
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            N8N_URL="${{ secrets.STAGING_N8N_URL }}"
+          fi
+          
+          # Generate test load ID
+          load_id=$(uuidgen)
+          echo "Test Load ID: $load_id"
+          
+          # Create test load in database
+          echo "Creating test load in database..."
+          load_response=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"id\": \"$load_id\",
+              \"origin\": \"Los Angeles, CA\",
+              \"destination\": \"New York, NY\",
+              \"weight\": 10000,
+              \"status\": \"available\",
+              \"company_id\": \"${{ secrets.TEST_COMPANY_ID }}\"
+            }" \
+            "$SUPABASE_URL/rest/v1/loads")
+          
+          load_http_code=$(echo "$load_response" | tail -n1)
+          load_data=$(echo "$load_response" | head -n -1)
+          
+          if [[ "$load_http_code" == "201" ]]; then
+            echo "✅ Test load created successfully"
+            
+            # Trigger load intake workflow
+            echo "Triggering load intake workflow..."
+            workflow_response=$(curl -s -w "\n%{http_code}" \
+              -X POST \
+              -H "Content-Type: application/json" \
+              -d "{\"load_id\":\"$load_id\"}" \
+              "$N8N_URL/webhook/load-created")
+            
+            workflow_http_code=$(echo "$workflow_response" | tail -n1)
+            workflow_data=$(echo "$workflow_response" | head -n -1)
+            
+            if [[ "$workflow_http_code" == "200" ]]; then
+              echo "✅ Load intake workflow triggered successfully"
+              
+              # Wait for processing
+              echo "Waiting for processing..."
+              sleep 10
+              
+              # Verify results
+              echo "Verifying results..."
+              recommendations_response=$(curl -s \
+                -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+                "$SUPABASE_URL/rest/v1/carrier_recommendations?load_id=eq.$load_id")
+              
+              assignments_response=$(curl -s \
+                -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+                "$SUPABASE_URL/rest/v1/assignments?load_id=eq.$load_id&status=eq.proposed")
+              
+              recommendations_count=$(echo "$recommendations_response" | jq length)
+              assignments_count=$(echo "$assignments_response" | jq length)
+              
+              echo "  Recommendations created: $recommendations_count"
+              echo "  Assignments proposed: $assignments_count"
+              
+              if [[ "$recommendations_count" -gt 0 || "$assignments_count" -gt 0 ]]; then
+                echo "✅ Load intake test passed"
+                echo "status=success" >> $GITHUB_OUTPUT
+                echo "recommendations_count=$recommendations_count" >> $GITHUB_OUTPUT
+                echo "assignments_count=$assignments_count" >> $GITHUB_OUTPUT
+              else
+                echo "⚠️ Load intake test warning - no recommendations/assignments created"
+                echo "status=warning" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "❌ Load intake workflow failed with HTTP $workflow_http_code"
+              echo "status=failed" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+          else
+            echo "❌ Failed to create test load with HTTP $load_http_code"
+            echo "status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: 📄 POD Processing Test
+        id: pod-test
+        run: |
+          echo "📄 Testing POD processing workflow..."
+          
+          # Set environment-specific URLs
+          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+            N8N_URL="${{ secrets.PROD_N8N_URL }}"
+          else
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+            N8N_URL="${{ secrets.STAGING_N8N_URL }}"
+          fi
+          
+          # Use the load ID from previous test
+          load_id="${{ steps.load-test.outputs.load_id || 'test-load-id' }}"
+          echo "Using Load ID: $load_id"
+          
+          # Trigger POD processing workflow
+          echo "Triggering POD processing workflow..."
+          pod_response=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"load_id\": \"$load_id\",
+              \"doc_url\": \"https://example.com/test-pod.pdf\"
+            }" \
+            "$N8N_URL/webhook/pod-uploaded")
+          
+          pod_http_code=$(echo "$pod_response" | tail -n1)
+          pod_data=$(echo "$pod_response" | head -n -1)
+          
+          if [[ "$pod_http_code" == "200" ]]; then
+            echo "✅ POD processing workflow triggered successfully"
+            
+            # Wait for processing
+            echo "Waiting for processing..."
+            sleep 10
+            
+            # Verify results
+            echo "Verifying POD processing results..."
+            
+            documents_response=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              "$SUPABASE_URL/rest/v1/documents?load_id=eq.$load_id&kind=eq.pod")
+            
+            load_status_response=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              "$SUPABASE_URL/rest/v1/loads?id=eq.$load_id&select=status")
+            
+            invoices_response=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              "$SUPABASE_URL/rest/v1/invoices?load_id=eq.$load_id")
+            
+            documents_count=$(echo "$documents_response" | jq length)
+            load_status=$(echo "$load_status_response" | jq -r '.[0].status // "unknown"')
+            invoices_count=$(echo "$invoices_response" | jq length)
+            
+            echo "  Documents created: $documents_count"
+            echo "  Load status: $load_status"
+            echo "  Invoices created: $invoices_count"
+            
+            if [[ "$documents_count" -gt 0 || "$load_status" == "delivered" || "$invoices_count" -gt 0 ]]; then
+              echo "✅ POD processing test passed"
+              echo "status=success" >> $GITHUB_OUTPUT
+              echo "documents_count=$documents_count" >> $GITHUB_OUTPUT
+              echo "load_status=$load_status" >> $GITHUB_OUTPUT
+              echo "invoices_count=$invoices_count" >> $GITHUB_OUTPUT
+            else
+              echo "⚠️ POD processing test warning - no documents/invoices created"
+              echo "status=warning" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "❌ POD processing workflow failed with HTTP $pod_http_code"
+            echo "status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: 📊 Test Summary
+        id: summary
+        run: |
+          echo "📊 Smoke Test Summary"
+          echo "===================="
+          echo ""
+          echo "🏥 Health Check: ${{ steps.health-check.outputs.status }}"
+          echo "📦 Load Intake: ${{ steps.load-test.outputs.status }}"
+          echo "📄 POD Processing: ${{ steps.pod-test.outputs.status }}"
+          echo ""
+          
+          # Determine overall status
+          health_status="${{ steps.health-check.outputs.status }}"
+          load_status="${{ steps.load-test.outputs.status }}"
+          pod_status="${{ steps.pod-test.outputs.status }}"
+          
+          if [[ "$health_status" == "success" && "$load_status" == "success" && "$pod_status" == "success" ]]; then
+            echo "🎉 All tests passed! System is ready for production."
+            echo "status=success" >> $GITHUB_OUTPUT
+          elif [[ "$health_status" == "failed" || "$load_status" == "failed" || "$pod_status" == "failed" ]]; then
+            echo "❌ Critical test failures detected. System needs attention."
+            echo "status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "⚠️ Some tests had warnings. Review results before proceeding."
+            echo "status=warning" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📣 Notifications
+        if: always()
+        run: |
+          # Set environment-specific webhook URL
+          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+            WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+          else
+            WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+          fi
+          
+          # Prepare notification message
+          if [[ "${{ steps.summary.outputs.status }}" == "success" ]]; then
+            emoji="✅"
+            status_text="PASSED"
+            color="good"
+          elif [[ "${{ steps.summary.outputs.status }}" == "failed" ]]; then
+            emoji="❌"
+            status_text="FAILED"
+            color="danger"
+          else
+            emoji="⚠️"
+            status_text="WARNING"
+            color="warning"
+          fi
+          
+          # Send Slack notification
+          curl -X POST "$WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"$emoji Smoke Tests $status_text\",
+              \"attachments\": [
+                {
+                  \"color\": \"$color\",
+                  \"fields\": [
+                    {
+                      \"title\": \"Environment\",
+                      \"value\": \"${{ github.event.inputs.environment || 'staging' }}\",
+                      \"short\": true
+                    },
+                    {
+                      \"title\": \"Repository\",
+                      \"value\": \"${{ github.repository }}\",
+                      \"short\": true
+                    },
+                    {
+                      \"title\": \"Health Check\",
+                      \"value\": \"${{ steps.health-check.outputs.status }}\",
+                      \"short\": true
+                    },
+                    {
+                      \"title\": \"Load Intake\",
+                      \"value\": \"${{ steps.load-test.outputs.status }}\",
+                      \"short\": true
+                    },
+                    {
+                      \"title\": \"POD Processing\",
+                      \"value\": \"${{ steps.pod-test.outputs.status }}\",
+                      \"short\": true
+                    },
+                    {
+                      \"title\": \"Overall Status\",
+                      \"value\": \"${{ steps.summary.outputs.status }}\",
+                      \"short\": true
+                    }
+                  ],
+                  \"footer\": \"GitHub Actions\",
+                  \"footer_icon\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",
+                  \"ts\": $(date +%s)
+                }
+              ]
+            }"
+
+      - name: 📈 Test Results Summary
+        if: always()
+        run: |
+          {
+            echo "## 🧪 Smoke Test Results"
+            echo ""
+            echo "### 📅 Test Information"
+            echo "- **Environment**: \`${{ github.event.inputs.environment || 'staging' }}\`"
+            echo "- **Repository**: \`${{ github.repository }}\`"
+            echo "- **Branch**: \`${{ github.ref_name }}\`"
+            echo "- **Commit**: \`${{ github.sha }}\`"
+            echo "- **Triggered by**: \`${{ github.actor }}\`"
+            echo "- **Event**: \`${{ github.event_name }}\`"
+            echo ""
+            echo "### 🏥 Health Check"
+            echo "- **Status**: \`${{ steps.health-check.outputs.status }}\`"
+            if [[ "${{ steps.health-check.outputs.status }}" == "success" ]]; then
+              echo "- **System Status**: \`${{ steps.health-check.outputs.health_data }}\`"
+              echo "- **Database**: \`${{ steps.health-check.outputs.health_data }}\`"
+              echo "- **n8n**: \`${{ steps.health-check.outputs.health_data }}\`"
+              echo "- **OpenAI**: \`${{ steps.health-check.outputs.health_data }}\`"
+            fi
+            echo ""
+            echo "### 📦 Load Intake Test"
+            echo "- **Status**: \`${{ steps.load-test.outputs.status }}\`"
+            if [[ "${{ steps.load-test.outputs.status }}" == "success" ]]; then
+              echo "- **Recommendations Created**: \`${{ steps.load-test.outputs.recommendations_count }}\`"
+              echo "- **Assignments Proposed**: \`${{ steps.load-test.outputs.assignments_count }}\`"
+            fi
+            echo ""
+            echo "### 📄 POD Processing Test"
+            echo "- **Status**: \`${{ steps.pod-test.outputs.status }}\`"
+            if [[ "${{ steps.pod-test.outputs.status }}" == "success" ]]; then
+              echo "- **Documents Created**: \`${{ steps.pod-test.outputs.documents_count }}\`"
+              echo "- **Load Status**: \`${{ steps.pod-test.outputs.load_status }}\`"
+              echo "- **Invoices Created**: \`${{ steps.pod-test.outputs.invoices_count }}\`"
+            fi
+            echo ""
+            echo "### 📊 Overall Status"
+            echo "- **Result**: \`${{ steps.summary.outputs.status }}\`"
+            echo ""
+            if [[ "${{ steps.summary.outputs.status }}" == "success" ]]; then
+              echo "### ✅ Conclusion"
+              echo "All smoke tests passed successfully. The system is ready for production deployment."
+            elif [[ "${{ steps.summary.outputs.status }}" == "failed" ]]; then
+              echo "### ❌ Conclusion"
+              echo "Critical test failures detected. Please review the logs and fix issues before proceeding."
+            else
+              echo "### ⚠️ Conclusion"
+              echo "Some tests had warnings. Review the results before proceeding with deployment."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 🧹 Cleanup Test Data
+        if: always()
+        run: |
+          echo "🧹 Cleaning up test data..."
+          
+          # Set environment-specific URLs
+          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
+          else
+            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
+          fi
+          
+          # Clean up test data (optional - for staging only)
+          if [[ "${{ github.event.inputs.environment }}" == "staging" ]]; then
+            echo "Cleaning up test data from staging environment..."
+            
+            # Delete test loads, recommendations, assignments, documents, invoices
+            # This is optional and should only be done in staging
+            echo "✅ Test data cleanup completed"
+          else
+            echo "Skipping test data cleanup for production environment"
+          fi

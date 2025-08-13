@@ -1,0 +1,84 @@
+/* app.css — cleaned up & enterprise-friendly */
+
+#root {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(1rem, 2vw + 0.5rem, 2rem);
+  text-align: center;
+}
+
+/* -------- Logo -------- */
+.logo {
+  height: clamp(3.5rem, 6vw + 1rem, 6rem);
+  padding: 1.25em;
+  will-change: transform, filter;
+  transition: filter 300ms ease, transform 300ms ease;
+  display: inline-block;
+}
+
+.logo:hover {
+  /* Uses --primary as a drop shadow color if available */
+  filter:
+    drop-shadow(0 0 2em
+      hsl(var(--primary, 240 100% 67%) / 0.67)
+    );
+}
+
+.logo.react:hover {
+  /* React blue fallback if no custom var */
+  filter: drop-shadow(0 0 2em rgba(97, 218, 251, 0.67));
+}
+
+/* Spin only when user allows motion */
+@keyframes logo-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin 20s linear infinite;
+  }
+}
+
+/* -------- Card -------- */
+.card {
+  padding: clamp(1rem, 2vw + 0.5rem, 2rem);
+  border-radius: var(--radius, 0.75rem);
+  background: color-mix(in oklab, hsl(var(--card, 0 0% 100%)) 85%, transparent);
+  border: 1px solid hsl(var(--border, 240 5.9% 90%));
+  box-shadow: var(--glass-shadow, 0 8px 24px rgba(0,0,0,0.08));
+}
+
+.dark .card {
+  background: color-mix(in oklab, hsl(var(--card, 240 10% 3.9%)) 85%, transparent);
+  border-color: hsl(var(--border, 240 3.7% 15.9%));
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+
+/* -------- Helper text -------- */
+.read-the-docs {
+  color: hsl(var(--muted-foreground, 0 0% 53%));
+}
+
+/* -------- Focus ring utility (optional) -------- */
+.focus-ring {
+  outline: none;
+  box-shadow:
+    0 0 0 2px hsl(var(--background, 0 0% 100%)),
+    0 0 0 4px hsl(var(--ring, 216 87% 51%) / 0.45);
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+}
+
+/* -------- Small screens tweaks -------- */
+@media (max-width: 480px) {
+  #root {
+    padding: 1rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+}

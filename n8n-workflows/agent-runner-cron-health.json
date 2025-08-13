@@ -1,0 +1,378 @@
+{
+  "name": "Agent Runner Cron & Health Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "hour": "*",
+          "minute": "*/5"
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Agent Runner Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/functions/v1/agent-runner",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "batch_size",
+              "value": "10"
+            },
+            {
+              "name": "timeout_seconds",
+              "value": "300"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "agent-runner-call",
+      "name": "Call Agent Runner",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "success-check",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/functions/v1/health",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "health-check",
+      "name": "Health Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "health-status",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "health-status-check",
+      "name": "Check Health Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://hooks.slack.com/services/your-webhook-url",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "✅ Agent Runner executed successfully\n\n📊 Stats:\n- Tasks processed: {{ $json.tasks_processed }}\n- Success rate: {{ $json.success_rate }}%\n- Duration: {{ $json.duration_ms }}ms\n\n🏥 System Health: {{ $('Health Check').item.json.status }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "success-notification",
+      "name": "Success Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://hooks.slack.com/services/your-webhook-url",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "⚠️ Agent Runner Warning\n\n📊 Stats:\n- Tasks processed: {{ $json.tasks_processed }}\n- Success rate: {{ $json.success_rate }}%\n- Duration: {{ $json.duration_ms }}ms\n\n🔍 Check logs for details"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "warning-notification",
+      "name": "Warning Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://hooks.slack.com/services/your-webhook-url",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "🚨 Agent Runner Failed\n\n❌ Error: {{ $json.error }}\n\n🔍 Check agent-runner logs immediately"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "error-notification",
+      "name": "Error Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 600]
+    },
+    {
+      "parameters": {
+        "url": "https://hooks.slack.com/services/your-webhook-url",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "🔴 System Health Check Failed\n\n📊 Health Status: {{ $json.status }}\n\n🔍 Components:\n- Database: {{ $json.database }}\n- n8n: {{ $json.n8n }}\n- OpenAI: {{ $json.openai }}\n\n🚨 Immediate attention required"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "health-error-notification",
+      "name": "Health Error Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 100]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Log execution details\nconst executionTime = new Date().toISOString();\nconst agentRunnerResult = $('Call Agent Runner').item.json;\nconst healthResult = $('Health Check').item.json;\n\n// Create execution log\nconst logEntry = {\n  execution_time: executionTime,\n  agent_runner_status: agentRunnerResult.status,\n  tasks_processed: agentRunnerResult.tasks_processed || 0,\n  success_rate: agentRunnerResult.success_rate || 0,\n  health_status: healthResult.status,\n  database_status: healthResult.database,\n  n8n_status: healthResult.n8n,\n  openai_status: healthResult.openai\n};\n\n// Return log entry for potential database storage\nreturn logEntry;"
+      },
+      "id": "log-execution",
+      "name": "Log Execution",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "Agent Runner Cron": {
+      "main": [
+        [
+          {
+            "node": "Call Agent Runner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Agent Runner": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Health Check",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Execution",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Warning Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check": {
+      "main": [
+        [
+          {
+            "node": "Check Health Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Health Status": {
+      "main": [
+        [
+          {
+            "node": "Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Error Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Execution": {
+      "main": [
+        [
+          {
+            "node": "Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "agent-runner",
+      "name": "agent-runner"
+    },
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "health-monitoring",
+      "name": "health-monitoring"
+    },
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "cron",
+      "name": "cron"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
