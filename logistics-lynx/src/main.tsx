@@ -1,7 +1,7 @@
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import AppAuthenticated from './AppAuthenticated.tsx';
 import './index.css';
 import { initObservability, session } from './observability';
 
@@ -20,6 +20,6 @@ const root = createRoot(container);
 
 root.render(
   <StrictMode>
-    <App />
+    <AppAuthenticated />
   </StrictMode>
 );

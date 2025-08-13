@@ -74,6 +74,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         accentColor: 'text-purple-600',
         items: [
           { id: 'dashboard', label: 'Command Center', icon: Monitor, path: '/dashboard' },
+          { id: 'rates', label: 'Rates Portal', icon: DollarSign, path: '/rates' },
+          { id: 'directory', label: 'Directory Portal', icon: Building2, path: '/directory' },
           { id: 'edi', label: 'EDI Intelligence', icon: Database, path: '/edi', 
             subItems: [
               { id: 'edi-dashboard', label: 'EDI Dashboard', icon: Activity, path: '/edi/dashboard' },
@@ -104,6 +106,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         accentColor: 'text-blue-600',
         items: [
           { id: 'dashboard', label: 'Fleet Control', icon: Truck, path: '/dashboard' },
+          { id: 'rates', label: 'Rates Portal', icon: DollarSign, path: '/rates' },
+          { id: 'directory', label: 'Directory Portal', icon: Building2, path: '/directory' },
           { id: 'assets', label: 'Fleet Management', icon: Package, 
             subItems: [
               { id: 'trucks', label: 'Trucks', icon: Truck, path: '/assets?tab=trucks' },
@@ -126,6 +130,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         accentColor: 'text-emerald-600',
         items: [
           { id: 'dashboard', label: 'Broker Hub', icon: Building2, path: '/dashboard' },
+          { id: 'rates', label: 'Rates Portal', icon: DollarSign, path: '/rates' },
+          { id: 'directory', label: 'Directory Portal', icon: Building2, path: '/directory' },
           { id: 'loadboard', label: 'Load Marketplace', icon: Package, path: '/loadboard' },
           { id: 'quotes', label: 'Rate Intelligence', icon: DollarSign, path: '/quotes' },
           { id: 'shipments', label: 'Shipment Flow', icon: MapPin, path: '/shipments' },
