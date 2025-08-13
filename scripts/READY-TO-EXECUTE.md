@@ -1,121 +1,164 @@
-# 🚀 Ready to Execute: Day-0 Go-Live Commands
+# Day-0 Go-Live — Ready-to-Execute Guide (Unix/macOS)
 
-## Copy/Paste These Commands Right Now
+This guide runs a full end-to-end synthetic task through your autonomous system and verifies realtime updates, metrics, RLS, and alerts.
 
-### **Windows PowerShell**
-```powershell
-# 1) Verify deployment
-pwsh -File scripts/verify-deployment.ps1
+## 0) Prerequisites (one-time)
 
-# 2) Fire the synthetic task end-to-end
-pwsh -File scripts/day0-synthetic-test.ps1 -CompanyId 00000000-0000-4000-8000-000000000001
+- Supabase CLI and psql are available on your machine.
+- Your app and functions have been deployed at least once.
+- You have the canary tenant UUID handy.
 
-# 3) Tail live logs (in new terminal)
-$env:SUPABASE_URL="https://<your>.supabase.co"
-$env:SUPABASE_ANON_KEY="<anon>"
-npx ts-node scripts/agent-tail.ts 00000000-0000-4000-8000-000000000001
+## 1) Set Environment Variables
+
+```bash
+export SUPABASE_URL="https://<your-project>.supabase.co"
+export SUPABASE_DB_URL="postgresql://<user>:<pass>@<host>:5432/postgres"
+# Optional: override if your function is at a custom URL
+export FUNCTION_URL="$SUPABASE_URL/functions/v1/agent-runner"
+# Optional for CLI tailing
+export SUPABASE_ANON_KEY="<your_anon_key>"
 ```
 
-### **Unix/macOS**
+Replace the placeholders with your values. Keep secrets out of shell history when possible.
+
+## 2) Verify the System
+
 ```bash
-# Make scripts executable
 chmod +x scripts/verify-agent-system.sh
-chmod +x scripts/day0-synthetic-run.sh
-
-# Set env for this shell
-export SUPABASE_URL="https://<your>.supabase.co"
-export SUPABASE_DB_URL="postgresql://<user>:<pass>@<host>:5432/postgres"
-
-# 1) Verify deployment
 ./scripts/verify-agent-system.sh
+```
 
-# 2) Fire the synthetic task (replace UUID with your canary tenant)
+**Pass criteria:**
+- DB connectivity ✅
+- agent_tasks, agent_runs, agent_logs present ✅
+- agent_logs has RLS ✅
+- Tables are in supabase_realtime ✅
+- TTL job exists ✅
+- v_agent_metrics_15m exists ✅
+- agent-runner is reachable ✅
+
+## 3) Fire a Synthetic Task (End-to-End)
+
+```bash
+chmod +x scripts/day0-synthetic-run.sh
 ./scripts/day0-synthetic-run.sh 00000000-0000-4000-8000-000000000001 CHI DAL
+```
 
-# 3) (Optional) Tail logs live from CLI while watching the portal
-SUPABASE_URL="$SUPABASE_URL" SUPABASE_ANON_KEY="<anon>" \
+**Args:** `<COMPANY_ID> [ORIGIN] [DEST]`
+
+The script will:
+- Insert a queued task for the tenant
+- Invoke the agent-runner function
+- Poll until done (or fail/timeout)
+
+## 4) Watch Realtime in the App + CLI (Optional)
+
+Keep your Autonomous Portal open (Live Feed + Metrics Bar), and optionally tail logs from your terminal:
+
+```bash
+SUPABASE_URL="$SUPABASE_URL" SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
   npx ts-node scripts/agent-tail.ts 00000000-0000-4000-8000-000000000001
 ```
 
-## ✅ **Pass Criteria (10–30 seconds)**
+## 5) Pass Criteria (10–30 seconds)
 
-1. **Autonomous Portal → Live Feed**: Shows "Starting task … / Task completed …"
-2. **Metrics Bar**: Updates queue depth / running / success(15m)
-3. **Slack**: Only pings if you intentionally break a handler
+- **Autonomous Portal → Live Feed** shows: `Starting task: rates.price_one → Task completed: rates.price_one`.
+- **Metrics Bar** updates queue depth / running / success (15m).
+- **Database** shows task lifecycle: queued → running → done.
+- **Slack** pings only if you intentionally trigger an error.
 
-## 🚨 **Fast Triage (if anything looks off)**
+## Fast Triage
 
-### **No log lines in UI but CLI tail works**
-- Ensure browser session is authenticated
-- `profiles.company_id` for user equals canary tenant
-- Confirm channel filter uses same UUID shown in DB
+### A. No Live Feed logs in UI (but CLI tail shows events)
 
-### **No realtime at all**
+- Ensure browser is authenticated (valid JWT).
+- Confirm the user's `profiles.company_id` equals the canary tenant UUID.
+- Check the Live Feed is using the same companyId you're testing.
+
+### B. No realtime at all
+
 ```sql
-select * from pg_publication_tables where pubname='supabase_realtime';
+select relname from pg_publication_tables
+where pubname='supabase_realtime'
+and relname in ('agent_tasks','agent_runs','agent_logs');
 ```
 
-### **Task stays queued**
-- Check function env: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` present
-- Re-deploy: `supabase functions deploy agent-runner`
+If any table is missing, re-run migrations: `supabase db push`.
 
-### **RLS denial in UI**
-- User must be member of canary company
-- Verify mapping in `profiles` table
+### C. Task stays queued
 
-### **Slack silent on errors**
-- Set `N8N_AGENT_LOG_WEBHOOK` on function, not frontend
-- Re-deploy function
+- Confirm function env is set: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
+- Re-deploy: `supabase functions deploy agent-runner`.
+- Check runner logs for SQL or payload errors.
 
-### **Log volume sanity**
+### D. RLS denied in UI
+
+- The signed-in user must belong to the tenant (`profiles.company_id`).
+- `agent_logs` writes are Edge-only via service role (by design).
+
+### E. Slack is silent
+
+- Set `N8N_AGENT_LOG_WEBHOOK` on the function env (not frontend).
+- Intentionally throw in a handler to verify the error path.
+
+### F. Log growth sanity
+
 ```sql
+-- should trend to ~0 after nightly TTL
 select count(*) from agent_logs where created_at < now() - interval '30 days';
--- should trend to ~0 after nightly cron
 ```
 
-## 📋 **Day-1–Day-7 Light Ops**
+## Rollback (safe, immediate)
 
-- **Daily**: Glance at `v_agent_metrics_15m` for success% dips and unexpected queue growth
-- **Weekly**: Quick DR drill (can you deploy agent-runner + see logs in scratch project?)
-- **Monthly**: Rotate keys; spot-check indexes on `agent_logs` / `agent_tasks`
+- Disable autonomous flags for the tenant in your feature-flag system.
+- Re-deploy the previous function artifact if needed.
+- No destructive DB changes in Day-0—data remains intact.
 
-## 🎯 **Success Indicators**
+## Day-1 → Day-7 Ops (lightweight)
 
-✅ **Autonomous Portal → Live Feed**: Shows "Starting task … / Task completed …"  
-✅ **Metrics Bar**: Updates queue depth / running / success(15m)  
-✅ **Slack**: Only pings on actual errors (test by breaking a handler)  
-✅ **CLI Tail**: Real-time log streaming works  
-✅ **Database**: Task status changes from queued → processing → done  
+- **Daily**: glance at `v_agent_metrics_15m` for success dips or queue growth.
+- **Weekly**: quick DR drill (fresh project → deploy function → see logs).
+- **Monthly**: rotate keys; check bloat on `agent_logs`/`agent_tasks`.
 
-## 🚨 **Emergency Rollback**
+## Suggested SLOs & Alerts
 
-If issues arise:
+- Uptime ≥ 99.95%
+- p95 runner latency ≤ 2.5s
+- 15-min success rate ≥ 98%
+- Queue > 50 for 5m → warn; > 100 for 5m → page
+- Errors > 2/min for 3m → page
+
+## Reference Commands
+
+### Re-verify
 ```bash
-# Disable autonomous processing
-supabase functions config set agent-runner.enabled=false
-
-# Clear queue (emergency only)
-psql "$SUPABASE_DB_URL" -c "UPDATE agent_tasks SET status = 'cancelled' WHERE status = 'queued';"
+./scripts/verify-agent-system.sh
 ```
 
-## 🎉 **You're Ready!**
+### Re-run synthetic
+```bash
+./scripts/day0-synthetic-run.sh 00000000-0000-4000-8000-000000000001 CHI DAL
+```
 
-You've got everything needed:
-- ✅ Environment, schema, runner, realtime UI
-- ✅ Verification and guardrails
-- ✅ Fast triage guide
-- ✅ Emergency rollback procedures
+### Tail logs
+```bash
+SUPABASE_URL=... SUPABASE_ANON_KEY=... \
+  npx ts-node scripts/agent-tail.ts 00000000-0000-4000-8000-000000000001
+```
 
-**Fire the synthetic task and watch your agents work in real time!** 🚀
+### Quick metrics
+```sql
+select * from public.v_agent_metrics_15m
+where company_id = '00000000-0000-4000-8000-000000000001';
+```
 
-The system will automatically:
-- Process tasks end-to-end
-- Update metrics in real-time
-- Send alerts on errors
-- Scale based on demand
-- Maintain security and privacy
+## Security Notes (don't skip)
+
+- Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
+- Keep `N8N_AGENT_LOG_WEBHOOK` server-side only.
+- Use the `redact()` helper to avoid logging PII (email, doc_url, names).
+- Realtime uses your app's Supabase client—RLS is enforced via JWT.
 
 ---
 
-**Status**: 🟢 Ready for 24/7 Autonomous Operations
-**Last Updated**: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+**You're green-lit. Run Section 2–4 now and watch your agents work in real time.** 🚀
