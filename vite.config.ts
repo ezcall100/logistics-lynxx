@@ -24,6 +24,7 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     jsx: 'automatic',
     target: 'es2020',
+    jsxDev: mode === 'development',
   },
   define: {
     global: 'globalThis',
