@@ -26,7 +26,7 @@ export function Header() {
             <Link to="/" className="flex items-center space-x-2">
               <Truck className="h-8 w-8 text-blue-600" />
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                Logistics Lynx
+                Trans Bot AI
               </span>
             </Link>
           </div>

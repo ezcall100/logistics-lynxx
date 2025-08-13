@@ -51,7 +51,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <Truck className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold">Logistics Lynx</span>
+              <span className="text-xl font-bold">Trans Bot AI</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
               Revolutionizing transportation management with AI-powered automation, 
@@ -62,7 +62,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-gray-400">
                 <Mail className="h-5 w-5" />
-                <span>contact@logisticslynx.com</span>
+                <span>contact@transbotai.com</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-400">
                 <Phone className="h-5 w-5" />
