@@ -10,7 +10,9 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "@emotion/react"
+    }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
@@ -20,5 +22,8 @@ export default defineConfig(({ mode }) => ({
   },
   define: {
     global: 'globalThis',
+  },
+  esbuild: {
+    jsx: 'automatic',
   },
 }));
