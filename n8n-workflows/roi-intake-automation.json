@@ -1,0 +1,223 @@
+{
+  "name": "ROI Intake Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "roi-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "ROI Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM roi_estimates WHERE id = $1",
+        "additionalFields": {
+          "queryReplacement": "SELECT * FROM roi_estimates WHERE id = $1"
+        }
+      },
+      "id": "fetch-roi",
+      "name": "Fetch ROI Data",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "customer",
+        "email": "={{ $json.contact_email }}",
+        "additionalFields": {
+          "name": "={{ $json.company_name }}",
+          "metadata": "={{ { roi_id: $json.roi_id, monthly_impact: $json.calc.monthlyImpact, plan: $json.plan } }}",
+          "description": "ROI Calculator Lead"
+        }
+      },
+      "id": "create-stripe-customer",
+      "name": "Create Stripe Customer",
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "subscription",
+        "customerId": "={{ $json.id }}",
+        "additionalFields": {
+          "items": "={{ [{ price: $('fetch-roi').item.json.plan === 'pro' ? 'price_pro_monthly' : 'price_starter_monthly' }] }}",
+          "trial_period_days": 14,
+          "metadata": "={{ { roi_id: $('fetch-roi').item.json.roi_id, source: 'roi_calculator' } }}"
+        }
+      },
+      "id": "create-trial",
+      "name": "Create Trial Subscription",
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "operation": "sendEmail",
+        "toEmail": "={{ $('fetch-roi').item.json.contact_email }}",
+        "subject": "Your Trans Bot AI ROI Estimate & Trial Access",
+        "text": "Hi there,\n\nThank you for using our ROI Calculator! Here's your personalized estimate:\n\n📊 Monthly Impact: ${{ $('fetch-roi').item.json.calc.monthlyImpact.toLocaleString() }}\n⏱️ Time Savings: {{ $('fetch-roi').item.json.calc.hrsSaved.toFixed(1) }} hours/month\n💰 Added Gross Profit: ${{ $('fetch-roi').item.json.calc.incrGP.toLocaleString() }}\n📅 Payback Period: {{ $('fetch-roi').item.json.calc.paybackDays }} days\n\n🎉 Your 14-day trial is now active!\nLogin: https://app.transbotai.com\n\nQuestions? Reply to this email or book a demo.\n\nBest regards,\nThe Trans Bot AI Team"
+      },
+      "id": "send-email",
+      "name": "Send ROI Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "sales",
+        "text": "🎯 *New ROI Calculator Lead*\n\n*Company:* {{ $('fetch-roi').item.json.company_name }}\n*Email:* {{ $('fetch-roi').item.json.contact_email }}\n*Monthly Impact:* ${{ $('fetch-roi').item.json.calc.monthlyImpact.toLocaleString() }}\n*Plan:* {{ $('fetch-roi').item.json.plan }}\n*Payback:* {{ $('fetch-roi').item.json.calc.paybackDays }} days\n\n{{ $('fetch-roi').item.json.calc.monthlyImpact > 10000 ? '🔥 HIGH VALUE - Route to AE' : '📧 Standard nurture sequence' }}",
+        "otherOptions": {
+          "username": "ROI Bot"
+        }
+      },
+      "id": "slack-notify",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "lead",
+        "additionalFields": {
+          "company": "={{ $('fetch-roi').item.json.company_name }}",
+          "email": "={{ $('fetch-roi').item.json.contact_email }}",
+          "leadSource": "ROI Calculator",
+          "description": "ROI Calculator Lead - Monthly Impact: ${{ $('fetch-roi').item.json.calc.monthlyImpact.toLocaleString() }}",
+          "customFields": "={{ { roi_id: $('fetch-roi').item.json.roi_id, monthly_impact: $('fetch-roi').item.json.calc.monthlyImpact, plan: $('fetch-roi').item.json.plan } }}"
+        }
+      },
+      "id": "create-crm-lead",
+      "name": "Create CRM Lead",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 1,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'ROI processed successfully', trial_created: $('create-trial').item.json.id } }}"
+      },
+      "id": "response",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "ROI Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch ROI Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch ROI Data": {
+      "main": [
+        [
+          {
+            "node": "Create Stripe Customer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send ROI Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Stripe Customer": {
+      "main": [
+        [
+          {
+            "node": "Create Trial Subscription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Trial Subscription": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send ROI Email": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Notification": {
+      "main": [
+        [
+          {
+            "node": "Create CRM Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create CRM Lead": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-12-01T00:00:00.000Z",
+      "updatedAt": "2024-12-01T00:00:00.000Z",
+      "id": "roi-automation",
+      "name": "ROI Automation"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-12-01T00:00:00.000Z",
+  "versionId": "1"
+}
