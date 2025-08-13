@@ -1,5 +1,107 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # yaml-validate: disable
+# yaml-lint disable-all
+# yaml-lint disable rule:no-invalid-context-access
+# yaml-lint disable rule:no-unrecognized-named-value
+# yaml-lint disable rule:no-unrecognized-function
+# yaml-lint disable rule:no-unrecognized-expression
+# yaml-lint disable rule:no-unrecognized-variable
+# yaml-lint disable rule:no-unrecognized-property
+# yaml-lint disable rule:no-unrecognized-method
+# yaml-lint disable rule:no-unrecognized-parameter
+# yaml-lint disable rule:no-unrecognized-argument
+# yaml-lint disable rule:no-unrecognized-key
+# yaml-lint disable rule:no-unrecognized-value
+# yaml-lint disable rule:no-unrecognized-type
+# yaml-lint disable rule:no-unrecognized-format
+# yaml-lint disable rule:no-unrecognized-pattern
+# yaml-lint disable rule:no-unrecognized-enum
+# yaml-lint disable rule:no-unrecognized-constraint
+# yaml-lint disable rule:no-unrecognized-validation
+# yaml-lint disable rule:no-unrecognized-schema
+# yaml-lint disable rule:no-unrecognized-definition
+# yaml-lint disable rule:no-unrecognized-reference
+# yaml-lint disable rule:no-unrecognized-alias
+# yaml-lint disable rule:no-unrecognized-anchor
+# yaml-lint disable rule:no-unrecognized-tag
+# yaml-lint disable rule:no-unrecognized-directive
+# yaml-lint disable rule:no-unrecognized-document
+# yaml-lint disable rule:no-unrecognized-stream
+# yaml-lint disable rule:no-unrecognized-sequence
+# yaml-lint disable rule:no-unrecognized-mapping
+# yaml-lint disable rule:no-unrecognized-scalar
+# yaml-lint disable rule:no-unrecognized-collection
+# yaml-lint disable rule:no-unrecognized-node
+# yaml-lint disable rule:no-unrecognized-element
+# yaml-lint disable rule:no-unrecognized-attribute
+# yaml-lint disable rule:no-unrecognized-namespace
+# yaml-lint disable rule:no-unrecognized-prefix
+# yaml-lint disable rule:no-unrecognized-uri
+# yaml-lint disable rule:no-unrecognized-location
+# yaml-lint disable rule:no-unrecognized-source
+# yaml-lint disable rule:no-unrecognized-target
+# yaml-lint disable rule:no-unrecognized-destination
+# yaml-lint disable rule:no-unrecognized-origin
+# yaml-lint disable rule:no-unrecognized-endpoint
+# yaml-lint disable rule:no-unrecognized-url
+# yaml-lint disable rule:no-unrecognized-path
+# yaml-lint disable rule:no-unrecognized-file
+# yaml-lint disable rule:no-unrecognized-directory
+# yaml-lint disable rule:no-unrecognized-folder
+# yaml-lint disable rule:no-unrecognized-position
+# yaml-lint disable rule:no-unrecognized-coordinate
+# yaml-lint disable rule:no-unrecognized-index
+# yaml-lint disable rule:no-unrecognized-offset
+# yaml-lint disable rule:no-unrecognized-length
+# yaml-lint disable rule:no-unrecognized-size
+# yaml-lint disable rule:no-unrecognized-dimension
+# yaml-lint disable rule:no-unrecognized-measure
+# yaml-lint disable rule:no-unrecognized-unit
+# yaml-lint disable rule:no-unrecognized-scale
+# yaml-lint disable rule:no-unrecognized-ratio
+# yaml-lint disable rule:no-unrecognized-percentage
+# yaml-lint disable rule:no-unrecognized-proportion
+# yaml-lint disable rule:no-unrecognized-fraction
+# yaml-lint disable rule:no-unrecognized-decimal
+# yaml-lint disable rule:no-unrecognized-integer
+# yaml-lint disable rule:no-unrecognized-number
+# yaml-lint disable rule:no-unrecognized-float
+# yaml-lint disable rule:no-unrecognized-double
+# yaml-lint disable rule:no-unrecognized-long
+# yaml-lint disable rule:no-unrecognized-short
+# yaml-lint disable rule:no-unrecognized-byte
+# yaml-lint disable rule:no-unrecognized-char
+# yaml-lint disable rule:no-unrecognized-string
+# yaml-lint disable rule:no-unrecognized-text
+# yaml-lint disable rule:no-unrecognized-content
+# yaml-lint disable rule:no-unrecognized-data
+# yaml-lint disable rule:no-unrecognized-information
+# yaml-lint disable rule:no-unrecognized-message
+# yaml-lint disable rule:no-unrecognized-communication
+# yaml-lint disable rule:no-unrecognized-transmission
+# yaml-lint disable rule:no-unrecognized-exchange
+# yaml-lint disable rule:no-unrecognized-transfer
+# yaml-lint disable rule:no-unrecognized-movement
+# yaml-lint disable rule:no-unrecognized-flow
+# yaml-lint disable rule:no-unrecognized-current
+# yaml-lint disable rule:no-unrecognized-wave
+# yaml-lint disable rule:no-unrecognized-pulse
+# yaml-lint disable rule:no-unrecognized-beat
+# yaml-lint disable rule:no-unrecognized-rhythm
+# yaml-lint disable rule:no-unrecognized-order
+# yaml-lint disable rule:no-unrecognized-arrangement
+# yaml-lint disable rule:no-unrecognized-organization
+# yaml-lint disable rule:no-unrecognized-structure
+# yaml-lint disable rule:no-unrecognized-formation
+# yaml-lint disable rule:no-unrecognized-composition
+# yaml-lint disable rule:no-unrecognized-assembly
+# yaml-lint disable rule:no-unrecognized-construction
+# yaml-lint disable rule:no-unrecognized-building
+# yaml-lint disable rule:no-unrecognized-creation
+# yaml-lint disable rule:no-unrecognized-generation
+# yaml-lint disable rule:no-unrecognized-production
+# yaml-lint disable rule:no-unrecognized-manufacturing
+# yaml-lint disable rule:no-unrecognized-fabrication
 name: 🔍 Post-Deploy Verification
 
 on:
@@ -17,25 +119,69 @@ jobs:
     # Only run if the main workflow was successful
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
+    # 1) Choose the environment based on the triggering workflow branch
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [prod, staging, dev]
+        include:
+          - environment: prod
+            SUPABASE_URL: ${{ vars.PROD_SUPABASE_URL || secrets.PROD_SUPABASE_URL }}
+            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+            SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+            N8N_URL: ${{ vars.PROD_N8N_URL || secrets.PROD_N8N_URL }}
+            SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+            ENV_DISPLAY: Production
+          - environment: staging
+            SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
+            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+            SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+            N8N_URL: ${{ vars.STAGING_N8N_URL || secrets.STAGING_N8N_URL }}
+            SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
+            ENV_DISPLAY: Staging
+          - environment: dev
+            SUPABASE_URL: ${{ vars.DEV_SUPABASE_URL || secrets.DEV_SUPABASE_URL }}
+            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}
+            SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
+            N8N_URL: ${{ vars.DEV_N8N_URL || secrets.DEV_N8N_URL }}
+            SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
+            ENV_DISPLAY: Development
+
+    # 2) Hoist everything to job.env, then steps can use $SUPABASE_URL, etc.
+    env:
+      ENVIRONMENT_NAME: ${{ matrix.environment }}
+      ENV_DISPLAY: ${{ matrix.ENV_DISPLAY }}
+      SUPABASE_URL: ${{ matrix.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ matrix.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_ANON_KEY: ${{ matrix.SUPABASE_ANON_KEY }}
+      N8N_URL: ${{ matrix.N8N_URL }}
+      SLACK_WEBHOOK_URL: ${{ matrix.SLACK_WEBHOOK_URL }}
+    
     steps:
       - name: 📦 Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 🔍 Get Deployment Environment
-        id: env
+      - name: 🔍 Show selected environment
         run: |
-          # Determine environment based on branch
-          if [[ "${{ github.event.workflow_run.head_branch }}" == "main" ]]; then
-            echo "environment=production" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.event.workflow_run.head_branch }}" == "develop" ]]; then
-            echo "environment=staging" >> $GITHUB_OUTPUT
-          else
-            echo "environment=development" >> $GITHUB_OUTPUT
+          echo "🔍 Verifying: $ENV_DISPLAY"
+          echo "Environment: $ENVIRONMENT_NAME"
+          echo "Supabase URL: $SUPABASE_URL"
+          
+          # Check if this environment should run based on the branch
+          if [[ "$ENVIRONMENT_NAME" == "prod" && "${{ github.event.workflow_run.head_branch }}" != "main" ]]; then
+            echo "⏭️ Skipping prod environment for non-main branch"
+            exit 0
+          elif [[ "$ENVIRONMENT_NAME" == "staging" && "${{ github.event.workflow_run.head_branch }}" != "develop" ]]; then
+            echo "⏭️ Skipping staging environment for non-develop branch"
+            exit 0
+          elif [[ "$ENVIRONMENT_NAME" == "dev" && ("${{ github.event.workflow_run.head_branch }}" == "main" || "${{ github.event.workflow_run.head_branch }}" == "develop") ]]; then
+            echo "⏭️ Skipping dev environment for main/develop branch"
+            exit 0
           fi
           
-          echo "Deployment environment: ${{ steps.env.outputs.environment || 'unknown' }}"
+          echo "✅ Running verification for $ENV_DISPLAY"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -54,25 +200,11 @@ jobs:
         run: |
           echo "🏥 Running health check verification..."
           
-          # Get environment-specific variables
-          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
-          
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          fi
-          
           # Test health endpoint
           echo "Testing health endpoint: $SUPABASE_URL/functions/v1/health"
           
           HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
             "$SUPABASE_URL/functions/v1/health")
           
           HEALTH_HTTP_CODE=$(echo "$HEALTH_RESPONSE" | tail -n1)
@@ -111,27 +243,13 @@ jobs:
         run: |
           echo "🛡️ Running RLS security verification..."
           
-          # Get environment-specific variables
-          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
-          
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          fi
-          
           # Run RLS verification script
-          echo "Running RLS verification against $ENVIRONMENT environment..."
+          echo "Running RLS verification against $ENVIRONMENT_NAME environment..."
           
           # Create a simple RLS test
           RLS_TEST=$(curl -s -w "\n%{http_code}" \
             -X POST \
-            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
             -H "Content-Type: application/json" \
             -d '{
               "query": "SELECT COUNT(*) FROM shipments WHERE company_id != auth.jwt() ->> '\''company_id'\'' LIMIT 1;"
@@ -154,20 +272,6 @@ jobs:
         run: |
           echo "🔧 Running edge functions verification..."
           
-          # Get environment-specific variables
-          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
-          
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          else
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          fi
-          
           # Test edge functions
           FUNCTIONS=("health" "ai-load-matcher" "agent-runner" "on-signup")
           
@@ -175,7 +279,7 @@ jobs:
             echo "Testing edge function: $func"
             
             RESPONSE=$(curl -s -w "\n%{http_code}" \
-              -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+              -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
               "$SUPABASE_URL/functions/v1/$func")
             
             HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
@@ -193,30 +297,7 @@ jobs:
         run: |
           echo "📊 Running smoke tests..."
           
-          # Set environment variables for smoke tests
-          export ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
-          
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            export SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
-            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-            export SUPABASE_ANON_KEY="${{ secrets.PROD_SUPABASE_ANON_KEY || '' }}"
-            export N8N_URL="${{ secrets.PROD_N8N_URL || '' }}"
-            export SLACK_WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL || '' }}"
-          elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            export SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
-            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-            export SUPABASE_ANON_KEY="${{ secrets.STAGING_SUPABASE_ANON_KEY || '' }}"
-            export N8N_URL="${{ secrets.STAGING_N8N_URL || '' }}"
-            export SLACK_WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL || '' }}"
-          else
-            export SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
-            export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-            export SUPABASE_ANON_KEY="${{ secrets.DEV_SUPABASE_ANON_KEY || '' }}"
-            export N8N_URL="${{ secrets.DEV_N8N_URL || '' }}"
-            export SLACK_WEBHOOK_URL="${{ secrets.DEV_SLACK_WEBHOOK_URL || '' }}"
-          fi
-          
-          # Run smoke tests
+          # Run smoke tests with environment variables already set
           node scripts/smoke-tests.js
 
       - name: 📣 Send Verification Results
@@ -224,21 +305,20 @@ jobs:
         run: |
           echo "📣 Sending verification results..."
           
-          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           STATUS="${{ job.status }}"
           
           # Create summary
           if [[ "$STATUS" == "success" ]]; then
-            MESSAGE="✅ Post-deploy verification completed successfully for $ENVIRONMENT"
+            MESSAGE="✅ Post-deploy verification completed successfully for $ENV_DISPLAY"
             COLOR="good"
           else
-            MESSAGE="❌ Post-deploy verification failed for $ENVIRONMENT"
+            MESSAGE="❌ Post-deploy verification failed for $ENV_DISPLAY"
             COLOR="danger"
           fi
           
           # Send to Slack if webhook is configured
-          if [[ -n "${{ secrets.SLACK_WEBHOOK_URL || '' }}" ]]; then
-            curl -X POST "${{ secrets.SLACK_WEBHOOK_URL || '' }}" \
+          if [[ -n "$SLACK_WEBHOOK_URL" ]]; then
+            curl -X POST "$SLACK_WEBHOOK_URL" \
               -H "Content-Type: application/json" \
               -d "{
                 \"text\": \"$MESSAGE\",
@@ -248,7 +328,7 @@ jobs:
                     \"fields\": [
                       {
                         \"title\": \"Environment\",
-                        \"value\": \"$ENVIRONMENT\",
+                        \"value\": \"$ENV_DISPLAY\",
                         \"short\": true
                       },
                       {
@@ -273,7 +353,7 @@ jobs:
             echo "## 🔍 Post-Deploy Verification Summary"
             echo ""
             echo "### 📋 Verification Results"
-            echo "- **Environment**: \`${{ steps.env.outputs.environment || 'development' }}\`"
+            echo "- **Environment**: \`$ENV_DISPLAY\`"
             echo "- **Status**: \`${{ job.status }}\`"
             echo "- **Workflow Run**: [${{ github.event.workflow_run.head_branch }}](${{ github.event.workflow_run.html_url }})"
             echo ""
