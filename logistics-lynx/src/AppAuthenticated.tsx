@@ -10,6 +10,7 @@ import { SolutionsSection } from './components/SolutionsSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { CTASection } from './components/CTASection';
 import { Footer } from './components/Footer';
+import NotAvailable from './routes/not-available';
 
 // Create a QueryClient instance for autonomous data management
 const queryClient = new QueryClient({
@@ -45,6 +46,13 @@ function AppAuthenticated() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<div className="container mx-auto py-20 text-center">Login Page Coming Soon</div>} />
               <Route path="/signup" element={<div className="container mx-auto py-20 text-center">Sign Up Page Coming Soon</div>} />
+              
+              {/* 🚫 DEPRECATED PORTAL ROUTES - Return 410 Gone */}
+              <Route path="/carrier-admin/*" element={<NotAvailable />} />
+              <Route path="/broker-admin/*" element={<NotAvailable />} />
+              <Route path="/shipper-admin/*" element={<NotAvailable />} />
+              <Route path="/freight-broker/*" element={<NotAvailable />} />
+              <Route path="/carrier-dispatch/*" element={<NotAvailable />} />
             </Routes>
             <Toaster />
           </div>
