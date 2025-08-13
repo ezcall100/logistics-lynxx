@@ -12,8 +12,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      tsDecorators: true,
-      jsxImportSource: "@types/react",
+      jsxImportSource: "react",
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
@@ -24,11 +23,13 @@ export default defineConfig(({ mode }) => ({
   },
   esbuild: {
     jsx: 'automatic',
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
+    jsxImportSource: 'react',
     target: 'es2020',
-    jsxDev: mode === 'development',
     loader: 'tsx',
+    include: [
+      'src/**/*.tsx',
+      'src/**/*.ts',
+    ],
   },
   define: {
     global: 'globalThis',
