@@ -13,8 +13,11 @@ import {
   Users,
   Activity,
   Target,
-  Zap
+  Zap,
+  Server
 } from 'lucide-react';
+import { MultiRegionHealthMonitor } from './MultiRegionHealthMonitor';
+import { UsageMeter } from '../billing/UsageMeter';
 
 interface SLOMetric {
   name: string;
@@ -317,6 +320,12 @@ const ExecutiveDashboard: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Multi-Region Health Monitor */}
+      <MultiRegionHealthMonitor />
+
+      {/* Usage Meter */}
+      <UsageMeter companyId="demo-company" subscriptionTier="pro" />
 
       {/* Quick Actions */}
       <Card>

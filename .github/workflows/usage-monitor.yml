@@ -1,0 +1,125 @@
+name: Usage Monitor - Nightly Check
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run mode (no notifications sent)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+
+jobs:
+  usage-monitor:
+    name: Monitor Usage & Create Alerts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          cd logistics-lynx
+          npm ci
+
+      - name: Run usage monitor
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DRY_RUN: ${{ env.DRY_RUN }}
+        run: |
+          echo "Running usage monitor..."
+          echo "Dry run mode: $DRY_RUN"
+          
+          # Call the usage monitor function
+          curl -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json" \
+            "$SUPABASE_URL/functions/v1/usage-monitor" \
+            -d '{"dry_run": "'$DRY_RUN'"}' \
+            | jq '.'
+
+      - name: Check for breaches
+        id: check-breaches
+        run: |
+          # Get the response from the previous step
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json" \
+            "$SUPABASE_URL/functions/v1/usage-monitor" \
+            -d '{"dry_run": "'$DRY_RUN'"}')
+          
+          BREACHES=$(echo "$RESPONSE" | jq -r '.summary.breaches_found // 0')
+          WARNINGS=$(echo "$RESPONSE" | jq -r '.summary.warnings_generated // 0')
+          
+          echo "breaches=$BREACHES" >> $GITHUB_OUTPUT
+          echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+          
+          if [ "$BREACHES" -gt 0 ]; then
+            echo "❌ Found $BREACHES usage breaches"
+            exit 1
+          elif [ "$WARNINGS" -gt 0 ]; then
+            echo "⚠️  Found $WARNINGS usage warnings"
+          else
+            echo "✅ No usage issues found"
+          fi
+
+      - name: Send Slack notification (if breaches)
+        if: steps.check-breaches.outputs.breaches > '0' && env.DRY_RUN == 'false'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: |
+            🚨 Usage Monitor Alert
+            
+            Found ${{ steps.check-breaches.outputs.breaches }} usage breaches across customers.
+            Check the dashboard for details.
+            
+            Run: ${{ github.run_id }}
+            Workflow: ${{ github.workflow }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send Slack notification (if warnings only)
+        if: steps.check-breaches.outputs.breaches == '0' && steps.check-breaches.outputs.warnings > '0' && env.DRY_RUN == 'false'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: |
+            ⚠️ Usage Monitor Warning
+            
+            Found ${{ steps.check-breaches.outputs.warnings }} usage warnings across customers.
+            Consider proactive outreach to prevent breaches.
+            
+            Run: ${{ github.run_id }}
+            Workflow: ${{ github.workflow }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Update monitoring dashboard
+        if: always()
+        run: |
+          # TODO: Update monitoring dashboard with results
+          echo "Updating monitoring dashboard..."
+          echo "Breaches: ${{ steps.check-breaches.outputs.breaches }}"
+          echo "Warnings: ${{ steps.check-breaches.outputs.warnings }}"
+          
+          # Could update a status file or call an API to update dashboard
+          # For now, just log the results
+          echo "## Usage Monitor Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Breaches Found:** ${{ steps.check-breaches.outputs.breaches }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Warnings Generated:** ${{ steps.check-breaches.outputs.warnings }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Run Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
