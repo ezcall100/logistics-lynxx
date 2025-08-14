@@ -16,6 +16,15 @@ const queryClient = new QueryClient({
 function HomePage() {
   const navigate = useNavigate();
 
+  const autonomousSystem = {
+    status: 'ACTIVE',
+    uptime: '99.95%',
+    agents: 250,
+    tasks: 1847,
+    successRate: '98.2%',
+    quarantineRate: '0.3%'
+  };
+
   const portals = [
     // Core Business Portals
     {
@@ -25,7 +34,18 @@ function HomePage() {
       route: '/super-admin',
       bgGradient: 'from-purple-500 to-violet-500',
       features: ['AI Agent Management', 'Global Analytics', 'System Health', 'User Administration'],
-      stats: { agents: '250', uptime: '99.8%', portals: '20+' }
+      stats: { agents: '250', uptime: '99.95%', portals: '20+' },
+      status: 'active'
+    },
+    {
+      id: 'autonomous',
+      title: '🤖 Autonomous Portal',
+      description: '24/7 No-Human Operations Control Center',
+      route: '/autonomous',
+      bgGradient: 'from-indigo-500 to-blue-500',
+      features: ['Live Agent Feed', 'Metrics Dashboard', 'Trace Links', 'Exception Handling'],
+      stats: { agents: '250', workflows: '24', accuracy: '95.2%' },
+      status: 'active'
     },
     {
       id: 'carrier_admin',
@@ -34,7 +54,8 @@ function HomePage() {
       route: '/carrier-admin',
       bgGradient: 'from-blue-500 to-cyan-500',
       features: ['Fleet Management', 'Load Operations', 'Driver Tracking', 'ELD Compliance'],
-      stats: { trucks: '127', drivers: '89', loads: '47' }
+      stats: { trucks: '127', drivers: '89', loads: '47' },
+      status: 'active'
     },
     {
       id: 'broker_admin',
@@ -43,7 +64,8 @@ function HomePage() {
       route: '/broker-admin',
       bgGradient: 'from-emerald-500 to-green-500',
       features: ['Load Board', 'Rate Management', 'Carrier Network', 'Margin Analysis'],
-      stats: { loads: '234', carriers: '156', margin: '12.4%' }
+      stats: { loads: '234', carriers: '156', margin: '12.4%' },
+      status: 'active'
     },
     {
       id: 'shipper_admin',
@@ -52,7 +74,8 @@ function HomePage() {
       route: '/shipper-admin',
       bgGradient: 'from-orange-500 to-amber-500',
       features: ['Shipment Tracking', 'Cost Analysis', 'Performance Reports', 'Carrier Rating'],
-      stats: { shipments: '156', ontime: '98.2%', savings: '$8,950' }
+      stats: { shipments: '156', ontime: '98.2%', savings: '$8,950' },
+      status: 'active'
     },
     {
       id: 'driver',
@@ -61,7 +84,8 @@ function HomePage() {
       route: '/driver',
       bgGradient: 'from-pink-500 to-rose-500',
       features: ['Hours of Service', 'Route Planning', 'Load Details', 'Safety Score'],
-      stats: { hours: '7.5/11', miles: '387', score: '98%' }
+      stats: { hours: '7.5/11', miles: '387', score: '98%' },
+      status: 'active'
     },
     {
       id: 'owner_operator',
@@ -70,26 +94,19 @@ function HomePage() {
       route: '/owner-operator',
       bgGradient: 'from-violet-500 to-purple-500',
       features: ['Revenue Tracking', 'Expense Management', 'Load Efficiency', 'Profit Analysis'],
-      stats: { revenue: '$4,750', margin: '23.4%', efficiency: '94.8%' }
+      stats: { revenue: '$4,750', margin: '23.4%', efficiency: '94.8%' },
+      status: 'active'
     },
-    // Specialized Portals
-    {
-      id: 'autonomous',
-      title: '🤖 Autonomous Portal',
-      description: 'AI-powered autonomous system management',
-      route: '/autonomous',
-      bgGradient: 'from-indigo-500 to-blue-500',
-      features: ['AI Agents', 'Automation Workflows', 'Predictive Analytics', 'ML Models'],
-      stats: { agents: '250', workflows: '24', accuracy: '95.2%' }
-    },
+    // Autonomous System Components
     {
       id: 'analytics',
-      title: '📊 Analytics Portal',
+      title: '�� Analytics Portal',
       description: 'Business intelligence and performance analytics',
       route: '/analytics',
       bgGradient: 'from-teal-500 to-cyan-500',
       features: ['Performance Metrics', 'Trend Analysis', 'Reporting', 'Insights'],
-      stats: { reports: '45', insights: '12', accuracy: '97.8%' }
+      stats: { reports: '45', insights: '12', accuracy: '97.8%' },
+      status: 'active'
     },
     {
       id: 'admin',
@@ -98,7 +115,8 @@ function HomePage() {
       route: '/admin',
       bgGradient: 'from-gray-500 to-slate-500',
       features: ['User Management', 'System Configuration', 'Reports', 'Security'],
-      stats: { users: '1,234', systems: '8', security: '100%' }
+      stats: { users: '1,234', systems: '8', security: '100%' },
+      status: 'active'
     },
     {
       id: 'factoring',
@@ -107,7 +125,8 @@ function HomePage() {
       route: '/factoring',
       bgGradient: 'from-yellow-500 to-orange-500',
       features: ['Invoice Factoring', 'Payment Processing', 'Financial Reports', 'Credit Management'],
-      stats: { invoices: '89', processed: '$45K', approval: '95%' }
+      stats: { invoices: '89', processed: '$45K', approval: '95%' },
+      status: 'active'
     },
     {
       id: 'carrier_dispatch',
@@ -116,7 +135,8 @@ function HomePage() {
       route: '/carrier-dispatch',
       bgGradient: 'from-red-500 to-pink-500',
       features: ['Real-time Dispatch', 'Communication', 'Load Assignment', 'Status Updates'],
-      stats: { dispatches: '67', active: '23', response: '2.3min' }
+      stats: { dispatches: '67', active: '23', response: '2.3min' },
+      status: 'active'
     },
     {
       id: 'testing',
@@ -125,7 +145,8 @@ function HomePage() {
       route: '/testing/autonomous-agents',
       bgGradient: 'from-lime-500 to-green-500',
       features: ['Agent Testing', 'Development', 'Performance Testing', 'Debugging'],
-      stats: { tests: '156', passed: '98%', coverage: '94%' }
+      stats: { tests: '156', passed: '98%', coverage: '94%' },
+      status: 'active'
     }
   ];
 
@@ -138,15 +159,68 @@ function HomePage() {
             Trans Bot AI
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Autonomous TMS Platform with 20+ Specialized Portals
+            Autonomous TMS Platform — 24/7 No-Human Operations
           </p>
-          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg inline-block">
-            <p className="text-green-600 font-semibold text-lg mb-2">
-              ✅ React is working! All portals are accessible.
-            </p>
-            <p className="text-gray-600 text-sm">
-              Server running on localhost:8080 | 250 AI Agents Active
-            </p>
+          
+          {/* Autonomous System Status */}
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg inline-block mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="font-semibold text-green-600">AUTONOMOUS SYSTEM ACTIVE</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="text-center">
+                <div className="font-bold text-gray-900">{autonomousSystem.agents}</div>
+                <div className="text-gray-600">AI Agents</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-gray-900">{autonomousSystem.uptime}</div>
+                <div className="text-gray-600">Uptime</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-gray-900">{autonomousSystem.successRate}</div>
+                <div className="text-gray-600">Success Rate</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-gray-900">{autonomousSystem.quarantineRate}</div>
+                <div className="text-gray-600">Quarantine</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Autonomous System Overview */}
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+            🤖 Autonomous System Components
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Intake & Normalization</h3>
+              <p className="text-sm opacity-90">EDI, Email, Portal, API ingestion with idempotent webhooks</p>
+            </div>
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Decisioning Engine</h3>
+              <p className="text-sm opacity-90">Pricing, carrier matching, policy enforcement</p>
+            </div>
+            <div className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Execution & Tracking</h3>
+              <p className="text-sm opacity-90">Tender/accept, booking, EDI 214, exception routing</p>
+            </div>
+            <div className="bg-gradient-to-r from-purple-500 to-pink-600 text-white p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Docs & Billing</h3>
+              <p className="text-sm opacity-90">POD ingestion, invoice generation, factoring integration</p>
+            </div>
+            <div className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Reconciliation</h3>
+              <p className="text-sm opacity-90">Settlement checks, variance analysis, auto-close</p>
+            </div>
+            <div className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Observe & Learn</h3>
+              <p className="text-sm opacity-90">OTEL traces, realtime metrics, feedback loops</p>
+            </div>
           </div>
         </div>
 
@@ -159,7 +233,10 @@ function HomePage() {
               onClick={() => navigate(portal.route)}
             >
               <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">{portal.title}</h3>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-bold">{portal.title}</h3>
+                  <div className={`w-3 h-3 rounded-full ${portal.status === 'active' ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                </div>
                 <p className="text-white/90 text-sm mb-4">{portal.description}</p>
                 
                 {/* Features */}
@@ -197,16 +274,16 @@ function HomePage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Access</h2>
           <div className="flex flex-wrap justify-center gap-4">
             <button
-              onClick={() => navigate('/super-admin')}
-              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              👑 Super Admin
-            </button>
-            <button
               onClick={() => navigate('/autonomous')}
               className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               🤖 Autonomous System
+            </button>
+            <button
+              onClick={() => navigate('/super-admin')}
+              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              👑 Super Admin
             </button>
             <button
               onClick={() => navigate('/analytics')}
@@ -220,6 +297,29 @@ function HomePage() {
             >
               🧪 Testing Center
             </button>
+          </div>
+        </div>
+
+        {/* System Health Footer */}
+        <div className="mt-12 bg-white/60 backdrop-blur-sm p-6 rounded-2xl shadow-lg">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">System Health Status</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-green-600">99.95%</div>
+              <div className="text-sm text-gray-600">Uptime</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-blue-600">≤2.5s</div>
+              <div className="text-sm text-gray-600">P95 Latency</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600">≥98%</div>
+              <div className="text-sm text-gray-600">Success Rate</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-orange-600">&lt;1%</div>
+              <div className="text-sm text-gray-600">Quarantine Rate</div>
+            </div>
           </div>
         </div>
       </div>
@@ -244,6 +344,14 @@ function AppAuthenticated() {
                 <p className="text-lg mb-8">Global command center with AI-powered oversight</p>
                 <div className="bg-purple-50 p-6 rounded-lg">
                   <p className="text-purple-800">Complete system control with 250 AI agents</p>
+                </div>
+              </div>} />
+              
+              <Route path="/autonomous" element={<div className="container mx-auto py-20 text-center">
+                <h1 className="text-3xl font-bold mb-4">🤖 Autonomous Portal</h1>
+                <p className="text-lg mb-8">24/7 No-Human Operations Control Center</p>
+                <div className="bg-indigo-50 p-6 rounded-lg">
+                  <p className="text-indigo-800">Live agent feed, metrics dashboard, trace links, exception handling</p>
                 </div>
               </div>} />
               
@@ -284,14 +392,6 @@ function AppAuthenticated() {
                 <p className="text-lg mb-8">Independent trucking business management</p>
                 <div className="bg-violet-50 p-6 rounded-lg">
                   <p className="text-violet-800">Revenue tracking, expense management, profit analysis</p>
-                </div>
-              </div>} />
-              
-              <Route path="/autonomous" element={<div className="container mx-auto py-20 text-center">
-                <h1 className="text-3xl font-bold mb-4">🤖 Autonomous Portal</h1>
-                <p className="text-lg mb-8">AI-powered autonomous system management</p>
-                <div className="bg-indigo-50 p-6 rounded-lg">
-                  <p className="text-indigo-800">250 AI agents, automation workflows, predictive analytics</p>
                 </div>
               </div>} />
               
