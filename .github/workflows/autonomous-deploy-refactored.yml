@@ -546,6 +546,24 @@ jobs:
           fetch-tags: true
           persist-credentials: false
 
+      - name: 🔧 Setup Environment Variables
+        run: |
+          echo "🔧 Setting up environment variables..."
+          APP_URL_DEFAULT="http://localhost:8084"
+          DEPLOYMENT_WEBHOOK_URL_DEFAULT="http://localhost:8084/webhook"
+          HEALTH_CHECK_URL_DEFAULT="http://localhost:8084/health"
+          
+          {
+            echo "APP_URL=${APP_URL:-$APP_URL_DEFAULT}"
+            echo "DEPLOYMENT_WEBHOOK_URL=${DEPLOYMENT_WEBHOOK_URL:-$DEPLOYMENT_WEBHOOK_URL_DEFAULT}"
+            echo "HEALTH_CHECK_URL=${HEALTH_CHECK_URL:-$HEALTH_CHECK_URL_DEFAULT}"
+          } >> "$GITHUB_ENV"
+          
+          echo "✅ Environment variables configured:"
+          echo "  APP_URL: ${APP_URL:-$APP_URL_DEFAULT}"
+          echo "  DEPLOYMENT_WEBHOOK_URL: ${DEPLOYMENT_WEBHOOK_URL:-$DEPLOYMENT_WEBHOOK_URL_DEFAULT}"
+          echo "  HEALTH_CHECK_URL: ${HEALTH_CHECK_URL:-$HEALTH_CHECK_URL_DEFAULT}"
+
       - name: 🔧 Export Environment Variables
         run: |
           set -euo pipefail
