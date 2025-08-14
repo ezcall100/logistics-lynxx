@@ -35,7 +35,33 @@ const Dashboard = () => {
             </p>
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse">
+        {/* Live Modification Indicator - Added by Autonomous Agent at 9:06:51 AM */}
+        <Card className="border-orange-200 bg-orange-50 mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-700">
+              🔄 Live Website Updates Active
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-orange-600 mb-2">
+              This website is being updated in real-time by autonomous agents
+            </p>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                <span>Live Updates: 3</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Last Update: 9:06:51 AM</span>
+              </div>
+            </div>
+            <div className="mt-2 p-2 bg-orange-100 rounded text-xs text-orange-700">
+              🔥 This indicator was added by autonomous agent at 9:06:51 AM
+            </div>
+          </CardContent>
+        </Card></div>
                 <span>Live Updates: 53</span>
               </div>
               <div className="flex items-center gap-1">

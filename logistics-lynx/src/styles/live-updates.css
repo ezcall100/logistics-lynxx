@@ -1,4 +1,4 @@
-/* Live Update Styles - Added by Autonomous Agent */
+/* Live Update Styles - Added by Autonomous Agent at 9:06:51 AM */
 .live-update-indicator {
   animation: livePulse 2s infinite;
   border: 2px solid #10b981;
@@ -61,4 +61,15 @@
 .live-update-status.processing {
   background-color: #dbeafe;
   color: #1e40af;
+}
+
+/* Added by autonomous agent at 9:06:51 AM */
+.live-update-timestamp {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #059669;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border-left: 3px solid #10b981;
 }

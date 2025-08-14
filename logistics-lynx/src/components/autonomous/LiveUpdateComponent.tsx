@@ -4,8 +4,9 @@ import { Badge } from './ui/badge';
 
 const LiveUpdateComponent = () => {
   const [updateCount, setUpdateCount] = useState(0);
-  const [lastUpdate, setLastUpdate] = useState(new Date().toLocaleTimeString());
+  const [lastUpdate, setLastUpdate] = useState('9:06:51 AM');
   const [status, setStatus] = useState('active');
+  const [createdAt] = useState('9:06:51 AM');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,9 +44,13 @@ const LiveUpdateComponent = () => {
             <span className="text-sm text-purple-600">Last Update:</span>
             <span className="text-xs text-purple-600">{lastUpdate}</span>
           </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-purple-600">Created At:</span>
+            <span className="text-xs text-purple-600">{createdAt}</span>
+          </div>
         </div>
         <div className="mt-3 p-2 bg-purple-100 rounded text-xs text-purple-700">
-          This component updates every 3 seconds to show live autonomous agent activity
+          🔥 This component was created by autonomous agent at 9:06:51 AM
         </div>
       </CardContent>
     </Card>

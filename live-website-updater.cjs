@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { exec, spawn } = require('child_process');
 
 console.log('🚀 Starting Live Website Updater...');
 console.log('📝 This will actually modify website pages in real-time!');
@@ -21,6 +22,7 @@ class LiveWebsiteUpdater {
       { name: 'ComponentBuilder', status: 'idle', task: 'Building components' }
     ];
     this.updateCount = 0;
+    this.devServerProcess = null;
   }
 
   startWebSocketServer() {
@@ -82,15 +84,17 @@ class LiveWebsiteUpdater {
     if (fs.existsSync(homePagePath)) {
       let content = fs.readFileSync(homePagePath, 'utf8');
       
-      // Add live update indicator
+      // Add live update indicator with timestamp
+      const timestamp = new Date().toLocaleTimeString();
       const liveUpdateIndicator = `
-        {/* Live Update Indicator - Added by Autonomous Agent */}
+        {/* Live Update Indicator - Added by Autonomous Agent at ${timestamp} */}
         <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
             <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
           </div>
-          <div className="text-xs mt-1">Last update: ${new Date().toLocaleTimeString()}</div>
+          <div className="text-xs mt-1">Last update: ${timestamp}</div>
+          <div className="text-xs">Update #${this.updateCount + 1}</div>
         </div>`;
 
       // Insert the indicator after the first div
@@ -108,6 +112,9 @@ class LiveWebsiteUpdater {
             file: homePagePath,
             timestamp: new Date().toISOString()
           });
+
+          // Restart dev server to show changes
+          this.restartDevServer();
         }
       }
     }
@@ -133,9 +140,10 @@ class LiveWebsiteUpdater {
     if (fs.existsSync(dashboardPath)) {
       let content = fs.readFileSync(dashboardPath, 'utf8');
       
-      // Add live modification indicator
+      // Add live modification indicator with timestamp
+      const timestamp = new Date().toLocaleTimeString();
       const liveModificationIndicator = `
-        {/* Live Modification Indicator - Added by Autonomous Agent */}
+        {/* Live Modification Indicator - Added by Autonomous Agent at ${timestamp} */}
         <Card className="border-orange-200 bg-orange-50 mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-orange-700">
@@ -153,8 +161,11 @@ class LiveWebsiteUpdater {
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Last Update: ${new Date().toLocaleTimeString()}</span>
+                <span>Last Update: ${timestamp}</span>
               </div>
+            </div>
+            <div className="mt-2 p-2 bg-orange-100 rounded text-xs text-orange-700">
+              🔥 This indicator was added by autonomous agent at ${timestamp}
             </div>
           </CardContent>
         </Card>`;
@@ -172,6 +183,9 @@ class LiveWebsiteUpdater {
           file: dashboardPath,
           timestamp: new Date().toISOString()
         });
+
+        // Restart dev server to show changes
+        this.restartDevServer();
       }
     }
 
@@ -191,14 +205,16 @@ class LiveWebsiteUpdater {
     agent.status = 'updating';
     agent.task = 'Creating live component';
 
+    const timestamp = new Date().toLocaleTimeString();
     const liveComponentContent = `import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 
 const LiveUpdateComponent = () => {
   const [updateCount, setUpdateCount] = useState(0);
-  const [lastUpdate, setLastUpdate] = useState(new Date().toLocaleTimeString());
+  const [lastUpdate, setLastUpdate] = useState('${timestamp}');
   const [status, setStatus] = useState('active');
+  const [createdAt] = useState('${timestamp}');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -236,9 +252,13 @@ const LiveUpdateComponent = () => {
             <span className="text-sm text-purple-600">Last Update:</span>
             <span className="text-xs text-purple-600">{lastUpdate}</span>
           </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-purple-600">Created At:</span>
+            <span className="text-xs text-purple-600">{createdAt}</span>
+          </div>
         </div>
         <div className="mt-3 p-2 bg-purple-100 rounded text-xs text-purple-700">
-          This component updates every 3 seconds to show live autonomous agent activity
+          🔥 This component was created by autonomous agent at ${timestamp}
         </div>
       </CardContent>
     </Card>
@@ -265,6 +285,9 @@ export default LiveUpdateComponent;`;
       timestamp: new Date().toISOString()
     });
 
+    // Restart dev server to show changes
+    this.restartDevServer();
+
     setTimeout(() => {
       agent.status = 'completed';
       agent.task = 'Live component created';
@@ -281,7 +304,8 @@ export default LiveUpdateComponent;`;
     agent.status = 'updating';
     agent.task = 'Updating website styles';
 
-    const styleContent = `/* Live Update Styles - Added by Autonomous Agent */
+    const timestamp = new Date().toLocaleTimeString();
+    const styleContent = `/* Live Update Styles - Added by Autonomous Agent at ${timestamp} */
 .live-update-indicator {
   animation: livePulse 2s infinite;
   border: 2px solid #10b981;
@@ -344,6 +368,17 @@ export default LiveUpdateComponent;`;
 .live-update-status.processing {
   background-color: #dbeafe;
   color: #1e40af;
+}
+
+/* Added by autonomous agent at ${timestamp} */
+.live-update-timestamp {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #059669;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border-left: 3px solid #10b981;
 }`;
 
     const stylePath = path.join(this.websiteDir, 'src', 'styles', 'live-updates.css');
@@ -364,6 +399,9 @@ export default LiveUpdateComponent;`;
       timestamp: new Date().toISOString()
     });
 
+    // Restart dev server to show changes
+    this.restartDevServer();
+
     setTimeout(() => {
       agent.status = 'completed';
       agent.task = 'Styles updated';
@@ -373,6 +411,41 @@ export default LiveUpdateComponent;`;
         message: 'StyleChanger completed'
       });
     }, 2000);
+  }
+
+  restartDevServer() {
+    console.log('🔄 Restarting development server to show live changes...');
+    
+    // Kill existing dev server process
+    if (this.devServerProcess) {
+      this.devServerProcess.kill('SIGTERM');
+    }
+
+    // Start new dev server
+    this.devServerProcess = spawn('npm', ['run', 'dev'], {
+      cwd: this.websiteDir,
+      stdio: 'pipe',
+      shell: true
+    });
+
+    this.devServerProcess.stdout.on('data', (data) => {
+      console.log(`📝 Dev Server: ${data.toString().trim()}`);
+    });
+
+    this.devServerProcess.stderr.on('data', (data) => {
+      console.log(`⚠️ Dev Server Error: ${data.toString().trim()}`);
+    });
+
+    this.devServerProcess.on('close', (code) => {
+      console.log(`🛑 Dev server process exited with code ${code}`);
+    });
+
+    this.broadcastUpdate({
+      type: 'dev_server_restart',
+      agent: 'System',
+      action: 'Development server restarted to show live changes',
+      timestamp: new Date().toISOString()
+    });
   }
 
   broadcastUpdate(update) {
@@ -458,6 +531,9 @@ process.on('SIGINT', () => {
   console.log('\n🛑 Shutting down live website updater...');
   if (updater.wss) {
     updater.wss.close();
+  }
+  if (updater.devServerProcess) {
+    updater.devServerProcess.kill('SIGTERM');
   }
   process.exit(0);
 });
