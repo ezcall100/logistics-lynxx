@@ -1,316 +1,154 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Simple autonomous agent HomePage without external dependencies
-function HomePage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header - Created by Autonomous Agent */}
-      <header className="bg-white shadow-lg border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">TMS</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Transportation Management System</h1>
-                <p className="text-sm text-gray-600">Powered by Autonomous Agents</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-sm">
-                🔥 Live Updates Active
-              </span>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section - Created by Autonomous Agent */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Welcome to the Future of Transportation Management
-            </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Our autonomous agents are continuously building and improving this platform. 
-              Watch as new features, pages, and components are created in real-time.
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-lg">
-                Explore Features
-              </button>
-              <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-lg">
-                View Live Updates
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid - Created by Autonomous Agent */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">
-              Autonomous Features
-            </h3>
-            <p className="text-gray-600">
-              Built and maintained by intelligent agents
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="border border-blue-200 bg-blue-50 rounded-lg p-6">
-              <h4 className="text-lg font-semibold text-blue-700 mb-3">
-                🤖 Autonomous Agents
-              </h4>
-              <p className="text-blue-600">
-                Intelligent agents continuously monitor, build, and improve the system
-              </p>
-            </div>
-
-            <div className="border border-green-200 bg-green-50 rounded-lg p-6">
-              <h4 className="text-lg font-semibold text-green-700 mb-3">
-                ⚡ Real-Time Updates
-              </h4>
-              <p className="text-green-600">
-                Watch as new pages and components are created live
-              </p>
-            </div>
-
-            <div className="border border-purple-200 bg-purple-50 rounded-lg p-6">
-              <h4 className="text-lg font-semibold text-purple-700 mb-3">
-                🎯 Smart Automation
-              </h4>
-              <p className="text-purple-600">
-                Automated workflows and intelligent decision making
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Live Status Section - Created by Autonomous Agent */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Live Build Status
-            </h3>
-            <p className="text-gray-600">
-              Current autonomous agent activities
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center bg-white p-6 rounded-lg shadow">
-              <div className="text-2xl mb-2">🤖</div>
-              <h4 className="font-semibold text-sm mb-1">PageCreator</h4>
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                building
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Creating new pages</p>
-            </div>
-            
-            <div className="text-center bg-white p-6 rounded-lg shadow">
-              <div className="text-2xl mb-2">🧩</div>
-              <h4 className="font-semibold text-sm mb-1">ComponentArchitect</h4>
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                building
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Architecting components</p>
-            </div>
-            
-            <div className="text-center bg-white p-6 rounded-lg shadow">
-              <div className="text-2xl mb-2">🎨</div>
-              <h4 className="font-semibold text-sm mb-1">LayoutEngineer</h4>
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                building
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Engineering layouts</p>
-            </div>
-            
-            <div className="text-center bg-white p-6 rounded-lg shadow">
-              <div className="text-2xl mb-2">⚡</div>
-              <h4 className="font-semibold text-sm mb-1">ContentWriter</h4>
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                building
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Writing content</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer - Created by Autonomous Agent */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="text-lg font-semibold mb-4">TMS Platform</h4>
-              <p className="text-gray-400 text-sm">
-                Built by autonomous agents for the future of transportation management.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Features</h4>
-              <ul className="text-gray-400 text-sm space-y-2">
-                <li>• Autonomous Agents</li>
-                <li>• Real-Time Updates</li>
-                <li>• Smart Automation</li>
-                <li>• Live Monitoring</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Status</h4>
-              <ul className="text-gray-400 text-sm space-y-2">
-                <li>• System: Active</li>
-                <li>• Agents: Building</li>
-                <li>• Updates: Live</li>
-                <li>• Last Build: Just Now</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Connect</h4>
-              <div className="flex space-x-4">
-                <button className="px-3 py-1 border border-gray-600 text-gray-300 rounded text-sm hover:bg-gray-800">
-                  Dashboard
-                </button>
-                <button className="px-3 py-1 border border-gray-600 text-gray-300 rounded text-sm hover:bg-gray-800">
-                  Monitor
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              🔥 This entire page was created by autonomous agents
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-// Simple Dashboard component
-function Dashboard() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">TMS Dashboard</h1>
-              <p className="text-gray-600">Built by autonomous agents</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-sm">
-                🔥 Live Build Active
-              </span>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                New Build
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Pages Created</p>
-                <p className="text-2xl font-bold text-gray-900">12</p>
-              </div>
-              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                <span className="text-blue-600 text-lg">📄</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Components Built</p>
-                <p className="text-2xl font-bold text-gray-900">28</p>
-              </div>
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                <span className="text-green-600 text-lg">🧩</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Agents</p>
-                <p className="text-2xl font-bold text-gray-900">6</p>
-              </div>
-              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                <span className="text-purple-600 text-lg">🤖</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Build Time</p>
-                <p className="text-2xl font-bold text-gray-900">2.3s</p>
-              </div>
-              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                <span className="text-orange-600 text-lg">⚡</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">📋 Recent Autonomous Builds</h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="font-medium">Homepage with Navigation</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-1 border border-gray-300 rounded text-xs">Completed</span>
-                <span className="text-sm text-gray-500">2 minutes ago</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                <span className="font-medium">Component Library</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-1 bg-gray-100 rounded text-xs">Building</span>
-                <span className="text-sm text-gray-500">Just now</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
+// Import all the autonomous agent-created pages
+import HomePage from './pages/HomePage';
+import Dashboard from './pages/Dashboard';
+import AboutPage from './pages/AboutPage';
+import ServicesPage from './pages/ServicesPage';
+import ProductsPage from './pages/ProductsPage';
+import PricingPage from './pages/PricingPage';
+import ContactPage from './pages/ContactPage';
+import BlogPage from './pages/BlogPage';
+import CareersPage from './pages/CareersPage';
+import SupportPage from './pages/SupportPage';
+import DocumentationPage from './pages/DocumentationPage';
+import APIReferencePage from './pages/APIReferencePage';
+import IntegrationsPage from './pages/IntegrationsPage';
+import PartnersPage from './pages/PartnersPage';
+import CaseStudiesPage from './pages/CaseStudiesPage';
+import TestimonialsPage from './pages/TestimonialsPage';
+import NewsPage from './pages/NewsPage';
+import EventsPage from './pages/EventsPage';
+import ResourcesPage from './pages/ResourcesPage';
+import DownloadsPage from './pages/DownloadsPage';
+import SecurityPage from './pages/SecurityPage';
+import CompliancePage from './pages/CompliancePage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import BillingPage from './pages/BillingPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import ReportsPage from './pages/ReportsPage';
+import FleetManagementPage from './pages/FleetManagementPage';
+import RouteOptimizationPage from './pages/RouteOptimizationPage';
+import LoadManagementPage from './pages/LoadManagementPage';
+import DriverManagementPage from './pages/DriverManagementPage';
+import ShipperPortalPage from './pages/ShipperPortalPage';
+import CarrierPortalPage from './pages/CarrierPortalPage';
+import BrokerPortalPage from './pages/BrokerPortalPage';
+import AdminPortalPage from './pages/AdminPortalPage';
+import SuperAdminPage from './pages/SuperAdminPage';
+import AutonomousDashboardPage from './pages/AutonomousDashboardPage';
+import LiveMonitoringPage from './pages/LiveMonitoringPage';
+import SystemHealthPage from './pages/SystemHealthPage';
+import PerformancePage from './pages/PerformancePage';
+import ScalabilityPage from './pages/ScalabilityPage';
+import InnovationPage from './pages/InnovationPage';
+import ResearchPage from './pages/ResearchPage';
+import DevelopmentPage from './pages/DevelopmentPage';
+import RoadmapPage from './pages/RoadmapPage';
+import UpdatesPage from './pages/UpdatesPage';
+import ReleaseNotesPage from './pages/ReleaseNotesPage';
+import MigrationPage from './pages/MigrationPage';
+import TrainingPage from './pages/TrainingPage';
+import CertificationPage from './pages/CertificationPage';
+import CommunityPage from './pages/CommunityPage';
+import ForumPage from './pages/ForumPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import StatusPage from './pages/StatusPage';
 
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-background">
         <Routes>
+          {/* Main Pages */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          
+          {/* Content Pages */}
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/careers" element={<CareersPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/downloads" element={<DownloadsPage />} />
+          <Route path="/case-studies" element={<CaseStudiesPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
+          
+          {/* Technical Pages */}
+          <Route path="/support" element={<SupportPage />} />
+          <Route path="/documentation" element={<DocumentationPage />} />
+          <Route path="/api-reference" element={<APIReferencePage />} />
+          <Route path="/integrations" element={<IntegrationsPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
+          
+          {/* Legal Pages */}
+          <Route path="/security" element={<SecurityPage />} />
+          <Route path="/compliance" element={<CompliancePage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          
+          {/* Authentication Pages */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          
+          {/* User Dashboard Pages */}
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/billing" element={<BillingPage />} />
+          
+          {/* Business Intelligence Pages */}
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/performance" element={<PerformancePage />} />
+          
+          {/* TMS Core Features */}
+          <Route path="/fleet-management" element={<FleetManagementPage />} />
+          <Route path="/route-optimization" element={<RouteOptimizationPage />} />
+          <Route path="/load-management" element={<LoadManagementPage />} />
+          <Route path="/driver-management" element={<DriverManagementPage />} />
+          
+          {/* Portal Pages */}
+          <Route path="/shipper-portal" element={<ShipperPortalPage />} />
+          <Route path="/carrier-portal" element={<CarrierPortalPage />} />
+          <Route path="/broker-portal" element={<BrokerPortalPage />} />
+          <Route path="/admin-portal" element={<AdminPortalPage />} />
+          <Route path="/super-admin" element={<SuperAdminPage />} />
+          <Route path="/autonomous-dashboard" element={<AutonomousDashboardPage />} />
+          
+          {/* System Pages */}
+          <Route path="/live-monitoring" element={<LiveMonitoringPage />} />
+          <Route path="/system-health" element={<SystemHealthPage />} />
+          <Route path="/status" element={<StatusPage />} />
+          
+          {/* Development Pages */}
+          <Route path="/scalability" element={<ScalabilityPage />} />
+          <Route path="/innovation" element={<InnovationPage />} />
+          <Route path="/research" element={<ResearchPage />} />
+          <Route path="/development" element={<DevelopmentPage />} />
+          <Route path="/roadmap" element={<RoadmapPage />} />
+          <Route path="/updates" element={<UpdatesPage />} />
+          <Route path="/release-notes" element={<ReleaseNotesPage />} />
+          <Route path="/migration" element={<MigrationPage />} />
+          
+          {/* Training & Community */}
+          <Route path="/training" element={<TrainingPage />} />
+          <Route path="/certification" element={<CertificationPage />} />
+          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/forum" element={<ForumPage />} />
+          <Route path="/help-center" element={<HelpCenterPage />} />
         </Routes>
       </div>
     </Router>
