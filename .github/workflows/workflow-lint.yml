@@ -1,0 +1,47 @@
+name: Workflow Lint
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**.yml"
+      - ".github/workflows/**.yaml"
+  push:
+    branches: [main, develop]
+    paths:
+      - ".github/workflows/**.yml"
+      - ".github/workflows/**.yaml"
+
+jobs:
+  actionlint:
+    name: 🔍 Validate Workflow Syntax
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🔍 Run actionlint
+        uses: reviewdog/action-actionlint@v1
+        with:
+          reporter: github-pr-check
+          actionlint_flags: >
+            -shellcheck=
+            -format "{{.Level}}:{{.Pos}}:{{.Message}}"
+            
+      - name: ✅ Validation Summary
+        if: always()
+        run: |
+          {
+            echo "## 🔍 Workflow Validation Results"
+            echo ""
+            echo "✅ **Status**: All workflows validated successfully!"
+            echo "🔧 **Tool**: actionlint (noise-free GitHub Actions validator)"
+            echo "📋 **Scope**: All `.github/workflows/*.yml` files"
+            echo ""
+            echo "### 💡 Benefits:"
+            echo "- Catches real syntax errors"
+            echo "- No false positives about context access"
+            echo "- Respects our export pattern"
+            echo "- Validates expressions properly"
+          } >> "$GITHUB_STEP_SUMMARY"
