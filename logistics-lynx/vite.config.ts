@@ -26,11 +26,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   esbuild: {
-    jsx: 'react-jsx',
+    jsx: 'automatic',
     jsxImportSource: 'react',
+    jsxDev: mode === 'development',
   },
   build: {
     target: 'esnext',
     sourcemap: mode === 'development',
+  },
+  define: {
+    __DEV__: mode === 'development',
   },
 }));

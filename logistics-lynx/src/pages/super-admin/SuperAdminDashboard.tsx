@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppShell } from '@/components/layout/AppShell';
+
 import { DashboardGrid, StatsGrid } from '@/components/layout/CardGrid';
-import { Card, StatsCard, ActionCard, InfoCard } from '@/components/ui/Card';
+import { Card, StatsCard, ActionCard, InfoCard, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SkeletonCard, SkeletonText, EmptyCreate, ErrorState } from '@/components/states';
@@ -188,34 +188,35 @@ export function SuperAdminDashboard() {
 
   if (error) {
     return (
-      <AppShell portal="super-admin" title="Dashboard">
+      <div className="min-h-screen bg-background">
         <ErrorState title="Failed to load dashboard" message={error} onRetry={handleRetry} />
-      </AppShell>
+      </div>
     );
   }
 
   return (
-    <AppShell 
-      portal="super-admin" 
-      title="Dashboard" 
-      subtitle="Overview of system performance and user activity"
-      actions={
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            New User
-          </Button>
+    <div className="min-h-screen bg-background">
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 items-center">
+          <div className="mr-4 flex">
+            <h1 className="text-lg font-semibold">Super Admin Dashboard</h1>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button variant="outline" size="sm">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+            <Button size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              New User
+            </Button>
+          </div>
         </div>
-      }
-    >
+      </div>
       <div className="p-6 space-y-6">
         {/* Stats Cards */}
         <StatsGrid>
@@ -232,7 +233,7 @@ export function SuperAdminDashboard() {
                 title="Total Users"
                 value={stats.totalUsers.toLocaleString()}
                 description={`+${stats.userGrowth}% from last month`}
-                icon={Users}
+                icon={<Users className="h-5 w-5" />}
                 trend="up"
                 trendValue={`+${stats.userGrowth}%`}
               />
@@ -240,7 +241,7 @@ export function SuperAdminDashboard() {
                 title="Active Carriers"
                 value={stats.activeCarriers.toLocaleString()}
                 description="Registered carriers"
-                icon={Truck}
+                icon={<Truck className="h-5 w-5" />}
                 trend="up"
                 trendValue="+8 this week"
               />
@@ -248,7 +249,7 @@ export function SuperAdminDashboard() {
                 title="Total Shipments"
                 value={stats.totalShipments.toLocaleString()}
                 description={`+${stats.shipmentGrowth}% from last month`}
-                icon={Package}
+                icon={<Package className="h-5 w-5" />}
                 trend="up"
                 trendValue={`+${stats.shipmentGrowth}%`}
               />
@@ -256,7 +257,7 @@ export function SuperAdminDashboard() {
                 title="Monthly Revenue"
                 value={`$${(stats.monthlyRevenue / 1000000).toFixed(1)}M`}
                 description="This month's revenue"
-                icon={DollarSign}
+                icon={<DollarSign className="h-5 w-5" />}
                 trend="up"
                 trendValue="+18.3%"
               />
@@ -265,7 +266,7 @@ export function SuperAdminDashboard() {
             <EmptyCreate 
               title="No data available"
               description="Start by creating your first user or shipment"
-              action={{ label: "Create User", onClick: () => {} }}
+              onCreate={() => {}}
             />
           )}
         </StatsGrid>
@@ -331,29 +332,33 @@ export function SuperAdminDashboard() {
                 <ActionCard
                   title="Add User"
                   description="Create new user account"
-                  icon={UserCheck}
-                  action={{ label: "Add", onClick: () => {} }}
+                  icon={<UserCheck className="h-4 w-4" />}
+                  action="Add"
+                  onClick={() => {}}
                   size="sm"
                 />
                 <ActionCard
                   title="View Reports"
                   description="Access system reports"
-                  icon={BarChart3}
-                  action={{ label: "View", onClick: () => {} }}
+                  icon={<BarChart3 className="h-4 w-4" />}
+                  action="View"
+                  onClick={() => {}}
                   size="sm"
                 />
                 <ActionCard
                   title="System Settings"
                   description="Configure system options"
-                  icon={Settings}
-                  action={{ label: "Configure", onClick: () => {} }}
+                  icon={<Settings className="h-4 w-4" />}
+                  action="Configure"
+                  onClick={() => {}}
                   size="sm"
                 />
                 <ActionCard
                   title="AI Agents"
                   description="Manage AI agents"
-                  icon={Cpu}
-                  action={{ label: "Manage", onClick: () => {} }}
+                  icon={<Cpu className="h-4 w-4" />}
+                  action="Manage"
+                  onClick={() => {}}
                   size="sm"
                 />
               </div>
@@ -378,26 +383,26 @@ export function SuperAdminDashboard() {
                   <InfoCard
                     title="System Health"
                     description={`${stats?.systemHealth}% operational`}
-                    icon={CheckCircle}
+                    icon={<CheckCircle className="h-4 w-4" />}
                     variant="success"
                   />
                   <InfoCard
                     title="AI Agents"
                     description={`${stats?.aiAgents} agents active`}
-                    icon={Cpu}
+                    icon={<Cpu className="h-4 w-4" />}
                     variant="info"
                   />
                   <InfoCard
                     title="Database"
                     description="All systems operational"
-                    icon={Database}
+                    icon={<Database className="h-4 w-4" />}
                     variant="success"
                   />
                   <InfoCard
                     title="Network"
                     description="Connected to all services"
-                    icon={Network}
-                    variant="success"
+                    icon={<Network className="h-4 w-4" />}
+                    variant="success" as const
                   />
                 </div>
               )}
@@ -405,6 +410,6 @@ export function SuperAdminDashboard() {
           </Card>
         </DashboardGrid>
       </div>
-    </AppShell>
+    </div>
   );
 }
