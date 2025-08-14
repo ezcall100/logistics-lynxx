@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trans Bot AI - Autonomous Website Builder Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .status-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .status-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .status-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .live-feed {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .feed-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid #28a745;
+        }
+        .feed-item.building {
+            border-left-color: #007bff;
+        }
+        .feed-item.completed {
+            border-left-color: #28a745;
+        }
+        .feed-item.error {
+            border-left-color: #dc3545;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #28a745);
+            transition: width 0.3s ease;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-danger { background: #dc3545; color: white; }
+        .autonomous-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #28a745;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Trans Bot AI - Autonomous Website Builder</h1>
+            <p><span class="autonomous-indicator"></span>Real-time autonomous TMS website building in progress...</p>
+        </div>
+
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>📄 Pages Built</h3>
+                <div class="status-value" id="pages-built">5</div>
+                <small>Target: 50 pages</small>
+            </div>
+            <div class="status-card">
+                <h3>⚡ Build Time</h3>
+                <div class="status-value" id="avg-build-time">2.3s</div>
+                <small>Average per page</small>
+            </div>
+            <div class="status-card">
+                <h3>🔍 SEO Score</h3>
+                <div class="status-value" id="seo-score">87%</div>
+                <small>Average quality</small>
+            </div>
+            <div class="status-card">
+                <h3>🏗️ In Progress</h3>
+                <div class="status-value" id="in-progress">2</div>
+                <small>Currently building</small>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="buildPage()">🏗️ Build Page</button>
+            <button class="btn btn-warning" onclick="pauseBuilder()">⏸️ Pause</button>
+            <button class="btn btn-success" onclick="resumeBuilder()">▶️ Resume</button>
+            <button class="btn btn-danger" onclick="clearFeed()">🗑️ Clear Feed</button>
+        </div>
+
+        <div class="live-feed">
+            <h3>📡 Live Autonomous Operations Feed</h3>
+            <div id="feed-container">
+                <div class="feed-item completed">
+                    <strong>✅ Home Page Completed</strong>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+                    <small>SEO: 89% | Words: 245 | Images: 3 | Duration: 2.1s</small>
+                </div>
+                <div class="feed-item building">
+                    <strong>🏗️ TMS Software Page Building...</strong>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 65%"></div></div>
+                    <small>Progress: 65% | SEO: 85% | Words: 180</small>
+                </div>
+                <div class="feed-item completed">
+                    <strong>✅ About Page Completed</strong>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+                    <small>SEO: 92% | Words: 312 | Images: 2 | Duration: 1.8s</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="live-feed">
+            <h3>🎯 TMS-Specific Content Generation</h3>
+            <div id="tms-feed">
+                <div class="feed-item completed">
+                    <strong>🚛 Transportation Management System</strong>
+                    <small>Autonomous route optimization, real-time fleet tracking, intelligent load matching</small>
+                </div>
+                <div class="feed-item completed">
+                    <strong>📊 Logistics Analytics</strong>
+                    <small>Comprehensive analytics for transportation companies, fuel optimization, compliance monitoring</small>
+                </div>
+                <div class="feed-item building">
+                    <strong>🔗 API Integration</strong>
+                    <small>Building integration endpoints for ERP systems, GPS tracking, fuel cards...</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pagesBuilt = 5;
+        let inProgress = 2;
+        let isPaused = false;
+
+        function updateStats() {
+            document.getElementById('pages-built').textContent = pagesBuilt;
+            document.getElementById('in-progress').textContent = inProgress;
+            document.getElementById('avg-build-time').textContent = (Math.random() * 2 + 1.5).toFixed(1) + 's';
+            document.getElementById('seo-score').textContent = Math.floor(Math.random() * 15 + 80) + '%';
+        }
+
+        function addFeedItem(type, title, progress, details) {
+            const container = document.getElementById('feed-container');
+            const item = document.createElement('div');
+            item.className = `feed-item ${type}`;
+            
+            const progressBar = progress ? 
+                `<div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div>` : '';
+            
+            item.innerHTML = `
+                <strong>${title}</strong>
+                ${progressBar}
+                <small>${details}</small>
+            `;
+            
+            container.insertBefore(item, container.firstChild);
+            
+            // Keep only last 10 items
+            if (container.children.length > 10) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        function buildPage() {
+            if (isPaused) {
+                alert('Builder is paused. Resume first.');
+                return;
+            }
+
+            const pageTypes = ['Home', 'About', 'TMS Software', 'Features', 'Pricing', 'Contact', 'Blog', 'Solutions'];
+            const randomType = pageTypes[Math.floor(Math.random() * pageTypes.length)];
+            
+            inProgress++;
+            updateStats();
+            
+            addFeedItem('building', `🏗️ ${randomType} Page Building...`, 0, 'Progress: 0% | SEO: Calculating...');
+            
+            // Simulate building process
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20 + 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    inProgress--;
+                    pagesBuilt++;
+                    updateStats();
+                    
+                    const seo = Math.floor(Math.random() * 20 + 80);
+                    const words = Math.floor(Math.random() * 200 + 100);
+                    const images = Math.floor(Math.random() * 5 + 1);
+                    const duration = (Math.random() * 2 + 1).toFixed(1);
+                    
+                    addFeedItem('completed', `✅ ${randomType} Page Completed`, 100, 
+                        `SEO: ${seo}% | Words: ${words} | Images: ${images} | Duration: ${duration}s`);
+                } else {
+                    const seo = Math.floor(Math.random() * 20 + 80);
+                    const words = Math.floor(Math.random() * 200 + 100);
+                    addFeedItem('building', `🏗️ ${randomType} Page Building...`, progress, 
+                        `Progress: ${Math.floor(progress)}% | SEO: ${seo}% | Words: ${words}`);
+                }
+            }, 500);
+        }
+
+        function pauseBuilder() {
+            isPaused = true;
+            addFeedItem('error', '⏸️ Builder Paused', null, 'Autonomous operations temporarily stopped');
+        }
+
+        function resumeBuilder() {
+            isPaused = false;
+            addFeedItem('completed', '▶️ Builder Resumed', null, 'Autonomous operations resumed');
+        }
+
+        function clearFeed() {
+            document.getElementById('feed-container').innerHTML = '';
+        }
+
+        // Auto-build pages every 3-8 seconds
+        setInterval(() => {
+            if (!isPaused) {
+                buildPage();
+            }
+        }, Math.random() * 5000 + 3000);
+
+        // Update stats every 2 seconds
+        setInterval(updateStats, 2000);
+
+        // Initial update
+        updateStats();
+    </script>
+</body>
+</html>
