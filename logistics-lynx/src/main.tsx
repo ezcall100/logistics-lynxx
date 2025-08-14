@@ -3,14 +3,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import AppAuthenticated from './AppAuthenticated.tsx';
 import './index.css';
-import { initObservability, session } from './observability';
-import './otel/browser'; // OpenTelemetry browser tracing
 
-// Initialize observability (Sentry, Web Vitals, performance monitoring)
-initObservability();
+// Simple error boundary
+window.addEventListener('error', (event) => {
+  console.error('Global error caught:', event.error);
+});
 
-// Start user session tracking
-session.start();
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+});
 
 const container = document.getElementById('root');
 if (!container) {
