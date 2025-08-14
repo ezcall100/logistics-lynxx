@@ -1,64 +1,54 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './components/theme-provider';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from './components/ui/toaster';
-import { Header } from './components/Header';
-import { HeroSection } from './components/HeroSection';
-import { FeaturesSection } from './components/FeaturesSection';
-import { SolutionsSection } from './components/SolutionsSection';
-import { TestimonialsSection } from './components/TestimonialsSection';
-import { CTASection } from './components/CTASection';
-import { Footer } from './components/Footer';
-import NotAvailable from './routes/not-available';
-
-// Create a QueryClient instance for autonomous data management
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
-
-function HomePage() {
-  return (
-    <div className="min-h-screen">
-      <HeroSection />
-      <FeaturesSection />
-      <SolutionsSection />
-      <TestimonialsSection />
-      <CTASection />
-      <Footer />
-    </div>
-  );
-}
 
 function AppAuthenticated() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <Router>
-          <div className="min-h-screen bg-background">
-            <Header />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<div className="container mx-auto py-20 text-center">Login Page Coming Soon</div>} />
-              <Route path="/signup" element={<div className="container mx-auto py-20 text-center">Sign Up Page Coming Soon</div>} />
-              
-              {/* 🚫 DEPRECATED PORTAL ROUTES - Return 410 Gone */}
-              <Route path="/carrier-admin/*" element={<NotAvailable />} />
-              <Route path="/broker-admin/*" element={<NotAvailable />} />
-              <Route path="/shipper-admin/*" element={<NotAvailable />} />
-              <Route path="/freight-broker/*" element={<NotAvailable />} />
-              <Route path="/carrier-dispatch/*" element={<NotAvailable />} />
-            </Routes>
-            <Toaster />
-          </div>
-        </Router>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#f0f9ff', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <h1 style={{ 
+          fontSize: '3rem', 
+          fontWeight: 'bold', 
+          color: '#2563eb', 
+          marginBottom: '1rem' 
+        }}>
+          Trans Bot AI
+        </h1>
+        <p style={{ 
+          fontSize: '1.25rem', 
+          color: '#4b5563', 
+          marginBottom: '2rem' 
+        }}>
+          Autonomous TMS Platform for Modern Logistics
+        </p>
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '1.5rem', 
+          borderRadius: '0.5rem', 
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' 
+        }}>
+          <p style={{ 
+            color: '#059669', 
+            fontWeight: 'bold',
+            fontSize: '1.125rem'
+          }}>
+            ✅ React is working! The app is loading successfully.
+          </p>
+          <p style={{ 
+            color: '#6b7280', 
+            marginTop: '0.5rem',
+            fontSize: '0.875rem'
+          }}>
+            Server is running on localhost:8080
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 

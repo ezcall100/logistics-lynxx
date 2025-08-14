@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import AppAuthenticated from './AppAuthenticated.tsx';
 import './index.css';
 import { initObservability, session } from './observability';
-import '@/otel/browser'; // OpenTelemetry browser tracing
+import './otel/browser'; // OpenTelemetry browser tracing
 
 // Initialize observability (Sentry, Web Vitals, performance monitoring)
 initObservability();
