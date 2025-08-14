@@ -17,7 +17,7 @@ on:
         default: 15
         type: number
     secrets:
-      GITHUB_TOKEN:
+      DEPLOYMENT_TOKEN:
         required: true
       DEPLOYMENT_API_KEY:
         required: false
@@ -179,6 +179,6 @@ jobs:
       - name: 🚨 Security Verification Summary
         run: |
           echo "🔒 Security verification completed for ${{ inputs.environment }}!"
-          echo "🌐 URL: ${{ inputs.deployment-url }}"
+          echo "🌐 URL: ${{ secrets.DEPLOYMENT_TOKEN }}"
           echo "⏱️ Duration: $(($SECONDS / 60)) minutes"
           echo "✅ All security checks completed successfully"
