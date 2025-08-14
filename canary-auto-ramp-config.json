@@ -1,0 +1,47 @@
+{
+  "current": 10,
+  "target": 100,
+  "steps": [
+    10,
+    25,
+    50,
+    75,
+    100
+  ],
+  "currentStep": 0,
+  "autoRampLogic": {
+    "checkInterval": "1 hour",
+    "successThreshold": 98,
+    "p95Threshold": 2,
+    "rampIncrement": 25,
+    "rollbackThreshold": 95
+  },
+  "flags": {
+    "global": {
+      "canaryEnabled": true,
+      "canaryPercentage": 10
+    },
+    "environment": {
+      "production": {
+        "canaryPercentage": 10
+      },
+      "staging": {
+        "canaryPercentage": 100
+      },
+      "development": {
+        "canaryPercentage": 100
+      }
+    },
+    "tenant": {
+      "default": {
+        "canaryPercentage": 10
+      },
+      "earlyAdopters": {
+        "canaryPercentage": 100
+      },
+      "conservative": {
+        "canaryPercentage": 0
+      }
+    }
+  }
+}

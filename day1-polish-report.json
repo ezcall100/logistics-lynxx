@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-08-14T17:37:01.764Z",
+  "budgetTuning": {
+    "optimalConcurrency": 150,
+    "utilization": "60.0%",
+    "p95Target": "1.6875s"
+  },
+  "canaryAutoRamp": {
+    "currentCohort": "10%",
+    "targetCohort": "100%",
+    "autoRampEnabled": true
+  },
+  "traceEverywhere": {
+    "spansConfigured": 7,
+    "errorLinksEnabled": true,
+    "liveFeedTraces": true
+  },
+  "keyHygiene": {
+    "serviceAccounts": 6,
+    "rotationDays": 90,
+    "rehearsalScheduled": true
+  },
+  "recommendations": [
+    "Monitor concurrency utilization and adjust as needed",
+    "Gradually increase canary percentage based on success metrics",
+    "Review trace data for optimization opportunities",
+    "Schedule monthly key rotation rehearsals"
+  ]
+}

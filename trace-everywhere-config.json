@@ -1,0 +1,67 @@
+{
+  "enabled": true,
+  "spans": [
+    "agent.task.execute",
+    "agent.fn.*"
+  ],
+  "errorLinks": true,
+  "liveFeed": true,
+  "spanConfiguration": {
+    "enabled": true,
+    "spans": [
+      "agent.task.execute",
+      "agent.fn.pricing",
+      "agent.fn.matching",
+      "agent.fn.edi",
+      "agent.fn.invoice",
+      "agent.fn.replay",
+      "agent.fn.quarantine"
+    ],
+    "attributes": {
+      "service.name": "autonomous-tms",
+      "service.version": "1.0.0",
+      "deployment.environment": "production"
+    },
+    "sampling": {
+      "rate": 1,
+      "rules": [
+        {
+          "name": "agent.*",
+          "rate": 1
+        },
+        {
+          "name": "portal.*",
+          "rate": 0.1
+        },
+        {
+          "name": "website.*",
+          "rate": 0.05
+        }
+      ]
+    }
+  },
+  "errorTraceLinks": {
+    "enabled": true,
+    "formats": [
+      "https://traces.transbotai.com/trace/{traceId}",
+      "https://jaeger.transbotai.com/trace/{traceId}",
+      "https://zipkin.transbotai.com/traces/{traceId}"
+    ],
+    "integrations": {
+      "slack": true,
+      "email": true,
+      "liveFeed": true,
+      "metricsBar": true,
+      "ediScreens": true
+    }
+  },
+  "liveFeedTraces": {
+    "enabled": true,
+    "showStartFinish": true,
+    "showTraceLinks": true,
+    "showDuration": true,
+    "showStatus": true,
+    "autoRefresh": true,
+    "refreshInterval": 5000
+  }
+}

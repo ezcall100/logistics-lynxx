@@ -1,0 +1,8 @@
+{
+  "concurrencyTarget": 75,
+  "safetyMargin": 10,
+  "currentConcurrency": 187,
+  "maxConcurrency": 250,
+  "optimalConcurrency": 150,
+  "p95Target": 1.6875
+}

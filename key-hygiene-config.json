@@ -1,0 +1,70 @@
+{
+  "rotationDays": 90,
+  "nextRotation": "2025-11-12T17:37:01.727Z",
+  "rehearsalScheduled": true,
+  "serviceAccounts": [
+    {
+      "name": "system",
+      "email": "system@transbotai.com",
+      "rotationDays": 90
+    },
+    {
+      "name": "autopilot",
+      "email": "autopilot@transbotai.com",
+      "rotationDays": 90
+    },
+    {
+      "name": "agents",
+      "email": "agents@transbotai.com",
+      "rotationDays": 90
+    },
+    {
+      "name": "dlq",
+      "email": "dlq@transbotai.com",
+      "rotationDays": 90
+    },
+    {
+      "name": "ci",
+      "email": "ci@transbotai.com",
+      "rotationDays": 90
+    },
+    {
+      "name": "n8n",
+      "email": "n8n@transbotai.com",
+      "rotationDays": 90
+    }
+  ],
+  "rehearsalSchedule": {
+    "enabled": true,
+    "frequency": "monthly",
+    "nextRehearsal": "2025-09-13T17:37:01.740Z",
+    "duration": "2 hours",
+    "scope": "non-production environments only",
+    "validation": [
+      "Key generation",
+      "Key distribution",
+      "Service authentication",
+      "Rollback capability"
+    ]
+  },
+  "rotationPipeline": {
+    "enabled": true,
+    "automation": {
+      "keyGeneration": true,
+      "keyDistribution": true,
+      "serviceRestart": true,
+      "validation": true,
+      "rollback": true
+    },
+    "notifications": {
+      "preRotation": "7 days",
+      "postRotation": "immediate",
+      "failures": "immediate"
+    },
+    "rollbackTriggers": [
+      "Authentication failures > 5%",
+      "Service unavailability > 1 minute",
+      "Manual override"
+    ]
+  }
+}
