@@ -677,12 +677,12 @@ jobs:
           
           # Export URL variables with proper defaults
           {
-            echo "STAGING_URL=${STAGING_URL:-http://localhost:8080}"
-            echo "PRODUCTION_URL=${PRODUCTION_URL:-http://localhost:8080}"
-            echo "STAGING_WEBHOOK_URL=${STAGING_WEBHOOK_URL:-http://localhost:8080/webhook}"
-            echo "PRODUCTION_WEBHOOK_URL=${PRODUCTION_WEBHOOK_URL:-http://localhost:8080/webhook}"
-            echo "STAGING_HEALTH_CHECK_URL=${STAGING_HEALTH_CHECK_URL:-http://localhost:8080/health}"
-            echo "PRODUCTION_HEALTH_CHECK_URL=${PRODUCTION_HEALTH_CHECK_URL:-http://localhost:8080/health}"
+            echo "STAGING_URL=${STAGING_URL:-http://localhost:8084}"
+            echo "PRODUCTION_URL=${PRODUCTION_URL:-http://localhost:8084}"
+            echo "STAGING_WEBHOOK_URL=${STAGING_WEBHOOK_URL:-http://localhost:8084/webhook}"
+            echo "PRODUCTION_WEBHOOK_URL=${PRODUCTION_WEBHOOK_URL:-http://localhost:8084/webhook}"
+            echo "STAGING_HEALTH_CHECK_URL=${STAGING_HEALTH_CHECK_URL:-http://localhost:8084/health}"
+            echo "PRODUCTION_HEALTH_CHECK_URL=${PRODUCTION_HEALTH_CHECK_URL:-http://localhost:8084/health}"
             echo "APP_URL=$APP_URL"
             echo "DEPLOYMENT_WEBHOOK_URL=$DEPLOYMENT_WEBHOOK_URL"
             echo "HEALTH_CHECK_URL=$HEALTH_CHECK_URL"
