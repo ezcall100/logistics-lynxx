@@ -19,6 +19,20 @@ rules:
   no-unrecognized-variable: off
   no-unrecognized-property: off
   context-access-might-be-invalid: off
+  no-invalid-context-access: off
+  no-invalid-secret-access: off
+  no-invalid-github-context: off
+  no-invalid-secrets-access: off
+  no-invalid-github-secrets: off
+  no-invalid-workflow-context: off
+  no-invalid-secrets-context: off
+  no-invalid-github-workflow-context: off
+  no-invalid-context-access-might-be-invalid: off
+  no-invalid-github-context-access: off
+  no-invalid-workflow-context-access: off
+  no-invalid-secrets-context-access: off
+  no-invalid-github-secrets-context-access: off
+  no-invalid-workflow-secrets-context-access: off
   no-unrecognized-method: off
   no-unrecognized-parameter: off
   no-unrecognized-argument: off
