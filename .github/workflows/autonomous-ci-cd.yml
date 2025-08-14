@@ -537,13 +537,13 @@ jobs:
     env:
       # Environment-specific variables
       ENVIRONMENT_NAME: 'development'
-      APP_URL: 'http://localhost:8080'
-      STAGING_URL: 'http://localhost:8080'
-      PRODUCTION_URL: 'http://localhost:8080'
-      STAGING_WEBHOOK_URL: 'http://localhost:8080/webhook'
-      PRODUCTION_WEBHOOK_URL: 'http://localhost:8080/webhook'
-      STAGING_HEALTH_CHECK_URL: 'http://localhost:8080/health'
-      PRODUCTION_HEALTH_CHECK_URL: 'http://localhost:8080/health'
+      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
+      STAGING_URL: ${{ vars.STAGING_URL || 'http://localhost:8080' }}
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}
+      STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+      PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
+      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
       
       # Secrets
       SUPABASE_URL: 'https://placeholder.supabase.co'
@@ -798,7 +798,7 @@ jobs:
             echo "Health check $i/6..."
             
             # Check if health endpoint is responding
-            if curl -fsS --max-time 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+            if curl -fsS --max-time 10 "${{ vars.APP_URL || 'http://localhost:8080' }}/health" >/dev/null 2>&1; then
               echo "✅ Health check $i passed"
             else
               echo "⚠️ Health check $i failed"
@@ -861,7 +861,7 @@ jobs:
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "environment": "$target_env",
-            "app_url": "http://localhost:8080",
+            "app_url": "${{ vars.APP_URL || 'http://localhost:8080' }}",
             "actor": "${{ github.actor }}",
             "timestamp": "$ts"
           }
@@ -899,7 +899,7 @@ jobs:
             "event": "health_check",
             "status": "$monitoring_status",
             "environment": "$target_env",
-            "app_url": "http://localhost:8080",
+            "app_url": "${{ vars.APP_URL || 'http://localhost:8080' }}",
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "timestamp": "$ts"

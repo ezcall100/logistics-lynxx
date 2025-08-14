@@ -507,10 +507,10 @@ jobs:
     env:
       # Environment-specific variables
       ENVIRONMENT_NAME: 'production'
-      APP_URL: 'http://localhost:8080'
+      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
       N8N_ENABLED: 'false'
       N8N_BASE_URL: ''
-      DEPLOYMENT_WEBHOOK_URL: 'http://localhost:8080/webhook'
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
       
       # Secrets
       SUPABASE_URL: 'https://placeholder.supabase.co'
@@ -604,7 +604,7 @@ jobs:
           fi
           
           if [[ "$APP_URL" == "placeholder-key" || -z "$APP_URL" ]]; then
-            APP_URL="http://localhost:8080"
+            APP_URL="${{ vars.APP_URL || 'http://localhost:8080' }}"
           fi
           
           # Output environment variables
@@ -686,10 +686,10 @@ jobs:
           
           # Try multiple health check endpoints
           health_endpoints=(
-            "http://localhost:3000/api/health"
-            "http://localhost:3000/health"
-            "http://localhost:8080/api/health"
-            "http://localhost:8080/health"
+            "${{ vars.APP_URL || 'http://localhost:3000' }}/api/health"
+            "${{ vars.APP_URL || 'http://localhost:3000' }}/health"
+            "${{ vars.APP_URL || 'http://localhost:8080' }}/api/health"
+            "${{ vars.APP_URL || 'http://localhost:8080' }}/health"
           )
           
           max_retries=5
@@ -830,10 +830,10 @@ jobs:
             
             # Try multiple health endpoints
             health_endpoints=(
-              "http://localhost:3000/api/health"
-              "http://localhost:3000/health"
-              "http://localhost:8080/api/health"
-              "http://localhost:8080/health"
+                          "${{ vars.APP_URL || 'http://localhost:3000' }}/api/health"
+            "${{ vars.APP_URL || 'http://localhost:3000' }}/health"
+            "${{ vars.APP_URL || 'http://localhost:8080' }}/api/health"
+            "${{ vars.APP_URL || 'http://localhost:8080' }}/health"
             )
             
             health_ok=false

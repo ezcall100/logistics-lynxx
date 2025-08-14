@@ -79,7 +79,7 @@ jobs:
               title: `🔄 DR Drill - ${environment.toUpperCase()} - ${date}`,
               body: issueBody,
               labels: ['dr-drill', 'maintenance', environment],
-              assignees: ['ezcall100']
+              assignees: []
             });
             
             console.log(`Created DR drill issue: ${issue.data.html_url}`);
