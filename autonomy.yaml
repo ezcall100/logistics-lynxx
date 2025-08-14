@@ -1,564 +1,331 @@
-# Autonomous Operating Charter - Final Implementation
-# Version: 2.0.0
-# Last Updated: 2025-01-17
-# Scope: All 20 portals + 50-page website + edge functions + n8n + CI/CD
-# Status: FULL AUTONOMOUS AUTHORITY GRANTED
+# =============================================================================
+# AUTONOMOUS OPERATING SYSTEM CONFIGURATION
+# =============================================================================
+# Single source of truth for all autonomous operations
+# This file is read by the orchestrator on boot
 
 # =============================================================================
-# 1. ROLES & PRINCIPALS (Humans + Machines)
+# 1. SYSTEM MODE & OPERATION
 # =============================================================================
 
-roles:
-  human:
-    super_admin:
-      scope: global
-      permissions: ["feature_flags", "dr_cutover", "budget_edits", "audit_access", "emergency_stop"]
-      portals: ["Super Admin"]
-      description: "Global system control, emergency stop, DR cutover"
-    
-    tenant_admin:
-      scope: tenant
-      permissions: ["portal_enable_disable", "user_invites", "billing", "entitlements"]
-      portals: ["Admin", "TMS Admin", "Onboarding"]
-      description: "Tenant-level administration and user management"
-    
-    ops_manager:
-      scope: tenant
-      permissions: ["broker_ops", "shipper_ops", "carrier_ops", "dlq_dry_run", "replay_approve"]
-      portals: ["Broker", "Shipper", "Carrier", "Load Board"]
-      description: "Operational management and DLQ control"
-    
-    dispatcher:
-      scope: tenant
-      permissions: ["tender_assign_track", "exception_triage", "docs_submission"]
-      portals: ["Broker", "Shipper", "Carrier", "Driver"]
-      description: "Dispatch operations and exception handling"
-    
-    finance_manager:
-      scope: tenant
-      permissions: ["ar_ap", "settlements", "factoring_releases"]
-      portals: ["Financials", "Factoring"]
-      description: "Financial operations and settlements"
-    
-    analyst:
-      scope: tenant
-      permissions: ["analytics", "exports", "kpi_dashboards"]
-      portals: ["Analytics"]
-      description: "Analytics and reporting access"
-    
-    developer:
-      scope: tenant
-      permissions: ["read_prod_logs", "read_traces", "deploy_staging"]
-      portals: ["All (read-only)"]
-      description: "Development and debugging access"
-    
-    viewer:
-      scope: tenant
-      permissions: ["read_only"]
-      portals: ["All (read-only)"]
-      description: "Read-only access to dashboards and reports"
-
-  machine:
-    autopilot:
-      email: "autopilot@transbotai.com"
-      permissions: ["queue_mgmt", "slo_gates", "canary_flags", "budget_control"]
-      rotation_days: 90
-      description: "Orchestrator for queue management and SLO gates"
-    
-    agents:
-      email: "agents@transbotai.com"
-      permissions: ["execute_tasks", "write_logs", "publish_outbox", "portal_control"]
-      rotation_days: 90
-      description: "Worker agents for task execution and portal operations"
-    
-    dlq:
-      email: "dlq@transbotai.com"
-      permissions: ["dlq_replay", "signed_calls", "audit", "replay_budget"]
-      rotation_days: 90
-      description: "DLQ replay and audit operations"
-    
-    ci:
-      email: "ci@transbotai.com"
-      permissions: ["post_deploy_verify", "auto_rollback", "health_checks"]
-      rotation_days: 90
-      description: "CI/CD self-healing and rollback operations"
-    
-    n8n:
-      email: "n8n@transbotai.com"
-      permissions: ["workflows", "signed_webhooks", "trace_propagation", "event_processing"]
-      rotation_days: 90
-      description: "n8n workflow orchestration and event processing"
-    
-    system:
-      email: "system@transbotai.com"
-      permissions: ["dr_promote_rollback", "emergency_stop", "feature_flags"]
-      rotation_days: 90
-      description: "Break-glass operations and emergency controls"
+mode: "FULL"                    # FULL | DEGRADED | EMERGENCY
+kill_switch: false              # Global emergency stop
+config_source: "Single source of truth for all autonomous operations"
+status: "FULL AUTONOMOUS AUTHORITY GRANTED - 24/7 OPERATION ENABLED"
 
 # =============================================================================
-# 2. AUTHORITY & HARD RAILS (Always On)
+# 2. BUDGETS & SAFETY RAILS
 # =============================================================================
 
-authority:
-  scope: "All 20 canonical portals + 50-page site + edge functions + n8n + CI/CD"
-  powers:
-    - "read/write data"
-    - "publish outbox"
-    - "DLQ replay"
-    - "toggle flags"
-    - "DR cutover"
-    - "deploy safe patches"
-    - "auto-rollback"
-    - "portal enable/disable"
-    - "user lifecycle management"
-    - "billing operations"
-    - "analytics generation"
-    - "website content updates"
-
-  hard_rails:
-    global_kill_switch: "autonomy.emergencyStop"
-    budgets_rate_limits: "tenant/IP based concurrency, replay caps, cost ceilings"
-    security: "RLS + JWT + v2 HMAC (timestamp + nonce), idempotency, PII redaction"
-    slo_gates: "auto-throttle + rollback on breach (uptime < 99.95%, success < 98%, p95 > 2.5s)"
+budgets:
+  agents:
+    max_concurrent: 150         # Maximum concurrent agent tasks
+    max_memory_mb: 2048         # Memory limit per agent
+    max_cpu_percent: 80         # CPU limit per agent
+  
+  replay:
+    per_5m: 3                   # Replays per 5 minutes per tenant/IP
+    batch_max: 50               # Maximum batch size for DLQ replay
+    payload_mb_max: 2           # Maximum payload size in MB
+    failure_threshold: 20       # Stop replay if >20% fail immediately
+  
+  rate_limits:
+    api_requests_per_minute: 1000
+    webhook_requests_per_minute: 100
+    database_queries_per_second: 100
 
 # =============================================================================
-# 3. FEATURE FLAGS (Copy-paste SQL)
+# 3. SERVICE LEVEL OBJECTIVES (SLOs)
 # =============================================================================
 
-feature_flags:
-  global_mode_kill_switch: |
-    -- Global mode & kill switch
-    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
-    ('autonomy.emergencyStop','global',false,'enable autonomy','system'),
-    ('autonomy.mode','global','FULL','full authority mode','system'),
-    ('agents.autonomousEnabled','global',true,'run agents','system'),
-    ('obs.otelEnabled','global',true,'tracing on','system')
-    on conflict (key,scope) do update set value=excluded.value;
-
-  budgets_safety_rails: |
-    -- Budgets / safety rails
-    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
-    ('budget.agents.maxConcurrent','global',150,'concurrency cap','autopilot'),
-    ('budget.replay.maxBatch','global',50,'dlq cap','dlq'),
-    ('budget.replay.maxPayloadMB','global',2,'payload cap','dlq'),
-    ('rate.replay.per5m','global',3,'rate limit','dlq')
-    on conflict (key,scope) do update set value=excluded.value;
-
-  portal_authority: |
-    -- Portal authority grants
-    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
-    ('portal.super_admin.autonomous','global',true,'super admin portal control','agents'),
-    ('portal.admin.autonomous','global',true,'admin portal control','agents'),
-    ('portal.tms_admin.autonomous','global',true,'TMS admin portal control','agents'),
-    ('portal.onboarding.autonomous','global',true,'onboarding portal control','agents'),
-    ('portal.broker.autonomous','global',true,'broker portal control','agents'),
-    ('portal.shipper.autonomous','global',true,'shipper portal control','agents'),
-    ('portal.carrier.autonomous','global',true,'carrier portal control','agents'),
-    ('portal.driver.autonomous','global',true,'driver portal control','agents'),
-    ('portal.owner_operator.autonomous','global',true,'owner operator portal control','agents'),
-    ('portal.factoring.autonomous','global',true,'factoring portal control','agents'),
-    ('portal.load_board.autonomous','global',true,'load board portal control','agents'),
-    ('portal.crm.autonomous','global',true,'CRM portal control','agents'),
-    ('portal.financials.autonomous','global',true,'financials portal control','agents'),
-    ('portal.edi.autonomous','global',true,'EDI portal control','agents'),
-    ('portal.marketplace.autonomous','global',true,'marketplace portal control','agents'),
-    ('portal.analytics.autonomous','global',true,'analytics portal control','agents'),
-    ('portal.autonomous.autonomous','global',true,'autonomous portal control','agents'),
-    ('portal.workers.autonomous','global',true,'workers portal control','agents'),
-    ('portal.rates.autonomous','global',true,'rates portal control','agents'),
-    ('portal.directory.autonomous','global',true,'directory portal control','agents')
-    on conflict (key,scope) do update set value=excluded.value;
-
-  website_authority: |
-    -- Website content authority
-    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
-    ('website.content.autonomous','global',true,'website content generation','agents'),
-    ('website.seo.autonomous','global',true,'website SEO optimization','agents'),
-    ('website.images.autonomous','global',true,'website image generation','agents'),
-    ('website.structured_data.autonomous','global',true,'website structured data','agents'),
-    ('website.analytics.autonomous','global',true,'website analytics','agents')
-    on conflict (key,scope) do update set value=excluded.value;
-
-  emergency_stop: |
-    -- Emergency stop (one command)
-    update feature_flags_v2
-    set value=true
-    where key='autonomy.emergencyStop' and scope='global';
+slos:
+  uptime: 99.95                 # Minimum uptime percentage
+  success_pct: 98               # Minimum success rate percentage
+  p95_ms: 2500                  # p95 response time in milliseconds
+  outbox_lag_p95_ms: 5000       # p95 outbox lag in milliseconds
+  dlq_depth_max: 20             # Maximum DLQ depth before alerting
 
 # =============================================================================
-# 4. PORTAL COVERAGE (20 Canonical) — Start→End Contracts
+# 4. OPERATIONAL SCHEDULES
+# =============================================================================
+
+schedules:
+  probe_s: 30                   # Health probe interval (seconds)
+  replay_m: 5                   # DLQ replay interval (minutes)
+  guardrails_h: 1               # Guardrail scan interval (hours)
+  ttl_d: 1                      # TTL cleanup interval (days)
+  dr_drill_w: 1                 # DR drill interval (weeks)
+  key_rotation_m: 1             # Key rotation rehearsal (months)
+
+# =============================================================================
+# 5. PORTAL AUTHORITY (20 Canonical Portals)
 # =============================================================================
 
 portals:
   super_admin:
-    contract: "tenant provisioning, global flags, budgets, DR runbooks"
-    agents: ["autopilot", "system"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Full system control and emergency operations"
+    autonomous: true
+    roles: ["super_admin"]
+    description: "Global system control and tenant provisioning"
   
   admin:
-    contract: "user/role lifecycle, SSO/MFA, tenant branding, secrets"
-    agents: ["autopilot", "agents"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "User management and tenant configuration"
+    autonomous: true
+    roles: ["tenant_admin"]
+    description: "User and role lifecycle management"
   
   tms_admin:
-    contract: "lanes, equipment, pricing guards, EDI config"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "TMS configuration and equipment management"
+    autonomous: true
+    roles: ["tenant_admin", "ops_manager"]
+    description: "TMS configuration and equipment management"
   
   onboarding:
-    contract: "6-step wizard, data import, integration checks, go-live"
-    agents: ["agents", "n8n"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Customer onboarding and data migration"
+    autonomous: true
+    roles: ["tenant_admin"]
+    description: "Customer onboarding and data import"
   
   broker:
-    contract: "quote→route→tender→book; docs; comms; SLA timers"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Broker operations and load management"
+    autonomous: true
+    roles: ["ops_manager", "dispatcher", "viewer"]
+    description: "Broker operations and quote management"
   
   shipper:
-    contract: "self-serve quotes, booking, tracking, invoices, payments"
-    agents: ["agents", "n8n"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Shipper self-service operations"
+    autonomous: true
+    roles: ["ops_manager", "dispatcher", "viewer"]
+    description: "Shipper self-service and booking"
   
   carrier:
-    contract: "bids, capacity, compliance, contract lanes, scorecards"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Carrier operations and capacity management"
+    autonomous: true
+    roles: ["ops_manager", "dispatcher", "viewer"]
+    description: "Carrier operations and capacity management"
   
   driver:
-    contract: "stops, status, POD, offline cache, error-tolerant sync"
-    agents: ["agents"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Driver operations and mobile app"
+    autonomous: true
+    roles: ["driver", "viewer"]
+    description: "Driver mobile app and status updates"
   
   owner_operator:
-    contract: "loads, revenue, settlements, maintenance"
-    agents: ["agents", "n8n"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Owner-operator business management"
+    autonomous: true
+    roles: ["owner_operator"]
+    description: "Business management and settlements"
   
   factoring:
-    contract: "invoice packages, UCC checks, remittance tracking"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Factoring and financial services"
+    autonomous: true
+    roles: ["finance_manager"]
+    description: "Financial services and invoice processing"
   
   load_board:
-    contract: "curated posts, anti-dup, response SLAs, escrow"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Load board operations and matching"
+    autonomous: true
+    roles: ["ops_manager", "dispatcher", "viewer"]
+    description: "Freight matching and load posting"
   
   crm:
-    contract: "accounts/opps/tasks, lifecycle webhooks"
-    agents: ["agents", "n8n"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "CRM operations and customer lifecycle"
+    autonomous: true
+    roles: ["ops_manager", "analyst"]
+    description: "Customer relationship management"
   
   financials:
-    contract: "AR/AP, payouts, reconciliation, variance handling"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Financial operations and accounting"
+    autonomous: true
+    roles: ["finance_manager", "analyst"]
+    description: "Accounting and payment processing"
   
   edi:
-    contract: "204/990/214/210 + 997 ACKs, idempotent windows"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "EDI operations and integration"
+    autonomous: true
+    roles: ["ops_manager"]
+    description: "Electronic data interchange"
   
   marketplace:
-    contract: "app installs, tokens, health pings, revocation"
-    agents: ["agents", "n8n"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Marketplace operations and app management"
+    autonomous: true
+    roles: ["tenant_admin"]
+    description: "App marketplace and integrations"
   
   analytics:
-    contract: "exec/ops KPIs, funnel, SLO budget, exemplars→traces"
-    agents: ["agents", "autopilot"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Analytics and business intelligence"
+    autonomous: true
+    roles: ["analyst", "viewer"]
+    description: "Business intelligence and reporting"
   
   autonomous:
-    contract: "queue/SLO/quarantine, replay tools, Live Feed"
-    agents: ["autopilot", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Autonomous system operations"
+    autonomous: true
+    roles: ["super_admin", "ops_manager"]
+    description: "System operations and monitoring"
   
   workers:
-    contract: "shift scheduling, load balancing, golden paths"
-    agents: ["agents", "autopilot"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Worker management and scheduling"
+    autonomous: true
+    roles: ["ops_manager"]
+    description: "Workforce management and scheduling"
   
   rates:
-    contract: "instant pricing, contracts, index blending, guards"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Rate management and pricing"
+    autonomous: true
+    roles: ["ops_manager", "analyst"]
+    description: "Pricing and contract management"
   
   directory:
-    contract: "partner KYC, safety, sanctions, watchlists"
-    agents: ["agents", "dlq"]
-    lifecycle: "Detect → Decide → Act → Prove"
-    authority: "Partner directory and compliance"
+    autonomous: true
+    roles: ["ops_manager", "analyst", "viewer"]
+    description: "Partner management and KYC"
 
 # =============================================================================
-# 5. 50-PAGE WEBSITE EVENT MAP (Zero-touch)
+# 6. WEBSITE AUTHORITY (50 Pages)
 # =============================================================================
 
 website:
-  pages:
-    - "Home"
-    - "Pricing"
-    - "Features"
-    - "ROI"
-    - "Solutions (by vertical)"
-    - "Blog"
-    - "Docs"
-    - "Support"
-    - "Careers"
-    - "Legal"
-    - "Contact"
-    - "Demo"
-    - "Case Studies"
-    - "Resources"
-    - "API Documentation"
-    - "Integration Guides"
-    - "Security"
-    - "Compliance"
-    - "Partners"
-    - "News"
-    - "Events"
-    - "Webinars"
-    - "Training"
-    - "Certification"
-    - "Community"
-    - "Help Center"
-    - "Status Page"
-    - "Roadmap"
-    - "Changelog"
-    - "Press Kit"
-    - "Investor Relations"
-    - "Sustainability"
-    - "Diversity"
-    - "Open Source"
-    - "Developer Portal"
-    - "App Store"
-    - "Marketplace"
-    - "Templates"
-    - "Tools"
-    - "Calculators"
-    - "Reports"
-    - "Whitepapers"
-    - "E-books"
-    - "Videos"
-    - "Podcasts"
-    - "Newsletters"
-    - "Social Media"
-    - "Mobile Apps"
-    - "Desktop Apps"
-    - "Integrations"
-
-  agents: ["agents", "n8n"]
-  tasks:
-    - "generate/refresh content"
-    - "SEO scores"
-    - "images"
-    - "structured data"
-    - "meta tags"
-    - "schema markup"
-    - "performance optimization"
-    - "accessibility compliance"
-    - "mobile responsiveness"
-    - "A/B testing"
-
-  events:
-    - "lead.created"
-    - "demo.requested"
-    - "roi.calculated"
-    - "checkout.started"
-    - "content.updated"
-    - "seo.score.changed"
-    - "page.performance.measured"
-    - "conversion.tracked"
-
-  flow: "outbox → n8n → CRM/Stripe"
-  tracking: "UTM capture, idempotent writes, PII redacted spans"
-  realtime: "Live progress tiles (no polling), build metrics updated every 2s"
+  content:
+    autonomous: true
+    description: "Content generation and management"
+  
+  seo:
+    autonomous: true
+    description: "Search engine optimization"
+  
+  images:
+    autonomous: true
+    description: "Image generation and optimization"
+  
+  structured_data:
+    autonomous: true
+    description: "Schema markup and metadata"
+  
+  analytics:
+    autonomous: true
+    description: "Website performance tracking"
+  
+  performance:
+    autonomous: true
+    description: "Load time optimization"
+  
+  accessibility:
+    autonomous: true
+    description: "Compliance and usability"
+  
+  mobile:
+    autonomous: true
+    description: "Mobile optimization"
 
 # =============================================================================
-# 6. SCHEDULES (Autonomous)
-# =============================================================================
-
-schedules:
-  every_30s:
-    - "health probes"
-    - "SLO gates"
-    - "canary routing"
-    - "queue depth"
-    - "emergency stop check"
-
-  every_5m:
-    - "DLQ replay (≤50, ≤2MB; stop if >20% fail)"
-    - "stale lock cleanup"
-    - "portal health checks"
-    - "website content refresh"
-
-  hourly:
-    - "guardrail scans (PII leaks, idempotency collisions)"
-    - "ETL rolls"
-    - "portal performance optimization"
-    - "website SEO updates"
-
-  daily:
-    - "partition rotation"
-    - "TTL cleanup"
-    - "backup freshness"
-    - "key drift check"
-    - "portal audit"
-    - "website content audit"
-
-  weekly:
-    - "DR drill rehearsal"
-    - "security scans"
-    - "portal audit"
-    - "website performance review"
-    - "autonomous agent performance review"
-
-  monthly:
-    - "restore test"
-    - "cost/SLO review"
-    - "key rotation rehearsal"
-    - "portal feature review"
-    - "website content strategy update"
-
-# =============================================================================
-# 7. CI/CD SELF-HEAL & ROLLBACK GATES
-# =============================================================================
-
-cicd:
-  post_deploy_verify: "run k6 thresholds + SQL alerts"
-  failure_action: "disable agents.autonomousEnabled, open PR with logs and trace links"
-  security: "least-privilege tokens; concurrency and timeouts on all jobs"
-  autonomous_deployment: "agents can deploy to staging and production"
-  auto_rollback: "automatic rollback on SLO breach or health check failure"
-
-# =============================================================================
-# 8. BUDGETS, SLOS, THRESHOLDS
-# =============================================================================
-
-slos:
-  uptime: "≥ 99.95%"
-  success: "≥ 98%"
-  p95: "≤ 2.5s"
-  portal_response: "≤ 1.5s"
-  website_load: "≤ 2.0s"
-
-replay_caps:
-  rate: "3/5m/tenant/IP"
-  batch: "≤ 50"
-  payload: "≤ 2MB"
-  stop_condition: "fail > 20%"
-
-concurrency:
-  default: 150
-  adaptive: "downshift on p95 drift"
-  portal_agents: 50
-  website_agents: 30
-
-k6_thresholds:
-  http_req_failed: "rate < 0.02"
-  p95: "< 2500ms"
-  outbox_lag_p95: "< 5000ms"
-  portal_p95: "< 1500ms"
-  website_p95: "< 2000ms"
-
-# =============================================================================
-# 9. SECURITY & PRIVACY (Non-negotiable)
+# 7. SECURITY & COMPLIANCE
 # =============================================================================
 
 security:
-  rls: "on all tenant data; service-role only from Edge"
-  authentication: "v2 HMAC (timestamp + nonce) + JWT role claims"
-  idempotency: "keys systemwide; Stripe/EDI replay-safe"
-  pii: "redaction in logs/spans (email/name/URL masked)"
-  csp_cors: "locked; secrets never in browser"
-  audit: "every admin/agent action produces audit rows + trace"
-  encryption: "at rest and in transit"
-  access_control: "role-based with least privilege"
+  rls_enabled: true             # Row-level security
+  jwt_enabled: true             # JWT token validation
+  hmac_enabled: true            # HMAC v2 authentication
+  idempotency_enabled: true     # Idempotency controls
+  pii_redaction_enabled: true   # PII redaction in logs
+  audit_enabled: true           # Comprehensive audit logging
+  csp_enabled: true             # Content security policy
+  cors_enabled: true            # CORS protection
 
 # =============================================================================
-# 10. VERIFICATION & PROVE-GREEN
+# 8. MONITORING & OBSERVABILITY
 # =============================================================================
 
-verification:
-  flags: "confirm 4 activation flags match expected values"
-  synthetic_test: "rates.price_one → Live Feed: start/finish in seconds"
-  error_test: "force 1 safe error → Slack shows trace link; DLQ displays same trace"
-  k6_smoke: "all thresholds green; SLO dashboard shows green"
-  portal_test: "each portal responds within SLA"
-  website_test: "website loads and functions correctly"
+monitoring:
+  otel_enabled: true            # OpenTelemetry tracing
+  metrics_enabled: true         # Metrics collection
+  logging_enabled: true         # Structured logging
+  alerting_enabled: true        # Alert notifications
+  dashboard_enabled: true       # Real-time dashboard
+  trace_exemplars_enabled: true # Trace exemplars for SLOs
 
 # =============================================================================
-# 11. STOP / DEGRADE / STEP-DOWN
+# 9. INTEGRATIONS & WORKFLOWS
 # =============================================================================
 
-emergency_controls:
-  stop: "autonomy.emergencyStop=true (halts all autonomous writes)"
-  degrade: "lower budget.agents.maxConcurrent, pause DLQ, disable a portal flag"
-  step_down: "keep agents read-only (flags set), humans review/approve replays"
-  portal_disable: "disable specific portal autonomy"
-  website_disable: "disable website content generation"
+integrations:
+  n8n_enabled: true             # n8n workflow integration
+  stripe_enabled: true          # Stripe payment processing
+  crm_enabled: true             # CRM integration
+  edi_enabled: true             # EDI integration
+  slack_enabled: true           # Slack notifications
+  email_enabled: true           # Email notifications
+
+workflows:
+  autonomous_enabled: true      # Autonomous workflow execution
+  approval_enabled: true        # Approval workflows
+  escalation_enabled: true      # Escalation workflows
+  notification_enabled: true    # Notification workflows
 
 # =============================================================================
-# 12. AUTONOMOUS OPERATIONS CHECKLIST
+# 10. OPERATIONAL CONTROLS
 # =============================================================================
 
-autonomous_operations:
-  startup:
-    - "Verify emergency stop is false"
-    - "Check all portal flags are enabled"
-    - "Validate SLO thresholds"
-    - "Confirm agent permissions"
-    - "Test outbox connectivity"
-    - "Verify DLQ access"
-    - "Check website authority"
-    - "Validate audit logging"
-
-  runtime:
-    - "Monitor SLO compliance"
-    - "Track portal performance"
-    - "Watch website metrics"
-    - "Check agent health"
-    - "Monitor budget consumption"
-    - "Track error rates"
-    - "Watch queue depths"
-    - "Monitor trace propagation"
-
-  shutdown:
-    - "Graceful agent shutdown"
-    - "Complete pending operations"
-    - "Save state"
-    - "Log shutdown reason"
-    - "Notify stakeholders"
-    - "Update status"
+operations:
+  dlq_replay_enabled: true      # DLQ replay functionality
+  outbox_enabled: true          # Event outbox processing
+  auto_rollback_enabled: true   # Automatic rollback on failure
+  canary_enabled: true          # Canary deployment
+  health_checks_enabled: true   # Health check system
+  slo_gates_enabled: true       # SLO-based gating
 
 # =============================================================================
-# 13. TL;DR SUMMARY
+# 11. ANALYTICS & INSIGHTS
 # =============================================================================
 
-summary:
-  authority: "Full authority granted to agents across the platform with provable guardrails"
-  emergency: "One-command emergency stop"
-  operation: "24/7 Detect→Decide→Act→Prove loop with realtime UI and trace-linked Slack"
-  human_required: "No human required, but everything is audited, reversible, and budget-bounded"
-  config_source: "Single source of truth for all autonomous operations"
-  status: "FULL AUTONOMOUS AUTHORITY GRANTED - 24/7 OPERATION ENABLED"
+analytics:
+  realtime_enabled: true        # Real-time analytics
+  predictive_enabled: true      # Predictive analytics
+  kpi_enabled: true             # KPI tracking
+  funnel_enabled: true          # Funnel analysis
+  slo_enabled: true             # SLO tracking
+  exemplars_enabled: true       # Trace exemplars
+
+# =============================================================================
+# 12. EMERGENCY PROCEDURES
+# =============================================================================
+
+emergency:
+  stop_command: "node emergency-stop.js stop"
+  status_command: "node emergency-stop.js status"
+  resume_command: "node emergency-stop.js resume"
+  audit_trail: true             # Audit all emergency actions
+  notification_channels: ["slack", "email"]
+  escalation_timeout_minutes: 5
+
+# =============================================================================
+# 13. COMPLIANCE & AUDIT
+# =============================================================================
+
+compliance:
+  audit_logging: true           # Comprehensive audit trail
+  data_retention_days: 90       # Audit log retention
+  pii_handling: "redacted"      # PII handling policy
+  access_control: "rbac"        # Access control method
+  encryption: "at_rest_and_transit" # Encryption standards
+
+# =============================================================================
+# 14. PERFORMANCE TARGETS
+# =============================================================================
+
+performance:
+  target_uptime: 99.95          # Target uptime percentage
+  target_response_time_p95: 2500 # Target p95 response time (ms)
+  target_success_rate: 98       # Target success rate percentage
+  target_outbox_lag_p95: 5000   # Target p95 outbox lag (ms)
+  target_dlq_depth: 20          # Target maximum DLQ depth
+
+# =============================================================================
+# 15. DEPLOYMENT & CI/CD
+# =============================================================================
+
+deployment:
+  auto_deploy: true             # Automatic deployment
+  canary_deployment: true       # Canary deployment strategy
+  rollback_on_failure: true     # Automatic rollback
+  health_check_timeout: 300     # Health check timeout (seconds)
+  deployment_timeout: 1800      # Deployment timeout (seconds)
+
+# =============================================================================
+# CONFIGURATION NOTES
+# =============================================================================
+
+# This configuration file serves as the single source of truth for the
+# autonomous operating system. The orchestrator reads this file on boot
+# and applies the configuration to the feature flags system.
+#
+# Key principles:
+# - All settings are auditable and version-controlled
+# - Changes require approval and testing
+# - Emergency procedures are clearly defined
+# - Safety rails are always active
+# - Performance targets are measurable
+#
+# The system operates 24/7 with full autonomous authority while maintaining
+# iron-clad guardrails and one-command emergency stop capability.
