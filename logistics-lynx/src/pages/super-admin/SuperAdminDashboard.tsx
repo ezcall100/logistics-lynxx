@@ -384,25 +384,25 @@ export function SuperAdminDashboard() {
                     title="System Health"
                     description={`${stats?.systemHealth}% operational`}
                     icon={<CheckCircle className="h-4 w-4" />}
-                    variant="success"
+                    variant="default"
                   />
                   <InfoCard
                     title="AI Agents"
                     description={`${stats?.aiAgents} agents active`}
                     icon={<Cpu className="h-4 w-4" />}
-                    variant="info"
+                    variant="default"
                   />
                   <InfoCard
                     title="Database"
                     description="All systems operational"
                     icon={<Database className="h-4 w-4" />}
-                    variant="success"
+                    variant="default"
                   />
                                      <InfoCard
                      title="Network"
                      description="Connected to all services"
                      icon={<Network className="h-4 w-4" />}
-                     variant="success"
+                     variant="default"
                    />
                 </div>
               )}

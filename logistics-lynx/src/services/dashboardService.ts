@@ -180,7 +180,6 @@ export class DashboardService {
       post_load: 'Load posted successfully to the board',
       find_loads: 'Load search completed',
       bid_on_load: 'Bid submitted successfully',
-      track_shipments: 'Shipment tracking data retrieved',
       generate_report: 'Report generated',
       view_dashboard: 'Dashboard accessed',
       export_data: 'Data exported',
@@ -212,7 +211,6 @@ export class DashboardService {
       upload_documents: 'Documents uploaded successfully',
       sign_agreements: 'Agreements signed successfully',
                   track_compliance: 'Compliance status updated successfully',
-            manage_users: 'User management completed successfully',
             configure_dashboards: 'Dashboard configuration updated successfully',
             view_analytics: 'Analytics data retrieved successfully'
     };
