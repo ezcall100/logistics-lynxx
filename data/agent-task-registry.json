@@ -1,662 +1,285 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "last_updated": "2024-12-01T00:00:00.000Z",
   "platform": "transbot-ai",
   "operating_mode": "autonomous-24-7",
-  "global_rules": {
-    "security": {
-      "feature_flags": "PR-101 hierarchy: global → env → tenant",
-      "idempotency": "required for all writes and external calls",
-      "signing": "v2 timestamped with ±5min skew and nonce replay guard",
-      "pii_handling": "use redact() function, never log sensitive data"
+  "standing_order": "A-1",
+  "golden_rules": {
+    "flags_first": {
+      "hierarchy": "global → env → tenant",
+      "blocked_action": "no-op + FF_BLOCKED log",
+      "never_bypass": true
     },
-    "access_control": {
-      "rls": "all DB operations must include company_id scope",
-      "rbac": "enforce role policies on privileged mutations",
-      "company_scoped": "all lookups must be company-scoped"
+    "identity_scope": {
+      "jwt_required": "role-based",
+      "hmac_v2": "timestamp+nonce",
+      "company_id": "all reads/writes"
+    },
+    "idempotency": {
+      "check_before_external": "event/outbox keys",
+      "dedupe": ["stripe", "edi_webhooks"],
+      "window": "10-min"
+    },
+    "rls_safe": {
+      "never_bypass": "outside service-role edge paths",
+      "company_scoped": "all operations",
+      "audit_trail": "all changes"
     },
     "durability": {
-      "outbox": "publish external side-effects via Outbox → n8n/HTTP/Slack",
-      "error_handling": "route to DLQ on error, auto-snooze with backoff",
-      "circuit_breakers": "break lane if 20% immediate fail"
+      "pattern": "write → commit → publish via Outbox",
+      "failure": "DLQ (auto-snooze/backoff)",
+      "circuit_break": "≥20% immediate fails"
     },
     "observability": {
       "root_span": "agent.task.execute",
       "function_spans": "agent.fn.<domain>.<action>",
-      "metadata": "include tenant.id, agent.task_id, agent.fn_name",
-      "trace_links": "attach in Slack for errors"
+      "error_recording": "with context",
+      "trace_links": "in Slack"
     },
     "slo_gates": {
-      "success_rate": "reduce sampling if < 98% (15m)",
-      "latency": "flip canary off if p95 > 2.5s",
-      "budgets": "respect per-tenant budgets and replay throttles"
+      "uptime": "≥99.95%",
+      "success_rate": "≥98%",
+      "p95_latency": "≤2.5s",
+      "quarantine_rate": "<1%",
+      "breach_action": "throttle, open incident, flip canaries off"
     }
   },
   "end_to_end_flows": [
     {
       "id": "quote_to_bill",
-      "name": "Quote → Book → Bill (Core Flow)",
-      "start_points": [
-        "website_roi_form",
-        "broker_portal_request", 
-        "api_edi_204"
+      "name": "Quote → Book → Bill",
+      "start": ["roi_form", "broker_request", "api_edi_204"],
+      "do": [
+        "normalize",
+        "price (rates.price_one)",
+        "offer_tender (204)",
+        "book (990 ack)",
+        "track (214)",
+        "pod_ocr",
+        "invoice (210)",
+        "ar_factoring"
       ],
-      "steps": [
-        {
-          "step": 1,
-          "action": "normalize_intake",
-          "input": "EDI/email/API/portal",
-          "output": "intake.normalized (Outbox)",
-          "agent": "intake_normalizer"
-        },
-        {
-          "step": 2,
-          "action": "price_quote",
-          "input": "rates.price_one with flags + guardrails",
-          "output": "candidate_quote",
-          "agent": "rates_agent"
-        },
-        {
-          "step": 3,
-          "action": "offer_tender",
-          "input": "204 to carrier or marketplace",
-          "output": "await 990",
-          "agent": "tender_agent"
-        },
-        {
-          "step": 4,
-          "action": "book_load",
-          "input": "create load, assign carrier",
-          "output": "214 tracking plan",
-          "agent": "booking_agent"
-        },
-        {
-          "step": 5,
-          "action": "execute_tracking",
-          "input": "status updates, ETA",
-          "output": "exceptions self-heal",
-          "agent": "tracking_agent"
-        },
-        {
-          "step": 6,
-          "action": "process_docs",
-          "input": "POD/OCR, fraud checks",
-          "output": "verified_documents",
-          "agent": "docs_agent"
-        },
-        {
-          "step": 7,
-          "action": "generate_invoice",
-          "input": "210 factoring/AR route",
-          "output": "post to Financials",
-          "agent": "invoice_agent"
-        }
-      ],
-      "end_state": {
-        "load_state": "closed",
-        "invoice_state": "paid",
+      "finish": {
+        "load": "closed",
+        "invoice": "paid",
         "analytics": "written"
       },
-      "fail_path": "DLQ with auto-snooze; circuit-break if 20% immediate fail"
+      "fail": "DLQ + backoff; circuit-break lane if ≥20% immediate fails"
     },
     {
       "id": "carrier_onboard",
       "name": "Carrier Onboard → Live",
-      "start_points": ["directory_carrier_application"],
-      "steps": [
-        {
-          "step": 1,
-          "action": "validate_docs",
-          "input": "KYC, COI, W-9",
-          "output": "compliance_score",
-          "agent": "compliance_agent"
-        },
-        {
-          "step": 2,
-          "action": "connect_integrations",
-          "input": "EDI/telematics",
-          "output": "connected_systems",
-          "agent": "integration_agent"
-        },
-        {
-          "step": 3,
-          "action": "trial_load",
-          "input": "test shipment",
-          "output": "performance_metrics",
-          "agent": "onboarding_agent"
-        }
+      "start": ["application", "kyc"],
+      "do": [
+        "docs_verify",
+        "compliance_score",
+        "integrations",
+        "trial_load"
       ],
-      "end_state": {
-        "carrier_status": "active",
-        "allowed_lanes": "set",
-        "published_to": ["rates", "marketplace"]
+      "finish": {
+        "carrier": "active",
+        "lanes": "enabled"
       }
     },
     {
       "id": "exception_remediate",
       "name": "Exception → Auto-Remediate",
-      "start_points": ["tracking_signal", "sla_miss", "anomaly"],
-      "steps": [
-        {
-          "step": 1,
-          "action": "classify_exception",
-          "input": "exception_data",
-          "output": "exception_type",
-          "agent": "exception_agent"
-        },
-        {
-          "step": 2,
-          "action": "remediate",
-          "input": "re-tender, re-price, re-route, notify",
-          "output": "remediation_attempt",
-          "agent": "remediation_agent"
-        },
-        {
-          "step": 3,
-          "action": "confirm_slo",
-          "input": "slo_check",
-          "output": "slo_status",
-          "agent": "slo_agent"
-        }
+      "start": ["sla_anomaly", "eta_anomaly"],
+      "do": [
+        "classify",
+        "re_tender",
+        "re_route",
+        "re_price",
+        "notify"
       ],
-      "end_state": {
+      "finish": {
         "exception_resolution": "success",
-        "post_mortem": "note",
-        "fallback": "quarantine & alert"
+        "fallback": "quarantine + alert"
       }
     },
     {
       "id": "dr_failover",
-      "name": "DR / Multi-region Failover",
-      "start_points": ["health_gate_fails_3x_30s"],
-      "steps": [
-        {
-          "step": 1,
-          "action": "flip_feature_flag",
-          "input": "secondary region",
-          "output": "region_switch",
-          "agent": "dr_agent"
-        },
-        {
-          "step": 2,
-          "action": "drain_queues",
-          "input": "primary queues",
-          "output": "queue_drained",
-          "agent": "queue_agent"
-        },
-        {
-          "step": 3,
-          "action": "replay_outbox",
-          "input": "outbox events",
-          "output": "events_replayed",
-          "agent": "outbox_agent"
-        }
+      "name": "DR / Multi-Region",
+      "start": "health_gate_fail_3x_30s",
+      "do": [
+        "flip_region_flag",
+        "drain",
+        "replay_outbox"
       ],
-      "end_state": {
-        "secondary_metrics": "green",
-        "dr_incident": "recorded"
+      "finish": {
+        "secondary": "green",
+        "incident": "posted"
       }
     }
   ],
   "portal_tasks": {
     "super_admin": {
-      "entry": "/super-admin/*",
-      "tasks": [
-        "tenant_provisioning",
-        "global_flags",
-        "billing_plans", 
-        "soc2_evidence",
-        "traces_page"
-      ],
-      "writes": ["companies", "feature_flags_v2", "audit_log"],
-      "external": ["stripe", "otel"],
-      "success_criteria": "changes audited, flags propagated",
-      "alerts": ["policy_flag_drift", "failed_evidence_sync"]
+      "start": "config_change",
+      "do": ["companies", "flags", "audit"],
+      "finish": "change audited + propagated"
     },
     "admin": {
-      "entry": "/admin/*",
-      "tasks": [
-        "user_invites",
-        "rbac",
-        "mfa_sso",
-        "api_keys"
-      ],
-      "writes": ["profiles", "roles", "api_keys"],
-      "success_criteria": "user state consistent, keys rotated",
-      "alerts": ["auth_failures_spike", "key_misuse"]
+      "start": "invite_role_key",
+      "do": ["profiles", "roles", "api_keys"],
+      "finish": "auth passes, keys rotated"
+    },
+    "tms_admin": {
+      "start": "lane_contract_guardrail",
+      "do": ["lanes", "contracts", "pricing_guards"],
+      "finish": "guardrails enforced"
+    },
+    "onboarding": {
+      "start": "step_submit_import",
+      "do": ["onboarding_steps", "connect"],
+      "finish": "onboarding.complete=true"
     },
     "broker": {
-      "entry": "/broker/*",
-      "tasks": [
-        "quote",
-        "tender", 
-        "book",
-        "docs",
-        "customer_comms"
-      ],
-      "writes": ["quotes", "loads", "documents"],
-      "external": ["edi_204", "edi_990", "edi_214", "edi_210"],
-      "success_criteria": "booked, on-time, invoiced",
-      "alerts": ["tender_rejection_spikes", "aging_unbooked_quotes"]
+      "start": "quote_tender_book",
+      "do": ["quotes", "loads", "docs", "edi"],
+      "finish": "booked + invoiced"
     },
     "shipper": {
-      "entry": "/shipper/*",
-      "tasks": [
-        "self_serve_quotes",
-        "self_serve_book",
-        "docs",
-        "track",
-        "pay"
-      ],
-      "writes": ["shipper_orders"],
-      "success_criteria": "order→load linked, invoice paid",
-      "alerts": ["failed_payments", "track_gaps"]
+      "start": "self_serve_quote_order",
+      "do": ["shipper_orders", "tracking"],
+      "finish": "delivered + paid"
     },
     "carrier": {
-      "entry": "/carrier/*",
-      "tasks": [
-        "bids",
-        "accept",
-        "capacity_updates",
-        "compliance"
-      ],
-      "writes": ["carrier_bids", "capacity", "coi"],
-      "success_criteria": "award, on-time pickup/delivery",
-      "alerts": ["expired_coi", "capacity_stale"]
+      "start": "bid_accept_capacity",
+      "do": ["carrier_bids", "capacity", "coi"],
+      "finish": "award + on-time delivery"
     },
     "driver": {
-      "entry": "/driver/*",
-      "tasks": [
-        "stops",
-        "pod",
-        "status_scans",
-        "nav_assist"
-      ],
-      "writes": ["stop_events", "pod_docs"],
-      "success_criteria": "signed POD, clean proof",
-      "alerts": ["missed_scans", "rejected_pod"]
+      "start": "stop_pod_status",
+      "do": ["stop_events", "pod_docs"],
+      "finish": "signed POD accepted"
     },
     "owner_operator": {
-      "entry": "/owner-operator/*",
-      "tasks": [
-        "pipeline",
-        "revenue",
-        "maintenance",
-        "payouts"
-      ],
-      "writes": ["settlements", "fleet_costs"],
-      "success_criteria": "weekly payout cleared",
-      "alerts": ["negative_margin", "payout_delays"]
+      "start": "revenue_costs",
+      "do": ["settlements", "fleet_costs"],
+      "finish": "weekly payout cleared"
     },
     "factoring": {
-      "entry": "/factoring/*",
-      "tasks": [
-        "invoice_packages",
-        "ucc_check",
-        "status_sync"
-      ],
-      "writes": ["factoring_submissions", "ar_status"],
-      "external": ["factor_apis"],
-      "success_criteria": "funded, status reconciled",
-      "alerts": ["chargeback_risk", "doc_rejection"]
+      "start": "package_submit",
+      "do": ["factoring_submissions", "ar_status"],
+      "finish": "funded + reconciled"
     },
     "load_board": {
-      "entry": "/load-board/*",
-      "tasks": [
-        "publish_loads",
-        "intake_bids",
-        "slas"
-      ],
-      "writes": ["market_posts", "market_bids"],
-      "success_criteria": "fill rate, SLA met",
-      "alerts": ["stale_posts", "ghost_bids"]
+      "start": "post_bid_award",
+      "do": ["market_posts", "bids"],
+      "finish": "fill rate ≥ target"
     },
     "crm": {
-      "entry": "/crm/*",
-      "tasks": [
-        "accounts",
-        "contacts",
-        "opps",
-        "activities"
-      ],
-      "writes": ["accounts", "opportunities"],
-      "success_criteria": "MQL→SQL→Won; handoffs complete",
-      "alerts": ["stuck_opps", "churn_signals"]
+      "start": "account_opp_activity",
+      "do": ["accounts", "opportunities"],
+      "finish": "win/lose updated"
     },
     "financials": {
-      "entry": "/financials/*",
-      "tasks": [
-        "ar_ap",
-        "invoicing",
-        "settlements",
-        "payouts"
-      ],
-      "writes": ["invoices", "ap", "gl_events"],
-      "external": ["stripe", "xero", "quickbooks"],
-      "success_criteria": "DSO within target, payout SLA met",
-      "alerts": ["failed_payouts", "aging_ar"]
+      "start": "invoice_ap_gl",
+      "do": ["invoices", "ap", "gl_events"],
+      "finish": "DSO within target; payouts on time"
     },
     "edi": {
-      "entry": "/edi/*",
-      "tasks": [
-        "edi_204_990_214_210",
-        "acks",
-        "retry"
-      ],
-      "writes": ["edi_messages", "edi_partner"],
-      "success_criteria": "end-to-end ACK chain",
-      "alerts": ["nak_spikes", "partner_latency"]
+      "start": "204_990_214_210",
+      "do": ["edi_messages", "ack_chain"],
+      "finish": "no NAKs outstanding"
     },
     "marketplace": {
-      "entry": "/marketplace/*",
-      "tasks": [
-        "app_integrations_discovery",
-        "app_install"
-      ],
-      "writes": ["installations", "webhooks"],
-      "success_criteria": "app healthy, events delivered",
-      "alerts": ["failed_webhooks", "version_drift"]
+      "start": "install_webhook",
+      "do": ["installations", "webhooks"],
+      "finish": "healthy app checks"
     },
     "analytics": {
-      "entry": "/analytics/*",
-      "tasks": [
-        "exec_dashboards",
-        "slos",
-        "funnels"
-      ],
-      "reads": ["materialized_views"],
-      "success_criteria": "KPIs within targets",
-      "alerts": ["slo_burn", "conversion_dips"]
+      "start": "refresh_views",
+      "do": "read_materialized_views",
+      "finish": "KPIs green or open ticket"
     },
     "autonomous": {
-      "entry": "/autonomous/*",
-      "tasks": [
-        "queue_mgmt",
-        "live_feed",
-        "quarantine",
-        "dlq_admin"
-      ],
-      "writes": ["agent_tasks", "agent_logs", "dlq_*"],
-      "success_criteria": "success≥98%, quarantine<1%",
-      "alerts": ["outbox_lag", "replay_failure_40_percent"]
+      "start": "queue_dlq_quarantine",
+      "do": ["agent_tasks", "agent_logs", "dlq_*"],
+      "finish": "success ≥98%, quarantine <1%"
     },
     "workers": {
-      "entry": "/workers/*",
-      "tasks": [
-        "internal_taskforce_scheduling",
-        "loadbal"
-      ],
-      "writes": ["work_shifts", "work_assignments"],
-      "success_criteria": "backlog under threshold",
-      "alerts": ["utilization_anomalies"]
+      "start": "schedule_assign",
+      "do": ["work_shifts", "work_assignments"],
+      "finish": "backlog under threshold"
     },
     "rates": {
-      "entry": "/rates/*",
-      "tasks": [
-        "instant_pricing",
-        "contracts",
-        "indices"
-      ],
-      "writes": ["rate_cards", "indices"],
-      "success_criteria": "guardrails respected, margin ok",
-      "alerts": ["outlier_prices", "stale_indices"]
+      "start": "instant_price_contract_index",
+      "do": ["rate_cards", "indices"],
+      "finish": "guardrails OK, margin ok"
     },
     "directory": {
-      "entry": "/directory/*",
-      "tasks": [
-        "discover_verify_partners",
-        "kyc",
-        "safety"
-      ],
-      "writes": ["partners", "verifications"],
-      "success_criteria": "verified partner usable in ops",
-      "alerts": ["expired_docs", "failed_verification"]
+      "start": "verify_kyc_safety",
+      "do": ["partners", "verifications"],
+      "finish": "partner usable"
     },
     "testing": {
-      "entry": "/testing/*",
-      "tasks": [
-        "agent_testing",
-        "development",
-        "performance_testing"
-      ],
-      "writes": ["test_results", "test_metrics"],
-      "success_criteria": "tests pass, coverage maintained",
-      "alerts": ["test_failures", "coverage_drops"]
+      "start": "test_validate_verify",
+      "do": ["test_results", "test_metrics"],
+      "finish": "tests pass, coverage maintained"
     }
   },
-  "website_sitemap": {
-    "top_level": [
-      {
-        "path": "/",
-        "event": "lead.viewed_home"
+  "website_events": {
+    "conversion_critical": {
+      "/roi": {
+        "event": "lead.roi_submitted",
+        "flow": "score → n8n route → trial/checkout link"
       },
-      {
-        "path": "/pricing",
-        "event": "lead.viewed_pricing"
+      "/trial": {
+        "event": "stripe_entitlements",
+        "flow": "Stripe → entitlements → flags on"
       },
-      {
-        "path": "/features",
-        "event": "lead.viewed_features_hub"
+      "/checkout": {
+        "event": "stripe_session",
+        "flow": "session → webhook → plan set"
       },
-      {
-        "path": "/roi",
-        "event": "lead.roi_submitted"
+      "/contact": {
+        "event": "lead.contact",
+        "flow": "CRM + Slack"
       },
-      {
-        "path": "/contact",
-        "event": "lead.contact_submitted"
-      },
-      {
-        "path": "/demo",
-        "event": "lead.demo_requested"
-      },
-      {
-        "path": "/status",
-        "event": "lead.viewed_status"
-      },
-      {
-        "path": "/security",
-        "event": "lead.viewed_security"
-      },
-      {
-        "path": "/changelog",
-        "event": "lead.viewed_changelog"
-      },
-      {
-        "path": "/legal/terms",
-        "event": "lead.viewed_terms"
-      },
-      {
-        "path": "/legal/privacy",
-        "event": "lead.viewed_privacy"
-      },
-      {
-        "path": "/about",
-        "event": "lead.viewed_about"
-      },
-      {
-        "path": "/careers",
-        "event": "lead.viewed_careers"
-      },
-      {
-        "path": "/partners",
-        "event": "lead.viewed_partners"
-      },
-      {
-        "path": "/integrations",
-        "event": "lead.viewed_integrations_hub"
+      "/demo": {
+        "event": "lead.demo",
+        "flow": "CRM + Slack"
       }
-    ],
-    "features": [
-      {
-        "path": "/features/broker",
-        "event": "lead.viewed_broker_features"
+    },
+    "hubs_content": {
+      "features_solutions_resources": {
+        "event": "content.view",
+        "flow": "UTM enrich → CRM timeline → nurture automations"
       },
-      {
-        "path": "/features/shipper",
-        "event": "lead.viewed_shipper_features"
-      },
-      {
-        "path": "/features/carrier",
-        "event": "lead.viewed_carrier_features"
-      },
-      {
-        "path": "/features/rates",
-        "event": "lead.viewed_rates_features"
-      },
-      {
-        "path": "/features/edi",
-        "event": "lead.viewed_edi_features"
-      },
-      {
-        "path": "/features/autonomous",
-        "event": "lead.viewed_autonomous_features"
-      },
-      {
-        "path": "/features/analytics",
-        "event": "lead.viewed_analytics_features"
-      },
-      {
-        "path": "/features/marketplace",
-        "event": "lead.viewed_marketplace_features"
-      },
-      {
-        "path": "/features/financials",
-        "event": "lead.viewed_financials_features"
-      },
-      {
-        "path": "/features/crm",
-        "event": "lead.viewed_crm_features"
-      },
-      {
-        "path": "/features/onboarding",
-        "event": "lead.viewed_onboarding_features"
-      },
-      {
-        "path": "/features/security",
-        "event": "lead.viewed_security_features"
+      "/resources/api/*": {
+        "event": "dev.intent",
+        "flow": "open API key draft (flag-gated)"
       }
-    ],
-    "solutions": [
-      {
-        "path": "/solutions/retail",
-        "event": "lead.viewed_retail_solution"
-      },
-      {
-        "path": "/solutions/manufacturing",
-        "event": "lead.viewed_manufacturing_solution"
-      },
-      {
-        "path": "/solutions/3pl",
-        "event": "lead.viewed_3pl_solution"
-      },
-      {
-        "path": "/solutions/food-beverage",
-        "event": "lead.viewed_food_beverage_solution"
-      },
-      {
-        "path": "/solutions/automotive",
-        "event": "lead.viewed_automotive_solution"
-      },
-      {
-        "path": "/solutions/energy",
-        "event": "lead.viewed_energy_solution"
-      },
-      {
-        "path": "/solutions/healthcare",
-        "event": "lead.viewed_healthcare_solution"
-      },
-      {
-        "path": "/solutions/ecommerce",
-        "event": "lead.viewed_ecommerce_solution"
-      }
-    ],
-    "resources": [
-      {
-        "path": "/resources",
-        "event": "lead.viewed_resources_hub"
-      },
-      {
-        "path": "/resources/blog",
-        "event": "lead.viewed_blog"
-      },
-      {
-        "path": "/resources/guides/quote-to-cash",
-        "event": "lead.viewed_quote_to_cash_guide"
-      },
-      {
-        "path": "/resources/guides/edi-101",
-        "event": "lead.viewed_edi_101_guide"
-      },
-      {
-        "path": "/resources/case-studies",
-        "event": "lead.viewed_case_studies"
-      },
-      {
-        "path": "/resources/webinars",
-        "event": "lead.viewed_webinars"
-      },
-      {
-        "path": "/resources/api",
-        "event": "lead.viewed_api_docs_hub"
-      },
-      {
-        "path": "/resources/api/auth",
-        "event": "lead.viewed_api_auth_docs"
-      },
-      {
-        "path": "/resources/api/rates",
-        "event": "lead.viewed_api_rates_docs"
-      },
-      {
-        "path": "/resources/api/loads",
-        "event": "lead.viewed_api_loads_docs"
-      }
-    ],
-    "conversion": [
-      {
-        "path": "/trial",
-        "event": "lead.trial_started",
-        "external": "stripe_entitlements"
-      },
-      {
-        "path": "/checkout",
-        "event": "stripe_session_created",
-        "external": "stripe"
-      },
-      {
-        "path": "/thank-you",
-        "event": "lead.conversion_complete"
-      },
-      {
-        "path": "/newsletter",
-        "event": "lead.subscribed"
-      },
-      {
-        "path": "/roi/share/:id",
-        "event": "lead.shared_roi"
-      }
-    ]
+    },
+    "all_pages": {
+      "csp": "respect",
+      "pii": "no logs",
+      "events": "Outbox → n8n for downstream"
+    }
   },
-  "autonomous_schedules": {
-    "every_30s": [
+  "schedules": {
+    "30s": [
       "health_probe",
-      "multi_region_gate",
-      "agent_queue_depth"
+      "queue_depth",
+      "slo_check",
+      "throttle_if_breach"
     ],
-    "every_5m": [
-      "dlq_replay_budget_window",
-      "retry_small_batches"
+    "5m": [
+      "dlq_retry",
+      "max_items": 50,
+      "max_size": "2MB",
+      "stop_if": ">20% immediate fails"
     ],
     "hourly": [
-      "guardrail_drift_scan",
-      "stale_indices_refill",
-      "analytics_etl"
+      "guardrail_drift",
+      "index_refresh",
+      "etl_ticks"
     ],
-    "daily": [
-      "rotate_partitions",
-      "ttl_cleanup",
-      "key_rotation_reminders"
+    "daily_03_00": [
+      "partitions_rotate",
+      "ttl_cleanup_30d",
+      "budget_reset"
     ],
     "weekly": [
       "dr_drill_dry_run",
@@ -665,60 +288,90 @@
     ],
     "monthly": [
       "restore_test",
-      "cost_slo_review",
-      "feature_flag_hygiene"
+      "flag_hygiene",
+      "cost_review"
     ]
   },
-  "alerting_matrix": {
+  "alerts": {
     "page": [
       "outbox_lag_p95_5s_15m",
       "dlq_replay_fail_40_percent",
-      "success_95_percent_15m",
-      "checkout_errors_spike",
+      "success_95_percent",
+      "checkout_error_surge",
       "edi_nak_storm"
     ],
     "warn": [
       "410_hits_50_per_hr_tenant",
-      "contract_guardrail_violation",
-      "stale_tracking"
+      "contract_guardrail_violations",
+      "tracking_gaps"
     ],
     "info": [
-      "feature_flag_change",
-      "plan_upgrade_downgrade",
-      "dr_drill_passed"
+      "flag_changes",
+      "plan_changes",
+      "dr_drill_pass"
     ]
   },
-  "agent_checklist": {
-    "do": [
-      "validate_inputs_zod",
-      "respect_rate_limits",
-      "use_idempotency_keys",
-      "write_via_outbox",
-      "fallback_to_dlq",
-      "attach_trace_id",
-      "include_trace_links",
-      "enforce_rls_rbac"
+  "safety_budgets": {
+    "per_tenant": {
+      "replays": "enforced via flags",
+      "expensive_ops": "enforced via flags"
+    },
+    "rate_limits": {
+      "roi": "10/min",
+      "checkout": "5/min",
+      "dlq_replay": "3/5m (tenant+IP)"
+    },
+    "replay_requirements": {
+      "v2_signature": true,
+      "nonce": true,
+      "idempotency_window": "10-min"
+    }
+  },
+  "incident_automations": {
+    "slo_breach": [
+      "halve_concurrency",
+      "disable_canaries",
+      "open_incident",
+      "attach_runbook_trace_link"
     ],
-    "dont": [
-      "log_pii",
-      "bypass_flags_dr_gates",
-      "write_direct_external"
+    "partner_down": [
+      "circuit_break",
+      "queue_locally",
+      "escalate_after_15m"
+    ],
+    "data_drift": [
+      "revert_flag_set",
+      "quarantine_new_writes",
+      "page_owner"
     ]
   },
-  "success_criteria": {
+  "done_invariants": {
+    "every_business_flow": [
+      "correct_ledger_entries",
+      "audit_log_written",
+      "spans_closed_with_status",
+      "analytics_updated"
+    ],
+    "every_external_call": [
+      "originates_from_outbox_entry",
+      "has_idempotency",
+      "either_ack_or_dlq_record"
+    ],
+    "every_error": [
+      "has_trace_link",
+      "redacted_context",
+      "retry_or_quarantine_disposition"
+    ]
+  },
+  "success_metrics": {
     "operational_excellence": {
       "uptime": "≥99.95%",
       "success_rate": "≥98%",
       "p95_latency": "≤2.5s",
       "quarantine_rate": "<1%"
     },
-    "security_compliance": {
-      "zero_pii_leaks": "all sensitive data redacted",
-      "rls_compliance": "100% DB operations company-scoped",
-      "audit_trail": "all changes logged and traceable"
-    },
     "business_metrics": {
-      "quote_to_book_conversion": "≥85%",
+      "quote_to_book": "≥85%",
       "on_time_delivery": "≥95%",
       "invoice_accuracy": "≥99%",
       "customer_satisfaction": "≥4.5/5"
