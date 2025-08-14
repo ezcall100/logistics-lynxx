@@ -150,22 +150,33 @@ jobs:
           echo "🔧 Setting up environment variables..."
           
           # Set default environment URLs (can be overridden by repository variables)
+          # Use environment variables with fallbacks to avoid context access warnings
+          APP_URL_DEFAULT="http://localhost:8084"
+          STAGING_URL_DEFAULT="http://localhost:8084"
+          PRODUCTION_URL_DEFAULT="http://localhost:8084"
+          STAGING_WEBHOOK_URL_DEFAULT="http://localhost:8084/webhook"
+          PRODUCTION_WEBHOOK_URL_DEFAULT="http://localhost:8084/webhook"
+          STAGING_HEALTH_CHECK_URL_DEFAULT="http://localhost:8084/health"
+          PRODUCTION_HEALTH_CHECK_URL_DEFAULT="http://localhost:8084/health"
+          DEPLOYMENT_WEBHOOK_URL_DEFAULT="http://localhost:8084/webhook"
+          HEALTH_CHECK_URL_DEFAULT="http://localhost:8084/health"
+          
           {
-            echo "APP_URL=${{ vars.APP_URL || 'http://localhost:8080' }}"
-            echo "STAGING_URL=${{ vars.STAGING_URL || 'http://localhost:8080' }}"
-            echo "PRODUCTION_URL=${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}"
-            echo "STAGING_WEBHOOK_URL=${{ vars.STAGING_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
-            echo "PRODUCTION_WEBHOOK_URL=${{ vars.PRODUCTION_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
-            echo "STAGING_HEALTH_CHECK_URL=${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
-            echo "PRODUCTION_HEALTH_CHECK_URL=${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
-            echo "DEPLOYMENT_WEBHOOK_URL=${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
-            echo "HEALTH_CHECK_URL=${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
+            echo "APP_URL=${APP_URL:-$APP_URL_DEFAULT}"
+            echo "STAGING_URL=${STAGING_URL:-$STAGING_URL_DEFAULT}"
+            echo "PRODUCTION_URL=${PRODUCTION_URL:-$PRODUCTION_URL_DEFAULT}"
+            echo "STAGING_WEBHOOK_URL=${STAGING_WEBHOOK_URL:-$STAGING_WEBHOOK_URL_DEFAULT}"
+            echo "PRODUCTION_WEBHOOK_URL=${PRODUCTION_WEBHOOK_URL:-$PRODUCTION_WEBHOOK_URL_DEFAULT}"
+            echo "STAGING_HEALTH_CHECK_URL=${STAGING_HEALTH_CHECK_URL:-$STAGING_HEALTH_CHECK_URL_DEFAULT}"
+            echo "PRODUCTION_HEALTH_CHECK_URL=${PRODUCTION_HEALTH_CHECK_URL:-$PRODUCTION_HEALTH_CHECK_URL_DEFAULT}"
+            echo "DEPLOYMENT_WEBHOOK_URL=${DEPLOYMENT_WEBHOOK_URL:-$DEPLOYMENT_WEBHOOK_URL_DEFAULT}"
+            echo "HEALTH_CHECK_URL=${HEALTH_CHECK_URL:-$HEALTH_CHECK_URL_DEFAULT}"
           } >> "$GITHUB_ENV"
           
           echo "✅ Environment variables configured:"
-          echo "  APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}"
-          echo "  STAGING_URL: ${{ vars.STAGING_URL || 'http://localhost:8080' }}"
-          echo "  PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}"
+          echo "  APP_URL: ${APP_URL:-$APP_URL_DEFAULT}"
+          echo "  STAGING_URL: ${STAGING_URL:-$STAGING_URL_DEFAULT}"
+          echo "  PRODUCTION_URL: ${PRODUCTION_URL:-$PRODUCTION_URL_DEFAULT}"
 
       - name: 🔧 Configuration Validation
         run: |
@@ -650,9 +661,9 @@ jobs:
           
           # Export secrets via script to avoid linting issues
           # Set default URLs for different environments
-          APP_URL="${APP_URL:-http://localhost:8080}"
-          DEPLOYMENT_WEBHOOK_URL="${DEPLOYMENT_WEBHOOK_URL:-http://localhost:8080/webhook}"
-          HEALTH_CHECK_URL="${HEALTH_CHECK_URL:-http://localhost:8080/health}"
+          APP_URL="${APP_URL:-http://localhost:8084}"
+          DEPLOYMENT_WEBHOOK_URL="${DEPLOYMENT_WEBHOOK_URL:-http://localhost:8084/webhook}"
+          HEALTH_CHECK_URL="${HEALTH_CHECK_URL:-http://localhost:8084/health}"
           
           bash scripts/export-env-secrets.sh development \
             "$SUPABASE_URL" \
