@@ -13,10 +13,12 @@ import {
   Clock,
   Server,
   Shield,
-  TrendingUp
+  TrendingUp,
+  FileText
 } from 'lucide-react';
 import LiveFeed from '@/components/autonomous/LiveFeed';
 import MetricsBar from '@/components/autonomous/MetricsBar';
+import WebsiteBuilder from '@/components/autonomous/WebsiteBuilder';
 
 export default function AutonomousDashboard() {
   return (
@@ -109,10 +111,14 @@ export default function AutonomousDashboard() {
 
       {/* Main Dashboard Tabs */}
       <Tabs defaultValue="live-feed" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="live-feed" className="flex items-center space-x-2">
             <Activity className="w-4 h-4" />
             <span>Live Feed</span>
+          </TabsTrigger>
+          <TabsTrigger value="website-builder" className="flex items-center space-x-2">
+            <FileText className="w-4 h-4" />
+            <span>Website Builder</span>
           </TabsTrigger>
           <TabsTrigger value="metrics" className="flex items-center space-x-2">
             <TrendingUp className="w-4 h-4" />
@@ -126,6 +132,10 @@ export default function AutonomousDashboard() {
 
         <TabsContent value="live-feed" className="space-y-4">
           <LiveFeed />
+        </TabsContent>
+
+        <TabsContent value="website-builder" className="space-y-4">
+          <WebsiteBuilder />
         </TabsContent>
 
         <TabsContent value="metrics" className="space-y-4">
