@@ -2,6 +2,8 @@
 
 import { AutonomousTMSController } from '../autonomous-system/AutonomousTMSController';
 import { LogManager } from '../autonomous-system/LogManager';
+import { TransBotAIWebsiteBuilder } from './agents/TransBotAIWebsiteBuilder';
+import { AutonomousCommitAgent } from './agents/AutonomousCommitAgent';
 
 /**
  * 🚀 Trans Bot AI Autonomous Development System
@@ -18,20 +20,26 @@ import { LogManager } from '../autonomous-system/LogManager';
 
 class TransBotAIAutonomousSystem {
   private controller: AutonomousTMSController;
+  private websiteBuilder: TransBotAIWebsiteBuilder;
+  private commitAgent: AutonomousCommitAgent;
   private logManager: LogManager;
   private isRunning: boolean = false;
 
   constructor() {
     this.logManager = new LogManager();
     this.controller = new AutonomousTMSController();
+    this.websiteBuilder = new TransBotAIWebsiteBuilder();
+    this.commitAgent = new AutonomousCommitAgent();
   }
 
   async initialize(): Promise<void> {
     try {
       this.logManager.log('🤖 Initializing Trans Bot AI Autonomous Development System...', 'info');
       
-      // Initialize the autonomous controller
+      // Initialize all components
       await this.controller.initialize();
+      await this.websiteBuilder.initialize();
+      await this.commitAgent.initialize();
       
       this.logManager.log('✅ Trans Bot AI Autonomous System initialized successfully', 'success');
       
@@ -51,12 +59,15 @@ class TransBotAIAutonomousSystem {
       this.isRunning = true;
       this.logManager.log('🚀 Starting Trans Bot AI Autonomous Development System...', 'info');
       
-      // Start the autonomous controller
+      // Start all autonomous agents
       await this.controller.start();
+      await this.websiteBuilder.start();
+      await this.commitAgent.start();
       
       this.logManager.log('✅ Trans Bot AI Autonomous System started successfully', 'success');
       this.logManager.log('🎯 Agents are now building the 50-60 page Trans Bot AI website...', 'info');
       this.logManager.log('🤖 No human intervention required - system is fully autonomous', 'info');
+      this.logManager.log('📝 All changes will be automatically committed and pushed', 'info');
       
       // Keep the process running
       this.keepAlive();
@@ -78,8 +89,10 @@ class TransBotAIAutonomousSystem {
       this.isRunning = false;
       this.logManager.log('🛑 Stopping Trans Bot AI Autonomous Development System...', 'info');
       
-      // Stop the autonomous controller
+      // Stop all autonomous agents
       await this.controller.stop();
+      await this.websiteBuilder.stop();
+      await this.commitAgent.stop();
       
       this.logManager.log('✅ Trans Bot AI Autonomous System stopped successfully', 'success');
       
