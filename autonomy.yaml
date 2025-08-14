@@ -1,0 +1,380 @@
+# Autonomous Operating Charter - Single Source of Truth
+# Version: 1.0.0
+# Last Updated: 2025-08-14
+# Scope: All 20 portals + 50-page website + edge functions + n8n + CI/CD
+
+# =============================================================================
+# 1. ROLES & PRINCIPALS
+# =============================================================================
+
+roles:
+  human:
+    super_admin:
+      scope: global
+      permissions: ["feature_flags", "dr_cutover", "budget_edits", "audit_access"]
+      portals: ["Super Admin"]
+    
+    tenant_admin:
+      scope: tenant
+      permissions: ["portal_enable_disable", "user_invites", "billing", "entitlements"]
+      portals: ["Admin", "TMS Admin", "Onboarding"]
+    
+    ops_manager:
+      scope: tenant
+      permissions: ["broker_ops", "shipper_ops", "carrier_ops", "dlq_dry_run", "replay_approve"]
+      portals: ["Broker", "Shipper", "Carrier", "Load Board"]
+    
+    dispatcher:
+      scope: tenant
+      permissions: ["tender_assign_track", "exception_triage", "docs_submission"]
+      portals: ["Broker", "Shipper", "Carrier", "Driver"]
+    
+    finance_manager:
+      scope: tenant
+      permissions: ["ar_ap", "settlements", "factoring_releases"]
+      portals: ["Financials", "Factoring"]
+    
+    analyst:
+      scope: tenant
+      permissions: ["analytics", "exports", "kpi_dashboards"]
+      portals: ["Analytics"]
+    
+    developer:
+      scope: tenant
+      permissions: ["read_prod_logs", "read_traces", "deploy_staging"]
+      portals: ["All (read-only)"]
+    
+    viewer:
+      scope: tenant
+      permissions: ["read_only"]
+      portals: ["All (read-only)"]
+
+  machine:
+    autopilot:
+      email: "autopilot@transbotai.com"
+      permissions: ["queue_mgmt", "slo_gates", "canary_flags"]
+      rotation_days: 90
+    
+    agents:
+      email: "agents@transbotai.com"
+      permissions: ["execute_tasks", "write_logs", "publish_outbox"]
+      rotation_days: 90
+    
+    dlq:
+      email: "dlq@transbotai.com"
+      permissions: ["dlq_replay", "signed_calls", "audit"]
+      rotation_days: 90
+    
+    ci:
+      email: "ci@transbotai.com"
+      permissions: ["post_deploy_verify", "auto_rollback"]
+      rotation_days: 90
+    
+    n8n:
+      email: "n8n@transbotai.com"
+      permissions: ["workflows", "signed_webhooks", "trace_propagation"]
+      rotation_days: 90
+    
+    system:
+      email: "system@transbotai.com"
+      permissions: ["dr_promote_rollback", "emergency_stop"]
+      rotation_days: 90
+
+# =============================================================================
+# 2. AUTHORITY & HARD RAILS
+# =============================================================================
+
+authority:
+  scope: "All 20 canonical portals + 50-page site + edge functions + n8n + CI/CD"
+  powers:
+    - "read/write data"
+    - "publish outbox"
+    - "DLQ replay"
+    - "toggle flags"
+    - "DR cutover"
+    - "deploy safe patches"
+    - "auto-rollback"
+
+  hard_rails:
+    global_kill_switch: "autonomy.emergencyStop"
+    budgets_rate_limits: "tenant/IP based"
+    security: "RLS + JWT + v2 HMAC + idempotency + PII redaction"
+    slo_gates: "auto-throttle + rollback on breach"
+
+# =============================================================================
+# 3. FEATURE FLAGS (Copy-paste SQL)
+# =============================================================================
+
+feature_flags:
+  global_mode_kill_switch: |
+    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
+    ('autonomy.emergencyStop','global',false,'enable autonomy','system'),
+    ('autonomy.mode','global','FULL','full authority mode','system'),
+    ('agents.autonomousEnabled','global',true,'run agents','system'),
+    ('obs.otelEnabled','global',true,'tracing on','system')
+    on conflict (key,scope) do update set value=excluded.value;
+
+  budgets_safety_rails: |
+    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
+    ('budget.agents.maxConcurrent','global',150,'concurrency cap','autopilot'),
+    ('budget.replay.maxBatch','global',50,'dlq cap','dlq'),
+    ('budget.replay.maxPayloadMB','global',2,'payload cap','dlq'),
+    ('rate.replay.per5m','global',3,'rate limit','dlq')
+    on conflict (key,scope) do update set value=excluded.value;
+
+  emergency_stop: |
+    update feature_flags_v2
+    set value=true
+    where key='autonomy.emergencyStop' and scope='global';
+
+# =============================================================================
+# 4. PORTAL COVERAGE (20 Canonical)
+# =============================================================================
+
+portals:
+  super_admin:
+    contract: "tenant provisioning, global flags, budgets, DR runbooks"
+    agents: ["autopilot", "system"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  admin:
+    contract: "user/role lifecycle, SSO/MFA, tenant branding, secrets"
+    agents: ["autopilot", "agents"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  tms_admin:
+    contract: "lanes, equipment, pricing guards, EDI config"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  onboarding:
+    contract: "6-step wizard, data import, integration checks, go-live"
+    agents: ["agents", "n8n"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  broker:
+    contract: "quote→route→tender→book; docs; comms; SLA timers"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  shipper:
+    contract: "self-serve quotes, booking, tracking, invoices, payments"
+    agents: ["agents", "n8n"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  carrier:
+    contract: "bids, capacity, compliance, contract lanes, scorecards"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  driver:
+    contract: "stops, status, POD, offline cache, error-tolerant sync"
+    agents: ["agents"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  owner_operator:
+    contract: "loads, revenue, settlements, maintenance"
+    agents: ["agents", "n8n"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  factoring:
+    contract: "invoice packages, UCC checks, remittance tracking"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  load_board:
+    contract: "curated posts, anti-dup, response SLAs, escrow"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  crm:
+    contract: "accounts/opps/tasks, lifecycle webhooks"
+    agents: ["agents", "n8n"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  financials:
+    contract: "AR/AP, payouts, reconciliation, variance handling"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  edi:
+    contract: "204/990/214/210 + 997 ACKs, idempotent windows"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  marketplace:
+    contract: "app installs, tokens, health pings, revocation"
+    agents: ["agents", "n8n"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  analytics:
+    contract: "exec/ops KPIs, funnel, SLO budget, exemplars→traces"
+    agents: ["agents", "autopilot"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  autonomous:
+    contract: "queue/SLO/quarantine, replay tools, Live Feed"
+    agents: ["autopilot", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  workers:
+    contract: "shift scheduling, load balancing, golden paths"
+    agents: ["agents", "autopilot"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  rates:
+    contract: "instant pricing, contracts, index blending, guards"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+  
+  directory:
+    contract: "partner KYC, safety, sanctions, watchlists"
+    agents: ["agents", "dlq"]
+    lifecycle: "Detect → Decide → Act → Prove"
+
+# =============================================================================
+# 5. 50-PAGE WEBSITE EVENT MAP
+# =============================================================================
+
+website:
+  pages:
+    - "Home"
+    - "Pricing"
+    - "Features"
+    - "ROI"
+    - "Solutions (by vertical)"
+    - "Blog"
+    - "Docs"
+    - "Support"
+    - "Careers"
+    - "Legal"
+    - "Contact"
+    - "Demo"
+    - "etc."
+
+  agents: ["agents", "n8n"]
+  tasks:
+    - "generate/refresh content"
+    - "SEO scores"
+    - "images"
+    - "structured data"
+
+  events:
+    - "lead.created"
+    - "demo.requested"
+    - "roi.calculated"
+    - "checkout.started"
+
+  flow: "outbox → n8n → CRM/Stripe"
+  tracking: "UTM capture, idempotent writes, PII redacted spans"
+  realtime: "Live progress tiles (no polling), build metrics updated every 2s"
+
+# =============================================================================
+# 6. SCHEDULES (AUTONOMOUS)
+# =============================================================================
+
+schedules:
+  every_30s:
+    - "health probes"
+    - "SLO gates"
+    - "canary routing"
+    - "queue depth"
+
+  every_5m:
+    - "DLQ replay (≤50, ≤2MB; stop if >20% fail)"
+    - "stale lock cleanup"
+
+  hourly:
+    - "guardrail scans (PII leaks, idempotency collisions)"
+    - "ETL rolls"
+
+  daily:
+    - "partition rotation"
+    - "TTL cleanup"
+    - "backup freshness"
+    - "key drift check"
+
+  weekly:
+    - "DR drill rehearsal"
+    - "security scans"
+    - "portal audit"
+
+  monthly:
+    - "restore test"
+    - "cost/SLO review"
+    - "key rotation rehearsal"
+
+# =============================================================================
+# 7. CI/CD SELF-HEAL & ROLLBACK GATES
+# =============================================================================
+
+cicd:
+  post_deploy_verify: "run k6 thresholds + SQL alerts"
+  failure_action: "disable agents.autonomousEnabled, open PR with logs and trace links"
+  security: "least-privilege tokens; concurrency and timeouts on all jobs"
+
+# =============================================================================
+# 8. BUDGETS, SLOS, THRESHOLDS
+# =============================================================================
+
+slos:
+  uptime: "≥ 99.95%"
+  success: "≥ 98%"
+  p95: "≤ 2.5s"
+
+replay_caps:
+  rate: "3/5m/tenant/IP"
+  batch: "≤ 50"
+  payload: "≤ 2MB"
+  stop_condition: "fail > 20%"
+
+concurrency:
+  default: 150
+  adaptive: "downshift on p95 drift"
+
+k6_thresholds:
+  http_req_failed: "rate < 0.02"
+  p95: "< 2500ms"
+  outbox_lag_p95: "< 5000ms"
+
+# =============================================================================
+# 9. SECURITY & PRIVACY (NON-NEGOTIABLE)
+# =============================================================================
+
+security:
+  rls: "on all tenant data; service-role only from Edge"
+  authentication: "v2 HMAC (timestamp + nonce) + JWT role claims"
+  idempotency: "keys systemwide; Stripe/EDI replay-safe"
+  pii: "redaction in logs/spans (email/name/URL masked)"
+  csp_cors: "locked; secrets never in browser"
+  audit: "every admin/agent action produces audit rows + trace"
+
+# =============================================================================
+# 10. VERIFICATION & PROVE-GREEN
+# =============================================================================
+
+verification:
+  flags: "confirm 4 activation flags match expected values"
+  synthetic_test: "rates.price_one → Live Feed: start/finish in seconds"
+  error_test: "force 1 safe error → Slack shows trace link; DLQ displays same trace"
+  k6_smoke: "all thresholds green; SLO dashboard shows green"
+
+# =============================================================================
+# 11. STOP / DEGRADE / STEP-DOWN
+# =============================================================================
+
+emergency_controls:
+  stop: "autonomy.emergencyStop=true (halts all autonomous writes)"
+  degrade: "lower budget.agents.maxConcurrent, pause DLQ, disable a portal flag"
+  step_down: "keep agents read-only (flags set), humans review/approve replays"
+
+# =============================================================================
+# 12. TL;DR SUMMARY
+# =============================================================================
+
+summary:
+  authority: "Full authority granted to agents across the platform with provable guardrails"
+  emergency: "One-command emergency stop"
+  operation: "24/7 Detect→Decide→Act→Prove loop with realtime UI and trace-linked Slack"
+  human_required: "No human required, but everything is audited, reversible, and budget-bounded"
+  config_source: "Single source of truth for all autonomous operations"
