@@ -1,87 +1,102 @@
-# Autonomous Operating Charter - Single Source of Truth
-# Version: 1.0.0
-# Last Updated: 2025-08-14
+# Autonomous Operating Charter - Final Implementation
+# Version: 2.0.0
+# Last Updated: 2025-01-17
 # Scope: All 20 portals + 50-page website + edge functions + n8n + CI/CD
+# Status: FULL AUTONOMOUS AUTHORITY GRANTED
 
 # =============================================================================
-# 1. ROLES & PRINCIPALS
+# 1. ROLES & PRINCIPALS (Humans + Machines)
 # =============================================================================
 
 roles:
   human:
     super_admin:
       scope: global
-      permissions: ["feature_flags", "dr_cutover", "budget_edits", "audit_access"]
+      permissions: ["feature_flags", "dr_cutover", "budget_edits", "audit_access", "emergency_stop"]
       portals: ["Super Admin"]
+      description: "Global system control, emergency stop, DR cutover"
     
     tenant_admin:
       scope: tenant
       permissions: ["portal_enable_disable", "user_invites", "billing", "entitlements"]
       portals: ["Admin", "TMS Admin", "Onboarding"]
+      description: "Tenant-level administration and user management"
     
     ops_manager:
       scope: tenant
       permissions: ["broker_ops", "shipper_ops", "carrier_ops", "dlq_dry_run", "replay_approve"]
       portals: ["Broker", "Shipper", "Carrier", "Load Board"]
+      description: "Operational management and DLQ control"
     
     dispatcher:
       scope: tenant
       permissions: ["tender_assign_track", "exception_triage", "docs_submission"]
       portals: ["Broker", "Shipper", "Carrier", "Driver"]
+      description: "Dispatch operations and exception handling"
     
     finance_manager:
       scope: tenant
       permissions: ["ar_ap", "settlements", "factoring_releases"]
       portals: ["Financials", "Factoring"]
+      description: "Financial operations and settlements"
     
     analyst:
       scope: tenant
       permissions: ["analytics", "exports", "kpi_dashboards"]
       portals: ["Analytics"]
+      description: "Analytics and reporting access"
     
     developer:
       scope: tenant
       permissions: ["read_prod_logs", "read_traces", "deploy_staging"]
       portals: ["All (read-only)"]
+      description: "Development and debugging access"
     
     viewer:
       scope: tenant
       permissions: ["read_only"]
       portals: ["All (read-only)"]
+      description: "Read-only access to dashboards and reports"
 
   machine:
     autopilot:
       email: "autopilot@transbotai.com"
-      permissions: ["queue_mgmt", "slo_gates", "canary_flags"]
+      permissions: ["queue_mgmt", "slo_gates", "canary_flags", "budget_control"]
       rotation_days: 90
+      description: "Orchestrator for queue management and SLO gates"
     
     agents:
       email: "agents@transbotai.com"
-      permissions: ["execute_tasks", "write_logs", "publish_outbox"]
+      permissions: ["execute_tasks", "write_logs", "publish_outbox", "portal_control"]
       rotation_days: 90
+      description: "Worker agents for task execution and portal operations"
     
     dlq:
       email: "dlq@transbotai.com"
-      permissions: ["dlq_replay", "signed_calls", "audit"]
+      permissions: ["dlq_replay", "signed_calls", "audit", "replay_budget"]
       rotation_days: 90
+      description: "DLQ replay and audit operations"
     
     ci:
       email: "ci@transbotai.com"
-      permissions: ["post_deploy_verify", "auto_rollback"]
+      permissions: ["post_deploy_verify", "auto_rollback", "health_checks"]
       rotation_days: 90
+      description: "CI/CD self-healing and rollback operations"
     
     n8n:
       email: "n8n@transbotai.com"
-      permissions: ["workflows", "signed_webhooks", "trace_propagation"]
+      permissions: ["workflows", "signed_webhooks", "trace_propagation", "event_processing"]
       rotation_days: 90
+      description: "n8n workflow orchestration and event processing"
     
     system:
       email: "system@transbotai.com"
-      permissions: ["dr_promote_rollback", "emergency_stop"]
+      permissions: ["dr_promote_rollback", "emergency_stop", "feature_flags"]
       rotation_days: 90
+      description: "Break-glass operations and emergency controls"
 
 # =============================================================================
-# 2. AUTHORITY & HARD RAILS
+# 2. AUTHORITY & HARD RAILS (Always On)
 # =============================================================================
 
 authority:
@@ -94,12 +109,17 @@ authority:
     - "DR cutover"
     - "deploy safe patches"
     - "auto-rollback"
+    - "portal enable/disable"
+    - "user lifecycle management"
+    - "billing operations"
+    - "analytics generation"
+    - "website content updates"
 
   hard_rails:
     global_kill_switch: "autonomy.emergencyStop"
-    budgets_rate_limits: "tenant/IP based"
-    security: "RLS + JWT + v2 HMAC + idempotency + PII redaction"
-    slo_gates: "auto-throttle + rollback on breach"
+    budgets_rate_limits: "tenant/IP based concurrency, replay caps, cost ceilings"
+    security: "RLS + JWT + v2 HMAC (timestamp + nonce), idempotency, PII redaction"
+    slo_gates: "auto-throttle + rollback on breach (uptime < 99.95%, success < 98%, p95 > 2.5s)"
 
 # =============================================================================
 # 3. FEATURE FLAGS (Copy-paste SQL)
@@ -107,6 +127,7 @@ authority:
 
 feature_flags:
   global_mode_kill_switch: |
+    -- Global mode & kill switch
     insert into feature_flags_v2(key,scope,value,reason,owner_name) values
     ('autonomy.emergencyStop','global',false,'enable autonomy','system'),
     ('autonomy.mode','global','FULL','full authority mode','system'),
@@ -115,6 +136,7 @@ feature_flags:
     on conflict (key,scope) do update set value=excluded.value;
 
   budgets_safety_rails: |
+    -- Budgets / safety rails
     insert into feature_flags_v2(key,scope,value,reason,owner_name) values
     ('budget.agents.maxConcurrent','global',150,'concurrency cap','autopilot'),
     ('budget.replay.maxBatch','global',50,'dlq cap','dlq'),
@@ -122,13 +144,49 @@ feature_flags:
     ('rate.replay.per5m','global',3,'rate limit','dlq')
     on conflict (key,scope) do update set value=excluded.value;
 
+  portal_authority: |
+    -- Portal authority grants
+    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
+    ('portal.super_admin.autonomous','global',true,'super admin portal control','agents'),
+    ('portal.admin.autonomous','global',true,'admin portal control','agents'),
+    ('portal.tms_admin.autonomous','global',true,'TMS admin portal control','agents'),
+    ('portal.onboarding.autonomous','global',true,'onboarding portal control','agents'),
+    ('portal.broker.autonomous','global',true,'broker portal control','agents'),
+    ('portal.shipper.autonomous','global',true,'shipper portal control','agents'),
+    ('portal.carrier.autonomous','global',true,'carrier portal control','agents'),
+    ('portal.driver.autonomous','global',true,'driver portal control','agents'),
+    ('portal.owner_operator.autonomous','global',true,'owner operator portal control','agents'),
+    ('portal.factoring.autonomous','global',true,'factoring portal control','agents'),
+    ('portal.load_board.autonomous','global',true,'load board portal control','agents'),
+    ('portal.crm.autonomous','global',true,'CRM portal control','agents'),
+    ('portal.financials.autonomous','global',true,'financials portal control','agents'),
+    ('portal.edi.autonomous','global',true,'EDI portal control','agents'),
+    ('portal.marketplace.autonomous','global',true,'marketplace portal control','agents'),
+    ('portal.analytics.autonomous','global',true,'analytics portal control','agents'),
+    ('portal.autonomous.autonomous','global',true,'autonomous portal control','agents'),
+    ('portal.workers.autonomous','global',true,'workers portal control','agents'),
+    ('portal.rates.autonomous','global',true,'rates portal control','agents'),
+    ('portal.directory.autonomous','global',true,'directory portal control','agents')
+    on conflict (key,scope) do update set value=excluded.value;
+
+  website_authority: |
+    -- Website content authority
+    insert into feature_flags_v2(key,scope,value,reason,owner_name) values
+    ('website.content.autonomous','global',true,'website content generation','agents'),
+    ('website.seo.autonomous','global',true,'website SEO optimization','agents'),
+    ('website.images.autonomous','global',true,'website image generation','agents'),
+    ('website.structured_data.autonomous','global',true,'website structured data','agents'),
+    ('website.analytics.autonomous','global',true,'website analytics','agents')
+    on conflict (key,scope) do update set value=excluded.value;
+
   emergency_stop: |
+    -- Emergency stop (one command)
     update feature_flags_v2
     set value=true
     where key='autonomy.emergencyStop' and scope='global';
 
 # =============================================================================
-# 4. PORTAL COVERAGE (20 Canonical)
+# 4. PORTAL COVERAGE (20 Canonical) — Start→End Contracts
 # =============================================================================
 
 portals:
@@ -136,104 +194,124 @@ portals:
     contract: "tenant provisioning, global flags, budgets, DR runbooks"
     agents: ["autopilot", "system"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Full system control and emergency operations"
   
   admin:
     contract: "user/role lifecycle, SSO/MFA, tenant branding, secrets"
     agents: ["autopilot", "agents"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "User management and tenant configuration"
   
   tms_admin:
     contract: "lanes, equipment, pricing guards, EDI config"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "TMS configuration and equipment management"
   
   onboarding:
     contract: "6-step wizard, data import, integration checks, go-live"
     agents: ["agents", "n8n"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Customer onboarding and data migration"
   
   broker:
     contract: "quote→route→tender→book; docs; comms; SLA timers"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Broker operations and load management"
   
   shipper:
     contract: "self-serve quotes, booking, tracking, invoices, payments"
     agents: ["agents", "n8n"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Shipper self-service operations"
   
   carrier:
     contract: "bids, capacity, compliance, contract lanes, scorecards"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Carrier operations and capacity management"
   
   driver:
     contract: "stops, status, POD, offline cache, error-tolerant sync"
     agents: ["agents"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Driver operations and mobile app"
   
   owner_operator:
     contract: "loads, revenue, settlements, maintenance"
     agents: ["agents", "n8n"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Owner-operator business management"
   
   factoring:
     contract: "invoice packages, UCC checks, remittance tracking"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Factoring and financial services"
   
   load_board:
     contract: "curated posts, anti-dup, response SLAs, escrow"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Load board operations and matching"
   
   crm:
     contract: "accounts/opps/tasks, lifecycle webhooks"
     agents: ["agents", "n8n"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "CRM operations and customer lifecycle"
   
   financials:
     contract: "AR/AP, payouts, reconciliation, variance handling"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Financial operations and accounting"
   
   edi:
     contract: "204/990/214/210 + 997 ACKs, idempotent windows"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "EDI operations and integration"
   
   marketplace:
     contract: "app installs, tokens, health pings, revocation"
     agents: ["agents", "n8n"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Marketplace operations and app management"
   
   analytics:
     contract: "exec/ops KPIs, funnel, SLO budget, exemplars→traces"
     agents: ["agents", "autopilot"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Analytics and business intelligence"
   
   autonomous:
     contract: "queue/SLO/quarantine, replay tools, Live Feed"
     agents: ["autopilot", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Autonomous system operations"
   
   workers:
     contract: "shift scheduling, load balancing, golden paths"
     agents: ["agents", "autopilot"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Worker management and scheduling"
   
   rates:
     contract: "instant pricing, contracts, index blending, guards"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Rate management and pricing"
   
   directory:
     contract: "partner KYC, safety, sanctions, watchlists"
     agents: ["agents", "dlq"]
     lifecycle: "Detect → Decide → Act → Prove"
+    authority: "Partner directory and compliance"
 
 # =============================================================================
-# 5. 50-PAGE WEBSITE EVENT MAP
+# 5. 50-PAGE WEBSITE EVENT MAP (Zero-touch)
 # =============================================================================
 
 website:
@@ -250,7 +328,44 @@ website:
     - "Legal"
     - "Contact"
     - "Demo"
-    - "etc."
+    - "Case Studies"
+    - "Resources"
+    - "API Documentation"
+    - "Integration Guides"
+    - "Security"
+    - "Compliance"
+    - "Partners"
+    - "News"
+    - "Events"
+    - "Webinars"
+    - "Training"
+    - "Certification"
+    - "Community"
+    - "Help Center"
+    - "Status Page"
+    - "Roadmap"
+    - "Changelog"
+    - "Press Kit"
+    - "Investor Relations"
+    - "Sustainability"
+    - "Diversity"
+    - "Open Source"
+    - "Developer Portal"
+    - "App Store"
+    - "Marketplace"
+    - "Templates"
+    - "Tools"
+    - "Calculators"
+    - "Reports"
+    - "Whitepapers"
+    - "E-books"
+    - "Videos"
+    - "Podcasts"
+    - "Newsletters"
+    - "Social Media"
+    - "Mobile Apps"
+    - "Desktop Apps"
+    - "Integrations"
 
   agents: ["agents", "n8n"]
   tasks:
@@ -258,19 +373,29 @@ website:
     - "SEO scores"
     - "images"
     - "structured data"
+    - "meta tags"
+    - "schema markup"
+    - "performance optimization"
+    - "accessibility compliance"
+    - "mobile responsiveness"
+    - "A/B testing"
 
   events:
     - "lead.created"
     - "demo.requested"
     - "roi.calculated"
     - "checkout.started"
+    - "content.updated"
+    - "seo.score.changed"
+    - "page.performance.measured"
+    - "conversion.tracked"
 
   flow: "outbox → n8n → CRM/Stripe"
   tracking: "UTM capture, idempotent writes, PII redacted spans"
   realtime: "Live progress tiles (no polling), build metrics updated every 2s"
 
 # =============================================================================
-# 6. SCHEDULES (AUTONOMOUS)
+# 6. SCHEDULES (Autonomous)
 # =============================================================================
 
 schedules:
@@ -279,30 +404,41 @@ schedules:
     - "SLO gates"
     - "canary routing"
     - "queue depth"
+    - "emergency stop check"
 
   every_5m:
     - "DLQ replay (≤50, ≤2MB; stop if >20% fail)"
     - "stale lock cleanup"
+    - "portal health checks"
+    - "website content refresh"
 
   hourly:
     - "guardrail scans (PII leaks, idempotency collisions)"
     - "ETL rolls"
+    - "portal performance optimization"
+    - "website SEO updates"
 
   daily:
     - "partition rotation"
     - "TTL cleanup"
     - "backup freshness"
     - "key drift check"
+    - "portal audit"
+    - "website content audit"
 
   weekly:
     - "DR drill rehearsal"
     - "security scans"
     - "portal audit"
+    - "website performance review"
+    - "autonomous agent performance review"
 
   monthly:
     - "restore test"
     - "cost/SLO review"
     - "key rotation rehearsal"
+    - "portal feature review"
+    - "website content strategy update"
 
 # =============================================================================
 # 7. CI/CD SELF-HEAL & ROLLBACK GATES
@@ -312,6 +448,8 @@ cicd:
   post_deploy_verify: "run k6 thresholds + SQL alerts"
   failure_action: "disable agents.autonomousEnabled, open PR with logs and trace links"
   security: "least-privilege tokens; concurrency and timeouts on all jobs"
+  autonomous_deployment: "agents can deploy to staging and production"
+  auto_rollback: "automatic rollback on SLO breach or health check failure"
 
 # =============================================================================
 # 8. BUDGETS, SLOS, THRESHOLDS
@@ -321,6 +459,8 @@ slos:
   uptime: "≥ 99.95%"
   success: "≥ 98%"
   p95: "≤ 2.5s"
+  portal_response: "≤ 1.5s"
+  website_load: "≤ 2.0s"
 
 replay_caps:
   rate: "3/5m/tenant/IP"
@@ -331,14 +471,18 @@ replay_caps:
 concurrency:
   default: 150
   adaptive: "downshift on p95 drift"
+  portal_agents: 50
+  website_agents: 30
 
 k6_thresholds:
   http_req_failed: "rate < 0.02"
   p95: "< 2500ms"
   outbox_lag_p95: "< 5000ms"
+  portal_p95: "< 1500ms"
+  website_p95: "< 2000ms"
 
 # =============================================================================
-# 9. SECURITY & PRIVACY (NON-NEGOTIABLE)
+# 9. SECURITY & PRIVACY (Non-negotiable)
 # =============================================================================
 
 security:
@@ -348,6 +492,8 @@ security:
   pii: "redaction in logs/spans (email/name/URL masked)"
   csp_cors: "locked; secrets never in browser"
   audit: "every admin/agent action produces audit rows + trace"
+  encryption: "at rest and in transit"
+  access_control: "role-based with least privilege"
 
 # =============================================================================
 # 10. VERIFICATION & PROVE-GREEN
@@ -358,6 +504,8 @@ verification:
   synthetic_test: "rates.price_one → Live Feed: start/finish in seconds"
   error_test: "force 1 safe error → Slack shows trace link; DLQ displays same trace"
   k6_smoke: "all thresholds green; SLO dashboard shows green"
+  portal_test: "each portal responds within SLA"
+  website_test: "website loads and functions correctly"
 
 # =============================================================================
 # 11. STOP / DEGRADE / STEP-DOWN
@@ -367,9 +515,44 @@ emergency_controls:
   stop: "autonomy.emergencyStop=true (halts all autonomous writes)"
   degrade: "lower budget.agents.maxConcurrent, pause DLQ, disable a portal flag"
   step_down: "keep agents read-only (flags set), humans review/approve replays"
+  portal_disable: "disable specific portal autonomy"
+  website_disable: "disable website content generation"
 
 # =============================================================================
-# 12. TL;DR SUMMARY
+# 12. AUTONOMOUS OPERATIONS CHECKLIST
+# =============================================================================
+
+autonomous_operations:
+  startup:
+    - "Verify emergency stop is false"
+    - "Check all portal flags are enabled"
+    - "Validate SLO thresholds"
+    - "Confirm agent permissions"
+    - "Test outbox connectivity"
+    - "Verify DLQ access"
+    - "Check website authority"
+    - "Validate audit logging"
+
+  runtime:
+    - "Monitor SLO compliance"
+    - "Track portal performance"
+    - "Watch website metrics"
+    - "Check agent health"
+    - "Monitor budget consumption"
+    - "Track error rates"
+    - "Watch queue depths"
+    - "Monitor trace propagation"
+
+  shutdown:
+    - "Graceful agent shutdown"
+    - "Complete pending operations"
+    - "Save state"
+    - "Log shutdown reason"
+    - "Notify stakeholders"
+    - "Update status"
+
+# =============================================================================
+# 13. TL;DR SUMMARY
 # =============================================================================
 
 summary:
@@ -378,3 +561,4 @@ summary:
   operation: "24/7 Detect→Decide→Act→Prove loop with realtime UI and trace-linked Slack"
   human_required: "No human required, but everything is audited, reversible, and budget-bounded"
   config_source: "Single source of truth for all autonomous operations"
+  status: "FULL AUTONOMOUS AUTHORITY GRANTED - 24/7 OPERATION ENABLED"
