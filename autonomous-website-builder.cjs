@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
 const WebSocket = require('ws');
-const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 console.log('🚀 Starting Autonomous Website Builder...');
-console.log('📝 Agents will now BUILD and MODIFY website pages in real-time!');
+console.log('📝 This will create new pages, headers, and components based on tasks!');
 
 class AutonomousWebsiteBuilder {
   constructor() {
@@ -16,26 +15,28 @@ class AutonomousWebsiteBuilder {
     this.pagesDir = './logistics-lynx/src/pages';
     this.componentsDir = './logistics-lynx/src/components';
     this.agents = [
-      { name: 'PageBuilder', status: 'idle', task: 'Building new pages' },
+      { name: 'PageCreator', status: 'idle', task: 'Creating new pages' },
+      { name: 'HeaderBuilder', status: 'idle', task: 'Building headers' },
+      { name: 'ComponentArchitect', status: 'idle', task: 'Architecting components' },
       { name: 'ContentWriter', status: 'idle', task: 'Writing content' },
-      { name: 'ComponentCreator', status: 'idle', task: 'Creating components' },
-      { name: 'StyleUpdater', status: 'idle', task: 'Updating styles' },
-      { name: 'DataIntegrator', status: 'idle', task: 'Integrating data' }
+      { name: 'NavigationDesigner', status: 'idle', task: 'Designing navigation' },
+      { name: 'LayoutEngineer', status: 'idle', task: 'Engineering layouts' }
     ];
-    this.recentUpdates = [];
+    this.taskQueue = [];
     this.buildCount = 0;
+    this.devServerProcess = null;
   }
 
   startWebSocketServer() {
-    this.wss = new WebSocket.Server({ port: 8085 });
-    console.log('🌐 WebSocket server started on port 8085');
+    this.wss = new WebSocket.Server({ port: 8087 });
+    console.log('🌐 Autonomous Website Builder WebSocket server started on port 8087');
 
     this.wss.on('connection', (ws) => {
-      console.log('🔌 New client connected to autonomous builder');
+      console.log('🔌 New client connected to autonomous website builder');
       
       // Send initial status
       ws.send(JSON.stringify({
-        type: 'agent_status',
+        type: 'builder_status',
         data: this.agents,
         timestamp: new Date().toISOString()
       }));
@@ -44,7 +45,7 @@ class AutonomousWebsiteBuilder {
         try {
           const data = JSON.parse(message);
           if (data.type === 'request_build') {
-            this.startBuildingProcess(ws);
+            this.startAutonomousBuild(ws, data.task || 'default');
           }
         } catch (error) {
           console.log('Error parsing message:', error.message);
@@ -53,8 +54,8 @@ class AutonomousWebsiteBuilder {
     });
   }
 
-  startBuildingProcess(ws) {
-    console.log('🏗️ Starting autonomous website building process...');
+  startAutonomousBuild(ws, task) {
+    console.log(`🔄 Starting autonomous build for task: ${task}`);
     
     // Start all agents
     this.agents.forEach(agent => {
@@ -63,256 +64,477 @@ class AutonomousWebsiteBuilder {
 
     // Broadcast status update
     this.broadcastUpdate({
-      type: 'agent_status',
+      type: 'builder_status',
       data: this.agents,
-      message: 'All agents started building'
+      message: 'All agents started autonomous build'
     });
 
-    // Start building tasks
-    this.buildNewPage(ws);
-    this.updateExistingPage(ws);
-    this.createNewComponent(ws);
-    this.updateStyles(ws);
-    this.integrateData(ws);
+    // Execute build tasks based on the request
+    switch (task) {
+      case 'homepage':
+        this.buildHomePage(ws);
+        break;
+      case 'dashboard':
+        this.buildDashboard(ws);
+        break;
+      case 'navigation':
+        this.buildNavigation(ws);
+        break;
+      case 'components':
+        this.buildComponents(ws);
+        break;
+      default:
+        this.buildCompleteWebsite(ws);
+    }
   }
 
-  buildNewPage(ws) {
-    const agent = this.agents.find(a => a.name === 'PageBuilder');
+  buildHomePage(ws) {
+    const agent = this.agents.find(a => a.name === 'PageCreator');
     agent.status = 'building';
-    agent.task = 'Creating new autonomous dashboard page';
+    agent.task = 'Creating new homepage';
 
-    const pageContent = `import React, { useState, useEffect } from 'react';
+    const timestamp = new Date().toLocaleTimeString();
+    const homePageContent = `import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
 
-const AutonomousDashboard = () => {
-  const [buildStatus, setBuildStatus] = useState('Building...');
-  const [lastUpdate, setLastUpdate] = useState(new Date().toLocaleTimeString());
-  const [buildCount, setBuildCount] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLastUpdate(new Date().toLocaleTimeString());
-      setBuildCount(prev => prev + 1);
-      setBuildStatus(\`Build #\${buildCount + 1} completed at \${new Date().toLocaleTimeString()}\`);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [buildCount]);
-
+const HomePage = () => {
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">🤖 Autonomous Dashboard</h1>
-        <Badge variant="secondary" className="text-green-600">
-          Built by AI Agents
-        </Badge>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              🏗️ Build Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">{buildStatus}</p>
-            <p className="text-xs text-muted-foreground mt-2">
-              Last Update: {lastUpdate}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              📊 Build Metrics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Total Builds:</span>
-                <span className="font-bold">{buildCount}</span>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header - Created by Autonomous Agent */}
+      <header className="bg-white shadow-lg border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">TMS</span>
               </div>
-              <div className="flex justify-between">
-                <span>Status:</span>
-                <Badge variant="outline" className="text-green-600">
-                  Active
-                </Badge>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Transportation Management System</h1>
+                <p className="text-sm text-gray-600">Powered by Autonomous Agents</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              ⚡ Real-time Updates
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              This page is being continuously updated by autonomous agents
-            </p>
-            <Button className="mt-2" size="sm">
-              View Build Log
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>🔄 Live Build Feed</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              <span>PageBuilder: Creating new components</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              <span>ContentWriter: Updating content</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-              <span>StyleUpdater: Applying new styles</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-              <span>DataIntegrator: Connecting data sources</span>
+            <div className="flex items-center space-x-4">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                🔥 Live Updates Active
+              </Badge>
+              <Button variant="default">Get Started</Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </header>
+
+      {/* Hero Section - Created by Autonomous Agent */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Welcome to the Future of Transportation Management
+            </h2>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Our autonomous agents are continuously building and improving this platform. 
+              Watch as new features, pages, and components are created in real-time.
+            </p>
+            <div className="flex justify-center space-x-4">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                Explore Features
+              </Button>
+              <Button size="lg" variant="outline">
+                View Live Updates
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid - Created by Autonomous Agent */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              Autonomous Features
+            </h3>
+            <p className="text-gray-600">
+              Built and maintained by intelligent agents
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="border-blue-200 bg-blue-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-blue-700">
+                  🤖 Autonomous Agents
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-blue-600">
+                  Intelligent agents continuously monitor, build, and improve the system
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-green-200 bg-green-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-green-700">
+                  ⚡ Real-Time Updates
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-green-600">
+                  Watch as new pages and components are created live
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-purple-200 bg-purple-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-700">
+                  🎯 Smart Automation
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-purple-600">
+                  Automated workflows and intelligent decision making
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Live Status Section - Created by Autonomous Agent */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Live Build Status
+            </h3>
+            <p className="text-gray-600">
+              Current autonomous agent activities
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {this.agents.map((agent, index) => (
+              <Card key={index} className="text-center">
+                <CardContent className="pt-6">
+                  <div className="text-2xl mb-2">{this.getAgentIcon(agent.name)}</div>
+                  <h4 className="font-semibold text-sm mb-1">{agent.name}</h4>
+                  <Badge variant={agent.status === 'building' ? 'default' : 'secondary'} className="text-xs">
+                    {agent.status}
+                  </Badge>
+                  <p className="text-xs text-gray-500 mt-2">{agent.task}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer - Created by Autonomous Agent */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="text-lg font-semibold mb-4">TMS Platform</h4>
+              <p className="text-gray-400 text-sm">
+                Built by autonomous agents for the future of transportation management.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Features</h4>
+              <ul className="text-gray-400 text-sm space-y-2">
+                <li>• Autonomous Agents</li>
+                <li>• Real-Time Updates</li>
+                <li>• Smart Automation</li>
+                <li>• Live Monitoring</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Status</h4>
+              <ul className="text-gray-400 text-sm space-y-2">
+                <li>• System: Active</li>
+                <li>• Agents: Building</li>
+                <li>• Updates: Live</li>
+                <li>• Last Build: ${timestamp}</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Connect</h4>
+              <div className="flex space-x-4">
+                <Button variant="outline" size="sm">Dashboard</Button>
+                <Button variant="outline" size="sm">Monitor</Button>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400 text-sm">
+              🔥 This entire page was created by autonomous agents at ${timestamp}
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
 
-export default AutonomousDashboard;`;
+export default HomePage;`;
 
-    const pagePath = path.join(this.pagesDir, 'autonomous-dashboard.tsx');
+    const homePagePath = path.join(this.pagesDir, 'HomePage.tsx');
     
     // Ensure directory exists
-    if (!fs.existsSync(this.pagesDir)) {
-      fs.mkdirSync(this.pagesDir, { recursive: true });
+    const pageDir = path.dirname(homePagePath);
+    if (!fs.existsSync(pageDir)) {
+      fs.mkdirSync(pageDir, { recursive: true });
     }
 
-    fs.writeFileSync(pagePath, pageContent);
+    fs.writeFileSync(homePagePath, homePageContent);
     
     this.broadcastUpdate({
-      type: 'real_time_update',
-      agent: 'PageBuilder',
-      action: 'Created new page: autonomous-dashboard.tsx',
-      file: pagePath,
+      type: 'page_created',
+      agent: 'PageCreator',
+      action: 'Created new homepage with header, hero, features, and footer',
+      file: homePagePath,
+      timestamp: new Date().toISOString()
+    });
+
+    // Restart dev server to show changes
+    this.restartDevServer();
+
+    setTimeout(() => {
+      agent.status = 'completed';
+      agent.task = 'Homepage created successfully';
+      this.broadcastUpdate({
+        type: 'builder_status',
+        data: this.agents,
+        message: 'PageCreator completed homepage build'
+      });
+    }, 3000);
+  }
+
+  buildNavigation(ws) {
+    const agent = this.agents.find(a => a.name === 'NavigationDesigner');
+    agent.status = 'building';
+    agent.task = 'Building navigation system';
+
+    const timestamp = new Date().toLocaleTimeString();
+    const navigationContent = `import React, { useState } from 'react';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { 
+  Home, 
+  BarChart3, 
+  Truck, 
+  Users, 
+  Settings, 
+  Zap,
+  Menu,
+  X
+} from 'lucide-react';
+
+const Navigation = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navigationItems = [
+    { name: 'Home', icon: Home, href: '/', badge: 'New' },
+    { name: 'Dashboard', icon: BarChart3, href: '/dashboard', badge: 'Live' },
+    { name: 'Fleet', icon: Truck, href: '/fleet' },
+    { name: 'Drivers', icon: Users, href: '/drivers' },
+    { name: 'Settings', icon: Settings, href: '/settings' },
+    { name: 'Autonomous', icon: Zap, href: '/autonomous', badge: 'AI' }
+  ];
+
+  return (
+    <nav className="bg-white shadow-lg border-b">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex items-center space-x-4">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">TMS</span>
+            </div>
+            <span className="text-xl font-bold text-gray-900">TMS Platform</span>
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              🔥 Autonomous
+            </Badge>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navigationItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                <item.icon className="w-4 h-4" />
+                <span>{item.name}</span>
+                {item.badge && (
+                  <Badge variant="secondary" className="text-xs">
+                    {item.badge}
+                  </Badge>
+                )}
+              </a>
+            ))}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 py-4">
+            <div className="space-y-2">
+              {navigationItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.name}</span>
+                  {item.badge && (
+                    <Badge variant="secondary" className="text-xs ml-auto">
+                      {item.badge}
+                    </Badge>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navigation;`;
+
+    const navigationPath = path.join(this.componentsDir, 'layout', 'Navigation.tsx');
+    
+    // Ensure directory exists
+    const navDir = path.dirname(navigationPath);
+    if (!fs.existsSync(navDir)) {
+      fs.mkdirSync(navDir, { recursive: true });
+    }
+
+    fs.writeFileSync(navigationPath, navigationContent);
+    
+    this.broadcastUpdate({
+      type: 'component_created',
+      agent: 'NavigationDesigner',
+      action: 'Created responsive navigation system with mobile menu',
+      file: navigationPath,
       timestamp: new Date().toISOString()
     });
 
     setTimeout(() => {
       agent.status = 'completed';
-      agent.task = 'Page created successfully';
+      agent.task = 'Navigation system built';
       this.broadcastUpdate({
-        type: 'agent_status',
+        type: 'builder_status',
         data: this.agents,
-        message: 'PageBuilder completed'
+        message: 'NavigationDesigner completed navigation build'
       });
-    }, 3000);
+    }, 2500);
   }
 
-  updateExistingPage(ws) {
-    const agent = this.agents.find(a => a.name === 'ContentWriter');
+  buildComponents(ws) {
+    const agent = this.agents.find(a => a.name === 'ComponentArchitect');
     agent.status = 'building';
-    agent.task = 'Updating dashboard content';
+    agent.task = 'Architecting new components';
 
-    // Update the main dashboard with autonomous features
-    const dashboardPath = path.join(this.componentsDir, 'dashboard', 'Dashboard.tsx');
+    const timestamp = new Date().toLocaleTimeString();
     
-    if (fs.existsSync(dashboardPath)) {
-      let content = fs.readFileSync(dashboardPath, 'utf8');
-      
-      // Add autonomous building indicator
-      const autonomousIndicator = `
-        {/* Autonomous Building Indicator */}
-        <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-700">
-              🤖 Autonomous Building Active
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-green-600">
-              Website is being built and updated by AI agents in real-time
-            </p>
-            <div className="mt-2 flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-green-600">Live updates every 5 seconds</span>
-            </div>
-          </CardContent>
-        </Card>`;
-
-      // Insert the indicator after the first Card component
-      const insertPoint = content.indexOf('</Card>');
-      if (insertPoint !== -1) {
-        content = content.slice(0, insertPoint + 7) + autonomousIndicator + content.slice(insertPoint + 7);
-        fs.writeFileSync(dashboardPath, content);
-        
-        this.broadcastUpdate({
-          type: 'real_time_update',
-          agent: 'ContentWriter',
-          action: 'Updated dashboard with autonomous building indicator',
-          file: dashboardPath,
-          timestamp: new Date().toISOString()
-        });
-      }
-    }
-
-    setTimeout(() => {
-      agent.status = 'completed';
-      agent.task = 'Dashboard updated';
-      this.broadcastUpdate({
-        type: 'agent_status',
-        data: this.agents,
-        message: 'ContentWriter completed'
-      });
-    }, 2000);
-  }
-
-  createNewComponent(ws) {
-    const agent = this.agents.find(a => a.name === 'ComponentCreator');
-    agent.status = 'building';
-    agent.task = 'Creating autonomous component';
-
-    const componentContent = `import React, { useState, useEffect } from 'react';
+    // Create multiple components
+    const components = [
+      {
+        name: 'AutonomousStatusCard',
+        content: `import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import { Activity, Cpu, Zap } from 'lucide-react';
 
-interface AutonomousComponentProps {
-  agentName: string;
-  task: string;
-}
+const AutonomousStatusCard = () => {
+  const agents = [
+    { name: 'PageCreator', status: 'active', icon: Activity, color: 'text-green-600' },
+    { name: 'HeaderBuilder', status: 'building', icon: Cpu, color: 'text-blue-600' },
+    { name: 'ComponentArchitect', status: 'idle', icon: Zap, color: 'text-purple-600' }
+  ];
 
-const AutonomousComponent: React.FC<AutonomousComponentProps> = ({ agentName, task }) => {
-  const [status, setStatus] = useState('active');
-  const [lastAction, setLastAction] = useState('Component created by autonomous agent');
+  return (
+    <Card className="border-purple-200 bg-purple-50">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-purple-700">
+          🤖 Autonomous Agent Status
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {agents.map((agent, index) => (
+            <div key={index} className="flex items-center justify-between p-2 bg-white rounded-lg">
+              <div className="flex items-center gap-2">
+                <agent.icon className={\`w-4 h-4 \${agent.color}\`} />
+                <span className="font-medium">{agent.name}</span>
+              </div>
+              <Badge variant={agent.status === 'active' ? 'default' : 'secondary'}>
+                {agent.status}
+              </Badge>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 p-2 bg-purple-100 rounded text-xs text-purple-700">
+          🔥 Created by autonomous agent at ${timestamp}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default AutonomousStatusCard;`
+      },
+      {
+        name: 'LiveBuildMonitor',
+        content: `import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
+
+const LiveBuildMonitor = () => {
+  const [buildProgress, setBuildProgress] = useState(0);
+  const [currentTask, setCurrentTask] = useState('Initializing build...');
 
   useEffect(() => {
-    const actions = [
-      'Updating component logic',
-      'Optimizing performance',
-      'Adding new features',
-      'Fixing bugs',
-      'Enhancing UI',
-      'Integrating APIs'
+    const tasks = [
+      'Analyzing requirements...',
+      'Creating components...',
+      'Building layouts...',
+      'Optimizing performance...',
+      'Deploying changes...',
+      'Build complete!'
     ];
 
+    let currentIndex = 0;
     const interval = setInterval(() => {
-      const randomAction = actions[Math.floor(Math.random() * actions.length)];
-      setLastAction(randomAction);
-    }, 3000);
+      if (currentIndex < tasks.length) {
+        setCurrentTask(tasks[currentIndex]);
+        setBuildProgress((currentIndex + 1) * (100 / tasks.length));
+        currentIndex++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -321,289 +543,341 @@ const AutonomousComponent: React.FC<AutonomousComponentProps> = ({ agentName, ta
     <Card className="border-blue-200 bg-blue-50">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-700">
-          🤖 {agentName}
+          ⚡ Live Build Monitor
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-blue-600 mb-2">{task}</p>
-        <div className="flex items-center justify-between">
-          <Badge variant={status === 'active' ? 'default' : 'secondary'}>
-            {status}
-          </Badge>
-          <span className="text-xs text-blue-500">{lastAction}</span>
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-blue-600 mb-2">Current Task:</p>
+            <p className="font-medium text-blue-800">{currentTask}</p>
+          </div>
+          
+          <div>
+            <p className="text-sm text-blue-600 mb-2">Build Progress:</p>
+            <Progress value={buildProgress} className="mb-2" />
+            <p className="text-xs text-blue-600">{Math.round(buildProgress)}% complete</p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Badge variant="outline" className="bg-green-50 text-green-700">
+              🔥 Live Updates
+            </Badge>
+            <span className="text-xs text-blue-600">Created at ${timestamp}</span>
+          </div>
         </div>
       </CardContent>
     </Card>
   );
 };
 
-export default AutonomousComponent;`;
+export default LiveBuildMonitor;`
+      }
+    ];
 
-    const componentPath = path.join(this.componentsDir, 'autonomous', 'AutonomousComponent.tsx');
-    
-    // Ensure directory exists
-    const componentDir = path.dirname(componentPath);
-    if (!fs.existsSync(componentDir)) {
-      fs.mkdirSync(componentDir, { recursive: true });
-    }
+    components.forEach((component, index) => {
+      const componentPath = path.join(this.componentsDir, 'autonomous', component.name + '.tsx');
+      
+      // Ensure directory exists
+      const componentDir = path.dirname(componentPath);
+      if (!fs.existsSync(componentDir)) {
+        fs.mkdirSync(componentDir, { recursive: true });
+      }
 
-    fs.writeFileSync(componentPath, componentContent);
-    
-    this.broadcastUpdate({
-      type: 'real_time_update',
-      agent: 'ComponentCreator',
-      action: 'Created new component: AutonomousComponent.tsx',
-      file: componentPath,
-      timestamp: new Date().toISOString()
+      fs.writeFileSync(componentPath, component.content);
+      
+      this.broadcastUpdate({
+        type: 'component_created',
+        agent: 'ComponentArchitect',
+        action: `Created ${component.name} component`,
+        file: componentPath,
+        timestamp: new Date().toISOString()
+      });
     });
 
     setTimeout(() => {
       agent.status = 'completed';
-      agent.task = 'Component created';
+      agent.task = 'Components architected';
       this.broadcastUpdate({
-        type: 'agent_status',
+        type: 'builder_status',
         data: this.agents,
-        message: 'ComponentCreator completed'
+        message: 'ComponentArchitect completed component build'
       });
-    }, 2500);
+    }, 4000);
   }
 
-  updateStyles(ws) {
-    const agent = this.agents.find(a => a.name === 'StyleUpdater');
-    agent.status = 'building';
-    agent.task = 'Updating website styles';
-
-    // Create a new CSS file for autonomous styling
-    const styleContent = `/* Autonomous Agent Generated Styles */
-.autonomous-indicator {
-  animation: pulse 2s infinite;
-  border: 2px solid #10b981;
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-}
-
-.autonomous-building {
-  position: relative;
-  overflow: hidden;
-}
-
-.autonomous-building::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
-  animation: slide 3s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-@keyframes slide {
-  0% { left: -100%; }
-  100% { left: 100%; }
-}
-
-.agent-status-active {
-  color: #059669;
-  font-weight: 600;
-}
-
-.agent-status-building {
-  color: #d97706;
-  font-weight: 600;
-}
-
-.agent-status-completed {
-  color: #059669;
-  font-weight: 600;
-}
-
-.real-time-update {
-  border-left: 4px solid #10b981;
-  padding-left: 1rem;
-  margin: 0.5rem 0;
-  background: rgba(16, 185, 129, 0.05);
-}
-
-.build-counter {
-  font-family: 'Courier New', monospace;
-  font-size: 0.875rem;
-  color: #6b7280;
-}`;
-
-    const stylePath = path.join(this.websiteDir, 'src', 'styles', 'autonomous.css');
+  buildCompleteWebsite(ws) {
+    console.log('🏗️ Building complete website with all components...');
     
-    // Ensure directory exists
-    const styleDir = path.dirname(stylePath);
-    if (!fs.existsSync(styleDir)) {
-      fs.mkdirSync(styleDir, { recursive: true });
-    }
-
-    fs.writeFileSync(stylePath, styleContent);
+    // Build homepage
+    this.buildHomePage(ws);
     
-    this.broadcastUpdate({
-      type: 'real_time_update',
-      agent: 'StyleUpdater',
-      action: 'Created autonomous styles: autonomous.css',
-      file: stylePath,
-      timestamp: new Date().toISOString()
-    });
-
-    setTimeout(() => {
-      agent.status = 'completed';
-      agent.task = 'Styles updated';
-      this.broadcastUpdate({
-        type: 'agent_status',
-        data: this.agents,
-        message: 'StyleUpdater completed'
-      });
-    }, 2000);
+    // Build navigation
+    setTimeout(() => this.buildNavigation(ws), 2000);
+    
+    // Build components
+    setTimeout(() => this.buildComponents(ws), 4000);
+    
+    // Build dashboard
+    setTimeout(() => this.buildDashboard(ws), 6000);
   }
 
-  integrateData(ws) {
-    const agent = this.agents.find(a => a.name === 'DataIntegrator');
+  buildDashboard(ws) {
+    const agent = this.agents.find(a => a.name === 'LayoutEngineer');
     agent.status = 'building';
-    agent.task = 'Integrating autonomous data';
+    agent.task = 'Engineering dashboard layout';
 
-    // Create a data file for autonomous system
-    const dataContent = `// Autonomous System Data - Generated by AI Agents
-export const autonomousSystemData = {
-  agents: [
-    {
-      id: 'page-builder',
-      name: 'PageBuilder',
-      status: 'active',
-      lastActivity: new Date().toISOString(),
-      tasksCompleted: 0,
-      currentTask: 'Building new pages'
-    },
-    {
-      id: 'content-writer',
-      name: 'ContentWriter', 
-      status: 'active',
-      lastActivity: new Date().toISOString(),
-      tasksCompleted: 0,
-      currentTask: 'Writing content'
-    },
-    {
-      id: 'component-creator',
-      name: 'ComponentCreator',
-      status: 'active', 
-      lastActivity: new Date().toISOString(),
-      tasksCompleted: 0,
-      currentTask: 'Creating components'
-    },
-    {
-      id: 'style-updater',
-      name: 'StyleUpdater',
-      status: 'active',
-      lastActivity: new Date().toISOString(),
-      tasksCompleted: 0,
-      currentTask: 'Updating styles'
-    },
-    {
-      id: 'data-integrator',
-      name: 'DataIntegrator',
-      status: 'active',
-      lastActivity: new Date().toISOString(),
-      tasksCompleted: 0,
-      currentTask: 'Integrating data'
-    }
-  ],
-  systemStatus: {
-    totalAgents: 5,
-    activeAgents: 5,
-    totalBuilds: 0,
-    lastBuild: new Date().toISOString(),
-    uptime: '0:00:00'
-  },
-  recentUpdates: [
-    {
-      id: 1,
-      agent: 'PageBuilder',
-      action: 'Created autonomous dashboard page',
-      timestamp: new Date().toISOString(),
-      file: 'autonomous-dashboard.tsx'
-    },
-    {
-      id: 2,
-      agent: 'ContentWriter',
-      action: 'Updated main dashboard',
-      timestamp: new Date().toISOString(),
-      file: 'Dashboard.tsx'
-    },
-    {
-      id: 3,
-      agent: 'ComponentCreator',
-      action: 'Created autonomous component',
-      timestamp: new Date().toISOString(),
-      file: 'AutonomousComponent.tsx'
-    }
-  ]
+    const timestamp = new Date().toLocaleTimeString();
+    const dashboardContent = `import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import AutonomousStatusCard from '../components/autonomous/AutonomousStatusCard';
+import LiveBuildMonitor from '../components/autonomous/LiveBuildMonitor';
+
+const Dashboard = () => {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">TMS Dashboard</h1>
+              <p className="text-gray-600">Built by autonomous agents</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Badge variant="outline" className="bg-green-50 text-green-700">
+                🔥 Live Build Active
+              </Badge>
+              <Button>New Build</Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Autonomous Status */}
+          <div className="lg:col-span-1">
+            <AutonomousStatusCard />
+          </div>
+
+          {/* Live Build Monitor */}
+          <div className="lg:col-span-2">
+            <LiveBuildMonitor />
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Pages Created</p>
+                  <p className="text-2xl font-bold text-gray-900">12</p>
+                </div>
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <span className="text-blue-600 text-lg">📄</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Components Built</p>
+                  <p className="text-2xl font-bold text-gray-900">28</p>
+                </div>
+                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                  <span className="text-green-600 text-lg">🧩</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Active Agents</p>
+                  <p className="text-2xl font-bold text-gray-900">6</p>
+                </div>
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <span className="text-purple-600 text-lg">🤖</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Build Time</p>
+                  <p className="text-2xl font-bold text-gray-900">2.3s</p>
+                </div>
+                <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <span className="text-orange-600 text-lg">⚡</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Builds */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              📋 Recent Autonomous Builds
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="font-medium">Homepage with Navigation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Completed</Badge>
+                  <span className="text-sm text-gray-500">2 minutes ago</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="font-medium">Component Library</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">Building</Badge>
+                  <span className="text-sm text-gray-500">Just now</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="font-medium">Dashboard Layout</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Completed</Badge>
+                  <span className="text-sm text-gray-500">5 minutes ago</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center">
+            <p className="text-gray-600">
+              🔥 This dashboard was engineered by autonomous agents at ${timestamp}
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 };
 
-export const getAutonomousStatus = () => {
-  return {
-    ...autonomousSystemData,
-    systemStatus: {
-      ...autonomousSystemData.systemStatus,
-      lastUpdate: new Date().toISOString()
-    }
-  };
-};`;
+export default Dashboard;`;
 
-    const dataPath = path.join(this.websiteDir, 'src', 'data', 'autonomousSystem.ts');
+    const dashboardPath = path.join(this.pagesDir, 'Dashboard.tsx');
     
     // Ensure directory exists
-    const dataDir = path.dirname(dataPath);
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    const dashboardDir = path.dirname(dashboardPath);
+    if (!fs.existsSync(dashboardDir)) {
+      fs.mkdirSync(dashboardDir, { recursive: true });
     }
 
-    fs.writeFileSync(dataPath, dataContent);
+    fs.writeFileSync(dashboardPath, dashboardContent);
     
     this.broadcastUpdate({
-      type: 'real_time_update',
-      agent: 'DataIntegrator',
-      action: 'Created autonomous system data: autonomousSystem.ts',
-      file: dataPath,
+      type: 'page_created',
+      agent: 'LayoutEngineer',
+      action: 'Engineered complete dashboard with stats and build monitoring',
+      file: dashboardPath,
       timestamp: new Date().toISOString()
     });
 
     setTimeout(() => {
       agent.status = 'completed';
-      agent.task = 'Data integrated';
+      agent.task = 'Dashboard engineered';
       this.broadcastUpdate({
-        type: 'agent_status',
+        type: 'builder_status',
         data: this.agents,
-        message: 'DataIntegrator completed'
+        message: 'LayoutEngineer completed dashboard build'
       });
-    }, 2000);
+    }, 3000);
+  }
+
+  getAgentIcon(agentName) {
+    const icons = {
+      'PageCreator': '📄',
+      'HeaderBuilder': '🏗️',
+      'ComponentArchitect': '🧩',
+      'ContentWriter': '✍️',
+      'NavigationDesigner': '🧭',
+      'LayoutEngineer': '⚙️'
+    };
+    return icons[agentName] || '🤖';
+  }
+
+  restartDevServer() {
+    console.log('🔄 Restarting development server to show new builds...');
+    
+    // Kill existing dev server process
+    if (this.devServerProcess) {
+      this.devServerProcess.kill('SIGTERM');
+    }
+
+    // Start new dev server
+    this.devServerProcess = spawn('npm', ['run', 'dev'], {
+      cwd: this.websiteDir,
+      stdio: 'pipe',
+      shell: true,
+      env: { ...process.env, PORT: '8084' }
+    });
+
+    this.devServerProcess.stdout.on('data', (data) => {
+      console.log(`📝 Dev Server: ${data.toString().trim()}`);
+    });
+
+    this.devServerProcess.stderr.on('data', (data) => {
+      console.log(`⚠️ Dev Server Error: ${data.toString().trim()}`);
+    });
+
+    this.devServerProcess.on('close', (code) => {
+      console.log(`🛑 Dev server process exited with code ${code}`);
+    });
+
+    this.broadcastUpdate({
+      type: 'dev_server_restart',
+      agent: 'System',
+      action: 'Development server restarted to show new builds',
+      timestamp: new Date().toISOString()
+    });
   }
 
   broadcastUpdate(update) {
-    this.recentUpdates.unshift({
-      ...update,
-      id: Date.now()
-    });
-
-    // Keep only last 10 updates
-    if (this.recentUpdates.length > 10) {
-      this.recentUpdates = this.recentUpdates.slice(0, 10);
-    }
-
+    this.buildCount++;
+    
     const message = {
       ...update,
-      recentUpdates: this.recentUpdates,
+      buildCount: this.buildCount,
       systemStatus: {
-        totalAgents: this.agents.length,
-        activeAgents: this.agents.filter(a => a.status === 'building').length,
         totalBuilds: this.buildCount,
-        lastBuild: new Date().toISOString()
+        activeAgents: this.agents.filter(a => a.status === 'building').length,
+        lastUpdate: new Date().toISOString()
       }
     };
 
@@ -615,70 +889,27 @@ export const getAutonomousStatus = () => {
       });
     }
 
-    console.log(`📝 [${update.agent || 'System'}] ${update.action || update.message}`);
-  }
-
-  startAgentSimulation() {
-    console.log('🤖 Starting autonomous agent simulation...');
-    
-    setInterval(() => {
-      // Randomly select an agent to perform a task
-      const randomAgent = this.agents[Math.floor(Math.random() * this.agents.length)];
-      
-      if (randomAgent.status === 'idle') {
-        randomAgent.status = 'building';
-        randomAgent.task = 'Performing autonomous task';
-        
-        this.broadcastUpdate({
-          type: 'agent_status',
-          data: this.agents,
-          message: `${randomAgent.name} started working`
-        });
-
-        // Simulate task completion
-        setTimeout(() => {
-          randomAgent.status = 'completed';
-          randomAgent.task = 'Task completed successfully';
-          this.buildCount++;
-          
-          this.broadcastUpdate({
-            type: 'real_time_update',
-            agent: randomAgent.name,
-            action: `Completed build #${this.buildCount}`,
-            timestamp: new Date().toISOString()
-          });
-
-          // Reset to idle after a moment
-          setTimeout(() => {
-            randomAgent.status = 'idle';
-            randomAgent.task = 'Ready for next task';
-            this.broadcastUpdate({
-              type: 'agent_status',
-              data: this.agents,
-              message: `${randomAgent.name} ready for next task`
-            });
-          }, 2000);
-        }, 3000);
-      }
-    }, 5000);
+    console.log(`🏗️ [${update.agent || 'System'}] ${update.action || update.message}`);
   }
 }
 
 // Start the autonomous website builder
 const builder = new AutonomousWebsiteBuilder();
 builder.startWebSocketServer();
-builder.startAgentSimulation();
 
 console.log('✅ Autonomous Website Builder is running!');
-console.log('🌐 WebSocket server: ws://localhost:8085');
-console.log('📝 Agents will build and modify website files in real-time');
-console.log('🔗 Connect your website to see live updates');
+console.log('🌐 WebSocket server: ws://localhost:8087');
+console.log('🏗️ Autonomous agents will create new pages and components');
+console.log('🔗 Connect to request builds: homepage, dashboard, navigation, components');
 
 // Keep the process running
 process.on('SIGINT', () => {
   console.log('\n🛑 Shutting down autonomous website builder...');
   if (builder.wss) {
     builder.wss.close();
+  }
+  if (builder.devServerProcess) {
+    builder.devServerProcess.kill('SIGTERM');
   }
   process.exit(0);
 });
