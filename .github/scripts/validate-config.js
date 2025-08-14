@@ -14,7 +14,6 @@ const __dirname = path.dirname(__filename);
 function validatePackageJson() {
   try {
     const packagePath = path.join(__dirname, '../../logistics-lynx/package.json');
-    console.log(`Looking for package.json at: ${packagePath}`);
     if (!fs.existsSync(packagePath)) {
       console.log(`❌ File not found: ${packagePath}`);
       return false;
@@ -63,22 +62,13 @@ function validatePackageJson() {
 function validateTsConfigJson() {
   try {
     const tsConfigPath = path.join(__dirname, '../../logistics-lynx/tsconfig.json');
-    console.log(`Looking for tsconfig.json at: ${tsConfigPath}`);
     if (!fs.existsSync(tsConfigPath)) {
       console.log(`❌ File not found: ${tsConfigPath}`);
       return false;
     }
-    let content = fs.readFileSync(tsConfigPath, 'utf8');
     
-    // Remove TypeScript-style comments before parsing as JSON
-    // Remove single-line comments (// ...)
-    content = content.replace(/\/\/.*$/gm, '');
-    
-    // Remove multi-line comments (/* ... */)
-    content = content.replace(/\/\*[\s\S]*?\*\//g, '');
-    
-    // Parse the cleaned JSON
-    const data = JSON.parse(content);
+    // Parse the JSON directly since we have a clean file
+    const data = JSON.parse(fs.readFileSync(tsConfigPath, 'utf8'));
     
     const requiredFields = ['compilerOptions'];
     for (const field of requiredFields) {

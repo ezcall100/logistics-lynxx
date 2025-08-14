@@ -150,8 +150,8 @@ jobs:
           set -euo pipefail
           echo "⚙️ Validating configuration files..."
           
-          # Run the Python validation script
-          python3 .github/scripts/validate-config.py
+          # Run the Node.js validation script
+          node .github/scripts/validate-config.js
 
       - name: 🎯 Deployment Decision Logic
         id: decision
