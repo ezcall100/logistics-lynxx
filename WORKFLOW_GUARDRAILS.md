@@ -115,6 +115,22 @@ outputs:
   issue-url: ${{ steps.create-issue.outputs.issue-url }}  # Use bracket notation instead
 ```
 
+### 🔧 **Optional: Zero-Noise Variant**
+
+If you want to avoid the `|| ''` pattern entirely (though it's perfectly valid):
+
+```yaml
+# Optional: avoid `|| ''` (still valid either way)
+- name: Export API_KEY safely
+  run: |
+    v="${{ secrets.API_KEY }}"   # expression allowed in run:
+    if [ -n "$v" ]; then
+      echo "API_KEY=$v" >> "$GITHUB_ENV"
+    else
+      echo "API_KEY=" >> "$GITHUB_ENV"
+    fi
+```
+
 ## 🔍 Manual Verification Commands
 
 ### Check for Context Expressions in Mappings:

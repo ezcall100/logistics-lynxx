@@ -45,6 +45,9 @@ We've successfully eliminated all "Context access might be invalid" warnings and
 3. **Click ⚙️ → Disable (Workspace)**
 4. **Reload Window** (Ctrl/Cmd + Shift + P → "Developer: Reload Window")
 
+**Verification:**
+- **Problems panel** → enable **Source column** → confirm **"GitHub Actions"** no longer appears
+
 ## 📋 **Clean Pattern Reference**
 
 ```yaml
