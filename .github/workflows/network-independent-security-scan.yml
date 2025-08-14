@@ -104,13 +104,29 @@ jobs:
           if [[ "${{ inputs.include-secrets }}" == "true" ]]; then
             echo "📥 Installing gitleaks..."
             
-            # Try multiple installation methods
+            # Try multiple installation methods with better error handling
             if command -v wget >/dev/null 2>&1; then
               echo "Using wget to download gitleaks..."
-              wget -qO- https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz | tar -xz -C /usr/local/bin gitleaks || echo "⚠️ wget installation failed"
+              # Get the latest version from GitHub API
+              LATEST_VERSION=$(wget -qO- https://api.github.com/repos/zricethezav/gitleaks/releases/latest | grep -o '"tag_name": "v[^"]*"' | cut -d'"' -f4)
+              if [ -n "$LATEST_VERSION" ]; then
+                echo "Latest gitleaks version: $LATEST_VERSION"
+                wget -qO- "https://github.com/zricethezav/gitleaks/releases/download/${LATEST_VERSION}/gitleaks_${LATEST_VERSION}_linux_x64.tar.gz" | tar -xz -C /usr/local/bin gitleaks || echo "⚠️ wget installation failed"
+              else
+                echo "⚠️ Could not determine latest version, trying fallback..."
+                wget -qO- https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz | tar -xz -C /usr/local/bin gitleaks || echo "⚠️ wget fallback failed"
+              fi
             elif command -v curl >/dev/null 2>&1; then
               echo "Using curl to download gitleaks..."
-              curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz | tar -xz -C /usr/local/bin gitleaks || echo "⚠️ curl installation failed"
+              # Get the latest version from GitHub API
+              LATEST_VERSION=$(curl -s https://api.github.com/repos/zricethezav/gitleaks/releases/latest | grep -o '"tag_name": "v[^"]*"' | cut -d'"' -f4)
+              if [ -n "$LATEST_VERSION" ]; then
+                echo "Latest gitleaks version: $LATEST_VERSION"
+                curl -sL "https://github.com/zricethezav/gitleaks/releases/download/${LATEST_VERSION}/gitleaks_${LATEST_VERSION}_linux_x64.tar.gz" | tar -xz -C /usr/local/bin gitleaks || echo "⚠️ curl installation failed"
+              else
+                echo "⚠️ Could not determine latest version, trying fallback..."
+                curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz | tar -xz -C /usr/local/bin gitleaks || echo "⚠️ curl fallback failed"
+              fi
             else
               echo "⚠️ Neither wget nor curl available, trying alternative method..."
               # Alternative: use apt if available
