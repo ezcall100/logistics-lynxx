@@ -533,17 +533,6 @@ jobs:
       # Environment-specific variables
       ENVIRONMENT_NAME: 'development'
       
-      # URL variables (these are not secrets, so safe to put in env)
-      STAGING_URL: ${{ vars.STAGING_URL || 'http://localhost:8080' }}
-      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}
-      STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
-      PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
-      STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
-      PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
-      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
-      HEALTH_CHECK_URL: ${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
-      
       # Secrets
       SUPABASE_URL: 'https://placeholder.supabase.co'
       SUPABASE_ANON_KEY: 'placeholder-key'
@@ -597,18 +586,18 @@ jobs:
             "$SUPABASE_ANON_KEY" \
             "$N8N_WEBHOOK_URL" \
             "" \
-            "$APP_URL" \
-            "$DEPLOYMENT_WEBHOOK_URL" \
-            "$HEALTH_CHECK_URL"
+            "${{ vars.APP_URL || 'http://localhost:8080' }}" \
+            "${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}" \
+            "${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
           
-          # Export URL variables (already available as env vars)
+          # Export URL variables
           {
-            echo "STAGING_URL=$STAGING_URL"
-            echo "PRODUCTION_URL=$PRODUCTION_URL"
-            echo "STAGING_WEBHOOK_URL=$STAGING_WEBHOOK_URL"
-            echo "PRODUCTION_WEBHOOK_URL=$PRODUCTION_WEBHOOK_URL"
-            echo "STAGING_HEALTH_CHECK_URL=$STAGING_HEALTH_CHECK_URL"
-            echo "PRODUCTION_HEALTH_CHECK_URL=$PRODUCTION_HEALTH_CHECK_URL"
+            echo "STAGING_URL=${{ vars.STAGING_URL || 'http://localhost:8080' }}"
+            echo "PRODUCTION_URL=${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}"
+            echo "STAGING_WEBHOOK_URL=${{ vars.STAGING_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
+            echo "PRODUCTION_WEBHOOK_URL=${{ vars.PRODUCTION_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
+            echo "STAGING_HEALTH_CHECK_URL=${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
+            echo "PRODUCTION_HEALTH_CHECK_URL=${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
           } >> "$GITHUB_ENV"
 
       - name: 📥 Download Build Artifacts
