@@ -4,12 +4,12 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { 
-  FileText, 
-  Globe, 
-  Code, 
-  Image, 
-  Search, 
+import {
+  FileText,
+  Globe,
+  Code,
+  Image,
+  Search,
   Settings,
   CheckCircle,
   Clock,
@@ -25,6 +25,7 @@ import {
   Users,
   BarChart3
 } from 'lucide-react';
+import { websiteBuilderService } from '@/services/websiteBuilderService';
 
 interface PageBuild {
   id: string;
@@ -54,7 +55,7 @@ export default function WebsiteBuilder() {
   const [pageBuilds, setPageBuilds] = useState<PageBuild[]>([]);
   const [stats, setStats] = useState<WebsiteStats>({
     totalPages: 50,
-    pagesBuilt: 0,
+    pagesBuilt: 5,
     pagesInProgress: 0,
     averageBuildTime: 0,
     seoScore: 0,
@@ -103,19 +104,16 @@ export default function WebsiteBuilder() {
 
   const createNewPage = () => {
     const pageType = pageTypes[Math.floor(Math.random() * pageTypes.length)];
-    const content = generateContent(pageType.type);
-    const wordCount = content.split(' ').length;
-    
     const newPage: PageBuild = {
       id: Date.now().toString(),
       pageName: pageType.name,
       status: 'building',
       progress: 0,
       startTime: new Date(),
-      content,
-      seoScore: Math.floor(Math.random() * 30) + 70, // 70-100
+      content: generateContent(pageType.type),
+      seoScore: Math.floor(Math.random() * 30) + 70,
       imageCount: Math.floor(Math.random() * 5) + 1,
-      wordCount,
+      wordCount: Math.floor(Math.random() * 200) + 100,
       type: pageType.type as any
     };
 
@@ -124,20 +122,11 @@ export default function WebsiteBuilder() {
   };
 
   const updatePageProgress = (pageId: string, progress: number) => {
-    setPageBuilds(prev => prev.map(page => {
-      if (page.id === pageId) {
-        const newProgress = Math.min(100, progress);
-        const isCompleted = newProgress >= 100;
-        
-        return {
-          ...page,
-          progress: newProgress,
-          status: isCompleted ? 'completed' : 'building',
-          endTime: isCompleted ? new Date() : undefined
-        };
-      }
-      return page;
-    }));
+    setPageBuilds(prev => prev.map(page =>
+      page.id === pageId
+        ? { ...page, progress, status: progress >= 100 ? 'completed' : 'building' }
+        : page
+    ));
   };
 
   useEffect(() => {
@@ -145,63 +134,101 @@ export default function WebsiteBuilder() {
 
     // Create new pages every 3-8 seconds
     const createInterval = setInterval(() => {
-      if (pageBuilds.length < 20) {
+      if (isRunning) {
         const newPage = createNewPage();
-        
-        // Simulate building progress
+
+        // Simulate progress updates
         let progress = 0;
         const progressInterval = setInterval(() => {
-          progress += Math.random() * 15 + 5; // 5-20% per update
-          updatePageProgress(newPage.id, progress);
-          
+          progress += Math.random() * 20 + 10;
           if (progress >= 100) {
+            progress = 100;
             clearInterval(progressInterval);
+            updatePageProgress(newPage.id, progress);
+          } else {
+            updatePageProgress(newPage.id, progress);
           }
-        }, 500 + Math.random() * 1000); // 0.5-1.5 seconds between updates
+        }, 500);
       }
-    }, 3000 + Math.random() * 5000);
+    }, Math.random() * 5000 + 3000);
 
-    // Update stats every 2 seconds
-    const statsInterval = setInterval(() => {
-      const completedPages = pageBuilds.filter(p => p.status === 'completed');
-      const inProgressPages = pageBuilds.filter(p => p.status === 'building');
-      
-      const totalBuildTime = completedPages.reduce((sum, page) => {
-        if (page.endTime && page.startTime) {
-          return sum + (page.endTime.getTime() - page.startTime.getTime());
-        }
-        return sum;
-      }, 0);
-      
-      const avgBuildTime = completedPages.length > 0 ? totalBuildTime / completedPages.length / 1000 : 0;
-      const avgSeoScore = completedPages.length > 0 ? 
-        completedPages.reduce((sum, page) => sum + page.seoScore, 0) / completedPages.length : 0;
-      const totalWords = completedPages.reduce((sum, page) => sum + page.wordCount, 0);
-      const totalImages = completedPages.reduce((sum, page) => sum + page.imageCount, 0);
-
-      setStats({
-        totalPages: 50,
-        pagesBuilt: completedPages.length,
-        pagesInProgress: inProgressPages.length,
-        averageBuildTime: avgBuildTime,
-        seoScore: avgSeoScore,
-        totalWords,
-        totalImages
-      });
-    }, 2000);
-
-    return () => {
-      clearInterval(createInterval);
-      clearInterval(statsInterval);
-    };
+    return () => clearInterval(createInterval);
   }, [isRunning, pageBuilds.length]);
+
+  // Listen for real-time events from the service
+  useEffect(() => {
+    const unsubscribe = websiteBuilderService.onEvent((event) => {
+      if (event.type === 'page_build_started') {
+        const pageType = pageTypes.find(pt => pt.type === event.pageType);
+        if (pageType) {
+          const newPage: PageBuild = {
+            id: event.pageId,
+            pageName: pageType.name,
+            status: 'building',
+            progress: 0,
+            startTime: new Date(event.timestamp),
+            content: generateContent(event.pageType),
+            seoScore: Math.floor(Math.random() * 30) + 70,
+            imageCount: Math.floor(Math.random() * 5) + 1,
+            wordCount: Math.floor(Math.random() * 200) + 100,
+            type: event.pageType as any
+          };
+          setPageBuilds(prev => [newPage, ...prev.slice(0, 19)]);
+        }
+      } else if (event.type === 'page_build_completed') {
+        setPageBuilds(prev => prev.map(page =>
+          page.id === event.pageId
+            ? {
+                ...page,
+                status: 'completed',
+                progress: 100,
+                endTime: new Date(event.timestamp),
+                seoScore: event.seoScore,
+                wordCount: event.wordCount
+              }
+            : page
+        ));
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  // Update stats based on page builds
+  useEffect(() => {
+    const completedPages = pageBuilds.filter(p => p.status === 'completed');
+    const buildingPages = pageBuilds.filter(p => p.status === 'building');
+
+    const avgBuildTime = completedPages.length > 0
+      ? completedPages.reduce((sum, page) => {
+          const duration = page.endTime ? page.endTime.getTime() - page.startTime.getTime() : 0;
+          return sum + duration;
+        }, 0) / completedPages.length
+      : 0;
+
+    const avgSeoScore = completedPages.length > 0
+      ? completedPages.reduce((sum, page) => sum + page.seoScore, 0) / completedPages.length
+      : 0;
+
+    const totalWords = completedPages.reduce((sum, page) => sum + page.wordCount, 0);
+    const totalImages = completedPages.reduce((sum, page) => sum + page.imageCount, 0);
+
+    setStats({
+      totalPages: 50,
+      pagesBuilt: completedPages.length,
+      pagesInProgress: buildingPages.length,
+      averageBuildTime: avgBuildTime,
+      seoScore: avgSeoScore,
+      totalWords,
+      totalImages
+    });
+  }, [pageBuilds]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'building': return 'bg-blue-500';
       case 'completed': return 'bg-green-500';
+      case 'building': return 'bg-blue-500';
       case 'failed': return 'bg-red-500';
-      case 'queued': return 'bg-yellow-500';
       default: return 'bg-gray-500';
     }
   };
@@ -260,19 +287,19 @@ export default function WebsiteBuilder() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <Clock className="w-5 h-5 text-blue-500" />
               <div>
                 <p className="text-sm font-medium">Avg Build Time</p>
-                <p className="text-2xl font-bold">{stats.averageBuildTime.toFixed(1)}s</p>
+                <p className="text-2xl font-bold">{formatDuration(stats.averageBuildTime)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -284,7 +311,7 @@ export default function WebsiteBuilder() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -321,8 +348,8 @@ export default function WebsiteBuilder() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="font-medium text-sm">{page.pageName}</span>
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         className={`w-2 h-2 p-0 ${getStatusColor(page.status)}`}
                       />
                       {page.status === 'building' && (
@@ -337,7 +364,7 @@ export default function WebsiteBuilder() {
                         </Badge>
                       )}
                     </div>
-                    
+
                     <div className="mb-2">
                       <Progress value={page.progress} className="h-2" />
                       <p className="text-xs text-muted-foreground mt-1">

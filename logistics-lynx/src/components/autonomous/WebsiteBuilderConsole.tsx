@@ -23,28 +23,7 @@ import {
   Terminal,
   RefreshCw
 } from 'lucide-react';
-
-interface BuilderStatus {
-  operational: boolean;
-  paused: boolean;
-  pagesBuilt: number;
-  pagesInProgress: number;
-  avgBuildMs: number;
-  avgSeoScore: number;
-  lastBuildAt?: string;
-  uptime: number;
-}
-
-interface BuilderMetrics {
-  pagesBuilt: number;
-  pagesInProgress: number;
-  avgBuildMs: number;
-  avgSeoScore: number;
-  totalWords: number;
-  totalImages: number;
-  eventsLast60s: number;
-  buildsLast2m: number;
-}
+import { websiteBuilderService, type WebsiteBuilderStatus, type WebsiteBuilderMetrics, type BuildRequest } from '@/services/websiteBuilderService';
 
 interface LogEvent {
   id: string;
@@ -55,8 +34,8 @@ interface LogEvent {
 }
 
 export default function WebsiteBuilderConsole() {
-  const [status, setStatus] = useState<BuilderStatus | null>(null);
-  const [metrics, setMetrics] = useState<BuilderMetrics | null>(null);
+  const [status, setStatus] = useState<WebsiteBuilderStatus | null>(null);
+  const [metrics, setMetrics] = useState<WebsiteBuilderMetrics | null>(null);
   const [logs, setLogs] = useState<LogEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageType, setPageType] = useState('home');
@@ -71,8 +50,7 @@ export default function WebsiteBuilderConsole() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('/api/website-builder/status');
-      const data = await response.json();
+      const data = await websiteBuilderService.getStatus();
       setStatus(data);
     } catch (error) {
       console.error('Error fetching status:', error);
@@ -81,8 +59,7 @@ export default function WebsiteBuilderConsole() {
 
   const fetchMetrics = async () => {
     try {
-      const response = await fetch('/api/website-builder/metrics');
-      const data = await response.json();
+      const data = await websiteBuilderService.getMetrics();
       setMetrics(data);
     } catch (error) {
       console.error('Error fetching metrics:', error);
@@ -92,8 +69,7 @@ export default function WebsiteBuilderConsole() {
   const pauseBuilder = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/website-builder/pause', { method: 'POST' });
-      const data = await response.json();
+      const data = await websiteBuilderService.pause();
       if (data.success) {
         await fetchStatus();
         addLog('info', 'Builder paused successfully');
@@ -109,8 +85,7 @@ export default function WebsiteBuilderConsole() {
   const resumeBuilder = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/website-builder/resume', { method: 'POST' });
-      const data = await response.json();
+      const data = await websiteBuilderService.resume();
       if (data.success) {
         await fetchStatus();
         addLog('info', 'Builder resumed successfully');
@@ -126,12 +101,7 @@ export default function WebsiteBuilderConsole() {
   const buildPage = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/website-builder/build', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: pageType, priority, seed })
-      });
-      const data = await response.json();
+      const data = await websiteBuilderService.buildPage({ type: pageType, priority, seed });
       if (data.success) {
         addLog('info', `Started building ${pageType} page (ID: ${data.pageId})`);
         await fetchStatus();
@@ -184,13 +154,48 @@ export default function WebsiteBuilderConsole() {
     fetchStatus();
     fetchMetrics();
 
+    // Listen for real-time events from the service
+    const unsubscribe = websiteBuilderService.onEvent((event) => {
+      switch (event.type) {
+        case 'page_build_started':
+          addLog('info', `Autonomous agent started building ${event.pageType} page`, {
+            pageId: event.pageId,
+            priority: event.priority,
+            seed: event.seed
+          });
+          break;
+        case 'page_build_completed':
+          addLog('info', `Autonomous agent completed ${event.pageType} page`, {
+            pageId: event.pageId,
+            seoScore: event.seoScore,
+            wordCount: event.wordCount,
+            buildMs: event.buildMs
+          });
+          break;
+        case 'builder_paused':
+          addLog('warn', event.message);
+          break;
+        case 'builder_resumed':
+          addLog('info', event.message);
+          break;
+        case 'progress_update':
+          // Update status when progress changes
+          fetchStatus();
+          fetchMetrics();
+          break;
+      }
+    });
+
     const interval = setInterval(() => {
       fetchStatus();
       fetchMetrics();
       setLastUpdate(new Date());
     }, 2000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      unsubscribe();
+    };
   }, []);
 
   return (
