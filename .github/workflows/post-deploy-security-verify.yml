@@ -17,7 +17,7 @@ on:
         default: 15
         type: number
     secrets:
-      DEPLOYMENT_TOKEN:
+     DEPLOYMENT_TOKEN:
         required: true
       DEPLOYMENT_API_KEY:
         required: false
