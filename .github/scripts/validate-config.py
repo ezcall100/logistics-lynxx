@@ -49,13 +49,35 @@ def validate_tsconfig_json():
     """Validate tsconfig.json file."""
     try:
         with open('logistics-lynx/tsconfig.json') as f:
-            data = json.load(f)
+            content = f.read()
+        
+        # Remove TypeScript-style comments before parsing as JSON
+        import re
+        
+        # Remove single-line comments (// ...)
+        content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
+        
+        # Remove multi-line comments (/* ... */)
+        content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+        
+        # Parse the cleaned JSON
+        data = json.loads(content)
         
         required_fields = ['compilerOptions']
         for field in required_fields:
             if field not in data:
                 print(f'❌ Missing required field: {field}')
                 return False
+        
+        # Check for essential compiler options
+        compiler_options = data.get('compilerOptions', {})
+        essential_options = ['target', 'module', 'moduleResolution']
+        
+        for option in essential_options:
+            if option in compiler_options:
+                print(f'✅ {option} compiler option present')
+            else:
+                print(f'⚠️ {option} compiler option missing (optional)')
         
         print('✅ tsconfig.json validation passed')
         return True
