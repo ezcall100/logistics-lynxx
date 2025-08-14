@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   esbuild: {
-    jsx: 'automatic',
+    jsx: 'react-jsx',
     jsxImportSource: 'react',
   },
   build: {
