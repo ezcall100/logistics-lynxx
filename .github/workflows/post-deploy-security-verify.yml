@@ -16,8 +16,13 @@ on:
         required: false
         default: 15
         type: number
+      security-level:
+        description: 'Security verification intensity'
+        required: false
+        default: 'standard'
+        type: string
     secrets:
-     DEPLOYMENT_TOKEN:
+      DEPLOYMENT_TOKEN:
         required: true
       DEPLOYMENT_API_KEY:
         required: false
@@ -37,148 +42,392 @@ jobs:
       cancel-in-progress: false
 
     steps:
+      # ==================== INITIALIZATION ====================
       - name: 📦 Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 🛡️ Security Headers Check
+      - name: 🔧 Setup Verification Environment
         run: |
-          echo "🔍 Checking security headers for ${{ inputs.deployment-url }}..."
+          echo "🔧 Setting up security verification environment..."
+          echo "Environment: ${{ inputs.environment }}"
+          echo "URL: ${{ inputs.deployment-url }}"
+          echo "Security Level: ${{ inputs.security-level }}"
+          echo "Timeout: ${{ inputs.timeout-minutes }} minutes"
+          
+          # Create verification directories
+          mkdir -p verification-results
+          mkdir -p security-reports
+
+      # ==================== SECURITY HEADERS VERIFICATION ====================
+      - name: 🛡️ Security Headers Check
+        id: security-headers
+        run: |
+          echo "🛡️ Checking security headers for ${{ inputs.deployment-url }}..."
+          
+          # Define critical security headers to check
+          declare -A security_headers=(
+            ["X-Frame-Options"]="Prevents clickjacking attacks"
+            ["X-Content-Type-Options"]="Prevents MIME type sniffing"
+            ["X-XSS-Protection"]="Enables XSS filtering"
+            ["Strict-Transport-Security"]="Enforces HTTPS"
+            ["Content-Security-Policy"]="Controls resource loading"
+            ["Referrer-Policy"]="Controls referrer information"
+            ["Permissions-Policy"]="Controls browser features"
+          )
           
           # Test security headers
-          headers=$(curl -sI "${{ inputs.deployment-url }}" | grep -E "(X-Frame-Options|X-Content-Type-Options|X-XSS-Protection|Strict-Transport-Security|Content-Security-Policy|Referrer-Policy)" || true)
+          headers=$(curl -sI "${{ inputs.deployment-url }}" 2>/dev/null || echo "")
           
-          echo "📋 Security Headers Found:"
-          echo "$headers"
+          echo "📋 Security Headers Analysis:" > verification-results/security-headers.md
+          echo "" >> verification-results/security-headers.md
           
-          # Check for critical security headers
-          if echo "$headers" | grep -q "X-Frame-Options"; then
-            echo "✅ X-Frame-Options header present"
-          else
-            echo "⚠️  X-Frame-Options header missing"
-          fi
+          header_count=0
+          missing_headers=()
           
-          if echo "$headers" | grep -q "X-Content-Type-Options"; then
-            echo "✅ X-Content-Type-Options header present"
-          else
-            echo "⚠️  X-Content-Type-Options header missing"
-          fi
+          for header in "${!security_headers[@]}"; do
+            if echo "$headers" | grep -qi "$header"; then
+              echo "✅ $header: Present" >> verification-results/security-headers.md
+              echo "   Purpose: ${security_headers[$header]}" >> verification-results/security-headers.md
+              ((header_count++))
+            else
+              echo "⚠️  $header: Missing" >> verification-results/security-headers.md
+              echo "   Purpose: ${security_headers[$header]}" >> verification-results/security-headers.md
+              missing_headers+=("$header")
+            fi
+            echo "" >> verification-results/security-headers.md
+          done
+          
+          # Calculate security score
+          total_headers=${#security_headers[@]}
+          security_score=$((header_count * 100 / total_headers))
+          
+          echo "📊 Security Headers Score: $security_score% ($header_count/$total_headers)" >> verification-results/security-headers.md
+          
+          # Set outputs for other steps
+          echo "security_score=$security_score" >> $GITHUB_OUTPUT
+          echo "missing_headers=${missing_headers[*]}" >> $GITHUB_OUTPUT
+          
+          # Display summary
+          cat verification-results/security-headers.md
 
+      # ==================== SSL/TLS CONFIGURATION VERIFICATION ====================
       - name: 🔐 SSL/TLS Configuration Check
+        id: ssl-verification
         run: |
           echo "🔐 Checking SSL/TLS configuration..."
           
-          # Test SSL configuration using openssl
-          ssl_info=$(echo | openssl s_client -connect $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1):443 -servername $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1) 2>/dev/null | openssl x509 -noout -text | grep -E "(Signature Algorithm|Subject Alternative Name|Not After)" || true)
+          # Extract domain from URL
+          domain=$(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1)
           
-          echo "📋 SSL Certificate Info:"
-          echo "$ssl_info"
+          # Test SSL configuration
+          ssl_info=$(echo | openssl s_client -connect "${domain}:443" -servername "$domain" 2>/dev/null | openssl x509 -noout -text 2>/dev/null || echo "")
+          
+          echo "📋 SSL/TLS Configuration Analysis:" > verification-results/ssl-config.md
+          echo "" >> verification-results/ssl-config.md
           
           # Check certificate expiration
-          expiry=$(echo | openssl s_client -connect $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1):443 -servername $(echo "${{ inputs.deployment-url }}" | sed 's|https://||' | sed 's|http://||' | cut -d'/' -f1) 2>/dev/null | openssl x509 -noout -enddate | cut -d'=' -f2)
+          expiry=$(echo | openssl s_client -connect "${domain}:443" -servername "$domain" 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d'=' -f2)
           
           if [ ! -z "$expiry" ]; then
-            echo "📅 Certificate expires: $expiry"
-            # Check if certificate expires within 30 days
+            echo "📅 Certificate Expiration: $expiry" >> verification-results/ssl-config.md
+            
+            # Calculate days until expiry
             expiry_epoch=$(date -d "$expiry" +%s 2>/dev/null || echo "0")
             current_epoch=$(date +%s)
             days_until_expiry=$(( (expiry_epoch - current_epoch) / 86400 ))
             
             if [ $days_until_expiry -lt 30 ]; then
-              echo "⚠️  Certificate expires in $days_until_expiry days"
+              echo "⚠️  Certificate expires in $days_until_expiry days" >> verification-results/ssl-config.md
+              echo "ssl_warning=true" >> $GITHUB_OUTPUT
             else
-              echo "✅ Certificate valid for $days_until_expiry days"
+              echo "✅ Certificate valid for $days_until_expiry days" >> verification-results/ssl-config.md
+              echo "ssl_warning=false" >> $GITHUB_OUTPUT
             fi
+          else
+            echo "❌ Could not retrieve certificate information" >> verification-results/ssl-config.md
+            echo "ssl_warning=true" >> $GITHUB_OUTPUT
           fi
+          
+          # Check for weak ciphers and protocols
+          if echo "$ssl_info" | grep -q "TLSv1.3\|TLSv1.2"; then
+            echo "✅ Modern TLS protocols supported" >> verification-results/ssl-config.md
+          else
+            echo "⚠️  Consider upgrading to TLS 1.2 or 1.3" >> verification-results/ssl-config.md
+          fi
+          
+          # Display results
+          cat verification-results/ssl-config.md
 
+      # ==================== CORS CONFIGURATION VERIFICATION ====================
       - name: 🌐 CORS Configuration Check
+        id: cors-verification
         run: |
           echo "🌐 Checking CORS configuration..."
           
-          # Test CORS headers
-          cors_headers=$(curl -sI -H "Origin: https://malicious-site.com" "${{ inputs.deployment-url }}" | grep -E "(Access-Control-Allow-Origin|Access-Control-Allow-Methods|Access-Control-Allow-Headers)" || true)
+          # Test CORS headers with different origins
+          test_origins=(
+            "https://malicious-site.com"
+            "https://trusted-site.com"
+            "http://insecure-site.com"
+          )
           
-          echo "📋 CORS Headers:"
-          echo "$cors_headers"
+          echo "📋 CORS Configuration Analysis:" > verification-results/cors-config.md
+          echo "" >> verification-results/cors-config.md
           
-          # Check if CORS is overly permissive
-          if echo "$cors_headers" | grep -q "Access-Control-Allow-Origin: \*"; then
-            echo "⚠️  CORS is configured to allow all origins (*)"
-          elif echo "$cors_headers" | grep -q "Access-Control-Allow-Origin:"; then
-            echo "✅ CORS is configured with specific origins"
-          else
-            echo "ℹ️  No CORS headers found (may be intentional)"
-          fi
+          cors_issues=0
+          
+          for origin in "${test_origins[@]}"; do
+            echo "Testing origin: $origin" >> verification-results/cors-config.md
+            
+            cors_headers=$(curl -sI -H "Origin: $origin" "${{ inputs.deployment-url }}" 2>/dev/null | grep -E "(Access-Control-Allow-Origin|Access-Control-Allow-Methods|Access-Control-Allow-Headers)" || echo "")
+            
+            if echo "$cors_headers" | grep -q "Access-Control-Allow-Origin: \*"; then
+              echo "⚠️  CORS allows all origins (*) - Security risk!" >> verification-results/cors-config.md
+              ((cors_issues++))
+            elif echo "$cors_headers" | grep -q "Access-Control-Allow-Origin:"; then
+              echo "✅ CORS configured with specific origins" >> verification-results/cors-config.md
+            else
+              echo "ℹ️  No CORS headers found (may be intentional)" >> verification-results/cors-config.md
+            fi
+            
+            echo "" >> verification-results/cors-config.md
+          done
+          
+          echo "cors_issues=$cors_issues" >> $GITHUB_OUTPUT
+          
+          # Display results
+          cat verification-results/cors-config.md
 
+      # ==================== API SECURITY ENDPOINT VERIFICATION ====================
       - name: 🔍 API Security Endpoint Check
+        id: api-security
         run: |
           echo "🔍 Checking API security endpoints..."
           
-          # Test common security endpoints
-          endpoints=(
-            "/.well-known/security.txt"
-            "/robots.txt"
-            "/sitemap.xml"
-            "/api/health"
-            "/health"
+          # Define endpoints to test
+          declare -A security_endpoints=(
+            ["/.well-known/security.txt"]="Security policy file"
+            ["/robots.txt"]="Search engine directives"
+            ["/sitemap.xml"]="Site structure"
+            ["/api/health"]="Health check endpoint"
+            ["/health"]="Alternative health check"
+            ["/api/docs"]="API documentation"
+            ["/admin"]="Admin panel (should be protected)"
+            ["/login"]="Login endpoint"
           )
           
-          for endpoint in "${endpoints[@]}"; do
+          echo "📋 API Security Endpoint Analysis:" > verification-results/api-security.md
+          echo "" >> verification-results/api-security.md
+          
+          endpoint_issues=0
+          
+          for endpoint in "${!security_endpoints[@]}"; do
             url="${{ inputs.deployment-url }}$endpoint"
-            echo "🔗 Testing: $url"
+            echo "Testing: $endpoint" >> verification-results/api-security.md
             
             response=$(curl -s -o /dev/null -w "%{http_code}" "$url" 2>/dev/null || echo "000")
             
-            if [ "$response" = "200" ]; then
-              echo "✅ $endpoint returns 200"
-            elif [ "$response" = "404" ]; then
-              echo "ℹ️  $endpoint returns 404 (expected)"
-            else
-              echo "⚠️  $endpoint returns $response"
-            fi
+            case $response in
+              "200")
+                echo "✅ Returns 200 - ${security_endpoints[$endpoint]}" >> verification-results/api-security.md
+                ;;
+              "401"|"403")
+                echo "✅ Returns $response - Properly protected" >> verification-results/api-security.md
+                ;;
+              "404")
+                echo "ℹ️  Returns 404 - Not found (expected)" >> verification-results/api-security.md
+                ;;
+              "000")
+                echo "❌ Connection failed" >> verification-results/api-security.md
+                ((endpoint_issues++))
+                ;;
+              *)
+                echo "⚠️  Returns $response - Unexpected response" >> verification-results/api-security.md
+                ((endpoint_issues++))
+                ;;
+            esac
+            echo "" >> verification-results/api-security.md
           done
-
-      - name: 📊 Generate Security Verification Report
-        run: |
-          echo "📊 Generating security verification report..."
           
+          echo "endpoint_issues=$endpoint_issues" >> $GITHUB_OUTPUT
+          
+          # Display results
+          cat verification-results/api-security.md
+
+      # ==================== VULNERABILITY SCANNING ====================
+      - name: 🚨 Vulnerability Scan
+        id: vulnerability-scan
+        if: ${{ inputs.security-level == 'full' }}
+        run: |
+          echo "🚨 Running vulnerability scan..."
+          
+          # Basic vulnerability checks
+          echo "📋 Vulnerability Scan Results:" > verification-results/vulnerability-scan.md
+          echo "" >> verification-results/vulnerability-scan.md
+          
+          # Check for common vulnerabilities
+          vulnerabilities_found=0
+          
+          # Test for SQL injection (basic)
+          sql_test_url="${{ inputs.deployment-url }}/api/test?q=1'OR'1'='1"
+          sql_response=$(curl -s -o /dev/null -w "%{http_code}" "$sql_test_url" 2>/dev/null || echo "000")
+          
+          if [ "$sql_response" = "500" ]; then
+            echo "⚠️  Potential SQL injection vulnerability detected" >> verification-results/vulnerability-scan.md
+            ((vulnerabilities_found++))
+          else
+            echo "✅ No obvious SQL injection vulnerability" >> verification-results/vulnerability-scan.md
+          fi
+          
+          # Test for XSS (basic)
+          xss_test_url="${{ inputs.deployment-url }}/api/test?q=<script>alert('xss')</script>"
+          xss_response=$(curl -s -o /dev/null -w "%{http_code}" "$xss_test_url" 2>/dev/null || echo "000")
+          
+          if [ "$xss_response" = "200" ]; then
+            echo "⚠️  Potential XSS vulnerability detected" >> verification-results/vulnerability-scan.md
+            ((vulnerabilities_found++))
+          else
+            echo "✅ No obvious XSS vulnerability" >> verification-results/vulnerability-scan.md
+          fi
+          
+          echo "vulnerabilities_found=$vulnerabilities_found" >> $GITHUB_OUTPUT
+          
+          # Display results
+          cat verification-results/vulnerability-scan.md
+
+      # ==================== GENERATE COMPREHENSIVE REPORT ====================
+      - name: 📊 Generate Security Verification Report
+        id: generate-report
+        run: |
+          echo "📊 Generating comprehensive security verification report..."
+          
+          # Calculate overall security score
+          security_score=${{ steps.security-headers.outputs.security_score }}
+          ssl_warning=${{ steps.ssl-verification.outputs.ssl_warning }}
+          cors_issues=${{ steps.cors-verification.outputs.cors_issues }}
+          endpoint_issues=${{ steps.api-security.outputs.endpoint_issues }}
+          vulnerabilities_found=${{ steps.vulnerability-scan.outputs.vulnerabilities_found || 0 }}
+          
+          # Calculate overall score
+          total_issues=$((cors_issues + endpoint_issues + vulnerabilities_found))
+          if [ "$ssl_warning" = "true" ]; then
+            ((total_issues++))
+          fi
+          
+          overall_score=$((100 - (total_issues * 10)))
+          if [ $overall_score -lt 0 ]; then
+            overall_score=0
+          fi
+          
+          # Generate comprehensive report
           cat << EOF > security-verification-report.md
-          # Security Verification Report
+          # 🔒 Security Verification Report
+          
+          ## 📋 Executive Summary
           
           **Environment:** ${{ inputs.environment }}
           **URL:** ${{ inputs.deployment-url }}
           **Timestamp:** $(date -Is)
           **Repository:** ${{ github.repository }}
           **Commit:** ${{ github.sha }}
+          **Security Level:** ${{ inputs.security-level }}
           
-          ## Verification Summary
+          ## 🎯 Overall Security Score: $overall_score/100
           
-          - ✅ SSL/TLS configuration checked
-          - ✅ Security headers verified
-          - ✅ CORS configuration reviewed
-          - ✅ API endpoints tested
+          ### 📊 Detailed Breakdown
           
-          ## Recommendations
+          - **Security Headers:** $security_score/100
+          - **SSL/TLS Configuration:** $([ "$ssl_warning" = "true" ] && echo "⚠️ Needs Attention" || echo "✅ Good")
+          - **CORS Configuration:** $([ $cors_issues -gt 0 ] && echo "⚠️ $cors_issues issues" || echo "✅ Good")
+          - **API Security:** $([ $endpoint_issues -gt 0 ] && echo "⚠️ $endpoint_issues issues" || echo "✅ Good")
+          - **Vulnerability Scan:** $([ $vulnerabilities_found -gt 0 ] && echo "🚨 $vulnerabilities_found vulnerabilities" || echo "✅ Clean")
           
-          1. **Security Headers:** Ensure all critical security headers are present
-          2. **SSL Certificate:** Monitor certificate expiration dates
-          3. **CORS Policy:** Review and restrict CORS origins as needed
-          4. **API Security:** Implement rate limiting and authentication where appropriate
+          ## 🔍 Detailed Findings
           
-          ## Next Steps
+          ### Security Headers
+          $(cat verification-results/security-headers.md)
           
-          - Review any warnings in the logs above
-          - Address critical security findings immediately
-          - Consider implementing automated security monitoring
+          ### SSL/TLS Configuration
+          $(cat verification-results/ssl-config.md)
+          
+          ### CORS Configuration
+          $(cat verification-results/cors-config.md)
+          
+          ### API Security
+          $(cat verification-results/api-security.md)
           
           EOF
           
-          echo "📄 Security verification report generated: security-verification-report.md"
+          # Add vulnerability scan results if available
+          if [ "${{ inputs.security-level }}" = "full" ]; then
+            echo "### Vulnerability Scan" >> security-verification-report.md
+            echo "$(cat verification-results/vulnerability-scan.md)" >> security-verification-report.md
+          fi
+          
+          cat << EOF >> security-verification-report.md
+          
+          ## 🚨 Critical Issues
+          
+          $(if [ $total_issues -gt 0 ]; then
+            echo "The following issues require immediate attention:"
+            if [ "$ssl_warning" = "true" ]; then echo "- SSL certificate issues detected"; fi
+            if [ $cors_issues -gt 0 ]; then echo "- CORS configuration issues: $cors_issues"; fi
+            if [ $endpoint_issues -gt 0 ]; then echo "- API security issues: $endpoint_issues"; fi
+            if [ $vulnerabilities_found -gt 0 ]; then echo "- Security vulnerabilities: $vulnerabilities_found"; fi
+          else
+            echo "No critical issues detected. Security posture is good."
+          fi)
+          
+          ## 📋 Recommendations
+          
+          1. **Security Headers:** $(if [ $security_score -lt 80 ]; then echo "Implement missing security headers"; else echo "Security headers are well configured"; fi)
+          2. **SSL Certificate:** $(if [ "$ssl_warning" = "true" ]; then echo "Renew SSL certificate and check configuration"; else echo "SSL configuration is good"; fi)
+          3. **CORS Policy:** $(if [ $cors_issues -gt 0 ]; then echo "Review and restrict CORS origins"; else echo "CORS policy is properly configured"; fi)
+          4. **API Security:** $(if [ $endpoint_issues -gt 0 ]; then echo "Review API endpoint security"; else echo "API endpoints are properly secured"; fi)
+          5. **Vulnerability Management:** $(if [ $vulnerabilities_found -gt 0 ]; then echo "Address detected vulnerabilities immediately"; else echo "No vulnerabilities detected"; fi)
+          
+          ## 🎯 Next Steps
+          
+          - Review any warnings in the detailed findings above
+          - Address critical security findings immediately
+          - Consider implementing automated security monitoring
+          - Schedule regular security assessments
+          - Update security documentation as needed
+          
+          ---
+          
+          *Report generated by Autonomous Security Verification System*
+          
+          EOF
+          
+          echo "📄 Comprehensive security verification report generated"
+          echo "overall_score=$overall_score" >> $GITHUB_OUTPUT
+          echo "total_issues=$total_issues" >> $GITHUB_OUTPUT
 
+      # ==================== UPLOAD ARTIFACTS ====================
+      - name: 📤 Upload Security Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-verification-reports-${{ inputs.environment }}
+          path: |
+            security-verification-report.md
+            verification-results/
+          retention-days: 30
+
+      # ==================== FINAL SUMMARY ====================
       - name: 🚨 Security Verification Summary
         run: |
           echo "🔒 Security verification completed for ${{ inputs.environment }}!"
-          echo "🌐 URL: ${{ secrets.DEPLOYMENT_TOKEN }}"
+          echo "🌐 URL: ${{ inputs.deployment-url }}"
+          echo "📊 Overall Security Score: ${{ steps.generate-report.outputs.overall_score }}/100"
+          echo "🚨 Total Issues Found: ${{ steps.generate-report.outputs.total_issues }}"
           echo "⏱️ Duration: $(($SECONDS / 60)) minutes"
-          echo "✅ All security checks completed successfully"
+          
+          if [ "${{ steps.generate-report.outputs.overall_score }}" -lt 70 ]; then
+            echo "⚠️  Security score is below recommended threshold (70/100)"
+            exit 1
+          else
+            echo "✅ Security verification passed successfully"
+          fi
