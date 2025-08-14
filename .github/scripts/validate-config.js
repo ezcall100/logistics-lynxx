@@ -4,8 +4,12 @@
  * Validates package.json and tsconfig.json files.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function validatePackageJson() {
   try {
@@ -130,8 +134,9 @@ function main() {
   console.log("✅ All configuration files validated successfully");
 }
 
-if (require.main === module) {
+// Check if this is the main module
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = { validatePackageJson, validateTsConfigJson };
+export { validatePackageJson, validateTsConfigJson };
