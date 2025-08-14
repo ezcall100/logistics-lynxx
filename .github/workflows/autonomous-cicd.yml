@@ -130,45 +130,19 @@ jobs:
 
   # ==================== SECURITY SCANNING ====================
   security-scan:
-    name: 🔒 Security Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
     needs: preflight
     if: ${{ needs.preflight.outputs.skip_validation != 'true' }}
-    steps:
-      - name: 📦 Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: 📦 Install Dependencies
-        run: |
-          npm ci --no-audit --no-fund
-          echo "✅ Dependencies installed successfully"
-
-      - name: 🔍 Run Security Scan
-        run: |
-          echo "🔒 Running security scan..."
-          echo "Scan Type: ${{ github.event.inputs.security_scan_level || 'full' }}"
-          echo "✅ Security scan completed"
-
-      - name: 🔍 Run Dependency Scan
-        run: |
-          echo "🔍 Running dependency vulnerability scan..."
-          npm audit --audit-level=high || echo "⚠️  High severity vulnerabilities found"
-          echo "✅ Dependency scan completed"
-
-      - name: 🔍 Run SAST Scan
-        run: |
-          echo "🔍 Running Static Application Security Testing..."
-          # Add your SAST tool here (e.g., CodeQL, Semgrep, etc.)
-          echo "✅ SAST scan completed"
+    uses: ./.github/workflows/reusable-security-scan.yml
+    with:
+      scan-type: ${{ github.event.inputs.security_scan_level || 'full' }}
+      fail-on-severity: 'high'
+      timeout-minutes: 30
+      include-dependencies: true
+      include-secrets: true
+      include-sast: true
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
   # ==================== CODE QUALITY CHECKS ====================
   code-quality:
