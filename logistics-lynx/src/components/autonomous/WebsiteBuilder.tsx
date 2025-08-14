@@ -23,7 +23,8 @@ import {
   Route,
   Package,
   Users,
-  BarChart3
+  BarChart3,
+  RefreshCw
 } from 'lucide-react';
 import { websiteBuilderService } from '@/services/websiteBuilderService';
 
@@ -64,6 +65,7 @@ export default function WebsiteBuilder() {
   });
   const [isRunning, setIsRunning] = useState(true);
   const [showDetails, setShowDetails] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   const pageTypes = [
     { type: 'home', name: 'Home Page', icon: Globe },
@@ -102,63 +104,21 @@ export default function WebsiteBuilder() {
     return contentTemplates[pageType as keyof typeof contentTemplates] || contentTemplates.home;
   };
 
-  const createNewPage = () => {
-    const pageType = pageTypes[Math.floor(Math.random() * pageTypes.length)];
-    const newPage: PageBuild = {
-      id: Date.now().toString(),
-      pageName: pageType.name,
-      status: 'building',
-      progress: 0,
-      startTime: new Date(),
-      content: generateContent(pageType.type),
-      seoScore: Math.floor(Math.random() * 30) + 70,
-      imageCount: Math.floor(Math.random() * 5) + 1,
-      wordCount: Math.floor(Math.random() * 200) + 100,
-      type: pageType.type as any
-    };
-
-    setPageBuilds(prev => [newPage, ...prev.slice(0, 19)]); // Keep last 20 builds
-    return newPage;
-  };
-
-  const updatePageProgress = (pageId: string, progress: number) => {
-    setPageBuilds(prev => prev.map(page =>
-      page.id === pageId
-        ? { ...page, progress, status: progress >= 100 ? 'completed' : 'building' }
-        : page
-    ));
-  };
-
+  // Initialize service and listen for events
   useEffect(() => {
-    if (!isRunning) return;
+    console.log('🏗️ WebsiteBuilder component initializing...');
+    
+    // Ensure service is running
+    websiteBuilderService.restart();
+    setIsConnected(true);
 
-    // Create new pages every 3-8 seconds
-    const createInterval = setInterval(() => {
-      if (isRunning) {
-        const newPage = createNewPage();
-
-        // Simulate progress updates
-        let progress = 0;
-        const progressInterval = setInterval(() => {
-          progress += Math.random() * 20 + 10;
-          if (progress >= 100) {
-            progress = 100;
-            clearInterval(progressInterval);
-            updatePageProgress(newPage.id, progress);
-          } else {
-            updatePageProgress(newPage.id, progress);
-          }
-        }, 500);
-      }
-    }, Math.random() * 5000 + 3000);
-
-    return () => clearInterval(createInterval);
-  }, [isRunning, pageBuilds.length]);
-
-  // Listen for real-time events from the service
-  useEffect(() => {
     const unsubscribe = websiteBuilderService.onEvent((event) => {
-      if (event.type === 'page_build_started') {
+      console.log('📡 WebsiteBuilder received event:', event.type);
+      
+      if (event.type === 'service_started' || event.type === 'service_status') {
+        setIsConnected(true);
+        setIsRunning(true);
+      } else if (event.type === 'page_build_started') {
         const pageType = pageTypes.find(pt => pt.type === event.pageType);
         if (pageType) {
           const newPage: PageBuild = {
@@ -173,7 +133,7 @@ export default function WebsiteBuilder() {
             wordCount: Math.floor(Math.random() * 200) + 100,
             type: event.pageType as any
           };
-          setPageBuilds(prev => [newPage, ...prev.slice(0, 19)]);
+          setPageBuilds(prev => [newPage, ...prev.slice(0, 19)]); // Keep last 20 pages
         }
       } else if (event.type === 'page_build_completed') {
         setPageBuilds(prev => prev.map(page =>
@@ -188,54 +148,70 @@ export default function WebsiteBuilder() {
               }
             : page
         ));
+      } else if (event.type === 'builder_paused') {
+        setIsRunning(false);
+      } else if (event.type === 'builder_resumed') {
+        setIsRunning(true);
       }
     });
 
-    return unsubscribe;
+    // Update stats periodically
+    const statsInterval = setInterval(async () => {
+      try {
+        const status = await websiteBuilderService.getStatus();
+        const metrics = await websiteBuilderService.getMetrics();
+        
+        setStats({
+          totalPages: 50,
+          pagesBuilt: status.pagesBuilt,
+          pagesInProgress: status.pagesInProgress,
+          averageBuildTime: status.avgBuildMs,
+          seoScore: status.avgSeoScore,
+          totalWords: metrics.totalWords,
+          totalImages: metrics.totalImages
+        });
+      } catch (error) {
+        console.error('Error updating stats:', error);
+      }
+    }, 2000);
+
+    return () => {
+      unsubscribe();
+      clearInterval(statsInterval);
+    };
   }, []);
 
-  // Update stats based on page builds
-  useEffect(() => {
-    const completedPages = pageBuilds.filter(p => p.status === 'completed');
-    const buildingPages = pageBuilds.filter(p => p.status === 'building');
+  const handlePauseResume = async () => {
+    try {
+      if (isRunning) {
+        await websiteBuilderService.pause();
+      } else {
+        await websiteBuilderService.resume();
+      }
+    } catch (error) {
+      console.error('Error toggling pause/resume:', error);
+    }
+  };
 
-    const avgBuildTime = completedPages.length > 0
-      ? completedPages.reduce((sum, page) => {
-          const duration = page.endTime ? page.endTime.getTime() - page.startTime.getTime() : 0;
-          return sum + duration;
-        }, 0) / completedPages.length
-      : 0;
-
-    const avgSeoScore = completedPages.length > 0
-      ? completedPages.reduce((sum, page) => sum + page.seoScore, 0) / completedPages.length
-      : 0;
-
-    const totalWords = completedPages.reduce((sum, page) => sum + page.wordCount, 0);
-    const totalImages = completedPages.reduce((sum, page) => sum + page.imageCount, 0);
-
-    setStats({
-      totalPages: 50,
-      pagesBuilt: completedPages.length,
-      pagesInProgress: buildingPages.length,
-      averageBuildTime: avgBuildTime,
-      seoScore: avgSeoScore,
-      totalWords,
-      totalImages
-    });
-  }, [pageBuilds]);
+  const handleRestart = () => {
+    websiteBuilderService.restart();
+    setPageBuilds([]);
+    setIsConnected(true);
+    setIsRunning(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-green-500';
-      case 'building': return 'bg-blue-500';
-      case 'failed': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'completed': return 'border-green-500 bg-green-50';
+      case 'building': return 'border-blue-500 bg-blue-50';
+      case 'failed': return 'border-red-500 bg-red-50';
+      default: return 'border-gray-300 bg-gray-50';
     }
   };
 
   const getTypeIcon = (type: string) => {
     const pageType = pageTypes.find(pt => pt.type === type);
-    return pageType ? <pageType.icon className="w-4 h-4" /> : <FileText className="w-4 h-4" />;
+    return pageType ? React.createElement(pageType.icon, { className: 'w-4 h-4' }) : <FileText className="w-4 h-4" />;
   };
 
   const formatDuration = (ms: number) => {
@@ -253,15 +229,26 @@ export default function WebsiteBuilder() {
           <Badge variant={isRunning ? "default" : "secondary"}>
             {isRunning ? "Building" : "Paused"}
           </Badge>
+          <Badge variant={isConnected ? "default" : "destructive"}>
+            {isConnected ? "Connected" : "Disconnected"}
+          </Badge>
         </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setIsRunning(!isRunning)}
+            onClick={handlePauseResume}
           >
             {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             {isRunning ? "Pause" : "Resume"}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRestart}
+          >
+            <RefreshCw className="w-4 h-4" />
+            Restart
           </Button>
           <Button
             variant="outline"
@@ -337,60 +324,68 @@ export default function WebsiteBuilder() {
         <CardContent>
           <ScrollArea className="h-96">
             <div className="space-y-3">
-              {pageBuilds.map((page) => (
-                <div
-                  key={page.id}
-                  className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    {getTypeIcon(page.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="font-medium text-sm">{page.pageName}</span>
-                      <Badge
-                        variant="outline"
-                        className={`w-2 h-2 p-0 ${getStatusColor(page.status)}`}
-                      />
-                      {page.status === 'building' && (
-                        <Badge variant="secondary" className="text-xs">
-                          Building...
-                        </Badge>
-                      )}
-                      {page.status === 'completed' && (
-                        <Badge variant="default" className="bg-green-500 text-xs">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Complete
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="mb-2">
-                      <Progress value={page.progress} className="h-2" />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {page.progress.toFixed(0)}% complete
-                      </p>
-                    </div>
-
-                    {showDetails && (
-                      <div className="space-y-2">
-                        <p className="text-xs text-muted-foreground line-clamp-2">
-                          {page.content}
-                        </p>
-                        <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                          <span>SEO: {page.seoScore}%</span>
-                          <span>Words: {page.wordCount}</span>
-                          <span>Images: {page.imageCount}</span>
-                          <span>Started: {page.startTime.toLocaleTimeString()}</span>
-                          {page.endTime && (
-                            <span>Duration: {formatDuration(page.endTime.getTime() - page.startTime.getTime())}</span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+              {pageBuilds.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Truck className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                  <p>Waiting for autonomous agents to start building...</p>
+                  <p className="text-sm">The website builder will begin automatically</p>
                 </div>
-              ))}
+              ) : (
+                pageBuilds.map((page) => (
+                  <div
+                    key={page.id}
+                    className={`flex items-start space-x-3 p-4 border rounded-lg hover:bg-muted/50 transition-colors ${getStatusColor(page.status)}`}
+                  >
+                    <div className="flex-shrink-0 mt-1">
+                      {getTypeIcon(page.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="font-medium text-sm">{page.pageName}</span>
+                        <Badge
+                          variant="outline"
+                          className={`w-2 h-2 p-0 ${page.status === 'completed' ? 'bg-green-500' : page.status === 'building' ? 'bg-blue-500' : 'bg-gray-500'}`}
+                        />
+                        {page.status === 'building' && (
+                          <Badge variant="secondary" className="text-xs">
+                            Building...
+                          </Badge>
+                        )}
+                        {page.status === 'completed' && (
+                          <Badge variant="default" className="bg-green-500 text-xs">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Complete
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="mb-2">
+                        <Progress value={page.progress} className="h-2" />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {page.progress.toFixed(0)}% complete
+                        </p>
+                      </div>
+
+                      {showDetails && (
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {page.content}
+                          </p>
+                          <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                            <span>SEO: {page.seoScore}%</span>
+                            <span>Words: {page.wordCount}</span>
+                            <span>Images: {page.imageCount}</span>
+                            <span>Started: {page.startTime.toLocaleTimeString()}</span>
+                            {page.endTime && (
+                              <span>Duration: {formatDuration(page.endTime.getTime() - page.startTime.getTime())}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </ScrollArea>
         </CardContent>
@@ -399,11 +394,11 @@ export default function WebsiteBuilder() {
       {/* Real-time Activity Indicators */}
       <div className="flex items-center justify-center space-x-4 p-4 bg-muted/50 rounded-lg">
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
           <span className="text-sm">Trans Bot AI TMS Website Building</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-blue-500' : 'bg-yellow-500'} animate-pulse`}></div>
           <span className="text-sm">Real-time TMS Content Generation</span>
         </div>
         <div className="flex items-center space-x-2">
