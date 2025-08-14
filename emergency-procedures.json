@@ -1,0 +1,5 @@
+{
+  "big_red_button": "set autonomy.emergencyStop=true (halts all agent actions immediately)",
+  "partial_degrade": "lower maxConcurrent, disable specific features (flags), or pause DLQ replay",
+  "full_rollback": "pipeline auto-reverts last deploy + disables agents.autonomousEnabled"
+}

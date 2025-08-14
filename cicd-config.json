@@ -1,0 +1,15 @@
+{
+  "post_deploy_verification": {
+    "checks": [
+      "health_checks",
+      "sql_alert_thresholds"
+    ],
+    "breach_action": "flip agents.autonomousEnabled=false and open rollback PR",
+    "canary_enablement": "hierarchical flags (global→env→tenant)"
+  },
+  "self_heal": {
+    "detection": "automated monitoring",
+    "action": "automatic rollback",
+    "verification": "post-rollback health checks"
+  }
+}

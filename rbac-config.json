@@ -1,0 +1,234 @@
+{
+  "roles": {
+    "human": {
+      "super_admin": {
+        "permissions": [
+          "everything_everywhere",
+          "kill_switch",
+          "feature_flags",
+          "dr_cutover"
+        ],
+        "portals": [
+          "Super Admin Portal"
+        ],
+        "description": "Global system administrator with full authority"
+      },
+      "tenant_owner": {
+        "permissions": [
+          "tenant_billing",
+          "security",
+          "enable_disable_features"
+        ],
+        "portals": [
+          "Admin Portal",
+          "TMS Admin Portal"
+        ],
+        "description": "Per-tenant owner with billing and security control"
+      },
+      "tenant_admin": {
+        "permissions": [
+          "user_role_management",
+          "integrations",
+          "pricing_rules"
+        ],
+        "portals": [
+          "Admin Portal",
+          "TMS Admin Portal"
+        ],
+        "description": "Tenant administrator with user and integration management"
+      },
+      "ops_manager": {
+        "permissions": [
+          "brokerage",
+          "carrier_assignment",
+          "exceptions"
+        ],
+        "portals": [
+          "Broker Portal",
+          "Shipper Portal",
+          "Carrier Portal"
+        ],
+        "description": "Operations manager for brokerage and carrier operations"
+      },
+      "dispatcher": {
+        "permissions": [
+          "dispatch",
+          "load_assignment",
+          "tracking"
+        ],
+        "portals": [
+          "Broker Portal",
+          "Shipper Portal",
+          "Carrier Portal"
+        ],
+        "description": "Dispatcher for load assignment and tracking"
+      },
+      "finance_manager": {
+        "permissions": [
+          "ar_ap",
+          "payouts",
+          "factoring",
+          "refunds"
+        ],
+        "portals": [
+          "Financials Portal",
+          "Factoring Portal"
+        ],
+        "description": "Finance manager for AR/AP and payouts"
+      },
+      "sales_rep": {
+        "permissions": [
+          "crm",
+          "quotes",
+          "accounts"
+        ],
+        "portals": [
+          "CRM Portal",
+          "Sales Portal"
+        ],
+        "description": "Sales representative for CRM and quotes"
+      },
+      "viewer": {
+        "permissions": [
+          "read_only",
+          "dashboards",
+          "audit"
+        ],
+        "portals": [
+          "All Portals"
+        ],
+        "description": "Read-only access to dashboards and audit logs"
+      }
+    },
+    "machine": {
+      "agent_orchestrator": {
+        "permissions": [
+          "queue_scheduling",
+          "budgets",
+          "slo_gates",
+          "kill_switch_respect"
+        ],
+        "service_account": "autopilot@transbotai.com",
+        "description": "Orchestrates agent queue and budget management"
+      },
+      "agent_worker": {
+        "permissions": [
+          "domain_tasks",
+          "pricing",
+          "matching",
+          "edi",
+          "invoices"
+        ],
+        "service_account": "agents@transbotai.com",
+        "description": "Executes domain-specific tasks"
+      },
+      "dlq_admin_bot": {
+        "permissions": [
+          "replay_idempotency",
+          "rate_batch_caps"
+        ],
+        "service_account": "dlq@transbotai.com",
+        "description": "Manages dead letter queue with idempotency"
+      },
+      "ci_cd_runner": {
+        "permissions": [
+          "deploy_secured_functions",
+          "self_heal_rollback"
+        ],
+        "service_account": "ci@transbotai.com",
+        "description": "Handles CI/CD deployments and rollbacks"
+      },
+      "n8n_runner": {
+        "permissions": [
+          "signed_workflow_calls"
+        ],
+        "service_account": "n8n@transbotai.com",
+        "description": "Executes signed n8n workflow calls"
+      }
+    }
+  },
+  "portal_mapping": {
+    "Super Admin Portal": [
+      "super_admin"
+    ],
+    "Admin Portal": [
+      "tenant_owner",
+      "tenant_admin"
+    ],
+    "TMS Admin Portal": [
+      "tenant_owner",
+      "tenant_admin"
+    ],
+    "Broker Portal": [
+      "ops_manager",
+      "dispatcher",
+      "viewer"
+    ],
+    "Shipper Portal": [
+      "ops_manager",
+      "dispatcher",
+      "viewer"
+    ],
+    "Carrier Portal": [
+      "ops_manager",
+      "dispatcher",
+      "viewer"
+    ],
+    "Driver Portal": [
+      "driver",
+      "viewer"
+    ],
+    "Owner Operator Portal": [
+      "owner_operator",
+      "viewer"
+    ],
+    "Financials Portal": [
+      "finance_manager",
+      "viewer"
+    ],
+    "Factoring Portal": [
+      "finance_manager",
+      "viewer"
+    ],
+    "EDI Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "Marketplace Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "Analytics Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "Autonomous Portal": [
+      "super_admin",
+      "tenant_owner"
+    ],
+    "Workers Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "Rates Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "Directory Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "Load Board Portal": [
+      "ops_manager",
+      "viewer"
+    ],
+    "CRM Portal": [
+      "sales_rep",
+      "viewer"
+    ],
+    "Onboarding Portal": [
+      "tenant_admin",
+      "viewer"
+    ]
+  }
+}

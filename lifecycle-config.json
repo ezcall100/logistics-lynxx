@@ -1,0 +1,28 @@
+{
+  "website_50_pages": {
+    "flow": "Lead → validate → outbox → n8n → CRM/Slack/Stripe → entitlements → analytics",
+    "real_time_updates": "Supabase Realtime",
+    "seo_gate": "Before publish",
+    "autonomous_agents": [
+      "ContentModifier",
+      "SEOOptimizer",
+      "AnalyticsTracker"
+    ]
+  },
+  "portals_20_canonical": {
+    "broker_shipper_carrier": "quote → tender → book → track → POD → invoice",
+    "financials_factoring": "invoice build, submit, reconcile, payout",
+    "rates": "instant + contract pricing with guardrails",
+    "edi": "204/990/214/210 with ACKs + retries",
+    "autonomous": "queue depth, quarantine, replay, self-heal",
+    "analytics": "SLOs, funnels, cost, success%",
+    "workers": "capacity + scheduling",
+    "directory_marketplace_crm": "standard ops + audits"
+  },
+  "self_healing_loop": {
+    "detect": "traces/realtime/SQL",
+    "decide": "SLO/flags/budgets",
+    "act": "retry/quarantine/degrade/failover",
+    "prove": "audit row + span + Slack with trace link"
+  }
+}

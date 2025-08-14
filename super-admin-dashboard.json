@@ -1,0 +1,56 @@
+{
+  "tiles": [
+    {
+      "name": "Kill Switch",
+      "status": "autonomy.emergencyStop",
+      "color": "red",
+      "action": "emergency_stop"
+    },
+    {
+      "name": "Mode",
+      "status": "autonomy.mode",
+      "color": "green",
+      "action": "mode_control"
+    },
+    {
+      "name": "SLOs",
+      "metrics": [
+        "uptime",
+        "success_rate",
+        "p95_response_time"
+      ],
+      "color": "blue",
+      "action": "slo_monitoring"
+    },
+    {
+      "name": "Budgets",
+      "metrics": [
+        "max_concurrent",
+        "pages_per_hour",
+        "rate_limits"
+      ],
+      "color": "orange",
+      "action": "budget_control"
+    },
+    {
+      "name": "Replay",
+      "metrics": [
+        "dlq_depth",
+        "replay_success",
+        "quarantine_count"
+      ],
+      "color": "purple",
+      "action": "replay_management"
+    },
+    {
+      "name": "DR Posture",
+      "metrics": [
+        "backup_status",
+        "replication_lag",
+        "failover_readiness"
+      ],
+      "color": "yellow",
+      "action": "dr_management"
+    }
+  ]
+}

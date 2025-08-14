@@ -1,0 +1,8 @@
+{
+  "autonomy.emergencyStop": false,
+  "lastUpdated": "2025-08-14T17:31:44.572Z",
+  "activationStep": 4,
+  "autonomy.mode": "FULL",
+  "agents.autonomousEnabled": true,
+  "obs.otelEnabled": true
+}

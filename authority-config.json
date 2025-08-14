@@ -1,0 +1,50 @@
+{
+  "kill_switch": {
+    "name": "autonomy.emergencyStop",
+    "description": "Global hard stop for all autonomous operations",
+    "default": true,
+    "enforcement": "immediate"
+  },
+  "mode": {
+    "name": "autonomy.mode",
+    "description": "Autonomous operation mode",
+    "options": [
+      "OFF",
+      "PARTIAL",
+      "FULL"
+    ],
+    "default": "FULL",
+    "enforcement": "immediate"
+  },
+  "budgets": {
+    "max_pages_per_hour": 1000,
+    "max_concurrent_agents": 250,
+    "rate_replay_per_5m": 50,
+    "roi_checkout_rate_limit": 100
+  },
+  "security": {
+    "rls_enabled": true,
+    "jwt_required": true,
+    "hmac_v2_timestamped": true,
+    "nonce_store": true,
+    "idempotency_keys": true
+  },
+  "slo_gates": {
+    "uptime_min": 99.95,
+    "success_rate_min": 98,
+    "p95_response_time_max": 2.5,
+    "auto_throttle": true,
+    "auto_rollback": true
+  },
+  "privacy": {
+    "pii_redaction": true,
+    "csp_enabled": true,
+    "cors_locked": true
+  },
+  "durability": {
+    "outbox_to_dlq": true,
+    "partitioned_logs": true,
+    "ttl_enabled": true,
+    "replay_caps": true
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "emergency_stop_off": "autonomy.emergencyStop=false",
+  "mode_full": "autonomy.mode=FULL",
+  "agents_on": "agents.autonomousEnabled=true",
+  "observability_on": "obs.otelEnabled=true"
+}

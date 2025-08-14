@@ -1,0 +1,32 @@
+{
+  "every_30s": [
+    "queue_health",
+    "budget_check",
+    "kill_switch_poll"
+  ],
+  "every_5m": [
+    "dlq_retries",
+    "max_50_items",
+    "max_2mb",
+    "stop_if_20_percent_fails"
+  ],
+  "hourly": [
+    "index_partition_maintenance",
+    "etl_jobs"
+  ],
+  "daily": [
+    "ttl_cleanup",
+    "backup_verify",
+    "key_rotation_check"
+  ],
+  "weekly": [
+    "dr_game_day",
+    "security_scans",
+    "portal_audits"
+  ],
+  "monthly": [
+    "restore_drills",
+    "cost_slo_review",
+    "flag_hygiene"
+  ]
+}
