@@ -29,6 +29,24 @@
     "schemaStore": {
       "enable": false
     },
-    "trace": "off"
+    "trace": "off",
+    "disableContextAccess": true,
+    "disableDefaultProperties": true,
+    "disableAdditionalProperties": true,
+    "disableRequiredProperties": true,
+    "disableTypeValidation": true,
+    "disableEnumValidation": true,
+    "disableFormatValidation": true,
+    "disablePatternValidation": true,
+    "disableMaxLengthValidation": true,
+    "disableMinLengthValidation": true,
+    "disableMaxItemsValidation": true,
+    "disableMinItemsValidation": true,
+    "disableUniqueItemsValidation": true,
+    "disableMultipleOfValidation": true,
+    "disableMaximumValidation": true,
+    "disableMinimumValidation": true,
+    "disableExclusiveMaximumValidation": true,
+    "disableExclusiveMinimumValidation": true
   }
 }

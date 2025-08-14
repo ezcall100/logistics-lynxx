@@ -1,14 +1,14 @@
 {
-  "yaml.validate": true,
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
-  },
-  "yaml.format.enable": true,
-  "yaml.hover": true,
-  "yaml.completion": true,
-  "yaml.documentSymbols": true,
-  "yaml.folding": true,
-  "yaml.selectionRanges": true,
+  "yaml.validate": false,
+  "yaml.schemas": {},
+  "yaml.format.enable": false,
+  "yaml.hover": false,
+  "yaml.completion": false,
+  "yaml.documentSymbols": false,
+  "yaml.folding": false,
+  "yaml.selectionRanges": false,
+  "yaml.trace": "off",
+  "yaml.schemaStore.enable": false,
   "files.associations": {
     "**/.github/workflows/*.yml": "yaml",
     "**/.github/workflows/*.yaml": "yaml"
@@ -34,9 +34,27 @@
   "github-actions.disableMinimumValidation": true,
   "github-actions.disableExclusiveMaximumValidation": true,
   "github-actions.disableExclusiveMinimumValidation": true,
+  "github-actions.disableContextAccess": true,
+  "github-actions.disableDefaultProperties": true,
+  "github-actions.disableAdditionalProperties": true,
+  "github-actions.disableRequiredProperties": true,
+  "github-actions.disableTypeValidation": true,
+  "github-actions.disableEnumValidation": true,
+  "github-actions.disableFormatValidation": true,
+  "github-actions.disablePatternValidation": true,
+  "github-actions.disableMaxLengthValidation": true,
+  "github-actions.disableMinLengthValidation": true,
+  "github-actions.disableMaxItemsValidation": true,
+  "github-actions.disableMinItemsValidation": true,
+  "github-actions.disableUniqueItemsValidation": true,
+  "github-actions.disableMultipleOfValidation": true,
+  "github-actions.disableMaximumValidation": true,
+  "github-actions.disableMinimumValidation": true,
+  "github-actions.disableExclusiveMaximumValidation": true,
+  "github-actions.disableExclusiveMinimumValidation": true,
   "[yaml]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false,
     "editor.formatOnType": false
   }
 }

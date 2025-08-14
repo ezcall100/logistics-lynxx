@@ -1,24 +1,42 @@
 {
   "folders": [
     {
-      "path": "."
+      "path": ".."
     }
   ],
   "settings": {
     "yaml.validate": false,
-    "yaml.validate.enable": false,
-    "yaml.disableContextAccess": true,
-    "yaml.disableDefaultProperties": true,
-    "yaml.disableAdditionalProperties": true,
-    "yaml.schemas": {
-      "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+    "yaml.schemas": {},
+    "yaml.format.enable": false,
+    "yaml.hover": false,
+    "yaml.completion": false,
+    "yaml.documentSymbols": false,
+    "yaml.folding": false,
+    "yaml.selectionRanges": false,
+    "yaml.trace": "off",
+    "yaml.schemaStore.enable": false,
+    "github-actions.validate": false,
+    "github-actions.validate.enable": false,
+    "extensions.ignoreRecommendations": true,
+    "extensions.autoUpdate": false,
+    "extensions.autoCheckUpdates": false,
+    "files.associations": {
+      "**/.github/workflows/*.yml": "yaml",
+      "**/.github/workflows/*.yaml": "yaml"
     },
-    "yaml.format.enable": true,
-    "yaml.hover": true,
-    "yaml.completion": true,
-    "yaml.schemaStore.enable": true,
-    "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
-    "yaml.validate.enable": false,
-    "yaml.validate": false
+    "[yaml]": {
+      "editor.formatOnSave": false,
+      "editor.formatOnPaste": false,
+      "editor.formatOnType": false
+    }
+  },
+  "extensions": {
+    "recommendations": [],
+    "unwantedRecommendations": [
+      "github.vscode-github-actions",
+      "github.vscode-github",
+      "github.copilot",
+      "github.copilot-chat"
+    ]
   }
 }

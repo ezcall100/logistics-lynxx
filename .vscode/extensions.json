@@ -1,6 +1,12 @@
 {
   "recommendations": [],
   "unwantedRecommendations": [
-    "github.vscode-github-actions"
-  ]
+    "github.vscode-github-actions",
+    "github.vscode-github",
+    "github.copilot",
+    "github.copilot-chat"
+  ],
+  "extensions.ignoreRecommendations": true,
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false
 }
