@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => ({
     minify: mode === 'production',
   },
   server: {
-    port: 5173,
+    port: 8080,
     host: true,
   },
 }));
