@@ -558,5 +558,285 @@
       },
       "overall": "RED"
     }
+  },
+  {
+    "timestamp": "2025-08-14T18:37:01.325Z",
+    "overall": "RED",
+    "flags": "RED",
+    "slo": "RED",
+    "budget": "YELLOW",
+    "telemetry": "GREEN",
+    "details": {
+      "flags": {
+        "status": "RED",
+        "details": {
+          "autonomy.emergencyStop": {
+            "expected": false,
+            "actual": null,
+            "correct": false
+          },
+          "autonomy.mode": {
+            "expected": "FULL",
+            "actual": "FULL",
+            "correct": true
+          },
+          "agents.autonomousEnabled": {
+            "expected": true,
+            "actual": true,
+            "correct": true
+          },
+          "obs.otelEnabled": {
+            "expected": true,
+            "actual": true,
+            "correct": true
+          }
+        },
+        "issues": [
+          "autonomy.emergencyStop: expected false, got null"
+        ]
+      },
+      "slo": {
+        "status": "RED",
+        "details": {
+          "uptime": {
+            "threshold": {
+              "min": 99.95,
+              "current": 99.97
+            },
+            "current": 99.97,
+            "good": true
+          },
+          "success": {
+            "threshold": {
+              "min": 98,
+              "current": 98.5
+            },
+            "current": 98.5,
+            "good": true
+          },
+          "p95": {
+            "threshold": {
+              "max": 2.5,
+              "current": 1.8
+            },
+            "current": 1.8,
+            "good": true
+          },
+          "dlqReplayFail": {
+            "threshold": {
+              "max": 2,
+              "current": 0.5
+            },
+            "current": 0.5,
+            "good": false
+          }
+        },
+        "issues": [
+          "dlqReplayFail: 0.5 (threshold: 2)"
+        ]
+      },
+      "budget": {
+        "status": "YELLOW",
+        "details": {
+          "concurrentAgents": {
+            "limit": {
+              "max": 250,
+              "current": 187
+            },
+            "utilization": 74.8,
+            "good": true,
+            "warning": false
+          },
+          "pagesPerHour": {
+            "limit": {
+              "max": 1000,
+              "current": 847
+            },
+            "utilization": 84.7,
+            "good": true,
+            "warning": true
+          },
+          "replayPer5m": {
+            "limit": {
+              "max": 3,
+              "current": 1.2
+            },
+            "utilization": 40,
+            "good": true,
+            "warning": false
+          }
+        },
+        "issues": [
+          "pagesPerHour: 84.7% utilization (warning)"
+        ]
+      },
+      "telemetry": {
+        "status": "GREEN",
+        "details": {
+          "spans": {
+            "expected": "agent.task.execute & agent.fn.*",
+            "found": true,
+            "good": true
+          },
+          "slackErrors": {
+            "expected": "include trace link",
+            "found": true,
+            "good": true
+          },
+          "liveFeed": {
+            "expected": "start/finish within seconds",
+            "found": true,
+            "good": true
+          },
+          "fileUpdates": {
+            "expected": "live page edits with timestamps",
+            "found": true,
+            "good": true
+          }
+        },
+        "issues": []
+      },
+      "overall": "RED"
+    }
+  },
+  {
+    "timestamp": "2025-08-14T19:04:31.027Z",
+    "overall": "RED",
+    "flags": "RED",
+    "slo": "RED",
+    "budget": "YELLOW",
+    "telemetry": "GREEN",
+    "details": {
+      "flags": {
+        "status": "RED",
+        "details": {
+          "autonomy.emergencyStop": {
+            "expected": false,
+            "actual": null,
+            "correct": false
+          },
+          "autonomy.mode": {
+            "expected": "FULL",
+            "actual": "FULL",
+            "correct": true
+          },
+          "agents.autonomousEnabled": {
+            "expected": true,
+            "actual": true,
+            "correct": true
+          },
+          "obs.otelEnabled": {
+            "expected": true,
+            "actual": true,
+            "correct": true
+          }
+        },
+        "issues": [
+          "autonomy.emergencyStop: expected false, got null"
+        ]
+      },
+      "slo": {
+        "status": "RED",
+        "details": {
+          "uptime": {
+            "threshold": {
+              "min": 99.95,
+              "current": 99.97
+            },
+            "current": 99.97,
+            "good": true
+          },
+          "success": {
+            "threshold": {
+              "min": 98,
+              "current": 98.5
+            },
+            "current": 98.5,
+            "good": true
+          },
+          "p95": {
+            "threshold": {
+              "max": 2.5,
+              "current": 1.8
+            },
+            "current": 1.8,
+            "good": true
+          },
+          "dlqReplayFail": {
+            "threshold": {
+              "max": 2,
+              "current": 0.5
+            },
+            "current": 0.5,
+            "good": false
+          }
+        },
+        "issues": [
+          "dlqReplayFail: 0.5 (threshold: 2)"
+        ]
+      },
+      "budget": {
+        "status": "YELLOW",
+        "details": {
+          "concurrentAgents": {
+            "limit": {
+              "max": 250,
+              "current": 187
+            },
+            "utilization": 74.8,
+            "good": true,
+            "warning": false
+          },
+          "pagesPerHour": {
+            "limit": {
+              "max": 1000,
+              "current": 847
+            },
+            "utilization": 84.7,
+            "good": true,
+            "warning": true
+          },
+          "replayPer5m": {
+            "limit": {
+              "max": 3,
+              "current": 1.2
+            },
+            "utilization": 40,
+            "good": true,
+            "warning": false
+          }
+        },
+        "issues": [
+          "pagesPerHour: 84.7% utilization (warning)"
+        ]
+      },
+      "telemetry": {
+        "status": "GREEN",
+        "details": {
+          "spans": {
+            "expected": "agent.task.execute & agent.fn.*",
+            "found": true,
+            "good": true
+          },
+          "slackErrors": {
+            "expected": "include trace link",
+            "found": true,
+            "good": true
+          },
+          "liveFeed": {
+            "expected": "start/finish within seconds",
+            "found": true,
+            "good": true
+          },
+          "fileUpdates": {
+            "expected": "live page edits with timestamps",
+            "found": true,
+            "good": true
+          }
+        },
+        "issues": []
+      },
+      "overall": "RED"
+    }
   }
 ]

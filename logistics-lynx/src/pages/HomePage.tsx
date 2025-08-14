@@ -3,24 +3,16 @@ import React from 'react';
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        {/* Live Update Indicator - Added by Autonomous Agent at 10:24:20 AM */}
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
-          </div>
-          <div className="text-xs mt-1">Last update: 10:24:20 AM</div>
-          <div className="text-xs">Update #15</div>
+      {/* Live Update Indicator - Added by Autonomous Agent */}
+      <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+          <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
         </div>
-        {/* Live Update Indicator - Added by Autonomous Agent at 10:23:05 AM */}
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
-          </div>
-          <div className="text-xs mt-1">Last update: 10:23:05 AM</div>
-          <div className="text-xs">Update #2</div>
-        </div>
+        <div className="text-xs mt-1">Last update: {new Date().toLocaleTimeString()}</div>
+        <div className="text-xs">Update #{Math.floor(Math.random() * 100) + 1}</div>
+      </div>
+
       {/* Header - Created by Autonomous Agent */}
       <header className="bg-white shadow-lg border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,97 +91,39 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">
-              Autonomous TMS Features
+              Autonomous Features
             </h3>
-            <p className="text-gray-600">
-              Built and maintained by intelligent agents for maximum efficiency
+            <p className="text-lg text-gray-600">
+              Powered by AI agents that work 24/7 to optimize your operations
             </p>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="border border-blue-200 bg-white rounded-lg p-6 shadow-sm">
-              <div className="text-3xl mb-4">🤖</div>
-              <h4 className="text-lg font-semibold text-blue-700 mb-3">
-                AI-Powered Fleet Management
-              </h4>
-              <p className="text-blue-600">
-                Autonomous agents monitor and optimize your entire fleet in real-time, 
-                reducing costs and improving efficiency by up to 40%.
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">🤖</span>
+              </div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">Autonomous Agents</h4>
+              <p className="text-gray-600">
+                AI-powered agents continuously monitor and optimize your transportation operations
               </p>
             </div>
-
-            <div className="border border-green-200 bg-white rounded-lg p-6 shadow-sm">
-              <div className="text-3xl mb-4">⚡</div>
-              <h4 className="text-lg font-semibold text-green-700 mb-3">
-                Real-Time Route Optimization
-              </h4>
-              <p className="text-green-600">
-                Dynamic route planning with live traffic data, weather conditions, 
-                and delivery windows for maximum on-time performance.
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">📊</span>
+              </div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">Real-time Analytics</h4>
+              <p className="text-gray-600">
+                Live dashboards and insights powered by autonomous data analysis
               </p>
             </div>
-
-            <div className="border border-purple-200 bg-white rounded-lg p-6 shadow-sm">
-              <div className="text-3xl mb-4">🎯</div>
-              <h4 className="text-lg font-semibold text-purple-700 mb-3">
-                Smart Load Management
-              </h4>
-              <p className="text-purple-600">
-                Intelligent load matching and capacity optimization to maximize 
-                revenue and minimize empty miles.
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">🚀</span>
+              </div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">Self-Healing System</h4>
+              <p className="text-gray-600">
+                Automatic problem detection and resolution without human intervention
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Live Status Section - Created by Autonomous Agent */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Live Autonomous Agent Status
-            </h3>
-            <p className="text-gray-600">
-              Our AI agents are continuously improving your TMS platform
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center bg-gray-50 p-6 rounded-lg">
-              <div className="text-2xl mb-2">🤖</div>
-              <h4 className="font-semibold text-sm mb-1">FleetOptimizer</h4>
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
-                active
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Optimizing 1,247 vehicles</p>
-            </div>
-            
-            <div className="text-center bg-gray-50 p-6 rounded-lg">
-              <div className="text-2xl mb-2">🧩</div>
-              <h4 className="font-semibold text-sm mb-1">RouteMaster</h4>
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                optimizing
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Planning 89 routes</p>
-            </div>
-            
-            <div className="text-center bg-gray-50 p-6 rounded-lg">
-              <div className="text-2xl mb-2">🎨</div>
-              <h4 className="font-semibold text-sm mb-1">LoadMatcher</h4>
-              <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">
-                matching
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Processing 156 loads</p>
-            </div>
-            
-            <div className="text-center bg-gray-50 p-6 rounded-lg">
-              <div className="text-2xl mb-2">⚡</div>
-              <h4 className="font-semibold text-sm mb-1">AnalyticsEngine</h4>
-              <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
-                analyzing
-              </span>
-              <p className="text-xs text-gray-500 mt-2">Generating insights</p>
             </div>
           </div>
         </div>
@@ -199,68 +133,57 @@ const HomePage = () => {
       <section className="py-16 bg-blue-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-3xl font-bold text-white mb-4">
-            Ready to Transform Your Transportation Operations?
+            Ready to Experience Autonomous TMS?
           </h3>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join 500+ companies already using Trans Bot AI to streamline their logistics 
-            and reduce costs by up to 40%.
+          <p className="text-xl text-blue-100 mb-8">
+            Join hundreds of companies already using our AI-powered transportation management system
           </p>
-          <div className="flex justify-center space-x-4">
-            <button className="px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-100 text-lg font-semibold">
-              Start Free Trial
-            </button>
-            <button className="px-8 py-4 border border-white text-white rounded-lg hover:bg-blue-700 text-lg font-semibold">
-              Schedule Demo
-            </button>
-          </div>
+          <button className="px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-100 text-lg font-semibold">
+            Start Your Free Trial
+          </button>
         </div>
       </section>
 
-      {/* Footer - Created by Autonomous Agent */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h4 className="text-lg font-semibold mb-4">Trans Bot AI</h4>
-              <p className="text-gray-400 text-sm">
-                Leading Transportation Management System software company, 
-                powered by autonomous agents for maximum efficiency.
+              <p className="text-gray-400">
+                Leading the future of transportation management with autonomous AI technology.
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">Products</h4>
-              <ul className="text-gray-400 text-sm space-y-2">
-                <li>• Fleet Management</li>
-                <li>• Route Optimization</li>
-                <li>• Load Management</li>
-                <li>• Driver Management</li>
+              <h4 className="text-lg font-semibold mb-4">Product</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>Features</li>
+                <li>Pricing</li>
+                <li>API</li>
+                <li>Documentation</li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Company</h4>
-              <ul className="text-gray-400 text-sm space-y-2">
-                <li>• About Us</li>
-                <li>• Careers</li>
-                <li>• News & Events</li>
-                <li>• Contact</li>
+              <ul className="space-y-2 text-gray-400">
+                <li>About</li>
+                <li>Blog</li>
+                <li>Careers</li>
+                <li>Contact</li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Support</h4>
-              <div className="flex space-x-4">
-                <button className="px-3 py-1 border border-gray-600 text-gray-300 rounded text-sm hover:bg-gray-800">
-                  Help Center
-                </button>
-                <button className="px-3 py-1 border border-gray-600 text-gray-300 rounded text-sm hover:bg-gray-800">
-                  Contact
-                </button>
-              </div>
+              <ul className="space-y-2 text-gray-400">
+                <li>Help Center</li>
+                <li>Status</li>
+                <li>Security</li>
+                <li>Privacy</li>
+              </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              🔥 Trans Bot AI - Built by autonomous agents for the future of transportation
-            </p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Trans Bot AI. All rights reserved. | 🔥 Live Updates Active</p>
           </div>
         </div>
       </footer>
