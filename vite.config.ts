@@ -20,6 +20,8 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     jsx: 'automatic',
     target: 'es2020',
+    jsxFactory: 'React.createElement',
+    jsxFragment: 'React.Fragment',
   },
   build: {
     target: 'es2020',
