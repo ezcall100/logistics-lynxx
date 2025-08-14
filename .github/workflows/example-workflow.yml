@@ -13,7 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Use a GitHub Actions secret
+      # Step 2: Export secrets
+      - name: Export secrets
+        run: |
+          {
+            echo "DB_CONNECTION_URL=${{ secrets.DB_CONNECTION_URL || '' }}"
+            echo "API_KEY=${{ secrets.API_KEY || '' }}"
+          } >> "$GITHUB_ENV"
+          echo "✅ Secrets exported successfully!"
+
+      # Step 3: Use a GitHub Actions secret
       # Using the actual secret name stored in your repository:
       # DB_CONNECTION_URL - Your database connection string
       - name: Use secret and context variables
@@ -28,7 +37,7 @@ jobs:
           echo "Database connection configured using DB_CONNECTION_URL"
           echo "API key configured"
         env:
-          DB_CONNECTION_URL: ${{ secrets.DB_CONNECTION_URL }}  # Your stored database connection string
-          API_KEY: ${{ secrets.API_KEY }}                      # Your API key (if you have one)
+          DB_CONNECTION_URL: ''  # Will be set by export script
+          API_KEY: ''            # Will be set by export script
           REPO_NAME: ${{ github.repository }}                  # Repository name from context
           BRANCH_NAME: ${{ github.ref_name }}                  # Current branch name
