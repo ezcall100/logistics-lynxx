@@ -18,7 +18,12 @@ import {
   EyeOff,
   Play,
   Pause,
-  RotateCcw
+  RotateCcw,
+  Truck,
+  Route,
+  Package,
+  Users,
+  BarChart3
 } from 'lucide-react';
 
 interface PageBuild {
@@ -32,7 +37,7 @@ interface PageBuild {
   seoScore: number;
   imageCount: number;
   wordCount: number;
-  type: 'home' | 'about' | 'features' | 'pricing' | 'contact' | 'blog' | 'solutions' | 'resources' | 'support' | 'careers';
+  type: 'home' | 'about' | 'tms-software' | 'features' | 'pricing' | 'contact' | 'blog' | 'solutions' | 'resources' | 'support' | 'careers' | 'demo' | 'api' | 'integrations';
 }
 
 interface WebsiteStats {
@@ -61,29 +66,37 @@ export default function WebsiteBuilder() {
 
   const pageTypes = [
     { type: 'home', name: 'Home Page', icon: Globe },
-    { type: 'about', name: 'About Us', icon: FileText },
-    { type: 'features', name: 'Features', icon: Settings },
-    { type: 'pricing', name: 'Pricing', icon: Code },
-    { type: 'contact', name: 'Contact', icon: Eye },
-    { type: 'blog', name: 'Blog', icon: FileText },
-    { type: 'solutions', name: 'Solutions', icon: Search },
+    { type: 'about', name: 'About Trans Bot AI', icon: Users },
+    { type: 'tms-software', name: 'TMS Software', icon: Truck },
+    { type: 'features', name: 'TMS Features', icon: Settings },
+    { type: 'pricing', name: 'Pricing Plans', icon: Code },
+    { type: 'contact', name: 'Contact Us', icon: Eye },
+    { type: 'blog', name: 'TMS Blog', icon: FileText },
+    { type: 'solutions', name: 'Industry Solutions', icon: Route },
     { type: 'resources', name: 'Resources', icon: FileText },
     { type: 'support', name: 'Support', icon: Settings },
-    { type: 'careers', name: 'Careers', icon: Eye }
+    { type: 'careers', name: 'Careers', icon: Users },
+    { type: 'demo', name: 'Request Demo', icon: Play },
+    { type: 'api', name: 'API Documentation', icon: Code },
+    { type: 'integrations', name: 'Integrations', icon: Package }
   ];
 
   const generateContent = (pageType: string) => {
     const contentTemplates = {
-      home: `Welcome to our innovative platform. We provide cutting-edge solutions for modern businesses. Our autonomous system ensures 24/7 operation with real-time updates and self-healing capabilities.`,
-      about: `Founded with a vision to revolutionize autonomous operations, our company leads the industry in AI-powered solutions. We serve over 1,000+ clients worldwide with our advanced technology.`,
-      features: `Discover our comprehensive feature set including real-time monitoring, autonomous operations, self-healing systems, and advanced analytics. Each feature is designed for maximum efficiency.`,
-      pricing: `Choose from our flexible pricing plans designed to scale with your business. All plans include full access to our autonomous system, 24/7 support, and real-time updates.`,
-      contact: `Get in touch with our team of experts. We're here to help you implement autonomous solutions that drive your business forward. Contact us for a personalized consultation.`,
-      blog: `Stay updated with the latest insights in autonomous technology, industry trends, and best practices. Our expert team shares valuable knowledge to help you succeed.`,
-      solutions: `Explore our tailored solutions for various industries. From logistics to healthcare, our autonomous systems adapt to your specific needs and requirements.`,
-      resources: `Access our comprehensive resource library including documentation, tutorials, case studies, and best practices to maximize your autonomous system's potential.`,
-      support: `Get the support you need with our dedicated team. We provide 24/7 assistance, comprehensive documentation, and personalized training to ensure your success.`,
-      careers: `Join our team of innovators and help shape the future of autonomous technology. We offer competitive benefits, growth opportunities, and a collaborative work environment.`
+      home: `Trans Bot AI - Leading TMS Software Company. We build intelligent Transportation Management Systems that revolutionize logistics operations. Our autonomous AI-powered platform ensures 24/7 optimization, real-time tracking, and seamless fleet management for modern transportation companies.`,
+      about: `Trans Bot AI is a pioneering software company specializing in Transportation Management Systems (TMS). Founded with a vision to revolutionize logistics through AI, we serve over 1,000+ transportation companies worldwide with our cutting-edge autonomous TMS platform.`,
+      'tms-software': `Our flagship TMS software combines artificial intelligence with advanced logistics management. Features include autonomous route optimization, real-time fleet tracking, intelligent load matching, automated dispatching, and comprehensive analytics for transportation companies.`,
+      features: `Discover our comprehensive TMS features: Autonomous Route Optimization, Real-time Fleet Tracking, Intelligent Load Matching, Automated Dispatching, Driver Management, Fuel Optimization, Compliance Monitoring, and Advanced Analytics. Each feature is designed for maximum efficiency.`,
+      pricing: `Choose from our flexible TMS pricing plans designed to scale with your transportation business. All plans include full access to our autonomous TMS system, 24/7 support, real-time updates, and comprehensive training for your team.`,
+      contact: `Get in touch with our TMS experts. We're here to help you implement our autonomous Transportation Management System that drives your logistics operations forward. Contact us for a personalized TMS consultation.`,
+      blog: `Stay updated with the latest insights in TMS technology, logistics trends, and transportation best practices. Our expert team shares valuable knowledge to help transportation companies succeed with autonomous systems.`,
+      solutions: `Explore our tailored TMS solutions for various transportation industries. From trucking companies to logistics providers, our autonomous systems adapt to your specific transportation needs and operational requirements.`,
+      resources: `Access our comprehensive TMS resource library including documentation, tutorials, case studies, and best practices to maximize your Transportation Management System's potential and optimize your logistics operations.`,
+      support: `Get the TMS support you need with our dedicated team. We provide 24/7 assistance, comprehensive TMS documentation, and personalized training to ensure your transportation management success.`,
+      careers: `Join our team of TMS innovators and help shape the future of transportation technology. We offer competitive benefits, growth opportunities, and a collaborative work environment for software professionals.`,
+      demo: `Experience our autonomous TMS software in action. Request a personalized demo to see how our Transportation Management System can optimize your logistics operations, reduce costs, and improve efficiency.`,
+      api: `Integrate our TMS software with your existing systems through our comprehensive API. Access real-time data, automate operations, and build custom solutions that work seamlessly with our autonomous transportation platform.`,
+      integrations: `Connect our TMS software with your favorite tools and platforms. We offer integrations with ERP systems, accounting software, GPS tracking devices, fuel cards, and more to streamline your transportation operations.`
     };
     return contentTemplates[pageType as keyof typeof contentTemplates] || contentTemplates.home;
   };
@@ -208,8 +221,8 @@ export default function WebsiteBuilder() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Globe className="w-6 h-6 text-blue-500" />
-          <h2 className="text-2xl font-bold">Autonomous Website Builder</h2>
+          <Truck className="w-6 h-6 text-blue-500" />
+          <h2 className="text-2xl font-bold">Trans Bot AI - TMS Website Builder</h2>
           <Badge variant={isRunning ? "default" : "secondary"}>
             {isRunning ? "Building" : "Paused"}
           </Badge>
@@ -241,7 +254,7 @@ export default function WebsiteBuilder() {
             <div className="flex items-center space-x-2">
               <FileText className="w-5 h-5 text-green-500" />
               <div>
-                <p className="text-sm font-medium">Pages Built</p>
+                <p className="text-sm font-medium">TMS Pages Built</p>
                 <p className="text-2xl font-bold">{stats.pagesBuilt}/50</p>
               </div>
             </div>
@@ -277,7 +290,7 @@ export default function WebsiteBuilder() {
             <div className="flex items-center space-x-2">
               <Image className="w-5 h-5 text-orange-500" />
               <div>
-                <p className="text-sm font-medium">Total Images</p>
+                <p className="text-sm font-medium">TMS Images</p>
                 <p className="text-2xl font-bold">{stats.totalImages}</p>
               </div>
             </div>
@@ -290,7 +303,7 @@ export default function WebsiteBuilder() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Zap className="w-5 h-5" />
-            <span>Live Page Building</span>
+            <span>Live TMS Website Building</span>
             <Badge variant="outline">{pageBuilds.filter(p => p.status === 'building').length} building</Badge>
           </CardTitle>
         </CardHeader>
@@ -360,19 +373,19 @@ export default function WebsiteBuilder() {
       <div className="flex items-center justify-center space-x-4 p-4 bg-muted/50 rounded-lg">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-          <span className="text-sm">Autonomous Page Building</span>
+          <span className="text-sm">Trans Bot AI TMS Website Building</span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-sm">Real-time Content Generation</span>
+          <span className="text-sm">Real-time TMS Content Generation</span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-          <span className="text-sm">SEO Optimization</span>
+          <span className="text-sm">TMS Software SEO Optimization</span>
         </div>
         <div className="flex items-center space-x-2">
-          <Zap className="w-4 h-4 text-yellow-500 animate-pulse" />
-          <span className="text-sm">50-Page Website</span>
+          <Truck className="w-4 h-4 text-yellow-500 animate-pulse" />
+          <span className="text-sm">50-Page TMS Website</span>
         </div>
       </div>
     </div>
