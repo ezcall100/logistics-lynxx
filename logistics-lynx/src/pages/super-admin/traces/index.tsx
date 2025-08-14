@@ -14,7 +14,7 @@ type TraceRow = {
 };
 
 export default function TracesPage() {
-  const enabled = useFlag("obs.tracesPageEnabled", false);
+  const enabled = useFlag("", "prod", "obs.tracesPageEnabled", false);
   const [companyId, setCompanyId] = useState<string>("");
   const [since, setSince] = useState<string>("24 hours");
   
@@ -29,12 +29,12 @@ export default function TracesPage() {
       if (error) throw error;
       return data as TraceRow[];
     },
-    enabled: enabled, // Only run query if feature flag is enabled
+    enabled: enabled.value, // Only run query if feature flag is enabled
   });
 
   const rows = useMemo(() => data ?? [], [data]);
 
-  if (!enabled) {
+  if (!enabled.value) {
     return (
       <div className="p-6 text-sm text-muted-foreground">
         Traces page is disabled by feature flag.

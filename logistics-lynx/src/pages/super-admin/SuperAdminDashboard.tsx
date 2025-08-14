@@ -398,12 +398,12 @@ export function SuperAdminDashboard() {
                     icon={<Database className="h-4 w-4" />}
                     variant="success"
                   />
-                  <InfoCard
-                    title="Network"
-                    description="Connected to all services"
-                    icon={<Network className="h-4 w-4" />}
-                    variant="success" as const
-                  />
+                                     <InfoCard
+                     title="Network"
+                     description="Connected to all services"
+                     icon={<Network className="h-4 w-4" />}
+                     variant="success"
+                   />
                 </div>
               )}
             </CardContent>

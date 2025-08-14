@@ -1,7 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { RequireAuth, RequireRoles } from '@/auth/RequireAuth';
-import { AppShell } from '@/components/layout/AppShell';
+import AppShell from '@/components/layout/AppShell';
 
 // Lazy load portal components
 const UnifiedDashboard = lazy(() => import('@/components/dashboard/UnifiedDashboard'));

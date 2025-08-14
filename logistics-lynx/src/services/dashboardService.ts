@@ -192,7 +192,7 @@ export class DashboardService {
       manage_clients: 'Client management accessed',
       view_contracts: 'Contracts retrieved',
       financial_reports: 'Financial reports generated',
-      manage_expenses: 'Expenses updated',
+      manage_expenses: 'Expenses updated successfully',
       add_contact: 'Contact added successfully',
       view_opportunities: 'Opportunities retrieved',
       generate_leads: 'Lead generation completed',
@@ -200,7 +200,6 @@ export class DashboardService {
       create_invoice: 'Invoice created successfully',
       process_payment: 'Payment processed successfully',
       view_financial_reports: 'Financial reports generated',
-      manage_expenses: 'Expenses updated successfully',
       send_document: 'EDI document sent successfully',
       receive_document: 'EDI document received and processed',
       view_transactions: 'EDI transactions retrieved',
@@ -215,7 +214,6 @@ export class DashboardService {
                   track_compliance: 'Compliance status updated successfully',
             manage_users: 'User management completed successfully',
             configure_dashboards: 'Dashboard configuration updated successfully',
-            system_settings: 'System settings saved successfully',
             view_analytics: 'Analytics data retrieved successfully'
     };
 
