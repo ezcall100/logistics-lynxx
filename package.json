@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "cd logistics-lynx && npm run dev",
     "build": "cd logistics-lynx && npm run build",
+    "build:dev": "cd logistics-lynx && npm run build:dev",
+    "build:dev:check": "cd logistics-lynx && npm run build:dev:check",
     "preview": "cd logistics-lynx && npm run preview",
     "lint": "cd logistics-lynx && npm run lint",
     "test": "cd logistics-lynx && npm run test"

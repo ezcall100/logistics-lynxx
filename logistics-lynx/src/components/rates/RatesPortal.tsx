@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import RateFormDialog from './RateFormDialog';
 import RateFilters from './RateFilters';
+import { DateRange } from 'react-day-picker';
 
 export default function RatesPortal() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMode, setSelectedMode] = useState('all');
+  const [selectedEquipment, setSelectedEquipment] = useState('all');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [isRateDialogOpen, setIsRateDialogOpen] = useState(false);
+  const [rateDialogMode, setRateDialogMode] = useState<'add' | 'edit'>('add');
+  const [rateDialogType, setRateDialogType] = useState<'buy' | 'sell'>('buy');
+
+  const activeFiltersCount = [
+    searchTerm,
+    selectedMode !== 'all',
+    selectedEquipment !== 'all',
+    dateRange
+  ].filter(Boolean).length;
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setSelectedMode('all');
+    setSelectedEquipment('all');
+    setDateRange(undefined);
+  };
+
+  const handleSaveRate = (data: any) => {
+    console.log('Saving rate:', data);
+    setIsRateDialogOpen(false);
+  };
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -25,7 +52,18 @@ export default function RatesPortal() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <RateFilters />
+            <RateFilters 
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              selectedMode={selectedMode}
+              onModeChange={setSelectedMode}
+              selectedEquipment={selectedEquipment}
+              onEquipmentChange={setSelectedEquipment}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              onClearFilters={handleClearFilters}
+              activeFiltersCount={activeFiltersCount}
+            />
             <div className="mt-4">
               <p className="text-sm text-muted-foreground">
                 Rate management features coming soon...
@@ -43,7 +81,13 @@ export default function RatesPortal() {
           </CardHeader>
           <CardContent>
             <div className="flex gap-4">
-              <RateFormDialog />
+              <RateFormDialog 
+                open={isRateDialogOpen}
+                onOpenChange={setIsRateDialogOpen}
+                mode={rateDialogMode}
+                type={rateDialogType}
+                onSave={handleSaveRate}
+              />
             </div>
           </CardContent>
         </Card>
