@@ -14,6 +14,11 @@ const __dirname = path.dirname(__filename);
 function validatePackageJson() {
   try {
     const packagePath = path.join(__dirname, '../../logistics-lynx/package.json');
+    console.log(`Looking for package.json at: ${packagePath}`);
+    if (!fs.existsSync(packagePath)) {
+      console.log(`❌ File not found: ${packagePath}`);
+      return false;
+    }
     const data = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
     
     // Check required fields
@@ -58,6 +63,11 @@ function validatePackageJson() {
 function validateTsConfigJson() {
   try {
     const tsConfigPath = path.join(__dirname, '../../logistics-lynx/tsconfig.json');
+    console.log(`Looking for tsconfig.json at: ${tsConfigPath}`);
+    if (!fs.existsSync(tsConfigPath)) {
+      console.log(`❌ File not found: ${tsConfigPath}`);
+      return false;
+    }
     let content = fs.readFileSync(tsConfigPath, 'utf8');
     
     // Remove TypeScript-style comments before parsing as JSON
@@ -134,9 +144,7 @@ function main() {
   console.log("✅ All configuration files validated successfully");
 }
 
-// Check if this is the main module
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
+// Execute main function
+main();
 
 export { validatePackageJson, validateTsConfigJson };
