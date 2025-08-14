@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { RealTimeAgentMonitor } from '../autonomous/RealTimeAgentMonitor';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -165,6 +166,11 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Autonomous Agent Monitor */}
+        <div className="mt-8">
+          <RealTimeAgentMonitor />
+        </div>
       </div>
     </div>
   );
