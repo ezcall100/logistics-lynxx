@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { RealTimeAgentMonitor } from '../autonomous/RealTimeAgentMonitor';
+import { WebsiteBuilderMonitor } from '../autonomous/WebsiteBuilderMonitor';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -170,6 +171,11 @@ const Dashboard = () => {
         {/* Autonomous Agent Monitor */}
         <div className="mt-8">
           <RealTimeAgentMonitor />
+        </div>
+
+        {/* Website Builder Monitor */}
+        <div className="mt-8">
+          <WebsiteBuilderMonitor />
         </div>
       </div>
     </div>
