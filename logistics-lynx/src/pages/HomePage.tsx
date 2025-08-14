@@ -2,10 +2,15 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
+import Navigation from '../components/layout/Navigation';
+import LiveBuildMonitor from '../components/autonomous/LiveBuildMonitor';
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Navigation - Created by Autonomous Agent */}
+      <Navigation />
+      
       {/* Header - Created by Autonomous Agent */}
       <header className="bg-white shadow-lg border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,18 +125,49 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {this.agents.map((agent, index) => (
-              <Card key={index} className="text-center">
-                <CardContent className="pt-6">
-                  <div className="text-2xl mb-2">{this.getAgentIcon(agent.name)}</div>
-                  <h4 className="font-semibold text-sm mb-1">{agent.name}</h4>
-                  <Badge variant={agent.status === 'building' ? 'default' : 'secondary'} className="text-xs">
-                    {agent.status}
-                  </Badge>
-                  <p className="text-xs text-gray-500 mt-2">{agent.task}</p>
-                </CardContent>
-              </Card>
-            ))}
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-2xl mb-2">🤖</div>
+                <h4 className="font-semibold text-sm mb-1">PageCreator</h4>
+                <Badge variant="default" className="text-xs">
+                  building
+                </Badge>
+                <p className="text-xs text-gray-500 mt-2">Creating new pages</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-2xl mb-2">🧩</div>
+                <h4 className="font-semibold text-sm mb-1">ComponentArchitect</h4>
+                <Badge variant="default" className="text-xs">
+                  building
+                </Badge>
+                <p className="text-xs text-gray-500 mt-2">Architecting components</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-2xl mb-2">🎨</div>
+                <h4 className="font-semibold text-sm mb-1">LayoutEngineer</h4>
+                <Badge variant="default" className="text-xs">
+                  building
+                </Badge>
+                <p className="text-xs text-gray-500 mt-2">Engineering layouts</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-2xl mb-2">⚡</div>
+                <h4 className="font-semibold text-sm mb-1">ContentWriter</h4>
+                <Badge variant="default" className="text-xs">
+                  building
+                </Badge>
+                <p className="text-xs text-gray-500 mt-2">Writing content</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
