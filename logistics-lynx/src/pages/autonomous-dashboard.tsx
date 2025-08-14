@@ -3,22 +3,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Activity, 
-  Zap, 
-  Globe, 
-  Settings, 
+import {
+  Activity,
+  Zap,
+  Globe,
+  Settings,
   AlertTriangle,
   CheckCircle,
   Clock,
   Server,
   Shield,
   TrendingUp,
-  FileText
+  FileText,
+  Terminal
 } from 'lucide-react';
 import LiveFeed from '@/components/autonomous/LiveFeed';
 import MetricsBar from '@/components/autonomous/MetricsBar';
 import WebsiteBuilder from '@/components/autonomous/WebsiteBuilder';
+import WebsiteBuilderConsole from '@/components/autonomous/WebsiteBuilderConsole';
 
 export default function AutonomousDashboard() {
   return (
@@ -27,7 +29,7 @@ export default function AutonomousDashboard() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center">
               <Zap className="w-8 h-8 text-white" />
             </div>
             <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full border-2 border-green-500 flex items-center justify-center">
@@ -35,9 +37,9 @@ export default function AutonomousDashboard() {
             </div>
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Autonomous System Dashboard</h1>
+            <h1 className="text-3xl font-bold">Trans Bot AI Autonomous Dashboard</h1>
             <p className="text-muted-foreground">
-              Full Authority 24/7 Operations - 20 Portals + 50-Page Website
+              Full Authority 24/7 Operations - TMS Software + 50-Page Website
             </p>
           </div>
         </div>
@@ -59,7 +61,7 @@ export default function AutonomousDashboard() {
                 <Globe className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-medium text-green-700">Portals Online</p>
+                <p className="text-sm font-medium text-green-700">TMS Software Active</p>
                 <p className="text-2xl font-bold text-green-800">20/20</p>
               </div>
             </div>
@@ -111,7 +113,7 @@ export default function AutonomousDashboard() {
 
       {/* Main Dashboard Tabs */}
       <Tabs defaultValue="live-feed" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="live-feed" className="flex items-center space-x-2">
             <Activity className="w-4 h-4" />
             <span>Live Feed</span>
@@ -119,6 +121,10 @@ export default function AutonomousDashboard() {
           <TabsTrigger value="website-builder" className="flex items-center space-x-2">
             <FileText className="w-4 h-4" />
             <span>Website Builder</span>
+          </TabsTrigger>
+          <TabsTrigger value="builder-console" className="flex items-center space-x-2">
+            <Terminal className="w-4 h-4" />
+            <span>Builder Console</span>
           </TabsTrigger>
           <TabsTrigger value="metrics" className="flex items-center space-x-2">
             <TrendingUp className="w-4 h-4" />
@@ -136,6 +142,10 @@ export default function AutonomousDashboard() {
 
         <TabsContent value="website-builder" className="space-y-4">
           <WebsiteBuilder />
+        </TabsContent>
+
+        <TabsContent value="builder-console" className="space-y-4">
+          <WebsiteBuilderConsole />
         </TabsContent>
 
         <TabsContent value="metrics" className="space-y-4">
@@ -170,6 +180,14 @@ export default function AutonomousDashboard() {
                     <p className="text-sm font-medium">Real-time Updates</p>
                     <Badge variant="default" className="bg-blue-500">ACTIVE</Badge>
                   </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Website Builder</p>
+                    <Badge variant="default" className="bg-green-500">ENABLED</Badge>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">API Endpoints</p>
+                    <Badge variant="default" className="bg-green-500">ACTIVE</Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -179,7 +197,7 @@ export default function AutonomousDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Globe className="w-5 h-5" />
-                  <span>Portal Status Summary</span>
+                  <span>TMS Portal Status Summary</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -241,21 +259,21 @@ export default function AutonomousDashboard() {
                   <div className="flex items-center space-x-3 p-2 bg-green-50 rounded-lg">
                     <CheckCircle className="w-4 h-4 text-green-500" />
                     <div>
-                      <p className="text-sm font-medium">System backup completed</p>
+                      <p className="text-sm font-medium">Website builder operational</p>
                       <p className="text-xs text-muted-foreground">2 minutes ago</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3 p-2 bg-blue-50 rounded-lg">
                     <Activity className="w-4 h-4 text-blue-500" />
                     <div>
-                      <p className="text-sm font-medium">Performance optimization applied</p>
+                      <p className="text-sm font-medium">TMS performance optimization applied</p>
                       <p className="text-xs text-muted-foreground">5 minutes ago</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3 p-2 bg-purple-50 rounded-lg">
                     <Zap className="w-4 h-4 text-purple-500" />
                     <div>
-                      <p className="text-sm font-medium">Autonomous load matching completed</p>
+                      <p className="text-sm font-medium">Autonomous TMS load matching completed</p>
                       <p className="text-xs text-muted-foreground">8 minutes ago</p>
                     </div>
                   </div>
@@ -308,19 +326,19 @@ export default function AutonomousDashboard() {
       <div className="flex items-center justify-center space-x-6 p-4 bg-muted/50 rounded-lg">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-sm font-medium">Full Authority Autonomous System</span>
+          <span className="text-sm font-medium">Trans Bot AI TMS Software</span>
         </div>
         <div className="flex items-center space-x-2">
           <Clock className="w-4 h-4 text-blue-500" />
-          <span className="text-sm">24/7 Operation</span>
+          <span className="text-sm">24/7 Autonomous Operation</span>
         </div>
         <div className="flex items-center space-x-2">
           <Shield className="w-4 h-4 text-green-500" />
-          <span className="text-sm">Security Active</span>
+          <span className="text-sm">Enterprise Security</span>
         </div>
         <div className="flex items-center space-x-2">
           <Zap className="w-4 h-4 text-yellow-500 animate-pulse" />
-          <span className="text-sm">Real-time Updates</span>
+          <span className="text-sm">Real-time Website Building</span>
         </div>
       </div>
     </div>
