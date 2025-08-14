@@ -1,56 +1,30 @@
-# 🚀 Final Extension Disable Guide
+# Stop "Context access might be invalid" Warnings (Workspace Only)
 
-## **The Last Step: Disable GitHub Actions Extension**
+These warnings are editor-side false positives from the GitHub Actions extension. CI is fine.
 
-Your workflows are clean and valid. The remaining warnings are **false positives** from the GitHub Actions VS Code extension.
+## Disable the validator for this workspace
 
-### **Disable Extension (2 minutes)**
+1) Open **Extensions** (Ctrl/Cmd + Shift + X)  
+2) Search **"GitHub Actions"** (publisher: **GitHub**)  
+3) Click **⚙️** → **Disable (Workspace)**  
+4) **Reload Window** (Ctrl/Cmd + Shift + P → *Developer: Reload Window*)
 
-1. **Open Extensions** (Ctrl/Cmd + Shift + X)
-2. **Search "GitHub Actions"** (publisher: GitHub)
-3. **Click ⚙️ → Disable (Workspace)**
-4. **Press Ctrl/Cmd + Shift + P → Developer: Reload Window**
+## Verify
 
-### **Verify It Worked**
+- Open **Problems** panel → enable the **Source** column  
+- "**GitHub Actions**" should no longer appear as a source  
+- (If using **WSL / Dev Container / SSH**): open that remote window and repeat the disable
 
-- Open **Problems panel** → enable the **Source** column
-- You should **no longer see "GitHub Actions"** as a source
-- All "Context access might be invalid" warnings should disappear
+## Optional linting (quiet & accurate)
 
-### **If Using WSL/Dev Container/SSH**
+- Use **actionlint** (extension or CLI) for workflow checks without false positives
 
-Repeat the disable steps inside that remote workspace too (extensions run separately).
+## Quick sanity checklist (for completeness)
 
-### **Optional: Keep Linting Without Noise**
-
-Install **actionlint** (extension or CLI) for reliable schema/expression checks.
-
-## **Your Clean Pattern (Keep This)**
-
-```yaml
-# ✅ Single export step per job
-- name: Export runtime envs
-  run: |
-    echo "APP_URL=${{ vars.APP_URL }}" >> $GITHUB_ENV
-    echo "SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }}" >> $GITHUB_ENV
-
-# ✅ Use $VARS in later steps
-- name: Use variables
-  run: |
-    curl "$APP_URL/health"
-```
-
-## **Safety Checklist**
-
-- [ ] **Problems panel** shows no "GitHub Actions" source
-- [ ] **All workflows** use export script pattern
-- [ ] **Hyphenated outputs** use bracket notation: `outputs['issue-url']`
-- [ ] **No `${{ vars.* }}` or `${{ secrets.* }}`** in `env:`, `matrix:`, or `with:`
-
-## **Re-enable Later (if needed)**
-
-Extensions → "GitHub Actions" → ⚙️ → **Enable (Workspace)** → Reload Window
+- [ ] Hyphenated outputs use bracket notation: `steps.create_issue.outputs['issue-url']`
+- [ ] No `${{ vars.* }}` or `${{ secrets.* }}` in `env:`, `matrix:`, or `with:`; everything is exported once via your script/`$GITHUB_ENV`, then referenced as `$APP_URL`, `$SUPABASE_URL`, etc.
+- [ ] Problems panel "Source" shows nothing from GitHub Actions after disabling
 
 ---
 
-**That's it!** 🎯 Your YAML is valid, workflows are tidy, and once the extension is disabled, those false positives disappear forever. 🚀
+**That's it—the codebase is clean, CI will run exactly as intended, and once you toggle that one workspace setting the editor will be blissfully quiet.** 🚀
