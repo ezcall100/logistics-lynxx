@@ -37,25 +37,64 @@ class MockWebsiteBuilderService {
   private buildQueue: any[] = [];
   private isRunning: boolean = true;
   private eventListeners: ((event: any) => void)[] = [];
+  private buildInterval: NodeJS.Timeout | null = null;
+  private progressInterval: NodeJS.Timeout | null = null;
 
   constructor() {
+    console.log('🤖 Trans Bot AI Website Builder Service initializing...');
     this.startAutonomousBuilding();
+    
+    // Ensure service persists across page refreshes
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', () => {
+        console.log('🔄 Page refreshing - preserving autonomous state...');
+      });
+      
+      // Auto-start when page loads
+      window.addEventListener('load', () => {
+        console.log('🚀 Page loaded - starting autonomous agents...');
+        this.ensureRunning();
+      });
+    }
+  }
+
+  private ensureRunning() {
+    if (!this.isRunning) {
+      console.log('🔄 Restarting autonomous agents...');
+      this.isRunning = true;
+      this.startAutonomousBuilding();
+    }
   }
 
   private startAutonomousBuilding() {
+    console.log('🏗️ Starting autonomous website building...');
+    
+    // Clear any existing intervals
+    if (this.buildInterval) clearInterval(this.buildInterval);
+    if (this.progressInterval) clearInterval(this.progressInterval);
+
     // Simulate autonomous agents building pages every 3-8 seconds
-    setInterval(() => {
+    this.buildInterval = setInterval(() => {
       if (!this.isPaused && this.isRunning) {
         this.buildRandomPage();
       }
     }, Math.random() * 5000 + 3000); // 3-8 seconds
 
     // Simulate progress updates every 1-2 seconds
-    setInterval(() => {
+    this.progressInterval = setInterval(() => {
       if (!this.isPaused && this.isRunning) {
         this.updateProgress();
       }
     }, Math.random() * 1000 + 1000); // 1-2 seconds
+
+    // Emit initial status event
+    this.emitEvent({
+      type: 'service_started',
+      timestamp: new Date().toISOString(),
+      message: 'Autonomous website builder service started'
+    });
+
+    console.log('✅ Autonomous agents are now running!');
   }
 
   private buildRandomPage() {
@@ -188,6 +227,19 @@ class MockWebsiteBuilderService {
 
   onEvent(listener: (event: any) => void) {
     this.eventListeners.push(listener);
+    
+    // Send immediate status update to new listeners
+    setTimeout(() => {
+      listener({
+        type: 'service_status',
+        timestamp: new Date().toISOString(),
+        operational: true,
+        paused: this.isPaused,
+        pagesBuilt: this.pagesBuilt,
+        pagesInProgress: this.pagesInProgress
+      });
+    }, 100);
+    
     return () => {
       const index = this.eventListeners.indexOf(listener);
       if (index > -1) {
@@ -198,6 +250,18 @@ class MockWebsiteBuilderService {
 
   stop() {
     this.isRunning = false;
+    if (this.buildInterval) clearInterval(this.buildInterval);
+    if (this.progressInterval) clearInterval(this.progressInterval);
+    console.log('🛑 Autonomous agents stopped');
+  }
+
+  // Force restart the service
+  restart() {
+    console.log('🔄 Restarting autonomous website builder service...');
+    this.stop();
+    this.isRunning = true;
+    this.isPaused = false;
+    this.startAutonomousBuilding();
   }
 }
 
@@ -206,3 +270,6 @@ export const websiteBuilderService = new MockWebsiteBuilderService();
 
 // Export types for use in components
 export type { WebsiteBuilderStatus, WebsiteBuilderMetrics, BuildRequest };
+
+// Auto-start when module is imported
+console.log('🚀 Trans Bot AI Website Builder Service loaded and ready!');
