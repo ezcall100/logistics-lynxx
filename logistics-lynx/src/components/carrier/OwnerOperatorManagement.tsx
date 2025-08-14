@@ -72,7 +72,7 @@ const OwnerOperatorManagement = () => {
         setOwnerOperators(data || []);
       }
     } catch (error: unknown) {
-      toast.error('Failed to fetch owner operators: ' + error.message);
+      toast.error('Failed to fetch owner operators: ' + (error as Error)?.message || 'Unknown error');
     }
   };
 
@@ -87,7 +87,7 @@ const OwnerOperatorManagement = () => {
       if (error) throw error;
       setInvitations(data || []);
     } catch (error: unknown) {
-      toast.error('Failed to fetch invitations: ' + error.message);
+      toast.error('Failed to fetch invitations: ' + (error as Error)?.message || 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -132,7 +132,7 @@ const OwnerOperatorManagement = () => {
       });
       fetchInvitations();
     } catch (error: unknown) {
-      toast.error('Failed to send invitation: ' + error.message);
+      toast.error('Failed to send invitation: ' + (error as Error)?.message || 'Unknown error');
     }
   };
 

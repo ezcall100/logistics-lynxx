@@ -30,7 +30,7 @@ export default function FlagsPage() {
 
   function scopeBadge(s: Scope) {
     const m: Record<Scope, string> = { global: "secondary", env: "default", tenant: "destructive" };
-    return <Badge variant={m[s]} className="capitalize">{s}</Badge>;
+    return <Badge variant="default" className="capitalize">{s}</Badge>;
   }
 
   async function upsert() {

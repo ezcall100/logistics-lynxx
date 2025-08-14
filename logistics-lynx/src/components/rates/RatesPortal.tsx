@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { RateFormDialog } from './RateFormDialog';
-import { RateFilters } from './RateFilters';
+import RateFormDialog from './RateFormDialog';
+import RateFilters from './RateFilters';
 
 export default function RatesPortal() {
   return (

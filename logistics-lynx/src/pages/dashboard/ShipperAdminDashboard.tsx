@@ -26,7 +26,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import StatCard from '@/components/dashboard/StatCard';
-import PerformanceChart from '@/components/dashboard/PerformanceChart';
+import { PerformanceChart } from '@/components/dashboard/PerformanceChart';
 import ActivityFeed, { ActivityItem } from '@/components/dashboard/ActivityFeed';
 
 const ShipperAdminDashboard = () => {

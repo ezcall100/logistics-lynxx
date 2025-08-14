@@ -66,7 +66,7 @@ const DriverManagement = () => {
         setDrivers(data || []);
       }
     } catch (error: unknown) {
-      toast.error('Failed to fetch drivers: ' + error.message);
+      toast.error('Failed to fetch drivers: ' + (error as Error)?.message || 'Unknown error');
     }
   };
 
@@ -80,7 +80,7 @@ const DriverManagement = () => {
       if (error) throw error;
       setInvitations(data || []);
     } catch (error: unknown) {
-      toast.error('Failed to fetch invitations: ' + error.message);
+      toast.error('Failed to fetch invitations: ' + (error as Error)?.message || 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -118,7 +118,7 @@ const DriverManagement = () => {
       setInviteForm({ email: '', driver_name: '', license_number: '', vehicle_assigned: '' });
       fetchInvitations();
     } catch (error: unknown) {
-      toast.error('Failed to send invitation: ' + error.message);
+      toast.error('Failed to send invitation: ' + (error as Error)?.message || 'Unknown error');
     }
   };
 
