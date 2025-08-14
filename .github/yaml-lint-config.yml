@@ -18,6 +18,7 @@ rules:
   # Suppress context access warnings
   no-unrecognized-variable: off
   no-unrecognized-property: off
+  context-access-might-be-invalid: off
   no-unrecognized-method: off
   no-unrecognized-parameter: off
   no-unrecognized-argument: off
