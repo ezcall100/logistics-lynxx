@@ -166,8 +166,6 @@ jobs:
           echo "  APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}"
           echo "  STAGING_URL: ${{ vars.STAGING_URL || 'http://localhost:8080' }}"
           echo "  PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}"
-          
-          echo "✅ Repository structure validation passed"
 
       - name: 🔧 Configuration Validation
         run: |
