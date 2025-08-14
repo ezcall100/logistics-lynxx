@@ -1,0 +1,61 @@
+name: 🧪 Test Security Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      scan-type:
+        description: 'Type of security scan to run'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - local
+          - quick
+      fail-on-severity:
+        description: 'Minimum severity level to fail the workflow'
+        required: false
+        default: 'high'
+        type: choice
+        options:
+          - low
+          - medium
+          - high
+          - critical
+
+jobs:
+  test-full-scan:
+    name: 🔒 Test Full Security Scan
+    if: ${{ github.event.inputs.scan-type == 'full' }}
+    uses: ./.github/workflows/reusable-security-scan.yml
+    with:
+      scan-type: full
+      fail-on-severity: ${{ github.event.inputs.fail-on-severity }}
+      timeout-minutes: 15
+      include-dependencies: true
+      include-secrets: true
+      include-sast: true
+
+  test-local-scan:
+    name: 🔒 Test Local Security Scan
+    if: ${{ github.event.inputs.scan-type == 'local' }}
+    uses: ./.github/workflows/network-independent-security-scan.yml
+    with:
+      scan-type: local
+      fail-on-severity: ${{ github.event.inputs.fail-on-severity }}
+      timeout-minutes: 10
+      include-dependencies: true
+      include-secrets: true
+      include-sast: false
+
+  test-quick-scan:
+    name: 🔒 Test Quick Security Scan
+    if: ${{ github.event.inputs.scan-type == 'quick' }}
+    uses: ./.github/workflows/reusable-security-scan.yml
+    with:
+      scan-type: quick
+      fail-on-severity: ${{ github.event.inputs.fail-on-severity }}
+      timeout-minutes: 5
+      include-dependencies: false
+      include-secrets: true
+      include-sast: false

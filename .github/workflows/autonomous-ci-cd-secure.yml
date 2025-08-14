@@ -130,22 +130,16 @@ jobs:
 
   # ==================== SECURITY SCANNING ====================
   security-scan:
-    name: 🔒 Security Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    uses: ./.github/workflows/reusable-security-scan.yml
     needs: preflight
     if: ${{ needs.preflight.outputs.skip_validation != 'true' }}
-    steps:
-      - name: 📦 Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 🔒 Run Security Scan
-        run: |
-          echo "🔒 Running security scan..."
-          echo "Scan type: ${{ github.event.inputs.security_scan_level || 'full' }}"
-          echo "✅ Security scan completed"
+    with:
+      scan-type: ${{ github.event.inputs.security_scan_level || 'full' }}
+      fail-on-severity: 'high'
+      timeout-minutes: 30
+      include-dependencies: true
+      include-secrets: true
+      include-sast: true
 
   # ==================== CODE QUALITY CHECKS ====================
   code-quality:

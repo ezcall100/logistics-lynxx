@@ -55,6 +55,15 @@ jobs:
       cancel-in-progress: false
 
     steps:
+      - name: 🌐 Network Diagnostic
+        run: |
+          echo "🔍 Running network diagnostics..."
+          echo "Testing connectivity to GitHub..."
+          ping -c 3 github.com || echo "Ping failed, trying curl..."
+          curl -I https://github.com || echo "HTTPS connection failed"
+          nslookup github.com || echo "DNS lookup failed"
+          echo "Network diagnostic completed"
+
       - name: 📦 Checkout Repository
         uses: actions/checkout@v4
         with:
