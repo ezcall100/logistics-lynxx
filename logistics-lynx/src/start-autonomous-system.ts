@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { LogManager } from './autonomous-system/LogManager';
-import { DatabaseManager } from './autonomous-system/DatabaseManager';
-import { NotificationManager } from './autonomous-system/NotificationManager';
-import { AutonomousTMSController } from './autonomous-system/AutonomousTMSController';
-import { PortalManager } from './agents/PortalManager';
+import { LogManager } from '../../autonomous-system/LogManager.js';
+import { DatabaseManager } from '../../autonomous-system/DatabaseManager.js';
+import { NotificationManager } from '../../autonomous-system/NotificationManager.js';
+import { AutonomousTMSController } from '../../autonomous-system/AutonomousTMSController.js';
+import { PortalManager } from './agents/PortalManager.js';
 
 class AutonomousSystem {
   private logManager: LogManager;
