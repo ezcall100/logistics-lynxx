@@ -1,7 +1,7 @@
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import AppAuthenticated from './AppAuthenticated.tsx';
+import App from './App.tsx';
 import './index.css';
 
 // Simple error boundary
@@ -22,6 +22,6 @@ const root = createRoot(container);
 
 root.render(
   <StrictMode>
-    <AppAuthenticated />
+    <App />
   </StrictMode>
 );
