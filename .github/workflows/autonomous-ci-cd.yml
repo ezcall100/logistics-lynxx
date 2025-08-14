@@ -241,13 +241,41 @@ jobs:
           echo "  Force Mode: $force_mode"
           echo "  Skip Validation: $skip_validation"
 
+      - name: 🔧 Setup Development Environment
+        if: ${{ steps.decision.outputs.target_environment == 'development' || steps.decision.outputs.target_environment == 'preview' }}
+        run: |
+          echo "🔧 Setting up development environment..."
+          
+          # Set default environment variables for development
+          export ENVIRONMENT_NAME="${ENVIRONMENT_NAME:-development}"
+          export APP_URL="${APP_URL:-http://localhost:3000}"
+          
+          # Set placeholder values for required secrets (for development only)
+          export SUPABASE_URL="${SUPABASE_URL:-https://placeholder.supabase.co}"
+          export SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-placeholder-key}"
+          export OPENAI_API_KEY="${OPENAI_API_KEY:-placeholder-key}"
+          
+          echo "✅ Development environment configured:"
+          echo "  ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
+          echo "  APP_URL: $APP_URL"
+          echo "  SUPABASE_URL: $SUPABASE_URL"
+
       - name: 🔐 Secrets Validation
         if: ${{ ! (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork) }}
         run: |
           set -euo pipefail
           echo "🔐 Validating required secrets and variables..."
           
-          # Required secrets for deployment
+          # Determine environment context
+          environment="${{ steps.decision.outputs.target_environment }}"
+          deployment_type="${{ steps.decision.outputs.deployment_type }}"
+          force_mode="${{ steps.decision.outputs.force_mode }}"
+          
+          echo "🔍 Environment: $environment"
+          echo "🔍 Deployment Type: $deployment_type"
+          echo "🔍 Force Mode: $force_mode"
+          
+          # Required secrets for deployment (only for production/staging)
           required_secrets=(
             "SUPABASE_URL"
             "SUPABASE_ANON_KEY"
@@ -268,12 +296,26 @@ jobs:
           )
           
           missing_secrets=0
+          missing_critical=0
+          
+          # Check if we're in a development context where secrets might not be needed
+          is_development=false
+          if [[ "$environment" == "development" || "$environment" == "preview" || "$deployment_type" == "feature" || "$deployment_type" == "pr" ]]; then
+            is_development=true
+            echo "🔧 Development environment detected - secrets validation relaxed"
+          fi
+          
           for secret in "${required_secrets[@]}"; do
             if [[ -n "${!secret:-}" && "${!secret}" != "placeholder-key" && "${!secret}" != "https://placeholder.supabase.co" ]]; then
               echo "✅ $secret configured"
             else
-              echo "❌ $secret missing or invalid"
-              missing_secrets=1
+              if [[ "$is_development" == "true" ]]; then
+                echo "⚠️ $secret missing (development mode - continuing)"
+              else
+                echo "❌ $secret missing or invalid"
+                missing_secrets=1
+                missing_critical=1
+              fi
             fi
           done
           
@@ -293,14 +335,19 @@ jobs:
             fi
           done
           
-          if [[ $missing_secrets -eq 1 ]]; then
-            echo "❌ Critical secrets missing. Deployment may fail."
-            if [[ "${{ steps.decision.outputs.force_mode }}" == "true" ]]; then
-              echo "⚠️ Force mode enabled - proceeding anyway"
+          # Handle missing secrets based on context
+          if [[ $missing_critical -eq 1 ]]; then
+            if [[ "$force_mode" == "true" ]]; then
+              echo "⚠️ Force mode enabled - proceeding despite missing secrets"
+            elif [[ "$is_development" == "true" ]]; then
+              echo "⚠️ Development environment - proceeding with missing secrets"
             else
+              echo "❌ Critical secrets missing for production deployment"
               exit 1
             fi
           fi
+          
+          echo "✅ Secrets validation completed"
 
       - name: 📊 Pre-flight Summary
         run: |
