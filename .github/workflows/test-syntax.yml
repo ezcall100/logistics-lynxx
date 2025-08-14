@@ -14,24 +14,45 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      # Test environment variables with proper fallbacks
-      ENVIRONMENT_NAME: ${{ vars.ENVIRONMENT_NAME || 'test' }}
-      APP_URL: ${{ vars.APP_URL || 'http://localhost' }}
-      STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
-      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://production.example.com' }}
-      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || 'https://n8n.example.com' }}
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}
-      
-      # Test secrets with proper fallbacks
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || 'placeholder-key' }}
+      # Placeholder values (will be overridden by export script)
+      ENVIRONMENT_NAME: 'test'
+      APP_URL: 'http://localhost'
+      STAGING_URL: 'https://staging.example.com'
+      PRODUCTION_URL: 'https://production.example.com'
+      N8N_ENABLED: 'false'
+      N8N_BASE_URL: 'https://n8n.example.com'
+      DEPLOYMENT_WEBHOOK_URL: 'https://deployment.example.com/webhook'
+      SUPABASE_URL: 'https://placeholder.supabase.co'
+      SUPABASE_ANON_KEY: 'placeholder-key'
+      OPENAI_API_KEY: 'placeholder-key'
+      N8N_API_KEY: 'placeholder-key'
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - name: Export Environment Variables
+        run: |
+          echo "🔧 Exporting environment variables and secrets..."
+          
+          # Export vars with fallbacks
+          {
+            echo "ENVIRONMENT_NAME=${{ vars.ENVIRONMENT_NAME || 'test' }}"
+            echo "APP_URL=${{ vars.APP_URL || 'http://localhost' }}"
+            echo "STAGING_URL=${{ vars.STAGING_URL || 'https://staging.example.com' }}"
+            echo "PRODUCTION_URL=${{ vars.PRODUCTION_URL || 'https://production.example.com' }}"
+            echo "N8N_ENABLED=${{ vars.N8N_ENABLED || 'false' }}"
+            echo "N8N_BASE_URL=${{ vars.N8N_BASE_URL || 'https://n8n.example.com' }}"
+            echo "DEPLOYMENT_WEBHOOK_URL=${{ vars.DEPLOYMENT_WEBHOOK_URL || 'https://deployment.example.com/webhook' }}"
+            
+            # Export secrets with fallbacks
+            echo "SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}"
+            echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}"
+            echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}"
+            echo "N8N_API_KEY=${{ secrets.N8N_API_KEY || 'placeholder-key' }}"
+          } >> "$GITHUB_ENV"
+          
+          echo "✅ Environment variables exported successfully!"
         
       - name: Test environment variable access
         run: |

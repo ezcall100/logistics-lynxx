@@ -35,10 +35,20 @@ jobs:
           cd logistics-lynx
           npm ci
 
+      - name: Export Secrets
+        run: |
+          echo "🔧 Exporting secrets..."
+          {
+            echo "SUPABASE_URL=${{ secrets.SUPABASE_URL || '' }}"
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY || '' }}"
+            echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL || '' }}"
+          } >> "$GITHUB_ENV"
+          echo "✅ Secrets exported successfully!"
+        
       - name: Run usage monitor
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL || '' }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || '' }}
+          SUPABASE_URL: ''
+          SUPABASE_SERVICE_ROLE_KEY: ''
           DRY_RUN: ${{ env.DRY_RUN }}
         run: |
           echo "Running usage monitor..."
@@ -101,7 +111,7 @@ jobs:
             Run: ${{ github.run_id }}
             Workflow: ${{ github.workflow }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL || '' }}
+          SLACK_WEBHOOK_URL: ''
 
       - name: Send Slack notification (if warnings only)
         if: steps.check-breaches.outputs.breaches == '0' && steps.check-breaches.outputs.warnings > '0' && env.DRY_RUN == 'false' && steps.check-slack.outputs.slack_available == 'true'
@@ -117,7 +127,7 @@ jobs:
             Run: ${{ github.run_id }}
             Workflow: ${{ github.workflow }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL || '' }}
+          SLACK_WEBHOOK_URL: ''
 
       - name: Log missing Slack webhook
         if: (steps.check-breaches.outputs.breaches > '0' || steps.check-breaches.outputs.warnings > '0') && env.DRY_RUN == 'false' && steps.check-slack.outputs.slack_available == 'false'
