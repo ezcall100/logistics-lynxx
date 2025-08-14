@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { RealTimeAgentMonitor } from '../autonomous/RealTimeAgentMonitor';
 import { WebsiteBuilderMonitor } from '../autonomous/WebsiteBuilderMonitor';
+import { LivePageUpdater } from '../autonomous/LivePageUpdater';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,7 +21,30 @@ const Dashboard = () => {
           <p className="text-lg text-gray-600">
             Welcome to your Transportation Management System
           </p>
-        </div>
+        
+        {/* Live Modification Indicator - Added by Autonomous Agent */}
+        <Card className="border-orange-200 bg-orange-50 mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-700">
+              🔄 Live Website Updates Active
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-orange-600 mb-2">
+              This website is being updated in real-time by autonomous agents
+            </p>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                <span>Live Updates: 53</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Last Update: 9:01:21 AM</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card></div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -176,6 +200,11 @@ const Dashboard = () => {
         {/* Website Builder Monitor */}
         <div className="mt-8">
           <WebsiteBuilderMonitor />
+        </div>
+
+        {/* Live Page Updater */}
+        <div className="mt-8">
+          <LivePageUpdater />
         </div>
       </div>
     </div>

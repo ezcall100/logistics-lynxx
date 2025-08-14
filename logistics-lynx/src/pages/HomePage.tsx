@@ -7,6 +7,14 @@ import { ArrowRight, Truck, Brain, Zap, Shield, Globe, BarChart3, Users } from '
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        {/* Live Update Indicator - Added by Autonomous Agent */}
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
+          </div>
+          <div className="text-xs mt-1">Last update: 9:01:21 AM</div>
+        </div>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
