@@ -34,8 +34,6 @@ on:
         default: true
         type: boolean
     secrets:
-      GITHUB_TOKEN:
-        required: true
       NPM_TOKEN:
         required: false
       SUPABASE_ACCESS_TOKEN:
