@@ -16,4 +16,10 @@ declare global {
   interface Window {
     [key: string]: any;
   }
+  
+  // Add document and other DOM globals
+  var document: Document;
+  var window: Window & typeof globalThis;
 }
+
+export {};
