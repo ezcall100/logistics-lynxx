@@ -58,6 +58,16 @@ env:
   NODE_VERSION: '18'
   PNPM_VERSION: '8'
   LOG_LEVEL: 'info'
+  # Default environment URLs (can be overridden by repository variables)
+  APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
+  STAGING_URL: ${{ vars.STAGING_URL || 'http://localhost:8080' }}
+  PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}
+  STAGING_WEBHOOK_URL: ${{ vars.STAGING_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+  PRODUCTION_WEBHOOK_URL: ${{ vars.PRODUCTION_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+  STAGING_HEALTH_CHECK_URL: ${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
+  PRODUCTION_HEALTH_CHECK_URL: ${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
+  DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+  HEALTH_CHECK_URL: ${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
 
 defaults:
   run:
@@ -627,24 +637,32 @@ jobs:
           target_env="${{ needs.preflight.outputs.target_environment }}"
           
           # Export secrets via script to avoid linting issues
+          # Set default URLs for different environments
+          APP_URL="${APP_URL:-http://localhost:8080}"
+          DEPLOYMENT_WEBHOOK_URL="${DEPLOYMENT_WEBHOOK_URL:-http://localhost:8080/webhook}"
+          HEALTH_CHECK_URL="${HEALTH_CHECK_URL:-http://localhost:8080/health}"
+          
           bash scripts/export-env-secrets.sh development \
             "$SUPABASE_URL" \
             "$SUPABASE_ANON_KEY" \
             "$SUPABASE_ANON_KEY" \
             "$N8N_WEBHOOK_URL" \
             "" \
-            "${{ vars.APP_URL || 'http://localhost:8080' }}" \
-            "${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}" \
-            "${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
+            "$APP_URL" \
+            "$DEPLOYMENT_WEBHOOK_URL" \
+            "$HEALTH_CHECK_URL"
           
-          # Export URL variables
+          # Export URL variables with proper defaults
           {
-            echo "STAGING_URL=${{ vars.STAGING_URL || 'http://localhost:8080' }}"
-            echo "PRODUCTION_URL=${{ vars.PRODUCTION_URL || 'http://localhost:8080' }}"
-            echo "STAGING_WEBHOOK_URL=${{ vars.STAGING_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
-            echo "PRODUCTION_WEBHOOK_URL=${{ vars.PRODUCTION_WEBHOOK_URL || 'http://localhost:8080/webhook' }}"
-            echo "STAGING_HEALTH_CHECK_URL=${{ vars.STAGING_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
-            echo "PRODUCTION_HEALTH_CHECK_URL=${{ vars.PRODUCTION_HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
+            echo "STAGING_URL=${STAGING_URL:-http://localhost:8080}"
+            echo "PRODUCTION_URL=${PRODUCTION_URL:-http://localhost:8080}"
+            echo "STAGING_WEBHOOK_URL=${STAGING_WEBHOOK_URL:-http://localhost:8080/webhook}"
+            echo "PRODUCTION_WEBHOOK_URL=${PRODUCTION_WEBHOOK_URL:-http://localhost:8080/webhook}"
+            echo "STAGING_HEALTH_CHECK_URL=${STAGING_HEALTH_CHECK_URL:-http://localhost:8080/health}"
+            echo "PRODUCTION_HEALTH_CHECK_URL=${PRODUCTION_HEALTH_CHECK_URL:-http://localhost:8080/health}"
+            echo "APP_URL=$APP_URL"
+            echo "DEPLOYMENT_WEBHOOK_URL=$DEPLOYMENT_WEBHOOK_URL"
+            echo "HEALTH_CHECK_URL=$HEALTH_CHECK_URL"
           } >> "$GITHUB_ENV"
 
       - name: 📥 Download Build Artifacts
@@ -693,8 +711,8 @@ jobs:
               ;;
             *)
               APP_URL="$APP_URL"
-              HEALTH_URL=""
-              WEBHOOK_URL=""
+              HEALTH_URL="$HEALTH_CHECK_URL"
+              WEBHOOK_URL="$DEPLOYMENT_WEBHOOK_URL"
               ;;
           esac
           
@@ -860,8 +878,7 @@ jobs:
             echo "Health check $i/6..."
             
             # Check if health endpoint is responding
-            # yaml-lint disable rule:context-access-might-be-invalid
-            if curl -fsS --max-time 10 "${{ vars.APP_URL || 'http://localhost:8080' }}/health" >/dev/null 2>&1; then
+            if curl -fsS --max-time 10 "$APP_URL/health" >/dev/null 2>&1; then
               echo "✅ Health check $i passed"
             else
               echo "⚠️ Health check $i failed"
@@ -924,8 +941,7 @@ jobs:
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "environment": "$target_env",
-            # yaml-lint disable rule:context-access-might-be-invalid
-            "app_url": "${{ vars.APP_URL || 'http://localhost:8080' }}",
+            "app_url": "$APP_URL",
             "actor": "${{ github.actor }}",
             "timestamp": "$ts"
           }
@@ -963,8 +979,7 @@ jobs:
             "event": "health_check",
             "status": "$monitoring_status",
             "environment": "$target_env",
-            # yaml-lint disable rule:context-access-might-be-invalid
-            "app_url": "${{ vars.APP_URL || 'http://localhost:8080' }}",
+            "app_url": "$APP_URL",
             "run_id": "${{ github.run_id }}",
             "run_attempt": "${{ github.run_attempt }}",
             "timestamp": "$ts"
