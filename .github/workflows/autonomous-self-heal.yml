@@ -1,0 +1,30 @@
+name: Autonomous Self-Heal
+on:
+  workflow_run:
+    workflows: ["Deploy Production"]
+    types: [completed]
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  checks: read
+jobs:
+  verify-and-heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post-deploy verification
+        run: bash logistics-lynx/scripts/verify-deployment.sh
+
+      - name: SLO gate check (SQL alerts)
+        run: psql "$SUPABASE_DB_URL" -f logistics-lynx/docs/alerting-thresholds.sql
+
+      - name: Rollback on breach
+        if: failure()
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          echo "SLO breach detected → auto-throttle + rollback"
+          psql "$SUPABASE_DB_URL" -c "update feature_flags_v2 set value=false where key in ('agents.autonomousEnabled') and scope='global';"
+          gh pr create -B main -t "Auto-rollback: SLO breach" -b "Disabled agents.autonomousEnabled; see run logs."

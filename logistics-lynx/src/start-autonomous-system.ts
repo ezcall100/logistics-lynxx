@@ -1,142 +1,218 @@
 #!/usr/bin/env node
 
-import { AutonomousTMSController } from '../autonomous-system/AutonomousTMSController';
-import { LogManager } from '../autonomous-system/LogManager';
-import { TransBotAIWebsiteBuilder } from './agents/TransBotAIWebsiteBuilder';
-import { AutonomousCommitAgent } from './agents/AutonomousCommitAgent';
+import { LogManager } from './autonomous-system/LogManager';
+import { DatabaseManager } from './autonomous-system/DatabaseManager';
+import { NotificationManager } from './autonomous-system/NotificationManager';
+import { AutonomousTMSController } from './autonomous-system/AutonomousTMSController';
+import { PortalManager } from './agents/PortalManager';
 
-/**
- * 🚀 Trans Bot AI Autonomous Development System
- * 
- * This system will autonomously build a complete 50-60 page website for Trans Bot AI
- * without any human intervention. The agents will:
- * 
- * 1. Analyze requirements and create a comprehensive site map
- * 2. Generate all necessary pages and components
- * 3. Implement responsive design and modern UI/UX
- * 4. Set up authentication, database, and API integrations
- * 5. Deploy and monitor the system 24/7
- */
-
-class TransBotAIAutonomousSystem {
-  private controller: AutonomousTMSController;
-  private websiteBuilder: TransBotAIWebsiteBuilder;
-  private commitAgent: AutonomousCommitAgent;
+class AutonomousSystem {
   private logManager: LogManager;
+  private databaseManager: DatabaseManager;
+  private notificationManager: NotificationManager;
+  private tmsController: AutonomousTMSController;
+  private portalManager: PortalManager;
   private isRunning: boolean = false;
+  private emergencyStopCheckInterval: NodeJS.Timeout | null = null;
 
   constructor() {
     this.logManager = new LogManager();
-    this.controller = new AutonomousTMSController();
-    this.websiteBuilder = new TransBotAIWebsiteBuilder();
-    this.commitAgent = new AutonomousCommitAgent();
+    this.databaseManager = new DatabaseManager();
+    this.notificationManager = new NotificationManager();
+    this.tmsController = new AutonomousTMSController();
+    this.portalManager = new PortalManager();
   }
 
   async initialize(): Promise<void> {
     try {
-      this.logManager.log('🤖 Initializing Trans Bot AI Autonomous Development System...', 'info');
+      this.logManager.log('🚀 Initializing Full Authority Autonomous System...', 'info');
       
-      // Initialize all components
-      await this.controller.initialize();
-      await this.websiteBuilder.initialize();
-      await this.commitAgent.initialize();
+      // Initialize all core systems
+      await this.databaseManager.initialize();
+      await this.notificationManager.initialize();
+      await this.tmsController.initialize();
+      await this.portalManager.initialize();
       
-      this.logManager.log('✅ Trans Bot AI Autonomous System initialized successfully', 'success');
+      this.logManager.log('✅ All systems initialized successfully', 'success');
       
     } catch (error) {
-      this.logManager.log(`❌ Failed to initialize Trans Bot AI system: ${error}`, 'error');
+      this.logManager.log(`❌ Failed to initialize autonomous system: ${error}`, 'error');
       throw error;
     }
   }
 
   async start(): Promise<void> {
     if (this.isRunning) {
-      this.logManager.log('⚠️ Trans Bot AI system is already running', 'warning');
+      this.logManager.log('⚠️ Autonomous system is already running', 'warning');
       return;
     }
 
     try {
+      // Check emergency stop flag before starting
+      const emergencyStop = await this.checkEmergencyStop();
+      if (emergencyStop) {
+        this.logManager.log('🚨 EMERGENCY STOP ACTIVE - System cannot start', 'error');
+        return;
+      }
+
       this.isRunning = true;
-      this.logManager.log('🚀 Starting Trans Bot AI Autonomous Development System...', 'info');
+      this.logManager.log('🤖 Starting Full Authority Autonomous System...', 'info');
       
-      // Start all autonomous agents
-      await this.controller.start();
-      await this.websiteBuilder.start();
-      await this.commitAgent.start();
+      // Start all autonomous components
+      await this.tmsController.start();
+      await this.portalManager.start();
       
-      this.logManager.log('✅ Trans Bot AI Autonomous System started successfully', 'success');
-      this.logManager.log('🎯 Agents are now building the 50-60 page Trans Bot AI website...', 'info');
-      this.logManager.log('🤖 No human intervention required - system is fully autonomous', 'info');
-      this.logManager.log('📝 All changes will be automatically committed and pushed', 'info');
+      // Start emergency stop monitoring
+      await this.startEmergencyStopMonitoring();
       
-      // Keep the process running
-      this.keepAlive();
+      this.logManager.log('✅ Full Authority Autonomous System started successfully', 'success');
+      this.logManager.log('🌐 Managing 20 portals + 50-page website + real-time updates', 'info');
+      this.logManager.log('🤖 24/7 autonomous operation: ACTIVE', 'success');
+      
+      // Send startup notification
+      await this.notificationManager.sendNotification({
+        type: 'system',
+        title: 'Full Authority Autonomous System Started',
+        message: 'All 20 portals and website are now under autonomous control. 24/7 operation active.',
+        priority: 'info'
+      });
       
     } catch (error) {
+      this.logManager.log(`❌ Failed to start autonomous system: ${error}`, 'error');
       this.isRunning = false;
-      this.logManager.log(`❌ Failed to start Trans Bot AI system: ${error}`, 'error');
       throw error;
     }
   }
 
   async stop(): Promise<void> {
     if (!this.isRunning) {
-      this.logManager.log('⚠️ Trans Bot AI system is not running', 'warning');
+      this.logManager.log('⚠️ Autonomous system is not running', 'warning');
       return;
     }
 
     try {
       this.isRunning = false;
-      this.logManager.log('🛑 Stopping Trans Bot AI Autonomous Development System...', 'info');
       
-      // Stop all autonomous agents
-      await this.controller.stop();
-      await this.websiteBuilder.stop();
-      await this.commitAgent.stop();
+      // Stop all components
+      await this.tmsController.stop();
+      await this.portalManager.stop();
       
-      this.logManager.log('✅ Trans Bot AI Autonomous System stopped successfully', 'success');
+      // Stop emergency stop monitoring
+      if (this.emergencyStopCheckInterval) {
+        clearInterval(this.emergencyStopCheckInterval);
+        this.emergencyStopCheckInterval = null;
+      }
+      
+      this.logManager.log('🛑 Full Authority Autonomous System stopped successfully', 'success');
       
     } catch (error) {
-      this.logManager.log(`❌ Failed to stop Trans Bot AI system: ${error}`, 'error');
+      this.logManager.log(`❌ Failed to stop autonomous system: ${error}`, 'error');
       throw error;
     }
   }
 
-  private keepAlive(): void {
-    // Keep the process running indefinitely
-    setInterval(() => {
+  private async checkEmergencyStop(): Promise<boolean> {
+    try {
+      const query = `
+        SELECT value FROM feature_flags_v2 
+        WHERE key = 'autonomy.emergencyStop' AND scope = 'global'
+      `;
+      const result = await this.databaseManager.executeQuery(query);
+      return result.rows[0]?.value === true;
+    } catch (error) {
+      this.logManager.log(`❌ Error checking emergency stop: ${error}`, 'error');
+      return true; // Default to emergency stop if we can't check
+    }
+  }
+
+  private async startEmergencyStopMonitoring(): Promise<void> {
+    // Check emergency stop flag every 30 seconds
+    this.emergencyStopCheckInterval = setInterval(async () => {
       if (this.isRunning) {
-        this.logManager.log('💚 Trans Bot AI system is running and building website...', 'info');
+        const emergencyStop = await this.checkEmergencyStop();
+        if (emergencyStop) {
+          this.logManager.log('🚨 EMERGENCY STOP DETECTED - Stopping all autonomous operations', 'error');
+          
+          // Send emergency notification
+          await this.notificationManager.sendNotification({
+            type: 'emergency',
+            title: 'EMERGENCY STOP ACTIVATED',
+            message: 'All autonomous operations have been halted due to emergency stop flag.',
+            priority: 'critical'
+          });
+          
+          // Stop the system
+          await this.stop();
+        }
       }
-    }, 60000); // Log every minute
+    }, 30000); // 30 seconds
+  }
 
-    // Handle graceful shutdown
-    process.on('SIGINT', async () => {
-      this.logManager.log('🛑 Received SIGINT, shutting down gracefully...', 'info');
-      await this.stop();
-      process.exit(0);
-    });
+  async getSystemStatus(): Promise<any> {
+    try {
+      const portalStatus = await this.portalManager.getPortalStatus();
+      const tmsStatus = await this.tmsController.getStatus();
+      
+      return {
+        isRunning: this.isRunning,
+        emergencyStop: await this.checkEmergencyStop(),
+        portals: {
+          total: 20,
+          active: portalStatus.filter(p => p.status === 'active').length,
+          inactive: portalStatus.filter(p => p.status === 'inactive').length,
+          maintenance: portalStatus.filter(p => p.status === 'maintenance').length,
+          details: portalStatus
+        },
+        tms: tmsStatus,
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      this.logManager.log(`❌ Error getting system status: ${error}`, 'error');
+      return { error: error.message };
+    }
+  }
 
-    process.on('SIGTERM', async () => {
-      this.logManager.log('🛑 Received SIGTERM, shutting down gracefully...', 'info');
-      await this.stop();
-      process.exit(0);
-    });
+  isReady(): boolean {
+    return this.databaseManager.isReady() && 
+           this.notificationManager.isReady() && 
+           this.tmsController.isReady() && 
+           this.portalManager.isReady();
   }
 }
 
 // Main execution
 async function main() {
-  const transBotAI = new TransBotAIAutonomousSystem();
+  const autonomousSystem = new AutonomousSystem();
   
   try {
-    await transBotAI.initialize();
-    await transBotAI.start();
+    // Handle graceful shutdown
+    process.on('SIGINT', async () => {
+      console.log('\n🛑 Received SIGINT - Shutting down gracefully...');
+      await autonomousSystem.stop();
+      process.exit(0);
+    });
+
+    process.on('SIGTERM', async () => {
+      console.log('\n🛑 Received SIGTERM - Shutting down gracefully...');
+      await autonomousSystem.stop();
+      process.exit(0);
+    });
+
+    // Initialize and start the system
+    await autonomousSystem.initialize();
+    await autonomousSystem.start();
+    
+    // Keep the process running
+    console.log('🤖 Full Authority Autonomous System is running...');
+    console.log('🌐 Managing 20 portals + 50-page website + real-time updates');
+    console.log('🚨 Emergency stop monitoring: ACTIVE');
+    console.log('📊 Press Ctrl+C to stop gracefully');
+    
   } catch (error) {
-    console.error('❌ Failed to start Trans Bot AI Autonomous System:', error);
+    console.error('❌ Failed to start autonomous system:', error);
     process.exit(1);
   }
 }
 
 // Start the autonomous system
-main();
+main().catch(console.error);
