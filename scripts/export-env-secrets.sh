@@ -10,6 +10,9 @@ service_key="${3:-}"
 anon_key="${4:-}"
 n8n_url="${5:-}"
 slack_webhook="${6:-}"
+app_url="${7:-}"
+deployment_webhook_url="${8:-}"
+health_check_url="${9:-}"
 
 if [[ -z "$env_name" || -z "$supabase_url" || -z "$service_key" || -z "$anon_key" ]]; then
   echo "Missing required args" >&2
@@ -24,6 +27,9 @@ fi
   echo "SUPABASE_ANON_KEY=$anon_key"
   echo "N8N_URL=${n8n_url:-}"
   echo "SLACK_WEBHOOK_URL=${slack_webhook:-}"
+  echo "APP_URL=${app_url:-}"
+  echo "DEPLOYMENT_WEBHOOK_URL=${deployment_webhook_url:-}"
+  echo "HEALTH_CHECK_URL=${health_check_url:-}"
 } >> "$GITHUB_ENV"
 
 echo "✅ Environment secrets exported for $env_name"

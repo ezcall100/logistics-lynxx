@@ -21,10 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
-      # yaml-lint disable rule:context-access-might-be-invalid
       environment: ${{ steps.env.outputs.environment }}
-      # yaml-lint disable rule:context-access-might-be-invalid
-      issue-url: ${{ steps.create-dr-issue.outputs.issue-url }}
+      issue-url: ${{ steps.create-dr-issue.outputs['issue-url'] }}
     
     steps:
       - name: 📦 Checkout Repository
@@ -81,8 +79,7 @@ jobs:
           
           # yaml-lint disable rule:context-access-might-be-invalid
           ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
-          # yaml-lint disable rule:context-access-might-be-invalid
-          ISSUE_URL="${{ steps.create-dr-issue.outputs.issue-url }}"
+          ISSUE_URL="${{ steps.create-dr-issue.outputs['issue-url'] }}"
           
           # Send to Slack notification
                     # Create JSON payload for Slack
@@ -346,7 +343,7 @@ jobs:
           # yaml-lint disable rule:context-access-might-be-invalid
           TESTS_PASSED="${{ needs.run-dr-tests.result == 'success' }}"
           # yaml-lint disable rule:context-access-might-be-invalid
-          ISSUE_URL="${{ needs.create-dr-checklist.outputs.issue-url }}"
+          ISSUE_URL="${{ needs.create-dr-checklist.outputs['issue-url'] }}"
           
           # Send to Slack notification
           COLOR="good"

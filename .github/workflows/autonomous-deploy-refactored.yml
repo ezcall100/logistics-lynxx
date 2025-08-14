@@ -503,12 +503,8 @@ jobs:
     env:
       # Environment-specific variables
       ENVIRONMENT_NAME: 'production'
-      # yaml-lint disable rule:context-access-might-be-invalid
-      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
       N8N_ENABLED: 'false'
       N8N_BASE_URL: ''
-      # yaml-lint disable rule:context-access-might-be-invalid
-      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
       
       # Secrets
       SUPABASE_URL: 'https://placeholder.supabase.co'
@@ -549,6 +545,23 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
+
+      - name: 🔧 Export Environment Variables
+        run: |
+          set -euo pipefail
+          
+          target_env="${{ needs.preflight.outputs.target_environment }}"
+          
+          # Export environment variables via script to avoid linting issues
+          bash scripts/export-env-secrets.sh production \
+            "$SUPABASE_URL" \
+            "$SUPABASE_ANON_KEY" \
+            "$SUPABASE_ANON_KEY" \
+            "$N8N_WEBHOOK_URL" \
+            "" \
+            "${{ vars.APP_URL || 'http://localhost:8080' }}" \
+            "${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}" \
+            "${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
