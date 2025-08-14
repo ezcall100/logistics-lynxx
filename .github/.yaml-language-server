@@ -1,14 +1,34 @@
 {
   "yaml": {
     "validate": false,
-    "schemas": {
-      "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
-    },
-    "customTags": [
-      "!reference sequence"
-    ],
+    "schemas": {},
+    "customTags": [],
     "disableDefaultProperties": true,
     "disableAdditionalProperties": true,
-    "disableContextAccess": true
+    "disableContextAccess": true,
+    "disableRequiredProperties": true,
+    "disableTypeValidation": true,
+    "disableEnumValidation": true,
+    "disableFormatValidation": true,
+    "disablePatternValidation": true,
+    "disableMaxLengthValidation": true,
+    "disableMinLengthValidation": true,
+    "disableMaxItemsValidation": true,
+    "disableMinItemsValidation": true,
+    "disableUniqueItemsValidation": true,
+    "disableMultipleOfValidation": true,
+    "disableMaximumValidation": true,
+    "disableMinimumValidation": true,
+    "disableExclusiveMaximumValidation": true,
+    "disableExclusiveMinimumValidation": true,
+    "hover": false,
+    "completion": false,
+    "documentSymbols": false,
+    "folding": false,
+    "selectionRanges": false,
+    "schemaStore": {
+      "enable": false
+    },
+    "trace": "off"
   }
 }
