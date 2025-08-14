@@ -1,44 +1,45 @@
-# 🚨 Manual Extension Disable Required
+# Disable GitHub Actions Validation (Workspace Only)
 
-## **The Final Step: Disable GitHub Actions Extension**
+These warnings are editor-side false positives from the GitHub Actions VS Code/Cursor extension.  
+Workflows are valid and CI is unaffected.
 
-All the code fixes are complete! The remaining warnings are from the **GitHub Actions VS Code extension** which ignores configuration files and must be manually disabled.
+## Disable for this workspace
 
-### **Step-by-Step Instructions:**
+1. Open **Extensions** (Ctrl/Cmd + Shift + X).
+2. Search **"GitHub Actions"** (publisher: **GitHub**).
+3. Click the **gear (⚙️)** → **Disable (Workspace)**.
+4. Press **Ctrl/Cmd + Shift + P** → run **Developer: Reload Window**.
 
-1. **Open Extensions Panel**
-   - Press `Ctrl+Shift+X` (Windows) or `Cmd+Shift+X` (Mac)
+## Verify it's off
 
-2. **Find GitHub Actions Extension**
-   - Search for "GitHub Actions"
-   - Look for extension by "GitHub" (publisher)
+- Open the **Problems** panel and enable the **Source** column.
+- You should **not** see "GitHub Actions" listed as a source.
+- (Optional) Ctrl/Cmd + Shift + P → **Developer: Show Running Extensions** → confirm *GitHub Actions* shows **Disabled (Workspace)**.
 
-3. **Disable for Workspace**
-   - Click the gear icon (⚙️) next to the extension
-   - Select **"Disable (Workspace)"** (NOT "Disable")
+## Keep linting (optional)
 
-4. **Reload Window**
-   - Press `Ctrl+Shift+P` → "Developer: Reload Window"
+If you still want workflow checks, use **actionlint** (extension or CLI). It respects expressions better and is CI-friendly.
 
-5. **Verify**
-   - Open any workflow file - warnings should be completely gone
-   - Check Problems panel - no more "GitHub Actions" source warnings
+## Final sanity checklist (quick)
 
-### **Why This Manual Step is Required:**
+- [ ] All hyphenated outputs use bracket notation: `steps.create_issue.outputs['issue-url']`
+- [ ] No `${{ vars.* }}` or `${{ secrets.* }}` in `env:`, `matrix:`, or `with:`.
+- [ ] Use your export script pattern once per job, then reference `$VARS` in steps.
+- [ ] Problems panel Source no longer shows GitHub Actions after disabling.
 
-- ✅ **All configuration files** are properly set up
-- ✅ **All workflows** are refactored to use clean patterns  
-- ✅ **All real errors** are fixed
-- ✅ **All secret references** are now handled via export script
-- ❌ **GitHub Actions extension** ignores configuration files and must be manually disabled
+## Minimal export pattern (reference)
 
-### **Expected Result:**
+```yaml
+- name: Export runtime envs (vars + secrets)
+  run: |
+    # Non-secrets (vars) — either pass as args to your script or echo here
+    echo "APP_URL=${{ vars.APP_URL }}" >> $GITHUB_ENV
+    echo "HEALTH_CHECK_URL=${{ vars.HEALTH_CHECK_URL }}" >> $GITHUB_ENV
+    echo "DEPLOYMENT_WEBHOOK_URL=${{ vars.DEPLOYMENT_WEBHOOK_URL }}" >> $GITHUB_ENV
 
-After disabling the extension, you should see:
-- ✅ No more "Context access might be invalid" warnings
-- ✅ Clean Problems panel
-- ✅ Distraction-free development environment for autonomous agents
+    # Secrets via your existing script or echo here
+    echo "SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }}" >> $GITHUB_ENV
+    echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" >> $GITHUB_ENV
+```
 
----
-
-**That's it!** Once you complete this manual step, all the warnings will disappear and your codebase will be completely clean. 🚚✨
+If the extension still complains about `${{ … }}` in `run:`, just complete the manual disable above. That's the reliable, workspace-scoped fix.
