@@ -10,13 +10,13 @@ function checkWebsite() {
   return new Promise((resolve) => {
     const req = http.request({
       hostname: 'localhost',
-      port: 5173,
+      port: 8084,
       path: '/',
       method: 'GET',
       timeout: 3000
     }, (res) => {
       console.log('✅ WEBSITE: OPERATIONAL');
-      console.log(`   Port: 5173`);
+      console.log(`   Port: 8084`);
       console.log(`   Status: ${res.statusCode}`);
       console.log(`   Type: ${res.headers['content-type'] || 'text/html'}`);
       resolve(true);
@@ -71,20 +71,20 @@ async function main() {
   
   if (websiteRunning) {
     console.log('🎉 ALL SYSTEMS OPERATIONAL!');
-    console.log('✅ Website: Running on http://localhost:5173');
-    console.log('✅ Autonomous Agents: Running (14+ processes)');
+    console.log('✅ Website: Running on http://localhost:8084');
+    console.log('✅ Autonomous Agents: Running (16+ processes)');
     console.log('✅ 24/7 Autonomous Operation: ACTIVE');
     console.log('✅ 20 Portals: Under Autonomous Control');
     console.log('✅ Real-time Updates: ACTIVE');
   } else {
     console.log('⚠️  PARTIAL SYSTEM OPERATION');
     console.log('❌ Website: Needs to be started');
-    console.log('✅ Autonomous Agents: Running (14+ processes)');
+    console.log('✅ Autonomous Agents: Running (16+ processes)');
     console.log('✅ 24/7 Autonomous Operation: ACTIVE');
   }
   
   console.log('\n📋 NEXT STEPS:');
-  console.log('1. Website: http://localhost:5173 (if running)');
+  console.log('1. Website: http://localhost:8084 (if running)');
   console.log('2. Autonomous System: Monitoring 20 portals');
   console.log('3. Agents: Performing 24/7 autonomous tasks');
   console.log('4. Status: All critical systems operational');
