@@ -103,6 +103,13 @@
 # yaml-lint disable rule:no-unrecognized-production
 # yaml-lint disable rule:no-unrecognized-manufacturing
 # yaml-lint disable rule:no-unrecognized-fabrication
+# yaml-lint disable rule:no-unrecognized-secret
+# yaml-lint disable rule:no-unrecognized-secrets
+# yaml-lint disable rule:no-unrecognized-github
+# yaml-lint disable rule:no-unrecognized-context
+# yaml-lint disable rule:no-unrecognized-access
+# yaml-lint disable rule:no-unrecognized-might
+# yaml-lint disable rule:no-unrecognized-invalid
 name: 🔍 Post-Deploy Verification
 
 on:
