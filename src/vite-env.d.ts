@@ -10,3 +10,10 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+// Ensure global DOM types are available
+declare global {
+  interface Window {
+    [key: string]: any;
+  }
+}

@@ -18,7 +18,9 @@ export default defineConfig(({ mode }) => ({
     'process.env': process.env,
   },
   esbuild: {
-    jsx: 'react-jsx',
+    jsx: 'automatic',
+    jsxFactory: 'React.createElement',
+    jsxFragment: 'React.Fragment',
     target: 'es2020',
     jsxDev: mode === 'development',
   },
