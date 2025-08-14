@@ -1,50 +1,5 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-# yaml-validate: disable
-# yaml-lint disable-all
-# Note: Context access warnings are false positives - these are valid GitHub Actions expressions
-# yaml-lint disable rule:no-unrecognized-double
-# yaml-lint disable rule:no-unrecognized-long
-# yaml-lint disable rule:no-unrecognized-short
-# yaml-lint disable rule:no-unrecognized-byte
-# yaml-lint disable rule:no-unrecognized-char
-# yaml-lint disable rule:no-unrecognized-string
-# yaml-lint disable rule:no-unrecognized-text
-# yaml-lint disable rule:no-unrecognized-content
-# yaml-lint disable rule:no-unrecognized-data
-# yaml-lint disable rule:no-unrecognized-information
-# yaml-lint disable rule:no-unrecognized-message
-# yaml-lint disable rule:no-unrecognized-communication
-# yaml-lint disable rule:no-unrecognized-transmission
-# yaml-lint disable rule:no-unrecognized-exchange
-# yaml-lint disable rule:no-unrecognized-transfer
-# yaml-lint disable rule:no-unrecognized-movement
-# yaml-lint disable rule:no-unrecognized-flow
-# yaml-lint disable rule:no-unrecognized-current
-# yaml-lint disable rule:no-unrecognized-wave
-# yaml-lint disable rule:no-unrecognized-pulse
-# yaml-lint disable rule:no-unrecognized-beat
-# yaml-lint disable rule:no-unrecognized-rhythm
-# yaml-lint disable rule:no-unrecognized-order
-# yaml-lint disable rule:no-unrecognized-arrangement
-# yaml-lint disable rule:no-unrecognized-organization
-# yaml-lint disable rule:no-unrecognized-structure
-# yaml-lint disable rule:no-unrecognized-formation
-# yaml-lint disable rule:no-unrecognized-composition
-# yaml-lint disable rule:no-unrecognized-assembly
-# yaml-lint disable rule:no-unrecognized-construction
-# yaml-lint disable rule:no-unrecognized-building
-# yaml-lint disable rule:no-unrecognized-creation
-# yaml-lint disable rule:no-unrecognized-generation
-# yaml-lint disable rule:no-unrecognized-production
-# yaml-lint disable rule:no-unrecognized-manufacturing
-# yaml-lint disable rule:no-unrecognized-fabrication
-# yaml-lint disable rule:no-unrecognized-secret
-# yaml-lint disable rule:no-unrecognized-secrets
-# yaml-lint disable rule:no-unrecognized-github
-# yaml-lint disable rule:no-unrecognized-context
-# yaml-lint disable rule:no-unrecognized-access
-# yaml-lint disable rule:no-unrecognized-might
-# yaml-lint disable rule:no-unrecognized-invalid
+# Note: GitHub Actions extension warnings are false positives - these are valid expressions
 name: 🔍 Post-Deploy Verification
 
 on:

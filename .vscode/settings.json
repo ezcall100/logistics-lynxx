@@ -1,39 +1,19 @@
 {
-  "yaml.validate": false,
-  "yaml.schemas": {},
-  "yaml.customTags": [],
-  "yaml.format.enable": false,
-  "yaml.hover": false,
-  "yaml.completion": false,
-  "yaml.validate.enable": false,
-  "yaml.schemaStore.enable": false,
-  "yaml.documentSymbols": false,
-  "yaml.folding": false,
-  "yaml.selectionRanges": false,
-  "yaml.trace": "off",
-  "yaml.disableContextAccess": true,
-  "yaml.disableDefaultProperties": true,
-  "yaml.disableAdditionalProperties": true,
-  "yaml.disableRequiredProperties": true,
-  "yaml.disableTypeValidation": true,
-  "yaml.disableEnumValidation": true,
-  "yaml.disableFormatValidation": true,
-  "yaml.disablePatternValidation": true,
-  "yaml.disableMaxLengthValidation": true,
-  "yaml.disableMinLengthValidation": true,
-  "yaml.disableMaxItemsValidation": true,
-  "yaml.disableMinItemsValidation": true,
-  "yaml.disableUniqueItemsValidation": true,
-  "yaml.disableMultipleOfValidation": true,
-  "yaml.disableMaximumValidation": true,
-  "yaml.disableMinimumValidation": true,
-  "yaml.disableExclusiveMaximumValidation": true,
-  "yaml.disableExclusiveMinimumValidation": true,
-  "files.associations": {
-    "**/.github/workflows/*.yml": "github-actions-workflow",
-    "**/.github/workflows/*.yaml": "github-actions-workflow"
+  "yaml.validate": true,
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },
-  "github-actions.workflows.pinned": true,
+  "yaml.format.enable": true,
+  "yaml.hover": true,
+  "yaml.completion": true,
+  "yaml.documentSymbols": true,
+  "yaml.folding": true,
+  "yaml.selectionRanges": true,
+  "files.associations": {
+    "**/.github/workflows/*.yml": "yaml",
+    "**/.github/workflows/*.yaml": "yaml"
+  },
+  "extensions.ignoreRecommendations": true,
   "github-actions.validate": false,
   "github-actions.validate.enable": false,
   "github-actions.disableContextAccess": true,
@@ -55,8 +35,8 @@
   "github-actions.disableExclusiveMaximumValidation": true,
   "github-actions.disableExclusiveMinimumValidation": true,
   "[yaml]": {
-    "editor.formatOnSave": false,
-    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
     "editor.formatOnType": false
   }
 }
