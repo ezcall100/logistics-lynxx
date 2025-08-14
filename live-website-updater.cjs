@@ -425,7 +425,8 @@ export default LiveUpdateComponent;`;
     this.devServerProcess = spawn('npm', ['run', 'dev'], {
       cwd: this.websiteDir,
       stdio: 'pipe',
-      shell: true
+      shell: true,
+      env: { ...process.env, PORT: '8084' }
     });
 
     this.devServerProcess.stdout.on('data', (data) => {

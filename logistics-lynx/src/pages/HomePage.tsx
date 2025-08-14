@@ -7,6 +7,24 @@ import { ArrowRight, Truck, Brain, Zap, Shield, Globe, BarChart3, Users } from '
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        {/* Live Update Indicator - Added by Autonomous Agent at 9:12:07 AM */}
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
+          </div>
+          <div className="text-xs mt-1">Last update: 9:12:07 AM</div>
+          <div className="text-xs">Update #28</div>
+        </div>
+        {/* Live Update Indicator - Added by Autonomous Agent at 9:09:26 AM */}
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
+          </div>
+          <div className="text-xs mt-1">Last update: 9:09:26 AM</div>
+          <div className="text-xs">Update #15</div>
+        </div>
         {/* Live Update Indicator - Added by Autonomous Agent at 9:06:50 AM */}
         <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
           <div className="flex items-center gap-2">
