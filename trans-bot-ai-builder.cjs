@@ -465,19 +465,19 @@ export default ${name};`;
       `
     };
     
-    return contentTemplates[type] || `
-      <div className="text-center">
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">${title}</h3>
-        <p className="text-gray-600">
-          This page is being built by autonomous agents. Content will be available soon.
-        </p>
-        <div className="mt-6">
-          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-            🔥 Autonomous Agent Building
-          </span>
-        </div>
-      </div>
-    `;
+         return contentTemplates[type] || `
+       <div className="text-center">
+         <h3 className="text-2xl font-bold text-gray-900 mb-4">${this.getPageDescription(type)}</h3>
+         <p className="text-gray-600">
+           This page is being built by autonomous agents. Content will be available soon.
+         </p>
+         <div className="mt-6">
+           <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+             🔥 Autonomous Agent Building
+           </span>
+         </div>
+       </div>
+     `;
   }
 
   restartDevServer() {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ResourcesPage = () => {
+const ShipperPortalPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -32,10 +32,10 @@ const ResourcesPage = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Resources
+            Shipper Portal
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Access whitepapers, guides, and resources to optimize your transportation operations.
+            Dedicated portal for shippers to manage shipments and track deliveries.
           </p>
         </div>
 
@@ -43,7 +43,7 @@ const ResourcesPage = () => {
         <div className="bg-white rounded-lg shadow-lg p-8">
           
        <div className="text-center">
-         <h3 className="text-2xl font-bold text-gray-900 mb-4">Access whitepapers, guides, and resources to optimize your transportation operations.</h3>
+         <h3 className="text-2xl font-bold text-gray-900 mb-4">Dedicated portal for shippers to manage shipments and track deliveries.</h3>
          <p className="text-gray-600">
            This page is being built by autonomous agents. Content will be available soon.
          </p>
@@ -69,4 +69,4 @@ const ResourcesPage = () => {
   );
 };
 
-export default ResourcesPage;
+export default ShipperPortalPage;
