@@ -157,29 +157,44 @@ jobs:
           npm ci --production=false
           echo "✅ Dependencies installed"
 
+      - name: 🔧 Export Environment Secrets
+        run: |
+          echo "🔧 Exporting environment secrets..."
+          
+          ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
+          
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            bash scripts/export-env-secrets.sh prod \
+              "${{ secrets.PROD_SUPABASE_URL }}" \
+              "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" \
+              "${{ secrets.PROD_SUPABASE_ANON_KEY }}" \
+              "${{ secrets.PROD_N8N_URL }}" \
+              "${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+          elif [[ "$ENVIRONMENT" == "staging" ]]; then
+            bash scripts/export-env-secrets.sh staging \
+              "${{ secrets.STAGING_SUPABASE_URL }}" \
+              "${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" \
+              "${{ secrets.STAGING_SUPABASE_ANON_KEY }}" \
+              "${{ secrets.STAGING_N8N_URL }}" \
+              "${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+          else
+            bash scripts/export-env-secrets.sh dev \
+              "${{ secrets.DEV_SUPABASE_URL }}" \
+              "${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" \
+              "${{ secrets.DEV_SUPABASE_ANON_KEY }}" \
+              "${{ secrets.DEV_N8N_URL }}" \
+              "${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+          fi
+
       - name: 🗄️ Backup Verification Test
         run: |
           echo "🗄️ Running backup verification test..."
           
-          # yaml-lint disable rule:context-access-might-be-invalid
           ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          else
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          fi
+          # Use exported environment variables
+          SUPABASE_URL="$SUPABASE_URL"
+          SUPABASE_SERVICE_KEY="$SUPABASE_SERVICE_ROLE_KEY"
           
           # Test backup accessibility
           echo "Testing backup accessibility for $ENVIRONMENT..."
@@ -227,25 +242,11 @@ jobs:
         run: |
           echo "🏥 Running health check test..."
           
-          # yaml-lint disable rule:context-access-might-be-invalid
           ENVIRONMENT="${{ steps.env.outputs.environment || 'development' }}"
           
-          if [[ "$ENVIRONMENT" == "production" ]]; then
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL || '' }}"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_SERVICE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          elif [[ "$ENVIRONMENT" == "staging" ]]; then
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL || '' }}"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_SERVICE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          else
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL || '' }}"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            SUPABASE_SERVICE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY || '' }}"
-          fi
+          # Use exported environment variables
+          SUPABASE_URL="$SUPABASE_URL"
+          SUPABASE_SERVICE_KEY="$SUPABASE_SERVICE_ROLE_KEY"
           
           # Test health endpoint
           HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" \

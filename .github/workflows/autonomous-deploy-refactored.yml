@@ -506,6 +506,11 @@ jobs:
       N8N_ENABLED: 'false'
       N8N_BASE_URL: ''
       
+      # URL variables (these are not secrets, so safe to put in env)
+      APP_URL: ${{ vars.APP_URL || 'http://localhost:8080' }}
+      DEPLOYMENT_WEBHOOK_URL: ${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}
+      HEALTH_CHECK_URL: ${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}
+      
       # Secrets
       SUPABASE_URL: 'https://placeholder.supabase.co'
       SUPABASE_ANON_KEY: 'placeholder-key'
@@ -552,16 +557,16 @@ jobs:
           
           target_env="${{ needs.preflight.outputs.target_environment }}"
           
-          # Export environment variables via script to avoid linting issues
+          # Export secrets via script to avoid linting issues
           bash scripts/export-env-secrets.sh production \
             "$SUPABASE_URL" \
             "$SUPABASE_ANON_KEY" \
             "$SUPABASE_ANON_KEY" \
             "$N8N_WEBHOOK_URL" \
             "" \
-            "${{ vars.APP_URL || 'http://localhost:8080' }}" \
-            "${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8080/webhook' }}" \
-            "${{ vars.HEALTH_CHECK_URL || 'http://localhost:8080/health' }}"
+            "$APP_URL" \
+            "$DEPLOYMENT_WEBHOOK_URL" \
+            "$HEALTH_CHECK_URL"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4

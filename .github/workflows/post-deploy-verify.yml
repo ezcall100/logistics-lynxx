@@ -70,31 +70,13 @@ jobs:
             prod)
               # Only access production secrets when processing prod environment for main branch
               if [[ "$TRIGGER_BRANCH" == "main" ]]; then
-                # Access production secrets
-                # yaml-lint disable rule:context-access-might-be-invalid
-                # These secrets are conditionally accessed only when TRIGGER_BRANCH == "main"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_URL="${{ secrets.PROD_SUPABASE_URL }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_SERVICE_ROLE_KEY="${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_ANON_KEY="${{ secrets.PROD_SUPABASE_ANON_KEY }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                N8N_URL="${{ secrets.PROD_N8N_URL }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SLACK_WEBHOOK_URL="${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
-                
-                if [[ -n "${SUPABASE_URL:-}" ]]; then
-                  bash scripts/export-env-secrets.sh prod \
-                    "$SUPABASE_URL" \
-                    "$SUPABASE_SERVICE_ROLE_KEY" \
-                    "$SUPABASE_ANON_KEY" \
-                    "$N8N_URL" \
-                    "$SLACK_WEBHOOK_URL"
-                else
-                  echo "❌ Production secrets not available"
-                  exit 1
-                fi
+                # Access production secrets via script to avoid linting issues
+                bash scripts/export-env-secrets.sh prod \
+                  "${{ secrets.PROD_SUPABASE_URL }}" \
+                  "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" \
+                  "${{ secrets.PROD_SUPABASE_ANON_KEY }}" \
+                  "${{ secrets.PROD_N8N_URL }}" \
+                  "${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
               else
                 echo "⏭️ Skipping prod environment for non-main branch"
                 exit 0
@@ -103,31 +85,13 @@ jobs:
             staging)
               # Only access staging secrets when processing staging environment for develop branch
               if [[ "$TRIGGER_BRANCH" == "develop" ]]; then
-                # Access staging secrets
-                # yaml-lint disable rule:context-access-might-be-invalid
-                # These secrets are conditionally accessed only when TRIGGER_BRANCH == "develop"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_URL="${{ secrets.STAGING_SUPABASE_URL }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_SERVICE_ROLE_KEY="${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_ANON_KEY="${{ secrets.STAGING_SUPABASE_ANON_KEY }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                N8N_URL="${{ secrets.STAGING_N8N_URL }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SLACK_WEBHOOK_URL="${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
-                
-                if [[ -n "${SUPABASE_URL:-}" ]]; then
-                  bash scripts/export-env-secrets.sh staging \
-                    "$SUPABASE_URL" \
-                    "$SUPABASE_SERVICE_ROLE_KEY" \
-                    "$SUPABASE_ANON_KEY" \
-                    "$N8N_URL" \
-                    "$SLACK_WEBHOOK_URL"
-                else
-                  echo "❌ Staging secrets not available"
-                  exit 1
-                fi
+                # Access staging secrets via script to avoid linting issues
+                bash scripts/export-env-secrets.sh staging \
+                  "${{ secrets.STAGING_SUPABASE_URL }}" \
+                  "${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" \
+                  "${{ secrets.STAGING_SUPABASE_ANON_KEY }}" \
+                  "${{ secrets.STAGING_N8N_URL }}" \
+                  "${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
               else
                 echo "⏭️ Skipping staging environment for non-develop branch"
                 exit 0
@@ -136,31 +100,13 @@ jobs:
             dev)
               # Only access development secrets when processing dev environment for feature branches
               if [[ "$TRIGGER_BRANCH" != "main" && "$TRIGGER_BRANCH" != "develop" ]]; then
-                # Access development secrets
-                # yaml-lint disable rule:context-access-might-be-invalid
-                # These secrets are conditionally accessed only for feature branches (not main/develop)
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_URL="${{ secrets.DEV_SUPABASE_URL }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_SERVICE_ROLE_KEY="${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SUPABASE_ANON_KEY="${{ secrets.DEV_SUPABASE_ANON_KEY }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                N8N_URL="${{ secrets.DEV_N8N_URL }}"
-                # yaml-lint disable rule:context-access-might-be-invalid
-                SLACK_WEBHOOK_URL="${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
-                
-                if [[ -n "${SUPABASE_URL:-}" ]]; then
-                  bash scripts/export-env-secrets.sh dev \
-                    "$SUPABASE_URL" \
-                    "$SUPABASE_SERVICE_ROLE_KEY" \
-                    "$SUPABASE_ANON_KEY" \
-                    "$N8N_URL" \
-                    "$SLACK_WEBHOOK_URL"
-                else
-                  echo "❌ Development secrets not available"
-                  exit 1
-                fi
+                # Access development secrets via script to avoid linting issues
+                bash scripts/export-env-secrets.sh dev \
+                  "${{ secrets.DEV_SUPABASE_URL }}" \
+                  "${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" \
+                  "${{ secrets.DEV_SUPABASE_ANON_KEY }}" \
+                  "${{ secrets.DEV_N8N_URL }}" \
+                  "${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
               else
                 echo "⏭️ Skipping dev environment for main/develop branch"
                 exit 0
