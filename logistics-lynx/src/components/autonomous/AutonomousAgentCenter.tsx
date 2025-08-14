@@ -13,6 +13,7 @@ import { FeatureDeploymentTracker } from './FeatureDeploymentTracker';
 import { FullAutonomyAuthorization } from './FullAutonomyAuthorization';
 import { Bot, Brain, Code, Database, TestTube, Rocket, Search, Activity, AlertTriangle, CheckCircle, Zap } from 'lucide-react';
 import { toast } from 'sonner';
+import { WebsitePageAgent } from '@/agents/WebsitePageAgent';
 
 interface AgentStats {
   total: number;
@@ -50,6 +51,7 @@ export const AutonomousAgentCenter: React.FC = () => {
   const [agentStats, setAgentStats] = useState<Record<string, AgentStats>>({});
   const [activeTasks, setActiveTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
+  const [websitePageAgent, setWebsitePageAgent] = useState<WebsitePageAgent | null>(null);
 
   useEffect(() => {
     // Initialize agent stats
@@ -63,6 +65,10 @@ export const AutonomousAgentCenter: React.FC = () => {
       };
     });
     setAgentStats(initialStats);
+
+    // Initialize Website Page Agent
+    const pageAgent = new WebsitePageAgent('autonomous-page-agent');
+    setWebsitePageAgent(pageAgent);
   }, []);
 
   const handleActivateAgents = async () => {
@@ -73,6 +79,12 @@ export const AutonomousAgentCenter: React.FC = () => {
     
     try {
       console.log('🤖 AUTONOMOUS AI AGENTS NOW HAVE FULL AUTHORITY OVER ENTIRE TMS');
+      
+      // Activate Website Page Agent
+      if (websitePageAgent) {
+        await websitePageAgent.activate();
+        console.log('✅ Website Page Agent activated for page creation and updates');
+      }
       
       // Force activation with FULL SYSTEM AUTHORITY
       setSystemStatus('active');
@@ -184,6 +196,54 @@ export const AutonomousAgentCenter: React.FC = () => {
     });
   };
 
+  const handleCreateWebsitePage = async () => {
+    if (!websitePageAgent) {
+      toast.error('Website Page Agent not initialized');
+      return;
+    }
+
+    try {
+      // Create a sample page
+      await websitePageAgent.createPageManually({
+        name: 'Test Page',
+        path: '/test',
+        component: 'TestPage',
+        type: 'page',
+        priority: 8,
+        content: `import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+const TestPage = () => {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Test Page</h1>
+        <p className="text-muted-foreground">This page was created by the autonomous agent</p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Autonomous Creation</CardTitle>
+          <CardDescription>This page was automatically generated</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>✅ Successfully created by Website Page Agent</p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default TestPage;`
+      });
+
+      toast.success('✅ Website page created successfully!');
+    } catch (error) {
+      console.error('Error creating website page:', error);
+      toast.error('Failed to create website page: ' + error.message);
+    }
+  };
+
   const getTotalProgress = () => {
     const totalAgents = Object.values(AGENT_TYPES).reduce((sum, type) => sum + type.count, 0);
     const activeAgents = Object.values(agentStats).reduce((sum, stats) => sum + stats.active, 0);
@@ -201,6 +261,15 @@ export const AutonomousAgentCenter: React.FC = () => {
           <Badge variant={isConnected ? "default" : "destructive"}>
             {isConnected ? 'Connected' : 'Disconnected'}
           </Badge>
+          <Button 
+            onClick={handleCreateWebsitePage}
+            disabled={false}
+            size="sm"
+            variant="outline"
+            className="bg-green-600 hover:bg-green-700 text-white border-0"
+          >
+            📝 Create Test Page
+          </Button>
           <Button 
             onClick={handleActivateAgents}
             disabled={false}

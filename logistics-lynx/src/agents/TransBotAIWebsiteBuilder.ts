@@ -426,12 +426,23 @@ export class TransBotAIWebsiteBuilder {
     try {
       const filePath = `src/pages/${template.component}.tsx`;
       
-      // This would create the actual React component file
-      // For now, we'll log the file creation
+      // Create the actual React component file
       this.logManager.log(`📝 Creating file: ${filePath}`, 'info');
       
-      // In a real implementation, this would write the file to disk
-      // await fs.writeFile(filePath, content, 'utf8');
+      // Import fs module for file operations
+      const fs = require('fs');
+      const path = require('path');
+      
+      // Ensure the directory exists
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      // Write the file to disk
+      fs.writeFileSync(filePath, content, 'utf8');
+      
+      this.logManager.log(`✅ Successfully created file: ${filePath}`, 'success');
       
     } catch (error) {
       this.logManager.log(`❌ Error creating page file: ${error}`, 'error');

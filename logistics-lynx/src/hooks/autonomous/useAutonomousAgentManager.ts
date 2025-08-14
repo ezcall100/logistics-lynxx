@@ -80,24 +80,26 @@ export const useAutonomousAgentManager = () => {
           break;
         case 'frontend':
           result = await executeFrontendTask();
-          actionDescription = 'Optimized frontend components and user experience';
+          actionDescription = 'Enhanced frontend components and user interface';
+          
+          // Auto-create or update website pages
+          if (result?.pages && result.pages.length > 0) {
+            for (const page of result.pages) {
+              await createOrUpdateWebsitePage(page);
+            }
+          }
           break;
         case 'backend':
           result = await executeBackendTask();
-          actionDescription = 'Enhanced backend APIs and server performance';
+          actionDescription = 'Improved backend services and API endpoints';
           break;
         case 'database':
           result = await executeDatabaseTask();
-          actionDescription = 'Database-Agent-Delta: Driver Portal schema optimization and real-time sync implementation';
-          
-          // Priority focus on Driver Portal completion
-          if (result?.driver_portal_focus) {
-            actionDescription = `Database-Agent-Delta: Completed ${result.driver_portal_focus.completed_features.length} Driver Portal features - ${result.driver_portal_focus.current_task}`;
-          }
+          actionDescription = 'Optimized database queries and schema';
           break;
         case 'testing':
           result = await executeTestingTask();
-          actionDescription = 'Executed comprehensive testing suites and quality checks';
+          actionDescription = 'Enhanced test coverage and quality assurance';
           break;
         case 'deployment':
           result = await executeDeploymentTask();
@@ -187,6 +189,209 @@ export const useAutonomousAgentManager = () => {
       system_status: systemStatus,
       uptime_hours: Math.round((Date.now() - new Date().setHours(0, 0, 0, 0)) / (1000 * 60 * 60))
     };
+  };
+
+  // Website page creation and updating functionality
+  const createOrUpdateWebsitePage = async (pageData: {
+    name: string;
+    path: string;
+    component: string;
+    content: string;
+    type: 'page' | 'component' | 'layout';
+  }) => {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      
+      // Determine the correct file path based on type
+      let filePath: string;
+      switch (pageData.type) {
+        case 'page':
+          filePath = `src/pages/${pageData.component}.tsx`;
+          break;
+        case 'component':
+          filePath = `src/components/${pageData.component}.tsx`;
+          break;
+        case 'layout':
+          filePath = `src/components/layout/${pageData.component}.tsx`;
+          break;
+        default:
+          filePath = `src/pages/${pageData.component}.tsx`;
+      }
+      
+      // Ensure the directory exists
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      // Write the file
+      fs.writeFileSync(filePath, pageData.content, 'utf8');
+      
+      // Save to database
+      await supabase.from('website_pages').upsert({
+        name: pageData.name,
+        path: pageData.path,
+        component: pageData.component,
+        content: pageData.content,
+        status: 'active',
+        updated_at: new Date().toISOString()
+      });
+      
+      console.log(`✅ Created/Updated website page: ${filePath}`);
+      
+    } catch (error) {
+      console.error(`❌ Error creating/updating website page: ${error}`);
+      throw error;
+    }
+  };
+
+  // Enhanced frontend task execution with page creation
+  const executeFrontendTask = async () => {
+    try {
+      // Generate sample pages that might be missing
+      const samplePages = [
+        {
+          name: 'User Management',
+          path: '/admin/users',
+          component: 'UserManagement',
+          type: 'page' as const,
+          content: `import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Users, Plus, Search, Edit, Trash2 } from 'lucide-react';
+
+const UserManagement = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    // Load users data
+    setLoading(false);
+  }, []);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">User Management</h1>
+          <p className="text-muted-foreground">Manage system users and permissions</p>
+        </div>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" />
+          Add User
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Users</CardTitle>
+          <CardDescription>Manage all system users</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="max-w-sm"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              {users.length === 0 && !loading && (
+                <p className="text-muted-foreground">No users found</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default UserManagement;`
+        },
+        {
+          name: 'Settings Dashboard',
+          path: '/admin/settings',
+          component: 'SettingsDashboard',
+          type: 'page' as const,
+          content: `import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Settings, Shield, Database, Bell, Globe } from 'lucide-react';
+
+const SettingsDashboard = () => {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Settings</h1>
+        <p className="text-muted-foreground">Configure system settings and preferences</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Shield className="h-5 w-5 mr-2" />
+              Security
+            </CardTitle>
+            <CardDescription>Manage security settings and permissions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" className="w-full">Configure</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Database className="h-5 w-5 mr-2" />
+              Database
+            </CardTitle>
+            <CardDescription>Database configuration and maintenance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" className="w-full">Configure</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Bell className="h-5 w-5 mr-2" />
+              Notifications
+            </CardTitle>
+            <CardDescription>Configure notification preferences</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" className="w-full">Configure</Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default SettingsDashboard;`
+        }
+      ];
+
+      return {
+        success: true,
+        pages: samplePages,
+        message: 'Frontend improvements completed with new pages created'
+      };
+    } catch (error) {
+      console.error('Frontend task execution failed:', error);
+      throw error;
+    }
   };
 
   return {
