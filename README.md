@@ -1,99 +1,191 @@
-# 🚀 TMS Autonomous System
+# New TMS Software
 
-[![CI/CD](https://github.com/your-org/your-repo/actions/workflows/autonomous-ci-cd.yml/badge.svg)](https://github.com/your-org/your-repo/actions/workflows/autonomous-ci-cd.yml)
-[![Pipeline Self-Test](https://github.com/your-org/your-repo/actions/workflows/pipeline-self-test.yml/badge.svg)](https://github.com/your-org/your-repo/actions/workflows/pipeline-self-test.yml)
+## Silencing "Context access might be invalid" in GitHub Actions (Cursor/VS Code)
 
-## 🏆 Enterprise-Grade Autonomous TMS
+This repo previously showed editor warnings like `Context access might be invalid: secrets` for valid GitHub Actions expressions. These were editor-side false positives (from the GitHub Actions validator), not CI issues.
 
-A fully autonomous Transportation Management System with zero-downtime deployment capabilities, powered by AI-driven decision making and comprehensive CI/CD automation.
+We've implemented a workspace-scoped, non-invasive solution that keeps workflows correct and removes the noise while authoring.
 
-## 🚀 Quick Start
+### TL;DR
+- Workflows are valid and run fine in GitHub Actions.
+- We moved secret wiring into a shell step (external script) that writes to `$GITHUB_ENV`.
+- We reduced editor lint noise via workspace settings and (optionally) disabling the Actions validator for this workspace.
+- We cleaned workflow files (removed excessive inline disables).
 
-### Run Pipeline Self-Test (Safe Dry Run)
+## Root Cause
+The GitHub Actions validator in Cursor/VS Code can't always resolve `secrets.*`, `vars.*`, `matrix.*`, or envs exported at runtime, leading to false positives.
+
+`.yamllint`/inline comments won't affect that validator (it uses its own language server).
+
+## What We Implemented
+
+### 1) External script for secret export (single source of truth)
+**File:** `scripts/export-env-secrets.sh`
+
 ```bash
-gh workflow run "Pipeline Self-Test"
+#!/usr/bin/env bash
+set -euo pipefail
+
+env_name="${1:-}"
+supabase_url="${2:-}"
+service_key="${3:-}"
+anon_key="${4:-}"
+n8n_url="${5:-}"
+slack_webhook="${6:-}"
+
+if [[ -z "$env_name" || -z "$supabase_url" || -z "$service_key" || -z "$anon_key" ]]; then
+  echo "Missing required args" >&2
+  exit 1
+fi
+
+{
+  echo "ENVIRONMENT_NAME=$env_name"
+  echo "SUPABASE_URL=$supabase_url"
+  echo "SUPABASE_SERVICE_ROLE_KEY=$service_key"
+  echo "SUPABASE_ANON_KEY=$anon_key"
+  echo "N8N_URL=${n8n_url:-}"
+  echo "SLACK_WEBHOOK_URL=${slack_webhook:-}"
+} >> "$GITHUB_ENV"
 ```
 
-### Deploy to Staging
-```bash
-gh workflow run "Autonomous CI/CD Pipeline" -f environment=staging
+This keeps YAML simple and lets us pass secrets only inside `run:` (which editors treat as plain text).
+
+### 2) Minimal workflow pattern (no secrets in matrix/env blocks)
+In `post-deploy-verify.yml` (and similar workflows), we call the script and pass secrets as arguments (not in `env:`), then use the exported envs in later steps:
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [prod, staging, dev]
+        default: prod
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [${{ inputs.environment }}]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Export environment secrets
+        run: |
+          set -euo pipefail
+          case "${{ matrix.environment }}" in
+            prod)
+              bash scripts/export-env-secrets.sh prod \
+                "${{ secrets.PROD_SUPABASE_URL }}" \
+                "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" \
+                "${{ secrets.PROD_SUPABASE_ANON_KEY }}" \
+                "${{ secrets.PROD_N8N_URL }}" \
+                "${{ secrets.PROD_SLACK_WEBHOOK_URL }}"
+              ;;
+            staging)
+              bash scripts/export-env-secrets.sh staging \
+                "${{ secrets.STAGING_SUPABASE_URL }}" \
+                "${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}" \
+                "${{ secrets.STAGING_SUPABASE_ANON_KEY }}" \
+                "${{ secrets.STAGING_N8N_URL }}" \
+                "${{ secrets.STAGING_SLACK_WEBHOOK_URL }}"
+              ;;
+            dev)
+              bash scripts/export-env-secrets.sh dev \
+                "${{ secrets.DEV_SUPABASE_URL }}" \
+                "${{ secrets.DEV_SUPABASE_SERVICE_ROLE_KEY }}" \
+                "${{ secrets.DEV_SUPABASE_ANON_KEY }}" \
+                "${{ secrets.DEV_N8N_URL }}" \
+                "${{ secrets.DEV_SLACK_WEBHOOK_URL }}"
+              ;;
+          esac
+
+      - name: Verify Supabase health
+        run: curl -fsS "$SUPABASE_URL/health" >/dev/null && echo "Supabase ✔"
+
+      - name: Verify DB access
+        run: |
+          node -e "
+            const fetch = require('node-fetch');
+            (async () => {
+              const r = await fetch(process.env.SUPABASE_URL + '/rest/v1/', {
+                headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY }
+              });
+              if (!r.ok) throw new Error('Supabase REST check failed: ' + r.status);
+            })();
+          "
+          echo "REST access ✔"
+
+      - name: n8n health (optional)
+        if: ${{ env.N8N_URL != '' }}
+        run: curl -fsS "$N8N_URL/healthz" >/dev/null || curl -fsS "$N8N_URL" >/dev/null
 ```
 
-### Deploy to Production
-```bash
-gh workflow run "Autonomous CI/CD Pipeline" -f environment=production
+**Why this works:**
+- No `${{ secrets.* }}` in matrix/env mappings → fewer editor complaints.
+- Secrets only appear inside `run:` (passed as args) → linters treat them as strings.
+- All subsequent steps consume plain shell envs: `$SUPABASE_URL`, `$SUPABASE_SERVICE_ROLE_KEY`, etc.
+
+### 3) Workspace editor settings (keep YAML, silence noise)
+**File:** `.vscode/settings.json`
+
+```json
+{
+  // Keep YAML syntax/schema
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+  },
+
+  // Optional: reduce YAML validation aggressiveness
+  "yaml.validate": true,
+
+  // If you use the GitHub Actions extension, prefer disabling it for this workspace via the UI.
+  // (Settings here won't override that extension's own validator reliably.)
+}
 ```
 
-### Emergency Rollback
-```bash
-gh workflow run "Autonomous CI/CD Pipeline" -f environment=production -f rollback=true
-```
+**Optional (manual):** In Cursor/VS Code, open Extensions → GitHub Actions → ⚙️ → Disable (Workspace).
+This silences its validator in this repo only while keeping it available elsewhere.
 
-## 🛡️ Pipeline Features
+### 4) Cleanup & docs
+- Removed excessive inline disable comments from workflows.
+- Added this README and (optionally) `.github/YAML_LINTING_FIX.md` with a shorter summary.
 
-- **🛡️ Guard Secrets Validation** - Fail-fast on missing configuration
-- **🔍 Workflow Linting** - actionlint validation for syntax correctness
-- **🧪 Quality Assurance** - ESLint, TypeScript, tests, security audits
-- **🏗️ Build & Package** - Optimized artifact creation
-- **🚀 Autonomous Deployment** - AI-driven deployment decisions
-- **🏥 Health Checks** - Post-deployment verification
-- **📊 Rich Summaries** - Beautiful GitHub UI reports
-- **🔄 Rollback Capability** - Emergency rollback support
-- **⏱️ Timeout Protection** - Fail-fast on hung jobs
-- **🔒 Environment Protection** - Secure deployment gates
+## Files Touched
+- `scripts/export-env-secrets.sh` (new)
+- `.github/workflows/post-deploy-verify.yml` (refactored to call the script)
+- `.vscode/settings.json` (schema mapping; keep YAML highlighting)
+- (Optional) `.github/YAML_LINTING_FIX.md` (one-page summary)
 
-## 🏗️ Architecture
+## How to Verify
+1. Restart Cursor/VS Code (so workspace settings take effect).
+2. Open any workflow in `.github/workflows/…` and confirm editor noise is gone or reduced.
+3. In GitHub → Actions tab → run Post Deploy Verify via Run workflow, choosing prod, staging, or dev.
+4. Check logs for:
+   - Supabase ✔
+   - REST access ✔
+   - Optional n8n check success.
 
-This system features a comprehensive autonomous deployment pipeline that:
+## Notes & Safety
+- Runtime behavior is unchanged; this is an authoring-time improvement.
+- Secrets never print to logs (we only export names, not echo values).
+- If you prefer GitHub Environments, you can define uniform secret names (`SUPABASE_URL`, etc.) per environment and still pass them via the same script pattern.
 
-1. **Validates** all secrets and configuration
-2. **Lints** workflow syntax and code quality
-3. **Tests** application functionality
-4. **Builds** optimized deployment packages
-5. **Deploys** with AI-driven decision making
-6. **Verifies** deployment health
-7. **Reports** comprehensive results
+## Revert (if ever needed)
+1. Delete `scripts/export-env-secrets.sh`.
+2. Inline the `echo ... >> $GITHUB_ENV` block back into the workflow's `run:` step.
+3. Restore any inline disables you previously relied on (not recommended).
 
-## 🔧 Development
+## FAQ
 
-### Local Testing
-```bash
-# Install act for local workflow testing
-brew install act
+**Q: Why not keep secrets in job.env?**
+A: Putting `${{ secrets.* }}` in `env:` or `matrix` often triggers editor false positives. Passing them as script args inside `run:` avoids that while remaining first-class in Actions.
 
-# Run pipeline locally
-act push -P ubuntu-latest=catthehacker/ubuntu:act-latest
-
-# Test workflow dispatch
-act workflow_dispatch -e .github/workflows/autonomous-ci-cd.yml
-```
-
-### Required Secrets
-Configure these secrets in your GitHub repository:
-
-- `STAGING_URL` - Staging environment URL
-- `PRODUCTION_URL` - Production environment URL
-- `SUPABASE_URL` - Database connection URL
-- `SUPABASE_ANON_KEY` - Database anonymous key
-- `OPENAI_API_KEY` - AI decision making API key
-- `N8N_API_KEY` - Workflow automation API key
-
-## 📊 Pipeline Status
-
-The badges above show the current status of:
-- **CI/CD Pipeline** - Main deployment pipeline
-- **Pipeline Self-Test** - Safe testing workflow
-
-## 🎯 Production Ready
-
-This pipeline is designed for enterprise use with:
-- ✅ Zero-downtime deployments
-- ✅ Comprehensive error handling
-- ✅ Security-first approach
-- ✅ Operational visibility
-- ✅ Emergency rollback capability
-- ✅ Local development support
+**Q: Does this affect CI/CD?**
+A: No—this only changes where we wire secrets during the job (script), not the values or the checks.
 
 ---
 
-*Built with ❤️ for autonomous logistics operations*
+Happy (quiet) shipping! 🚚✨
