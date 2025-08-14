@@ -13,7 +13,7 @@ function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-card text-card-foreground p-6 rounded-lg border">
             <h2 className="text-xl font-semibold mb-2">System Status</h2>
-            <p className="text-green-600">✅ Autonomous System Initializing</p>
+            <p className="text-green-600">✅ Security Fixed - Super Admin Access Only</p>
           </div>
           
           <div className="bg-card text-card-foreground p-6 rounded-lg border">
@@ -28,28 +28,6 @@ function App() {
               <p>🔗 N8n Workflows</p>
               <p>🔗 Supabase Backend</p>
               <p>🔗 OpenAI Intelligence</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-8 bg-card text-card-foreground p-6 rounded-lg border">
-          <h2 className="text-xl font-semibold mb-4">Autonomous Operations Dashboard</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-blue-600">24/7</div>
-              <div className="text-sm text-muted-foreground">Operation</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-green-600">99.9%</div>
-              <div className="text-sm text-muted-foreground">Uptime</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-purple-600">AI</div>
-              <div className="text-sm text-muted-foreground">Powered</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-orange-600">Auto</div>
-              <div className="text-sm text-muted-foreground">Healing</div>
             </div>
           </div>
         </div>
