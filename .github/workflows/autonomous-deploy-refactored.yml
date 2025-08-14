@@ -559,9 +559,9 @@ jobs:
             "$SUPABASE_ANON_KEY" \
             "$N8N_WEBHOOK_URL" \
             "" \
-            "${{ vars.APP_URL || 'http://localhost:8084' }}" \
-            "${{ vars.DEPLOYMENT_WEBHOOK_URL || 'http://localhost:8084/webhook' }}" \
-            "${{ vars.HEALTH_CHECK_URL || 'http://localhost:8084/health' }}"
+            "$APP_URL" \
+            "$DEPLOYMENT_WEBHOOK_URL" \
+            "$HEALTH_CHECK_URL"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -615,8 +615,7 @@ jobs:
           fi
           
           if [[ "$APP_URL" == "placeholder-key" || -z "$APP_URL" ]]; then
-            # yaml-lint disable rule:context-access-might-be-invalid
-            APP_URL="${{ vars.APP_URL || 'http://localhost:8084' }}"
+            APP_URL="${APP_URL:-http://localhost:8084}"
           fi
           
           # Output environment variables
@@ -698,14 +697,10 @@ jobs:
           
           # Try multiple health check endpoints
           health_endpoints=(
-            # yaml-lint disable rule:context-access-might-be-invalid
-            "${{ vars.APP_URL || 'http://localhost:3000' }}/api/health"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            "${{ vars.APP_URL || 'http://localhost:3000' }}/health"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            "${{ vars.APP_URL || 'http://localhost:8084' }}/api/health"
-            # yaml-lint disable rule:context-access-might-be-invalid
-            "${{ vars.APP_URL || 'http://localhost:8084' }}/health"
+            "${APP_URL:-http://localhost:8084}/api/health"
+            "${APP_URL:-http://localhost:8084}/health"
+            "http://localhost:8084/api/health"
+            "http://localhost:8084/health"
           )
           
           max_retries=5
@@ -846,14 +841,10 @@ jobs:
             
             # Try multiple health endpoints
             health_endpoints=(
-              # yaml-lint disable rule:context-access-might-be-invalid
-              "${{ vars.APP_URL || 'http://localhost:3000' }}/api/health"
-              # yaml-lint disable rule:context-access-might-be-invalid
-              "${{ vars.APP_URL || 'http://localhost:3000' }}/health"
-              # yaml-lint disable rule:context-access-might-be-invalid
-              "${{ vars.APP_URL || 'http://localhost:8084' }}/api/health"
-              # yaml-lint disable rule:context-access-might-be-invalid
-              "${{ vars.APP_URL || 'http://localhost:8084' }}/health"
+              "${APP_URL:-http://localhost:8084}/api/health"
+              "${APP_URL:-http://localhost:8084}/health"
+              "http://localhost:8084/api/health"
+              "http://localhost:8084/health"
             )
             
             health_ok=false
