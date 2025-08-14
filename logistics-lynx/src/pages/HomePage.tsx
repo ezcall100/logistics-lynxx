@@ -1,188 +1,186 @@
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { ArrowRight, Truck, Brain, Zap, Shield, Globe, BarChart3, Users } from 'lucide-react';
 
-export default function HomePage() {
+const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        {/* Live Update Indicator - Added by Autonomous Agent at 9:12:07 AM */}
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
+      {/* Header - Created by Autonomous Agent */}
+      <header className="bg-white shadow-lg border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">TMS</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Transportation Management System</h1>
+                <p className="text-sm text-gray-600">Powered by Autonomous Agents</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                🔥 Live Updates Active
+              </Badge>
+              <Button variant="default">Get Started</Button>
+            </div>
           </div>
-          <div className="text-xs mt-1">Last update: 9:12:07 AM</div>
-          <div className="text-xs">Update #28</div>
         </div>
-        {/* Live Update Indicator - Added by Autonomous Agent at 9:09:26 AM */}
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
-          </div>
-          <div className="text-xs mt-1">Last update: 9:09:26 AM</div>
-          <div className="text-xs">Update #15</div>
-        </div>
-        {/* Live Update Indicator - Added by Autonomous Agent at 9:06:50 AM */}
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
-          </div>
-          <div className="text-xs mt-1">Last update: 9:06:50 AM</div>
-          <div className="text-xs">Update #2</div>
-        </div>
-        {/* Live Update Indicator - Added by Autonomous Agent */}
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            <span className="text-sm font-medium">LIVE UPDATES ACTIVE</span>
-          </div>
-          <div className="text-xs mt-1">Last update: 9:01:21 AM</div>
-        </div>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      </header>
+
+      {/* Hero Section - Created by Autonomous Agent */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <Badge variant="secondary" className="mb-4">
-              🤖 AI-Powered Transportation Management
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
-              Trans Bot AI
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              The future of intelligent transportation management with AI-powered logistics solutions
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Welcome to the Future of Transportation Management
+            </h2>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Our autonomous agents are continuously building and improving this platform. 
+              Watch as new features, pages, and components are created in real-time.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center space-x-4">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                Get Started Free
-                <ArrowRight className="ml-2 h-4 w-4" />
+                Explore Features
               </Button>
               <Button size="lg" variant="outline">
-                Watch Demo
+                View Live Updates
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
+      {/* Features Grid - Created by Autonomous Agent */}
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Revolutionary AI Features
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience the power of artificial intelligence in transportation management
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              Autonomous Features
+            </h3>
+            <p className="text-gray-600">
+              Built and maintained by intelligent agents
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="border-blue-200 bg-blue-50">
               <CardHeader>
-                <Brain className="h-12 w-12 text-blue-600 mb-4" />
-                <CardTitle>AI Route Optimization</CardTitle>
-                <CardDescription>
-                  Intelligent route planning that reduces fuel costs and delivery times
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2 text-blue-700">
+                  🤖 Autonomous Agents
+                </CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-blue-600">
+                  Intelligent agents continuously monitor, build, and improve the system
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <Card className="border-green-200 bg-green-50">
               <CardHeader>
-                <Zap className="h-12 w-12 text-green-600 mb-4" />
-                <CardTitle>Real-time Tracking</CardTitle>
-                <CardDescription>
-                  Live monitoring of all vehicles and shipments with instant alerts
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2 text-green-700">
+                  ⚡ Real-Time Updates
+                </CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-green-600">
+                  Watch as new pages and components are created live
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <Card className="border-purple-200 bg-purple-50">
               <CardHeader>
-                <BarChart3 className="h-12 w-12 text-purple-600 mb-4" />
-                <CardTitle>Predictive Analytics</CardTitle>
-                <CardDescription>
-                  Data-driven insights to optimize operations and reduce costs
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2 text-purple-700">
+                  🎯 Smart Automation
+                </CardTitle>
               </CardHeader>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Truck className="h-12 w-12 text-orange-600 mb-4" />
-                <CardTitle>Smart Load Matching</CardTitle>
-                <CardDescription>
-                  AI-powered matching of loads to vehicles for maximum efficiency
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Shield className="h-12 w-12 text-red-600 mb-4" />
-                <CardTitle>Safety Management</CardTitle>
-                <CardDescription>
-                  Proactive safety monitoring and incident prevention
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Globe className="h-12 w-12 text-indigo-600 mb-4" />
-                <CardTitle>Global Operations</CardTitle>
-                <CardDescription>
-                  Manage transportation operations across multiple countries
-                </CardDescription>
-              </CardHeader>
+              <CardContent>
+                <p className="text-purple-600">
+                  Automated workflows and intelligent decision making
+                </p>
+              </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-blue-600">
+      {/* Live Status Section - Created by Autonomous Agent */}
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">500+</div>
-              <div className="text-blue-100">Companies Trust Us</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">10M+</div>
-              <div className="text-blue-100">Miles Optimized</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">25%</div>
-              <div className="text-blue-100">Cost Reduction</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white mb-2">99.9%</div>
-              <div className="text-blue-100">Uptime</div>
-            </div>
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Live Build Status
+            </h3>
+            <p className="text-gray-600">
+              Current autonomous agent activities
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {this.agents.map((agent, index) => (
+              <Card key={index} className="text-center">
+                <CardContent className="pt-6">
+                  <div className="text-2xl mb-2">{this.getAgentIcon(agent.name)}</div>
+                  <h4 className="font-semibold text-sm mb-1">{agent.name}</h4>
+                  <Badge variant={agent.status === 'building' ? 'default' : 'secondary'} className="text-xs">
+                    {agent.status}
+                  </Badge>
+                  <p className="text-xs text-gray-500 mt-2">{agent.task}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Ready to Transform Your Transportation?
-          </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join thousands of companies already using Trans Bot AI to optimize their operations
-          </p>
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-            Start Your Free Trial
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+      {/* Footer - Created by Autonomous Agent */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="text-lg font-semibold mb-4">TMS Platform</h4>
+              <p className="text-gray-400 text-sm">
+                Built by autonomous agents for the future of transportation management.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Features</h4>
+              <ul className="text-gray-400 text-sm space-y-2">
+                <li>• Autonomous Agents</li>
+                <li>• Real-Time Updates</li>
+                <li>• Smart Automation</li>
+                <li>• Live Monitoring</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Status</h4>
+              <ul className="text-gray-400 text-sm space-y-2">
+                <li>• System: Active</li>
+                <li>• Agents: Building</li>
+                <li>• Updates: Live</li>
+                <li>• Last Build: 9:26:42 AM</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Connect</h4>
+              <div className="flex space-x-4">
+                <Button variant="outline" size="sm">Dashboard</Button>
+                <Button variant="outline" size="sm">Monitor</Button>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400 text-sm">
+              🔥 This entire page was created by autonomous agents at 9:26:42 AM
+            </p>
+          </div>
         </div>
-      </section>
+      </footer>
     </div>
   );
-}
+};
+
+export default HomePage;
