@@ -3,13 +3,10 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
-declare module '*.tsx' {
-  import React from 'react';
-  const component: React.ComponentType<any>;
-  export default component;
+interface ImportMetaEnv {
+  readonly VITE_APP_TITLE: string
 }
 
-declare module '*.ts' {
-  const content: any;
-  export default content;
+interface ImportMeta {
+  readonly env: ImportMetaEnv
 }
