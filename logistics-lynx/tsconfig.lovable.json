@@ -19,8 +19,12 @@
       "@/*": ["./src/*"]
     },
     "allowJs": true,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*", "vite.config.ts"],
+  "include": ["src/**/*", "vite.config.ts", "vite-env.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

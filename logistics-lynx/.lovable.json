@@ -1,0 +1,13 @@
+{
+  "typescript": {
+    "configFile": "tsconfig.lovable.json"
+  },
+  "build": {
+    "command": "npm run build:dev",
+    "output": "dist"
+  },
+  "dev": {
+    "command": "npm run dev",
+    "port": 8080
+  }
+}

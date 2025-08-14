@@ -1,106 +1,59 @@
-# Welcome to your Lovable project
+# Trans Bot AI - Autonomous TMS Platform
 
-## Project info
+## 🚀 Quick Start
 
-**URL**: https://lovable.dev/projects/9cb42980-6592-4b99-a762-f88ea2d0b00e
+This is a React + TypeScript + Vite application with autonomous agent capabilities.
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/9cb42980-6592-4b99-a762-f88ea2d0b00e) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Development
+```bash
 npm run dev
-
-# The server will be available at: http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+### Build for Production
+```bash
+npm run build
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build for Development (Lovable AI)
+```bash
+npm run build:dev
+```
 
-**Use GitHub Codespaces**
+## 📁 Project Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- `src/App.tsx` - Main application component with autonomous agent portal system
+- `src/main.tsx` - Application entry point
+- `tsconfig.lovable.json` - TypeScript configuration for Lovable AI
+- `vite.config.ts` - Vite build configuration
 
-## What technologies are used for this project?
+## 🔧 Configuration
 
-This project is built with .
+### TypeScript Configuration
+- **Main**: `tsconfig.json` (read-only)
+- **Build**: `tsconfig.build.json`
+- **Lovable AI**: `tsconfig.lovable.json` (recommended for Lovable)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Build Scripts
+- `npm run dev` - Start development server
+- `npm run build:dev` - Build for development (uses tsconfig.lovable.json)
+- `npm run build` - Build for production
 
-## How can I deploy this project?
+## 🌐 Access Points
 
-Simply open [Lovable](https://lovable.dev/projects/9cb42980-6592-4b99-a762-f88ea2d0b00e) and click on Share -> Publish.
+- **Development Server**: http://localhost:8080 (or next available port)
+- **Main Portal**: http://localhost:8080/ (autonomous agent portal system)
+- **Canonical Portals**: 20 production portals accessible via navigation
 
-## I want to use a custom domain - is that possible?
+## 🎯 Key Features
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- **Autonomous Agent System**: 24/7 no-human operations
+- **20 Canonical Portals**: Consolidated portal system
+- **Portal Decommission**: Deprecated routes return 410 Gone
+- **Real-time Monitoring**: System health and performance tracking
 
-## Troubleshooting
+## 📝 Notes for Lovable AI
 
-### Dev Server Issues
-
-If you encounter connection refused errors:
-
-1. **Check if port 8080 is in use:**
-   ```bash
-   # On macOS/Linux
-   ./scripts/check-port.sh
-   
-   # On Windows
-   powershell -ExecutionPolicy Bypass -File scripts/check-port.ps1
-   ```
-
-2. **Verify the server is running:**
-   ```bash
-   npm run dev:check
-   ```
-
-3. **Alternative start methods:**
-   ```bash
-   # Use the Node.js start script
-   node start-8080.js
-   
-   # Or start with explicit port
-   npm run dev
-   ```
-
-### Testing
-
-- **Cypress E2E tests:** `npx cypress open` (expects server on http://localhost:8080)
-- **k6 Load tests:** `k6 run k6/smoke.js` (expects server on http://localhost:8080)
-- **Build preview:** `npm run preview` (serves built app on http://localhost:8080)
+- Use `tsconfig.lovable.json` for TypeScript compilation
+- The main `tsconfig.json` is read-only - do not attempt to modify it
+- JSX is configured as `"react-jsx"` in the Lovable config
+- All DOM types are properly included in the configuration
