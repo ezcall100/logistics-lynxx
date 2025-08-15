@@ -6,7 +6,7 @@ import RoleSelector, { roles } from '@/components/login/RoleSelector';
 import LoginHero from '@/components/login/LoginHero';
 import { useLoginForm } from '@/hooks/login/useLoginForm';
 import { useAuth } from '@/context/AuthContext';
-import { LiveUpdateDisplay } from '@/components/autonomous/LiveUpdateDisplay';
+import { SimpleLiveUpdate } from '@/components/autonomous/SimpleLiveUpdate';
 
 const Login = () => {
   const { user, isAuthenticated } = useAuth();
@@ -35,7 +35,7 @@ const Login = () => {
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               <h2 className="text-xl font-bold text-green-800">🤖 Live Autonomous Agent Updates</h2>
             </div>
-            <LiveUpdateDisplay />
+            <SimpleLiveUpdate />
           </div>
         </div>
       </div>
