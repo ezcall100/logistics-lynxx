@@ -1,47 +1,47 @@
-# 🌐 Website Navigation Guide
+# 🌐 Trans Bot AI - Website Navigation Guide
 
 ## 🏠 **Public Pages** (No Login Required)
 
 ### **Main Pages**
-- **Home**: `http://localhost:8084/` - Main landing page
-- **About**: `http://localhost:8084/about` - Company information
-- **Services**: `http://localhost:8084/services` - Our services
-- **Products**: `http://localhost:8084/products` - Product offerings
-- **Pricing**: `http://localhost:8084/pricing` - Pricing plans
-- **Contact**: `http://localhost:8084/contact` - Contact information
+- **Home**: `http://localhost:5174/` - Main landing page
+- **About**: `http://localhost:5174/about` - Company information
+- **Services**: `http://localhost:5174/services` - Our services
+- **Products**: `http://localhost:5174/products` - Product offerings
+- **Pricing**: `http://localhost:5174/pricing` - Pricing plans
+- **Contact**: `http://localhost:5174/contact` - Contact information
 
 ### **Marketing Pages**
-- **Blog**: `http://localhost:8084/blog` - Company blog
-- **Careers**: `http://localhost:8084/careers` - Job opportunities
-- **News**: `http://localhost:8084/news` - Latest news
-- **Events**: `http://localhost:8084/events` - Upcoming events
-- **Resources**: `http://localhost:8084/resources` - Resource library
-- **Downloads**: `http://localhost:8084/downloads` - Downloadable content
+- **Blog**: `http://localhost:5174/blog` - Company blog
+- **Careers**: `http://localhost:5174/careers` - Job opportunities
+- **News**: `http://localhost:5174/news` - Latest news
+- **Events**: `http://localhost:5174/events` - Upcoming events
+- **Resources**: `http://localhost:5174/resources` - Resource library
+- **Downloads**: `http://localhost:5174/downloads` - Downloadable content
 
 ### **Social Proof**
-- **Case Studies**: `http://localhost:8084/case-studies` - Success stories
-- **Testimonials**: `http://localhost:8084/testimonials` - Customer reviews
+- **Case Studies**: `http://localhost:5174/case-studies` - Success stories
+- **Testimonials**: `http://localhost:5174/testimonials` - Customer reviews
 
 ### **Support & Documentation**
-- **Support**: `http://localhost:8084/support` - Support center
-- **Documentation**: `http://localhost:8084/documentation` - User guides
-- **API Reference**: `http://localhost:8084/api-reference` - API documentation
-- **Integrations**: `http://localhost:8084/integrations` - Third-party integrations
-- **Partners**: `http://localhost:8084/partners` - Partner information
+- **Support**: `http://localhost:5174/support` - Support center
+- **Documentation**: `http://localhost:5174/documentation` - User guides
+- **API Reference**: `http://localhost:5174/api-reference` - API documentation
+- **Integrations**: `http://localhost:5174/integrations` - Third-party integrations
+- **Partners**: `http://localhost:5174/partners` - Partner information
 
 ### **Legal & Compliance**
-- **Security**: `http://localhost:8084/security` - Security information
-- **Compliance**: `http://localhost:8084/compliance` - Compliance details
-- **Privacy**: `http://localhost:8084/privacy` - Privacy policy
-- **Terms**: `http://localhost:8084/terms` - Terms of service
+- **Security**: `http://localhost:5174/security` - Security information
+- **Compliance**: `http://localhost:5174/compliance` - Compliance details
+- **Privacy**: `http://localhost:5174/privacy` - Privacy policy
+- **Terms**: `http://localhost:5174/terms` - Terms of service
 
 ### **Authentication**
-- **Login**: `http://localhost:8084/login` - User login
-- **Register**: `http://localhost:8084/register` - User registration
-- **Forgot Password**: `http://localhost:8084/forgot-password` - Password recovery
+- **Login**: `http://localhost:5174/login` - User login
+- **Register**: `http://localhost:5174/register` - User registration
+- **Forgot Password**: `http://localhost:5174/forgot-password` - Password recovery
 
 ### **System Status**
-- **Status**: `http://localhost:8084/status` - System status page
+- **Status**: `http://localhost:5174/status` - System status page
 
 ---
 

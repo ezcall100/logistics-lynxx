@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import TransBotLogo from '../TransBotLogo';
 import { 
   Home, 
   BarChart3, 
@@ -30,10 +31,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">TMS</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">TMS Platform</span>
+            <TransBotLogo size="md" variant="full" />
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
               🔥 Autonomous
             </Badge>

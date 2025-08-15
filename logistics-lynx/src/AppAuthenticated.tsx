@@ -230,7 +230,7 @@ function HomePage() {
             Trans Bot AI
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Autonomous TMS Platform — 24/7 No-Human Operations
+            Trans Bot AI Platform — 24/7 No-Human Operations
           </p>
           
           {/* Autonomous System Status */}
