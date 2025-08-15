@@ -6,7 +6,7 @@ import RoleSelector, { roles } from '@/components/login/RoleSelector';
 import LoginHero from '@/components/login/LoginHero';
 import { useLoginForm } from '@/hooks/login/useLoginForm';
 import { useAuth } from '@/context/AuthContext';
-import { AgentTest } from '@/components/autonomous/AgentTest';
+import { AllAgentsActive } from '@/components/autonomous/AllAgentsActive';
 
 const Login = () => {
   const { user, isAuthenticated } = useAuth();
@@ -32,10 +32,10 @@ const Login = () => {
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200">
           <div className="p-6">
                          <div className="flex items-center gap-2 mb-4">
-               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-               <h2 className="text-xl font-bold text-green-800">🧪 SIMPLE TEST AGENT - WORKING!</h2>
+               <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+               <h2 className="text-xl font-bold text-purple-800">🤖 ALL AUTONOMOUS AGENTS CONTROL CENTER</h2>
              </div>
-             <SimpleTestAgent />
+             <AllAgentsActive />
           </div>
         </div>
       </div>
