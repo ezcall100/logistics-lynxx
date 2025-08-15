@@ -1,73 +1,33 @@
 #!/usr/bin/env node
 
 /**
- * 🔧 Dependency Update Script
- * Updates dependencies and ensures package-lock.json is in sync
+ * 🔧 Cross-Platform Dependency Reset Script
+ * Single Node/ESM toolchain for dependency management
  */
 
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+import { execSync } from "node:child_process";
+import { existsSync, rmSync } from "node:fs";
 
-class DependencyUpdater {
-  constructor() {
-    this.packageJsonPath = path.join(process.cwd(), 'package.json');
-    this.packageLockPath = path.join(process.cwd(), 'package-lock.json');
+const sh = (cmd) => execSync(cmd, { stdio: "inherit" });
+
+console.log("🔧 Resetting dependencies…");
+
+// Cross-platform cleanup with better error handling
+try {
+  if (existsSync("node_modules")) {
+    console.log("🗑️  Removing node_modules...");
+    rmSync("node_modules", { recursive: true, force: true, maxRetries: 3, retryDelay: 1000 });
   }
-
-  async run() {
-    console.log('🔧 Dependency Update Script');
-    console.log('==========================');
-    
-    try {
-      // Check if package.json exists
-      if (!fs.existsSync(this.packageJsonPath)) {
-        console.error('❌ package.json not found');
-        process.exit(1);
-      }
-
-      console.log('📦 Checking current dependencies...');
-      
-      // Clean npm cache
-      console.log('🧹 Cleaning npm cache...');
-      execSync('npm cache clean --force', { stdio: 'inherit' });
-      
-      // Remove node_modules and package-lock.json (cross-platform)
-      console.log('🗑️  Removing existing node_modules and package-lock.json...');
-      if (fs.existsSync('node_modules')) {
-        if (process.platform === 'win32') {
-          execSync('rmdir /s /q node_modules', { stdio: 'inherit' });
-        } else {
-          execSync('rm -rf node_modules', { stdio: 'inherit' });
-        }
-      }
-      if (fs.existsSync(this.packageLockPath)) {
-        if (process.platform === 'win32') {
-          execSync('del package-lock.json', { stdio: 'inherit' });
-        } else {
-          execSync('rm package-lock.json', { stdio: 'inherit' });
-        }
-      }
-      
-      // Install dependencies fresh
-      console.log('📥 Installing dependencies...');
-      execSync('npm install --no-audit --no-fund', { stdio: 'inherit' });
-      
-      // Verify installation
-      console.log('✅ Verifying installation...');
-      execSync('npm ls --depth=0', { stdio: 'inherit' });
-      
-      console.log('\n🎉 Dependencies updated successfully!');
-      console.log('✅ package-lock.json is now in sync');
-      console.log('✅ All dependencies are properly installed');
-      
-    } catch (error) {
-      console.error('❌ Error updating dependencies:', error.message);
-      process.exit(1);
-    }
+  if (existsSync("package-lock.json")) {
+    console.log("🗑️  Removing package-lock.json...");
+    rmSync("package-lock.json", { force: true });
   }
+} catch (error) {
+  console.log("⚠️  Some files couldn't be removed, continuing with install...");
 }
 
-// Run the dependency updater
-const updater = new DependencyUpdater();
-updater.run();
+// Fresh install
+console.log("📥 Installing dependencies...");
+sh("npm cache clean --force");
+sh("npm install --no-audit --no-fund");
+console.log("✅ Dependencies refreshed");

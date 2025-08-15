@@ -1,10 +1,23 @@
-# Ops Quick Commands Script (PowerShell)
+# Ops Quick Commands Script (PowerShell) - DEPRECATED
+# This command is deprecated. Use: npm run emergency:stop|resume|degrade|status
 # Provides easy access to common operational tasks
 
 param(
     [Parameter(Position=0)]
     [string]$Command = "help"
 )
+
+# DEPRECATION NOTICE
+Write-Host "⚠️  This PowerShell script is deprecated!" -ForegroundColor Yellow
+Write-Host "Use the cross-platform Node.js commands instead:" -ForegroundColor White
+Write-Host "  npm run emergency:stop" -ForegroundColor Cyan
+Write-Host "  npm run emergency:resume" -ForegroundColor Cyan
+Write-Host "  npm run emergency:degrade" -ForegroundColor Cyan
+Write-Host "  npm run emergency:status" -ForegroundColor Cyan
+Write-Host "  npm run smoke:test" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "This script will be removed in the next release." -ForegroundColor Red
+Write-Host ""
 
 # Colors for output
 $Red = "Red"

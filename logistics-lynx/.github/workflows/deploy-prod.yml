@@ -33,18 +33,23 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install dependencies (ci with fallback)
+        shell: bash
         run: |
-          # Clear npm cache and try npm ci first
-          npm cache clean --force
-          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
-          echo "✅ Dependencies installed successfully"
+          set -euo pipefail
+          echo "Attempting npm ci…"
+          if npm ci --no-audit --no-fund; then
+            echo "✅ npm ci succeeded"
+          else
+            echo "⚠️ npm ci failed — cleaning cache and falling back to npm install"
+            npm cache clean --force
+            rm -rf node_modules package-lock.json
+            npm install --no-audit --no-fund
+            echo "✅ npm install fallback succeeded"
+          fi
 
-      - name: Verify package-lock.json
-        run: |
-          # Check if package-lock.json is up to date
-          npm ls --depth=0 || echo "⚠️  Some dependencies may be missing, but continuing..."
-          echo "✅ Package verification complete"
+      - name: Verify dependency graph
+        run: npm ls || true
       - name: Lint analysis
         run: npm run lint:report
         continue-on-error: true

@@ -140,8 +140,10 @@ The autonomous portal builder is ready to generate all 20 portals with:
 
 ### Created Files
 - `logistics-lynx/scripts/update-dependencies.mjs`
-- `logistics-lynx/scripts/update-dependencies-win.mjs`
 - `DEPENDENCY-FIX-SUMMARY.md`
+
+### Deprecated Files
+- `scripts/ops-quick-commands.ps1` - Added deprecation notice, use `npm run emergency:*` commands instead
 
 ## Conclusion
 
