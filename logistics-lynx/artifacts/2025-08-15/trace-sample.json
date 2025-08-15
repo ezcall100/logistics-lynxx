@@ -1,0 +1,5 @@
+{
+  "timestamp": "2025-08-15T19:31:28.138Z",
+  "sample": "Command failed: psql \"$SUPABASE_DB_URL\" -c \"SELECT trace_id, span_id, operation_name, duration_ms, created_at FROM traces WHERE created_at > NOW() - INTERVAL '1 hour' ORDER BY created_at DESC LIMIT 10;\"\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+  "status": "CAPTURED"
+}

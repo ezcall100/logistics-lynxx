@@ -62,7 +62,9 @@
     "check:portals": "node scripts/check-portals-simple.mjs",
     "build:portals": "node scripts/autonomous-portal-builder.mjs",
     "update:deps": "node scripts/update-dependencies.mjs",
-    "verify:deployment": "node scripts/deployment-verification.mjs"
+    "verify:deployment": "node scripts/deployment-verification.mjs",
+    "green:posture": "node scripts/green-posture-script.mjs",
+    "golden:path": "node scripts/golden-path-flow.mjs"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",

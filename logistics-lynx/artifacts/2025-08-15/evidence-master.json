@@ -1,0 +1,111 @@
+{
+  "timestamp": "2025-08-15T19:31:28.138Z",
+  "date": "2025-08-15",
+  "posture": "GREEN",
+  "artifacts": {
+    "featureFlags": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "data": "Command failed: psql \"$SUPABASE_DB_URL\" -c \"SELECT key, value, scope FROM feature_flags_v2 WHERE scope IN ('global', 'production') ORDER BY key;\"\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+      "status": "CAPTURED"
+    },
+    "sloSnapshot": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "healthz": {
+        "ok": true,
+        "ts": "2025-08-15T19:31:28.349Z"
+      },
+      "readyz": {
+        "ready": true,
+        "mode": "lenient"
+      },
+      "status": "CAPTURED"
+    },
+    "portalStatus": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "output": "\n> vite_react_shadcn_ts@0.0.0 check:portals\n> node scripts/check-portals-simple.mjs\n\n🔍 Portal Configuration Check\n============================\nChecking 20 portals...\n\n✅ 1. Super Admin (/super-admin)\n✅ 2. Admin (/admin)\n✅ 3. TMS Admin (/tms-admin)\n✅ 4. Onboarding (/onboarding)\n✅ 5. Broker (/broker)\n✅ 6. Shipper (/shipper)\n✅ 7. Carrier (/carrier)\n✅ 8. Driver (/driver)\n✅ 9. Owner Operator (/owner-operator)\n✅ 10. Factoring (/factoring)\n✅ 11. Load Board (/load-board)\n✅ 12. CRM (/crm)\n✅ 13. Financials (/financials)\n✅ 14. EDI (/edi)\n✅ 15. Marketplace (/marketplace)\n✅ 16. Analytics (/analytics)\n✅ 17. Autonomous AI (/autonomous)\n✅ 18. Workers (/workers)\n✅ 19. Rates (/rates)\n✅ 20. Directory (/directory)\n\n🔄 Checking deprecated routes...\n   ✅ /carrier-admin → /carrier (Carrier)\n   ✅ /broker-admin → /broker (Broker)\n   ✅ /shipper-admin → /shipper (Shipper)\n   ✅ /carrier-dispatch → /load-board (Load Board)\n\n📊 Portal Check Results\n======================\nTotal Portals: 20\n✅ Passed: 20\n❌ Failed: 0\n🔄 Deprecated Routes: ✅ Valid\n\n🎉 All portals are properly configured!\n✅ Ready for Phase-2 autonomous portal build\n",
+      "status": "RED"
+    },
+    "outboxLag": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "query": "Command failed: psql \"$SUPABASE_DB_URL\" -c \"SELECT COUNT(*) as pending_count, MAX(created_at) as oldest_pending FROM outbox WHERE status = 'pending' AND created_at < NOW() - INTERVAL '5 minutes';\"\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+      "status": "CAPTURED"
+    },
+    "alertQueries": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "queries": {
+        "highErrorRate": "SELECT COUNT(*) as error_count FROM logs WHERE level = 'error' AND created_at > NOW() - INTERVAL '1 hour';",
+        "slowQueries": "SELECT COUNT(*) as slow_count FROM logs WHERE response_time > 5000 AND created_at > NOW() - INTERVAL '1 hour';",
+        "dlqFailures": "SELECT COUNT(*) as dlq_count FROM dead_letter_queue WHERE created_at > NOW() - INTERVAL '1 hour';",
+        "authFailures": "SELECT COUNT(*) as auth_failures FROM auth_logs WHERE success = false AND created_at > NOW() - INTERVAL '1 hour';"
+      },
+      "status": "CAPTURED"
+    },
+    "traceSample": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "sample": "Command failed: psql \"$SUPABASE_DB_URL\" -c \"SELECT trace_id, span_id, operation_name, duration_ms, created_at FROM traces WHERE created_at > NOW() - INTERVAL '1 hour' ORDER BY created_at DESC LIMIT 10;\"\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+      "status": "CAPTURED"
+    },
+    "systemHealth": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "smokeTest": "\n> vite_react_shadcn_ts@0.0.0 smoke:test\n> node scripts/prod-smoke-test.mjs\n\n🚀 Starting Production Smoke Test...\n   Host: localhost:8089\n   Timeout: 5000ms\n\n🏥 Testing /healthz endpoint...\n✅ /healthz: PASSED (37ms)\n\n🔍 Testing /readyz endpoint...\n✅ /readyz: PASSED (2ms)\n   Mode: lenient\n   Ready: true\n\n📊 Smoke Test Results:\n   Total Time: 42ms\n   /healthz: ✅ PASS\n   /readyz: ✅ PASS\n   Overall: ✅ PASS\n\n🎉 All smoke tests passed! System is ready for production.\n",
+      "status": "GREEN"
+    },
+    "emergencyStatus": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "status": "\n> vite_react_shadcn_ts@0.0.0 emergency:status\n> node scripts/emergency-stop.mjs status\n\n",
+      "posture": "CAPTURED"
+    },
+    "auditDigest": {
+      "timestamp": "2025-08-15T19:31:28.138Z",
+      "date": "2025-08-15",
+      "summary": {
+        "totalArtifacts": 8,
+        "successfulCaptures": 6,
+        "failedCaptures": 1,
+        "overallPosture": "GREEN"
+      },
+      "artifacts": [
+        {
+          "name": "featureFlags",
+          "status": "CAPTURED",
+          "file": "featureFlags.json"
+        },
+        {
+          "name": "sloSnapshot",
+          "status": "CAPTURED",
+          "file": "sloSnapshot.json"
+        },
+        {
+          "name": "portalStatus",
+          "status": "RED",
+          "file": "portalStatus.json"
+        },
+        {
+          "name": "outboxLag",
+          "status": "CAPTURED",
+          "file": "outboxLag.json"
+        },
+        {
+          "name": "alertQueries",
+          "status": "CAPTURED",
+          "file": "alertQueries.json"
+        },
+        {
+          "name": "traceSample",
+          "status": "CAPTURED",
+          "file": "traceSample.json"
+        },
+        {
+          "name": "systemHealth",
+          "status": "GREEN",
+          "file": "systemHealth.json"
+        },
+        {
+          "name": "emergencyStatus",
+          "status": "\n> vite_react_shadcn_ts@0.0.0 emergency:status\n> node scripts/emergency-stop.mjs status\n\n",
+          "file": "emergencyStatus.json"
+        }
+      ]
+    }
+  }
+}

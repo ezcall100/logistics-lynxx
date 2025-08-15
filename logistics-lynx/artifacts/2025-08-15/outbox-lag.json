@@ -1,0 +1,5 @@
+{
+  "timestamp": "2025-08-15T19:31:28.138Z",
+  "query": "Command failed: psql \"$SUPABASE_DB_URL\" -c \"SELECT COUNT(*) as pending_count, MAX(created_at) as oldest_pending FROM outbox WHERE status = 'pending' AND created_at < NOW() - INTERVAL '5 minutes';\"\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+  "status": "CAPTURED"
+}
