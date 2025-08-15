@@ -272,10 +272,10 @@ export class TransBotAIWebsiteBuilder {
         // Send notification every 10 pages
         if (this.pagesBuilt % 10 === 0) {
           await this.notificationManager.sendNotification({
-            type: 'progress',
+            type: 'info',
             title: 'Website Building Progress',
             message: `Successfully built ${this.pagesBuilt} pages for Trans Bot AI website`,
-            priority: 'info'
+            priority: 'low'
           });
         }
       }

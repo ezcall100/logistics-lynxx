@@ -318,10 +318,10 @@ export class PortalManager {
         
         // Send notification for unhealthy portals
         await this.notificationManager.sendNotification({
-          type: 'health',
+          type: 'warning',
           title: `Portal Health Alert: ${portal.name}`,
           message: `Portal ${portal.name} is experiencing issues and may need attention`,
-          priority: 'warning'
+          priority: 'medium'
         });
       }
 
