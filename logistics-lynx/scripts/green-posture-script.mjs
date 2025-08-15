@@ -12,7 +12,7 @@ const sh = (cmd) => {
   }
 };
 
-const timestamp = new Date().toISOString();
+    const timestamp = new Date().toISOString();
 const date = timestamp.split('T')[0];
 const artifactsDir = `artifacts/${date}`;
 
@@ -40,7 +40,7 @@ try {
   };
   writeFileSync(join(artifactsDir, 'feature-flags.json'), JSON.stringify(evidence.artifacts.featureFlags, null, 2));
   console.log('   ✅ Feature flags captured');
-} catch (error) {
+    } catch (error) {
   evidence.artifacts.featureFlags = { status: 'ERROR', error: error.message };
   console.log('   ❌ Feature flags capture failed');
 }
@@ -75,7 +75,7 @@ try {
   };
   writeFileSync(join(artifactsDir, 'portal-status.json'), JSON.stringify(evidence.artifacts.portalStatus, null, 2));
   console.log(`   ✅ Portal status: ${evidence.artifacts.portalStatus.status}`);
-} catch (error) {
+    } catch (error) {
   evidence.artifacts.portalStatus = { status: 'ERROR', error: error.message };
   console.log('   ❌ Portal status capture failed');
 }
@@ -91,7 +91,7 @@ try {
   };
   writeFileSync(join(artifactsDir, 'outbox-lag.json'), JSON.stringify(evidence.artifacts.outboxLag, null, 2));
   console.log('   ✅ Outbox lag captured');
-} catch (error) {
+    } catch (error) {
   evidence.artifacts.outboxLag = { status: 'ERROR', error: error.message };
   console.log('   ❌ Outbox lag capture failed');
 }

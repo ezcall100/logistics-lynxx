@@ -91,19 +91,19 @@ class SmokeTest {
         };
         console.log(`✅ /healthz: PASSED (${response.responseTime}ms)`);
         return true;
-      } else {
+    } else {
         throw new Error(`HTTP ${response.statusCode}`);
-      }
-    } catch (error) {
+    }
+  } catch (error) {
       this.results.healthz = {
         passed: false,
         error: error.error || error.message,
         responseTime: error.responseTime || 0
       };
       console.log(`❌ /healthz: FAILED - ${error.error || error.message}`);
-      return false;
-    }
+    return false;
   }
+}
 
   async testReadyz() {
     console.log('🔍 Testing /readyz endpoint...');
@@ -122,7 +122,7 @@ class SmokeTest {
         console.log(`✅ /readyz: PASSED (${response.responseTime}ms)`);
         console.log(`   Mode: ${response.data.mode || 'unknown'}`);
         console.log(`   Ready: ${response.data.ready}`);
-        return true;
+      return true;
       } else {
         this.results.readyz = {
           passed: false,
@@ -134,18 +134,18 @@ class SmokeTest {
         if (response.data && response.data.reason) {
           console.log(`   Reason: ${response.data.reason}`);
         }
-        return false;
-      }
-    } catch (error) {
+      return false;
+    }
+  } catch (error) {
       this.results.readyz = {
         passed: false,
         error: error.error || error.message,
         responseTime: error.responseTime || 0
       };
       console.log(`❌ /readyz: FAILED - ${error.error || error.message}`);
-      return false;
-    }
+    return false;
   }
+}
 
   async run() {
     console.log('🚀 Starting Production Smoke Test...');
@@ -170,11 +170,11 @@ class SmokeTest {
     if (allPassed) {
       console.log('');
       console.log('🎉 All smoke tests passed! System is ready for production.');
-      process.exit(0);
-    } else {
+    process.exit(0);
+  } else {
       console.log('');
       console.log('⚠️  Some smoke tests failed. Please check the system before deployment.');
-      process.exit(1);
+    process.exit(1);
     }
   }
 }
