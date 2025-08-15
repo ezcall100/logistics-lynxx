@@ -7,7 +7,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxRuntime: 'automatic',
-      jsxImportSource: 'react',
     }),
   ],
   resolve: {
@@ -20,7 +19,6 @@ export default defineConfig(({ mode }) => ({
   },
   esbuild: {
     jsx: 'automatic',
-    jsxImportSource: 'react',
     target: 'es2020',
     jsxDev: mode === 'development',
   },
