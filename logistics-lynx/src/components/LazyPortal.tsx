@@ -21,7 +21,16 @@ const LazyPortalComponent: React.FC<LazyPortalProps> = ({ title, portalKey }) =>
         setError(false);
         
         // Try to import the portal page
-        const module = await import(`@/pages/${portalKey}/index.tsx`);
+        // Handle folder name mapping for special cases
+        const folderMap: Record<string, string> = {
+          'ownerOperator': 'owner-operator',
+          'superAdmin': 'super-admin',
+          'loadBoard': 'loadBoard',
+          'tmsAdmin': 'tmsAdmin'
+        };
+        
+        const folderName = folderMap[portalKey] || portalKey;
+        const module = await import(`@/pages/${folderName}/index.tsx`);
         setComponent(() => module.default);
       } catch (err) {
         console.log(`Portal ${portalKey} not found, using scaffold`);

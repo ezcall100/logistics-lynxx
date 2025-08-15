@@ -2,7 +2,8 @@
 
 import http from 'http';
 
-const BASE_URL = 'http://localhost:8085';
+const BASE_URL = process.env.APP_ORIGIN || 'http://localhost:8088';
+const COOKIE = process.env.APP_COOKIE || '';
 
 const PORTALS = [
   { key: "superAdmin", title: "Super Admin", path: "/super-admin" },
@@ -38,16 +39,35 @@ function checkPortal(path) {
   return new Promise((resolve) => {
     const url = new URL(`${BASE_URL}${path}`);
     
+    const headers = {};
+    if (COOKIE) {
+      headers.Cookie = COOKIE;
+    }
+    
     const req = http.request({
       hostname: url.hostname,
       port: url.port,
       path: url.pathname,
       method: 'GET',
-      timeout: 5000
+      timeout: 5000,
+      headers
     }, (res) => {
-      const success = res.statusCode >= 200 && res.statusCode < 400;
-      console.log(`${success ? '✅' : '❌'} ${String(res.statusCode).padEnd(3)} ${path}`);
-      resolve({ path, status: res.statusCode, success });
+      const success = COOKIE ? (res.statusCode === 200) : ([200, 302, 401].includes(res.statusCode));
+      const location = res.headers.location;
+      const portalStatus = res.headers['x-portal-status'];
+      
+      let statusText = `${String(res.statusCode).padEnd(3)}`;
+      if (location) statusText += ` → ${location}`;
+      if (portalStatus) statusText += ` (${portalStatus})`;
+      
+      console.log(`${success ? '✅' : '❌'} ${statusText} ${path}`);
+      resolve({ 
+        path, 
+        status: res.statusCode, 
+        success,
+        location,
+        portalStatus
+      });
     });
     
     req.on('error', (error) => {
@@ -104,6 +124,19 @@ async function main() {
     const status = result?.success ? '✅' : '❌';
     console.log(`${status} ${portal.title} (${portal.path})`);
   });
+
+  // Check deprecated routes specifically
+  const deprecatedResults = results.filter(r => DEPRECATED_ROUTES[r.path]);
+  if (deprecatedResults.length > 0) {
+    console.log('\n⚠️  Deprecated Routes Check:');
+    console.log('==========================');
+    deprecatedResults.forEach(r => {
+      const newPath = DEPRECATED_ROUTES[r.path];
+      const expected410 = r.status === 410 && r.portalStatus === 'decommissioned';
+      const status = expected410 ? '✅' : '❌';
+      console.log(`${status} ${r.path} → ${newPath} (${r.status}${r.portalStatus ? `, ${r.portalStatus}` : ''})`);
+    });
+  }
   
   console.log(`\n🎉 Portal check completed!`);
   console.log(`Success rate: ${((successful.length / results.length) * 100).toFixed(1)}%`);

@@ -103,6 +103,7 @@ const PortalSelection = () => {
           {allowedPortals.map((portal) => (
             <Card 
               key={portal.key} 
+              data-testid="portal-card"
               className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50"
               onClick={() => handlePortalSelect(portal)}
             >
