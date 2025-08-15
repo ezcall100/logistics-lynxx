@@ -2,7 +2,7 @@
 
 import http from 'http';
 
-const BASE_URL = process.env.APP_ORIGIN || 'http://localhost:8088';
+const BASE_URL = process.env.APP_ORIGIN || 'http://localhost:8084';
 const COOKIE = process.env.APP_COOKIE || '';
 
 const PORTALS = [

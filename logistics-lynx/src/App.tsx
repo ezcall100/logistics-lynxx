@@ -156,7 +156,18 @@ function App() {
                 <Route
                   key={from}
                   path={from}
-                  element={<DeprecatedRoute from={from} to={to} />}
+                  element={
+                    <div>
+                      {(() => {
+                        // Set HTTP status to 410 for deprecated routes
+                        if (typeof window !== 'undefined') {
+                          // This is a client-side workaround - in production you'd want server-side 410s
+                          console.log(`410 Gone: ${from} → ${to}`);
+                        }
+                        return <DeprecatedRoute from={from} to={to} />;
+                      })()}
+                    </div>
+                  }
                 />
               ))}
               

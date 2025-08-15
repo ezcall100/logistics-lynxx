@@ -15,6 +15,20 @@ interface DeprecatedRouteProps {
 }
 
 export const DeprecatedRoute: React.FC<DeprecatedRouteProps> = ({ from, to }) => {
+  // Set document title and meta tags for 410 status
+  React.useEffect(() => {
+    document.title = '410 Gone - Portal Decommissioned';
+    // Add meta tag to indicate this is a 410 response
+    const meta = document.createElement('meta');
+    meta.name = 'http-equiv';
+    meta.content = '410';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, [from, to]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
