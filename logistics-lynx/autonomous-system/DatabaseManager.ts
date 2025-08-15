@@ -62,7 +62,7 @@ export class DatabaseManager {
     }
   }
 
-  async executeQuery(query: string, params?: any[]): Promise<any> {
+  async executeQuery(query: string, params?: unknown[]): Promise<unknown> {
     if (!this.isConnected) {
       throw new Error('Database not connected');
     }

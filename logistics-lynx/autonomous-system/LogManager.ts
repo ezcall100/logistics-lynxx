@@ -9,7 +9,7 @@ export interface LogEntry {
   message: string;
   agentId?: string;
   component?: string;
-  metadata?: any;
+  metadata?: unknown;
 }
 
 export class LogManager {
@@ -24,7 +24,7 @@ export class LogManager {
   /**
    * Log a message with specified level
    */
-  log(message: string, level: LogEntry['level'] = 'info', metadata?: any): void {
+  log(message: string, level: LogEntry['level'] = 'info', metadata?: unknown): void {
     const entry: LogEntry = {
       timestamp: new Date(),
       level,
@@ -46,35 +46,35 @@ export class LogManager {
   /**
    * Log info message
    */
-  info(message: string, metadata?: any): void {
+  info(message: string, metadata?: unknown): void {
     this.log(message, 'info', metadata);
   }
 
   /**
    * Log success message
    */
-  success(message: string, metadata?: any): void {
+  success(message: string, metadata?: unknown): void {
     this.log(message, 'success', metadata);
   }
 
   /**
    * Log warning message
    */
-  warning(message: string, metadata?: any): void {
+  warning(message: string, metadata?: unknown): void {
     this.log(message, 'warning', metadata);
   }
 
   /**
    * Log error message
    */
-  error(message: string, metadata?: any): void {
+  error(message: string, metadata?: unknown): void {
     this.log(message, 'error', metadata);
   }
 
   /**
    * Log debug message (only in debug mode)
    */
-  debug(message: string, metadata?: any): void {
+  debug(message: string, metadata?: unknown): void {
     if (this.isDebugMode) {
       this.log(message, 'debug', metadata);
     }

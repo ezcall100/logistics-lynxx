@@ -10,7 +10,7 @@ export interface Notification {
   message: string;
   priority: 'low' | 'medium' | 'high' | 'critical';
   recipient?: string;
-  metadata?: any;
+  metadata?: unknown;
   timestamp?: Date;
 }
 

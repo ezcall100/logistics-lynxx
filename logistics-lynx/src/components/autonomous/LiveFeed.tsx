@@ -103,7 +103,7 @@ export default function LiveFeed() {
       const newOperation: LiveOperation = {
         id: Date.now().toString(),
         timestamp: new Date(),
-        type: operationType.type as any,
+        type: operationType.type as string,
         portal: portal.name,
         action,
         status: Math.random() > 0.1 ? 'completed' : 'running',

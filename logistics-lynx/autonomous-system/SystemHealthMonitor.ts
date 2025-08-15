@@ -161,7 +161,8 @@ export class SystemHealthMonitor {
   private async getMemoryUsage(): Promise<number> {
     try {
       const used = process.memoryUsage();
-      const total = require('os').totalmem();
+      const os = await import('os');
+      const total = os.totalmem();
       const usage = (used.heapUsed / total) * 100;
       return Math.round(usage);
     } catch (error) {

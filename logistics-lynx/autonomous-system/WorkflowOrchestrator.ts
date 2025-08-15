@@ -7,7 +7,7 @@ interface Workflow {
   isActive: boolean;
   lastRun: Date;
   status: 'active' | 'inactive' | 'error' | 'running';
-  config: any;
+  config: unknown;
   executionCount: number;
   successRate: number;
 }
@@ -238,7 +238,7 @@ export class WorkflowOrchestrator {
   /**
    * Execute a workflow
    */
-  async executeWorkflow(workflowId: string, data?: any): Promise<any> {
+  async executeWorkflow(workflowId: string, data?: unknown): Promise<unknown> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
       this.logManager.log(`❌ Workflow not found: ${workflowId}`, 'error');
@@ -373,7 +373,7 @@ export class WorkflowOrchestrator {
   /**
    * Update workflow configuration
    */
-  async updateWorkflowConfig(workflowId: string, config: any): Promise<void> {
+  async updateWorkflowConfig(workflowId: string, config: unknown): Promise<void> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
       this.logManager.log(`❌ Workflow not found: ${workflowId}`, 'error');
@@ -419,7 +419,7 @@ export class WorkflowOrchestrator {
   /**
    * Simulate workflow execution
    */
-  private async simulateWorkflowExecution(workflow: Workflow, data?: any): Promise<any> {
+  private async simulateWorkflowExecution(workflow: Workflow, data?: unknown): Promise<unknown> {
     // Simulate execution time based on workflow type
     const executionTime = Math.random() * 5000 + 2000; // 2-7 seconds
     await new Promise(resolve => setTimeout(resolve, executionTime));

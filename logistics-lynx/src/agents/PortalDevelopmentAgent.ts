@@ -23,7 +23,7 @@ interface PortalFeature {
   name: string;
   component: string;
   permissions: string[];
-  config: any;
+  config: unknown;
 }
 
 interface PortalInstance {
@@ -47,7 +47,7 @@ interface PortalInstance {
   config: {
     theme: string;
     layout: string;
-    features: Record<string, any>;
+    features: Record<string, unknown>;
     permissions: Record<string, boolean>;
   };
 }
@@ -585,7 +585,7 @@ export class PortalDevelopmentAgent {
   /**
    * Create portal from gap
    */
-  private async createPortalFromGap(gap: any): Promise<void> {
+  private async createPortalFromGap(gap: { template: string; type: string; portalType?: PortalType; role?: UserRole }): Promise<void> {
     try {
       const template = this.templates.get(gap.template);
       if (!template) {
@@ -823,7 +823,7 @@ export class PortalDevelopmentAgent {
   /**
    * Apply portal UX improvement
    */
-  private async applyPortalUXImprovement(interaction: any): Promise<void> {
+  private async applyPortalUXImprovement(interaction: { type: string }): Promise<void> {
     this.logManager.log(`🎯 Applying portal UX improvement for: ${interaction.type}`, 'info');
   }
 
@@ -946,7 +946,16 @@ export class PortalDevelopmentAgent {
   /**
    * Get agent status
    */
-  getStatus(): any {
+  getStatus(): {
+    isRunning: boolean;
+    totalPortals: number;
+    publishedPortals: number;
+    draftPortals: number;
+    productionAccess: boolean;
+    portalTypes: PortalType[];
+    supportedRoles: UserRole[];
+    lastActivity: Date;
+  } {
     return {
       isRunning: this.isRunning,
       totalPortals: this.portals.size,

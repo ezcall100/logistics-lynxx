@@ -5,7 +5,7 @@ interface PageTemplate {
   name: string;
   path: string;
   component: string;
-  content: any;
+  content: unknown;
   metadata: {
     title: string;
     description: string;
@@ -20,7 +20,7 @@ interface WebsitePage {
   name: string;
   path: string;
   component: string;
-  content: any;
+  content: unknown;
   status: 'draft' | 'published' | 'archived';
   createdAt: Date;
   updatedAt: Date;
@@ -292,7 +292,7 @@ export class WebsiteDevelopmentAgent {
   /**
    * Create page from gap
    */
-  private async createPageFromGap(gap: any): Promise<void> {
+  private async createPageFromGap(gap: { template: string; type: string; path?: string; searchTerm?: string }): Promise<void> {
     try {
       const template = this.templates.get(gap.template);
       if (!template) {
@@ -470,7 +470,7 @@ export class WebsiteDevelopmentAgent {
   /**
    * Apply UX improvement
    */
-  private async applyUXImprovement(interaction: any): Promise<void> {
+  private async applyUXImprovement(interaction: { type: string }): Promise<void> {
     this.logManager.log(`🎯 Applying UX improvement for: ${interaction.type}`, 'info');
   }
 
@@ -571,7 +571,14 @@ export class WebsiteDevelopmentAgent {
   /**
    * Get agent status
    */
-  getStatus(): any {
+  getStatus(): {
+    isRunning: boolean;
+    totalPages: number;
+    publishedPages: number;
+    draftPages: number;
+    productionAccess: boolean;
+    lastActivity: Date;
+  } {
     return {
       isRunning: this.isRunning,
       totalPages: this.pages.size,

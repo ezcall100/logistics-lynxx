@@ -31,7 +31,7 @@ interface SystemMetric {
   unit: string;
   status: 'excellent' | 'good' | 'warning' | 'critical';
   trend: 'up' | 'down' | 'stable';
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 interface AgentActivity {

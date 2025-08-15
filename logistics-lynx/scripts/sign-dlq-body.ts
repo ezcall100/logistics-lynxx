@@ -40,7 +40,7 @@ function signDlqBody(options: SignOptions): void {
   } = options;
 
   // Build payload
-  const payload: any = {
+  const payload: Record<string, unknown> = {
     company_id: companyId,
     max
   };

@@ -97,7 +97,7 @@ export class WebsitePageAgent {
     }
   }
 
-  private async processPageRequest(request: any): Promise<void> {
+  private async processPageRequest(request: { id: string; task_name: string }): Promise<void> {
     try {
       console.log(`📝 Processing page request: ${request.task_name}`);
 
@@ -138,7 +138,7 @@ export class WebsitePageAgent {
     }
   }
 
-  private async processPageUpdate(update: any): Promise<void> {
+  private async processPageUpdate(update: { id: string; task_name: string }): Promise<void> {
     try {
       console.log(`🔄 Processing page update: ${update.task_name}`);
 
@@ -179,7 +179,7 @@ export class WebsitePageAgent {
     }
   }
 
-  private async generatePageTemplate(request: any): Promise<PageTemplate> {
+  private async generatePageTemplate(request: { task_name: string }): Promise<PageTemplate> {
     // Extract page information from request
     const taskName = request.task_name.toLowerCase();
     
@@ -227,7 +227,7 @@ export class WebsitePageAgent {
     return pageTemplate;
   }
 
-  private async parsePageUpdate(update: any): Promise<PageUpdate> {
+  private async parsePageUpdate(update: { task_name: string }): Promise<PageUpdate> {
     // Parse the update request to extract what needs to be updated
     const taskName = update.task_name.toLowerCase();
     
@@ -242,8 +242,8 @@ export class WebsitePageAgent {
 
   private async createPage(template: PageTemplate): Promise<void> {
     try {
-      const fs = require('fs');
-      const path = require('path');
+      const fs = await import('fs');
+      const path = await import('path');
       
       // Determine file path
       let filePath: string;
@@ -304,8 +304,8 @@ export class WebsitePageAgent {
 
       // Update the page content
       if (pageUpdate.updates.content) {
-        const fs = require('fs');
-        const path = require('path');
+        const fs = await import('fs');
+        const path = await import('path');
         
         const filePath = `src/pages/${page.component}.tsx`;
         fs.writeFileSync(filePath, pageUpdate.updates.content, 'utf8');
