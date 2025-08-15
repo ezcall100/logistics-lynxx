@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxRuntime: 'automatic',
+      jsxImportSource: undefined,
+      babel: {
+        plugins: []
+      }
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
