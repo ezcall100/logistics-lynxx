@@ -83,9 +83,9 @@ jobs:
         if: success()
         run: |
           echo "🎉 Production deployment successful!"
-          echo "Health: http://${{ vars.PROD_HOST }}:8089/healthz"
-          echo "Readiness: http://${{ vars.PROD_HOST }}:8089/readyz"
-          echo "Web Interface: http://${{ vars.PROD_HOST }}:8084"
+          echo "Health: http://${{ env.PROD_HOST }}:8089/healthz"
+          echo "Readiness: http://${{ env.PROD_HOST }}:8089/readyz"
+          echo "Web Interface: http://${{ env.PROD_HOST }}:8084"
 
       - name: Deploy failure notification
         if: failure()
