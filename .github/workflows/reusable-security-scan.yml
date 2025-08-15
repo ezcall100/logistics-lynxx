@@ -1,4 +1,4 @@
-name: 🔒 Reusable Security Scan
+name: Reusable Security Scan
 
 on:
   workflow_call:

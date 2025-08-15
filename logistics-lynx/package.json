@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 8084 --host",
-    "dev:autonomous": "nodemon --exec node --loader ts-node/esm src/start-autonomous-system.ts",
-    "dev:full": "concurrently \"npm run dev\" \"npm run start:autonomous\" \"npm run supabase:start\"",
+    "dev:autonomous": "concurrently -n web,agents \"vite\" \"node scripts/dev-agents.mjs\"",
+    "dev:full": "concurrently -n web,agents,watchers \"vite\" \"node scripts/dev-agents.mjs\" \"node scripts/dev-watchers.mjs\"",
     "build": "tsc --project tsconfig.build.json && vite build",
     "build:dev": "vite build --mode development",
     "build:dev:check": "tsc --project tsconfig.lovable.json --noEmit && vite build --mode development",
@@ -35,9 +35,8 @@
     "supabase:stop": "supabase stop",
     "supabase:db:push": "supabase db push",
     "supabase:functions:deploy": "supabase functions deploy agent-runner",
-    "portal:generate": "node autonomous-portal-generator.cjs",
-    "portal:fix": "npm run portal:generate && npm run dev",
-    "check:portals": "node check-portals.js",
+    "portal:fix": "node scripts/portal-fix.mjs",
+    "check:portals": "node scripts/check-portals.mjs",
     "fix:all": "npm run portal:fix && npm run check:portals"
   },
   "dependencies": {
@@ -84,6 +83,7 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.4.6",
+    "node-fetch": "^3.3.2",
     "react": "^18.3.1",
     "react-day-picker": "^9.7.0",
     "react-dom": "^18.3.1",

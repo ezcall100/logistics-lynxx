@@ -1,4 +1,4 @@
-name: 🔒 Network-Independent Security Scan
+name: Network-Independent Security Scan
 
 on:
   workflow_call:
