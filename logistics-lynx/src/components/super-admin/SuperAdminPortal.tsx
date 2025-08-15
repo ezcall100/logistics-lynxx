@@ -234,6 +234,7 @@ const SuperAdminPortal = () => {
         driver: { label: 'Driver Portal', icon: Icons.Users, url: portalUrls.driver, color: 'text-indigo-600' },
         shipper: { label: 'Shipper Portal', icon: Icons.Users, url: portalUrls.shipper, color: 'text-indigo-600' },
         admin: { label: 'Admin Portal', icon: Icons.Settings, url: portalUrls.admin, color: 'text-indigo-600' },
+        superAdmin: { label: 'Super Admin Portal', icon: Icons.Crown, url: portalUrls.superAdmin, color: 'text-indigo-600' },
         analytics: { label: 'Analytics Portal', icon: Icons.Analytics, url: portalUrls.analytics, color: 'text-indigo-600' },
         autonomous: { label: 'Autonomous Portal', icon: Icons.Brain, url: portalUrls.autonomous, color: 'text-indigo-600' },
         factoring: { label: 'Factoring Portal', icon: Icons.Factoring, url: portalUrls.factoring, color: 'text-indigo-600' },
@@ -544,10 +545,18 @@ const SuperAdminPortal = () => {
                       driver: { icon: Icons.Users, label: 'Driver', color: 'from-orange-500 to-yellow-500' },
                       shipper: { icon: Icons.Users, label: 'Shipper', color: 'from-red-500 to-pink-500' },
                       admin: { icon: Icons.Settings, label: 'Admin', color: 'from-gray-500 to-slate-500' },
+                      superAdmin: { icon: Icons.Crown, label: 'Super Admin', color: 'from-purple-500 to-violet-500' },
                       analytics: { icon: Icons.Analytics, label: 'Analytics', color: 'from-teal-500 to-cyan-500' },
                       autonomous: { icon: Icons.Brain, label: 'Autonomous', color: 'from-indigo-500 to-purple-500' },
-                      factoring: { icon: Icons.Factoring, label: 'Factoring', color: 'from-blue-500 to-indigo-500' }
+                      factoring: { icon: Icons.Factoring, label: 'Factoring', color: 'from-blue-500 to-indigo-500' },
+                      ownerOperator: { icon: Icons.OwnerOperator, label: 'Owner Operator', color: 'from-indigo-500 to-blue-500' }
                     }[key];
+
+                    // Skip rendering if portal config is not found
+                    if (!portalConfig) {
+                      console.warn(`Portal configuration not found for key: ${key}`);
+                      return null;
+                    }
 
                     return (
                       <Button 
