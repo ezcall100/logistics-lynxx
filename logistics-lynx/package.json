@@ -76,7 +76,13 @@
     "green:posture": "node scripts/green-posture-script.js",
     "golden:path": "node scripts/golden-path.mjs",
     "check:portals": "node scripts/check-portals.mjs",
-    "check:portals:config": "node scripts/portals-sanity.mjs"
+    "check:portals:config": "node scripts/portals-sanity.mjs",
+    "portal:performance": "node scripts/portal-performance-monitor.mjs",
+    "k6:canary": "k6 run scripts/k6-portal-canary.js",
+    "press:go:enhanced": "bash scripts/press-go-enhanced.sh",
+    "press:go:enhanced:win": "powershell -ExecutionPolicy Bypass -File scripts/press-go-enhanced.ps1",
+    "press:go:dry-run": "PRESSGO_DRY_RUN=1 npm run press:go:enhanced",
+    "press:go:dry-run:win": "$env:PRESSGO_DRY_RUN='1'; npm run press:go:enhanced:win"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",
