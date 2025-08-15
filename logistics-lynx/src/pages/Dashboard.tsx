@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
+import AutonomousStatusCard from '../components/autonomous/AutonomousStatusCard';
+import LiveBuildMonitor from '../components/autonomous/LiveBuildMonitor';
 
 const Dashboard = () => {
   return (
@@ -26,8 +28,20 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Autonomous Status */}
+          <div className="lg:col-span-1">
+            <AutonomousStatusCard />
+          </div>
+
+          {/* Live Build Monitor */}
+          <div className="lg:col-span-2">
+            <LiveBuildMonitor />
+          </div>
+        </div>
+
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -136,7 +150,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <p className="text-gray-600">
-              🔥 This dashboard was engineered by autonomous agents
+              🔥 This dashboard was engineered by autonomous agents at 11:33:50 PM
             </p>
           </div>
         </div>

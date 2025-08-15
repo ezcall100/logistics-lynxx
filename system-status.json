@@ -129,5 +129,11 @@
     "issues": []
   },
   "lastCheck": "2025-08-14T19:04:31.139Z",
-  "overall": "RED"
+  "overall": "RED",
+  "autonomy.emergencyStop": false,
+  "lastUpdated": "2025-08-15T06:19:22.490Z",
+  "activationStep": 4,
+  "autonomy.mode": "FULL",
+  "agents.autonomousEnabled": true,
+  "obs.otelEnabled": true
 }

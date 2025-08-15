@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 import { 
   Home, 
   BarChart3, 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
 
 const LiveBuildMonitor = () => {
   const [buildProgress, setBuildProgress] = useState(0);
@@ -46,12 +47,7 @@ const LiveBuildMonitor = () => {
           
           <div>
             <p className="text-sm text-blue-600 mb-2">Build Progress:</p>
-            <div className="w-full bg-blue-200 rounded-full h-2 mb-2">
-              <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${buildProgress}%` }}
-              ></div>
-            </div>
+            <Progress value={buildProgress} className="mb-2" />
             <p className="text-xs text-blue-600">{Math.round(buildProgress)}% complete</p>
           </div>
 
@@ -59,7 +55,7 @@ const LiveBuildMonitor = () => {
             <Badge variant="outline" className="bg-green-50 text-green-700">
               🔥 Live Updates
             </Badge>
-            <span className="text-xs text-blue-600">Created by autonomous agent</span>
+            <span className="text-xs text-blue-600">Created at 11:33:48 PM</span>
           </div>
         </div>
       </CardContent>
