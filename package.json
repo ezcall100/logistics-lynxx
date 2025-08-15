@@ -4,16 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cd logistics-lynx && npm run dev",
+    "dev": "vite",
+    "dev:web": "cd logistics-lynx && vite --port 8084",
+    "dev:autonomous": "cd logistics-lynx && npx tsx scripts/autonomous-agent-continuous.mts",
+    "start:autonomous": "cd logistics-lynx && node --enable-source-maps dist/autonomous-orchestrator.mjs",
+    "start:autonomous:full": "cd logistics-lynx && concurrently -n WEB,AGENTS,CTRL -c auto \"npm:dev:web\" \"npm:dev:autonomous\" \"npx tsx scripts/health-check.mts\"",
+    "ops:status": "cd logistics-lynx && npx tsx scripts/green-posture-script.mts",
+    "ops:daily": "cd logistics-lynx && npx tsx scripts/operational-cadence.mts daily",
+    "ops:emergency-stop": "cd logistics-lynx && npx tsx scripts/incident-response.mts stop",
+    "ops:resume": "cd logistics-lynx && npx tsx scripts/incident-response.mts resume",
     "build": "cd logistics-lynx && npm run build",
     "build:dev": "cd logistics-lynx && npm run build:dev",
     "build:dev:check": "cd logistics-lynx && npm run build:dev:check",
     "preview": "cd logistics-lynx && npm run preview",
     "lint": "cd logistics-lynx && npm run lint",
     "test": "cd logistics-lynx && npm run test",
-    "start:autonomous": "cd logistics-lynx && npm run start:autonomous",
-    "start:autonomous-website": "cd logistics-lynx && npm run start:autonomous-website",
-    "start:autonomous-full": "cd logistics-lynx && npm run start:autonomous-full",
     "portal:scan": "cd logistics-lynx && npm run portal:scan",
     "autonomous:build": "cd logistics-lynx && npm run autonomous:build",
     "autonomous:continuous": "cd logistics-lynx && npm run autonomous:continuous"
@@ -28,5 +33,9 @@
     "@supabase/supabase-js": "^2.55.0",
     "jose": "^6.0.12",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "concurrently": "^8.2.2"
   }
 }
