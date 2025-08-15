@@ -64,7 +64,9 @@
     "update:deps": "node scripts/update-dependencies.mjs",
     "verify:deployment": "node scripts/deployment-verification.mjs",
     "green:posture": "node scripts/green-posture-script.mjs",
-    "golden:path": "node scripts/golden-path-flow.mjs"
+    "golden:path": "node scripts/golden-path-flow.mjs",
+    "press:go": "bash scripts/press-go.sh",
+    "press:go:win": "powershell -ExecutionPolicy Bypass -File scripts/press-go.ps1"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",
