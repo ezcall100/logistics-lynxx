@@ -6,7 +6,7 @@ import RoleSelector, { roles } from '@/components/login/RoleSelector';
 import LoginHero from '@/components/login/LoginHero';
 import { useLoginForm } from '@/hooks/login/useLoginForm';
 import { useAuth } from '@/context/AuthContext';
-import { RealAutonomousAgent } from '@/components/autonomous/RealAutonomousAgent';
+import { SimpleTestAgent } from '@/components/autonomous/SimpleTestAgent';
 
 const Login = () => {
   const { user, isAuthenticated } = useAuth();
@@ -33,9 +33,9 @@ const Login = () => {
           <div className="p-6">
                          <div className="flex items-center gap-2 mb-4">
                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-               <h2 className="text-xl font-bold text-green-800">🤖 REAL Autonomous Agent - Making ACTUAL Changes</h2>
+               <h2 className="text-xl font-bold text-green-800">🧪 SIMPLE TEST AGENT - WORKING!</h2>
              </div>
-             <RealAutonomousAgent />
+             <SimpleTestAgent />
           </div>
         </div>
       </div>

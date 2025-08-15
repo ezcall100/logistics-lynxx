@@ -184,8 +184,7 @@ export const RealAutonomousAgent = () => {
         description: modification.description,
         timestamp: now,
         applied: true,
-        cssRules: modification.cssRules,
-        domChanges: modification.domChanges
+        cssRules: modification.cssRules
       };
 
       // Actually apply the change
