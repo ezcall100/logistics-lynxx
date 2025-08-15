@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { useAutonomousAI } from '@/hooks/useAutonomousAI';
-import { useBatchProcessing } from './useBatchProcessing';
+import { useBatchProcessing } from '../useBatchProcessing';
 
 interface AgentTask {
   id: string;
