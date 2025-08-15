@@ -12,6 +12,9 @@ jobs:
   e2e:
     name: 🧪 Portal E2E Tests
     runs-on: ubuntu-latest
+    env:
+      E2E_EMAIL: ezcallnet.mo@ezcallnet.com
+      E2E_PASSWORD: King80sam!@#$%
     
     steps:
     - name: Checkout code
@@ -54,9 +57,6 @@ jobs:
       run: |
         cd logistics-lynx
         npx playwright test -g "Portals behind auth"
-      env:
-        E2E_EMAIL: ${{ secrets.E2E_EMAIL || 'ezcallnet.mo@ezcallnet.com' }}
-        E2E_PASSWORD: ${{ secrets.E2E_PASSWORD || 'King80sam!@#$%' }}
 
     - name: Stop dev server
       if: always()
