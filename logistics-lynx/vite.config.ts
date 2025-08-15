@@ -13,26 +13,6 @@ export default defineConfig({
     host: true,
     proxy: {
       "/functions/v1": "http://127.0.0.1:54321"
-    },
-    // Add custom middleware for deprecated routes
-    configureServer: (server) => {
-      server.middlewares.use((req, res, next) => {
-        const retired = ["/carrier-admin","/broker-admin","/shipper-admin","/carrier-dispatch"];
-        if (retired.includes(req.url)) {
-          res.statusCode = 410;
-          res.setHeader("Content-Type","application/json");
-          res.setHeader("X-Portal-Status","decommissioned");
-          const map = {
-            "/carrier-admin": "/carrier",
-            "/broker-admin": "/broker",
-            "/shipper-admin": "/shipper",
-            "/carrier-dispatch": "/load-board"
-          };
-          res.end(JSON.stringify({error:"gone", use: map[req.url]}));
-          return;
-        }
-        next();
-      });
     }
   },
   resolve: {

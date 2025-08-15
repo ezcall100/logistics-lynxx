@@ -182,9 +182,9 @@ const LoadBoardPage = () => {
     return matchesSearch && matchesEquipment && matchesFavorites;
   });
 
-  const handleBid = (load: unknown) => {
+  const handleBid = (load: any) => {
     setSelectedLoad(load);
-    setBidAmount(load.rate.toString());
+    setBidAmount(load.rate?.toString() || '0');
     setBidComments('');
   };
 
@@ -194,7 +194,7 @@ const LoadBoardPage = () => {
       return;
     }
 
-    toast.success(`Bid submitted for load ${selectedLoad.id} - $${bidAmount}`);
+    toast.success(`Bid submitted for load ${selectedLoad?.id || 'unknown'} - $${bidAmount}`);
     setSelectedLoad(null);
     setBidAmount('');
     setBidComments('');
@@ -204,12 +204,12 @@ const LoadBoardPage = () => {
     toast.success('Load added to favorites');
   };
 
-  const contactBroker = (load: unknown) => {
-    toast.success(`Contacting ${load.broker} about load ${load.id}`);
+  const contactBroker = (load: any) => {
+    toast.success(`Contacting ${load.broker || 'broker'} about load ${load.id || 'unknown'}`);
   };
 
-  const viewLoadDetails = (load: unknown) => {
-    toast.info(`Viewing details for load ${load.id}`);
+  const viewLoadDetails = (load: any) => {
+    toast.info(`Viewing details for load ${load.id || 'unknown'}`);
   };
 
   const getEquipmentIcon = (equipment: string) => {
@@ -602,7 +602,7 @@ const LoadBoardPage = () => {
               <DialogDescription>
                 {selectedLoad && (
                   <>
-                    {selectedLoad.origin.city}, {selectedLoad.origin.state} → {selectedLoad.destination.city}, {selectedLoad.destination.state}
+                    {selectedLoad.origin?.city || 'Unknown'}, {selectedLoad.origin?.state || 'Unknown'} → {selectedLoad.destination?.city || 'Unknown'}, {selectedLoad.destination?.state || 'Unknown'}
                   </>
                 )}
               </DialogDescription>
@@ -613,19 +613,19 @@ const LoadBoardPage = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <Label className="text-gray-500">Equipment</Label>
-                    <p>{selectedLoad.equipment}</p>
+                    <p>{selectedLoad.equipment || 'Unknown'}</p>
                   </div>
                   <div>
                     <Label className="text-gray-500">Distance</Label>
-                    <p>{selectedLoad.distance} miles</p>
+                    <p>{selectedLoad.distance || 0} miles</p>
                   </div>
                   <div>
                     <Label className="text-gray-500">Weight</Label>
-                    <p>{selectedLoad.weight.toLocaleString()} lbs</p>
+                    <p>{(selectedLoad.weight || 0).toLocaleString()} lbs</p>
                   </div>
                   <div>
                     <Label className="text-gray-500">Current Bids</Label>
-                    <p>{selectedLoad.bidsCount} bids</p>
+                    <p>{selectedLoad.bidsCount || 0} bids</p>
                   </div>
                 </div>
                 
@@ -639,7 +639,7 @@ const LoadBoardPage = () => {
                     placeholder="Enter your bid amount"
                   />
                   <p className="text-sm text-gray-500">
-                    Suggested rate: ${selectedLoad.rate.toLocaleString()} (${selectedLoad.ratePerMile.toFixed(2)}/mile)
+                    Suggested rate: ${(selectedLoad.rate || 0).toLocaleString()} (${((selectedLoad.ratePerMile || 0) as number).toFixed(2)}/mile)
                   </p>
                 </div>
                 

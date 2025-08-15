@@ -4,6 +4,24 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 
 const HomePage = () => {
+  // Mock data for agents
+  const agents = [
+    { name: 'UI Builder', status: 'building', task: 'Creating components' },
+    { name: 'API Agent', status: 'active', task: 'Managing endpoints' },
+    { name: 'Data Agent', status: 'building', task: 'Processing data' },
+    { name: 'Test Agent', status: 'idle', task: 'Running tests' }
+  ];
+
+  const getAgentIcon = (name: string) => {
+    const icons: Record<string, string> = {
+      'UI Builder': '🎨',
+      'API Agent': '🔌',
+      'Data Agent': '📊',
+      'Test Agent': '🧪'
+    };
+    return icons[name] || '🤖';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header - Created by Autonomous Agent */}
@@ -120,10 +138,10 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {this.agents.map((agent, index) => (
+            {agents.map((agent, index) => (
               <Card key={index} className="text-center">
                 <CardContent className="pt-6">
-                  <div className="text-2xl mb-2">{this.getAgentIcon(agent.name)}</div>
+                  <div className="text-2xl mb-2">{getAgentIcon(agent.name)}</div>
                   <h4 className="font-semibold text-sm mb-1">{agent.name}</h4>
                   <Badge variant={agent.status === 'building' ? 'default' : 'secondary'} className="text-xs">
                     {agent.status}

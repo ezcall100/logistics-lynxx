@@ -46,17 +46,17 @@ async function authHeader() {
 }
 
 export default function DlqAdminPage() {
-  const uiEnabled = useFlag("ops.dlqAdminUIEnabled", false);
+  const uiEnabled = useFlag("default", "development", "ops.dlqAdminUIEnabled", false);
   const [companyId, setCompanyId] = useState<string>("");
   const [status, setStatus] = useState<string | undefined>();
   const [limit, setLimit] = useState<number>(50);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const qc = useQueryClient();
 
-  const { data: items = [], isLoading, refetch } = useQuery({
+  const { data: items = [] as any[], isLoading, refetch } = useQuery({
     queryKey: ["dlq", companyId, limit, status],
     queryFn: () => fetchItems(companyId || null, limit, status),
-    enabled: uiEnabled,
+    enabled: uiEnabled.value,
     refetchOnWindowFocus: false,
   });
 
@@ -67,7 +67,7 @@ export default function DlqAdminPage() {
   const mDryRun = useMutation({ mutationFn: () => action({ action: "dry_run", company_id: companyId, max: 25, ids: selectedIds }), onSuccess: () => qc.invalidateQueries({ queryKey:["dlq"] }) });
   const mReplay = useMutation({ mutationFn: () => action({ action: "replay", company_id: companyId, max: 25, ids: selectedIds, dry_run: false }), onSuccess: () => qc.invalidateQueries({ queryKey:["dlq"] }) });
 
-  if (!uiEnabled) return <div className="p-6">⚠️ DLQ Admin UI is disabled by flag.</div>;
+  if (!uiEnabled.value) return <div className="p-6">⚠️ DLQ Admin UI is disabled by flag.</div>;
 
   return (
     <div className="p-6 space-y-4">
