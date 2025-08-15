@@ -31,6 +31,7 @@ import { Progress } from '@/components/ui/progress';
 import StatCard from '@/components/dashboard/StatCard';
 import { PerformanceChart } from '@/components/dashboard/PerformanceChart';
 import ActivityFeed, { ActivityItem } from '@/components/dashboard/ActivityFeed';
+import { LiveUpdateDisplay } from '@/components/autonomous/LiveUpdateDisplay';
 
 const SuperAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -175,6 +176,22 @@ const SuperAdminDashboard = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-8">
+            {/* Live Update Display - Prominently Featured */}
+            <Card className="bg-white/60 backdrop-blur-sm border-0 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-xl">
+                <CardTitle className="flex items-center gap-2 text-slate-900">
+                  <Activity className="h-5 w-5 text-green-600" />
+                  🤖 Live Autonomous Agent Updates
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Real-time monitoring of autonomous system activities and improvements
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6">
+                <LiveUpdateDisplay />
+              </CardContent>
+            </Card>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Enhanced Performance Chart */}
               <Card className="lg:col-span-2 bg-white/60 backdrop-blur-sm border-0 shadow-xl">
