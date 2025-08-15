@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 8084 --host",
-    "dev:autonomous": "concurrently \"npm run dev\" \"npm run start:autonomous\"",
+    "dev:autonomous": "nodemon --exec node --loader ts-node/esm src/start-autonomous-system.ts",
     "dev:full": "concurrently \"npm run dev\" \"npm run start:autonomous\" \"npm run supabase:start\"",
     "build": "tsc --project tsconfig.build.json && vite build",
     "build:dev": "vite build --mode development",
@@ -28,7 +28,6 @@
     "sync:setup:windows": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1",
     "sync:remove": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1 -Remove",
     "start:autonomous": "node --loader ts-node/esm --project tsconfig.node.json src/start-autonomous-system.ts",
-    "dev:autonomous": "nodemon --exec node --loader ts-node/esm src/start-autonomous-system.ts",
     "deploy:autonomous": "supabase db push && supabase functions deploy agent-runner && npm run start:autonomous",
     "supabase:link": "supabase link --project-ref imcyiofodlnbomemvqto",
     "supabase:status": "supabase status",
@@ -37,7 +36,9 @@
     "supabase:db:push": "supabase db push",
     "supabase:functions:deploy": "supabase functions deploy agent-runner",
     "portal:generate": "node autonomous-portal-generator.cjs",
-    "portal:fix": "npm run portal:generate && npm run dev"
+    "portal:fix": "npm run portal:generate && npm run dev",
+    "check:portals": "node check-portals.js",
+    "fix:all": "npm run portal:fix && npm run check:portals"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",

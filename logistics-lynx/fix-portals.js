@@ -5,8 +5,13 @@
  * Fixes all portal routing and ensures real-time development is working
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log('🔧 Fixing Portal Routing and Real-time Development...');
 
@@ -131,7 +136,7 @@ console.log('✅ Created: DEVELOPMENT_GUIDE.md');
 // Create a portal status checker
 const PORTAL_CHECKER = `#!/usr/bin/env node
 
-const http = require('http');
+import http from 'http';
 
 const PORTAL_URLS = ${JSON.stringify(PORTAL_URLS, null, 2)};
 

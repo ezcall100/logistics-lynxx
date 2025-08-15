@@ -1,4 +1,4 @@
-name: 🔒 Post-Deploy Security Verification
+name: Post-Deploy Security Verification
 
 on:
   workflow_call:
