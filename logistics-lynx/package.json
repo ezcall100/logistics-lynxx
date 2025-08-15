@@ -66,7 +66,17 @@
     "green:posture": "node scripts/green-posture-script.mjs",
     "golden:path": "node scripts/golden-path-flow.mjs",
     "press:go": "bash scripts/press-go.sh",
-    "press:go:win": "powershell -ExecutionPolicy Bypass -File scripts/press-go.ps1"
+    "press:go:win": "powershell -ExecutionPolicy Bypass -File scripts/press-go.ps1",
+    "emergency:stop": "node scripts/emergency-control.mjs stop",
+    "emergency:resume": "node scripts/emergency-control.mjs resume",
+    "emergency:degrade": "node scripts/emergency-control.mjs degrade",
+    "emergency:status": "node scripts/emergency-control.mjs status",
+    "verify:deployment": "node scripts/verify-deployment.mjs",
+    "smoke:test": "node scripts/prod-smoke-test.mjs",
+    "green:posture": "node scripts/green-posture-script.js",
+    "golden:path": "node scripts/golden-path.mjs",
+    "check:portals": "node scripts/check-portals.mjs",
+    "check:portals:config": "node scripts/portals-sanity.mjs"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",
