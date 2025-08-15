@@ -97,7 +97,7 @@ export const FrontendChangeAgent = () => {
     
     // Apply specific changes based on type
     switch (change.type) {
-      case 'ui_enhancement':
+      case 'ui_enhancement': {
         // Add CSS classes for visual enhancements
         const style = document.createElement('style');
         style.textContent = `
@@ -112,20 +112,23 @@ export const FrontendChangeAgent = () => {
         `;
         document.head.appendChild(style);
         break;
+      }
       
-      case 'style_update':
+      case 'style_update': {
         // Update theme
         const themes = ['default', 'modern', 'elegant'];
         const newTheme = themes[Math.floor(Math.random() * themes.length)];
         setCurrentTheme(newTheme);
         document.documentElement.setAttribute('data-theme', newTheme);
         break;
+      }
       
-      case 'feature_addition':
+      case 'feature_addition': {
         // Enable animations
         setAnimationsEnabled(true);
         document.body.style.setProperty('--animation-duration', '0.3s');
         break;
+      }
     }
   };
 

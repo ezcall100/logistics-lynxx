@@ -122,7 +122,7 @@ export const RealAutonomousAgent = () => {
         }, 2000);
         break;
       
-      case 'animation_add':
+      case 'animation_add': {
         // Add pulse animation to the main container
         const mainContainer = document.querySelector('main') || document.body;
         mainContainer.classList.add('pulse-animation');
@@ -130,6 +130,7 @@ export const RealAutonomousAgent = () => {
           mainContainer.classList.remove('pulse-animation');
         }, 3000);
         break;
+      }
     }
   };
 

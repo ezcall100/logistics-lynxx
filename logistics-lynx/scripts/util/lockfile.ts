@@ -21,21 +21,27 @@ export function acquire(): void {
     process.on("exit", () => { 
       try { 
         fs.unlinkSync(LOCK); 
-      } catch {} 
+      } catch (error) {
+        // Ignore errors during cleanup
+      } 
     });
     
     // Clean up on SIGINT/SIGTERM
     process.on("SIGINT", () => {
       try { 
         fs.unlinkSync(LOCK); 
-      } catch {} 
+      } catch (error) {
+        // Ignore errors during cleanup
+      } 
       process.exit(0);
     });
     
     process.on("SIGTERM", () => {
       try { 
         fs.unlinkSync(LOCK); 
-      } catch {} 
+      } catch (error) {
+        // Ignore errors during cleanup
+      } 
       process.exit(0);
     });
     
