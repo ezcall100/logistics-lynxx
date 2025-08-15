@@ -1,4 +1,5 @@
 import React from 'react';
+import { SimpleAgentTest } from '@/components/autonomous/SimpleAgentTest';
 
 const HomePage = () => {
   return (
@@ -37,6 +38,21 @@ const HomePage = () => {
           </div>
         </div>
       </header>
+
+      {/* Autonomous Agent Test Section */}
+      <section className="py-8 bg-white border-b">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200">
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                <h2 className="text-xl font-bold text-purple-800">🤖 SIMPLE AUTONOMOUS AGENT TEST</h2>
+              </div>
+              <SimpleAgentTest />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Hero Section - Created by Autonomous Agent */}
       <section className="py-20">
