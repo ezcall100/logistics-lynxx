@@ -3,16 +3,10 @@
 import http from "node:http";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.SUPABASE_URL || "";
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-
-function supa() {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
-  }
-  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false },
-  });
+function read(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`missing_env:${name}`);
+  return v;
 }
 
 async function dbPing(timeoutMs = 1500): Promise<{ ok: boolean; reason?: string }> {
@@ -20,17 +14,19 @@ async function dbPing(timeoutMs = 1500): Promise<{ ok: boolean; reason?: string 
   const t = setTimeout(() => ctl.abort(), timeoutMs);
 
   try {
-    const client = supa();
-    // Cheap, RLS-safe, fast: HEAD-style select on a tiny table you already have.
-    // feature_flags_v2 exists per your seeds; we only need connectivity, not data.
-    const { error } = await client
+    const url = read('SUPABASE_URL');
+    const key = read('SUPABASE_SERVICE_ROLE_KEY'); // server only
+    const sb = createClient(url, key, { auth: { persistSession: false } });
+    
+    // Tiny, fast query; change to any lightweight table if needed
+    const { error } = await sb
       .from("feature_flags_v2")
       .select("key", { head: true, count: "exact" })
       .limit(1)
       .abortSignal(ctl.signal);
 
     clearTimeout(t);
-    if (error) return { ok: false, reason: error.message };
+    if (error) return { ok: false, reason: `db_error:${error.message}` };
     return { ok: true };
   } catch (e: any) {
     clearTimeout(t);
@@ -75,10 +71,19 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      // Check for lenient mode (for development)
+      const lenient = process.env.READYZ_MODE === 'lenient';
+      if (lenient) {
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(JSON.stringify({ ready: true, mode: 'lenient' }));
+        return;
+      }
+
+      // Strict mode - require database connectivity
       const db = await dbPing(1500);
       if (!db.ok) {
         res.writeHead(503, { "content-type": "application/json" });
-        res.end(JSON.stringify({ ready: false, reason: `db: ${db.reason}` }));
+        res.end(JSON.stringify({ ready: false, reason: db.reason }));
         return;
       }
 
@@ -108,6 +113,7 @@ server.listen(PORT, () => {
   console.log(`🏥 Health server listening on port ${PORT}`);
   console.log(`   Health check: http://localhost:${PORT}/healthz`);
   console.log(`   Readiness check: http://localhost:${PORT}/readyz`);
+  console.log(`   Mode: ${process.env.READYZ_MODE || 'strict'}`);
 });
 
 // Graceful shutdown

@@ -46,7 +46,7 @@
     "autonomous:build": "node scripts/autonomous-build.mjs",
     "autonomous:continuous": "node scripts/autonomous-agent-continuous.mjs",
     "health:check": "node scripts/health-check.mjs",
-    "health:serve": "node --loader tsx -r tsconfig-paths/register -r dotenv/config scripts/health-check.mts",
+    "health:serve": "node -r dotenv/config --loader tsx -r tsconfig-paths/register scripts/health-check.mts dotenv_config_path=.env.local",
     "green:posture": "node scripts/green-posture-script.mjs",
     "emergency:stop": "node scripts/emergency-stop.mjs stop",
     "emergency:resume": "node scripts/emergency-stop.mjs resume",
