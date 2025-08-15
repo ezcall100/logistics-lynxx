@@ -6,6 +6,7 @@ import RoleSelector, { roles } from '@/components/login/RoleSelector';
 import LoginHero from '@/components/login/LoginHero';
 import { useLoginForm } from '@/hooks/login/useLoginForm';
 import { useAuth } from '@/context/AuthContext';
+import { LiveUpdateDisplay } from '@/components/autonomous/LiveUpdateDisplay';
 
 const Login = () => {
   const { user, isAuthenticated } = useAuth();
@@ -25,8 +26,23 @@ const Login = () => {
   const selectedRoleData = roles.find(role => role.value === selectedRole);
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background">
-      <div className="grid w-full max-w-[900px] grid-cols-1 overflow-hidden rounded-2xl shadow-lg md:grid-cols-5">
+    <div className="min-h-screen bg-background bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background">
+      {/* Live Autonomous Agent Updates - Prominently Displayed */}
+      <div className="w-full max-w-4xl mx-auto pt-8 px-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200">
+          <div className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <h2 className="text-xl font-bold text-green-800">🤖 Live Autonomous Agent Updates</h2>
+            </div>
+            <LiveUpdateDisplay />
+          </div>
+        </div>
+      </div>
+      
+      {/* Login Form */}
+      <div className="flex items-center justify-center py-8">
+        <div className="grid w-full max-w-[900px] grid-cols-1 overflow-hidden rounded-2xl shadow-lg md:grid-cols-5">
         {/* Left side - form */}
         <div className="col-span-3 p-8 md:p-12">
           <div className="mb-8 flex items-center">
@@ -85,6 +101,7 @@ const Login = () => {
         
         {/* Right side - hero */}
         <LoginHero />
+        </div>
       </div>
     </div>
   );
