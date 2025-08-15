@@ -30,6 +30,7 @@
     "start:autonomous": "node --loader ts-node/esm --project tsconfig.node.json src/start-autonomous-system.ts",
     "start:autonomous-website": "node scripts/start-autonomous-website-dev.mjs",
     "start:autonomous-full": "node scripts/start-autonomous-full-dev.mjs",
+    "portal:scan": "node scripts/portal-scan-and-queue.mjs",
     "deploy:autonomous": "supabase db push && supabase functions deploy agent-runner && npm run start:autonomous",
     "supabase:link": "supabase link --project-ref imcyiofodlnbomemvqto",
     "supabase:status": "supabase status",
