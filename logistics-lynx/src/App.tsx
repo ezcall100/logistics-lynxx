@@ -8,6 +8,7 @@ import BrokerPortal from './components/broker/BrokerPortal';
 import CarrierPortal from './components/carrier/CarrierPortal';
 import DriverPortal from './components/driver/DriverPortal';
 import ShipperPortal from './components/shipper/ShipperPortal';
+import OwnerOperatorPortal from './components/owner-operator/OwnerOperatorPortal';
 import AdminPortal from './components/admin/AdminPortal';
 import SuperAdminPortal from './components/super-admin/SuperAdminPortal';
 import AutonomousPortal from './components/autonomous/AutonomousPortal';
@@ -58,7 +59,11 @@ import BrokerPortalPage from './pages/BrokerPortalPage';
 import AdminPortalPage from './pages/AdminPortalPage';
 import SuperAdminPage from './pages/SuperAdminPage';
 import AutonomousDashboardPage from './pages/AutonomousDashboardPage';
+import PortalSelection from './pages/PortalSelection';
 import LiveMonitoringPage from './pages/LiveMonitoringPage';
+import { PORTALS, DEPRECATED_ROUTES } from './portals/registry';
+import { LazyPortal } from './components/LazyPortal';
+import { DeprecatedRoute } from './components/DeprecatedRoute';
 import SystemHealthPage from './pages/SystemHealthPage';
 import PerformancePage from './pages/PerformancePage';
 import ScalabilityPage from './pages/ScalabilityPage';
@@ -76,11 +81,8 @@ import ForumPage from './pages/ForumPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import StatusPage from './pages/StatusPage';
 
-// Protected Route Component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // For development, allow all access
-  return <>{children}</>;
-};
+// Import the enhanced ProtectedRoute
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -119,6 +121,13 @@ function App() {
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
               
+              {/* Portal Selection Route */}
+              <Route path="/portal-selection" element={
+                <ProtectedRoute>
+                  <PortalSelection />
+                </ProtectedRoute>
+              } />
+              
               {/* Protected Portal Routes */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
@@ -126,15 +135,30 @@ function App() {
                 </ProtectedRoute>
               } />
               
-              {/* Portal Routes - Direct Access */}
-              <Route path="/broker" element={<BrokerPortal />} />
-              <Route path="/carrier" element={<CarrierPortal />} />
-              <Route path="/driver" element={<DriverPortal />} />
-              <Route path="/shipper" element={<ShipperPortal />} />
-              <Route path="/admin" element={<AdminPortal />} />
-              <Route path="/super-admin" element={<SuperAdminPortal />} />
-              <Route path="/analytics" element={<AnalyticsPortal />} />
-              <Route path="/autonomous" element={<AutonomousPortal />} />
+              {/* Registry-based Portal Routes */}
+              {PORTALS.map(portal => (
+                <Route
+                  key={portal.key}
+                  path={portal.path}
+                  element={
+                    <ProtectedRoute 
+                      requiredFlag={portal.featureFlag} 
+                      allowedRoles={portal.roles}
+                    >
+                      <LazyPortal title={portal.title} portalKey={portal.key} />
+                    </ProtectedRoute>
+                  }
+                />
+              ))}
+
+              {/* Deprecated Routes - Return 410 */}
+              {Object.entries(DEPRECATED_ROUTES).map(([from, to]) => (
+                <Route
+                  key={from}
+                  path={from}
+                  element={<DeprecatedRoute from={from} to={to} />}
+                />
+              ))}
               
               {/* User Dashboard Pages */}
               <Route path="/profile" element={

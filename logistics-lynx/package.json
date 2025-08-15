@@ -36,7 +36,7 @@
     "supabase:db:push": "supabase db push",
     "supabase:functions:deploy": "supabase functions deploy agent-runner",
     "portal:fix": "node scripts/portal-fix.mjs",
-    "check:portals": "node scripts/check-portals.mjs",
+    "check:portals": "node scripts/check-portals-simple.mjs",
     "fix:all": "npm run portal:fix && npm run check:portals"
   },
   "dependencies": {

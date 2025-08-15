@@ -49,8 +49,8 @@ export const useLoginForm = () => {
           description: `Welcome to LogiPortal as ${roleData?.label}`,
         });
         
-        console.log('useLoginForm: Login successful, navigating to dashboard');
-        navigate('/dashboard', { replace: true });
+        console.log('useLoginForm: Login successful, navigating to portal selection');
+        navigate('/portal-selection', { replace: true });
       } else {
         console.error('useLoginForm: Login error:', result.error);
         setError(result.error || 'Invalid email or password');

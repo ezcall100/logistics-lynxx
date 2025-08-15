@@ -5,12 +5,16 @@ import { useAuth } from '@/context/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requiredFlag?: string;
+  allowedRoles?: string[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  console.log('ProtectedRoute: Auth check', { isAuthenticated, isLoading });
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  requiredFlag, 
+  allowedRoles = [] 
+}) => {
+  const { isAuthenticated, isLoading, selectedRole, user } = useAuth();
 
   // Show loading while checking auth
   if (isLoading) {
@@ -28,6 +32,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!isAuthenticated) {
     console.log('ProtectedRoute: User not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
+  }
+
+  // Check feature flag (for now, default to true - can be enhanced with feature flag service)
+  const featureEnabled = true; // TODO: Implement feature flag checking
+  if (requiredFlag && !featureEnabled) {
+    console.log(`ProtectedRoute: Feature flag ${requiredFlag} disabled, redirecting to portal selection`);
+    return <Navigate to="/portal-selection" replace />;
+  }
+
+  // Check role access
+  if (allowedRoles.length > 0 && selectedRole && !allowedRoles.includes(selectedRole)) {
+    console.log(`ProtectedRoute: Role ${selectedRole} not allowed, redirecting to portal selection`);
+    return <Navigate to="/portal-selection" replace />;
   }
 
   return <>{children}</>;
