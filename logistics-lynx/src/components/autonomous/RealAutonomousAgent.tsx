@@ -137,6 +137,38 @@ export const RealAutonomousAgent = () => {
   useEffect(() => {
     if (!isActive) return;
 
+    // Apply initial change immediately
+    const applyInitialChange = () => {
+      const now = new Date();
+      setLastChangeTime(now);
+      setChangeCounter(prev => prev + 1);
+
+      // Apply a dramatic change immediately
+      const dramaticChange: RealChange = {
+        id: `real-change-${Date.now()}`,
+        type: 'dom_manipulation',
+        title: '🚨 IMMEDIATE VISUAL CHANGE - Agent is Working!',
+        description: 'This proves the autonomous agent is making real changes to your website',
+        timestamp: now,
+        applied: true,
+        cssRules: [
+          'body { background: linear-gradient(45deg, #ff6b6b, #4ecdc4) !important; }',
+          'button { transform: scale(1.1) !important; box-shadow: 0 0 20px rgba(255, 107, 107, 0.5) !important; }',
+          '.card { border: 3px solid #ff6b6b !important; animation: pulse 1s infinite !important; }'
+        ]
+      };
+
+      // Apply the dramatic change
+      if (dramaticChange.cssRules) {
+        applyRealCSSChange(dramaticChange.cssRules);
+      }
+      applyDOMChanges(dramaticChange);
+      setRealChanges([dramaticChange]);
+    };
+
+    // Apply initial change after 2 seconds
+    const initialTimer = setTimeout(applyInitialChange, 2000);
+
     const interval = setInterval(() => {
       const now = new Date();
       setLastChangeTime(now);
@@ -165,7 +197,10 @@ export const RealAutonomousAgent = () => {
       setRealChanges(prev => [newChange, ...prev.slice(0, 9)]);
     }, 8000); // Apply changes every 8 seconds
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(interval);
+    };
   }, [isActive]);
 
   const formatTime = (date: Date) => {
@@ -199,7 +234,7 @@ export const RealAutonomousAgent = () => {
                 <Brain className="h-5 w-5 text-green-600" />
                 <span className="font-semibold text-green-800">🤖 REAL Autonomous Agent - Making ACTUAL Changes</span>
               </div>
-              <Badge variant="default" className="bg-green-600">
+              <Badge variant="default" className="bg-green-600 animate-pulse">
                 {isActive ? 'ACTIVE' : 'PAUSED'}
               </Badge>
             </div>
@@ -214,6 +249,19 @@ export const RealAutonomousAgent = () => {
           </div>
         </CardHeader>
       </Card>
+
+      {/* Immediate Status Alert */}
+      {isActive && (
+        <div className="bg-red-100 border-2 border-red-300 rounded-lg p-4 animate-pulse">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
+            <span className="font-bold text-red-800">🚨 WATCH YOUR WEBSITE - Changes Coming in 2 Seconds!</span>
+          </div>
+          <p className="text-sm text-red-700 mt-1">
+            The autonomous agent will apply dramatic visual changes to prove it's working!
+          </p>
+        </div>
+      )}
 
       {/* Control Panel */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
