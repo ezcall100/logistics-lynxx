@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { { Building2 } } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useFeatureFlag } from '@/hooks/useFeatureFlag';
 
@@ -90,47 +90,44 @@ export const BrokerPortal = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        // Dashboard cards for Broker
-<Card>
-  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-    <CardTitle className="text-sm font-medium">Total Items</CardTitle>
-    <Building2 className="h-4 w-4 text-muted-foreground" />
-  </CardHeader>
-  <CardContent>
-    <div className="text-2xl font-bold">10</div>
-    <p className="text-xs text-muted-foreground">
-      +5% from last month
-    </p>
-  </CardContent>
-</Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
+            <Building2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">10</div>
+            <p className="text-xs text-muted-foreground">
+              +5% from last month
+            </p>
+          </CardContent>
+        </Card>
 
-// Dashboard cards for Broker
-<Card>
-  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-    <CardTitle className="text-sm font-medium">Total Items</CardTitle>
-    <Building2 className="h-4 w-4 text-muted-foreground" />
-  </CardHeader>
-  <CardContent>
-    <div className="text-2xl font-bold">20</div>
-    <p className="text-xs text-muted-foreground">
-      +10% from last month
-    </p>
-  </CardContent>
-</Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
+            <Building2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">20</div>
+            <p className="text-xs text-muted-foreground">
+              +10% from last month
+            </p>
+          </CardContent>
+        </Card>
 
-// Dashboard cards for Broker
-<Card>
-  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-    <CardTitle className="text-sm font-medium">Total Items</CardTitle>
-    <Building2 className="h-4 w-4 text-muted-foreground" />
-  </CardHeader>
-  <CardContent>
-    <div className="text-2xl font-bold">30</div>
-    <p className="text-xs text-muted-foreground">
-      +15% from last month
-    </p>
-  </CardContent>
-</Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
+            <Building2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">30</div>
+            <p className="text-xs text-muted-foreground">
+              +15% from last month
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
@@ -139,23 +136,22 @@ export const BrokerPortal = () => {
           <CardDescription>Latest updates and activities</CardDescription>
         </CardHeader>
         <CardContent>
-          
-      <div className="space-y-4">
-        <div className="flex items-center space-x-4">
-          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-          <div className="flex-1">
-            <p className="text-sm">New item created</p>
-            <p className="text-xs text-muted-foreground">2 minutes ago</p>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm">New item created</p>
+                <p className="text-xs text-muted-foreground">2 minutes ago</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm">Item updated</p>
+                <p className="text-xs text-muted-foreground">5 minutes ago</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center space-x-4">
-          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-          <div className="flex-1">
-            <p className="text-sm">Item updated</p>
-            <p className="text-xs text-muted-foreground">5 minutes ago</p>
-          </div>
-        </div>
-      </div>
         </CardContent>
       </Card>
     </div>
