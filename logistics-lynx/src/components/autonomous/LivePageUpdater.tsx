@@ -82,7 +82,7 @@ const LivePageUpdater: React.FC = () => {
           }
 
           if (data.type === 'live_update_status') {
-            setActiveAgents(data.data.filter((agent: any) => agent.status === 'updating').length);
+            setActiveAgents(data.data.filter((agent: { status: string }) => agent.status === 'updating').length);
           }
 
           if (data.systemStatus) {

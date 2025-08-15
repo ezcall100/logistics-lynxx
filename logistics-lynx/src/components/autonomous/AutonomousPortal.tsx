@@ -168,11 +168,11 @@ const AutonomousPortal: React.FC = () => {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
+            <div>
           <h1 className="text-3xl font-bold text-gray-900">Autonomous Development Portal</h1>
           <p className="text-gray-600">AI-powered system development and monitoring dashboard</p>
-        </div>
-        <div className="flex items-center space-x-4">
+          </div>
+          <div className="flex items-center space-x-4">
           <Badge variant={systemStatus === 'autonomous' ? 'default' : 'secondary'}>
             <Brain className="w-4 h-4 mr-2" />
             {systemStatus === 'autonomous' ? 'Autonomous Mode' : 'Manual Mode'}
@@ -185,7 +185,7 @@ const AutonomousPortal: React.FC = () => {
             System Health: {systemMetrics.systemHealth}
           </span>
         </div>
-      </div>
+            </div>
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -212,13 +212,13 @@ const AutonomousPortal: React.FC = () => {
         <TabsContent value="overview" className="space-y-6">
           {/* System Overview */}
           <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
                 <Target className="w-6 h-6" />
                 System Overview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-600">{systemMetrics.overallCompletion}%</div>
@@ -227,18 +227,18 @@ const AutonomousPortal: React.FC = () => {
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600">{systemMetrics.activeAgents}</div>
                   <div className="text-sm text-gray-600">Active Agents</div>
-                </div>
+                      </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600">{systemMetrics.performance}%</div>
                   <div className="text-sm text-gray-600">Performance</div>
-                </div>
+                      </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-600">{systemMetrics.uptime}</div>
                   <div className="text-sm text-gray-600">Uptime</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -252,66 +252,66 @@ const AutonomousPortal: React.FC = () => {
                     </div>
                     <div className={`p-3 rounded-full ${stat.bgColor}`}>
                       <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
 
           {/* System Metrics */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
                   <Cpu className="w-5 h-5" />
                   System Performance
-                </CardTitle>
-              </CardHeader>
+                    </CardTitle>
+                  </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">CPU Usage</span>
                   <span className="text-sm font-medium">{systemMetrics.cpuUsage}%</span>
-                </div>
+                                </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-blue-600 h-2 rounded-full" 
                     style={{ width: `${systemMetrics.cpuUsage}%` }}
                   ></div>
-                </div>
+                                </div>
                 
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Memory Usage</span>
                   <span className="text-sm font-medium">{systemMetrics.memoryUsage}GB</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
                     className="bg-green-600 h-2 rounded-full" 
                     style={{ width: `${(systemMetrics.memoryUsage / 8) * 100}%` }}
-                  ></div>
-                </div>
+                                ></div>
+                              </div>
                 
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Network Latency</span>
                   <span className="text-sm font-medium">{systemMetrics.networkLatency}ms</span>
-                </div>
+                            </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-purple-600 h-2 rounded-full" 
                     style={{ width: `${(systemMetrics.networkLatency / 50) * 100}%` }}
                   ></div>
-                </div>
-              </CardContent>
-            </Card>
+                    </div>
+                  </CardContent>
+                </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
                   <Activity className="w-5 h-5" />
                   Recent Activities
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                 <div className="space-y-4">
                   {recentActivities.map((activity) => (
                     <div key={activity.id} className="flex items-start space-x-3">
@@ -325,23 +325,23 @@ const AutonomousPortal: React.FC = () => {
                           </Badge>
                           <Badge className={getPriorityColor(activity.priority)}>
                             {activity.priority}
-                          </Badge>
+                              </Badge>
                           <span className="text-xs text-gray-500">{activity.time}</span>
-                        </div>
-                      </div>
+                              </div>
+                            </div>
                     </div>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
           {/* System Controls */}
           <Card>
-            <CardHeader>
+                  <CardHeader>
               <CardTitle>System Controls</CardTitle>
-            </CardHeader>
-            <CardContent>
+                  </CardHeader>
+                  <CardContent>
               <div className="flex items-center gap-4">
                 <Button 
                   variant={systemStatus === 'autonomous' ? 'default' : 'outline'}
@@ -365,9 +365,9 @@ const AutonomousPortal: React.FC = () => {
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh Status
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
+                            </div>
+                          </CardContent>
+                        </Card>
         </TabsContent>
 
         {/* Completion Status Tab */}
@@ -383,20 +383,20 @@ const AutonomousPortal: React.FC = () => {
         {/* Analytics Tab */}
         <TabsContent value="analytics" className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
                 Performance Analytics
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
               <div className="text-center py-12">
                 <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Dashboard</h3>
                 <p className="text-gray-600">Detailed performance analytics and metrics coming soon...</p>
-              </div>
-            </CardContent>
-          </Card>
+                    </div>
+                  </CardContent>
+                </Card>
         </TabsContent>
       </Tabs>
     </div>

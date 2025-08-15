@@ -25,7 +25,7 @@ try {
   const health = execSync(`curl -fsS "http://${PROD_HOST}/healthz"`, { encoding: 'utf8' });
   evidence.checks.health = JSON.parse(health);
   console.log('✅ Health check passed');
-} catch (error) {
+      } catch (error) {
   evidence.checks.health = { error: error.message };
   console.log('❌ Health check failed');
 }
@@ -36,7 +36,7 @@ try {
   const ready = execSync(`curl -fsS "http://${PROD_HOST}/readyz"`, { encoding: 'utf8' });
   evidence.checks.readiness = JSON.parse(ready);
   console.log('✅ Readiness check passed');
-} catch (error) {
+      } catch (error) {
   evidence.checks.readiness = { error: error.message };
   console.log('❌ Readiness check failed');
 }
@@ -47,7 +47,7 @@ try {
   const portalCount = execSync(`node scripts/check-portals.mjs`, { encoding: 'utf8' });
   evidence.checks.portal_count = portalCount.trim();
   console.log('✅ Portal count:', portalCount.trim());
-} catch (error) {
+      } catch (error) {
   evidence.checks.portal_count = { error: error.message };
   console.log('❌ Portal count failed');
 }
@@ -61,7 +61,7 @@ for (const portal of portals) {
     const response = execSync(`curl -fsS -o /dev/null -w "%{http_code}" "http://${PROD_HOST}${portal}"`, { encoding: 'utf8' });
     evidence.checks.portal_accessibility[portal] = response.trim();
     console.log(`✅ ${portal}: ${response.trim()}`);
-  } catch (error) {
+      } catch (error) {
     evidence.checks.portal_accessibility[portal] = { error: error.message };
     console.log(`❌ ${portal}: Failed`);
   }
@@ -99,5 +99,5 @@ if (summary.successful_checks === summary.total_checks) {
   console.log('\n✅ All checks passed - Green posture confirmed!');
 } else {
   console.log('\n⚠️ Some checks failed - Review evidence file');
-  process.exit(1);
+    process.exit(1);
 }

@@ -15,7 +15,7 @@ export interface PerformanceChartProps {
 
 interface TooltipProps {
   active?: boolean;
-  payload?: Array<{ value: number; [key: string]: any }>;
+  payload?: Array<{ value: number; [key: string]: unknown }>;
   label?: string;
 }
 

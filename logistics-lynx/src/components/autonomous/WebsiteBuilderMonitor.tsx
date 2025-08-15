@@ -82,7 +82,7 @@ const WebsiteBuilderMonitor: React.FC = () => {
           }
 
           if (data.type === 'agent_status') {
-            setActiveAgents(data.data.filter((agent: any) => agent.status === 'building').length);
+            setActiveAgents(data.data.filter((agent: { status: string }) => agent.status === 'building').length);
           }
 
           if (data.systemStatus) {

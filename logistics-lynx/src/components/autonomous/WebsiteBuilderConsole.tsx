@@ -30,7 +30,7 @@ interface LogEvent {
   timestamp: string;
   level: 'info' | 'warn' | 'error';
   message: string;
-  meta?: any;
+  meta?: unknown;
 }
 
 export default function WebsiteBuilderConsole() {
@@ -115,7 +115,7 @@ export default function WebsiteBuilderConsole() {
     setIsLoading(false);
   };
 
-  const addLog = (level: 'info' | 'warn' | 'error', message: string, meta?: any) => {
+  const addLog = (level: 'info' | 'warn' | 'error', message: string, meta?: unknown) => {
     const newLog: LogEvent = {
       id: Date.now().toString(),
       timestamp: new Date().toISOString(),

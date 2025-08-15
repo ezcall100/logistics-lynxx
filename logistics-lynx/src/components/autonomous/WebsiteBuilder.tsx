@@ -131,7 +131,7 @@ export default function WebsiteBuilder() {
             seoScore: Math.floor(Math.random() * 30) + 70,
             imageCount: Math.floor(Math.random() * 5) + 1,
             wordCount: Math.floor(Math.random() * 200) + 100,
-            type: event.pageType as any
+            type: event.pageType as string
           };
           setPageBuilds(prev => [newPage, ...prev.slice(0, 19)]); // Keep last 20 pages
         }

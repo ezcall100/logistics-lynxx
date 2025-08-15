@@ -24,7 +24,7 @@ interface SystemMetric {
   unit: string;
   trend: 'up' | 'down' | 'stable';
   status: 'good' | 'warning' | 'critical';
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 interface PortalMetric {
