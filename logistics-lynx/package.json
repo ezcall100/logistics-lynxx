@@ -28,6 +28,7 @@
     "sync:setup:windows": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1",
     "sync:remove": "powershell -ExecutionPolicy Bypass -File scripts/setup-auto-sync.ps1 -Remove",
     "start:autonomous": "node --loader ts-node/esm --project tsconfig.node.json src/start-autonomous-system.ts",
+    "start:autonomous-website": "node scripts/start-autonomous-website-dev.mjs",
     "deploy:autonomous": "supabase db push && supabase functions deploy agent-runner && npm run start:autonomous",
     "supabase:link": "supabase link --project-ref imcyiofodlnbomemvqto",
     "supabase:status": "supabase status",

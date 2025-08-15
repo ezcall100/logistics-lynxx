@@ -4,6 +4,7 @@ import { WorkflowOrchestrator } from './WorkflowOrchestrator';
 import { DatabaseManager } from './DatabaseManager';
 import { NotificationManager } from './NotificationManager';
 import { LogManager } from './LogManager';
+import { WebsiteDevelopmentAgent } from '../src/agents/WebsiteDevelopmentAgent';
 
 /**
  * 🚀 Autonomous TMS Controller
@@ -16,6 +17,7 @@ export class AutonomousTMSController {
   private databaseManager: DatabaseManager;
   private notificationManager: NotificationManager;
   private logManager: LogManager;
+  private websiteDevelopmentAgent: WebsiteDevelopmentAgent;
   private isRunning: boolean = false;
   private restartCount: number = 0;
   private maxRestarts: number = 5;
@@ -27,6 +29,7 @@ export class AutonomousTMSController {
     this.workflowOrchestrator = new WorkflowOrchestrator();
     this.databaseManager = new DatabaseManager();
     this.notificationManager = new NotificationManager();
+    this.websiteDevelopmentAgent = new WebsiteDevelopmentAgent();
   }
 
   /**
@@ -43,12 +46,16 @@ export class AutonomousTMSController {
       await this.workflowOrchestrator.initialize();
       await this.notificationManager.initialize();
 
+      // Initialize website development agent with full production access
+      this.logManager.log('🌐 Initializing Website Development Agent with full production access...', 'info');
+      this.websiteDevelopmentAgent.setProductionAccess(true);
+
       this.logManager.log('✅ Autonomous TMS System initialized successfully', 'success');
       
       // Send startup notification
       await this.notificationManager.sendNotification({
         type: 'system_startup',
-        message: 'Autonomous TMS System is now online and monitoring',
+        message: 'Autonomous TMS System is now online and monitoring with full website development capabilities',
         priority: 'info'
       });
 
@@ -75,11 +82,15 @@ export class AutonomousTMSController {
       await this.healthMonitor.start();
       await this.agentManager.start();
       await this.workflowOrchestrator.start();
+      
+      // Start website development agent with full production access
+      this.logManager.log('🌐 Starting Website Development Agent with full production access...', 'info');
+      await this.websiteDevelopmentAgent.start();
 
       // Start monitoring loop
       this.startMonitoringLoop();
 
-      this.logManager.log('✅ Autonomous TMS System started successfully', 'success');
+      this.logManager.log('✅ Autonomous TMS System started successfully with full website development capabilities', 'success');
 
     } catch (error) {
       this.isRunning = false;
@@ -105,6 +116,10 @@ export class AutonomousTMSController {
       await this.healthMonitor.stop();
       await this.agentManager.stop();
       await this.workflowOrchestrator.stop();
+      
+      // Stop website development agent
+      this.logManager.log('🌐 Stopping Website Development Agent...', 'info');
+      await this.websiteDevelopmentAgent.stop();
 
       this.logManager.log('✅ Autonomous TMS System stopped successfully', 'success');
 

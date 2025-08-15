@@ -131,6 +131,40 @@ export class AutonomousAgentManager {
           responseTime: 5000, // 5 seconds
           priority: 'high'
         }
+      },
+      {
+        id: 'website-developer',
+        name: 'Website Development Agent',
+        type: 'website_development',
+        config: {
+          interval: 45000, // 45 seconds
+          maxPagesPerCycle: 10,
+          priority: 'high',
+          permissions: ['create_pages', 'modify_pages', 'deploy_pages', 'optimize_ui', 'manage_content'],
+          productionAccess: true
+        }
+      },
+      {
+        id: 'ui-optimizer',
+        name: 'UI/UX Optimization Agent',
+        type: 'ui_optimization',
+        config: {
+          interval: 90000, // 1.5 minutes
+          optimizationTargets: ['performance', 'accessibility', 'user_experience'],
+          priority: 'medium',
+          permissions: ['modify_components', 'optimize_layouts', 'improve_interactions']
+        }
+      },
+      {
+        id: 'content-manager',
+        name: 'Content Management Agent',
+        type: 'content_management',
+        config: {
+          interval: 120000, // 2 minutes
+          contentTypes: ['pages', 'components', 'assets', 'documentation'],
+          priority: 'medium',
+          permissions: ['create_content', 'update_content', 'organize_content', 'publish_content']
+        }
       }
     ];
 
