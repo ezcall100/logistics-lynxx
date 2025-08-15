@@ -13,8 +13,10 @@ on:
         - staging
 
 env:
-  READYZ_MODE: ${{ vars.READYZ_MODE || 'strict' }}
+  READYZ_MODE: strict
   NODE_VERSION: '18'
+  OTEL_SERVICE_NAME: transbotai
+  PROD_HOST: app.yourdomain.com
 
 jobs:
   deploy:
@@ -52,20 +54,20 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
-          OTEL_SERVICE_NAME: ${{ vars.OTEL_SERVICE_NAME || 'transbot-ai-prod' }}
-          HOST: ${{ vars.PROD_HOST }}
+          OTEL_SERVICE_NAME: ${{ env.OTEL_SERVICE_NAME }}
+          HOST: ${{ env.PROD_HOST }}
 
       # Post-deploy smoke tests (strict readiness must be 200)
       - name: Smoke test - Health endpoint
         run: |
           echo "Testing health endpoint..."
-          curl -fsS http://${{ vars.PROD_HOST }}:8089/healthz && echo " ✅ Health endpoint OK"
+          curl -fsS http://${{ env.PROD_HOST }}:8089/healthz && echo " ✅ Health endpoint OK"
         continue-on-error: false
 
       - name: Smoke test - Readiness endpoint
         run: |
           echo "Testing readiness endpoint..."
-          RESPONSE=$(curl -fsS http://${{ vars.PROD_HOST }}:8089/readyz)
+          RESPONSE=$(curl -fsS http://${{ env.PROD_HOST }}:8089/readyz)
           echo "Response: $RESPONSE"
           echo "$RESPONSE" | grep -q '"ready":true' || (echo "❌ Readiness endpoint not green" && exit 1)
           echo " ✅ Readiness endpoint OK"
@@ -74,7 +76,7 @@ jobs:
       - name: Smoke test - Web interface
         run: |
           echo "Testing web interface..."
-          curl -fsS http://${{ vars.PROD_HOST }}:8084 && echo " ✅ Web interface OK"
+          curl -fsS http://${{ env.PROD_HOST }}:8084 && echo " ✅ Web interface OK"
         continue-on-error: false
 
       - name: Deploy success notification
