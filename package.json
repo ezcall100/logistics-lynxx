@@ -10,7 +10,13 @@
     "build:dev:check": "cd logistics-lynx && npm run build:dev:check",
     "preview": "cd logistics-lynx && npm run preview",
     "lint": "cd logistics-lynx && npm run lint",
-    "test": "cd logistics-lynx && npm run test"
+    "test": "cd logistics-lynx && npm run test",
+    "start:autonomous": "cd logistics-lynx && npm run start:autonomous",
+    "start:autonomous-website": "cd logistics-lynx && npm run start:autonomous-website",
+    "start:autonomous-full": "cd logistics-lynx && npm run start:autonomous-full",
+    "portal:scan": "cd logistics-lynx && npm run portal:scan",
+    "autonomous:build": "cd logistics-lynx && npm run autonomous:build",
+    "autonomous:continuous": "cd logistics-lynx && npm run autonomous:continuous"
   },
   "description": "Parent package for Trans Bot AI project",
   "engines": {
