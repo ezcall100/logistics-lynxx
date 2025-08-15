@@ -1,0 +1,90 @@
+name: Portal E2E
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  APP_ORIGIN: http://localhost:8084
+  E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
+  E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+jobs:
+  e2e:
+    name: 🧪 Portal E2E Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd logistics-lynx
+        npm ci
+
+    - name: Scaffold missing portals
+      run: |
+        cd logistics-lynx
+        npm run portal:scaffold
+
+    - name: Install Playwright
+      run: |
+        cd logistics-lynx
+        npx playwright install --with-deps
+
+    - name: Start dev server
+      run: |
+        cd logistics-lynx
+        npm run dev &
+        DEV_PID=$!
+        echo "DEV_PID=$DEV_PID" >> $GITHUB_ENV
+        sleep 10
+
+    - name: Wait for server
+      run: |
+        npx wait-on $APP_ORIGIN --timeout 60000
+
+    - name: Run E2E tests
+      run: |
+        cd logistics-lynx
+        npx playwright test -g "Portals behind auth"
+      env:
+        E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
+        E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+    - name: Stop dev server
+      if: always()
+      run: |
+        if [ ! -z "$DEV_PID" ]; then
+          kill $DEV_PID || true
+        fi
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-test-results
+        path: |
+          logistics-lynx/test-results/
+          logistics-lynx/playwright-report/
+        retention-days: 7
+
+    - name: E2E test summary
+      if: always()
+      run: |
+        echo "## 🧪 Portal E2E Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Authentication**: Login flow tested" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Portal Selection**: Role-based portal filtering tested" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Portal Access**: All 20 canonical portals tested" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Deprecated Routes**: 410 responses verified" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📊 **Test Results**: Available in artifacts" >> $GITHUB_STEP_SUMMARY

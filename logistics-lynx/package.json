@@ -42,6 +42,10 @@
     "autonomous:build": "node scripts/autonomous-build.mjs",
     "autonomous:continuous": "node scripts/autonomous-agent-continuous.mjs",
     "health:check": "node scripts/health-check.mjs",
+    "green:posture": "node scripts/green-posture-script.mjs",
+    "emergency:stop": "node scripts/emergency-stop.mjs stop",
+    "emergency:resume": "node scripts/emergency-stop.mjs resume",
+    "emergency:status": "node scripts/emergency-stop.mjs status",
     "fix:all": "npm run portal:fix && npm run check:portals"
   },
   "dependencies": {
