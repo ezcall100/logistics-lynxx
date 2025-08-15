@@ -55,6 +55,8 @@
     "emergency:status": "node scripts/emergency-stop.mjs status",
     "emergency:degrade": "node scripts/emergency-control.mjs degrade",
     "smoke:test": "node scripts/prod-smoke-test.mjs",
+    "preflight:check": "node scripts/preflight-check.mjs",
+    "setup:production": "node scripts/setup-production-env.mjs",
     "deploy:prod": "echo 'Trigger GitHub Actions workflow: Deploy to Production'",
     "fix:all": "npm run portal:fix && npm run check:portals"
   },
