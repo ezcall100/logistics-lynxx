@@ -182,7 +182,7 @@ const LoadBoardPage = () => {
     return matchesSearch && matchesEquipment && matchesFavorites;
   });
 
-  const handleBid = (load: any) => {
+  const handleBid = (load: Load) => {
     setSelectedLoad(load);
     setBidAmount(load.rate?.toString() || '0');
     setBidComments('');
@@ -204,11 +204,11 @@ const LoadBoardPage = () => {
     toast.success('Load added to favorites');
   };
 
-  const contactBroker = (load: any) => {
+  const contactBroker = (load: Load) => {
     toast.success(`Contacting ${load.broker || 'broker'} about load ${load.id || 'unknown'}`);
   };
 
-  const viewLoadDetails = (load: any) => {
+  const viewLoadDetails = (load: Load) => {
     toast.info(`Viewing details for load ${load.id || 'unknown'}`);
   };
 

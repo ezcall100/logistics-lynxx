@@ -29,14 +29,32 @@ interface BuildRequest {
   seed?: string;
 }
 
+interface BuildEvent {
+  type: string;
+  timestamp: string;
+  message?: string;
+  pageType?: string;
+  priority?: number;
+  seed?: string;
+  pagesBuilt?: number;
+  pagesInProgress?: number;
+}
+
+interface BuildQueueItem {
+  type: string;
+  priority: number;
+  seed: string;
+  timestamp: Date;
+}
+
 class MockWebsiteBuilderService {
   private isPaused: boolean = false;
   private pagesBuilt: number = 5; // Start with demo pages
   private pagesInProgress: number = 0;
   private startTime: Date = new Date();
-  private buildQueue: any[] = [];
+  private buildQueue: BuildQueueItem[] = [];
   private isRunning: boolean = true;
-  private eventListeners: ((event: any) => void)[] = [];
+  private eventListeners: ((event: BuildEvent) => void)[] = [];
   private buildInterval: NodeJS.Timeout | null = null;
   private progressInterval: NodeJS.Timeout | null = null;
 
@@ -125,7 +143,7 @@ class MockWebsiteBuilderService {
     }
   }
 
-  private emitEvent(event: any) {
+  private emitEvent(event: BuildEvent) {
     this.eventListeners.forEach(listener => listener(event));
   }
 
@@ -225,7 +243,7 @@ class MockWebsiteBuilderService {
     };
   }
 
-  onEvent(listener: (event: any) => void) {
+  onEvent(listener: (event: BuildEvent) => void) {
     this.eventListeners.push(listener);
     
     // Send immediate status update to new listeners

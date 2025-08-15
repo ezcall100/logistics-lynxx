@@ -1,5 +1,15 @@
 import { LogManager } from './LogManager';
 
+interface AgentConfig {
+  interval?: number;
+  maxMatches?: number;
+  priority?: 'high' | 'medium' | 'low';
+  optimizationThreshold?: number;
+  maxRoutes?: number;
+  routeOptimization?: boolean;
+  [key: string]: unknown;
+}
+
 interface Agent {
   id: string;
   name: string;
@@ -7,7 +17,7 @@ interface Agent {
   isRunning: boolean;
   lastActivity: Date;
   status: 'running' | 'stopped' | 'error' | 'starting';
-  config: any;
+  config: AgentConfig;
 }
 
 interface AgentStatus {
@@ -330,7 +340,7 @@ export class AutonomousAgentManager {
   /**
    * Update agent configuration
    */
-  async updateAgentConfig(agentId: string, config: any): Promise<void> {
+  async updateAgentConfig(agentId: string, config: Partial<AgentConfig>): Promise<void> {
     const agent = this.agents.get(agentId);
     if (!agent) {
       this.logManager.log(`❌ Agent not found: ${agentId}`, 'error');

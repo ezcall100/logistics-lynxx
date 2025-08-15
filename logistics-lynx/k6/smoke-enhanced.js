@@ -92,7 +92,7 @@ export default function () {
   
   // Test 3: Outbox lag verification (every 10th request)
   if (__ENV.TEST_OUTBOX === 'true' && Math.random() < 0.1) {
-    const outboxLag = await checkOutboxLag();
+    const outboxLag = checkOutboxLag();
     if (outboxLag !== null) {
       outboxLagTime.add(outboxLag);
     }
@@ -100,7 +100,7 @@ export default function () {
   
   // Test 4: DLQ health check (every 20th request)
   if (__ENV.TEST_DLQ === 'true' && Math.random() < 0.05) {
-    const dlqHealth = await checkDLQHealth();
+    const dlqHealth = checkDLQHealth();
     if (dlqHealth !== null) {
       dlqCount.add(dlqHealth.count);
     }
@@ -108,7 +108,7 @@ export default function () {
   
   // Test 5: Agent success rate check (every 15th request)
   if (__ENV.TEST_AGENTS === 'true' && Math.random() < 0.07) {
-    const agentHealth = await checkAgentSuccessRate();
+    const agentHealth = checkAgentSuccessRate();
     if (agentHealth !== null) {
       agentSuccessRate.add(agentHealth.success_rate);
     }

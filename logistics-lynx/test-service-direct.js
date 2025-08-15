@@ -64,10 +64,12 @@ async function testService() {
 
     // Test 5: Build another page to trigger events
     console.log('\n🔄 Building another page to trigger events...');
-    await websiteBuilderService.buildPage({
+    websiteBuilderService.buildPage({
       type: 'about',
       priority: 3,
       seed: 'test-direct-002'
+    }).catch(error => {
+      console.error('❌ Failed to build test page:', error);
     });
 
   } catch (error) {

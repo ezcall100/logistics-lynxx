@@ -246,9 +246,9 @@ export class AutonomousTMSController {
    */
   async getStatus(): Promise<{
     isRunning: boolean;
-    health: any;
-    agents: any;
-    workflows: any;
+    health: unknown;
+    agents: unknown;
+    workflows: unknown;
     uptime: number;
     restartCount: number;
   }> {
