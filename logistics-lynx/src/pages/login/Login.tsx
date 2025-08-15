@@ -6,7 +6,7 @@ import RoleSelector, { roles } from '@/components/login/RoleSelector';
 import LoginHero from '@/components/login/LoginHero';
 import { useLoginForm } from '@/hooks/login/useLoginForm';
 import { useAuth } from '@/context/AuthContext';
-import { AllAgentsActive } from '@/components/autonomous/AllAgentsActive';
+import { ContinuousAgentSystem } from '@/components/autonomous/ContinuousAgentSystem';
 
 const Login = () => {
   const { user, isAuthenticated } = useAuth();
@@ -33,9 +33,9 @@ const Login = () => {
           <div className="p-6">
                          <div className="flex items-center gap-2 mb-4">
                <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
-               <h2 className="text-xl font-bold text-purple-800">🤖 ALL AUTONOMOUS AGENTS CONTROL CENTER</h2>
+               <h2 className="text-xl font-bold text-purple-800">🤖 CONTINUOUS AUTONOMOUS AGENT SYSTEM</h2>
              </div>
-             <AllAgentsActive />
+             <ContinuousAgentSystem />
           </div>
         </div>
       </div>
