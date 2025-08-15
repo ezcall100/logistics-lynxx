@@ -1,5 +1,6 @@
 import React from 'react';
 import { SimpleAgentTest } from '@/components/autonomous/SimpleAgentTest';
+import { AutonomousAgentStatusDashboard } from '@/components/autonomous/AutonomousAgentStatusDashboard';
 
 const HomePage = () => {
   return (
@@ -39,7 +40,14 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* Autonomous Agent Test Section */}
+      {/* Autonomous Agent Status Dashboard */}
+      <section className="py-8 bg-gray-50 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AutonomousAgentStatusDashboard />
+        </div>
+      </section>
+
+      {/* Simple Agent Test Section */}
       <section className="py-8 bg-white border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200">
