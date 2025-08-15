@@ -124,7 +124,7 @@ const VehicleStatusPage = () => {
     }
   };
 
-  const getAlertVariant = (type: string) => {
+  const getAlertVariant = (type: string): "default" | "destructive" | "outline" | "secondary" => {
     switch (type) {
       case "critical": return "destructive";
       case "warning": return "secondary";
@@ -132,13 +132,13 @@ const VehicleStatusPage = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants = {
+  const getStatusBadge = (status: string): "default" | "destructive" | "outline" | "secondary" => {
+    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = {
       passed: "default",
       failed: "destructive",
       pending: "secondary"
     };
-    return variants[status as keyof typeof variants] || "default";
+    return variants[status] || "default";
   };
 
   const handleReportIssue = () => {
@@ -462,7 +462,7 @@ const VehicleStatusPage = () => {
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center gap-2">
                         <h4 className="font-medium">{alert.title}</h4>
-                        <Badge variant={getAlertVariant(alert.type) as unknown}>
+                        <Badge variant={getAlertVariant(alert.type)}>
                           {alert.type}
                         </Badge>
                       </div>
@@ -507,7 +507,7 @@ const VehicleStatusPage = () => {
                       <TableCell>{inspection.inspector}</TableCell>
                       <TableCell>{inspection.type}</TableCell>
                       <TableCell>
-                        <Badge variant={getStatusBadge(inspection.status) as unknown}>
+                        <Badge variant={getStatusBadge(inspection.status)}>
                           {inspection.status}
                         </Badge>
                       </TableCell>

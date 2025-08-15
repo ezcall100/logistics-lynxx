@@ -19,10 +19,44 @@ import {
   MessageCircle
 } from 'lucide-react';
 
+interface ShipmentCargo {
+  description: string;
+  weight: string;
+  pieces: number;
+  value: string;
+  temperature: string;
+}
+
+interface ShipmentLocation {
+  company: string;
+  address: string;
+  contact: string;
+  phone: string;
+  scheduledTime: string;
+  actualTime: string | null;
+}
+
+interface Shipment {
+  id: string;
+  status: string;
+  pickup: ShipmentLocation;
+  delivery: ShipmentLocation;
+  cargo: ShipmentCargo;
+  progress: number;
+  currentLocation?: string;
+  lastUpdate: string;
+  documents?: string[];
+  deliveryTime?: string;
+}
+
 const ShipmentTracking = () => {
   const [activeTab, setActiveTab] = useState('active');
 
-  const shipments = {
+  const shipments: {
+    active: Shipment[];
+    completed: Shipment[];
+    upcoming: Shipment[];
+  } = {
     active: [
       {
         id: 'LD001',
@@ -149,7 +183,7 @@ const ShipmentTracking = () => {
     });
   };
 
-  const renderShipmentCard = (shipment: unknown) => (
+  const renderShipmentCard = (shipment: Shipment) => (
     <Card key={shipment.id} className="mb-4">
       <CardHeader>
         <div className="flex justify-between items-center">
