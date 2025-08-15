@@ -22,6 +22,13 @@ declare global {
       NODE_ENV: 'development' | 'production' | 'test'
     }
   }
+  
+  // Ensure JSX namespace is properly declared
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
 }
 
 export {}

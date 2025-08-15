@@ -24,6 +24,9 @@ export default defineConfig({
     jsx: 'automatic',
     jsxImportSource: 'react'
   },
+  define: {
+    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+  },
   build: {
     chunkSizeWarningLimit: 1000, // Increase warning limit to 1MB
     rollupOptions: {
@@ -36,5 +39,8 @@ export default defineConfig({
         }
       }
     }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom']
   }
 })
