@@ -23,8 +23,6 @@ export default defineConfig(({ mode }) => ({
     jsx: 'automatic',
     target: 'es2020',
     jsxDev: mode === 'development',
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
   },
   build: {
     target: 'es2020',
