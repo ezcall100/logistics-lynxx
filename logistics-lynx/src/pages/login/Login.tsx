@@ -6,7 +6,7 @@ import RoleSelector, { roles } from '@/components/login/RoleSelector';
 import LoginHero from '@/components/login/LoginHero';
 import { useLoginForm } from '@/hooks/login/useLoginForm';
 import { useAuth } from '@/context/AuthContext';
-import { SimpleTestAgent } from '@/components/autonomous/SimpleTestAgent';
+import { AgentTest } from '@/components/autonomous/AgentTest';
 
 const Login = () => {
   const { user, isAuthenticated } = useAuth();
