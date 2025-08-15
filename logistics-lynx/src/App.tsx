@@ -1,7 +1,24 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './components/theme-provider';
 
-// Import all the autonomous agent-created pages
+// Import portal components
+import BrokerPortal from './components/broker/BrokerPortal';
+import CarrierPortal from './components/carrier/CarrierPortal';
+import DriverPortal from './components/driver/DriverPortal';
+import ShipperPortal from './components/shipper/ShipperPortal';
+import AdminPortal from './components/admin/AdminPortal';
+import SuperAdminPortal from './components/super-admin/SuperAdminPortal';
+import AutonomousPortal from './components/autonomous/AutonomousPortal';
+import AnalyticsPortal from './components/analytics/AnalyticsPortal';
+
+// Import authentication pages
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+
+// Import main pages
 import HomePage from './pages/HomePage';
 import Dashboard from './pages/Dashboard';
 import AboutPage from './pages/AboutPage';
@@ -26,9 +43,6 @@ import SecurityPage from './pages/SecurityPage';
 import CompliancePage from './pages/CompliancePage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
@@ -62,96 +76,218 @@ import ForumPage from './pages/ForumPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import StatusPage from './pages/StatusPage';
 
+// Protected Route Component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  // For development, allow all access
+  return <>{children}</>;
+};
+
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-background">
-        <Routes>
-          {/* Main Pages */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          
-          {/* Content Pages */}
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/careers" element={<CareersPage />} />
-          <Route path="/news" element={<NewsPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
-          <Route path="/downloads" element={<DownloadsPage />} />
-          <Route path="/case-studies" element={<CaseStudiesPage />} />
-          <Route path="/testimonials" element={<TestimonialsPage />} />
-          
-          {/* Technical Pages */}
-          <Route path="/support" element={<SupportPage />} />
-          <Route path="/documentation" element={<DocumentationPage />} />
-          <Route path="/api-reference" element={<APIReferencePage />} />
-          <Route path="/integrations" element={<IntegrationsPage />} />
-          <Route path="/partners" element={<PartnersPage />} />
-          
-          {/* Legal Pages */}
-          <Route path="/security" element={<SecurityPage />} />
-          <Route path="/compliance" element={<CompliancePage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          
-          {/* Authentication Pages */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          
-          {/* User Dashboard Pages */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/billing" element={<BillingPage />} />
-          
-          {/* Business Intelligence Pages */}
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/performance" element={<PerformancePage />} />
-          
-          {/* TMS Core Features */}
-          <Route path="/fleet-management" element={<FleetManagementPage />} />
-          <Route path="/route-optimization" element={<RouteOptimizationPage />} />
-          <Route path="/load-management" element={<LoadManagementPage />} />
-          <Route path="/driver-management" element={<DriverManagementPage />} />
-          
-          {/* Portal Pages */}
-          <Route path="/shipper-portal" element={<ShipperPortalPage />} />
-          <Route path="/carrier-portal" element={<CarrierPortalPage />} />
-          <Route path="/broker-portal" element={<BrokerPortalPage />} />
-          <Route path="/admin-portal" element={<AdminPortalPage />} />
-          <Route path="/super-admin" element={<SuperAdminPage />} />
-          <Route path="/autonomous-dashboard" element={<AutonomousDashboardPage />} />
-          
-          {/* System Pages */}
-          <Route path="/live-monitoring" element={<LiveMonitoringPage />} />
-          <Route path="/system-health" element={<SystemHealthPage />} />
-          <Route path="/status" element={<StatusPage />} />
-          
-          {/* Development Pages */}
-          <Route path="/scalability" element={<ScalabilityPage />} />
-          <Route path="/innovation" element={<InnovationPage />} />
-          <Route path="/research" element={<ResearchPage />} />
-          <Route path="/development" element={<DevelopmentPage />} />
-          <Route path="/roadmap" element={<RoadmapPage />} />
-          <Route path="/updates" element={<UpdatesPage />} />
-          <Route path="/release-notes" element={<ReleaseNotesPage />} />
-          <Route path="/migration" element={<MigrationPage />} />
-          
-          {/* Training & Community */}
-          <Route path="/training" element={<TrainingPage />} />
-          <Route path="/certification" element={<CertificationPage />} />
-          <Route path="/community" element={<CommunityPage />} />
-          <Route path="/forum" element={<ForumPage />} />
-          <Route path="/help-center" element={<HelpCenterPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-background">
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              
+              {/* Main Content Pages */}
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/careers" element={<CareersPage />} />
+              <Route path="/news" element={<NewsPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/downloads" element={<DownloadsPage />} />
+              <Route path="/case-studies" element={<CaseStudiesPage />} />
+              <Route path="/testimonials" element={<TestimonialsPage />} />
+              <Route path="/support" element={<SupportPage />} />
+              <Route path="/documentation" element={<DocumentationPage />} />
+              <Route path="/api-reference" element={<APIReferencePage />} />
+              <Route path="/integrations" element={<IntegrationsPage />} />
+              <Route path="/partners" element={<PartnersPage />} />
+              <Route path="/security" element={<SecurityPage />} />
+              <Route path="/compliance" element={<CompliancePage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              
+              {/* Protected Portal Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              
+              {/* Portal Routes - Direct Access */}
+              <Route path="/broker" element={<BrokerPortal />} />
+              <Route path="/carrier" element={<CarrierPortal />} />
+              <Route path="/driver" element={<DriverPortal />} />
+              <Route path="/shipper" element={<ShipperPortal />} />
+              <Route path="/admin" element={<AdminPortal />} />
+              <Route path="/super-admin" element={<SuperAdminPortal />} />
+              <Route path="/analytics" element={<AnalyticsPortal />} />
+              <Route path="/autonomous" element={<AutonomousPortal />} />
+              
+              {/* User Dashboard Pages */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/billing" element={
+                <ProtectedRoute>
+                  <BillingPage />
+                </ProtectedRoute>
+              } />
+              
+              {/* Business Intelligence Pages */}
+              <Route path="/analytics-dashboard" element={
+                <ProtectedRoute>
+                  <AnalyticsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/reports" element={
+                <ProtectedRoute>
+                  <ReportsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/performance" element={
+                <ProtectedRoute>
+                  <PerformancePage />
+                </ProtectedRoute>
+              } />
+              
+              {/* TMS Core Features */}
+              <Route path="/fleet-management" element={
+                <ProtectedRoute>
+                  <FleetManagementPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/route-optimization" element={
+                <ProtectedRoute>
+                  <RouteOptimizationPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/load-management" element={
+                <ProtectedRoute>
+                  <LoadManagementPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/driver-management" element={
+                <ProtectedRoute>
+                  <DriverManagementPage />
+                </ProtectedRoute>
+              } />
+              
+              {/* Legacy Portal Pages (for backward compatibility) */}
+              <Route path="/shipper-portal" element={<ShipperPortalPage />} />
+              <Route path="/carrier-portal" element={<CarrierPortalPage />} />
+              <Route path="/broker-portal" element={<BrokerPortalPage />} />
+              <Route path="/admin-portal" element={<AdminPortalPage />} />
+              <Route path="/autonomous-dashboard" element={<AutonomousDashboardPage />} />
+              
+              {/* System Pages */}
+              <Route path="/live-monitoring" element={
+                <ProtectedRoute>
+                  <LiveMonitoringPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/system-health" element={
+                <ProtectedRoute>
+                  <SystemHealthPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/status" element={<StatusPage />} />
+              
+              {/* Development Pages */}
+              <Route path="/scalability" element={
+                <ProtectedRoute>
+                  <ScalabilityPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/innovation" element={
+                <ProtectedRoute>
+                  <InnovationPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/research" element={
+                <ProtectedRoute>
+                  <ResearchPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/development" element={
+                <ProtectedRoute>
+                  <DevelopmentPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/roadmap" element={
+                <ProtectedRoute>
+                  <RoadmapPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/updates" element={
+                <ProtectedRoute>
+                  <UpdatesPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/release-notes" element={
+                <ProtectedRoute>
+                  <ReleaseNotesPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/migration" element={
+                <ProtectedRoute>
+                  <MigrationPage />
+                </ProtectedRoute>
+              } />
+              
+              {/* Training & Community */}
+              <Route path="/training" element={
+                <ProtectedRoute>
+                  <TrainingPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/certification" element={
+                <ProtectedRoute>
+                  <CertificationPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/community" element={
+                <ProtectedRoute>
+                  <CommunityPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/forum" element={
+                <ProtectedRoute>
+                  <ForumPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/help-center" element={
+                <ProtectedRoute>
+                  <HelpCenterPage />
+                </ProtectedRoute>
+              } />
+              
+              {/* Catch all route - redirect to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
