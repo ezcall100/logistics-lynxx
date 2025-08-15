@@ -55,8 +55,8 @@ jobs:
         cd logistics-lynx
         npx playwright test -g "Portals behind auth"
       env:
-        E2E_EMAIL: ${{ secrets.E2E_EMAIL || 'test@example.com' }}
-        E2E_PASSWORD: ${{ secrets.E2E_PASSWORD || 'testpassword' }}
+        E2E_EMAIL: ${{ secrets.E2E_EMAIL || 'ezcallnet.mo@ezcallnet.com' }}
+        E2E_PASSWORD: ${{ secrets.E2E_PASSWORD || 'King80sam!@#$%' }}
 
     - name: Stop dev server
       if: always()
