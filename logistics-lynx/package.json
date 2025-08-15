@@ -14,6 +14,8 @@
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
+    "lint:report": "eslint . --ext ts,tsx -f json -o artifacts/eslint.json || true",
+    "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",

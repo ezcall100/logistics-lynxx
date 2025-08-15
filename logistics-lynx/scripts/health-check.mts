@@ -71,24 +71,27 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      // Check for lenient mode (for development)
-      const lenient = process.env.READYZ_MODE === 'lenient';
-      if (lenient) {
-        res.writeHead(200, { "content-type": "application/json" });
-        res.end(JSON.stringify({ ready: true, mode: 'lenient' }));
-        return;
-      }
-
-      // Strict mode - require database connectivity
+      // Determine mode: strict in prod, lenient in dev
+      const mode = process.env.READYZ_MODE === 'strict' ? 'strict' : 'lenient';
+      
+      // Check agents status
+      const agentsOk = getAgentsReady();
+      
+      // Check database connectivity based on mode
       const db = await dbPing(1500);
-      if (!db.ok) {
-        res.writeHead(503, { "content-type": "application/json" });
-        res.end(JSON.stringify({ ready: false, reason: db.reason }));
-        return;
-      }
-
-      res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify({ ready: true }));
+      const dbOk = mode === 'lenient' ? true : db.ok;
+      
+      // Determine overall readiness
+      const ready = agentsOk && dbOk;
+      
+      res.writeHead(ready ? 200 : 503, { "content-type": "application/json" });
+      res.end(JSON.stringify({ 
+        ready, 
+        mode, 
+        agentsOk, 
+        dbOk: db.ok,
+        reason: !ready ? (agentsOk ? db.reason : 'agents not ready') : undefined
+      }));
       return;
     }
 

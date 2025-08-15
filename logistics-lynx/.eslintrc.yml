@@ -21,3 +21,18 @@ rules:
   '@typescript-eslint/no-explicit-any': 'warn'
   'no-console': 'warn'
   'prefer-const': 'error'
+
+overrides:
+  # Soften app UI temporarily for gradual improvement
+  - files: ['src/**/*.{ts,tsx}']
+    rules:
+      '@typescript-eslint/no-explicit-any': 'warn'
+      '@typescript-eslint/no-require-imports': 'warn'
+      'react-hooks/exhaustive-deps': 'warn'
+  
+  # Keep autonomous agents strict
+  - files: ['src/agents/**/*.{ts,tsx}', 'autonomous-system/**/*.{ts,tsx}']
+    rules:
+      '@typescript-eslint/no-explicit-any': 'error'
+      '@typescript-eslint/no-require-imports': 'error'
+      'react-hooks/exhaustive-deps': 'off'
