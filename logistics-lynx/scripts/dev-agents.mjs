@@ -17,7 +17,6 @@ console.log('🤖 Starting autonomous agents for development...');
 // Start the autonomous system
 const autonomousProcess = spawn('node', [
   '--loader', 'ts-node/esm',
-  '--project', 'tsconfig.node.json',
   'src/start-autonomous-system.ts'
 ], {
   cwd: path.join(__dirname, '..'),
