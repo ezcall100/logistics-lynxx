@@ -245,9 +245,9 @@ export default function LoginPage() {
               <div className="mt-1 relative">
                 <input
                   id="email"
-                  type="email"
+              type="email"
                   autoComplete="email"
-                  required
+              required
                   placeholder="you@company.com"
                   value={s.email}
                   onChange={(e) => setS((x) => ({ ...x, email: e.target.value }))}
@@ -264,7 +264,7 @@ export default function LoginPage() {
                   id="password"
                   type={s.showPw ? "text" : "password"}
                   autoComplete="current-password"
-                  required
+              required
                   placeholder="••••••••"
                   onKeyUp={(e: any) =>
                     setS((x) => ({ ...x, capsLock: e.getModifierState?.("CapsLock") }))
