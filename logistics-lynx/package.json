@@ -58,7 +58,9 @@
     "preflight:check": "node scripts/preflight-check.mjs",
     "setup:production": "node scripts/setup-production-env.mjs",
     "deploy:prod": "echo 'Trigger GitHub Actions workflow: Deploy to Production'",
-    "fix:all": "npm run portal:fix && npm run check:portals"
+    "fix:all": "npm run portal:fix && npm run check:portals",
+    "check:portals": "node scripts/check-portals-simple.mjs",
+    "build:portals": "node scripts/autonomous-portal-builder.mjs"
   },
   "dependencies": {
     "@11labs/react": "^0.1.4",

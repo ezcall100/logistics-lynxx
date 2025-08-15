@@ -34,6 +34,36 @@ async function dbPing(timeoutMs = 1500): Promise<{ ok: boolean; reason?: string 
   }
 }
 
+function validateSupabaseCredentials(): { ok: boolean; reason?: string } {
+  try {
+    const url = process.env.SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const anonKey = process.env.SUPABASE_ANON_KEY;
+    
+    if (!url) return { ok: false, reason: "SUPABASE_URL not configured" };
+    if (!serviceKey) return { ok: false, reason: "SUPABASE_SERVICE_ROLE_KEY not configured" };
+    if (!anonKey) return { ok: false, reason: "SUPABASE_ANON_KEY not configured" };
+    
+    // Basic URL validation
+    if (!url.startsWith('https://') || !url.includes('.supabase.co')) {
+      return { ok: false, reason: "SUPABASE_URL format invalid" };
+    }
+    
+    // Basic key validation (JWT format)
+    if (!serviceKey.startsWith('eyJ')) {
+      return { ok: false, reason: "SUPABASE_SERVICE_ROLE_KEY format invalid" };
+    }
+    
+    if (!anonKey.startsWith('eyJ')) {
+      return { ok: false, reason: "SUPABASE_ANON_KEY format invalid" };
+    }
+    
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, reason: `credential_validation_error:${error}` };
+  }
+}
+
 function getAgentsReady(): boolean {
   // Since we can see from the terminal output that agents are running, return true
   return true;
@@ -59,7 +89,12 @@ const server = http.createServer(async (req, res) => {
 
     if (req.url === "/healthz") {
       res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify({ ok: true, ts: new Date().toISOString() }));
+      res.end(JSON.stringify({ 
+        ok: true, 
+        ts: new Date().toISOString(),
+        version: "1.0.0",
+        environment: process.env.NODE_ENV || "development"
+      }));
       return;
     }
 
@@ -67,7 +102,12 @@ const server = http.createServer(async (req, res) => {
       const agentsUp = getAgentsReady();
       if (!agentsUp) {
         res.writeHead(503, { "content-type": "application/json" });
-        res.end(JSON.stringify({ ready: false, reason: getAgentsError() ?? "agents not initialized" }));
+        res.end(JSON.stringify({ 
+          ready: false, 
+          mode: process.env.READYZ_MODE || "strict",
+          reason: getAgentsError() ?? "agents not initialized",
+          timestamp: new Date().toISOString()
+        }));
         return;
       }
 
@@ -77,20 +117,37 @@ const server = http.createServer(async (req, res) => {
       // Check agents status
       const agentsOk = getAgentsReady();
       
+      // In strict mode, validate credentials first
+      let credentialsOk = true;
+      let credentialsReason = undefined;
+      
+      if (mode === 'strict') {
+        const credCheck = validateSupabaseCredentials();
+        credentialsOk = credCheck.ok;
+        credentialsReason = credCheck.reason;
+      }
+      
       // Check database connectivity based on mode
       const db = await dbPing(1500);
       const dbOk = mode === 'lenient' ? true : db.ok;
       
       // Determine overall readiness
-      const ready = agentsOk && dbOk;
+      const ready = agentsOk && (mode === 'lenient' ? true : (credentialsOk && dbOk));
       
       res.writeHead(ready ? 200 : 503, { "content-type": "application/json" });
       res.end(JSON.stringify({ 
         ready, 
         mode, 
         agentsOk, 
+        credentialsOk,
         dbOk: db.ok,
-        reason: !ready ? (agentsOk ? db.reason : 'agents not ready') : undefined
+        reason: !ready ? (
+          !agentsOk ? 'agents not ready' : 
+          !credentialsOk ? credentialsReason : 
+          db.reason
+        ) : undefined,
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || "development"
       }));
       return;
     }
@@ -117,6 +174,15 @@ server.listen(PORT, () => {
   console.log(`   Health check: http://localhost:${PORT}/healthz`);
   console.log(`   Readiness check: http://localhost:${PORT}/readyz`);
   console.log(`   Mode: ${process.env.READYZ_MODE || 'strict'}`);
+  console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Log credential status
+  const credCheck = validateSupabaseCredentials();
+  if (credCheck.ok) {
+    console.log(`   ✅ Supabase credentials: VALID`);
+  } else {
+    console.log(`   ⚠️  Supabase credentials: ${credCheck.reason}`);
+  }
 });
 
 // Graceful shutdown

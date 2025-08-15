@@ -1,147 +1,172 @@
 #!/usr/bin/env node
 
-import http from 'http';
+/**
+ * 🔍 Portal Check Script
+ * Validates all 20 portals from the registry are properly configured
+ */
 
-const BASE_URL = process.env.APP_ORIGIN || 'http://localhost:8084';
-const COOKIE = process.env.APP_COOKIE || '';
+import { PORTALS, DEPRECATED_ROUTES } from '../src/portals/registry.ts';
+import fs from 'fs';
+import path from 'path';
 
-const PORTALS = [
-  { key: "superAdmin", title: "Super Admin", path: "/super-admin" },
-  { key: "admin", title: "Admin", path: "/admin" },
-  { key: "tmsAdmin", title: "TMS Admin", path: "/tms-admin" },
-  { key: "onboarding", title: "Onboarding", path: "/onboarding" },
-  { key: "broker", title: "Broker", path: "/broker" },
-  { key: "shipper", title: "Shipper", path: "/shipper" },
-  { key: "carrier", title: "Carrier", path: "/carrier" },
-  { key: "driver", title: "Driver", path: "/driver" },
-  { key: "ownerOperator", title: "Owner Operator", path: "/owner-operator" },
-  { key: "factoring", title: "Factoring", path: "/factoring" },
-  { key: "loadBoard", title: "Load Board", path: "/load-board" },
-  { key: "crm", title: "CRM", path: "/crm" },
-  { key: "financials", title: "Financials", path: "/financials" },
-  { key: "edi", title: "EDI", path: "/edi" },
-  { key: "marketplace", title: "Marketplace", path: "/marketplace" },
-  { key: "analytics", title: "Analytics", path: "/analytics" },
-  { key: "autonomous", title: "Autonomous AI", path: "/autonomous" },
-  { key: "workers", title: "Workers", path: "/workers" },
-  { key: "rates", title: "Rates", path: "/rates" },
-  { key: "directory", title: "Directory", path: "/directory" }
-];
+class PortalChecker {
+  constructor() {
+    this.results = {
+      total: PORTALS.length,
+      passed: 0,
+      failed: 0,
+      issues: []
+    };
+  }
 
-const DEPRECATED_ROUTES = {
-  "/carrier-admin": "/carrier",
-  "/broker-admin": "/broker", 
-  "/shipper-admin": "/shipper",
-  "/carrier-dispatch": "/load-board"
-};
+  checkPortalFile(portalPath) {
+    const fullPath = path.join(process.cwd(), 'src', 'pages', portalPath.replace('/', ''), 'index.tsx');
+    return fs.existsSync(fullPath);
+  }
 
-function checkPortal(path) {
-  return new Promise((resolve) => {
-    const url = new URL(`${BASE_URL}${path}`);
+  checkPortalComponent(portalPath) {
+    const fullPath = path.join(process.cwd(), 'src', 'components', portalPath.replace('/', ''), 'index.tsx');
+    return fs.existsSync(fullPath);
+  }
+
+  validatePortal(portal) {
+    const issues = [];
     
-    const headers = {};
-    if (COOKIE) {
-      headers.Cookie = COOKIE;
+    // Check if portal page exists
+    if (!this.checkPortalFile(portal.path)) {
+      issues.push(`Missing page file: src/pages${portal.path}/index.tsx`);
     }
     
-    const req = http.request({
-      hostname: url.hostname,
-      port: url.port,
-      path: url.pathname,
-      method: 'GET',
-      timeout: 5000,
-      headers
-    }, (res) => {
-      const success = COOKIE ? (res.statusCode === 200) : ([200, 302, 401].includes(res.statusCode));
-      const location = res.headers.location;
-      const portalStatus = res.headers['x-portal-status'];
+    // Check if portal component exists
+    if (!this.checkPortalComponent(portal.path)) {
+      issues.push(`Missing component file: src/components${portal.path}/index.tsx`);
+    }
+    
+    // Validate portal configuration
+    if (!portal.title || portal.title.trim() === '') {
+      issues.push('Missing or empty title');
+    }
+    
+    if (!portal.description || portal.description.trim() === '') {
+      issues.push('Missing or empty description');
+    }
+    
+    if (!portal.roles || portal.roles.length === 0) {
+      issues.push('No roles configured');
+    }
+    
+    if (!portal.featureFlag || portal.featureFlag.trim() === '') {
+      issues.push('Missing feature flag');
+    }
+    
+    if (!portal.icon || portal.icon.trim() === '') {
+      issues.push('Missing icon');
+    }
+    
+    if (!portal.color || portal.color.trim() === '') {
+      issues.push('Missing color');
+    }
+    
+    if (!portal.features || portal.features.length === 0) {
+      issues.push('No features listed');
+    }
+    
+    return {
+      portal: portal.key,
+      path: portal.path,
+      valid: issues.length === 0,
+      issues
+    };
+  }
+
+  checkDeprecatedRoutes() {
+    console.log('\n🔄 Checking deprecated routes...');
+    
+    const deprecatedIssues = [];
+    
+    for (const [deprecatedPath, canonicalPath] of Object.entries(DEPRECATED_ROUTES)) {
+      const canonicalPortal = PORTALS.find(p => p.path === canonicalPath);
       
-      let statusText = `${String(res.statusCode).padEnd(3)}`;
-      if (location) statusText += ` → ${location}`;
-      if (portalStatus) statusText += ` (${portalStatus})`;
+      if (!canonicalPortal) {
+        deprecatedIssues.push(`Deprecated route ${deprecatedPath} maps to non-existent canonical path ${canonicalPath}`);
+      } else {
+        console.log(`   ✅ ${deprecatedPath} → ${canonicalPath} (${canonicalPortal.title})`);
+      }
+    }
+    
+    if (deprecatedIssues.length > 0) {
+      console.log('   ❌ Deprecated route issues:');
+      deprecatedIssues.forEach(issue => console.log(`      - ${issue}`));
+    }
+    
+    return deprecatedIssues.length === 0;
+  }
+
+  run() {
+    console.log('🔍 Portal Configuration Check');
+    console.log('============================');
+    console.log(`Checking ${PORTALS.length} portals...\n`);
+    
+    let allValid = true;
+    
+    PORTALS.forEach((portal, index) => {
+      const result = this.validatePortal(portal);
       
-      console.log(`${success ? '✅' : '❌'} ${statusText} ${path}`);
-      resolve({ 
-        path, 
-        status: res.statusCode, 
-        success,
-        location,
-        portalStatus
+      if (result.valid) {
+        console.log(`✅ ${index + 1}. ${portal.title} (${portal.path})`);
+        this.results.passed++;
+      } else {
+        console.log(`❌ ${index + 1}. ${portal.title} (${portal.path})`);
+        console.log(`   Issues:`);
+        result.issues.forEach(issue => {
+          console.log(`      - ${issue}`);
+        });
+        this.results.failed++;
+        this.results.issues.push(result);
+        allValid = false;
+      }
+    });
+    
+    // Check deprecated routes
+    const deprecatedValid = this.checkDeprecatedRoutes();
+    
+    // Summary
+    console.log('\n📊 Portal Check Results');
+    console.log('======================');
+    console.log(`Total Portals: ${this.results.total}`);
+    console.log(`✅ Passed: ${this.results.passed}`);
+    console.log(`❌ Failed: ${this.results.failed}`);
+    console.log(`🔄 Deprecated Routes: ${deprecatedValid ? '✅ Valid' : '❌ Issues'}`);
+    
+    if (this.results.failed > 0) {
+      console.log('\n🚨 Issues Found:');
+      this.results.issues.forEach(result => {
+        console.log(`\n${result.portal} (${result.path}):`);
+        result.issues.forEach(issue => {
+          console.log(`  - ${issue}`);
+        });
       });
-    });
+    }
     
-    req.on('error', (error) => {
-      console.log(`❌ ERR ${path} → ${error.message}`);
-      resolve({ path, status: 'ERROR', success: false, error: error.message });
-    });
+    const overallSuccess = allValid && deprecatedValid;
     
-    req.on('timeout', () => {
-      console.log(`❌ TIMEOUT ${path}`);
-      req.destroy();
-      resolve({ path, status: 'TIMEOUT', success: false });
-    });
+    if (overallSuccess) {
+      console.log('\n🎉 All portals are properly configured!');
+      console.log('✅ Ready for Phase-2 autonomous portal build');
+    } else {
+      console.log('\n⚠️  Some portal issues found. Please fix before proceeding.');
+    }
     
-    req.end();
-  });
+    return overallSuccess;
+  }
 }
 
-async function main() {
-  console.log('🔍 Checking all portal routes...\n');
-  
-  const allPaths = [
-    "/", "/login", "/register",
-    ...PORTALS.map(p => p.path),
-    ...Object.keys(DEPRECATED_ROUTES)
-  ];
-  
-  const results = [];
-  
-  for (const path of allPaths) {
-    const result = await checkPortal(path);
-    results.push(result);
-  }
-  
-  console.log('\n📊 Results Summary:');
-  console.log('==================');
-  
-  const successful = results.filter(r => r.success);
-  const failed = results.filter(r => !r.success);
-  
-  console.log(`✅ Successful: ${successful.length}/${results.length}`);
-  console.log(`❌ Failed: ${failed.length}/${results.length}`);
-  
-  if (failed.length > 0) {
-    console.log('\n❌ Failed Routes:');
-    failed.forEach(r => {
-      console.log(`  ${r.path}: ${r.status}${r.error ? ` (${r.error})` : ''}`);
-    });
-  }
-  
-  console.log('\n🎯 Portal Registry Status:');
-  console.log('========================');
-  PORTALS.forEach(portal => {
-    const result = results.find(r => r.path === portal.path);
-    const status = result?.success ? '✅' : '❌';
-    console.log(`${status} ${portal.title} (${portal.path})`);
-  });
+// Run the portal check
+const checker = new PortalChecker();
+const success = checker.run();
 
-  // Check deprecated routes specifically
-  const deprecatedResults = results.filter(r => DEPRECATED_ROUTES[r.path]);
-  if (deprecatedResults.length > 0) {
-    console.log('\n⚠️  Deprecated Routes Check:');
-    console.log('==========================');
-    deprecatedResults.forEach(r => {
-      const newPath = DEPRECATED_ROUTES[r.path];
-      const expected410 = r.status === 410 && r.portalStatus === 'decommissioned';
-      const status = expected410 ? '✅' : '❌';
-      console.log(`${status} ${r.path} → ${newPath} (${r.status}${r.portalStatus ? `, ${r.portalStatus}` : ''})`);
-    });
-  }
-  
-  console.log(`\n🎉 Portal check completed!`);
-  console.log(`Success rate: ${((successful.length / results.length) * 100).toFixed(1)}%`);
-  
-  process.exit(failed.length > 0 ? 1 : 0);
+if (success) {
+  process.exit(0);
+} else {
+  process.exit(1);
 }
-
-main().catch(console.error);
