@@ -223,7 +223,7 @@ export class WebsiteDevelopmentAgent {
   /**
    * Analyze page gaps
    */
-  private async analyzePageGaps(): Promise<any[]> {
+  private async analyzePageGaps(): Promise<unknown[]> {
     const gaps = [];
     const existingPaths = Array.from(this.pages.values()).map(page => page.path);
 
@@ -266,7 +266,7 @@ export class WebsiteDevelopmentAgent {
   /**
    * Identify content gaps
    */
-  private async identifyContentGaps(): Promise<any[]> {
+  private async identifyContentGaps(): Promise<unknown[]> {
     const gaps = [];
 
     // Analyze user behavior and identify missing content
@@ -437,7 +437,7 @@ export class WebsiteDevelopmentAgent {
   /**
    * Get user behavior data (simulated)
    */
-  private async getUserBehaviorData(): Promise<any> {
+  private async getUserBehaviorData(): Promise<unknown> {
     return {
       searchTerms: ['logistics', 'transportation', 'shipping', 'freight', 'delivery'],
       popularPages: ['/dashboard', '/load-board', '/rates'],
@@ -459,7 +459,7 @@ export class WebsiteDevelopmentAgent {
   /**
    * Get user interactions (simulated)
    */
-  private async getUserInteractions(): Promise<any[]> {
+  private async getUserInteractions(): Promise<unknown[]> {
     return [
       { type: 'click', element: 'button', page: '/dashboard' },
       { type: 'scroll', direction: 'down', page: '/load-board' },

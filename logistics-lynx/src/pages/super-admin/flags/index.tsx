@@ -77,7 +77,7 @@ export default function FlagsPage() {
             <Input placeholder="env (production/staging/dev)" value={edit?.env ?? ""} onChange={e => setEdit({ ...edit, env: e.target.value })}/>
           )}
           {edit?.scope === "tenant" && (
-            <Input placeholder="company_id (uuid)" value={edit?.company_id ?? ""} onChange={e => setEdit({ ...edit, company_id: e.target.value as any })}/>
+            <Input placeholder="company_id (uuid)" value={edit?.company_id ?? ""} onChange={e => setEdit({ ...edit, company_id: e.target.value as string })}/>
           )}
           <div className="flex items-center gap-2">
             <Switch checked={!!edit?.value} onCheckedChange={v => setEdit({ ...edit, value: v })}/>

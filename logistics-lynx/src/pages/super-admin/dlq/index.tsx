@@ -53,7 +53,7 @@ export default function DlqAdminPage() {
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const qc = useQueryClient();
 
-  const { data: items = [] as any[], isLoading, refetch } = useQuery({
+  const { data: items = [] as unknown[], isLoading, refetch } = useQuery({
     queryKey: ["dlq", companyId, limit, status],
     queryFn: () => fetchItems(companyId || null, limit, status),
     enabled: uiEnabled.value,

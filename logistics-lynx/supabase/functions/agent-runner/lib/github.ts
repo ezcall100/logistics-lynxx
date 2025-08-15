@@ -53,7 +53,7 @@ export async function upsertFile(ctx: GhCtx, path: string, content: string, mess
   const existing = await getFile(ctx, path, branch);
   const b64 = btoa(unescape(encodeURIComponent(content)));
   const url = `${GH_API}/repos/${ctx.owner}/${ctx.repo}/contents/${encodeURIComponent(path)}`;
-  const body: any = { message, content: b64, branch };
+  const body: Record<string, unknown> = { message, content: b64, branch };
   if (existing?.sha) body.sha = existing.sha;
   const res = await fetch(url, { method: "PUT", headers: headers(ctx.token), body: JSON.stringify(body) });
   if (!res.ok) throw new Error(`upsertFile failed ${res.status}: ${await res.text()}`);

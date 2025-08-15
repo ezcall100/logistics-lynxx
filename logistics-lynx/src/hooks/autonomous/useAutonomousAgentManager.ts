@@ -200,8 +200,8 @@ export const useAutonomousAgentManager = () => {
     type: 'page' | 'component' | 'layout';
   }) => {
     try {
-      const fs = require('fs');
-      const path = require('path');
+      const fs = await import('fs');
+      const path = await import('path');
       
       // Determine the correct file path based on type
       let filePath: string;

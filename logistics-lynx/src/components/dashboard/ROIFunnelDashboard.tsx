@@ -85,7 +85,7 @@ export const ROIFunnelDashboard: React.FC = () => {
                 key={period}
                 variant={timeframe === period ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setTimeframe(period as any)}
+                onClick={() => setTimeframe(period as string)}
               >
                 {period}
               </Button>
@@ -124,7 +124,7 @@ export const ROIFunnelDashboard: React.FC = () => {
               key={period}
               variant={timeframe === period ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setTimeframe(period as any)}
+              onClick={() => setTimeframe(period as string)}
             >
               {period}
             </Button>

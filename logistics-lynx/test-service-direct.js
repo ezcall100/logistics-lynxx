@@ -9,7 +9,7 @@ async function testService() {
     
     // Test 1: Get status
     console.log('\n1️⃣ Getting status...');
-    const status = await websiteBuilderService.getStatus();
+    const status = websiteBuilderService.getStatus();
     console.log('✅ Status received:', {
       operational: status.operational,
       paused: status.paused,
@@ -21,7 +21,7 @@ async function testService() {
 
     // Test 2: Get metrics
     console.log('\n2️⃣ Getting metrics...');
-    const metrics = await websiteBuilderService.getMetrics();
+    const metrics = websiteBuilderService.getMetrics();
     console.log('✅ Metrics received:', {
       pagesBuilt: metrics.pagesBuilt,
       pagesInProgress: metrics.pagesInProgress,
@@ -34,7 +34,7 @@ async function testService() {
 
     // Test 3: Build a page
     console.log('\n3️⃣ Building a test page...');
-    const buildResult = await websiteBuilderService.buildPage({
+    const buildResult = websiteBuilderService.buildPage({
       type: 'home',
       priority: 5,
       seed: 'test-direct-001'
@@ -58,7 +58,7 @@ async function testService() {
         
         // Test 5: Pause and resume
         console.log('\n5️⃣ Testing pause/resume...');
-        await testPauseResume();
+        testPauseResume();
       }
     });
 
@@ -81,7 +81,7 @@ async function testPauseResume() {
   try {
     // Pause
     console.log('⏸️ Pausing builder...');
-    const pauseResult = await websiteBuilderService.pause();
+    const pauseResult = websiteBuilderService.pause();
     console.log('✅ Pause result:', pauseResult);
 
     // Wait a moment
@@ -89,7 +89,7 @@ async function testPauseResume() {
 
     // Resume
     console.log('▶️ Resuming builder...');
-    const resumeResult = await websiteBuilderService.resume();
+    const resumeResult = websiteBuilderService.resume();
     console.log('✅ Resume result:', resumeResult);
 
     console.log('\n🎉 All direct tests completed successfully!');

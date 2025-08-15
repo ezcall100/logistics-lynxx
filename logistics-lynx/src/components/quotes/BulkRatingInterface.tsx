@@ -87,7 +87,7 @@ const BulkRatingInterface: React.FC = () => {
   };
 
   // Update job field
-  const updateJob = (id: string, field: keyof BulkJob, value: any) => {
+  const updateJob = (id: string, field: keyof BulkJob, value: unknown) => {
     setJobs(jobs.map(job => 
       job.id === id ? { ...job, [field]: value } : job
     ));

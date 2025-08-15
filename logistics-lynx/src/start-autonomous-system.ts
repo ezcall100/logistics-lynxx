@@ -91,7 +91,7 @@ class SimpleAutonomousSystem {
     return this.isRunning;
   }
 
-  getStatus(): any {
+  getStatus(): unknown {
     return {
       isRunning: this.isRunning,
       timestamp: new Date().toISOString(),

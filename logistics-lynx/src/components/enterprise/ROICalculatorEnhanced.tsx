@@ -261,7 +261,7 @@ export const ROICalculatorEnhanced: React.FC = () => {
                 <Button
                   key={plan}
                   variant={formData.plan === plan ? "default" : "outline"}
-                  onClick={() => setFormData(prev => ({ ...prev, plan: plan as any }))}
+                  onClick={() => setFormData(prev => ({ ...prev, plan: plan as string }))}
                   className="capitalize"
                 >
                   {plan}

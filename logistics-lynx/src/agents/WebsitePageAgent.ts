@@ -13,7 +13,7 @@ interface PageUpdate {
   path: string;
   updates: {
     content?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
     status?: 'active' | 'inactive' | 'draft';
   };
 }

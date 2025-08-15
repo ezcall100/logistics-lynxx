@@ -487,7 +487,7 @@ export class PortalDevelopmentAgent {
   /**
    * Analyze portal gaps
    */
-  private async analyzePortalGaps(): Promise<any[]> {
+  private async analyzePortalGaps(): Promise<unknown[]> {
     const gaps = [];
     const existingPortalTypes = Array.from(this.portals.values()).map(portal => portal.type);
 
@@ -536,7 +536,7 @@ export class PortalDevelopmentAgent {
   /**
    * Identify role-based portal gaps
    */
-  private async identifyRoleBasedGaps(): Promise<any[]> {
+  private async identifyRoleBasedGaps(): Promise<unknown[]> {
     const gaps = [];
 
     // Analyze user roles and identify missing portal access
@@ -796,7 +796,7 @@ export class PortalDevelopmentAgent {
   /**
    * Get user role data (simulated)
    */
-  private async getUserRoleData(): Promise<any> {
+  private async getUserRoleData(): Promise<unknown> {
     return {
       roles: ['carrier', 'broker', 'shipper', 'driver', 'owner-operator', 'admin', 'analyst', 'billing', 'support'],
       roleDistribution: {
@@ -812,7 +812,7 @@ export class PortalDevelopmentAgent {
   /**
    * Get user interactions (simulated)
    */
-  private async getUserInteractions(): Promise<any[]> {
+  private async getUserInteractions(): Promise<unknown[]> {
     return [
       { type: 'portal_access', portal: 'carrier', action: 'login' },
       { type: 'feature_usage', portal: 'broker', feature: 'load_management' },

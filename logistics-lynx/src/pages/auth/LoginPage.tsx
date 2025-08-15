@@ -60,7 +60,7 @@ export default function LoginPage() {
     if (user) nav("/portal-selection", { replace: true });
   }, [user]);
 
-  const from = (location.state as any)?.from?.pathname ?? "/portal-selection";
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/portal-selection";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -83,14 +83,14 @@ export default function LoginPage() {
       }
       
       nav(from, { replace: true });
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Check for MFA requirement
-      if (/mfa/i.test(err?.message ?? "")) {
+      if (/mfa/i.test((err as Error)?.message ?? "")) {
         setS(x => ({ ...x, error: undefined, showMfa: true }));
         return;
       }
       
-      const msg = normalizeAuthError(err?.message);
+      const msg = normalizeAuthError((err as Error)?.message);
       setS((x) => ({ ...x, loading: false, error: msg }));
       
       // OTEL breadcrumb - error
@@ -112,8 +112,8 @@ export default function LoginPage() {
       if (error) throw error;
       // supabase will redirect
       return data;
-    } catch (err: any) {
-      setS((x) => ({ ...x, loading: false, error: normalizeAuthError(err?.message) }));
+    } catch (err: unknown) {
+      setS((x) => ({ ...x, loading: false, error: normalizeAuthError((err as Error)?.message) }));
       
       // OTEL breadcrumb - SSO error
       window.dispatchEvent(new CustomEvent("otel:b", { detail: { name: `auth.login.sso.${provider}.error` }}));
@@ -146,8 +146,8 @@ export default function LoginPage() {
       
       // OTEL breadcrumb - magic link sent
       window.dispatchEvent(new CustomEvent("otel:b", { detail: { name: "auth.login.magic_link.sent" }}));
-    } catch (err: any) {
-      setS((x) => ({ ...x, loading: false, error: normalizeAuthError(err?.message) }));
+    } catch (err: unknown) {
+      setS((x) => ({ ...x, loading: false, error: normalizeAuthError((err as Error)?.message) }));
       
       // OTEL breadcrumb - magic link error
       window.dispatchEvent(new CustomEvent("otel:b", { detail: { name: "auth.login.magic_link.error" }}));
@@ -171,8 +171,8 @@ export default function LoginPage() {
       
       // For now, just close the modal
       setS(x => ({ ...x, loading: false, showMfa: false }));
-    } catch (err: any) {
-      setS(x => ({ ...x, loading: false, error: normalizeAuthError(err?.message) }));
+    } catch (err: unknown) {
+      setS(x => ({ ...x, loading: false, error: normalizeAuthError((err as Error)?.message) }));
       
       // OTEL breadcrumb - MFA error
       window.dispatchEvent(new CustomEvent("otel:b", { detail: { name: "auth.login.mfa.error" }}));
@@ -266,7 +266,7 @@ export default function LoginPage() {
                   autoComplete="current-password"
               required
                   placeholder="••••••••"
-                  onKeyUp={(e: any) =>
+                  onKeyUp={(e: React.KeyboardEvent) =>
                     setS((x) => ({ ...x, capsLock: e.getModifierState?.("CapsLock") }))
                   }
                   value={s.password}

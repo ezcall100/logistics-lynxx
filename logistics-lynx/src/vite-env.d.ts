@@ -14,7 +14,7 @@ interface ImportMeta {
 // Ensure global DOM types are available
 declare global {
   interface Window {
-    [key: string]: any;
+    [key: string]: unknown;
   }
   
   namespace NodeJS {
@@ -26,7 +26,7 @@ declare global {
   // Ensure JSX namespace is properly declared
   namespace JSX {
     interface IntrinsicElements {
-      [elemName: string]: any;
+      [elemName: string]: unknown;
     }
   }
 }

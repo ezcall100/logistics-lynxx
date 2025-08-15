@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-function html({ company, calc }: any) {
+function html({ company, calc }: { company: string; calc: unknown }) {
   return `<!doctype html><meta charset="utf-8" />
     <style>body{font-family:ui-sans-serif,system-ui;max-width:720px;margin:24px auto;padding:16px;line-height:1.5}
     h1{font-size:20px} .kpi{display:inline-block;margin-right:24px}</style>

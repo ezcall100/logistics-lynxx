@@ -27,7 +27,7 @@ try {
 console.log('\n🗄️ Testing Supabase Integration...');
 try {
   // Import Supabase client
-  const { createClient } = require('@supabase/supabase-js');
+  const { createClient } = await import('@supabase/supabase-js');
   console.log('Supabase client: Available');
   console.log('Supabase integration status: Ready for configuration');
 } catch (error) {

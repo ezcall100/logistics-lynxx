@@ -116,7 +116,7 @@ export async function runEnsurePortal(ctx: Ctx, args: { portalKey: string; openP
   const branch = await ensureBranch(ctx.gh, `autobot/portal-${portalKey}-${new Date().toISOString().slice(0,10)}`);
   const s1 = await ensureScaffold(ctx, portalKey);
   const s2 = await ensureRegistry(ctx, branch, portalKey);
-  let pr: any = null;
+  let pr: unknown = null;
 
   if (!ctx.dryRun && (args.openPR ?? true)) {
     pr = await openPullRequest(ctx.gh, {

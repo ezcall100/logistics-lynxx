@@ -26,7 +26,7 @@ interface AgentRun {
   id: string;
   task_id: string;
   status: 'started' | 'completed' | 'failed';
-  result?: any;
+  result?: unknown;
   error?: string;
   duration_ms: number;
   started_at: string;

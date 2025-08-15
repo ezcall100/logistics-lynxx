@@ -515,7 +515,7 @@ async function writeAuditLog(log: {
 }
 
 // Hash payload for idempotency
-async function hashPayload(payload: any): Promise<string> {
+async function hashPayload(payload: unknown): Promise<string> {
   const payloadStr = JSON.stringify(payload);
   const encoder = new TextEncoder();
   const data = encoder.encode(payloadStr);
@@ -608,7 +608,7 @@ function calculateNextRetry(retryCount: number): string {
   return nextRetry.toISOString();
 }
 
-async function sendSlackNotification(message: any): Promise<void> {
+async function sendSlackNotification(message: unknown): Promise<void> {
   try {
     const webhookUrl = Deno.env.get('SLACK_WEBHOOK_URL');
     if (!webhookUrl) return;

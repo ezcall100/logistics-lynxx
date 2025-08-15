@@ -135,7 +135,7 @@ export function RateQuoteForm() {
     quoteMutation.mutate(formData);
   };
 
-  const updateField = (field: string, value: any) => {
+  const updateField = (field: string, value: unknown) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -274,7 +274,7 @@ export function RateQuoteForm() {
               <Label htmlFor="equipment">Equipment Type</Label>
               <Select
                 value={formData.equipment}
-                onValueChange={(value: any) => updateField('equipment', value)}
+                onValueChange={(value: string) => updateField('equipment', value)}
               >
                 <SelectTrigger>
                   <SelectValue />

@@ -11,11 +11,11 @@ export const createPortalSpan = (portalName: string, operation: string) => {
   });
 };
 
-export const recordPortalError = (span: any, error: Error) => {
+export const recordPortalError = (span: unknown, error: Error) => {
   span.recordException(error);
   span.setStatus({ code: 2, message: error.message });
 };
 
-export const endPortalSpan = (span: any) => {
+export const endPortalSpan = (span: unknown) => {
   span.end();
 };

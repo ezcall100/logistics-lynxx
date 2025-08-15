@@ -430,8 +430,8 @@ export class TransBotAIWebsiteBuilder {
       this.logManager.log(`📝 Creating file: ${filePath}`, 'info');
       
       // Import fs module for file operations
-      const fs = require('fs');
-      const path = require('path');
+      const fs = await import('fs');
+      const path = await import('path');
       
       // Ensure the directory exists
       const dir = path.dirname(filePath);

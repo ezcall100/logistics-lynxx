@@ -28,7 +28,7 @@ export default function RatesPortal() {
     setDateRange(undefined);
   };
 
-  const handleSaveRate = (data: any) => {
+  const handleSaveRate = (data: unknown) => {
     console.log('Saving rate:', data);
     setIsRateDialogOpen(false);
   };

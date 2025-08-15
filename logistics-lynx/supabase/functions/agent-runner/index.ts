@@ -14,7 +14,7 @@ function ghCtx() {
 }
 
 // Simple logging functions
-async function agentInfo(companyId: string, taskId: string, message: string, meta?: any) {
+async function agentInfo(companyId: string, taskId: string, message: string, meta?: unknown) {
   console.log(`[INFO] ${companyId}/${taskId}: ${message}`, meta ? JSON.stringify(meta) : '');
   try {
     await supa.from("agent_logs").insert({
@@ -29,7 +29,7 @@ async function agentInfo(companyId: string, taskId: string, message: string, met
   }
 }
 
-async function agentError(companyId: string, taskId: string, message: string, meta?: any) {
+async function agentError(companyId: string, taskId: string, message: string, meta?: unknown) {
   console.error(`[ERROR] ${companyId}/${taskId}: ${message}`, meta ? JSON.stringify(meta) : '');
   try {
     await supa.from("agent_logs").insert({
@@ -44,7 +44,7 @@ async function agentError(companyId: string, taskId: string, message: string, me
   }
 }
 
-async function agentSlackError(params: { companyId: string; taskId: string; msg: string; meta?: any }) {
+async function agentSlackError(params: { companyId: string; taskId: string; msg: string; meta?: unknown }) {
   // Placeholder for Slack integration
   console.error(`[SLACK] ${params.companyId}/${params.taskId}: ${params.msg}`, params.meta ? JSON.stringify(params.meta) : '');
 }
@@ -65,7 +65,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ success: true, result }), { status: 200 });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      await agentError(company_id, task_id, `Task failed: ${fn_name} - ${msg}`, { stack: (err as any)?.stack, fn_name, payload });
+      await agentError(company_id, task_id, `Task failed: ${fn_name} - ${msg}`, { stack: (err as Error)?.stack, fn_name, payload });
       await agentSlackError({ companyId: company_id, taskId: task_id, msg: `Task failed: ${fn_name} - ${msg}`, meta: { fn_name, payload } });
       await supa.from("agent_tasks").update({ status: "failed", error: msg, updated_at: new Date().toISOString() }).eq("id", task_id);
       return new Response(JSON.stringify({ error: msg }), { status: 500 });
@@ -75,7 +75,7 @@ serve(async (req) => {
   }
 });
 
-async function dispatch(fn_name: string, payload: any) {
+async function dispatch(fn_name: string, payload: unknown) {
   switch (fn_name) {
     case "rates.price_one":
       return await handleRatesPricing(payload);
@@ -98,6 +98,6 @@ async function dispatch(fn_name: string, payload: any) {
   }
 }
 
-async function handleRatesPricing(payload: any) {
+async function handleRatesPricing(payload: unknown) {
   return { price: 150.0, currency: "USD", input: payload };
 }

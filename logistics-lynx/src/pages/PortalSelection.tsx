@@ -54,7 +54,7 @@ const PortalSelection = () => {
     Database: <Database className="h-8 w-8" />
   };
 
-  const handlePortalSelect = (portal: any) => {
+  const handlePortalSelect = (portal: Portal) => {
     console.log(`Navigating to ${portal.title} at ${portal.path}`);
     navigate(portal.path);
   };
