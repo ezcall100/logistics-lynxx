@@ -1,7 +1,10 @@
 import React from "react";
-export default function Page(){return(
-  <div className="max-w-5xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-2">Autonomous</h1>
-    <p className="text-muted-foreground">This portal is provisioned and protected by auth/roles/flags.</p>
-  </div>
-);}
+import AutonomousPortal from "../../components/autonomous/AutonomousPortal";
+
+export default function Page() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+      <AutonomousPortal />
+    </div>
+  );
+}
