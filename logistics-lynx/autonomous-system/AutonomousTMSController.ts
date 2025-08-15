@@ -5,6 +5,7 @@ import { DatabaseManager } from './DatabaseManager';
 import { NotificationManager } from './NotificationManager';
 import { LogManager } from './LogManager';
 import { WebsiteDevelopmentAgent } from '../src/agents/WebsiteDevelopmentAgent';
+import { PortalDevelopmentAgent } from '../src/agents/PortalDevelopmentAgent';
 
 /**
  * 🚀 Autonomous TMS Controller
@@ -18,6 +19,7 @@ export class AutonomousTMSController {
   private notificationManager: NotificationManager;
   private logManager: LogManager;
   private websiteDevelopmentAgent: WebsiteDevelopmentAgent;
+  private portalDevelopmentAgent: PortalDevelopmentAgent;
   private isRunning: boolean = false;
   private restartCount: number = 0;
   private maxRestarts: number = 5;
@@ -30,6 +32,7 @@ export class AutonomousTMSController {
     this.databaseManager = new DatabaseManager();
     this.notificationManager = new NotificationManager();
     this.websiteDevelopmentAgent = new WebsiteDevelopmentAgent();
+    this.portalDevelopmentAgent = new PortalDevelopmentAgent();
   }
 
   /**
@@ -50,12 +53,16 @@ export class AutonomousTMSController {
       this.logManager.log('🌐 Initializing Website Development Agent with full production access...', 'info');
       this.websiteDevelopmentAgent.setProductionAccess(true);
 
+      // Initialize portal development agent with full production access
+      this.logManager.log('🏢 Initializing Portal Development Agent with full production access...', 'info');
+      this.portalDevelopmentAgent.setProductionAccess(true);
+
       this.logManager.log('✅ Autonomous TMS System initialized successfully', 'success');
       
       // Send startup notification
       await this.notificationManager.sendNotification({
         type: 'system_startup',
-        message: 'Autonomous TMS System is now online and monitoring with full website development capabilities',
+        message: 'Autonomous TMS System is now online and monitoring with full website and portal development capabilities',
         priority: 'info'
       });
 
@@ -86,11 +93,15 @@ export class AutonomousTMSController {
       // Start website development agent with full production access
       this.logManager.log('🌐 Starting Website Development Agent with full production access...', 'info');
       await this.websiteDevelopmentAgent.start();
+      
+      // Start portal development agent with full production access
+      this.logManager.log('🏢 Starting Portal Development Agent with full production access...', 'info');
+      await this.portalDevelopmentAgent.start();
 
       // Start monitoring loop
       this.startMonitoringLoop();
 
-      this.logManager.log('✅ Autonomous TMS System started successfully with full website development capabilities', 'success');
+      this.logManager.log('✅ Autonomous TMS System started successfully with full website and portal development capabilities', 'success');
 
     } catch (error) {
       this.isRunning = false;
@@ -120,6 +131,10 @@ export class AutonomousTMSController {
       // Stop website development agent
       this.logManager.log('🌐 Stopping Website Development Agent...', 'info');
       await this.websiteDevelopmentAgent.stop();
+      
+      // Stop portal development agent
+      this.logManager.log('🏢 Stopping Portal Development Agent...', 'info');
+      await this.portalDevelopmentAgent.stop();
 
       this.logManager.log('✅ Autonomous TMS System stopped successfully', 'success');
 

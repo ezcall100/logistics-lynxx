@@ -165,6 +165,20 @@ export class AutonomousAgentManager {
           priority: 'medium',
           permissions: ['create_content', 'update_content', 'organize_content', 'publish_content']
         }
+      },
+      {
+        id: 'portal-developer',
+        name: 'Portal Development Agent',
+        type: 'portal_development',
+        config: {
+          interval: 60000, // 1 minute
+          maxPortalsPerCycle: 5,
+          priority: 'high',
+          permissions: ['create_portals', 'modify_portals', 'deploy_portals', 'manage_roles', 'configure_features'],
+          productionAccess: true,
+          supportedPortalTypes: ['carrier', 'broker', 'shipper', 'driver', 'owner-operator', 'admin', 'enterprise', 'marketplace', 'analytics', 'billing', 'support'],
+          supportedRoles: ['carrier', 'broker', 'shipper', 'driver', 'owner-operator', 'admin', 'super-admin', 'enterprise', 'analyst', 'billing', 'support']
+        }
       }
     ];
 
