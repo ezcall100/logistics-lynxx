@@ -39,6 +39,9 @@
     "check:portals": "node scripts/check-portals-simple.mjs",
     "portal:scaffold": "node scripts/scaffold-portals.mjs",
     "dev:server": "node server/dev-server.mjs",
+    "autonomous:build": "node scripts/autonomous-build.mjs",
+    "autonomous:continuous": "node scripts/autonomous-agent-continuous.mjs",
+    "health:check": "node scripts/health-check.mjs",
     "fix:all": "npm run portal:fix && npm run check:portals"
   },
   "dependencies": {
