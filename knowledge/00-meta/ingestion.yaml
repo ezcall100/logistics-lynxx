@@ -1,0 +1,33 @@
+version: 1
+
+agents:
+  include_scopes: ["policy","playbook","runbook","portal","domain","system","telemetry"]
+  require_front_matter: true
+  ignore_patterns:
+    - "**/archive/**"
+    - "**/*.bak"
+  
+  priority_tags:
+    - key: scope
+      order: ["policy","telemetry","system","portal","domain","playbook","runbook"]
+  
+  freshness:
+    default_ttl_days: 90
+    overrides:
+      telemetry: 30
+      policy: 180
+  
+  routing:
+    # Which agent specializes in which folders
+    portal-dev:
+      include: ["05-portals/**"]
+    website-dev:
+      include: ["03-playbooks/golden-path-book.md","11-faq-and-howto/**"]
+    orchestrator:
+      include: ["02-policies/**","07-systems/**","08-telemetry/**","10-agent-registry/**"]
+  
+  consistency_checks:
+    - name: "Portal list matches registry"
+      kind: "path-vs-json"
+      left: "05-portals/*.md"
+      right: "10-agent-registry/registry.json#portals[*].key"

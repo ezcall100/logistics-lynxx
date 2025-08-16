@@ -22,7 +22,8 @@
     "test": "cd logistics-lynx && npm run test",
     "portal:scan": "cd logistics-lynx && npm run portal:scan",
     "autonomous:build": "cd logistics-lynx && npm run autonomous:build",
-    "autonomous:continuous": "cd logistics-lynx && npm run autonomous:continuous"
+    "autonomous:continuous": "cd logistics-lynx && npm run autonomous:continuous",
+    "knowledge:lint": "node scripts/knowledge-lint.js"
   },
   "description": "Parent package for Trans Bot AI project",
   "engines": {

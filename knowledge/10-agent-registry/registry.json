@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "portals": [
+    {"key":"superAdmin","path":"/super-admin","flag":"portal.superAdmin.enabled"},
+    {"key":"admin","path":"/admin","flag":"portal.admin.enabled"},
+    {"key":"tmsAdmin","path":"/tms-admin","flag":"portal.tmsAdmin.enabled"},
+    {"key":"onboarding","path":"/onboarding","flag":"portal.onboarding.enabled"},
+    {"key":"broker","path":"/broker","flag":"portal.broker.enabled"},
+    {"key":"shipper","path":"/shipper","flag":"portal.shipper.enabled"},
+    {"key":"carrier","path":"/carrier","flag":"portal.carrier.enabled"},
+    {"key":"driver","path":"/driver","flag":"portal.driver.enabled"},
+    {"key":"ownerOperator","path":"/owner-operator","flag":"portal.ownerOperator.enabled"},
+    {"key":"factoring","path":"/factoring","flag":"portal.factoring.enabled"},
+    {"key":"loadBoard","path":"/load-board","flag":"portal.loadBoard.enabled"},
+    {"key":"crm","path":"/crm","flag":"portal.crm.enabled"},
+    {"key":"financials","path":"/financials","flag":"portal.financials.enabled"},
+    {"key":"edi","path":"/edi","flag":"portal.edi.enabled"},
+    {"key":"marketplace","path":"/marketplace","flag":"portal.marketplace.enabled"},
+    {"key":"analytics","path":"/analytics","flag":"portal.analytics.enabled"},
+    {"key":"autonomous","path":"/autonomous","flag":"portal.autonomous.enabled"},
+    {"key":"workers","path":"/workers","flag":"portal.workers.enabled"},
+    {"key":"rates","path":"/rates","flag":"portal.rates.enabled"},
+    {"key":"directory","path":"/directory","flag":"portal.directory.enabled"}
+  ],
+  "tasks": [
+    {
+      "id": "rates.price_one",
+      "entry": "POST /api/rates/price_one",
+      "span": "agent.fn.rates.price_one",
+      "success_criteria": {"p95_ms": 2500, "success_pct": 98},
+      "sli_event": true
+    },
+    {
+      "id": "edi.204_tender",
+      "entry": "POST /api/edi/204",
+      "span": "agent.fn.edi.204_tender",
+      "success_criteria": {"p95_ms": 2500, "success_pct": 98},
+      "sli_event": true
+    }
+  ],
+  "schedules": {
+    "30s": ["queue_health", "kill_switch_poll"],
+    "5m": ["dlq_replay", "p95_watch"],
+    "hourly": ["etl_maint", "index_opt"],
+    "daily": ["ttl_cleanup", "backup_verify"],
+    "weekly": ["dr_drill", "security_scan"]
+  }
+}
