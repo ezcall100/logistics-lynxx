@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,11 +39,7 @@ export const ShipmentList: React.FC = () => {
   const [isTrackingOpen, setIsTrackingOpen] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchShipments();
-  }, [fetchShipments]);
-
-  const fetchShipments = async () => {
+  const fetchShipments = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('shipments')
@@ -62,7 +58,11 @@ export const ShipmentList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchShipments();
+  }, [fetchShipments]);
 
   const handleDeleteShipment = async (shipmentId: string) => {
     if (!confirm('Are you sure you want to delete this shipment?')) return;

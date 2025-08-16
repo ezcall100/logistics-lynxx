@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Zap, 
   CheckCircle, 
@@ -51,7 +51,7 @@ const N8NIntegrationPanel = () => {
   const [webhookUrl, setWebhookUrl] = useState('https://pixx100.app.n8n.cloud/webhook-test/');
   const { toast } = useToast();
 
-  const testWebhook = async (testType: 'basic' | 'autonomous' | 'health' = 'basic') => {
+  const testWebhook = useCallback(async (testType: 'basic' | 'autonomous' | 'health' = 'basic') => {
     setIsTesting(true);
     const startTime = Date.now();
 
@@ -168,7 +168,7 @@ const N8NIntegrationPanel = () => {
     } finally {
       setIsTesting(false);
     }
-  };
+  }, [webhookUrl, toast]);
 
   const runAllTests = async () => {
     setIsTesting(true);
