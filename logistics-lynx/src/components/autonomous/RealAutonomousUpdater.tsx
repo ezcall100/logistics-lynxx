@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { getAutonomousAPI, type AutonomousUpdate, type AutonomousAgent } from '@/lib/autonomous-api';
+import { SupabaseAPI, type AutonomousUpdate, type AutonomousAgent } from '@/lib/supabase';
 import { 
   Bot, 
   Code, 
@@ -42,22 +42,20 @@ export const RealAutonomousUpdater: React.FC = () => {
   // Initialize API and agents
   useEffect(() => {
     const initializeAPI = async () => {
-      const autonomousAPI = await getAutonomousAPI();
-      setApi(autonomousAPI);
+      setApi(SupabaseAPI);
       
-      // Load existing agents from API
+      // Load existing agents from Supabase
       try {
-        const existingAgents = await autonomousAPI.getAutonomousAgents();
+        const existingAgents = await SupabaseAPI.getAutonomousAgents();
         if (existingAgents.length > 0) {
           setAgents(existingAgents);
         } else {
           // Initialize default agents if none exist
-          const defaultAgents: AutonomousAgent[] = [
+          const defaultAgents = [
             {
-              id: 'ui-designer',
               name: 'UI Design Agent',
               type: 'design',
-              status: 'idle',
+              status: 'idle' as const,
               current_task: 'Ready to enhance website design',
               progress: 0,
               tasks_completed: 0,
@@ -65,10 +63,9 @@ export const RealAutonomousUpdater: React.FC = () => {
               specializations: ['color-schemes', 'typography', 'spacing', 'visual-hierarchy']
             },
             {
-              id: 'layout-engineer',
               name: 'Layout Engineer Agent',
               type: 'layout',
-              status: 'idle',
+              status: 'idle' as const,
               current_task: 'Ready to optimize layouts',
               progress: 0,
               tasks_completed: 0,
@@ -76,10 +73,9 @@ export const RealAutonomousUpdater: React.FC = () => {
               specializations: ['responsive-design', 'grid-systems', 'flexbox', 'css-grid']
             },
             {
-              id: 'interaction-designer',
               name: 'Interaction Designer Agent',
               type: 'interaction',
-              status: 'idle',
+              status: 'idle' as const,
               current_task: 'Ready to improve interactions',
               progress: 0,
               tasks_completed: 0,
@@ -87,10 +83,9 @@ export const RealAutonomousUpdater: React.FC = () => {
               specializations: ['animations', 'transitions', 'hover-effects', 'micro-interactions']
             },
             {
-              id: 'performance-optimizer',
               name: 'Performance Optimizer Agent',
               type: 'performance',
-              status: 'idle',
+              status: 'idle' as const,
               current_task: 'Ready to optimize performance',
               progress: 0,
               tasks_completed: 0,
@@ -98,10 +93,9 @@ export const RealAutonomousUpdater: React.FC = () => {
               specializations: ['rendering-optimization', 'memory-management', 'bundle-optimization']
             },
             {
-              id: 'accessibility-specialist',
               name: 'Accessibility Specialist Agent',
               type: 'accessibility',
-              status: 'idle',
+              status: 'idle' as const,
               current_task: 'Ready to improve accessibility',
               progress: 0,
               tasks_completed: 0,
@@ -110,21 +104,21 @@ export const RealAutonomousUpdater: React.FC = () => {
             }
           ];
           
-          // Save default agents to API
+          // Save default agents to Supabase
           for (const agent of defaultAgents) {
-            await autonomousAPI.upsertAgent(agent);
+            await SupabaseAPI.createAutonomousAgent(agent);
           }
-          setAgents(defaultAgents);
+          setAgents(await SupabaseAPI.getAutonomousAgents());
         }
         
         // Load recent updates
-        const recentUpdates = await autonomousAPI.getRecentAutonomousUpdates();
+        const recentUpdates = await SupabaseAPI.getAutonomousUpdates();
         setUpdates(recentUpdates);
         setUpdateCount(recentUpdates.length);
       } catch (error) {
         console.error('Failed to initialize agents:', error);
         toast({
-          title: "⚠️ API Connection Issue",
+          title: "⚠️ Supabase Connection Issue",
           description: "Using fallback mode - autonomous agents will work locally",
         });
       }
@@ -137,19 +131,19 @@ export const RealAutonomousUpdater: React.FC = () => {
   const applyRealUpdate = useCallback(async (component: string, change: string, type: AutonomousUpdate['type']) => {
     if (!api) return;
 
-    const update: Omit<AutonomousUpdate, 'id'> = {
+    const update = {
       component,
       change,
       timestamp: new Date().toISOString(),
-      status: 'applied',
+      status: 'applied' as const,
       type,
-      impact: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)] as any,
-      agent_id: 'ui-designer' // Default agent ID
+      impact: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)] as 'low' | 'medium' | 'high',
+      agent_id: agents[0]?.id || 'default' // Use first agent's ID
     };
 
     try {
-      // Save to API
-      const savedUpdate = await api.saveAutonomousUpdate(update);
+      // Save to Supabase
+      const savedUpdate = await SupabaseAPI.createAutonomousUpdate(update);
       
       // Update local state
       setUpdates(prev => [savedUpdate, ...prev.slice(0, 9)]);
@@ -170,11 +164,11 @@ export const RealAutonomousUpdater: React.FC = () => {
       console.error('Failed to save update:', error);
       toast({
         title: "⚠️ Update Failed",
-        description: "Could not save update to database",
+        description: "Could not save update to Supabase",
         variant: "destructive"
       });
     }
-  }, [api, toast]);
+  }, [api, toast, agents]);
 
   // Apply real visual changes to the page
   const applyVisualChange = useCallback((component: string, change: string, type: AutonomousUpdate['type']) => {
