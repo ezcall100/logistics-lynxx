@@ -1,5 +1,5 @@
 import UltraModernLayout from '@/components/layout/UltraModernLayout';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -74,9 +74,9 @@ export default function LoadManagementPage() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData, fetchData]);
+  }, [fetchData]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       // Fetch loads from shipments table
@@ -133,7 +133,7 @@ export default function LoadManagementPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   const filteredLoads = loads.filter(load => {
     const matchesSearch = load.shipment_number.toLowerCase().includes(searchQuery.toLowerCase()) ||

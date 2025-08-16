@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 // CarrierLayout import removed - layout is provided by App.tsx routing
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,9 +26,9 @@ const RatesOverview = () => {
     fetchRateMetrics();
     fetchRecentActivity();
     fetchModeBreakdown();
-  }, [fetchRateMetrics]);
+  }, [fetchRateMetrics, fetchRecentActivity, fetchModeBreakdown]);
 
-  const fetchRateMetrics = async () => {
+  const fetchRateMetrics = useCallback(async () => {
     try {
       const { data: rates, error } = await supabase
         .from('carrier_rates')
@@ -60,9 +60,9 @@ const RatesOverview = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const fetchRecentActivity = async () => {
+  const fetchRecentActivity = useCallback(async () => {
     // Mock recent activity - replace with real data
     setRecentActivity([
       { id: 1, type: 'Rate Update', description: 'OTR Dry Van rates updated for TX-CA lane', time: '2 hours ago' },
@@ -70,16 +70,16 @@ const RatesOverview = () => {
       { id: 3, type: 'New Rate', description: 'Added reefer rates for FL-NY corridor', time: '6 hours ago' },
       { id: 4, type: 'Margin Alert', description: 'Low margin detected on ATL-DEN route', time: '8 hours ago' }
     ]);
-  };
+  }, []);
 
-  const fetchModeBreakdown = async () => {
+  const fetchModeBreakdown = useCallback(async () => {
     setModeBreakdown([
       { mode: 'OTR Dry Van', icon: Truck, count: 145, revenue: 275000, margin: 24.5, color: 'blue' },
       { mode: 'Refrigerated', icon: Truck, count: 89, revenue: 185000, margin: 28.2, color: 'green' },
       { mode: 'Flatbed', icon: Truck, count: 67, revenue: 145000, margin: 21.8, color: 'orange' },
       { mode: 'LTL', icon: Package, count: 234, revenue: 95000, margin: 18.5, color: 'purple' }
     ]);
-  };
+  }, []);
 
   if (loading) {
     return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -58,7 +58,7 @@ const CommunicationCenterPage = () => {
     };
   }, [fetchCommunications]);
 
-  const fetchCommunications = async () => {
+  const fetchCommunications = useCallback(async () => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return;
@@ -81,7 +81,7 @@ const CommunicationCenterPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const sendMessage = async () => {
     if (!newMessage.subject.trim() || !newMessage.message.trim()) {

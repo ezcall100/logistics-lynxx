@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import ModernLayout from '@/components/layout/ModernLayout';
@@ -10,14 +10,14 @@ const Dashboard = () => {
   const location = useLocation();
 
   // Map routes to roles (excluding shipper-admin which has its own layout)
-  const routeToRoleMap: Record<string, string> = {
+  const routeToRoleMap = useMemo(() => ({
     '/super-admin': 'super_admin',
     '/carrier-admin': 'carrier_admin', 
     '/broker-admin': 'freight_broker_admin',
     '/driver': 'carrier_driver',
     '/owner-operator': 'owner_operator',
     '/dashboard': selectedRole || 'super_admin' // Default to current role or super_admin
-  };
+  }), [selectedRole]);
 
   // Update role based on current route
   useEffect(() => {

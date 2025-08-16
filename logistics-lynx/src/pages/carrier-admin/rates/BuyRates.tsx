@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 // CarrierLayout import removed - layout is provided by App.tsx routing
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,7 @@ const BuyRates = () => {
     fetchBuyRates();
   }, [fetchBuyRates]);
 
-  const fetchBuyRates = async () => {
+  const fetchBuyRates = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('carrier_rates')
@@ -67,7 +67,7 @@ const BuyRates = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const handleCreateRate = async () => {
     // Implementation for creating new rate

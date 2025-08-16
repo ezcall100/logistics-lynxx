@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -41,7 +41,7 @@ const PerformanceTrackingPage = () => {
     fetchPerformanceData();
   }, [fetchPerformanceData]);
 
-  const fetchPerformanceData = async () => {
+  const fetchPerformanceData = useCallback(async () => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return;
@@ -65,7 +65,7 @@ const PerformanceTrackingPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   // Calculate aggregated metrics
   const totalMiles = metrics.reduce((sum, m) => sum + (m.total_miles || 0), 0);

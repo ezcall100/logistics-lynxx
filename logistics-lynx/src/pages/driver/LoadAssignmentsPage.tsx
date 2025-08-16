@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ const LoadAssignmentsPage = () => {
     fetchDriverLoads();
   }, [fetchDriverLoads]);
 
-  const fetchDriverLoads = async () => {
+  const fetchDriverLoads = useCallback(async () => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return;
@@ -51,7 +51,7 @@ const LoadAssignmentsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const updateLoadStatus = async (loadId: string, newStatus: string) => {
     try {

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +13,7 @@ export const N8NQuickTest = () => {
 
   const webhookUrl = `https://imcyiofodlnbomemvqto.supabase.co/functions/v1/n8n-webhook`;
 
-  const runQuickTest = async () => {
+  const runQuickTest = useCallback(async () => {
     setTestStatus('testing');
     
     try {
@@ -68,7 +68,7 @@ export const N8NQuickTest = () => {
         variant: "destructive"
       });
     }
-  };
+  }, [webhookUrl, toast]);
 
   // Auto-run test on component mount
   useEffect(() => {

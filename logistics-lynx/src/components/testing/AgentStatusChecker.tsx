@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -88,7 +88,7 @@ export const AgentStatusChecker: React.FC = () => {
     }
   };
 
-  const runHealthCheck = async () => {
+  const runHealthCheck = useCallback(async () => {
     setIsChecking(true);
     
     // Initialize agents with checking status
@@ -139,7 +139,7 @@ export const AgentStatusChecker: React.FC = () => {
     } finally {
       setIsChecking(false);
     }
-  };
+  }, [toast]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
