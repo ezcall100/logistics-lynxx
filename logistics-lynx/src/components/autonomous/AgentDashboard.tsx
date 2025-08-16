@@ -37,7 +37,7 @@ export const AgentDashboard: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [loadData])
 
   const loadData = useCallback(async () => {
     try {

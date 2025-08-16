@@ -239,7 +239,7 @@ test.describe('Design System v2.0 Visual Regression', () => {
 /**
  * Helper function to generate visual diff report
  */
-export async function generateVisualDiffReport(page: any, baselineDir: string, currentDir: string): Promise<void> {
+export async function generateVisualDiffReport(page: Page, baselineDir: string, currentDir: string): Promise<void> {
   const fs = require('fs');
   const path = require('path');
   
