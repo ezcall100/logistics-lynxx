@@ -44,6 +44,7 @@ import { PortalImprovementTracker } from '@/components/autonomous/PortalImprovem
 import { AdvancedFeatureCenter } from '@/components/autonomous/AdvancedFeatureCenter';
 import { FeatureDeploymentTracker } from '@/components/autonomous/FeatureDeploymentTracker';
 import { FullAutonomyAuthorization } from '@/components/autonomous/FullAutonomyAuthorization';
+import WebsiteImprovementDashboard from '@/components/autonomous/WebsiteImprovementDashboard';
 
 const AutonomousPortal: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -201,7 +202,7 @@ const AutonomousPortal: React.FC = () => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Eye className="w-4 h-4" />
             Overview
@@ -217,6 +218,10 @@ const AutonomousPortal: React.FC = () => {
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Analytics
+          </TabsTrigger>
+          <TabsTrigger value="website-improvements" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            Website
           </TabsTrigger>
         </TabsList>
 
@@ -437,6 +442,11 @@ const AutonomousPortal: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Website Improvements Tab */}
+        <TabsContent value="website-improvements" className="space-y-6">
+          <WebsiteImprovementDashboard />
         </TabsContent>
       </Tabs>
     </div>
