@@ -1,3 +1,13 @@
+---
+title: Metadata Schema (Front-Matter)
+version: 1.0.0
+owner: platform@transbot.ai
+visibility: agents,human-ops
+scope: reference
+ttl_days: 180
+last_validated: 2025-08-15
+---
+
 # Metadata Schema (Front-Matter)
 
 Required keys:

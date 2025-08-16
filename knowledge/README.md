@@ -3,6 +3,7 @@ title: Autonomous Knowledge Root
 version: 1.0.0
 owner: platform@transbot.ai
 visibility: agents,human-ops
+scope: reference
 ---
 
 # Trans Bot AI — Autonomous Knowledge Working Tree
