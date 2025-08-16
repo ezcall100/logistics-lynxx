@@ -1,6 +1,7 @@
 # yaml-lint disable rule:context-access-might-be-invalid
 # Test workflow to validate syntax and environment variable access
 # Note: Context access warnings are false positives - these variables are properly defined
+# All vars.* and secrets.* references are valid and will be resolved at runtime
 name: 🧪 Test Workflow Syntax
 
 on:
@@ -39,6 +40,7 @@ jobs:
           
           # Export vars with fallbacks using proper context syntax
           # These variables should be defined in GitHub repository settings
+          # Note: Using explicit fallbacks to avoid linting warnings
           {
             echo "ENVIRONMENT_NAME=${{ vars.ENVIRONMENT_NAME || 'test' }}"
             echo "APP_URL=${{ vars.APP_URL || 'http://localhost' }}"
@@ -50,6 +52,7 @@ jobs:
             
             # Export secrets with fallbacks using proper context syntax
             # These secrets should be defined in GitHub repository settings
+            # Note: Using explicit fallbacks to avoid linting warnings
             echo "SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}"
             echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'placeholder-key' }}"
             echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}"
