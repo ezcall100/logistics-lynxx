@@ -314,10 +314,10 @@ export const RealAutonomousUpdater: React.FC = () => {
             last_activity: new Date().toISOString()
           };
 
-          // Update agent in API
+          // Update agent in Supabase
           if (api) {
             try {
-              await api.updateAgentStatus(agent.id, updatedAgent);
+              await SupabaseAPI.updateAutonomousAgent(agent.id, updatedAgent);
             } catch (error) {
               console.error('Failed to update agent status:', error);
             }
