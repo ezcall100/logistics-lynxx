@@ -1,7 +1,7 @@
 
-import React from 'react';
+import { FC } from 'react';
 
-const App: React.FC = () => {
+const App: FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-primary text-primary-foreground p-4">
