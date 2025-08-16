@@ -165,7 +165,7 @@ export const AgentDashboard: React.FC = () => {
       default:
         return 'bg-gray-100 text-gray-800'
     }
-  }
+    }
 
   const getHealthStatusColor = (status: string) => {
     switch (status) {
@@ -190,12 +190,12 @@ export const AgentDashboard: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Autonomous Agents Dashboard</h1>
         <div className={`px-3 py-1 rounded-full text-sm font-medium ${getHealthStatusColor(health?.status || 'unknown')}`}>
           System: {health?.status || 'Unknown'}
         </div>
-      </div>
+              </div>
 
       {/* System Health Overview */}
       {health && (
@@ -217,9 +217,9 @@ export const AgentDashboard: React.FC = () => {
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">{health.overall_metrics.success_rate.toFixed(1)}%</div>
               <div className="text-sm text-gray-600">Success Rate</div>
-            </div>
-          </div>
-        </div>
+                </div>
+                          </div>
+                                  </div>
       )}
 
       {/* Agent Status */}
@@ -233,7 +233,7 @@ export const AgentDashboard: React.FC = () => {
                 <span className={`px-2 py-1 rounded text-xs ${getStatusColor(agent.status)}`}>
                   {agent.status}
                 </span>
-              </div>
+                                  </div>
               <p className="text-sm text-gray-600 mb-2">{agent.type}</p>
               <p className="text-xs text-gray-500">
                 Last heartbeat: {new Date(agent.last_heartbeat).toLocaleString()}
@@ -247,10 +247,10 @@ export const AgentDashboard: React.FC = () => {
                         {cap}
                       </span>
                     ))}
-                  </div>
-                </div>
-              )}
-            </div>
+                                  </div>
+                                    </div>
+                                  )}
+                                </div>
           ))}
         </div>
       </div>
@@ -293,8 +293,8 @@ export const AgentDashboard: React.FC = () => {
           >
             Create Task
           </button>
-        </div>
-        
+              </div>
+
         {/* Sample Task Buttons */}
         <div className="flex flex-wrap gap-2">
           <button
@@ -327,8 +327,8 @@ export const AgentDashboard: React.FC = () => {
           >
             Sample Capacity
           </button>
-        </div>
-      </div>
+                </div>
+                          </div>
 
       {/* Recent Tasks */}
       <div className="bg-white rounded-lg shadow p-6">
@@ -372,7 +372,7 @@ export const AgentDashboard: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>
+              </div>
 
       {/* Recent Events */}
       <div className="bg-white rounded-lg shadow p-6">
@@ -383,11 +383,11 @@ export const AgentDashboard: React.FC = () => {
               <div>
                 <span className="font-medium">{event.agent_id}</span>
                 <span className="text-gray-600 ml-2">- {event.event_type}</span>
-              </div>
+                </div>
               <span className="text-sm text-gray-500">
                 {new Date(event.created_at).toLocaleString()}
               </span>
-            </div>
+                          </div>
           ))}
         </div>
       </div>
