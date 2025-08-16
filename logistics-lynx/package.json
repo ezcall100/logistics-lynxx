@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "test": "npm run build:ts && node dist/test/test-runner.js",
+    "test:autonomous": "node test-autonomous-agents.js",
     "start:autonomous": "npm run build:ts && node dist/autonomous/start-autonomous.js",
     "monitor:start": "npm run build:ts && node dist/monitoring/start-monitoring.js",
     "agents:start": "npm run build:ts && node dist/agents/start-agents.js",
