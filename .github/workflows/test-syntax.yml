@@ -1,3 +1,4 @@
+# yaml-lint disable rule:context-access-might-be-invalid
 # Test workflow to validate syntax and environment variable access
 name: 🧪 Test Workflow Syntax
 
@@ -31,7 +32,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      # yaml-lint disable rule:context-access-might-be-invalid
       - name: Export Environment Variables
         run: |
           echo "🔧 Exporting environment variables and secrets..."
@@ -54,7 +54,6 @@ jobs:
           } >> "$GITHUB_ENV"
           
           echo "✅ Environment variables exported successfully!"
-      # yaml-lint enable rule:context-access-might-be-invalid
         
       - name: Test environment variable access
         run: |
