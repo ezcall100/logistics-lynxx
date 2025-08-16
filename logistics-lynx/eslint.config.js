@@ -66,7 +66,7 @@ export default tseslint.config(
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': ['warn', {
-        additionalHooks: '(useAsyncEffect|useDebouncedCallback)'
+        additionalHooks: '(useAsyncEffect|useDebounced|useEvent|useDerived)'
       }],
 
       // Fast Refresh friendliness
@@ -75,7 +75,9 @@ export default tseslint.config(
         allowExportNames: [
           'metadata','generateMetadata','viewport','dynamic','dynamicParams',
           'revalidate','fetchCache','preferredRegion','runtime','maxDuration',
-          'config','generateStaticParams'
+          'config','generateStaticParams',
+          'useAuth','useRole','useRoleContext','useTheme','useSidebar',
+          'AuthProvider','RoleProvider','ThemeProvider'
         ]
       }],
 

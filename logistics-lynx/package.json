@@ -22,7 +22,7 @@
     "deploy": "npm run build && npm run deploy:prod",
     "deploy:prod": "npm run build:ts && node dist/deploy/deploy-production.js",
     "lint": "eslint .",
-    "lint:ci": "eslint . --max-warnings=38",
+    "lint:ci": "eslint . --max-warnings=26",
     "lint:strict": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
