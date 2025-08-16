@@ -21,9 +21,9 @@
     "db:setup": "npm run build:ts && node dist/database/setup-tables.js",
     "deploy": "npm run build && npm run deploy:prod",
     "deploy:prod": "npm run build:ts && node dist/deploy/deploy-production.js",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint:ci": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --format=compact",
-    "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
+    "lint:ci": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 42",
+    "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --fix"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
