@@ -10,6 +10,8 @@ import PerformanceOptimizationDashboard from './PerformanceOptimizationDashboard
 import PredictiveScalingDashboard from './PredictiveScalingDashboard';
 import SelfHealingDashboard from './SelfHealingDashboard';
 import AutonomousUIDesignDashboard from './AutonomousUIDesignDashboard';
+import { AutonomousWebsiteUpdater } from './AutonomousWebsiteUpdater';
+import { LiveWebsiteUpdater } from './LiveWebsiteUpdater';
 
 const AutonomousTabs = () => {
   return (
@@ -22,7 +24,7 @@ const AutonomousTabs = () => {
       </div>
 
       <Tabs defaultValue="dashboard" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-8">
+        <TabsList className="grid w-full grid-cols-10">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="agents">AI Agents</TabsTrigger>
           <TabsTrigger value="tasks">Task Manager</TabsTrigger>
@@ -31,6 +33,8 @@ const AutonomousTabs = () => {
           <TabsTrigger value="scaling">Scaling</TabsTrigger>
           <TabsTrigger value="healing">Self-Healing</TabsTrigger>
           <TabsTrigger value="ui-design">UI Design</TabsTrigger>
+          <TabsTrigger value="website-updater">Website Updater</TabsTrigger>
+          <TabsTrigger value="live-updater">Live Updates</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-4">
@@ -73,6 +77,14 @@ const AutonomousTabs = () => {
 
         <TabsContent value="ui-design" className="space-y-4">
           <AutonomousUIDesignDashboard />
+        </TabsContent>
+
+        <TabsContent value="website-updater" className="space-y-4">
+          <AutonomousWebsiteUpdater />
+        </TabsContent>
+
+        <TabsContent value="live-updater" className="space-y-4">
+          <LiveWebsiteUpdater />
         </TabsContent>
       </Tabs>
     </div>
