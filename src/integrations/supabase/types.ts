@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -6595,10 +6595,10 @@ export type Database = {
       }
       assign_driver_to_carrier: {
         Args:
-          | { driver_id: number; carrier_id: number }
+          | { carrier_id: number; driver_id: number }
           | {
-              p_driver_user_id: string
               p_carrier_id: string
+              p_driver_user_id: string
               p_invitation_id: string
             }
         Returns: undefined
@@ -6622,34 +6622,34 @@ export type Database = {
       get_active_autonomous_tasks: {
         Args: { p_agent_type?: string }
         Returns: {
-          task_id: string
           agent_type: string
-          task_name: string
-          status: string
-          priority: number
           created_at: string
+          priority: number
+          status: string
+          task_id: string
+          task_name: string
         }[]
       }
       get_agent_performance_metrics: {
         Args: { p_agent_type: string }
         Returns: {
-          total_tasks: number
+          avg_duration_minutes: number
           completed_tasks: number
           success_rate: number
-          avg_duration_minutes: number
+          total_tasks: number
         }[]
       }
       get_carrier_drivers: {
         Args: { p_carrier_id: string }
         Returns: {
-          user_id: string
-          name: string
-          email: string
-          driver_license_number: string
-          vehicle_assigned: string
-          driver_status: string
-          last_login: string
           created_at: string
+          driver_license_number: string
+          driver_status: string
+          email: string
+          last_login: string
+          name: string
+          user_id: string
+          vehicle_assigned: string
         }[]
       }
       get_current_user_role: {
@@ -6666,8 +6666,8 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
