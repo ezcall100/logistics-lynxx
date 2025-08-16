@@ -168,17 +168,17 @@ jobs:
       - name: 🔍 Lint Check
         run: |
           echo "🔍 Running linting checks..."
-          npm run lint:ci || echo "⚠️  Linting completed with warnings (non-blocking)"
+          cd logistics-lynx && npm run lint:ci || echo "⚠️  Linting completed with warnings (non-blocking)"
 
       - name: 🧪 Type Check
         run: |
           echo "🧪 Running type checks..."
-          npm run type-check --if-present || echo "⚠️  Type checking failed but continuing..."
+          cd logistics-lynx && npm run type-check || echo "⚠️  Type checking failed but continuing..."
 
       - name: 📊 Code Coverage
         run: |
           echo "📊 Running test coverage..."
-          npm run test:coverage --if-present || echo "⚠️  Coverage check failed but continuing..."
+          cd logistics-lynx && npm run test:coverage || echo "⚠️  Coverage check failed but continuing..."
 
   # ==================== BUILD & TEST ====================
   build-and-test:
@@ -205,12 +205,12 @@ jobs:
       - name: 🧪 Run Tests
         run: |
           echo "🧪 Running test suite..."
-          npm test --if-present || echo "⚠️  Tests failed but continuing..."
+          cd logistics-lynx && npm test || echo "⚠️  Tests failed but continuing..."
 
       - name: 🏗️ Build Application
         run: |
           echo "🏗️ Building application..."
-          npm run build --if-present || echo "⚠️  Build failed but continuing..."
+          cd logistics-lynx && npm run build || echo "⚠️  Build failed but continuing..."
 
       - name: 📦 Package Artifacts
         run: |
