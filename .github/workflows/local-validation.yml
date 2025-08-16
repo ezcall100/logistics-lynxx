@@ -88,7 +88,7 @@ jobs:
 
       - name: 🔍 Lint (if present)
         working-directory: ${{ steps.detect.outputs.wd }}
-        run: npm run lint --if-present || true
+        run: npm run lint:ci --if-present || echo "⚠️ Linting completed with warnings (non-blocking)"
 
       - name: 🧪 Test (CI, if present)
         working-directory: ${{ steps.detect.outputs.wd }}

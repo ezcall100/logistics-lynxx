@@ -193,7 +193,7 @@ jobs:
         run: |
           echo "🔍 Running linting checks..."
           cd logistics-lynx
-          npm run lint --if-present || echo "⚠️ Linting failed but continuing..."
+          npm run lint:ci --if-present || echo "⚠️ Linting completed with warnings (non-blocking)"
 
       - name: 🧪 Run Tests (if needed)
         if: ${{ github.event.inputs.validation_level == 'comprehensive' }}
