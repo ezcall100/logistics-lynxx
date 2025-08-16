@@ -320,7 +320,7 @@ function Reset-Database {
 }
 
 # Function to run complete setup
-function Run-Setup {
+function Initialize-Setup {
     Write-Header
     Write-Status "Running complete Supabase setup..."
     
@@ -346,7 +346,7 @@ function Run-Setup {
 function Main {
     switch ($Command.ToLower()) {
         "setup" {
-            Run-Setup
+            Initialize-Setup
         }
         "install" {
             Write-Header

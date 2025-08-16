@@ -207,7 +207,7 @@ function New-Directories {
 }
 
 # Function to build Docker image
-function Build-Image {
+function New-DockerImage {
     Write-Status "Building Docker image..."
     
     docker build -t "${ImageName}:${Tag}" .
@@ -420,7 +420,7 @@ function Show-Logs {
 }
 
 # Function to clean up
-function Clean-Up {
+function Remove-DockerResources {
     Write-Status "Cleaning up Docker resources..."
     
     # Stop containers
@@ -471,14 +471,14 @@ function Show-Help {
 }
 
 # Function to run initial setup
-function Run-Setup {
+function Initialize-Setup {
     Write-Header
     Write-Status "Running initial setup..."
     
     Test-Prerequisites
     Set-Environment
     New-Directories
-    Build-Image
+    New-DockerImage
     
     Write-Success "Setup completed successfully!"
     Write-Host ""
@@ -493,7 +493,7 @@ function Run-Setup {
 function Main {
     switch ($Command.ToLower()) {
         "setup" {
-            Run-Setup
+            Initialize-Setup
         }
         "start" {
             Write-Header
@@ -516,7 +516,7 @@ function Main {
         }
         "clean" {
             Write-Header
-            Clean-Up
+            Remove-DockerResources
         }
         "help" {
             Show-Help
