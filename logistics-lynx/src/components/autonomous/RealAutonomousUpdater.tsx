@@ -553,7 +553,7 @@ export const RealAutonomousUpdater: React.FC = () => {
       `;
       document.head.appendChild(style);
     }
-  }, [currentTheme]);
+  }, [currentTheme]); // eslint-disable-line @typescript-eslint/parser
 
   // Start real autonomous updates
   const startRealUpdates = useCallback(() => {
