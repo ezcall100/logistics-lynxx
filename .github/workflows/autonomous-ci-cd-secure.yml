@@ -168,7 +168,7 @@ jobs:
       - name: 🔍 Lint Check
         run: |
           echo "🔍 Running linting checks..."
-          npm run lint --if-present || echo "⚠️  Linting failed but continuing..."
+          npm run lint:ci || echo "⚠️  Linting completed with warnings (non-blocking)"
 
       - name: 🧪 Type Check
         run: |

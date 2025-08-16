@@ -18,6 +18,7 @@
     "build:dev:check": "cd logistics-lynx && npm run build:dev:check",
     "preview": "cd logistics-lynx && npm run preview",
     "lint": "cd logistics-lynx && npm run lint",
+    "lint:ci": "cd logistics-lynx && npm run lint:ci",
     "test": "cd logistics-lynx && npm run test",
     "portal:scan": "cd logistics-lynx && npm run portal:scan",
     "autonomous:build": "cd logistics-lynx && npm run autonomous:build",
