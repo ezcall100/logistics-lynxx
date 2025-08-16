@@ -103,6 +103,7 @@ import CommunityPage from './pages/CommunityPage';
 import ForumPage from './pages/ForumPage';
 import HelpCenterPage from './pages/HelpCenterPage';
 import StatusPage from './pages/StatusPage';
+import DesignSystem from './pages/DesignSystem';
 
 // Import the enhanced ProtectedRoute
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -361,6 +362,11 @@ function App() {
                   <HelpCenterPage />
                 </ProtectedRoute>
               } />
+              
+              {/* Design System */}
+              <Route path="/design-system" element={<DesignSystem />} />
+              <Route path="/design-system/components" element={<DesignSystem />} />
+              <Route path="/design-system/layout" element={<DesignSystem />} />
               
               {/* Catch all route - redirect to home */}
               <Route path="*" element={<Navigate to="/" replace />} />

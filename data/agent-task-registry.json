@@ -376,5 +376,164 @@
       "invoice_accuracy": "≥99%",
       "customer_satisfaction": "≥4.5/5"
     }
-  }
+  },
+  "tasks": [
+    {
+      "id": "ds-rollout-ui-v2",
+      "title": "EXECUTE: Design System Rollout (UI v2) — All Surfaces, Canary + Proofs",
+      "priority": "HIGH",
+      "status": "READY",
+      "created": "2025-08-16T18:55:00.000Z",
+      "assigned_to": "TMS_AUTONOMOUS_AGENT_SYSTEM",
+      "objective": "Ship the unified Trans Bot AI design system (tokens, components, layouts, accents, states, a11y) to website + 20 portals with UI v2 feature flag, staged rollout, and auditor-ready evidence.",
+      
+      "guardrails": {
+        "slo": {
+          "success_rate": "≥ 98%",
+          "p95_route_paint": "≤ 2.5s",
+          "error_rate": "< 2%"
+        },
+        "safety_flags": {
+          "ui.v2.enabled": "canary",
+          "autonomy.emergencyStop": "honor immediately"
+        },
+        "rollback_triggers": [
+          "any portal p95 > 2.5s for 2 consecutive 3-min windows",
+          "visual snapshot diff > 5% critical areas"
+        ]
+      },
+
+      "phases": [
+        {
+          "id": "phase-0",
+          "name": "Setup",
+          "target_duration": "1 hour",
+          "tasks": [
+            "Create tokens & theme",
+            "Files: /design/tokens/semantic.json → generate CSS vars to src/styles/tokens.css",
+            "Tailwind: extend from tokens; dark mode class-based",
+            "Feature flags: Ensure flags exist (idempotent): ui.v2.enabled (global:false), ui.v2.accentMap (JSON), obs.otelEnabled (true)",
+            "Component library scaffold: src/components/ui/ (buttons, inputs, cards, tables, overlays, toasts, skeletons, progress)",
+            "Docs checkpoint: DESIGN_SYSTEM.md (tokens, components, usage), light/dark screenshots"
+          ],
+          "deliverable": "PR ui/v2-setup (tests + screenshots)"
+        },
+        {
+          "id": "phase-1",
+          "name": "Layout & Navigation Unification",
+          "tasks": [
+            "Apply app shell to all portals: left rail + top bar + page header presets",
+            "Replace inline styles with tokens; remove hardcoded hex values",
+            "Introduce state patterns everywhere: Loading: skeleton within 200ms; spinner > 800ms, Empty: icon + sentence + CTA, Error: human message + \"View trace\" (span/traceId)",
+            "Accessibility pass (WCAG 2.2 AA basics): Focus rings, aria labels, landmarks, keyboard traversal"
+          ],
+          "deliverable": "PR ui/v2-shell-portals + axe report"
+        },
+        {
+          "id": "phase-2",
+          "name": "Portal Accent Map (sub-brands, subtle)",
+          "tasks": [
+            "Apply accents only to small affordances (active pill, top-bar indicator, chart series #1)",
+            "superAdmin: #8B5CF6, admin: #6366F1, tmsAdmin: #7C3AED, onboarding: #A78BFA",
+            "broker: #4F46E5, shipper: #10B981, carrier: #0EA5E9, driver: #F59E0B",
+            "ownerOperator: #4338CA, factoring: #16A34A, loadBoard: #06B6D4, crm: #0EA5E9",
+            "financials: #14B8A6, edi: #22C55E, marketplace: #8B5CF6, analytics: #D946EF",
+            "autonomous: #22D3EE, workers: #10B981, rates: #3B82F6, directory: #64748B"
+          ],
+          "deliverable": "PR ui/v2-accents (tokenized; no raw hex in components)"
+        },
+        {
+          "id": "phase-3",
+          "name": "Data-Viz & Tables",
+          "tasks": [
+            "Recharts presets (time series with p50/p95 toggle, a11y colors, tz-aware tooltips)",
+            "Tables: density toggle, sticky header, sort/filter, empty/error/loading templates",
+            "Performance: virtualization where row count > 200"
+          ],
+          "deliverable": "PR ui/v2-dataviz-tables"
+        },
+        {
+          "id": "phase-4",
+          "name": "Website (50+ pages)",
+          "tasks": [
+            "Apply tokens + components to marketing pages (hero, trust band, features, ROI, CTA)",
+            "Lighthouse ≥ 90 on Perf/Best/A11y/SEO (home, pricing, blog index)",
+            "SEO tech: meta, OpenGraph, structured data"
+          ],
+          "deliverable": "PR ui/v2-website"
+        },
+        {
+          "id": "phase-5",
+          "name": "Canary, Tests, and Rollout",
+          "tasks": [
+            "Enable canary: set ui.v2.enabled=true for 10% of sessions/tenants",
+            "Visual regression: Playwright snapshots (light/dark) on 20 portal landings",
+            "p95 monitor per portal (new SLI event): page paint, TTI, errors",
+            "Ramp to 25% → 50% → 100% when green for 30m at each step",
+            "If breach → auto-degrade (50% parallelism) → rollback UI v2 flag → open incident"
+          ],
+          "deliverable": "PR ui/v2-rollout + artifact pack"
+        }
+      ],
+
+      "evidence_observability": {
+        "store_to": "/artifacts/ui-v2/YYYY-MM-DD/",
+        "artifacts": [
+          "flags.json",
+          "lighthouse.json", 
+          "axe-report.json",
+          "visual-diff.html",
+          "p95-portal.csv (per portal)",
+          "trace-sample.txt (ids of exemplar spans)"
+        ],
+        "slack_alert": "includes PR link + traceId + p95 snapshot"
+      },
+
+      "acceptance_criteria": {
+        "consistency": "tokens only; zero hardcoded colors in app code",
+        "a11y": "WCAG 2.2 AA key paths; keyboard-only checks pass",
+        "perf": "p95 paint ≤ 2.5s (portal landings & primary dashboards)",
+        "seo": "Lighthouse ≥ 90 for website key pages",
+        "docs": "DESIGN_SYSTEM.md + kitchen-sink routes: /design-system/components, /design-system/layout"
+      },
+
+      "work_items": [
+        "ds.tokens.generate",
+        "ds.tailwind.apply", 
+        "ds.components.ship.core",
+        "ds.shell.apply.portals",
+        "ds.states.wire",
+        "ds.a11y.pass",
+        "ds.accents.apply",
+        "ds.dataviz.standardize",
+        "ds.website.apply",
+        "ds.tests.visual",
+        "ds.rollout.canary",
+        "ds.evidence.capture"
+      ],
+
+      "notes_for_agents": [
+        "Emit OTEL spans on route mounts and primary actions; attach portalKey, uiVersion: \"v2\"",
+        "Respect prefers-reduced-motion",
+        "Do not exceed bundle budgets; lazy-load heavy charts/routes",
+        "For any portal missing a page, scaffold with v2 components immediately"
+      ],
+
+      "operator_quick_checks": [
+        "/readyz stays 200; p95 dashboards trending ≤ 2.5s",
+        "Visual diffs: no >5% critical changes", 
+        "Lighthouse ≥ 90 (home, pricing, blog)",
+        "npm run smoke:test && npm run check:portals green"
+      ],
+
+      "rollback_procedure": [
+        "flip ui.v2.enabled=false globally",
+        "revert last PR", 
+        "restore prior snapshots"
+      ],
+
+      "execution_window": "Safe to run now (honor emergencyStop)",
+      "priority": "HIGH"
+    }
+  ]
 }
