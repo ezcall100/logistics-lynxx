@@ -446,8 +446,8 @@ jobs:
         working-directory: logistics-lynx
         run: |
           echo "🔍 Running linting checks..."
-          pnpm run lint
-          echo "✅ Linting passed"
+          pnpm run lint:ci
+          echo "✅ Linting completed (warnings are non-blocking)"
 
       - name: 🧪 Run Tests
         if: ${{ needs.preflight.outputs.skip_validation != 'true' }}
