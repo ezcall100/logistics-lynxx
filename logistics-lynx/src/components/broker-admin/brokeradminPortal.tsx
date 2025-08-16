@@ -22,7 +22,7 @@ import {
   Shield
 } from 'lucide-react';
 
-const brokeradminPortal: React.FC = () => {
+const BrokerAdminPortal: React.FC = () => {
   const { 
     agents, 
     systemStatus, 
@@ -217,4 +217,4 @@ const brokeradminPortal: React.FC = () => {
   );
 };
 
-export default brokeradminPortal;
+export default BrokerAdminPortal;

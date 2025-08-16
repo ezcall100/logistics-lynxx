@@ -22,7 +22,7 @@ import {
   Shield
 } from 'lucide-react';
 
-const carrieradminPortal: React.FC = () => {
+const CarrierAdminPortal: React.FC = () => {
   const { 
     agents, 
     systemStatus, 
@@ -217,4 +217,4 @@ const carrieradminPortal: React.FC = () => {
   );
 };
 
-export default carrieradminPortal;
+export default CarrierAdminPortal;

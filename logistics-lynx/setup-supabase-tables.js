@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-env node */
 
 /**
  * Supabase Database Tables Setup Script

@@ -22,7 +22,7 @@ import {
   Shield
 } from 'lucide-react';
 
-const shipperadminPortal: React.FC = () => {
+const ShipperAdminPortal: React.FC = () => {
   const { 
     agents, 
     systemStatus, 
@@ -217,4 +217,4 @@ const shipperadminPortal: React.FC = () => {
   );
 };
 
-export default shipperadminPortal;
+export default ShipperAdminPortal;
