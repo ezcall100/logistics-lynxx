@@ -7,8 +7,8 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
-      jsxRuntime: 'classic',
-      jsxImportSource: undefined,
+      jsxRuntime: 'automatic',
+      jsxImportSource: 'react',
       babel: {
         plugins: []
       }
@@ -24,10 +24,8 @@ export default defineConfig(({ mode }) => ({
     'process.env': process.env,
   },
   esbuild: {
-    jsx: 'transform',
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
-    jsxImportSource: undefined,
+    jsx: 'automatic',
+    jsxImportSource: 'react',
     target: 'es2020',
     jsxDev: mode === 'development',
   },
