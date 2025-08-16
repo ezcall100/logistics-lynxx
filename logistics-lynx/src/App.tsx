@@ -42,7 +42,7 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 // Import main pages
-import HomePage from './pages/HomePage';
+import ModernIndex from './pages/ModernIndex';
 import Dashboard from './pages/Dashboard';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
@@ -81,6 +81,13 @@ import BrokerPortalPage from './pages/BrokerPortalPage';
 import AdminPortalPage from './pages/AdminPortalPage';
 import SuperAdminPage from './pages/SuperAdminPage';
 import AutonomousDashboardPage from './pages/AutonomousDashboardPage';
+
+// Import portal dashboard pages
+import BrokerDashboard from './pages/broker/dashboard';
+import CarrierDashboard from './pages/carrier/dashboard';
+import ShipperDashboard from './pages/shipper/dashboard';
+import DriverDashboard from './pages/driver/dashboard';
+import SuperAdminDashboard from './pages/superAdmin/dashboard';
 import PortalSelection from './pages/PortalSelection';
 import LiveMonitoringPage from './pages/LiveMonitoringPage';
 import { PORTALS, DEPRECATED_ROUTES } from './portals/registry';
@@ -138,7 +145,7 @@ function App() {
                   <Route path="/carrier-admin" element={<carrieradminPortal />} />
                   <Route path="/super-admin" element={<superadminPortal />} />
               {/* Public Routes */}
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<ModernIndex />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -279,6 +286,13 @@ function App() {
               <Route path="/broker-portal" element={<BrokerPortalPage />} />
               <Route path="/admin-portal" element={<AdminPortalPage />} />
               <Route path="/autonomous-dashboard" element={<AutonomousDashboardPage />} />
+              
+              {/* Portal Dashboard Routes */}
+              <Route path="/broker/dashboard" element={<BrokerDashboard />} />
+              <Route path="/carrier/dashboard" element={<CarrierDashboard />} />
+              <Route path="/shipper/dashboard" element={<ShipperDashboard />} />
+              <Route path="/driver/dashboard" element={<DriverDashboard />} />
+              <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
               
               {/* System Pages */}
               <Route path="/live-monitoring" element={

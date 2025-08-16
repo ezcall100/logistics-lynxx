@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
-import { LoadBoardPortal } from '../components/loadBoard/LoadBoardPortal';
+import { LoadBoardPortal } from '../../components/load-board/LoadBoardPortal';
 
 const LoadBoardPage = () => {
   return (

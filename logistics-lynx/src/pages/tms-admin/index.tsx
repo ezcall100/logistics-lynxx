@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProtectedRoute } from '../components/auth/ProtectedRoute';
-import { TMSAdminPortal } from '../components/tmsAdmin/TMSAdminPortal';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import { TMSAdminPortal } from '../../components/tms-admin/TMSAdminPortal';
 
 const TMSAdminPage = () => {
   return (
