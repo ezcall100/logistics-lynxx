@@ -127,6 +127,155 @@ export const RealAutonomousUpdater: React.FC = () => {
     initializeAPI();
   }, [toast]);
 
+  // Apply real visual changes to the page
+  const applyVisualChange = useCallback((component: string, change: string, type: AutonomousUpdate['type']) => {
+    // Get the root element to apply global changes
+    const root = document.documentElement;
+    const body = document.body;
+    
+    // Add global notification for autonomous updates
+    const globalNotification = document.createElement('div');
+    globalNotification.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 10000;
+      animation: slideDown 0.5s ease-out;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+    globalNotification.innerHTML = `
+      🤖 <strong>Autonomous Agent Update:</strong> ${component} - ${change}
+    `;
+    document.body.appendChild(globalNotification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      if (globalNotification.parentNode) {
+        globalNotification.style.animation = 'slideUp 0.5s ease-out';
+        setTimeout(() => {
+          if (globalNotification.parentNode) {
+            globalNotification.parentNode.removeChild(globalNotification);
+          }
+        }, 500);
+      }
+    }, 3000);
+    
+    switch (type) {
+      case 'style':
+        // Apply dramatic color scheme changes
+        if (change.includes('color') || change.includes('theme')) {
+          const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+          setCurrentTheme(newTheme);
+          root.classList.toggle('dark', newTheme === 'dark');
+          
+          // Add a dramatic color flash effect
+          body.style.transition = 'all 0.3s ease';
+          body.style.backgroundColor = newTheme === 'dark' ? '#1a1a1a' : '#f8fafc';
+          
+          // Change accent colors
+          const accentColor = newTheme === 'dark' ? '#3b82f6' : '#ef4444';
+          root.style.setProperty('--accent-color', accentColor);
+        }
+        
+        // Apply animation speed changes with visual feedback
+        if (change.includes('animation') || change.includes('speed')) {
+          const newSpeed = Math.random() * 2 + 0.5; // 0.5x to 2.5x
+          setAnimationSpeed(newSpeed);
+          root.style.setProperty('--animation-speed', `${newSpeed}s`);
+          
+          // Add a speed indicator
+          const speedIndicator = document.createElement('div');
+          speedIndicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #3b82f6;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          speedIndicator.textContent = `Animation Speed: ${newSpeed.toFixed(1)}x`;
+          document.body.appendChild(speedIndicator);
+          
+          setTimeout(() => {
+            if (speedIndicator.parentNode) {
+              speedIndicator.parentNode.removeChild(speedIndicator);
+            }
+          }, 2000);
+        }
+        break;
+        
+      case 'layout':
+        // Apply dramatic spacing changes
+        if (change.includes('spacing') || change.includes('padding')) {
+          const spacing = Math.random() * 30 + 15; // 15px to 45px
+          root.style.setProperty('--spacing', `${spacing}px`);
+          
+          // Add a spacing indicator
+          const spacingIndicator = document.createElement('div');
+          spacingIndicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          spacingIndicator.textContent = `Spacing: ${spacing}px`;
+          document.body.appendChild(spacingIndicator);
+          
+          setTimeout(() => {
+            if (spacingIndicator.parentNode) {
+              spacingIndicator.parentNode.removeChild(spacingIndicator);
+            }
+          }, 2000);
+        }
+        break;
+        
+      case 'content':
+        // Apply content changes with visual feedback
+        if (change.includes('text') || change.includes('content')) {
+          // Add a content change indicator
+          const contentIndicator = document.createElement('div');
+          contentIndicator.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #f59e0b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          contentIndicator.textContent = `Content Updated: ${component}`;
+          document.body.appendChild(contentIndicator);
+          
+          setTimeout(() => {
+            if (contentIndicator.parentNode) {
+              contentIndicator.parentNode.removeChild(contentIndicator);
+            }
+          }, 2000);
+        }
+        break;
+    }
+  }, [currentTheme, setCurrentTheme, setAnimationSpeed]);
+
   // Real component update functions
   const applyRealUpdate = useCallback(async (component: string, change: string, type: AutonomousUpdate['type']) => {
     if (!api) return;
@@ -169,9 +318,6 @@ export const RealAutonomousUpdater: React.FC = () => {
       });
     }
   }, [api, toast, agents]);
-
-  // Apply real visual changes to the page
-  const applyVisualChange = useCallback((component: string, change: string, type: AutonomousUpdate['type']) => {
     // Get the root element to apply global changes
     const root = document.documentElement;
     const body = document.body;

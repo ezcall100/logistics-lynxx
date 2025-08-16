@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase-agents'
 import { 
   initializeAgents, 
@@ -27,13 +27,7 @@ export const AgentDashboard: React.FC = () => {
     priority: 0
   })
 
-  useEffect(() => {
-    initializeSystem()
-    const interval = setInterval(loadData, 10000) // Refresh every 10 seconds
-    return () => clearInterval(interval)
-  }, [])
-
-  const initializeSystem = async () => {
+  const initializeSystem = useCallback(async () => {
     try {
       await initializeAgents()
       await loadData()
@@ -42,9 +36,9 @@ export const AgentDashboard: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [agentsData, tasksData, eventsData, healthData] = await Promise.all([
         supabase.from('agent_registry').select('*').order('created_at', { ascending: false }),
@@ -60,7 +54,13 @@ export const AgentDashboard: React.FC = () => {
     } catch (error) {
       console.error('Failed to load agent data:', error)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    initializeSystem()
+    const interval = setInterval(loadData, 10000) // Refresh every 10 seconds
+    return () => clearInterval(interval)
+  }, [initializeSystem, loadData])
 
   const createTask = async () => {
     try {
