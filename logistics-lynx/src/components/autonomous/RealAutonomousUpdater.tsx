@@ -174,54 +174,237 @@ export const RealAutonomousUpdater: React.FC = () => {
   const applyVisualChange = useCallback((component: string, change: string, type: AutonomousUpdate['type']) => {
     // Get the root element to apply global changes
     const root = document.documentElement;
+    const body = document.body;
+    
+    // Add global notification for autonomous updates
+    const globalNotification = document.createElement('div');
+    globalNotification.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 10000;
+      animation: slideDown 0.5s ease-out;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+    globalNotification.innerHTML = `
+      🤖 <strong>Autonomous Agent Update:</strong> ${component} - ${change}
+    `;
+    document.body.appendChild(globalNotification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      if (globalNotification.parentNode) {
+        globalNotification.style.animation = 'slideUp 0.5s ease-out';
+        setTimeout(() => {
+          if (globalNotification.parentNode) {
+            globalNotification.parentNode.removeChild(globalNotification);
+          }
+        }, 500);
+      }
+    }, 3000);
     
     switch (type) {
       case 'style':
-        // Apply color scheme changes
+        // Apply dramatic color scheme changes
         if (change.includes('color') || change.includes('theme')) {
           const newTheme = currentTheme === 'light' ? 'dark' : 'light';
           setCurrentTheme(newTheme);
           root.classList.toggle('dark', newTheme === 'dark');
+          
+          // Add a dramatic color flash effect
+          body.style.transition = 'all 0.3s ease';
+          body.style.backgroundColor = newTheme === 'dark' ? '#1a1a1a' : '#f8fafc';
+          
+          // Change accent colors
+          const accentColor = newTheme === 'dark' ? '#3b82f6' : '#ef4444';
+          root.style.setProperty('--accent-color', accentColor);
         }
         
-        // Apply animation speed changes
+        // Apply animation speed changes with visual feedback
         if (change.includes('animation') || change.includes('speed')) {
           const newSpeed = Math.random() * 2 + 0.5; // 0.5x to 2.5x
           setAnimationSpeed(newSpeed);
           root.style.setProperty('--animation-speed', `${newSpeed}s`);
+          
+          // Add a speed indicator
+          const speedIndicator = document.createElement('div');
+          speedIndicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #3b82f6;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          speedIndicator.textContent = `Animation Speed: ${newSpeed.toFixed(1)}x`;
+          document.body.appendChild(speedIndicator);
+          
+          setTimeout(() => {
+            if (speedIndicator.parentNode) {
+              speedIndicator.parentNode.removeChild(speedIndicator);
+            }
+          }, 2000);
         }
         break;
         
       case 'layout':
-        // Apply spacing changes
+        // Apply dramatic spacing changes
         if (change.includes('spacing') || change.includes('padding')) {
-          const spacing = Math.random() * 20 + 10; // 10px to 30px
+          const spacing = Math.random() * 30 + 15; // 15px to 45px
           root.style.setProperty('--spacing-unit', `${spacing}px`);
+          
+          // Add spacing indicator
+          const spacingIndicator = document.createElement('div');
+          spacingIndicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          spacingIndicator.textContent = `Spacing: ${spacing}px`;
+          document.body.appendChild(spacingIndicator);
+          
+          setTimeout(() => {
+            if (spacingIndicator.parentNode) {
+              spacingIndicator.parentNode.removeChild(spacingIndicator);
+            }
+          }, 2000);
         }
         break;
         
       case 'interaction':
-        // Apply hover effect changes
+        // Apply dramatic hover effect changes
         if (change.includes('hover') || change.includes('effect')) {
-          const intensity = Math.random() * 0.3 + 0.1; // 0.1 to 0.4
+          const intensity = Math.random() * 0.5 + 0.2; // 0.2 to 0.7
           root.style.setProperty('--hover-intensity', `${intensity}`);
+          
+          // Add hover effect indicator
+          const hoverIndicator = document.createElement('div');
+          hoverIndicator.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #f59e0b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          hoverIndicator.textContent = `Hover Effect: ${intensity.toFixed(2)}`;
+          document.body.appendChild(hoverIndicator);
+          
+          setTimeout(() => {
+            if (hoverIndicator.parentNode) {
+              hoverIndicator.parentNode.removeChild(hoverIndicator);
+            }
+          }, 2000);
         }
         break;
         
       case 'performance':
-        // Apply rendering optimizations
+        // Apply rendering optimizations with visual feedback
         if (change.includes('performance') || change.includes('optimization')) {
           root.style.setProperty('--render-quality', 'optimized');
+          
+          // Add performance indicator
+          const perfIndicator = document.createElement('div');
+          perfIndicator.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #8b5cf6;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeInOut 2s ease-in-out;
+          `;
+          perfIndicator.textContent = 'Performance Optimized';
+          document.body.appendChild(perfIndicator);
+          
+          setTimeout(() => {
+            if (perfIndicator.parentNode) {
+              perfIndicator.parentNode.removeChild(perfIndicator);
+            }
+          }, 2000);
         }
         break;
         
       case 'content':
-        // Apply content changes (simulated)
+        // Apply content changes with visual feedback
         if (change.includes('content') || change.includes('text')) {
-          // This would typically update actual content
-          console.log('Content update applied:', change);
+          // Add content update indicator
+          const contentIndicator = document.createElement('div');
+          contentIndicator.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ec4899;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999;
+            animation: fadeInOut 3s ease-in-out;
+            text-align: center;
+          `;
+          contentIndicator.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 4px;">Content Updated</div>
+            <div style="font-size: 12px;">${change}</div>
+          `;
+          document.body.appendChild(contentIndicator);
+          
+          setTimeout(() => {
+            if (contentIndicator.parentNode) {
+              contentIndicator.parentNode.removeChild(contentIndicator);
+            }
+          }, 3000);
         }
         break;
+    }
+    
+    // Add CSS animation for indicators
+    if (!document.getElementById('autonomous-animations')) {
+      const style = document.createElement('style');
+      style.id = 'autonomous-animations';
+      style.textContent = `
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateY(-10px); }
+          20% { opacity: 1; transform: translateY(0); }
+          80% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-10px); }
+        }
+        @keyframes slideDown {
+          from { transform: translateY(-100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(0); opacity: 1; }
+          to { transform: translateY(-100%); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
     }
   }, [currentTheme]);
 
@@ -241,7 +424,7 @@ export const RealAutonomousUpdater: React.FC = () => {
       setAgents(prev => prev.map(agent => ({
         ...agent,
         status: 'active' as const,
-        currentTask: 'Analyzing website for real improvements...'
+        current_task: 'Analyzing website for real improvements...'
       })));
     }, 2000);
 
@@ -326,7 +509,7 @@ export const RealAutonomousUpdater: React.FC = () => {
         return agent;
       }));
 
-    }, 6000); // Update every 6 seconds
+    }, 3000); // Update every 3 seconds (changed from 6 seconds)
 
   }, [isActive, applyRealUpdate, toast]);
 

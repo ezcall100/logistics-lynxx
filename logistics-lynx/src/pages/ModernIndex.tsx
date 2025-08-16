@@ -312,6 +312,115 @@ const ModernIndex = () => {
           })}
         </div>
 
+        {/* Quick Access Section */}
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              🔥 Autonomous System & Portal Dashboards
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Access the AI-powered autonomous system and individual portal dashboards
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {/* Autonomous System */}
+            <Card className="group hover:shadow-xl transition-all duration-300 border-2 border-primary/20 hover:border-primary/40">
+              <CardHeader className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className={`h-14 w-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <Brain className="h-7 w-7 text-white" />
+                  </div>
+                  <Badge className="bg-green-500 text-white animate-pulse">
+                    Live
+                  </Badge>
+                </div>
+                <CardTitle className="text-xl lg:text-2xl text-purple-600 group-hover:text-foreground transition-colors">
+                  Autonomous System
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent className="p-6 space-y-4">
+                <p className="text-muted-foreground leading-relaxed text-base">
+                  AI-powered autonomous agents making real-time updates to your website and system
+                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Activity className="h-3 w-3 text-green-500" />
+                    <span className="text-sm text-muted-foreground">Real-time Updates</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-3 w-3 text-blue-500" />
+                    <span className="text-sm text-muted-foreground">AI Agents Active</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-3 w-3 text-purple-500" />
+                    <span className="text-sm text-muted-foreground">Visual Changes</span>
+                  </div>
+                </div>
+                
+                <Button 
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-lg transition-all duration-300 group-hover:scale-105 text-white font-semibold py-3"
+                  onClick={() => navigate('/autonomous-dashboard')}
+                >
+                  Access Autonomous System
+                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Portal Dashboards */}
+            {[
+              { key: 'broker', title: 'Broker Dashboard', icon: Building2, color: 'from-emerald-500 to-green-500' },
+              { key: 'carrier', title: 'Carrier Dashboard', icon: Truck, color: 'from-blue-500 to-cyan-500' },
+              { key: 'shipper', title: 'Shipper Dashboard', icon: Package, color: 'from-orange-500 to-amber-500' },
+              { key: 'driver', title: 'Driver Dashboard', icon: Users, color: 'from-pink-500 to-rose-500' },
+              { key: 'super-admin', title: 'Super Admin Dashboard', icon: Command, color: 'from-violet-500 to-purple-500' }
+            ].map((dashboard) => (
+              <Card key={dashboard.key} className="group hover:shadow-xl transition-all duration-300 border-2 border-border/20 hover:border-primary/40">
+                <CardHeader className="p-6">
+                  <div className={`h-14 w-14 bg-gradient-to-br ${dashboard.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <dashboard.icon className="h-7 w-7 text-white" />
+                  </div>
+                  <CardTitle className="text-xl lg:text-2xl group-hover:text-foreground transition-colors">
+                    {dashboard.title}
+                  </CardTitle>
+                </CardHeader>
+                
+                <CardContent className="p-6 space-y-4">
+                  <p className="text-muted-foreground leading-relaxed text-base">
+                    Complete dashboard with KPIs, charts, tables, and real-time data for {dashboard.key.replace('-', ' ')} operations
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <BarChart3 className="h-3 w-3 text-primary" />
+                      <span className="text-sm text-muted-foreground">KPI Metrics</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-3 w-3 text-primary" />
+                      <span className="text-sm text-muted-foreground">Real-time Charts</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Target className="h-3 w-3 text-primary" />
+                      <span className="text-sm text-muted-foreground">Performance Tracking</span>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    className={`w-full bg-gradient-to-r ${dashboard.color} hover:shadow-lg transition-all duration-300 group-hover:scale-105 text-white font-semibold py-3`}
+                    onClick={() => navigate(`/${dashboard.key}/dashboard`)}
+                  >
+                    View Dashboard
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
         {/* Bottom CTA */}
         <div className="text-center mt-16">
           <div className="glass-ultra p-8 rounded-3xl border border-border/30 max-w-2xl mx-auto">
