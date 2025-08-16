@@ -1,30 +1,24 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "allowJs": true,
-    "strict": false,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "outDir": "dist",
     "noEmit": false,
-    "outDir": "./dist",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "types": ["node"]
   },
   "include": [
-    "src/**/*",
-    "autonomous-system/**/*",
-    "src/start-autonomous-system.ts"
+    "autonomous",
+    "monitoring",
+    "agents",
+    "deploy",
+    "database",
+    "test",
+    "n8n",
+    "server",
+    "scripts"
   ],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["src", "node_modules", "dist"]
 }
 

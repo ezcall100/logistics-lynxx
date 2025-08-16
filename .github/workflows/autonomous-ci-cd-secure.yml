@@ -210,7 +210,7 @@ jobs:
       - name: 🏗️ Build Application
         run: |
           echo "🏗️ Building application..."
-          cd logistics-lynx && npm run build:dev || echo "⚠️  Build failed but continuing..."
+          cd logistics-lynx && npm run build:ts && npm run build:dev || echo "⚠️  Build failed but continuing..."
 
       - name: 📦 Package Artifacts
         run: |
