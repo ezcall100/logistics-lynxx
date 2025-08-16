@@ -29,11 +29,21 @@ import {
   Network,
   Cloud
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Progress } from '../ui/progress';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import AutonomousCompletionDashboard from '@/components/autonomous/AutonomousCompletionDashboard';
+import AutonomousAgentProgress from '@/components/autonomous/AutonomousAgentProgress';
+import AutonomousAgentDashboard from '@/components/autonomous/AutonomousAgentDashboard';
+import RealtimeDashboard from '@/components/autonomous/RealtimeDashboard';
+import { AutonomousAgentCenter } from '@/components/autonomous/AutonomousAgentCenter';
+import { AutonomousPerformanceDashboard } from '@/components/autonomous/AutonomousPerformanceDashboard';
+import { PortalImprovementTracker } from '@/components/autonomous/PortalImprovementTracker';
+import { AdvancedFeatureCenter } from '@/components/autonomous/AdvancedFeatureCenter';
+import { FeatureDeploymentTracker } from '@/components/autonomous/FeatureDeploymentTracker';
+import { FullAutonomyAuthorization } from '@/components/autonomous/FullAutonomyAuthorization';
 
 const AutonomousPortal: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');

@@ -1,10 +1,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useUserActivity } from './sidebar/useUserActivity';
-import { useMenuRecommendations } from './sidebar/useMenuRecommendations';
-import { useRealTimeUpdates } from './sidebar/useRealTimeUpdates';
-import { useAdaptiveMenu } from './sidebar/useAdaptiveMenu';
+import { useUserActivity } from '@/hooks/sidebar/useUserActivity';
+import { useMenuRecommendations } from '@/hooks/sidebar/useMenuRecommendations';
+import { useRealTimeUpdates } from '@/hooks/sidebar/useRealTimeUpdates';
+import { useAdaptiveMenu } from '@/hooks/sidebar/useAdaptiveMenu';
 
 interface MenuRecommendation {
   itemPath: string;

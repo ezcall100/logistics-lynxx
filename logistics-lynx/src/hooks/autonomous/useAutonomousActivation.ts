@@ -1,11 +1,11 @@
 
 import React, { useCallback } from 'react';
-import { useAutonomousAgentManager } from './useAutonomousAgentManager';
+import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
 import { useAutonomousAI } from '@/hooks/useAutonomousAI';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useActivationStatus } from './activation/useActivationStatus';
-import { useAutoActivation } from './activation/useAutoActivation';
+import { useActivationStatus } from '@/hooks/autonomous/activation/useActivationStatus';
+import { useAutoActivation } from '@/hooks/autonomous/activation/useAutoActivation';
 import { useEvent } from '@/lib/hooks';
 
 export const useAutonomousActivation = () => {

@@ -4,9 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { usePerformanceOptimization } from '@/hooks/usePerformanceOptimization';
 import { AutonomousAgent, SystemStats } from '@/types/autonomous-agents';
-import { useAgentInitializer } from './useAgentInitializer';
-import { useAgentTasks } from './useAgentTasks';
-import { useGPTAssistance } from './useGPTAssistance';
+import { useAgentInitializer } from '@/hooks/autonomous/useAgentInitializer';
+import { useAgentTasks } from '@/hooks/autonomous/useAgentTasks';
+import { useGPTAssistance } from '@/hooks/autonomous/useGPTAssistance';
 import { calculateNextRun } from '@/utils/agentUtils';
 
 export const useAutonomousAgentManager = () => {

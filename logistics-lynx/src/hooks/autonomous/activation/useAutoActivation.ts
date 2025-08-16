@@ -2,7 +2,7 @@
 import { useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { ActivationStatus } from './useActivationStatus';
+import { ActivationStatus } from '@/hooks/autonomous/activation/useActivationStatus';
 
 export const useAutoActivation = (
   setActivationStatus: (status: ActivationStatus | ((prev: ActivationStatus) => ActivationStatus)) => void,
