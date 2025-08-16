@@ -15,7 +15,7 @@ import onboardingPortal from './components/onboarding/onboardingPortal';
 import tmsadminPortal from './components/tms-admin/tmsadminPortal';
 import adminPortal from './components/admin/adminPortal';
 import analyticsPortal from './components/analytics/analyticsPortal';
-import autonomousPortal from './components/autonomous/autonomousPortal';
+import AutonomousPortal from './components/autonomous/AutonomousPortal';
 import owneroperatorPortal from './components/owner-operator/owneroperatorPortal';
 import driverPortal from './components/driver/driverPortal';
 import shipperadminPortal from './components/shipper-admin/shipperadminPortal';
@@ -34,7 +34,6 @@ import ShipperPortal from './components/shipper/ShipperPortal';
 import OwnerOperatorPortal from './components/owner-operator/OwnerOperatorPortal';
 import AdminPortal from './components/admin/AdminPortal';
 import SuperAdminPortal from './components/super-admin/SuperAdminPortal';
-import AutonomousPortal from './components/autonomous/AutonomousPortal';
 import AnalyticsPortal from './components/analytics/AnalyticsPortal';
 
 // Import authentication pages
@@ -131,7 +130,7 @@ function App() {
                   <Route path="/tms-admin" element={<tmsadminPortal />} />
                   <Route path="/admin" element={<adminPortal />} />
                   <Route path="/analytics" element={<analyticsPortal />} />
-                  <Route path="/autonomous" element={<autonomousPortal />} />
+                  <Route path="/autonomous" element={<AutonomousPortal />} />
                   <Route path="/owner-operator" element={<owneroperatorPortal />} />
                   <Route path="/driver" element={<driverPortal />} />
                   <Route path="/shipper-admin" element={<shipperadminPortal />} />
