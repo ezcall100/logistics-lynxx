@@ -1,0 +1,97 @@
+{
+  "timestamp": "2025-08-16T02:31:47.380Z",
+  "flow": "broker → price → tender → bill",
+  "steps": {
+    "brokerAccess": {
+      "status": "FAIL",
+      "response": "Command failed: curl -fsS http://localhost:5174/broker\ncurl: (22) The requested URL returned error: 404\r\n...",
+      "traceId": "trace_ifapmty3u"
+    },
+    "ratePricing": {
+      "status": "FAIL",
+      "response": "Command failed: curl -fsS http://localhost:5174/rates\ncurl: (22) The requested URL returned error: 404\r\n...",
+      "traceId": "trace_3bdg067sg"
+    },
+    "loadTender": {
+      "status": "FAIL",
+      "response": "Command failed: curl -fsS http://localhost:5174/load-board\ncurl: (22) The requested URL returned error: 404\r\n...",
+      "traceId": "trace_13g7dp54g"
+    },
+    "billing": {
+      "status": "FAIL",
+      "response": "Command failed: curl -fsS http://localhost:5174/financials\ncurl: (22) The requested URL returned error: 404\r\n...",
+      "traceId": "trace_84e389685"
+    },
+    "autonomousTasks": {
+      "status": "FAIL",
+      "response": "Command failed: curl -fsS http://localhost:5174/autonomous\ncurl: (22) The requested URL returned error: 404\r\n...",
+      "traceId": "trace_enpmmzxpo"
+    },
+    "analytics": {
+      "status": "FAIL",
+      "response": "Command failed: curl -fsS http://localhost:5174/analytics\ncurl: (22) The requested URL returned error: 404\r\n...",
+      "traceId": "trace_wf3q4qm49"
+    }
+  },
+  "traces": [
+    {
+      "traceId": "trace_ifapmty3u",
+      "spanId": "span_ovp3ij0s9",
+      "operation": "error",
+      "duration": 516,
+      "timestamp": "2025-08-16T02:31:47.771Z"
+    },
+    {
+      "traceId": "trace_3bdg067sg",
+      "spanId": "span_qjk91wohl",
+      "operation": "error",
+      "duration": 681,
+      "timestamp": "2025-08-16T02:31:47.771Z"
+    },
+    {
+      "traceId": "trace_13g7dp54g",
+      "spanId": "span_r4uwvtqbx",
+      "operation": "error",
+      "duration": 159,
+      "timestamp": "2025-08-16T02:31:47.771Z"
+    },
+    {
+      "traceId": "trace_84e389685",
+      "spanId": "span_ycq4sxypb",
+      "operation": "error",
+      "duration": 962,
+      "timestamp": "2025-08-16T02:31:47.771Z"
+    },
+    {
+      "traceId": "trace_enpmmzxpo",
+      "spanId": "span_mug2auoyh",
+      "operation": "error",
+      "duration": 919,
+      "timestamp": "2025-08-16T02:31:47.771Z"
+    },
+    {
+      "traceId": "trace_wf3q4qm49",
+      "spanId": "span_y5ojk813j",
+      "operation": "error",
+      "duration": 288,
+      "timestamp": "2025-08-16T02:31:47.771Z"
+    }
+  ],
+  "overall": "FAILED",
+  "flowValidation": {
+    "totalSteps": 6,
+    "passedSteps": 0,
+    "failedSteps": 6,
+    "errorSteps": 0,
+    "successRate": 0
+  },
+  "slackIntegration": {
+    "status": "PASS",
+    "traceLinks": [
+      "https://your-otel-backend.com/trace/trace_ifapmty3u",
+      "https://your-otel-backend.com/trace/trace_3bdg067sg",
+      "https://your-otel-backend.com/trace/trace_13g7dp54g"
+    ],
+    "message": "Golden path flow completed: 0/6 steps passed"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "date": "2025-08-16",
+  "summary": {
+    "totalArtifacts": 8,
+    "successfulCaptures": 6,
+    "failedCaptures": 1,
+    "overallPosture": "GREEN"
+  },
+  "artifacts": [
+    {
+      "name": "featureFlags",
+      "status": "CAPTURED",
+      "file": "featureFlags.json"
+    },
+    {
+      "name": "sloSnapshot",
+      "status": "CAPTURED",
+      "file": "sloSnapshot.json"
+    },
+    {
+      "name": "portalStatus",
+      "status": "RED",
+      "file": "portalStatus.json"
+    },
+    {
+      "name": "outboxLag",
+      "status": "CAPTURED",
+      "file": "outboxLag.json"
+    },
+    {
+      "name": "alertQueries",
+      "status": "CAPTURED",
+      "file": "alertQueries.json"
+    },
+    {
+      "name": "traceSample",
+      "status": "CAPTURED",
+      "file": "traceSample.json"
+    },
+    {
+      "name": "systemHealth",
+      "status": "GREEN",
+      "file": "systemHealth.json"
+    },
+    {
+      "name": "emergencyStatus",
+      "status": "\n> vite_react_shadcn_ts@0.0.0 emergency:status\n> node scripts/emergency-control.mjs status\n\n",
+      "file": "emergencyStatus.json"
+    }
+  ]
+}

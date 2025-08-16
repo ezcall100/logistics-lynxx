@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "healthz": {
+    "ok": true,
+    "ts": "2025-08-16T02:31:51.947Z"
+  },
+  "readyz": {
+    "ready": true,
+    "mode": "lenient"
+  },
+  "status": "CAPTURED"
+}

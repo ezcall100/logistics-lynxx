@@ -1,0 +1,5 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "output": "\n> vite_react_shadcn_ts@0.0.0 check:portals\n> node scripts/check-portals.mjs\n\n",
+  "status": "RED"
+}

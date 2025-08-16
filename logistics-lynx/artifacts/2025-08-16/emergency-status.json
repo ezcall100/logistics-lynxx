@@ -1,0 +1,5 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "status": "\n> vite_react_shadcn_ts@0.0.0 emergency:status\n> node scripts/emergency-control.mjs status\n\n",
+  "posture": "CAPTURED"
+}

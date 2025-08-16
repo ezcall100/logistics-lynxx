@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "queries": {
+    "highErrorRate": "SELECT COUNT(*) as error_count FROM logs WHERE level = 'error' AND created_at > NOW() - INTERVAL '1 hour';",
+    "slowQueries": "SELECT COUNT(*) as slow_count FROM logs WHERE response_time > 5000 AND created_at > NOW() - INTERVAL '1 hour';",
+    "dlqFailures": "SELECT COUNT(*) as dlq_count FROM dead_letter_queue WHERE created_at > NOW() - INTERVAL '1 hour';",
+    "authFailures": "SELECT COUNT(*) as auth_failures FROM auth_logs WHERE success = false AND created_at > NOW() - INTERVAL '1 hour';"
+  },
+  "status": "CAPTURED"
+}

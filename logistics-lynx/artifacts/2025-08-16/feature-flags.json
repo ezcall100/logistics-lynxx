@@ -1,0 +1,5 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "data": "Command failed: psql \"$SUPABASE_DB_URL\" -c \"SELECT key, value, scope FROM feature_flags_v2 WHERE scope IN ('global', 'production') ORDER BY key;\"\n'psql' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+  "status": "CAPTURED"
+}

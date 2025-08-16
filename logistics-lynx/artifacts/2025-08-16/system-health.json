@@ -1,0 +1,5 @@
+{
+  "timestamp": "2025-08-16T02:31:51.755Z",
+  "smokeTest": "\n> vite_react_shadcn_ts@0.0.0 smoke:test\n> node scripts/prod-smoke-test.mjs\n\n🚀 Starting Production Smoke Test...\n   Host: localhost:8089\n   Timeout: 5000ms\n\n🏥 Testing /healthz endpoint...\n✅ /healthz: PASSED (32ms)\n\n🔍 Testing /readyz endpoint...\n✅ /readyz: PASSED (2ms)\n   Mode: lenient\n   Ready: true\n\n📊 Smoke Test Results:\n   Total Time: 37ms\n   /healthz: ✅ PASS\n   /readyz: ✅ PASS\n   Overall: ✅ PASS\n\n🎉 All smoke tests passed! System is ready for production.\n",
+  "status": "GREEN"
+}
