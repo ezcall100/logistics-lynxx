@@ -210,12 +210,12 @@ jobs:
       - name: 🏗️ Build Application
         run: |
           echo "🏗️ Building application..."
-          cd logistics-lynx && npm run build || echo "⚠️  Build failed but continuing..."
+          cd logistics-lynx && npm run build:dev || echo "⚠️  Build failed but continuing..."
 
       - name: 📦 Package Artifacts
         run: |
           echo "📦 Packaging build artifacts..."
-          tar -czf build-artifacts.tar.gz dist/ build/ || echo "⚠️  No build artifacts to package"
+          cd logistics-lynx && tar -czf ../build-artifacts.tar.gz dist/ build/ || echo "⚠️  No build artifacts to package"
 
       - name: 📤 Upload Build Artifacts
         uses: actions/upload-artifact@v4
