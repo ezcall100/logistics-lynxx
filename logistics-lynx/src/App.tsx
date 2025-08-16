@@ -1,4 +1,19 @@
 import React from 'react';
+import directoryPortal from './components/directory/directoryPortal';
+import ratesPortal from './components/rates/ratesPortal';
+import workersPortal from './components/workers/workersPortal';
+import marketplacePortal from './components/marketplace/marketplacePortal';
+import ediPortal from './components/edi/ediPortal';
+import financialsPortal from './components/financials/financialsPortal';
+import crmPortal from './components/crm/crmPortal';
+import loadboardPortal from './components/load-board/loadboardPortal';
+import factoringPortal from './components/factoring/factoringPortal';
+import carrierPortal from './components/carrier/carrierPortal';
+import shipperPortal from './components/shipper/shipperPortal';
+import brokerPortal from './components/broker/brokerPortal';
+import onboardingPortal from './components/onboarding/onboardingPortal';
+import tmsadminPortal from './components/tms-admin/tmsadminPortal';
+import adminPortal from './components/admin/adminPortal';
 import analyticsPortal from './components/analytics/analyticsPortal';
 import autonomousPortal from './components/autonomous/autonomousPortal';
 import owneroperatorPortal from './components/owner-operator/owneroperatorPortal';
@@ -99,6 +114,21 @@ function App() {
         <Router>
           <div className="min-h-screen bg-background">
             <Routes>
+                  <Route path="/directory" element={<directoryPortal />} />
+                  <Route path="/rates" element={<ratesPortal />} />
+                  <Route path="/workers" element={<workersPortal />} />
+                  <Route path="/marketplace" element={<marketplacePortal />} />
+                  <Route path="/edi" element={<ediPortal />} />
+                  <Route path="/financials" element={<financialsPortal />} />
+                  <Route path="/crm" element={<crmPortal />} />
+                  <Route path="/load-board" element={<loadboardPortal />} />
+                  <Route path="/factoring" element={<factoringPortal />} />
+                  <Route path="/carrier" element={<carrierPortal />} />
+                  <Route path="/shipper" element={<shipperPortal />} />
+                  <Route path="/broker" element={<brokerPortal />} />
+                  <Route path="/onboarding" element={<onboardingPortal />} />
+                  <Route path="/tms-admin" element={<tmsadminPortal />} />
+                  <Route path="/admin" element={<adminPortal />} />
                   <Route path="/analytics" element={<analyticsPortal />} />
                   <Route path="/autonomous" element={<autonomousPortal />} />
                   <Route path="/owner-operator" element={<owneroperatorPortal />} />

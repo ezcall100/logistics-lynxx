@@ -1,0 +1,426 @@
+{
+  "portals": {
+    "super_admin": {
+      "name": "Super Admin Portal",
+      "route": "/super-admin",
+      "description": "Global command center with AI-powered oversight across all portals and autonomous agent management",
+      "autonomous_features": [
+        "ai_agent_management",
+        "global_analytics",
+        "system_health_monitoring",
+        "user_administration",
+        "autonomous_control_matrix",
+        "portal_oversight",
+        "system_configuration",
+        "security_management"
+      ],
+      "agent_integration": {
+        "monitoring_agent": true,
+        "optimization_agent": true,
+        "security_agent": true,
+        "analytics_agent": true,
+        "oversight_agent": true,
+        "configuration_agent": true
+      }
+    },
+    "admin": {
+      "name": "Admin Portal",
+      "route": "/admin",
+      "description": "System administration interface with user management and configuration controls",
+      "autonomous_features": [
+        "user_management_ai",
+        "system_configuration_automation",
+        "role_based_access_control",
+        "audit_logging_automation",
+        "backup_management_ai",
+        "system_maintenance_automation"
+      ],
+      "agent_integration": {
+        "user_management_agent": true,
+        "system_config_agent": true,
+        "access_control_agent": true,
+        "audit_agent": true,
+        "backup_agent": true,
+        "maintenance_agent": true
+      }
+    },
+    "tms_admin": {
+      "name": "TMS Admin Portal",
+      "route": "/tms-admin",
+      "description": "Transportation Management System administration with operational controls",
+      "autonomous_features": [
+        "tms_configuration_ai",
+        "operational_management_automation",
+        "workflow_optimization_ai",
+        "system_integration_management",
+        "performance_monitoring_ai",
+        "compliance_management_automation"
+      ],
+      "agent_integration": {
+        "tms_config_agent": true,
+        "operational_agent": true,
+        "workflow_agent": true,
+        "integration_agent": true,
+        "performance_agent": true,
+        "compliance_agent": true
+      }
+    },
+    "onboarding": {
+      "name": "Onboarding Portal",
+      "route": "/onboarding",
+      "description": "Automated user and company onboarding with intelligent workflow management",
+      "autonomous_features": [
+        "intelligent_onboarding_workflow",
+        "document_processing_ai",
+        "verification_automation",
+        "training_assignment_ai",
+        "compliance_check_automation",
+        "progress_tracking_ai"
+      ],
+      "agent_integration": {
+        "onboarding_workflow_agent": true,
+        "document_processing_agent": true,
+        "verification_agent": true,
+        "training_agent": true,
+        "compliance_check_agent": true,
+        "progress_tracking_agent": true
+      }
+    },
+    "broker": {
+      "name": "Broker Portal",
+      "route": "/broker",
+      "description": "Freight broker management interface with AI-powered load matching and rate optimization",
+      "autonomous_features": [
+        "load_matching_ai",
+        "rate_optimization_engine",
+        "carrier_network_management",
+        "margin_analysis_automation",
+        "market_intelligence_ai",
+        "contract_management_automation"
+      ],
+      "agent_integration": {
+        "load_matching_agent": true,
+        "rate_optimization_agent": true,
+        "carrier_network_agent": true,
+        "margin_analysis_agent": true,
+        "market_intelligence_agent": true,
+        "contract_management_agent": true
+      }
+    },
+    "shipper": {
+      "name": "Shipper Portal",
+      "route": "/shipper",
+      "description": "Shipper booking and tracking interface with cost optimization and performance analytics",
+      "autonomous_features": [
+        "shipment_tracking_automation",
+        "cost_analysis_ai",
+        "performance_reporting_ai",
+        "carrier_rating_automation",
+        "demand_forecasting_ai",
+        "route_optimization_ai"
+      ],
+      "agent_integration": {
+        "shipment_tracking_agent": true,
+        "cost_optimization_agent": true,
+        "performance_analysis_agent": true,
+        "forecasting_agent": true,
+        "route_optimization_agent": true,
+        "rating_agent": true
+      }
+    },
+    "carrier": {
+      "name": "Carrier Portal",
+      "route": "/carrier",
+      "description": "Carrier management and tracking interface with fleet optimization and compliance monitoring",
+      "autonomous_features": [
+        "fleet_management_ai",
+        "load_operations_optimization",
+        "driver_tracking_automation",
+        "eld_compliance_monitoring",
+        "route_optimization_ai",
+        "maintenance_scheduling_ai"
+      ],
+      "agent_integration": {
+        "fleet_management_agent": true,
+        "load_operations_agent": true,
+        "driver_tracking_agent": true,
+        "compliance_agent": true,
+        "route_optimization_agent": true,
+        "maintenance_agent": true
+      }
+    },
+    "driver": {
+      "name": "Driver Portal",
+      "route": "/driver",
+      "description": "Driver mobile and web interface with HOS tracking and route optimization",
+      "autonomous_features": [
+        "hos_tracking_automation",
+        "route_planning_ai",
+        "load_details_optimization",
+        "safety_monitoring_ai",
+        "communication_automation",
+        "document_management_ai"
+      ],
+      "agent_integration": {
+        "hos_compliance_agent": true,
+        "route_planning_agent": true,
+        "safety_monitoring_agent": true,
+        "communication_agent": true,
+        "document_management_agent": true,
+        "load_details_agent": true
+      }
+    },
+    "owner_operator": {
+      "name": "Owner Operator Portal",
+      "route": "/owner-operator",
+      "description": "Independent trucking business management with revenue tracking and profit optimization",
+      "autonomous_features": [
+        "revenue_tracking_automation",
+        "expense_management_ai",
+        "load_efficiency_optimization",
+        "profit_analysis_ai",
+        "business_intelligence_ai",
+        "financial_planning_ai"
+      ],
+      "agent_integration": {
+        "revenue_optimization_agent": true,
+        "expense_management_agent": true,
+        "efficiency_analysis_agent": true,
+        "business_intelligence_agent": true,
+        "financial_planning_agent": true,
+        "profit_analysis_agent": true
+      }
+    },
+    "factoring": {
+      "name": "Factoring Portal",
+      "route": "/factoring",
+      "description": "Invoice factoring and cash flow management with automated credit analysis",
+      "autonomous_features": [
+        "invoice_processing_automation",
+        "credit_analysis_ai",
+        "cash_flow_optimization",
+        "risk_assessment_ai",
+        "payment_processing_automation",
+        "financial_reporting_ai"
+      ],
+      "agent_integration": {
+        "invoice_processing_agent": true,
+        "credit_analysis_agent": true,
+        "cash_flow_agent": true,
+        "risk_assessment_agent": true,
+        "payment_processing_agent": true,
+        "financial_reporting_agent": true
+      }
+    },
+    "load_board": {
+      "name": "Load Board Portal",
+      "route": "/load-board",
+      "description": "Intelligent load board with AI-powered matching and market analysis",
+      "autonomous_features": [
+        "load_matching_ai",
+        "market_analysis_automation",
+        "pricing_optimization_ai",
+        "availability_tracking_automation",
+        "notification_management_ai",
+        "trend_analysis_ai"
+      ],
+      "agent_integration": {
+        "load_matching_agent": true,
+        "market_analysis_agent": true,
+        "pricing_optimization_agent": true,
+        "availability_tracking_agent": true,
+        "notification_agent": true,
+        "trend_analysis_agent": true
+      }
+    },
+    "crm": {
+      "name": "CRM Portal",
+      "route": "/crm",
+      "description": "Customer relationship management with AI-powered insights and automation",
+      "autonomous_features": [
+        "customer_insights_ai",
+        "lead_management_automation",
+        "sales_forecasting_ai",
+        "communication_automation",
+        "opportunity_tracking_ai",
+        "relationship_management_ai"
+      ],
+      "agent_integration": {
+        "customer_insights_agent": true,
+        "lead_management_agent": true,
+        "sales_forecasting_agent": true,
+        "communication_agent": true,
+        "opportunity_tracking_agent": true,
+        "relationship_management_agent": true
+      }
+    },
+    "financials": {
+      "name": "Financials Portal",
+      "route": "/financials",
+      "description": "Financial management and accounting with automated reporting and analysis",
+      "autonomous_features": [
+        "financial_reporting_automation",
+        "budget_analysis_ai",
+        "expense_tracking_automation",
+        "revenue_analysis_ai",
+        "tax_optimization_ai",
+        "audit_automation"
+      ],
+      "agent_integration": {
+        "financial_reporting_agent": true,
+        "budget_analysis_agent": true,
+        "expense_tracking_agent": true,
+        "revenue_analysis_agent": true,
+        "tax_optimization_agent": true,
+        "audit_agent": true
+      }
+    },
+    "edi": {
+      "name": "EDI Portal",
+      "route": "/edi",
+      "description": "Electronic Data Interchange management with automated document processing",
+      "autonomous_features": [
+        "document_processing_automation",
+        "edi_translation_ai",
+        "error_detection_automation",
+        "compliance_monitoring_ai",
+        "integration_management_automation",
+        "data_validation_ai"
+      ],
+      "agent_integration": {
+        "document_processing_agent": true,
+        "edi_translation_agent": true,
+        "error_detection_agent": true,
+        "compliance_monitoring_agent": true,
+        "integration_management_agent": true,
+        "data_validation_agent": true
+      }
+    },
+    "marketplace": {
+      "name": "Marketplace Portal",
+      "route": "/marketplace",
+      "description": "Digital marketplace for transportation services with AI-powered matching",
+      "autonomous_features": [
+        "service_matching_ai",
+        "pricing_optimization_automation",
+        "vendor_management_ai",
+        "transaction_processing_automation",
+        "review_analysis_ai",
+        "marketplace_analytics_ai"
+      ],
+      "agent_integration": {
+        "service_matching_agent": true,
+        "pricing_optimization_agent": true,
+        "vendor_management_agent": true,
+        "transaction_processing_agent": true,
+        "review_analysis_agent": true,
+        "marketplace_analytics_agent": true
+      }
+    },
+    "analytics": {
+      "name": "Analytics Portal",
+      "route": "/analytics",
+      "description": "Business intelligence and analytics with predictive insights and automated reporting",
+      "autonomous_features": [
+        "data_insights_ai",
+        "performance_analytics_automation",
+        "business_intelligence_ai",
+        "reporting_automation",
+        "trend_analysis_ai",
+        "predictive_modeling_ai"
+      ],
+      "agent_integration": {
+        "data_analysis_agent": true,
+        "performance_analytics_agent": true,
+        "business_intelligence_agent": true,
+        "reporting_automation_agent": true,
+        "trend_analysis_agent": true,
+        "predictive_modeling_agent": true
+      }
+    },
+    "autonomous": {
+      "name": "Autonomous AI Portal",
+      "route": "/autonomous",
+      "description": "AI agent management and autonomous system control center",
+      "autonomous_features": [
+        "ai_agent_management",
+        "automation_workflows",
+        "predictive_analytics",
+        "ml_models_management",
+        "system_monitoring",
+        "autonomous_decision_making"
+      ],
+      "agent_integration": {
+        "ai_management_agent": true,
+        "workflow_automation_agent": true,
+        "predictive_analytics_agent": true,
+        "ml_model_agent": true,
+        "system_monitoring_agent": true,
+        "decision_making_agent": true
+      }
+    },
+    "workers": {
+      "name": "Workers Portal",
+      "route": "/workers",
+      "description": "Workforce management and human resources with AI-powered optimization",
+      "autonomous_features": [
+        "workforce_planning_ai",
+        "scheduling_optimization_automation",
+        "performance_management_ai",
+        "training_automation",
+        "compliance_tracking_ai",
+        "hr_analytics_ai"
+      ],
+      "agent_integration": {
+        "workforce_planning_agent": true,
+        "scheduling_optimization_agent": true,
+        "performance_management_agent": true,
+        "training_agent": true,
+        "compliance_tracking_agent": true,
+        "hr_analytics_agent": true
+      }
+    },
+    "rates": {
+      "name": "Rates Portal",
+      "route": "/rates",
+      "description": "Dynamic rate management and pricing optimization with market intelligence",
+      "autonomous_features": [
+        "dynamic_pricing_ai",
+        "market_intelligence_automation",
+        "rate_optimization_ai",
+        "competitor_analysis_automation",
+        "profitability_analysis_ai",
+        "pricing_strategy_ai"
+      ],
+      "agent_integration": {
+        "dynamic_pricing_agent": true,
+        "market_intelligence_agent": true,
+        "rate_optimization_agent": true,
+        "competitor_analysis_agent": true,
+        "profitability_analysis_agent": true,
+        "pricing_strategy_agent": true
+      }
+    },
+    "directory": {
+      "name": "Directory Portal",
+      "route": "/directory",
+      "description": "Comprehensive business directory with AI-powered search and matching",
+      "autonomous_features": [
+        "intelligent_search_ai",
+        "business_matching_automation",
+        "verification_automation",
+        "rating_analysis_ai",
+        "contact_management_automation",
+        "directory_analytics_ai"
+      ],
+      "agent_integration": {
+        "intelligent_search_agent": true,
+        "business_matching_agent": true,
+        "verification_agent": true,
+        "rating_analysis_agent": true,
+        "contact_management_agent": true,
+        "directory_analytics_agent": true
+      }
+    }
+  }
+}
