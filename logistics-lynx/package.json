@@ -20,7 +20,10 @@
     "n8n:deploy": "npm run build:ts && node dist/deploy/deploy-n8n-workflows.js",
     "db:setup": "npm run build:ts && node dist/database/setup-tables.js",
     "deploy": "npm run build && npm run deploy:prod",
-    "deploy:prod": "npm run build:ts && node dist/deploy/deploy-production.js"
+    "deploy:prod": "npm run build:ts && node dist/deploy/deploy-production.js",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:ci": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --format=compact",
+    "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
