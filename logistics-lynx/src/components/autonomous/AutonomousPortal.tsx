@@ -1,4 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Brain, 
+  Activity,
+  CheckCircle,
+  Clock,
+  Zap,
+  Target,
+  TrendingUp
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -35,6 +46,25 @@ import AutonomousCompletionDashboard from './AutonomousCompletionDashboard';
 import AutonomousAgentProgress from './AutonomousAgentProgress';
 
 const AutonomousPortal: React.FC = () => {
+  const { 
+    agents, 
+    systemStatus, 
+    executeAgentTask, 
+    getSystemStats,
+    setSystemStatus 
+  } = useAutonomousAgentManager();
+  const { toast } = useToast();
+  const [activeExecutions, setActiveExecutions] = useState(0);
+  const [lastTaskTime, setLastTaskTime] = useState<Date | null>(null);
+
+  const stats = getSystemStats();
+
+  // Force autonomous mode and trigger agent executions
+  useEffect(() => {
+    if (systemStatus !== 'autonomous') {
+      setSystemStatus('autonomous');
+    }
+  }, [systemStatus, setSystemStatus]);
   const [activeTab, setActiveTab] = useState('overview');
   const [systemStatus, setSystemStatus] = useState<'autonomous' | 'manual' | 'paused'>('autonomous');
 
@@ -303,6 +333,53 @@ const AutonomousPortal: React.FC = () => {
                     </div>
                   </CardContent>
                 </Card>
+        
+        {/* Autonomous Agent Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5" />
+              Autonomous Agent Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries({"ai_management_agent":true,"workflow_automation_agent":true,"predictive_analytics_agent":true,"ml_model_agent":true,"system_monitoring_agent":true}).map(([agentType, isEnabled]) => {
+                const agent = agents.find(a => a.type === agentType);
+                return (
+                  <div key={agentType} className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold capitalize">{agentType.replace('_', ' ')}</h3>
+                      <Badge variant={isEnabled ? "default" : "secondary"}>
+                        {isEnabled ? "Active" : "Inactive"}
+                      </Badge>
+                    </div>
+                    {agent && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span>Status:</span>
+                          <span className="capitalize">{agent.status}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span>Success Rate:</span>
+                          <span>{agent.successRate}%</span>
+                        </div>
+                        <Progress value={agent.successRate} className="h-2" />
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleAgentExecution(agent.type)}
+                          disabled={activeExecutions > 0}
+                        >
+                          Execute Task
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
 
             <Card>
                   <CardHeader>

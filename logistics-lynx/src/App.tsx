@@ -1,4 +1,12 @@
 import React from 'react';
+import analyticsPortal from './components/analytics/analyticsPortal';
+import autonomousPortal from './components/autonomous/autonomousPortal';
+import owneroperatorPortal from './components/owner-operator/owneroperatorPortal';
+import driverPortal from './components/driver/driverPortal';
+import shipperadminPortal from './components/shipper-admin/shipperadminPortal';
+import brokeradminPortal from './components/broker-admin/brokeradminPortal';
+import carrieradminPortal from './components/carrier-admin/carrieradminPortal';
+import superadminPortal from './components/super-admin/superadminPortal';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './components/theme-provider';
@@ -91,6 +99,14 @@ function App() {
         <Router>
           <div className="min-h-screen bg-background">
             <Routes>
+                  <Route path="/analytics" element={<analyticsPortal />} />
+                  <Route path="/autonomous" element={<autonomousPortal />} />
+                  <Route path="/owner-operator" element={<owneroperatorPortal />} />
+                  <Route path="/driver" element={<driverPortal />} />
+                  <Route path="/shipper-admin" element={<shipperadminPortal />} />
+                  <Route path="/broker-admin" element={<brokeradminPortal />} />
+                  <Route path="/carrier-admin" element={<carrieradminPortal />} />
+                  <Route path="/super-admin" element={<superadminPortal />} />
               {/* Public Routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />

@@ -1,4 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Brain, 
+  Activity,
+  CheckCircle,
+  Clock,
+  Zap,
+  Target,
+  TrendingUp
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';

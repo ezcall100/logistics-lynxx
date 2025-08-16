@@ -3,6 +3,9 @@
 
 -- Global mode & kill switch
 insert into feature_flags_v2(key,scope,value,reason,owner_name) values
+('portal.shipper_admin.autonomous','global',true,'Shipper Admin Portal autonomous control','agents'),
+('portal.broker_admin.autonomous','global',true,'Broker Admin Portal autonomous control','agents'),
+('portal.carrier_admin.autonomous','global',true,'Carrier Admin Portal autonomous control','agents'),
 ('autonomy.emergencyStop','global',false,'enable autonomy','system'),
 ('autonomy.mode','global','FULL','full authority mode','system'),
 ('agents.autonomousEnabled','global',true,'run agents','system'),

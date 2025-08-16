@@ -1,4 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Brain, 
+  Activity,
+  CheckCircle,
+  Clock,
+  Zap,
+  Target,
+  TrendingUp
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -101,6 +112,53 @@ const DriverPortal = () => {
               <Button variant="outline" className="h-12">
                 Help
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Autonomous Agent Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5" />
+              Autonomous Agent Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries({"hos_compliance_agent":true,"route_planning_agent":true,"safety_monitoring_agent":true,"communication_agent":true}).map(([agentType, isEnabled]) => {
+                const agent = agents.find(a => a.type === agentType);
+                return (
+                  <div key={agentType} className="p-4 border rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold capitalize">{agentType.replace('_', ' ')}</h3>
+                      <Badge variant={isEnabled ? "default" : "secondary"}>
+                        {isEnabled ? "Active" : "Inactive"}
+                      </Badge>
+                    </div>
+                    {agent && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span>Status:</span>
+                          <span className="capitalize">{agent.status}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span>Success Rate:</span>
+                          <span>{agent.successRate}%</span>
+                        </div>
+                        <Progress value={agent.successRate} className="h-2" />
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleAgentExecution(agent.type)}
+                          disabled={activeExecutions > 0}
+                        >
+                          Execute Task
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
