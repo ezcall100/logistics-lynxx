@@ -534,6 +534,133 @@
 
       "execution_window": "Safe to run now (honor emergencyStop)",
       "priority": "HIGH"
+    },
+    {
+      "id": "research-mode-enable",
+      "title": "ENABLE: Autonomous Research Team — Continuous Self-Improvement",
+      "priority": "HIGH",
+      "status": "READY",
+      "created": "2025-08-16T19:00:00.000Z",
+      "assigned_to": "TMS_AUTONOMOUS_AGENT_SYSTEM",
+      "objective": "Enable continuous self-improvement across website + 20 portals with safe, measurable experiments via the built-in Research Team.",
+      
+      "guardrails": {
+        "slo": {
+          "success_rate": "≥ 98%",
+          "p95_route_paint": "≤ 2.5s",
+          "error_rate": "< 2%"
+        },
+        "safety_flags": {
+          "autonomy.emergencyStop": "honor immediately",
+          "research.mode.enabled": "canary"
+        },
+        "rollback_triggers": [
+          "any experiment causes SLO breach",
+          "ethical violation detected",
+          "PII exposure risk"
+        ]
+      },
+
+      "phases": [
+        {
+          "id": "phase-1",
+          "name": "Research Team Activation",
+          "target_duration": "30 minutes",
+          "tasks": [
+            "Activate Research Director role for prioritization and ethics oversight",
+            "Activate UX Researcher role for IA, flows, copy, accessibility",
+            "Activate Data Scientist role for metrics design and statistical analysis",
+            "Activate Performance Engineer role for optimization and monitoring",
+            "Activate Experiment Conductor role for A/B testing and rollout management",
+            "Activate Documentation Curator role for ADRs, PRDs, and knowledge management"
+          ],
+          "deliverable": "Research Team operational with defined roles and responsibilities"
+        },
+        {
+          "id": "phase-2",
+          "name": "Backlog Creation",
+          "target_duration": "1 hour",
+          "tasks": [
+            "Analyze telemetry data for top 10 improvement opportunities",
+            "Map user journeys and identify pain points",
+            "Prioritize experiments by potential impact and effort",
+            "Create experiment backlog with hypotheses and success metrics",
+            "Set up evidence storage structure: /artifacts/research/YYYY-MM-DD/"
+          ],
+          "deliverable": "Prioritized research backlog with 10+ high-ROI experiments"
+        },
+        {
+          "id": "phase-3",
+          "name": "First Three Experiments",
+          "target_duration": "2 hours",
+          "tasks": [
+            "Launch Pricing CTA Clarity experiment (website /pricing)",
+            "Launch Portal Tables Virtualization experiment (Broker/Carrier/Analytics)",
+            "Launch Form UX Polish experiment (Onboarding/Driver)",
+            "Set up monitoring and evidence collection for each experiment",
+            "Configure feature flags for safe A/B testing"
+          ],
+          "deliverable": "Three active experiments with monitoring and evidence collection"
+        }
+      ],
+
+      "evidence_observability": {
+        "store_to": "/artifacts/research/YYYY-MM-DD/",
+        "artifacts": [
+          "hypotheses.md",
+          "experiments.json",
+          "p95.csv",
+          "funnels.csv",
+          "a11y.json",
+          "visual-diff.html",
+          "traces.txt",
+          "rfcs.md",
+          "adrs.md"
+        ],
+        "daily_report": "Generate /artifacts/research/<date>/daily.md with experiment status"
+      },
+
+      "acceptance_criteria": {
+        "research_team": "All 6 roles activated and operational",
+        "backlog": "10+ prioritized experiments with clear hypotheses",
+        "experiments": "3 active experiments with monitoring and evidence collection",
+        "safety": "All experiments respect SLOs, ethics, and accessibility standards",
+        "documentation": "Experiment template and process documentation in place"
+      },
+
+      "work_items": [
+        "research.team.activate",
+        "research.backlog.create",
+        "research.experiments.launch.3",
+        "research.monitoring.setup",
+        "research.evidence.structure",
+        "research.documentation.template"
+      ],
+
+      "notes_for_agents": [
+        "Follow the Research Flywheel: Observe → Hypothesize → Experiment → Learn → Document",
+        "Ship via flags/canaries only; never direct production changes",
+        "Protect SLOs, keep a11y/ethics intact, prove every improvement with artifacts",
+        "Use experiment template from knowledge/03-playbooks/experiment-template.md"
+      ],
+
+      "operator_quick_checks": [
+        "Research Team roles operational and responding",
+        "Backlog created with 10+ experiments",
+        "3 experiments active with monitoring",
+        "Evidence collection working: /artifacts/research/YYYY-MM-DD/",
+        "Daily reports being generated"
+      ],
+
+      "rollback_procedure": [
+        "flip research.mode.enabled=false globally",
+        "pause all active experiments",
+        "revert any experimental changes",
+        "restore control variants"
+      ],
+
+      "execution_window": "Safe to run now (honor emergencyStop)",
+      "priority": "HIGH"
     }
   ]
 }
