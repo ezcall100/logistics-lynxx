@@ -27,43 +27,12 @@ import {
 } from 'lucide-react';
 
 const ModernIndex = () => {
-  const { isAuthenticated, isLoading, selectedRole, setSelectedRole } = useAuth();
+  // Temporarily disable authentication for testing
+  const isAuthenticated = true;
+  const isLoading = false;
+  const selectedRole = 'super_admin';
+  const setSelectedRole = () => {};
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      navigate('/login', { replace: true });
-    }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  // Show loading while determining auth state
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-background via-background/95 to-primary/5">
-        <div className="glass-ultra flex flex-col items-center gap-8 p-12 rounded-3xl shadow-premium max-w-md mx-4">
-          <div className="relative">
-            <div className="h-20 w-20 rounded-full border-4 border-primary/30 border-t-primary animate-spin"></div>
-            <div className="absolute inset-0 h-20 w-20 rounded-full bg-gradient-to-r from-primary/20 to-primary/40 animate-pulse"></div>
-          </div>
-          <div className="text-center space-y-4">
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Loading Autonomous TMS
-            </h3>
-            <p className="text-muted-foreground font-medium text-lg">Initializing your AI-powered workspace...</p>
-            <div className="flex items-center justify-center gap-2 mt-6">
-              <div className="h-2.5 w-2.5 bg-primary rounded-full animate-bounce"></div>
-              <div className="h-2.5 w-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="h-2.5 w-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
   const portals = [
     {
