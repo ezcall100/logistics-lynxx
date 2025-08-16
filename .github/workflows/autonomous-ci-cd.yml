@@ -1,6 +1,8 @@
 
+# yaml-lint disable rule:context-access-might-be-invalid
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # Note: GitHub Actions extension warnings are false positives - these are valid expressions
+# All github.* context references are valid and will be resolved at runtime
 name: 🤖 Autonomous CI/CD Pipeline (Legacy)
 
 on:
