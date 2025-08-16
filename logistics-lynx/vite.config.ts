@@ -9,7 +9,7 @@ export default defineConfig({
     jsxImportSource: 'react'
   })],
   server: {
-    port: 5173,
+    port: 8084,
     host: true,
     proxy: {
       "/functions/v1": "http://127.0.0.1:54321"
