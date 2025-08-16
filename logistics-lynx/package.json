@@ -13,6 +13,7 @@
     "test": "npm run build:ts && node dist/test/test-runner.js",
     "test:autonomous": "node test-autonomous-agents.js",
     "setup:supabase": "node setup-supabase.js",
+    "setup:supabase-tables": "node setup-supabase-tables.js",
     "start:autonomous": "npm run build:ts && node dist/autonomous/start-autonomous.js",
     "monitor:start": "npm run build:ts && node dist/monitoring/start-monitoring.js",
     "agents:start": "npm run build:ts && node dist/agents/start-agents.js",
