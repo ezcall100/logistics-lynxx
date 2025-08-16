@@ -367,9 +367,6 @@ function App() {
               <Route path="/design-system/components" element={<DesignSystem />} />
               <Route path="/design-system/layout" element={<DesignSystem />} />
               
-              {/* Test route for debugging */}
-              <Route path="/test" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Test Page Working!</h1><p>If you can see this, routing is working.</p></div>} />
-              
               {/* Catch all route - redirect to home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
