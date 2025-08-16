@@ -12,6 +12,7 @@ import SelfHealingDashboard from './SelfHealingDashboard';
 import AutonomousUIDesignDashboard from './AutonomousUIDesignDashboard';
 import { AutonomousWebsiteUpdater } from './AutonomousWebsiteUpdater';
 import { LiveWebsiteUpdater } from './LiveWebsiteUpdater';
+import { RealAutonomousUpdater } from './RealAutonomousUpdater';
 
 const AutonomousTabs = () => {
   return (
@@ -24,7 +25,7 @@ const AutonomousTabs = () => {
       </div>
 
       <Tabs defaultValue="dashboard" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-10">
+        <TabsList className="grid w-full grid-cols-11">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="agents">AI Agents</TabsTrigger>
           <TabsTrigger value="tasks">Task Manager</TabsTrigger>
@@ -35,6 +36,7 @@ const AutonomousTabs = () => {
           <TabsTrigger value="ui-design">UI Design</TabsTrigger>
           <TabsTrigger value="website-updater">Website Updater</TabsTrigger>
           <TabsTrigger value="live-updater">Live Updates</TabsTrigger>
+          <TabsTrigger value="real-updater">Real Updates</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-4">
@@ -85,6 +87,10 @@ const AutonomousTabs = () => {
 
         <TabsContent value="live-updater" className="space-y-4">
           <LiveWebsiteUpdater />
+        </TabsContent>
+
+        <TabsContent value="real-updater" className="space-y-4">
+          <RealAutonomousUpdater />
         </TabsContent>
       </Tabs>
     </div>
