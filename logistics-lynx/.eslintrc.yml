@@ -34,6 +34,9 @@ rules:
   'no-console': 'warn'
   'prefer-const': 'error'
   'react-refresh/only-export-components': ['warn', { 'allowConstantExport': true }]
+  'react-hooks/exhaustive-deps': ['warn', {
+    'additionalHooks': '(useAsyncEffect|useDebouncedCallback)'
+  }]
 
 overrides:
   # Disable react-refresh for Next.js public website (legitimate metadata exports)

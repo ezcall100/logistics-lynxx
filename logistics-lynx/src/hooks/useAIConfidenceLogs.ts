@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { AIConfidenceLog, AIConfidenceFilters, AIConfidenceStats } from '@/types/ai-confidence';
@@ -10,7 +10,7 @@ export const useAIConfidenceLogs = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const fetchLogs = async (filters?: AIConfidenceFilters) => {
+  const fetchLogs = useCallback(async (filters?: AIConfidenceFilters) => {
     setLoading(true);
     try {
       let query = supabase
@@ -50,7 +50,7 @@ export const useAIConfidenceLogs = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const createLog = async (logData: Omit<AIConfidenceLog, 'id' | 'created_at' | 'updated_at'>) => {
     try {
