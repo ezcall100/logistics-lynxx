@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +26,7 @@ interface AgentStatus {
   lastCheck: string;
   responseTime: number;
   message: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 export const AgentStatusChecker: React.FC = () => {
@@ -35,16 +35,16 @@ export const AgentStatusChecker: React.FC = () => {
   const [overallHealth, setOverallHealth] = useState(0);
   const { toast } = useToast();
 
-  const agentTypes = [
+  const agentTypes = useMemo(() => [
     { type: 'researcher', name: 'Research Agent', icon: Search },
     { type: 'frontend', name: 'Frontend Agent', icon: Code },
     { type: 'backend', name: 'Backend Agent', icon: Database },
     { type: 'database', name: 'Database Agent', icon: Database },
     { type: 'testing', name: 'Testing Agent', icon: TestTube },
     { type: 'deployment', name: 'Deployment Agent', icon: Rocket }
-  ];
+  ], []);
 
-  const checkAgentHealth = async (agent: typeof agentTypes[0]): Promise<AgentStatus> => {
+  const checkAgentHealth = useCallback(async (agent: typeof agentTypes[0]): Promise<AgentStatus> => {
     const startTime = Date.now();
     
     try {
@@ -86,7 +86,7 @@ export const AgentStatusChecker: React.FC = () => {
         icon: agent.icon
       };
     }
-  };
+  }, []);
 
   const runHealthCheck = useCallback(async () => {
     setIsChecking(true);

@@ -104,7 +104,7 @@ const DispatchChatPage: React.FC = () => {
     }
   ];
 
-  const messages: Record<string, Message[]> = {
+  const messages = useMemo((): Record<string, Message[]> => ({
     'chat-001': [
       {
         id: 'msg-001',
@@ -200,7 +200,7 @@ const DispatchChatPage: React.FC = () => {
         type: 'text'
       }
     ]
-  };
+  }), []);
 
   const currentMessages = useMemo(() => messages[selectedChat] || [], [messages, selectedChat]);
   const currentContact = contacts.find(c => c.id === selectedChat);
