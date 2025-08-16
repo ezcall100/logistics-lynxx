@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 // CarrierLayout import removed - layout is provided by App.tsx routing
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

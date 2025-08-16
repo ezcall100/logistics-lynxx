@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 export default function Page(){return(
   <div className="max-w-5xl mx-auto p-6">

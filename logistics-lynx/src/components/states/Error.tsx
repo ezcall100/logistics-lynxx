@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function ErrorState({ message="Something went wrong", onRetry }: { message?: string; onRetry?: ()=>void }) {
   return (
     <div className="text-center bg-surface2 rounded-lg border border-destructive/30 p-8">

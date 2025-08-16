@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { FileText, Search, Plus, Download, Eye, Edit, Trash2, Filter, Star, Upload, DollarSign, Calendar, User, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';

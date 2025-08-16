@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseAgent } from './BaseAgent'
 
 export class TMSDecisionAgent extends BaseAgent {

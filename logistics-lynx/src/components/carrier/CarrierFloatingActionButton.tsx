@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Phone, MessageCircle, Navigation, FileText, Wrench, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';

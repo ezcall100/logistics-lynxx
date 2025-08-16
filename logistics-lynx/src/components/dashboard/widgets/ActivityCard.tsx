@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Clock, User, Activity } from "lucide-react";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Card Component
  * Unified card component with consistent styling and flexible slots

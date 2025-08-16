@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function Empty({ title="Nothing here yet", action }: { title?: string; action?: React.ReactNode }) {
   return (
     <div className="text-center text-text-muted bg-surface2 rounded-lg border border-border p-8">

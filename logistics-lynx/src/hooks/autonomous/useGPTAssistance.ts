@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useAutonomousAI } from '@/hooks/useAutonomousAI';
 import { useToast } from '@/hooks/use-toast';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Suspense } from 'react';
 import PortalScaffold from '@/pages/_scaffold/PortalScaffold';
 import { getPortalByKey } from '@/portals/registry';

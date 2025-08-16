@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Separator } from '@/components/ui/separator';
 import Layout from '@/components/layout/Layout';

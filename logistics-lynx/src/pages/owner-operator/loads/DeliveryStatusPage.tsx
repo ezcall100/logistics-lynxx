@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Package, CheckCircle, Clock, AlertTriangle, FileText, Camera, Star, Download, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';

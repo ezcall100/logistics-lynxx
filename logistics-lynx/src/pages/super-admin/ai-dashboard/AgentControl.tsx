@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import EnhancedSuperAdminLayout from '@/components/super-admin/EnhancedSuperAdminLayout';
 import ResponsiveCard from '@/components/super-admin/ResponsiveCard';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Enhanced Autonomous TMS System Test
 // Tests the complete Phase 2 autonomous system
 

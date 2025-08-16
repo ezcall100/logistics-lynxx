@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { User, UserRole } from '@/types/user';

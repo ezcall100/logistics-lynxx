@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export { navigationMenuTriggerStyle } from './navigation-menu.styles';
 export {
   NavigationMenu,

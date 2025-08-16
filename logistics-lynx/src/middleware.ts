@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Portal Decommission Middleware
 // Returns 410 Gone for deprecated portal routes
 

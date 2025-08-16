@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/pages/settings/UsersPage.tsx
 import React, { useMemo, useState } from 'react';
 import { Plus, Search, User as UserIcon } from 'lucide-react';

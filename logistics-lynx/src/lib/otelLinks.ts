@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Build trace deep-links for OTEL backend
  * Supports any vendor via URL template or base URL

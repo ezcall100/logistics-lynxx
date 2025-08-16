@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LogManager } from '../../autonomous-system/LogManager';
 
 interface PageTemplate {

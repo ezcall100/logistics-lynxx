@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import TransBotMarketingHeader from '@/components/marketing/TransBotMarketingHeader';
 import TransBotHeroSection from '@/components/marketing/TransBotHeroSection';

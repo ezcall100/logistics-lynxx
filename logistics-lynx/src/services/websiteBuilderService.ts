@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Mock Website Builder Service for Real-time Autonomous Operations
 // This simulates the autonomous agents building the website in real-time
 

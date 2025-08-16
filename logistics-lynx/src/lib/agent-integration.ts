@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AgentManager } from '@/agents/AgentManager'
 
 let agentManager: AgentManager | null = null

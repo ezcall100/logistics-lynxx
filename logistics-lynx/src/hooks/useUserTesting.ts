@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useTestingTasks } from './testing/useTestingTasks';
 import { useTestingSession } from './testing/useTestingSession';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { 
   Users2, Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Eye, 

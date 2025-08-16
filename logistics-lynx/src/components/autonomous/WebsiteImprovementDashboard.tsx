@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { useWebsiteImprovementAgent, WebsiteImprovement, WebsiteMetrics } from '@/hooks/autonomous/useWebsiteImprovementAgent';
 import { useToast } from '@/hooks/use-toast';

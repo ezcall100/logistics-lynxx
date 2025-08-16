@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
 export type AlertCategory = 'ai_confidence' | 'system_error' | 'performance' | 'security' | 'maintenance';

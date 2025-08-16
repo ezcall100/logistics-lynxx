@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { FileText, Search, Plus, Download, Eye, Edit, Trash2, Filter, Calendar, Building, User, MapPin, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';

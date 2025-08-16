@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Portal Theme Helper - Trans Bot AI Design System v2.0
  * Provides runtime portal accent mapping for the 20 canonical portals

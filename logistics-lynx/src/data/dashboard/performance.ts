@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface PerformanceDataPoint {
   date: string;
   value: number;

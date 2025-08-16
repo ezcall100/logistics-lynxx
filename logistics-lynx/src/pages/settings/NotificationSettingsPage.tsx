@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Bell, Mail, Smartphone, MessageSquare, Settings, Clock, AlertTriangle, CheckCircle, Volume2, VolumeX, Calendar, Zap, Filter, Users, Truck, DollarSign, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

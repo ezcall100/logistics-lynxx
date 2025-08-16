@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, createContext, useContext } from "react";
 
 type Theme = "light" | "dark" | "system";

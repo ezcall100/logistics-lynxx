@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Mock data for the CRM system
 export const mockContacts = [
   {

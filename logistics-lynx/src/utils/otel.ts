@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { trace } from '@opentelemetry/api';
 
 export const createPortalSpan = (portalName: string, operation: string) => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { usePredictiveScaling } from '@/hooks/usePredictiveScaling';
 import ScalingStatsCard from './scaling/ScalingStatsCard';

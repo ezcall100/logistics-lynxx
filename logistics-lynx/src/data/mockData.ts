@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Customer, Vendor, Terminal, Location, Carrier, AccessRole, User, UserGroup, AccessPolicy, AuditLog } from '@/types/networks';
 
 export const mockCustomers: Customer[] = [

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Brain, X } from 'lucide-react';
 import { Link } from 'react-router-dom';

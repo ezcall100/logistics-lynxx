@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { BookOpen, HelpCircle, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';

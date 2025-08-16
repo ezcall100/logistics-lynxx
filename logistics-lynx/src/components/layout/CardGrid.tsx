@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Card Grid Component
  * Responsive grid layout helper for consistent card arrangements

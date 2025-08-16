@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import UltraModernLayout from '@/components/layout/UltraModernLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

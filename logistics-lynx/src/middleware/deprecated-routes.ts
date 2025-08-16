@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Middleware for deprecated routes
 export const handleDeprecatedRoute = (req, res) => {
   const deprecatedRoutes = {

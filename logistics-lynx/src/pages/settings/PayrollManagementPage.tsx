@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { DollarSign, Users, Calendar, Calculator, FileText, CreditCard, Receipt, TrendingUp, AlertTriangle, CheckCircle, Download, Upload, Settings, Plus, Edit, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

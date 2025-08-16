@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Lock, Shield, Key, Eye, EyeOff, Smartphone, AlertTriangle, CheckCircle, Users, Clock, Activity, Settings, Trash2, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

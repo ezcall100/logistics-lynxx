@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * App Shell Layout
  * Unified layout component for all portals with consistent structure

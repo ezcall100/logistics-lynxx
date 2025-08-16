@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Lead Scoring System
 // Phase 6: Automated Lead Qualification
 

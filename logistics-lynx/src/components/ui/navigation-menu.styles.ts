@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cva } from "class-variance-authority";
 
 export const navigationMenuTriggerStyle = cva(

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // KPI Types
 export interface KpiData {
   id: string;

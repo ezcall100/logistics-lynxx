@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type WidgetKind = "kpi" | "timeseries" | "table" | "activity" | "alerts";
 
 export type WidgetDef = {

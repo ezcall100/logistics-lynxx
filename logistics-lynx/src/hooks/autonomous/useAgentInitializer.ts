@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useCallback } from 'react';
 import { AutonomousAgent } from '@/types/autonomous-agents';

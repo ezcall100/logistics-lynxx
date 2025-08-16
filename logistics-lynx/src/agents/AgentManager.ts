@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { supabaseAdmin, AGENT_TABLES } from '@/lib/supabase-agents'
 import { TMSDecisionAgent } from './TMSDecisionAgent'
 

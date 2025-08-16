@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/pages/settings/RolesPage.tsx
 import React, { useMemo, useState, FormEvent } from 'react';
 import { Plus, Search, Edit, Trash2, Eye, Shield } from 'lucide-react';

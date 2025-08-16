@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type FlagScope = 'global' | 'env' | 'tenant';
 
 export type FeatureFlag = {

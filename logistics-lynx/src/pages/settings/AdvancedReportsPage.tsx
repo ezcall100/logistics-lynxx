@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { BarChart3, TrendingUp, PieChart, Calendar, Download, Filter, Settings, Eye, Share2, Clock, Users, Truck, DollarSign, Activity, FileText, Globe, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Comprehensive Autonomous TMS System Test
 import { agent001 } from './agents/agent001';
 

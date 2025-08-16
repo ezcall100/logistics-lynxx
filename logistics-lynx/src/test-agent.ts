@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Test file to verify agent001 export works
 import { agent001 } from './agents/agent001';
 

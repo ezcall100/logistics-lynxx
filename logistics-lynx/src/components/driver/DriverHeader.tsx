@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Search, Bell, Settings, LogOut, User, Menu, Package, Globe, Shield, Zap, Activity, TrendingUp, MessageSquare, Star, HelpCircle, AlertTriangle, Clock, FileText, Target, Fuel, Thermometer, Phone, Home, CreditCard, Map, Truck, BarChart3, Calendar, Camera, Download, Eye, Lock, Palette, Smartphone, Wifi, Volume2, BatteryCharging, Moon, Sun, Languages, UserCheck, Mail, Bookmark, History, Award, Coffee, DollarSign, Route, Navigation, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';

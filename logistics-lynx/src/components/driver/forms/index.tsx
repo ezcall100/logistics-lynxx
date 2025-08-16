@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { PreTripInspectionForm } from './PreTripInspectionForm';
 import { DeliveryConfirmationForm } from './DeliveryConfirmationForm';

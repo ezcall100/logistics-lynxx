@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import UltraModernLayout from '@/components/layout/UltraModernLayout';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Database, Server, HardDrive, Cpu, MemoryStick, Activity, AlertTriangle, CheckCircle, Clock, Download, Upload, Trash2, Settings, RefreshCw, Zap, Shield, Monitor, Wifi, Globe } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

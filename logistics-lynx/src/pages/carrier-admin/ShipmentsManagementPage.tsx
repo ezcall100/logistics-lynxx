@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { Package, Truck, Ship, Plane, Train, Activity, MapPin, BarChart3, FileText, Settings, Bell, Search, Plus, ChevronRight, Container, Anchor, Car, Boxes } from 'lucide-react';

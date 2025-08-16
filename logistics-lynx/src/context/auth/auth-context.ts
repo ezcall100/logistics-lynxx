@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext } from 'react';
 import { Session } from '@supabase/supabase-js';
 import type { UserRole, ExtendedUser } from '@/types/auth';

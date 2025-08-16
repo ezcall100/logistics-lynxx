@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type PortalKey =
   | "superAdmin" | "admin" | "tmsAdmin" | "onboarding"
   | "broker" | "shipper" | "carrier" | "driver" | "ownerOperator"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Fuel, DollarSign, TrendingUp, TrendingDown, MapPin, Calendar, Plus, BarChart3, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';

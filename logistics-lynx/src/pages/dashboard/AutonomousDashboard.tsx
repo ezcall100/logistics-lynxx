@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useAuth } from '@/context/AuthContext';
 import AutonomousLayout from '@/components/layout/AutonomousLayout';

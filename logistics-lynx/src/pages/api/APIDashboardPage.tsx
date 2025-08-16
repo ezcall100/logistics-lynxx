@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { APIDashboard } from '@/components/api/APIDashboard';

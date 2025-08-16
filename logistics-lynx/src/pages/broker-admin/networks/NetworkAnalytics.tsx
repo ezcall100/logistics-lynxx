@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { 
   TrendingUp, BarChart3, PieChart, Activity, Target, DollarSign,

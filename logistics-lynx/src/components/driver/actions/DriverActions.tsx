@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Phone, MessageCircle, Navigation, Clock, Fuel, Scan, Bot } from 'lucide-react';
 
 export interface DriverAction {

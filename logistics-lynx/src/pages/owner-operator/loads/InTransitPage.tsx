@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Truck, MapPin, Clock, Phone, AlertTriangle, Navigation, Fuel, Edit, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';

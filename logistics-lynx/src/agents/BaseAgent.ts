@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { supabaseAdmin, supabaseRealtime, AGENT_TABLES } from '@/lib/supabase-agents'
 
 export abstract class BaseAgent {

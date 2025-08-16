@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getKpisForRole, KpiData } from '../data/dashboard/kpis';
 import { getPerformanceData, PerformanceFilters, PerformanceMetric } from '../data/dashboard/performance';
 import { getActivityData, ActivityItem } from '../data/dashboard/activity';

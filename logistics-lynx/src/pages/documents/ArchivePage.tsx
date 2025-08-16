@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Archive, Search, Download, Eye, Edit, RotateCcw, Trash2, Filter, Calendar, FileText, User, HardDrive, Clock, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';

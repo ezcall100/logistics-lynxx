@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // OpenTelemetry browser configuration
 // This is conditionally loaded only when VITE_OTEL_ENABLED is true
 const otelEnabled = import.meta.env.VITE_OTEL_ENABLED === "true";

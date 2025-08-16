@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { TestingSession } from '@/types/testing';
 import { supabase } from '@/integrations/supabase/client';

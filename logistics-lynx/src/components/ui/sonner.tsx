@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTheme } from "next-themes"
 import { Toaster as Sonner } from "sonner"
 

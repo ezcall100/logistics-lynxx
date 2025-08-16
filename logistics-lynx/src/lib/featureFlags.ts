@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type FeatureKey = 'rates' | 'directory' | 'bulk_rating' | 'invite_auto_approve' | 'api_access' | 'white_label';
 export type Flag = { key: FeatureKey; enabled: boolean; tenants?: string[] };
 

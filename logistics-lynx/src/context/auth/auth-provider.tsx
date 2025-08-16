@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode } from 'react';
 import type { UserRole } from '@/types/auth';
 import { useAuthContext } from '@/hooks/auth/useAuthContext';

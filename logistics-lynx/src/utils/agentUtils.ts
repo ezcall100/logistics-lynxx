@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const calculateNextRun = (agentType: string, isError = false) => {
   const baseIntervals: { [key: string]: number } = {

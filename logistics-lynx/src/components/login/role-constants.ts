@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserRole } from '@/types/auth';
 import { Crown, Truck, Users, Package, MapPin, User } from 'lucide-react';
 

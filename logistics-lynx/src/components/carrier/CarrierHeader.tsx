@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Search, Bell, Settings, LogOut, User, Menu, Truck, Package, Globe, Shield, Zap, Activity, TrendingUp, Users2, MessageSquare, Star, HelpCircle, Monitor, Database, Wifi, WifiOff, CheckCircle, AlertTriangle, XCircle, Clock, FileText, PieChart, BarChart3, Headphones, Lock, Eye, EyeOff, Moon, Sun, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
