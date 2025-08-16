@@ -21,9 +21,15 @@
     "db:setup": "npm run build:ts && node dist/database/setup-tables.js",
     "deploy": "npm run build && npm run deploy:prod",
     "deploy:prod": "npm run build:ts && node dist/deploy/deploy-production.js",
-    "lint": "eslint . --report-unused-disable-directives",
-    "lint:ci": "eslint . --report-unused-disable-directives --max-warnings 38",
-    "lint:fix": "eslint . --report-unused-disable-directives --fix"
+    "lint": "eslint .",
+    "lint:ci": "eslint . --max-warnings=38",
+    "lint:strict": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "verify": "npm run typecheck && npm run lint && npm run format:check",
+    "prepare": "husky"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
@@ -67,8 +73,12 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
@@ -76,7 +86,17 @@
     "vite": "^5.0.8"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "node": ">=20 <21",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10.8.1",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
