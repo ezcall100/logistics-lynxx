@@ -1,0 +1,96 @@
+extends: default
+
+rules:
+  # Basic YAML formatting rules
+  line-length:
+    max: 120
+    level: warning
+  
+  # Allow trailing spaces in some contexts
+  trailing-spaces: enable
+  
+  # Allow comments
+  comments-indentation: enable
+  
+  # Allow empty lines
+  empty-lines:
+    max: 2
+    level: warning
+  
+  # Allow document start
+  document-start: disable
+  
+  # Allow document end
+  document-end: disable
+  
+  # Allow multiple documents
+  multiple-documents: enable
+  
+  # Allow anchors and aliases
+  anchors: enable
+  
+  # Allow tags
+  tags: enable
+  
+  # Allow flow style
+  flow-style: enable
+  
+  # Allow block style
+  block-style: enable
+  
+  # Allow literal style
+  literal-style: enable
+  
+  # Allow folded style
+  folded-style: enable
+  
+  # Allow double quoted style
+  double-quoted-style: enable
+  
+  # Allow single quoted style
+  single-quoted-style: enable
+  
+  # Allow plain style
+  plain-style: enable
+  
+  # Allow explicit style
+  explicit-style: enable
+  
+  # Allow implicit style
+  implicit-style: enable
+  
+  # Allow null values
+  null-values: enable
+  
+  # Allow boolean values
+  boolean-values: enable
+  
+  # Allow integer values
+  integer-values: enable
+  
+  # Allow float values
+  float-values: enable
+  
+  # Allow string values
+  string-values: enable
+  
+  # Allow timestamp values
+  timestamp-values: enable
+  
+  # Allow binary values
+  binary-values: enable
+  
+  # Allow omap values
+  omap-values: enable
+  
+  # Allow pairs values
+  pairs-values: enable
+  
+  # Allow set values
+  set-values: enable
+  
+  # Allow seq values
+  seq-values: enable
+  
+  # Allow map values
+  map-values: enable

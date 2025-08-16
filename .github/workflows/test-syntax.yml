@@ -14,41 +14,36 @@ jobs:
   syntax:
     name: Validate config & contexts
     runs-on: ubuntu-latest
-
-    # Declare everything the extension complains about so it knows these exist
-    env:
-      ENVIRONMENT_NAME: ${{ inputs.environment }}
-
-      # Repository/Org Variables (Settings → Variables → Actions)
-      STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
-      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://example.com' }}
-      N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-      N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-
-      # Secrets (Settings → Secrets and variables → Actions → Secrets)
-      DEPLOYMENT_WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL || '' }}
-      N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
+    timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Compute APP_URL based on the selected environment and export to $GITHUB_ENV
-      - name: Resolve APP_URL from environment
-        shell: bash
+      - name: Test Variables and Secrets
+        env:
+          ENVIRONMENT_NAME: ${{ inputs.environment }}
+          STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://example.com' }}
+          N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
+          N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
+          DEPLOYMENT_WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL || '' }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
         run: |
-          if [ "${{ env.ENVIRONMENT_NAME }}" = "production" ]; then
-            echo "APP_URL=${PRODUCTION_URL}" >> "$GITHUB_ENV"
+          echo "=== Environment Configuration Test ==="
+          echo "ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
+          
+          # Determine APP_URL based on environment
+          if [ "$ENVIRONMENT_NAME" = "production" ]; then
+            APP_URL="$PRODUCTION_URL"
           else
-            echo "APP_URL=${STAGING_URL}" >> "$GITHUB_ENV"
+            APP_URL="$STAGING_URL"
           fi
-
-      # Safe printout (no secret leakage)
-      - name: Show resolved non-secret config
-        shell: bash
-        run: |
-          echo "ENVIRONMENT_NAME=${ENVIRONMENT_NAME}"
-          echo "APP_URL=${APP_URL}"
-          echo "N8N_ENABLED=${N8N_ENABLED}"
-          echo "N8N_BASE_URL set? $([ -n "$N8N_BASE_URL" ] && echo yes || echo no)"
-          echo "DEPLOYMENT_WEBHOOK_URL set? $([ -n "$DEPLOYMENT_WEBHOOK_URL" ] && echo yes || echo no)"
-          echo "N8N_API_KEY set? $([ -n "$N8N_API_KEY" ] && echo yes || echo no)"
+          echo "APP_URL: $APP_URL"
+          
+          echo "N8N_ENABLED: $N8N_ENABLED"
+          echo "N8N_BASE_URL set? $([ -n "$N8N_BASE_URL" ] && echo "yes" || echo "no")"
+          echo "DEPLOYMENT_WEBHOOK_URL set? $([ -n "$DEPLOYMENT_WEBHOOK_URL" ] && echo "yes" || echo "no")"
+          echo "N8N_API_KEY set? $([ -n "$N8N_API_KEY" ] && echo "yes" || echo "no")"
+          
+          echo "=== Test Complete ==="
