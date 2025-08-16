@@ -7,15 +7,15 @@ name: 🤖 Autonomous CI/CD Pipeline (Legacy)
 
 on:
   # DISABLED: Conflicts with autonomous-ci-cd-secure.yml
-  # push:
-  #   branches: [main, develop, feature/*]
+  push:
+    branches: [main, develop, feature/*]
   #   paths-ignore:
   #     - '**.md'
   #     - 'docs/**'
   #     - '.github/ISSUE_TEMPLATE/**'
-  # pull_request:
-  #   branches: [main, develop]
-  #   types: [opened, synchronize, reopened]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       environment:
