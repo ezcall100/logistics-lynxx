@@ -49,6 +49,14 @@ overrides:
     rules:
       'react-refresh/only-export-components': 'off'
   
+  # Node.js setup scripts
+  - files: ['setup-*.js', 'scripts/**/*.js', 'scripts/**/*.mjs']
+    env:
+      node: true
+    rules:
+      'no-console': 'off'
+      'no-undef': 'off'
+  
   # Soften app UI temporarily for gradual improvement
   - files: ['src/**/*.{ts,tsx}']
     rules:
