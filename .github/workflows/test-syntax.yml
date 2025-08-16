@@ -15,40 +15,26 @@ jobs:
     name: Validate config & contexts
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    
-    # Declare all contexts that will be used in this job
-    env:
-      # These are the variables and secrets that will be accessed
-      # This helps the GitHub Actions extension understand what's valid
-      _STAGING_URL: ${{ vars.STAGING_URL }}
-      _PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
-      _N8N_ENABLED: ${{ vars.N8N_ENABLED }}
-      _N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
-      _DEPLOYMENT_WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL }}
-      _N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Test Variables and Secrets
-        env:
-          # Input from workflow dispatch
-          ENVIRONMENT_NAME: ${{ inputs.environment }}
-          
-          # Use the declared variables with fallbacks
-          STAGING_URL: ${{ env._STAGING_URL || 'https://staging.example.com' }}
-          PRODUCTION_URL: ${{ env._PRODUCTION_URL || 'https://example.com' }}
-          N8N_ENABLED: ${{ env._N8N_ENABLED || 'false' }}
-          N8N_BASE_URL: ${{ env._N8N_BASE_URL || '' }}
-          DEPLOYMENT_WEBHOOK_URL: ${{ env._DEPLOYMENT_WEBHOOK_URL || '' }}
-          N8N_API_KEY: ${{ env._N8N_API_KEY || '' }}
         run: |
           echo "=== Environment Configuration Test ==="
-          echo "ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
+          echo "ENVIRONMENT_NAME: ${{ inputs.environment }}"
+          
+          # Get variables with fallbacks
+          STAGING_URL="${{ vars.STAGING_URL || 'https://staging.example.com' }}"
+          PRODUCTION_URL="${{ vars.PRODUCTION_URL || 'https://example.com' }}"
+          N8N_ENABLED="${{ vars.N8N_ENABLED || 'false' }}"
+          N8N_BASE_URL="${{ vars.N8N_BASE_URL || '' }}"
+          DEPLOYMENT_WEBHOOK_URL="${{ secrets.DEPLOYMENT_WEBHOOK_URL || '' }}"
+          N8N_API_KEY="${{ secrets.N8N_API_KEY || '' }}"
           
           # Determine APP_URL based on environment
-          if [ "$ENVIRONMENT_NAME" = "production" ]; then
+          if [ "${{ inputs.environment }}" = "production" ]; then
             APP_URL="$PRODUCTION_URL"
           else
             APP_URL="$STAGING_URL"

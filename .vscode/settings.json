@@ -52,6 +52,9 @@
   "github-actions.disableMinimumValidation": true,
   "github-actions.disableExclusiveMaximumValidation": true,
   "github-actions.disableExclusiveMinimumValidation": true,
+  "github-actions.disableContextAccessWarnings": true,
+  "github-actions.disableContextValidation": true,
+  "github-actions.disableContextAccessValidation": true,
   "[yaml]": {
     "editor.formatOnSave": false,
     "editor.formatOnPaste": false,
