@@ -291,7 +291,7 @@ export const RealAutonomousUpdater: React.FC = () => {
         'Added progressive enhancement'
       ];
 
-      const types: RealUpdate['type'][] = ['style', 'layout', 'interaction', 'performance', 'content'];
+      const types: AutonomousUpdate['type'][] = ['style', 'layout', 'interaction', 'performance', 'content'];
 
       const randomComponent = components[Math.floor(Math.random() * components.length)];
       const randomChange = changes[Math.floor(Math.random() * changes.length)];
@@ -300,27 +300,25 @@ export const RealAutonomousUpdater: React.FC = () => {
       applyRealUpdate(randomComponent, randomChange, randomType);
 
       // Update agent progress
-      setAgents(prev => prev.map(async (agent) => {
+      setAgents(prev => prev.map((agent) => {
         if (agent.status === 'active') {
           const newProgress = Math.min(100, agent.progress + Math.random() * 15);
           const isCompleted = newProgress >= 100;
           
           const updatedAgent = {
             ...agent,
-            status: isCompleted ? 'working' : 'active',
+            status: isCompleted ? 'working' as const : 'active' as const,
             progress: newProgress,
             tasks_completed: isCompleted ? agent.tasks_completed + 1 : agent.tasks_completed,
             current_task: isCompleted ? generateNewTask(agent.type) : agent.current_task,
             last_activity: new Date().toISOString()
           };
 
-          // Update agent in Supabase
+          // Update agent in Supabase (async operation)
           if (api) {
-            try {
-              await SupabaseAPI.updateAutonomousAgent(agent.id, updatedAgent);
-            } catch (error) {
+            SupabaseAPI.updateAutonomousAgent(agent.id, updatedAgent).catch(error => {
               console.error('Failed to update agent status:', error);
-            }
+            });
           }
 
           return updatedAgent;
@@ -345,7 +343,7 @@ export const RealAutonomousUpdater: React.FC = () => {
     setAgents(prev => prev.map(agent => ({
       ...agent,
       status: 'idle' as const,
-      currentTask: 'Real updates stopped',
+      current_task: 'Real updates stopped',
       progress: 0
     })));
 
