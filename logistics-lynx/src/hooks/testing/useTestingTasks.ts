@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { TestingTask } from '@/types/testing';
 
 export const useTestingTasks = () => {
   const [testingTasks, setTestingTasks] = useState<TestingTask[]>([]);
 
-  const defaultTasks: TestingTask[] = [
+  const defaultTasks = useMemo((): TestingTask[] => [
     {
       id: 'task-1',
       name: 'Compare Multiple Quotes',
@@ -38,7 +38,7 @@ export const useTestingTasks = () => {
       category: 'quote_comparison',
       estimatedDuration: 5
     }
-  ];
+  ], []);
 
   useEffect(() => {
     setTestingTasks(defaultTasks);

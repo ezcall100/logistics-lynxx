@@ -173,7 +173,7 @@ const ActiveRoutePage: React.FC = () => {
     return () => clearInterval(interval);
   }, [initializeRouteData, updateLiveData]);
 
-  const initializeRouteData = async () => {
+  const initializeRouteData = useCallback(async () => {
     try {
       // Simulate API calls with realistic data
       await Promise.all([
@@ -187,7 +187,7 @@ const ActiveRoutePage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const loadActiveRoute = async () => {
     // Realistic active load data

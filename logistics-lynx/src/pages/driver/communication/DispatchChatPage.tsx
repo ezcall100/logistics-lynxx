@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -105,7 +105,7 @@ const DispatchChatPage = () => {
   ];
 
   // Mock messages for active thread
-  const messages: Message[] = [
+  const messages = useMemo((): Message[] => [
     {
       id: "1",
       sender: "Sarah Johnson",
@@ -162,7 +162,7 @@ const DispatchChatPage = () => {
       status: "delivered",
       priority: "urgent"
     }
-  ];
+  ], []);
 
   const filteredThreads = chatThreads.filter(thread =>
     thread.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

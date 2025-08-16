@@ -26,7 +26,7 @@ interface AgentStatus {
   lastCheck: string;
   responseTime: number;
   message: string;
-  icon: React.ComponentType<unknown>;
+  icon: React.ComponentType<any>;
 }
 
 export const AgentStatusChecker: React.FC = () => {
@@ -82,7 +82,7 @@ export const AgentStatusChecker: React.FC = () => {
         status: 'error',
         lastCheck: new Date().toISOString(),
         responseTime: Date.now() - startTime,
-        message: `❌ Error: ${error.message}`,
+        message: `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
         icon: agent.icon
       };
     }
@@ -106,7 +106,7 @@ export const AgentStatusChecker: React.FC = () => {
 
     try {
       // Check all agents concurrently but with a small delay to avoid overwhelming
-      const results = [];
+      const results: AgentStatus[] = [];
       for (const agent of agentTypes) {
         const result = await checkAgentHealth(agent);
         results.push(result);
@@ -133,13 +133,13 @@ export const AgentStatusChecker: React.FC = () => {
     } catch (error: unknown) {
       toast({
         title: "Health Check Failed",
-        description: error.message,
+        description: error instanceof Error ? error.message : 'Unknown error',
         variant: "destructive"
       });
     } finally {
       setIsChecking(false);
     }
-  }, [toast]);
+  }, [toast, agentTypes, checkAgentHealth]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
