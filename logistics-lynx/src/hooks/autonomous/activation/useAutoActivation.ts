@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ActivationStatus } from './useActivationStatus';
@@ -12,6 +12,12 @@ export const useAutoActivation = (
   agents: unknown[]
 ) => {
   const { toast } = useToast();
+
+  // Create stable versions of the functions
+  const stableSetActivationStatus = useCallback(setActivationStatus, [setActivationStatus]);
+  const stableSetSystemStatus = useCallback(setSystemStatus, [setSystemStatus]);
+  const stableStartContinuousOperation = useCallback(startContinuousOperation, [startContinuousOperation]);
+  const stableExecuteComprehensiveTesting = useCallback(executeComprehensiveTesting, [executeComprehensiveTesting]);
 
   useEffect(() => {
     const autoActivateSystem = async () => {
@@ -50,8 +56,8 @@ export const useAutoActivation = (
             timelineAutoStarted: true
           };
 
-          setActivationStatus(autoActivatedStatus);
-          setSystemStatus('autonomous');
+          stableSetActivationStatus(autoActivatedStatus);
+          stableSetSystemStatus('autonomous');
           localStorage.setItem('tms_autonomous_24_7_status', JSON.stringify(autoActivatedStatus));
 
           try {
@@ -75,9 +81,9 @@ export const useAutoActivation = (
             console.log('Database logging failed, but auto-activation continues:', dbError);
           }
 
-          startContinuousOperation();
+          stableStartContinuousOperation();
           setTimeout(() => {
-            executeComprehensiveTesting();
+            stableExecuteComprehensiveTesting();
           }, 2000);
 
           toast({
@@ -93,5 +99,5 @@ export const useAutoActivation = (
 
     const timer = setTimeout(autoActivateSystem, 100); // Immediate activation
     return () => clearTimeout(timer);
-  }, [agents, setSystemStatus, toast, setActivationStatus, startContinuousOperation, executeComprehensiveTesting]);
+  }, [agents, stableSetSystemStatus, toast, stableSetActivationStatus, stableStartContinuousOperation, stableExecuteComprehensiveTesting]);
 };

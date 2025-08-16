@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useActivationStatus } from './activation/useActivationStatus';
 import { useAutoActivation } from './activation/useAutoActivation';
+import { useEvent } from '@/lib/hooks';
 
 export const useAutonomousActivation = () => {
   const { activationStatus, setActivationStatus } = useActivationStatus();
@@ -53,7 +54,7 @@ export const useAutonomousActivation = () => {
     }, 5000);
 
     return () => clearInterval(continuousInterval);
-  }, [agents, executeAgentTask]);
+  }, [agents, executeAgentTask, executeComprehensiveTesting, setActivationStatus]);
 
   const executeComprehensiveTesting = useCallback(async () => {
     try {
