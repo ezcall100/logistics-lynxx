@@ -33,9 +33,19 @@ rules:
   '@typescript-eslint/no-explicit-any': 'warn'
   'no-console': 'warn'
   'prefer-const': 'error'
-  'react-refresh/only-export-components': 'off'
+  'react-refresh/only-export-components': ['warn', { 'allowConstantExport': true }]
 
 overrides:
+  # Disable react-refresh for Next.js public website (legitimate metadata exports)
+  - files: ['public-website/**/*.{ts,tsx}']
+    rules:
+      'react-refresh/only-export-components': 'off'
+  
+  # Allow non-prod files to export helpers next to components
+  - files: ['**/*.stories.*', '**/*.test.*', '**/__examples__/**']
+    rules:
+      'react-refresh/only-export-components': 'off'
+  
   # Soften app UI temporarily for gradual improvement
   - files: ['src/**/*.{ts,tsx}']
     rules:

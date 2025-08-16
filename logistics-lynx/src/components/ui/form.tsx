@@ -13,6 +13,10 @@ import {
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
+/* eslint-disable react-refresh/only-export-components */
+// This file exports both components and a hook that are tightly coupled
+// and should remain together for maintainability
+
 const Form = FormProvider
 
 type FormFieldContextValue<
