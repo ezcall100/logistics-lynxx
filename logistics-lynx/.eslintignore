@@ -1,0 +1,12 @@
+# Setup scripts (working Node.js scripts)
+setup-*.js
+
+# Build artifacts
+dist/
+build/
+
+# Node modules
+node_modules/
+
+# Environment files
+.env*
