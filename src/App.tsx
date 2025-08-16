@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 
-function App(): React.ReactElement {
+const App: React.FC = (): React.ReactElement => {
   return React.createElement('div', { className: 'min-h-screen bg-background' },
     React.createElement('header', { className: 'bg-primary text-primary-foreground p-4' },
       React.createElement('h1', { className: 'text-2xl font-bold' }, 'Autonomous TMS System'),
@@ -32,6 +32,6 @@ function App(): React.ReactElement {
       )
     )
   );
-}
+};
 
 export default App;
