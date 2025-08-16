@@ -1,5 +1,5 @@
 import { CTASection } from '../../components/CTASection';
-import { metadata, jsonLd, contactMethods } from './constants';
+import { metadata, jsonLd, contactMethods } from './constants.tsx';
 
 export { metadata };
 
