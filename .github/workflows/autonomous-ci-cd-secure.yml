@@ -45,7 +45,7 @@ permissions:
 
 # Concurrency control to prevent race conditions
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: autonomous-cicd-secure-${{ github.ref }}
   cancel-in-progress: true
 
 env:

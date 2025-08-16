@@ -1,18 +1,19 @@
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 # Note: GitHub Actions extension warnings are false positives - these are valid expressions
-name: 🤖 Autonomous CI/CD Pipeline
+name: 🤖 Autonomous CI/CD Pipeline (Legacy)
 
 on:
-  push:
-    branches: [main, develop, feature/*]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.github/ISSUE_TEMPLATE/**'
-  pull_request:
-    branches: [main, develop]
-    types: [opened, synchronize, reopened]
+  # DISABLED: Conflicts with autonomous-ci-cd-secure.yml
+  # push:
+  #   branches: [main, develop, feature/*]
+  #   paths-ignore:
+  #     - '**.md'
+  #     - 'docs/**'
+  #     - '.github/ISSUE_TEMPLATE/**'
+  # pull_request:
+  #   branches: [main, develop]
+  #   types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       environment:
@@ -51,7 +52,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: autonomous-cicd-legacy-${{ github.ref }}
   cancel-in-progress: true
 
 env:

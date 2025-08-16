@@ -1,15 +1,16 @@
-name: 🤖 Autonomous CI/CD Pipeline (Secure)
+name: 🤖 Autonomous CI/CD Pipeline (Standard)
 
 on:
-  push:
-    branches: [main, develop, feature/*]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.github/ISSUE_TEMPLATE/**'
-  pull_request:
-    branches: [main, develop]
-    types: [opened, synchronize, reopened]
+  # DISABLED: Conflicts with autonomous-ci-cd-secure.yml
+  # push:
+  #   branches: [main, develop, feature/*]
+  #   paths-ignore:
+  #     - '**.md'
+  #     - 'docs/**'
+  #     - '.github/ISSUE_TEMPLATE/**'
+  # pull_request:
+  #   branches: [main, develop]
+  #   types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       environment:
@@ -45,7 +46,7 @@ permissions:
 
 # Concurrency control to prevent race conditions
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: autonomous-cicd-standard-${{ github.ref }}
   cancel-in-progress: true
 
 env:
