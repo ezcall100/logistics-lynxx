@@ -105,7 +105,7 @@ export function DispatchDashboard() {
         variant: "destructive",
       });
     }
-  }, [supabase, toast]);
+  }, [toast]);
 
   const fetchCarriers = useCallback(async () => {
     try {
@@ -125,7 +125,7 @@ export function DispatchDashboard() {
         variant: "destructive",
       });
     }
-  }, [supabase, toast]);
+  }, [toast]);
 
   const fetchDispatchStats = useCallback(async () => {
     try {

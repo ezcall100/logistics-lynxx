@@ -202,7 +202,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         toggleSidebar();
       }
     }
-  }, []);
+  }, [isMobile, isOpen, toggleSidebar]);
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');

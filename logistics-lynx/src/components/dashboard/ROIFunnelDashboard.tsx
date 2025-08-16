@@ -39,11 +39,7 @@ export const ROIFunnelDashboard: React.FC = () => {
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | '90d'>('30d');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchFunnelData();
-  }, [timeframe, fetchFunnelData]);
-
-  const fetchFunnelData = async () => {
+  const fetchFunnelData = useCallback(async () => {
     setLoading(true);
     try {
       // Fetch funnel metrics
@@ -60,7 +56,11 @@ export const ROIFunnelDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeframe]);
+
+  useEffect(() => {
+    fetchFunnelData();
+  }, [fetchFunnelData]);
 
   const getConversionColor = (rate: number) => {
     if (rate >= 25) return 'text-green-600';

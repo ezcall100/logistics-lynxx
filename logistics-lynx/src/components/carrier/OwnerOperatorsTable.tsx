@@ -35,11 +35,7 @@ const OwnerOperatorsTable = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchOwnerOperators();
-  }, [fetchOwnerOperators]);
-
-  const fetchOwnerOperators = async () => {
+  const fetchOwnerOperators = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -59,7 +55,11 @@ const OwnerOperatorsTable = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchOwnerOperators();
+  }, [fetchOwnerOperators]);
 
   const getStatusBadge = (status?: string) => {
     switch (status?.toLowerCase()) {

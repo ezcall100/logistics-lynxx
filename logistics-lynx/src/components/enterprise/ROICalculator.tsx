@@ -57,7 +57,7 @@ export const ROICalculator: React.FC = () => {
       
       setIsCalculating(false);
     }, 1000);
-  }, []);
+  }, [inputs.averageRate, inputs.currentCostPerHour, inputs.currentTimePerQuote, inputs.quotesPerMonth, inputs.transbotCost, inputs.winRate]);
 
   const exportToPDF = () => {
     if (!calculation) return;

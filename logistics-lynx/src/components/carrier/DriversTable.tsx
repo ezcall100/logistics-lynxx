@@ -36,11 +36,7 @@ const DriversTable = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchDrivers();
-  }, [fetchDrivers]);
-
-  const fetchDrivers = async () => {
+  const fetchDrivers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -60,7 +56,11 @@ const DriversTable = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchDrivers();
+  }, [fetchDrivers]);
 
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {

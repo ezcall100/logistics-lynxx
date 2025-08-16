@@ -107,7 +107,7 @@ export const ROICalculatorEnhanced: React.FC = () => {
       
       setIsCalculating(false);
     }, 1000);
-  }, []);
+  }, [inputs.averageRate, inputs.currentCostPerHour, inputs.currentTimePerQuote, inputs.quotesPerMonth, inputs.transbotCost, inputs.winRate]);
 
   const handleSubmitROI = async () => {
     if (!formData.company_name || !formData.contact_email) {
