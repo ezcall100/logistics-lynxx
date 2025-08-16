@@ -1,7 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useEvent, useInterval } from '@/lib/hooks';
 import type { KnowledgeRule, KnowledgePattern, KnowledgeVersion, PerformanceMetrics } from '@/types/knowledge-base';
 
 export const useAutonomousKnowledge = () => {
@@ -20,19 +21,7 @@ export const useAutonomousKnowledge = () => {
   const [currentVersion, setCurrentVersion] = useState<KnowledgeVersion | null>(null);
   const { toast } = useToast();
 
-  // Simulate real-time pattern discovery
-  useEffect(() => {
-    loadKnowledgeBase();
-    
-    const interval = setInterval(() => {
-      runPatternAnalysis();
-      generateNewRules();
-    }, 10 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [generateNewRules, loadKnowledgeBase, runPatternAnalysis]);
-
-  const loadKnowledgeBase = async () => {
+  const loadKnowledgeBase = useCallback(async () => {
     try {
       // Load knowledge rules
       const { data: rules, error: rulesError } = await supabase
@@ -87,9 +76,9 @@ export const useAutonomousKnowledge = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
-  const runPatternAnalysis = async () => {
+  const runPatternAnalysis = useCallback(async () => {
     setIsLearning(true);
     try {
       // Fetch recent AI decisions for pattern analysis
@@ -149,9 +138,9 @@ export const useAutonomousKnowledge = () => {
     } finally {
       setIsLearning(false);
     }
-  };
+  }, [toast]);
 
-  const generateNewRules = async () => {
+  const generateNewRules = useCallback(async () => {
     try {
       const newRules: KnowledgeRule[] = patterns
         .filter(pattern => !pattern.rule_generated && pattern.confidence > 0.7)
@@ -197,7 +186,7 @@ export const useAutonomousKnowledge = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [patterns, toast]);
 
   const createKnowledgeVersion = async () => {
     const newVersion: KnowledgeVersion = {
@@ -273,6 +262,18 @@ export const useAutonomousKnowledge = () => {
       rules_applied: applicableRules.length
     };
   };
+
+  // Simulate real-time pattern discovery
+  useEffect(() => {
+    loadKnowledgeBase();
+    
+    const interval = setInterval(() => {
+      runPatternAnalysis();
+      generateNewRules();
+    }, 10 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [loadKnowledgeBase, runPatternAnalysis, generateNewRules]);
 
   return {
     knowledgeRules,

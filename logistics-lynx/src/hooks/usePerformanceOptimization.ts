@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PerformanceMetrics {
@@ -58,7 +58,7 @@ export const usePerformanceOptimization = () => {
   const [systemHealth, setSystemHealth] = useState<'optimal' | 'warning' | 'critical'>('optimal');
   const { toast } = useToast();
 
-  const generateOptimizationAction = (metrics: PerformanceMetrics): OptimizationAction | null => {
+  const generateOptimizationAction = useCallback((metrics: PerformanceMetrics): OptimizationAction | null => {
     const now = new Date().toISOString();
     
     // CPU optimization
@@ -128,9 +128,9 @@ export const usePerformanceOptimization = () => {
     }
 
     return null;
-  };
+  }, [thresholds]);
 
-  const executeOptimization = async (action: OptimizationAction): Promise<boolean> => {
+  const executeOptimization = useCallback(async (action: OptimizationAction): Promise<boolean> => {
     try {
       console.log(`Executing optimization: ${action.description}`);
       
@@ -194,9 +194,9 @@ export const usePerformanceOptimization = () => {
       console.error('Optimization execution failed:', error);
       return false;
     }
-  };
+  }, [toast]);
 
-  const calculateSystemHealth = (metrics: PerformanceMetrics): 'optimal' | 'warning' | 'critical' => {
+  const calculateSystemHealth = useCallback((metrics: PerformanceMetrics): 'optimal' | 'warning' | 'critical' => {
     const criticalConditions = [
       metrics.cpu_usage > thresholds.cpu_critical,
       metrics.memory_usage > thresholds.memory_critical,
@@ -218,7 +218,7 @@ export const usePerformanceOptimization = () => {
     } else {
       return 'optimal';
     }
-  };
+  }, [thresholds]);
 
   // Simulate real-time metrics updates
   useEffect(() => {

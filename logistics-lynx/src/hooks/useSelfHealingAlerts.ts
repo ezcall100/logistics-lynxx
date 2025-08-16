@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAlerts } from '@/hooks/useAlerts';
 import type { Alert } from '@/types/alerts';
@@ -82,7 +82,7 @@ export const useSelfHealingAlerts = () => {
     return applicableStrategies.sort((a, b) => b.success_rate - a.success_rate)[0];
   };
 
-  const executeHealingStrategy = async (alert: Alert, strategy: HealingStrategy): Promise<boolean> => {
+  const executeHealingStrategy = useCallback(async (alert: Alert, strategy: HealingStrategy): Promise<boolean> => {
     const startTime = Date.now();
     
     try {
@@ -140,9 +140,9 @@ export const useSelfHealingAlerts = () => {
       console.error('Healing strategy execution failed:', error);
       return false;
     }
-  };
+  }, [toast, updateAlert]);
 
-  const attemptSelfHealing = async (alert: Alert): Promise<boolean> => {
+  const attemptSelfHealing = useCallback(async (alert: Alert): Promise<boolean> => {
     if (!healingActive) return false;
 
     const strategy = selectBestStrategy(alert);
@@ -161,7 +161,7 @@ export const useSelfHealingAlerts = () => {
     });
 
     return executeHealingStrategy(alert, strategy);
-  };
+  }, [healingActive, updateAlert, executeHealingStrategy]);
 
   // Monitor alerts and attempt healing
   useEffect(() => {

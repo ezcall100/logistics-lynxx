@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
+// Always-latest value
 export function useLatest<T>(value: T) {
   const ref = useRef(value);
   useEffect(() => { ref.current = value; }, [value]);
   return ref;
 }
 
-// Stable function reference that always sees latest logic/state
+// Stable function reference that always sees the latest logic/state
 export function useEvent<T extends (...args: unknown[]) => unknown>(fn: T) {
   const ref = useLatest(fn);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,7 +34,17 @@ export function useAsyncEffect(effect: (signal: AbortSignal) => Promise<void>, d
   }, deps);
 }
 
-// Memoize derived objects/arrays once, via inputs
+// Stable interval that uses the latest callback
+export function useInterval(callback: () => void, ms: number | null) {
+  const cb = useEvent(callback);
+  useEffect(() => {
+    if (ms == null) return;
+    const id = setInterval(cb, ms);
+    return () => clearInterval(id);
+  }, [cb, ms]);
+}
+
+// Derive objects/arrays once, keyed by inputs
 export function useDerived<T>(factory: () => T, deps: unknown[]) {
   return useMemo(factory, deps);
 }
