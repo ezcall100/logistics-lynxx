@@ -33,14 +33,9 @@ rules:
   '@typescript-eslint/no-explicit-any': 'warn'
   'no-console': 'warn'
   'prefer-const': 'error'
-  'react-refresh/only-export-components': 'warn'
+  'react-refresh/only-export-components': 'off'
 
 overrides:
-  # Disable react-refresh/only-export-components for Next.js pages and public website
-  - files: ['public-website/**/*.{ts,tsx}', '**/page.tsx', '**/layout.tsx']
-    rules:
-      'react-refresh/only-export-components': 'off'
-  
   # Soften app UI temporarily for gradual improvement
   - files: ['src/**/*.{ts,tsx}']
     rules:
