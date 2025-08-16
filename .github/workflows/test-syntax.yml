@@ -24,21 +24,19 @@ jobs:
         env:
           STAGING_URL: ${{ vars.STAGING_URL || 'https://staging.example.com' }}
           PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://example.com' }}
-          N8N_ENABLED: ${{ vars.N8N_ENABLED || 'false' }}
-          N8N_BASE_URL: ${{ vars.N8N_BASE_URL || '' }}
-          DEPLOYMENT_WEBHOOK_URL: ${{ secrets.DEPLOYMENT_WEBHOOK_URL || '' }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY || '' }}
         run: |
           echo "=== Environment Configuration Test ==="
           echo "ENVIRONMENT_NAME: ${{ inputs.environment }}"
           
-          # Use environment variables with fallbacks
-          STAGING_URL="${STAGING_URL:-https://staging.example.com}"
-          PRODUCTION_URL="${PRODUCTION_URL:-https://example.com}"
+          # Set default values for variables that might not be defined
           N8N_ENABLED="${N8N_ENABLED:-false}"
           N8N_BASE_URL="${N8N_BASE_URL:-}"
           DEPLOYMENT_WEBHOOK_URL="${DEPLOYMENT_WEBHOOK_URL:-}"
           N8N_API_KEY="${N8N_API_KEY:-}"
+          
+          # Use environment variables with fallbacks
+          STAGING_URL="${STAGING_URL:-https://staging.example.com}"
+          PRODUCTION_URL="${PRODUCTION_URL:-https://example.com}"
           
           # Determine APP_URL based on environment
           if [ "${{ inputs.environment }}" = "production" ]; then
