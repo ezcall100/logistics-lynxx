@@ -14,7 +14,8 @@ class AutonomousAgentReader {
       'AUTONOMOUS_AGENT_PORTAL_EXPLANATION.md',
       'canonical-portals-config.json',
       'PORTAL_AUTONOMOUS_AGENT_INTEGRATION_FIX.md',
-      'autonomous-setup.sql'
+      'autonomous-setup.sql',
+      'AUTONOMOUS_AGENT_DESIGN_SYSTEM_EXPLANATION.md'
     ];
     this.readingStatus = {};
   }
