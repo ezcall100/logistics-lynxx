@@ -107,10 +107,10 @@ export const useRealtimeUIOptimization = () => {
     } catch (error) {
       console.error('Error in UI optimization analysis:', error);
     }
-  }, [isOptimizing, optimizationRules, fetchUserBehaviorData]);
+  }, [isOptimizing, optimizationRules, fetchUserBehaviorData, executeOptimization]);
 
   // Execute specific optimization
-  const executeOptimization = async (rule: UIOptimizationRule, behaviorData: unknown) => {
+  const executeOptimization = useCallback(async (rule: UIOptimizationRule, behaviorData: unknown) => {
     const change: UIChange = {
       id: Date.now().toString(),
       type: getOptimizationType(rule.action),
@@ -135,7 +135,7 @@ export const useRealtimeUIOptimization = () => {
       description: change.change_description,
       duration: 3000,
     });
-  };
+  }, [toast, logUIOptimization]);
 
   // Apply UI changes to the DOM
   const applyUIChange = (change: UIChange) => {
@@ -227,7 +227,7 @@ export const useRealtimeUIOptimization = () => {
   };
 
   // Log optimization to database  
-  const logUIOptimization = async (change: UIChange, rule: UIOptimizationRule, behaviorData: unknown) => {
+  const logUIOptimization = useCallback(async (change: UIChange, rule: UIOptimizationRule, behaviorData: unknown) => {
     try {
       const insertData = {
         decision_type: 'ui_optimization',
@@ -244,7 +244,7 @@ export const useRealtimeUIOptimization = () => {
     } catch (error) {
       console.error('Error logging UI optimization:', error);
     }
-  };
+  }, []);
 
   // Start/stop optimization monitoring
   const startOptimization = useCallback(() => {

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { MarketResearchAgent, MarketIntelligenceData, CompetitiveAnalysis, MarketForecast } from '@/types/market-research';
@@ -57,7 +57,7 @@ export const useMarketResearchAgents = () => {
     initializeAgents();
   }, []);
 
-  const executeMarketResearch = async (agent: MarketResearchAgent) => {
+  const executeMarketResearch = useCallback(async (agent: MarketResearchAgent) => {
     setAgents(prev => prev.map(a => 
       a.id === agent.id ? { ...a, status: 'researching' } : a
     ));
@@ -125,7 +125,7 @@ export const useMarketResearchAgents = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   // Auto-execute research cycles
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -95,7 +95,7 @@ const BrokerRateIntegration = () => {
     fetchIntegrationSettings();
   }, [fetchBrokerRates]);
 
-  const fetchBrokerRates = async () => {
+  const fetchBrokerRates = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('broker_rates')
@@ -112,7 +112,7 @@ const BrokerRateIntegration = () => {
         variant: "destructive"
       });
     }
-  };
+  }, [toast]);
 
   const fetchIntegrationSettings = async () => {
     try {

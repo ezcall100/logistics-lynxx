@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 // Always-latest value
@@ -10,7 +11,7 @@ export function useLatest<T>(value: T) {
 // Stable function reference that always sees the latest logic/state
 export function useEvent<T extends (...args: unknown[]) => unknown>(fn: T) {
   const ref = useLatest(fn);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   return useCallback(((...args: Parameters<T>) => ref.current(...args)) as T, []);
 }
 
@@ -46,11 +47,13 @@ export function useInterval(callback: () => void, ms: number | null) {
 
 // Derive objects/arrays once, keyed by inputs
 export function useDerived<T>(factory: () => T, deps: unknown[]) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: factory is intentionally omitted from deps
   return useMemo(factory, deps);
 }
 
 // Stable callback that always sees latest logic/state without re-deps
 export function useStableCallback<T extends (...args: unknown[]) => unknown>(fn: T) {
   const ref = useLatest(fn);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: ref.current always has latest value
   return useCallback(((...args: Parameters<T>) => ref.current(...args)) as T, []);
 }

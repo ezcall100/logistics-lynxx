@@ -31,7 +31,7 @@ export const useAutonomousAgentManager = () => {
     executeDeploymentTask
   } = useAgentTasks();
 
-  const executeAgentTask = async (agent: AutonomousAgent) => {
+  const executeAgentTask = useCallback(async (agent: AutonomousAgent) => {
     setAgents(prev => prev.map(a => 
       a.id === agent.id ? { ...a, status: 'working' as const } : a
     ));
@@ -154,7 +154,7 @@ export const useAutonomousAgentManager = () => {
       // Try to get GPT assistance for complex problems
       await seekGPTAssistance(agent, error, systemHealth, agents);
     }
-  };
+  }, [toast, seekGPTAssistance, systemHealth, agents, executeRefactoringTask, executeOptimizationTask, executeUIImprovementTask, executeMonitoringTask, executeLearningTask, executeResearchTask, executeFrontendTask, executeBackendTask, executeDatabaseTask, executeTestingTask, executeDeploymentTask, systemStatus]);
 
   // Autonomous agent scheduler
   useEffect(() => {
@@ -256,7 +256,7 @@ export const useAutonomousAgentManager = () => {
           path: '/admin/users',
           component: 'UserManagement',
           type: 'page' as const,
-          content: `import React, { useState, useEffect } from 'react';
+          content: `import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useCRMCompanies } from './crm/useCRMCompanies';
 import { useCRMContacts } from './crm/useCRMContacts';
 import { useCRMLeads } from './crm/useCRMLeads';
@@ -33,7 +33,7 @@ export const useCRM = () => {
   const emails = useCRMEmails();
   const activities = useCRMActivities();
 
-  const fetchAllCRMData = async () => {
+  const fetchAllCRMData = useCallback(async () => {
     setLoading(true);
     try {
       // For demo purposes, use mock data immediately
@@ -54,7 +54,7 @@ export const useCRM = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [companies, contacts, leads, opportunities, projects, events, emails, activities]);
 
   useEffect(() => {
     fetchAllCRMData();

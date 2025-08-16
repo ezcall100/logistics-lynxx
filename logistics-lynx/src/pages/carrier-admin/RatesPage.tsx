@@ -187,7 +187,7 @@ const RatesPage: React.FC = () => {
     if (path.includes('/target')) return 'target';
     
     return 'all';
-  }, []);
+  }, [location.pathname, searchParams]);
   
   const [activeTab, setActiveTab] = useState(getInitialTab());
   const [selectedMode, setSelectedMode] = useState('All');

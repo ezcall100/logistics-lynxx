@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -24,7 +24,7 @@ export const useSelfLearning = () => {
   const [learningActive, setLearningActive] = useState(true);
   const { toast } = useToast();
 
-  const analyzePerfomanceData = async () => {
+  const analyzePerfomanceData = useCallback(async () => {
     try {
       // Get recent AI decision logs
       const { data: logs, error } = await supabase
@@ -68,9 +68,9 @@ export const useSelfLearning = () => {
       console.error('Error analyzing performance data:', error);
       return {};
     }
-  };
+  }, []);
 
-  const adjustThresholds = async (performanceData: Record<string, {
+  const adjustThresholds = useCallback(async (performanceData: Record<string, {
     total: number;
     successful: number;
     avgConfidence: number;
@@ -124,7 +124,7 @@ export const useSelfLearning = () => {
     }
 
     return adjustments;
-  };
+  }, [thresholds]);
 
   const logLearningData = async (data: LearningData) => {
     try {
@@ -147,7 +147,7 @@ export const useSelfLearning = () => {
     }
   };
 
-  const runLearningCycle = async () => {
+  const runLearningCycle = useCallback(async () => {
     if (!learningActive) return;
 
     try {
@@ -174,7 +174,7 @@ export const useSelfLearning = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [learningActive, toast, analyzePerfomanceData, adjustThresholds]);
 
   const getThresholdForDecision = (decisionType: string): number => {
     return thresholds[decisionType]?.current_threshold || 0.8;
