@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProtectedRoute } from '../components/auth/ProtectedRoute';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 import { LoadBoardPortal } from '../components/loadBoard/LoadBoardPortal';
 
 const LoadBoardPage = () => {
