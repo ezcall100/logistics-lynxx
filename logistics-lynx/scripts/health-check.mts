@@ -169,21 +169,55 @@ const server = http.createServer(async (req, res) => {
 
 const PORT = process.env.HEALTH_PORT || 8089;
 
-server.listen(PORT, () => {
-  console.log(`🏥 Health server listening on port ${PORT}`);
-  console.log(`   Health check: http://localhost:${PORT}/healthz`);
-  console.log(`   Readiness check: http://localhost:${PORT}/readyz`);
-  console.log(`   Mode: ${process.env.READYZ_MODE || 'strict'}`);
-  console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
+// Function to find an available port
+async function findAvailablePort(startPort: number): Promise<number> {
+  const net = await import('net');
   
-  // Log credential status
-  const credCheck = validateSupabaseCredentials();
-  if (credCheck.ok) {
-    console.log(`   ✅ Supabase credentials: VALID`);
-  } else {
-    console.log(`   ⚠️  Supabase credentials: ${credCheck.reason}`);
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    
+    server.listen(startPort, () => {
+      const port = (server.address() as any)?.port;
+      server.close(() => resolve(port));
+    });
+    
+    server.on('error', (err: any) => {
+      if (err.code === 'EADDRINUSE') {
+        resolve(findAvailablePort(startPort + 1));
+      } else {
+        reject(err);
+      }
+    });
+  });
+}
+
+// Start server with port fallback
+async function startServer() {
+  try {
+    const availablePort = await findAvailablePort(PORT);
+    
+    server.listen(availablePort, () => {
+      console.log(`🏥 Health server listening on port ${availablePort}`);
+      console.log(`   Health check: http://localhost:${availablePort}/healthz`);
+      console.log(`   Readiness check: http://localhost:${availablePort}/readyz`);
+      console.log(`   Mode: ${process.env.READYZ_MODE || 'strict'}`);
+      console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
+      
+      // Log credential status
+      const credCheck = validateSupabaseCredentials();
+      if (credCheck.ok) {
+        console.log(`   ✅ Supabase credentials: VALID`);
+      } else {
+        console.log(`   ⚠️  Supabase credentials: ${credCheck.reason}`);
+      }
+    });
+  } catch (error) {
+    console.error('Failed to start health server:', error);
+    process.exit(1);
   }
-});
+}
+
+startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
