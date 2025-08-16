@@ -31,7 +31,7 @@ const CRMOpportunitiesPage: React.FC = () => {
 
   React.useEffect(() => {
     fetchOpportunities();
-  }, []);
+  }, [fetchOpportunities]);
 
   const filteredOpportunities = opportunities.filter(opp => {
     const matchesSearch = 

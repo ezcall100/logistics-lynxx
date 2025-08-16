@@ -37,7 +37,7 @@ export const FrontendChangeAgent = () => {
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
 
   // Real frontend changes that will be applied
-  const frontendEnhancements = [
+  const frontendEnhancements = useMemo(() => [
     {
       type: 'ui_enhancement' as const,
       title: 'Enhanced Button Styling',
@@ -80,7 +80,7 @@ export const FrontendChangeAgent = () => {
       changes: ['Added theme context', 'Created toggle component', 'Applied theme styles'],
       visualEffect: 'dark-mode'
     }
-  ];
+  ], []);
 
   // Apply real frontend changes
   const applyFrontendChange = (change: FrontendChange) => {
@@ -160,7 +160,7 @@ export const FrontendChangeAgent = () => {
     }, 5000); // Apply changes every 5 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [frontendEnhancements]);
 
   const getStatusIcon = (status: FrontendChange['status']) => {
     switch (status) {

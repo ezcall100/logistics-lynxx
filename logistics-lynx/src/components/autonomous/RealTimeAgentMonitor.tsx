@@ -101,16 +101,7 @@ export const RealTimeAgentMonitor: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
 
-  useEffect(() => {
-    connectWebSocket();
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
-    };
-  }, []);
-
-  const connectWebSocket = () => {
+  const connectWebSocket = useCallback(() => {
     const ws = new WebSocket('ws://localhost:8085');
     wsRef.current = ws;
 
@@ -148,7 +139,16 @@ export const RealTimeAgentMonitor: React.FC = () => {
       console.error('WebSocket error:', error);
       setIsConnected(false);
     };
-  };
+  }, []);
+
+  useEffect(() => {
+    connectWebSocket();
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
+  }, [connectWebSocket]);
 
   const togglePause = () => {
     setIsPaused(!isPaused);

@@ -32,7 +32,7 @@ export const ROICalculator: React.FC = () => {
   const [calculation, setCalculation] = useState<ROICalculation | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  const calculateROI = () => {
+  const calculateROI = useCallback(() => {
     setIsCalculating(true);
     
     // Simulate calculation delay
@@ -57,7 +57,7 @@ export const ROICalculator: React.FC = () => {
       
       setIsCalculating(false);
     }, 1000);
-  };
+  }, []);
 
   const exportToPDF = () => {
     if (!calculation) return;
@@ -77,7 +77,7 @@ export const ROICalculator: React.FC = () => {
     if (inputs.laneCount > 0 && inputs.quotesPerMonth > 0) {
       calculateROI();
     }
-  }, [inputs]);
+  }, [inputs, calculateROI]);
 
   return (
     <div className="space-y-6">

@@ -38,7 +38,7 @@ const DriversTable = () => {
 
   useEffect(() => {
     fetchDrivers();
-  }, []);
+  }, [fetchDrivers]);
 
   const fetchDrivers = async () => {
     try {

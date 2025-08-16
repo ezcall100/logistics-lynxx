@@ -26,7 +26,7 @@ const RatesOverview = () => {
     fetchRateMetrics();
     fetchRecentActivity();
     fetchModeBreakdown();
-  }, []);
+  }, [fetchRateMetrics]);
 
   const fetchRateMetrics = async () => {
     try {

@@ -164,7 +164,7 @@ export const AgentStatusChecker: React.FC = () => {
   useEffect(() => {
     // Run initial health check on component mount
     runHealthCheck();
-  }, []);
+  }, [runHealthCheck]);
 
   return (
     <div className="space-y-6">

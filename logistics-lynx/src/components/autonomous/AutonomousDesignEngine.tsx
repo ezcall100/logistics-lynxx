@@ -176,6 +176,29 @@ const AutonomousDesignEngine = () => {
   const [currentOptimization, setCurrentOptimization] = useState<string | null>(null);
 
   // Real-time optimization simulation
+  const triggerNewOptimization = useCallback(() => {
+    const optimizations = [
+      'Enhancing visual consistency across portals',
+      'Optimizing mobile touch interactions',
+      'Improving dark mode color schemes',
+      'Refining loading state animations',
+      'Enhancing form validation feedback',
+      'Optimizing table responsive behaviors'
+    ];
+
+    const randomOptimization = optimizations[Math.floor(Math.random() * optimizations.length)];
+    setCurrentOptimization(randomOptimization);
+
+    setTimeout(() => {
+      setCurrentOptimization(null);
+      toast({
+        title: "Design Optimization Applied",
+        description: randomOptimization,
+        duration: 3000,
+      });
+    }, 2500);
+  }, [toast]);
+
   useEffect(() => {
     if (!isEngineActive) return;
 
@@ -225,30 +248,7 @@ const AutonomousDesignEngine = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isEngineActive]);
-
-  const triggerNewOptimization = useCallback(() => {
-    const optimizations = [
-      'Enhancing visual consistency across portals',
-      'Optimizing mobile touch interactions',
-      'Improving dark mode color schemes',
-      'Refining loading state animations',
-      'Enhancing form validation feedback',
-      'Optimizing table responsive behaviors'
-    ];
-
-    const randomOptimization = optimizations[Math.floor(Math.random() * optimizations.length)];
-    setCurrentOptimization(randomOptimization);
-
-    setTimeout(() => {
-      setCurrentOptimization(null);
-      toast({
-        title: "Design Optimization Applied",
-        description: randomOptimization,
-        duration: 3000,
-      });
-    }, 2500);
-  }, [toast]);
+    }, [isEngineActive, triggerNewOptimization]);
 
   const applyOptimization = (id: string) => {
     setDesignOptimizations(prev => 

@@ -171,7 +171,7 @@ const ActiveRoutePage: React.FC = () => {
     initializeRouteData();
     const interval = setInterval(updateLiveData, 30000); // Update every 30 seconds
     return () => clearInterval(interval);
-  }, []);
+  }, [initializeRouteData, updateLiveData]);
 
   const initializeRouteData = async () => {
     try {

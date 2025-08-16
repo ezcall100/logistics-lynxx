@@ -217,7 +217,7 @@ export const AutonomousTaskProcessor = () => {
         clearInterval(processingInterval);
       }
     };
-  }, [tasks]);
+  }, [tasks, toast]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

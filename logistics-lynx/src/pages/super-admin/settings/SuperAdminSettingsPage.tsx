@@ -24,8 +24,8 @@ const SuperAdminSettingsPage = () => {
     if (tabParam && settingsSections.some(section => section.id === tabParam)) {
       setActiveTab(tabParam);
     }
-  }, [searchParams]);
-  const settingsSections = [{
+  }, [searchParams, settingsSections]);
+  const settingsSections = useMemo(() => [{
     id: 'general',
     label: 'General',
     icon: Settings,
@@ -74,7 +74,7 @@ const SuperAdminSettingsPage = () => {
     icon: Plug,
     description: 'Integrations & data exchange',
     component: ApiAndEdiSettings
-  }];
+  }], []);
   return <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <div className="max-w-[1280px] mx-auto px-6 py-8">
         {/* Header */}

@@ -29,7 +29,7 @@ const CRMContactsPage: React.FC = () => {
 
   React.useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [fetchContacts]);
 
   const filteredContacts = contacts.filter(contact => {
     const matchesSearch = 

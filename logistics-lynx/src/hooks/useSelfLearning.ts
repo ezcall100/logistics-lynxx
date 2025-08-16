@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -190,7 +190,7 @@ export const useSelfLearning = () => {
     runLearningCycle();
 
     return () => clearInterval(interval);
-  }, [learningActive]);
+  }, [learningActive, runLearningCycle]);
 
   return {
     thresholds,

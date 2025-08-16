@@ -161,9 +161,9 @@ const RealtimeUIDesignAgent = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isOptimizing]);
+  }, [isOptimizing, triggerOptimization]);
 
-  const triggerOptimization = () => {
+  const triggerOptimization = useCallback(() => {
     const optimizations = [
       'Analyzing user interaction patterns',
       'Optimizing color contrast for accessibility',
@@ -185,7 +185,7 @@ const RealtimeUIDesignAgent = () => {
         duration: 3000,
       });
     }, 2500);
-  };
+  }, []);
 
   const autoFixAccessibilityIssue = (issueId: string) => {
     setAccessibilityIssues(prev => 

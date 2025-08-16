@@ -140,7 +140,7 @@ const CRMCompaniesPage = () => {
 
   useEffect(() => {
     fetchCompanies();
-  }, []);
+  }, [fetchCompanies]);
 
   // Use sample data if no companies exist
   const displayCompanies = companies.length > 0 ? companies : sampleCompanies as CRMCompany[];

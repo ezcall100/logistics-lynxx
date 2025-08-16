@@ -93,7 +93,7 @@ const BrokerRateIntegration = () => {
   useEffect(() => {
     fetchBrokerRates();
     fetchIntegrationSettings();
-  }, []);
+  }, [fetchBrokerRates]);
 
   const fetchBrokerRates = async () => {
     try {

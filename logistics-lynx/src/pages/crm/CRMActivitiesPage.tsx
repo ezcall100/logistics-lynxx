@@ -120,7 +120,7 @@ const CRMActivitiesPage = () => {
     fetchActivities();
     fetchContacts();
     fetchCompanies();
-  }, []);
+  }, [fetchActivities, fetchCompanies, fetchContacts]);
 
   // Use sample data if no activities exist
   const displayActivities = activities.length > 0 ? activities : sampleActivities as CRMActivity[];

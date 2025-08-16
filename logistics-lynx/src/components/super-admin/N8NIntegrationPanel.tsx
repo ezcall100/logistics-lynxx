@@ -186,7 +186,7 @@ const N8NIntegrationPanel = () => {
   // Auto-test on component mount
   useEffect(() => {
     testWebhook('basic');
-  }, []);
+  }, [testWebhook]);
 
   const getStatusBadge = () => {
     if (isTesting) {

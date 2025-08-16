@@ -67,7 +67,7 @@ export default function WebsiteBuilder() {
   const [showDetails, setShowDetails] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
 
-  const pageTypes = [
+  const pageTypes = useMemo(() => [
     { type: 'home', name: 'Home Page', icon: Globe },
     { type: 'about', name: 'About Trans Bot AI', icon: Users },
     { type: 'tms-software', name: 'TMS Software', icon: Truck },
@@ -82,7 +82,7 @@ export default function WebsiteBuilder() {
     { type: 'demo', name: 'Request Demo', icon: Play },
     { type: 'api', name: 'API Documentation', icon: Code },
     { type: 'integrations', name: 'Integrations', icon: Package }
-  ];
+  ], []);
 
   const generateContent = (pageType: string) => {
     const contentTemplates = {
@@ -179,7 +179,7 @@ export default function WebsiteBuilder() {
       unsubscribe();
       clearInterval(statsInterval);
     };
-  }, []);
+  }, [pageTypes]);
 
   const handlePauseResume = async () => {
     try {

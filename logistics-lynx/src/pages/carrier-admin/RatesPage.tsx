@@ -174,7 +174,7 @@ const RatesPage: React.FC = () => {
   const location = useLocation();
   
   // Determine initial tab based on URL path or search params
-  const getInitialTab = () => {
+  const getInitialTab = useCallback(() => {
     const tabParam = searchParams.get('tab');
     if (tabParam) return tabParam;
     
@@ -187,7 +187,7 @@ const RatesPage: React.FC = () => {
     if (path.includes('/target')) return 'target';
     
     return 'all';
-  };
+  }, []);
   
   const [activeTab, setActiveTab] = useState(getInitialTab());
   const [selectedMode, setSelectedMode] = useState('All');
@@ -200,7 +200,7 @@ const RatesPage: React.FC = () => {
   // Update tab when URL changes
   useEffect(() => {
     setActiveTab(getInitialTab());
-  }, [location.pathname, searchParams]);
+  }, [location.pathname, searchParams, getInitialTab]);
 
   // Form state for creating/editing rates
   const [formData, setFormData] = useState({

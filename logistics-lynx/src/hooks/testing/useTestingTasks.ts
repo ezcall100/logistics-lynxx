@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TestingTask } from '@/types/testing';
 
 export const useTestingTasks = () => {
@@ -42,7 +42,7 @@ export const useTestingTasks = () => {
 
   useEffect(() => {
     setTestingTasks(defaultTasks);
-  }, []);
+  }, [defaultTasks]);
 
   return { testingTasks };
 };

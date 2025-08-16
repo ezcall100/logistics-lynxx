@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAlerts } from '@/hooks/useAlerts';
 import type { Alert } from '@/types/alerts';
@@ -184,7 +184,7 @@ export const useSelfHealingAlerts = () => {
         setTimeout(() => attemptSelfHealing(alert), Math.random() * 5000);
       }
     });
-  }, [alerts, healingActive]);
+  }, [alerts, healingActive, attemptSelfHealing, healingAttempts]);
 
   const getStrategyStats = () => {
     const strategyPerformance = HEALING_STRATEGIES.map(strategy => {

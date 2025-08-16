@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { KnowledgeRule, KnowledgePattern, KnowledgeVersion, PerformanceMetrics } from '@/types/knowledge-base';
@@ -30,7 +30,7 @@ export const useAutonomousKnowledge = () => {
     }, 10 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [generateNewRules, loadKnowledgeBase, runPatternAnalysis]);
 
   const loadKnowledgeBase = async () => {
     try {

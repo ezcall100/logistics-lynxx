@@ -1,5 +1,5 @@
 
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useAutonomousAgentManager } from './useAutonomousAgentManager';
 import { useAutonomousAI } from '@/hooks/useAutonomousAI';
 import { useToast } from '@/hooks/use-toast';

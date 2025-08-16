@@ -41,7 +41,7 @@ export const ROIFunnelDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchFunnelData();
-  }, [timeframe]);
+  }, [timeframe, fetchFunnelData]);
 
   const fetchFunnelData = async () => {
     setLoading(true);

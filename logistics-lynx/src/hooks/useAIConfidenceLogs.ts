@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { AIConfidenceLog, AIConfidenceFilters, AIConfidenceStats } from '@/types/ai-confidence';
@@ -169,7 +169,7 @@ export const useAIConfidenceLogs = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchLogs]);
 
   return {
     logs,

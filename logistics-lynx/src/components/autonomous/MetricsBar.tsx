@@ -42,7 +42,7 @@ export default function MetricsBar() {
 
   useEffect(() => {
     // Initialize system metrics
-    const initialMetrics: SystemMetric[] = [
+    const initialMetrics: SystemMetric[portalMetrics] = [
       {
         name: 'CPU Usage',
         value: 45,

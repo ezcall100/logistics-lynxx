@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { MarketResearchAgent, MarketIntelligenceData, CompetitiveAnalysis, MarketForecast } from '@/types/market-research';
@@ -140,7 +140,7 @@ export const useMarketResearchAgents = () => {
     }, 60 * 60 * 1000); // Check every hour
 
     return () => clearInterval(interval);
-  }, [agents, researchActive]);
+  }, [agents, researchActive, executeMarketResearch]);
 
   const getMarketInsights = () => {
     const recentData = marketData.slice(-5);

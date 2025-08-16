@@ -37,7 +37,7 @@ const OwnerOperatorsTable = () => {
 
   useEffect(() => {
     fetchOwnerOperators();
-  }, []);
+  }, [fetchOwnerOperators]);
 
   const fetchOwnerOperators = async () => {
     try {

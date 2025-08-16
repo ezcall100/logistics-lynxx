@@ -75,7 +75,7 @@ export const ROICalculatorEnhanced: React.FC = () => {
   const [roiId, setRoiId] = useState<string | null>(null);
   const [roiSummaryUrl, setRoiSummaryUrl] = useState<string | null>(null);
 
-  const calculateROI = () => {
+  const calculateROI = useCallback(() => {
     setIsCalculating(true);
     
     setTimeout(() => {
@@ -107,7 +107,7 @@ export const ROICalculatorEnhanced: React.FC = () => {
       
       setIsCalculating(false);
     }, 1000);
-  };
+  }, []);
 
   const handleSubmitROI = async () => {
     if (!formData.company_name || !formData.contact_email) {
@@ -218,7 +218,7 @@ export const ROICalculatorEnhanced: React.FC = () => {
     if (inputs.laneCount > 0 && inputs.quotesPerMonth > 0) {
       calculateROI();
     }
-  }, [inputs]);
+  }, [inputs, calculateROI]);
 
   return (
     <div className="space-y-6">

@@ -73,7 +73,7 @@ export const N8NQuickTest = () => {
   // Auto-run test on component mount
   useEffect(() => {
     runQuickTest();
-  }, []);
+  }, [runQuickTest]);
 
   const getStatusBadge = () => {
     switch (testStatus) {

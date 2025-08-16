@@ -56,7 +56,7 @@ const CommunicationCenterPage = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchCommunications]);
 
   const fetchCommunications = async () => {
     try {

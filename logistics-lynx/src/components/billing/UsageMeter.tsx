@@ -91,7 +91,7 @@ export function UsageMeter({ companyId, subscriptionTier }: UsageMeterProps) {
     };
 
     fetchUsageData();
-  }, [companyId]);
+  }, [companyId, mockUsageData]);
 
   const hasOverage = usageMetrics.some(metric => metric.isOverage);
   const hasNearLimit = usageMetrics.some(metric => metric.isNearLimit && !metric.isOverage);

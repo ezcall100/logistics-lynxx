@@ -26,7 +26,7 @@ const LoadAssignmentsPage = () => {
 
   useEffect(() => {
     fetchDriverLoads();
-  }, []);
+  }, [fetchDriverLoads]);
 
   const fetchDriverLoads = async () => {
     try {

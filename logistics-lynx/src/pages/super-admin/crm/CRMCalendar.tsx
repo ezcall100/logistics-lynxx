@@ -33,7 +33,7 @@ const CRMCalendarPage: React.FC = () => {
 
   React.useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   const filteredEvents = events.filter(event => {
     const matchesSearch = 

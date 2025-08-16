@@ -33,7 +33,7 @@ export const RealAutonomousAgent = () => {
   const [isActive, setIsActive] = useState(true);
 
   // Real CSS modifications that will actually be applied
-  const realCSSModifications = [
+  const realCSSModifications = useMemo(() => [
     {
       type: 'css_modification' as const,
       title: 'Enhanced Button Animations',
@@ -91,7 +91,7 @@ export const RealAutonomousAgent = () => {
         '.glass-effect:hover { background: rgba(255, 255, 255, 0.2); }'
       ]
     }
-  ];
+  ], []);
 
   // Function to actually apply CSS changes to the document
   const applyRealCSSChange = (cssRules: string[]) => {
@@ -201,7 +201,7 @@ export const RealAutonomousAgent = () => {
       clearTimeout(initialTimer);
       clearInterval(interval);
     };
-  }, [isActive]);
+  }, [isActive, realCSSModifications]);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', { 

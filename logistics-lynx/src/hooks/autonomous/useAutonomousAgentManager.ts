@@ -169,7 +169,7 @@ export const useAutonomousAgentManager = () => {
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, [agents, systemStatus]);
+  }, [agents, systemStatus, executeAgentTask]);
 
   // Initialize agents on mount
   useEffect(() => {

@@ -35,7 +35,7 @@ const CRMProjectsPage: React.FC = () => {
 
   React.useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   const filteredProjects = projects.filter(project => {
     const matchesSearch = 

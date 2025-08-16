@@ -27,7 +27,7 @@ const Dashboard = () => {
     if (roleForRoute && roleForRoute !== selectedRole) {
       setSelectedRole(roleForRoute as unknown);
     }
-  }, [location.pathname, selectedRole, setSelectedRole]);
+  }, [location.pathname, selectedRole, setSelectedRole, routeToRoleMap]);
 
   return (
     <ModernLayout>

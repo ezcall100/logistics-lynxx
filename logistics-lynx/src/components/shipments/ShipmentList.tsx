@@ -41,7 +41,7 @@ export const ShipmentList: React.FC = () => {
 
   useEffect(() => {
     fetchShipments();
-  }, []);
+  }, [fetchShipments]);
 
   const fetchShipments = async () => {
     try {

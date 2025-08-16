@@ -28,7 +28,7 @@ const SellRates = () => {
 
   useEffect(() => {
     fetchSellRates();
-  }, []);
+  }, [fetchSellRates]);
 
   const fetchSellRates = async () => {
     try {

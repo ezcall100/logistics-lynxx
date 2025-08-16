@@ -39,7 +39,7 @@ const PerformanceTrackingPage = () => {
 
   useEffect(() => {
     fetchPerformanceData();
-  }, []);
+  }, [fetchPerformanceData]);
 
   const fetchPerformanceData = async () => {
     try {

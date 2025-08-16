@@ -58,7 +58,7 @@ export default function LoginPage() {
 
   React.useEffect(() => {
     if (user) nav("/portal-selection", { replace: true });
-  }, [user]);
+  }, [user, nav]);
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/portal-selection";
 

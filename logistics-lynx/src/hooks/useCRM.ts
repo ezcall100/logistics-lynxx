@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCRMCompanies } from './crm/useCRMCompanies';
 import { useCRMContacts } from './crm/useCRMContacts';
 import { useCRMLeads } from './crm/useCRMLeads';
@@ -58,7 +58,7 @@ export const useCRM = () => {
 
   useEffect(() => {
     fetchAllCRMData();
-  }, [user]);
+  }, [user, fetchAllCRMData]);
 
   return {
     // Data

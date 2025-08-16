@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PerformanceMetrics {
@@ -251,7 +251,7 @@ export const usePerformanceOptimization = () => {
         setTimeout(() => executeOptimization(action), 1000);
       }
     }
-  }, [metrics, optimizationActive]);
+  }, [metrics, optimizationActive, executeOptimization, calculateSystemHealth, generateOptimizationAction]);
 
   const getOptimizationStats = () => {
     const total = optimizationActions.length;
