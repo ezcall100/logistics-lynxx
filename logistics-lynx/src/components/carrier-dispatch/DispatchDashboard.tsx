@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -86,7 +86,7 @@ export function DispatchDashboard() {
     fetchDispatchStats();
   }, [fetchCarriers, fetchDispatchStats, fetchLoads]);
 
-  const fetchLoads = async () => {
+  const fetchLoads = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('shipments')
@@ -105,9 +105,9 @@ export function DispatchDashboard() {
         variant: "destructive",
       });
     }
-  };
+  }, [supabase, toast]);
 
-  const fetchCarriers = async () => {
+  const fetchCarriers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('freight_carriers')
@@ -125,9 +125,9 @@ export function DispatchDashboard() {
         variant: "destructive",
       });
     }
-  };
+  }, [supabase, toast]);
 
-  const fetchDispatchStats = async () => {
+  const fetchDispatchStats = useCallback(async () => {
     try {
       // Simulate fetching dispatch statistics
       setDispatchStats({
@@ -139,7 +139,7 @@ export function DispatchDashboard() {
     } catch (error) {
       console.error('Error fetching dispatch stats:', error);
     }
-  };
+  }, [loads, carriers]);
 
   const handleManualDispatch = async () => {
     if (!selectedLoad || !selectedCarrier) {

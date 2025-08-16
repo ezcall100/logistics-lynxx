@@ -92,7 +92,7 @@ const SelfLearningEngine = () => {
         performance_trend: Math.random() > 0.7 ? 'improving' : Math.random() > 0.5 ? 'stable' : 'improving'
       }));
     }
-  }, [getStats, adaptiveParameters.minimum_data_points]);
+  }, [getStats, adaptiveParameters.minimum_data_points, adaptiveParameters.adjustment_sensitivity, learningMetrics.confidence_threshold]);
 
   useEffect(() => {
     // Simulate continuous learning process

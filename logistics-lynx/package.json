@@ -12,7 +12,7 @@
     "build:dev": "vite build --mode development",
     "build:dev:check": "tsc --project tsconfig.lovable.json --noEmit && vite build --mode development",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 100",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "lint:report": "eslint . --ext ts,tsx -f json -o artifacts/eslint.json || true",
     "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",

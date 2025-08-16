@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
@@ -42,7 +42,7 @@ export function UsageMeter({ companyId, subscriptionTier }: UsageMeterProps) {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   // Mock usage data - replace with actual API call
-  const mockUsageData: UsageMetric[] = [
+  const mockUsageData = useMemo<UsageMetric[]>(() => [
     {
       feature: 'quotes',
       used: 8500,
@@ -70,7 +70,7 @@ export function UsageMeter({ companyId, subscriptionTier }: UsageMeterProps) {
       isOverage: false,
       isNearLimit: true
     }
-  ];
+  ], []);
 
   useEffect(() => {
     const fetchUsageData = async () => {

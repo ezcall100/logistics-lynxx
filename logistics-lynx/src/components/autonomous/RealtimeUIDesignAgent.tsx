@@ -185,7 +185,7 @@ const RealtimeUIDesignAgent = () => {
         duration: 3000,
       });
     }, 2500);
-  }, []);
+  }, [toast]);
 
   const autoFixAccessibilityIssue = (issueId: string) => {
     setAccessibilityIssues(prev => 

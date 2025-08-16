@@ -151,7 +151,7 @@ export default function MetricsBar() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [portalMetrics]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -139,7 +139,7 @@ export const RealTimeAgentMonitor: React.FC = () => {
       console.error('WebSocket error:', error);
       setIsConnected(false);
     };
-  }, []);
+  }, [isPaused]);
 
   useEffect(() => {
     connectWebSocket();
