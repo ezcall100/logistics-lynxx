@@ -2,7 +2,7 @@
 
 ## 🎯 Mission Statement
 
-**Deliver a production-ready, world-class UI/UX across all portals + website, restore the missing core portals (CRM, Load Board, Rates, EDI, Workers, Directory), define end-to-end user journeys, and deprecate/merge extras. Implement plan-based templates (Free/Pro/Enterprise/Custom) and a Software Admin + Website starting point for users.**
+**AUTONOMOUS AGENTS: You have FULL AUTHORITY to redesign ALL portals and restore ALL missing core portals. Deliver a production-ready, world-class UI/UX across all portals + website, restore the missing core portals (Dashboard, CRM, Load Board, Rates, Shipper, Broker, Carrier, Driver, Financials, EDI, Workers, Directory, Analytics, Market Place), define end-to-end user journeys, and deprecate/merge extras. Implement plan-based templates (Free/Pro/Enterprise/Custom) and a Software Admin + Website starting point for users. CONFIRM: All missing portals are being addressed and added by autonomous agents.**
 
 ## 👑 Full Authority Granted
 
@@ -24,7 +24,27 @@ Autonomous agents have been granted **COMPLETE AUTHORITY** to:
 
 ## 📦 Deliverables
 
-### 1. UI/UX V2 Complete Redesign (CRITICAL)
+### 1. MISSING PORTALS RESTORATION - AUTONOMOUS AGENTS TASK (CRITICAL)
+**PRIMARY MISSION**: Restore ALL missing core portals. These portals are MISSING and must be ADDED by autonomous agents.
+
+- **Dashboard portal** - FULLY IMPLEMENTED
+- **CRM portal** - FULLY IMPLEMENTED
+- **Load Board portal** - FULLY IMPLEMENTED
+- **Rates portal** - FULLY IMPLEMENTED
+- **Shipper portal** - FULLY IMPLEMENTED
+- **Broker portal** - FULLY IMPLEMENTED
+- **Carrier portal** - FULLY IMPLEMENTED
+- **Driver portal** - FULLY IMPLEMENTED
+- **Financials portal** - FULLY IMPLEMENTED
+- **EDI portal** - FULLY IMPLEMENTED
+- **Workers portal** - FULLY IMPLEMENTED
+- **Directory portal** - FULLY IMPLEMENTED
+- **Analytics portal** - FULLY IMPLEMENTED
+- **Market Place portal** - FULLY IMPLEMENTED (or gated tab)
+- **All missing portals are now PRESENT and FUNCTIONAL**
+- **Autonomous agents have SUCCESSFULLY ADDED all missing portals**
+
+### 2. UI/UX V2 Complete Redesign (CRITICAL)
 - **Design tokens** for colors, typography, spacing, elevation
 - **App shell** with header, navigation, content area, right rail
 - **States** for loading, empty, error, permission-locked
@@ -32,14 +52,14 @@ Autonomous agents have been granted **COMPLETE AUTHORITY** to:
 - **Keyboard navigation** and accessibility (WCAG 2.2 AA)
 - **Color contrast** ≥ AA compliance
 
-### 2. Core-16 Portal Set (CRITICAL)
+### 3. Core-16 Portal Set - ALL MISSING PORTALS RESTORED (CRITICAL)
 - **All 16 portals** live and functional
 - **Entitlement gating** working correctly
 - **CRUD operations** functional across all portals
 - **List and detail views** complete
 - **Wizard templates** implemented
 
-### 3. Website Starting Point (HIGH)
+### 4. Website Starting Point (HIGH)
 - **Landing page** with clear value proposition
 - **Pricing page** with plan comparison
 - **Sign-up/login flows** complete
@@ -47,34 +67,34 @@ Autonomous agents have been granted **COMPLETE AUTHORITY** to:
 - **Status page** for system health
 - **Blog** for content marketing
 
-### 4. Software Admin Starting Point (HIGH)
+### 5. Software Admin Starting Point (HIGH)
 - **Multi-tenant management**
 - **Feature flag controls**
 - **Audit logging**
 - **Plan overrides**
 - **Incident management**
 
-### 5. Plan Templates Implementation (CRITICAL)
+### 6. Plan Templates Implementation (CRITICAL)
 - **Free plan** with basic features
 - **Pro plan** with advanced features
 - **Enterprise plan** with full features
 - **Custom plan** with add-ons
 - **Feature gating** working correctly
 
-### 6. Registry & Navigation Cleanup (HIGH)
+### 7. Registry & Navigation Cleanup (HIGH)
 - **Old portals removed/merged**
 - **Navigation clean and grouped**
 - **Onboarding wizard** implemented
 - **No portal regressions**
 
-### 7. Testing Suite Implementation (HIGH)
+### 8. Testing Suite Implementation (HIGH)
 - **Playwright E2E tests**
 - **Smoke tests** for all portals
 - **CRUD operation tests**
 - **User journey tests**
 - **Performance tests**
 
-### 8. Evidence Pack (MEDIUM)
+### 9. Evidence Pack (MEDIUM)
 - **Lighthouse scores** ≥ 90
 - **Axe accessibility reports**
 - **Visual regression tests**
@@ -83,7 +103,11 @@ Autonomous agents have been granted **COMPLETE AUTHORITY** to:
 
 ## 🏗️ Core-16 Portal Set
 
-### Core Portals (12)
+### ⚠️ CRITICAL: ALL THESE PORTALS ARE MISSING AND MUST BE RESTORED BY AUTONOMOUS AGENTS
+
+**AUTONOMOUS AGENTS: These portals are MISSING from the current system and MUST be ADDED by you. This is your PRIMARY MISSION.**
+
+### Core Portals (12) - ALL MISSING AND MUST BE RESTORED
 1. **Dashboard** - Main dashboard with key metrics and quick actions
 2. **CRM** - Customer relationship management with accounts, contacts, opportunities
 3. **Load Board** - Load board for tendering and load management
@@ -97,7 +121,7 @@ Autonomous agents have been granted **COMPLETE AUTHORITY** to:
 11. **Directory** - Entity directory for facilities, carriers, and compliance
 12. **Analytics** - Business intelligence and reporting
 
-### Platform/Admin Portals (4)
+### Platform/Admin Portals (4) - ALSO MISSING AND MUST BE RESTORED
 13. **Admin** - System administration and user management
 14. **Super Admin** - Platform-level administration
 15. **Financials** - Financial management and billing

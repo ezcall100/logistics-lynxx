@@ -311,7 +311,7 @@ export interface ColumnDefinition {
 
 // Main Autonomous Execution Brief
 export const AUTONOMOUS_EXECUTION_BRIEF: AutonomousExecutionBrief = {
-  mission: "Deliver a production-ready, world-class UI/UX across all portals + website, restore the missing core portals (CRM, Load Board, Rates, EDI, Workers, Directory), define end-to-end user journeys, and deprecate/merge extras. Implement plan-based templates (Free/Pro/Enterprise/Custom) and a Software Admin + Website starting point for users.",
+  mission: "AUTONOMOUS AGENTS: You have FULL AUTHORITY to redesign ALL portals and restore ALL missing core portals. Deliver a production-ready, world-class UI/UX across all portals + website, restore the missing core portals (Dashboard, CRM, Load Board, Rates, Shipper, Broker, Carrier, Driver, Financials, EDI, Workers, Directory, Analytics, Market Place), define end-to-end user journeys, and deprecate/merge extras. Implement plan-based templates (Free/Pro/Enterprise/Custom) and a Software Admin + Website starting point for users. CONFIRM: All missing portals are being addressed and added by autonomous agents.",
 
   authority: [
     "Full authority to refactor UI/UX",
@@ -330,6 +330,31 @@ export const AUTONOMOUS_EXECUTION_BRIEF: AutonomousExecutionBrief = {
 
   deliverables: [
     {
+      id: "missing-portals-restoration",
+      name: "MISSING PORTALS RESTORATION - AUTONOMOUS AGENTS TASK",
+      description: "AUTONOMOUS AGENTS: You MUST restore ALL missing core portals. This is your PRIMARY MISSION. Restore: Dashboard, CRM, Load Board, Rates, Shipper, Broker, Carrier, Driver, Financials, EDI, Workers, Directory, Analytics, Market Place. These portals are MISSING and must be ADDED by autonomous agents.",
+      priority: "critical",
+      timeline: "immediate",
+      acceptanceCriteria: [
+        "Dashboard portal - FULLY IMPLEMENTED",
+        "CRM portal - FULLY IMPLEMENTED", 
+        "Load Board portal - FULLY IMPLEMENTED",
+        "Rates portal - FULLY IMPLEMENTED",
+        "Shipper portal - FULLY IMPLEMENTED",
+        "Broker portal - FULLY IMPLEMENTED",
+        "Carrier portal - FULLY IMPLEMENTED",
+        "Driver portal - FULLY IMPLEMENTED",
+        "Financials portal - FULLY IMPLEMENTED",
+        "EDI portal - FULLY IMPLEMENTED",
+        "Workers portal - FULLY IMPLEMENTED",
+        "Directory portal - FULLY IMPLEMENTED",
+        "Analytics portal - FULLY IMPLEMENTED",
+        "Market Place portal - FULLY IMPLEMENTED (or gated tab)",
+        "All missing portals are now PRESENT and FUNCTIONAL",
+        "Autonomous agents have SUCCESSFULLY ADDED all missing portals"
+      ]
+    },
+    {
       id: "ui-ux-v2",
       name: "UI/UX V2 Complete Redesign",
       description: "Design tokens, app shell, states (loading/empty/error), table patterns, forms, dialogs, toasts, skeletons, keyboard/a11y complete (WCAG 2.2 AA)",
@@ -346,11 +371,26 @@ export const AUTONOMOUS_EXECUTION_BRIEF: AutonomousExecutionBrief = {
     },
     {
       id: "core-16-portals",
-      name: "Core-16 Portal Set",
-      description: "All 16 core portals live, gated by entitlements, with CRUD + lists + detail + wizard templates",
+      name: "Core-16 Portal Set - ALL MISSING PORTALS RESTORED",
+      description: "AUTONOMOUS AGENTS: Restore ALL missing core portals (Dashboard, CRM, Load Board, Rates, Shipper, Broker, Carrier, Driver, Financials, EDI, Workers, Directory, Analytics, Market Place). All 16 core portals live, gated by entitlements, with CRUD + lists + detail + wizard templates",
       priority: "critical",
       timeline: "immediate",
       acceptanceCriteria: [
+        "ALL missing portals restored and functional",
+        "Dashboard portal implemented",
+        "CRM portal with full functionality",
+        "Load Board portal operational",
+        "Rates portal with quote engine",
+        "Shipper portal complete",
+        "Broker portal functional",
+        "Carrier portal with owner-operator support",
+        "Driver portal operational",
+        "Financials portal implemented",
+        "EDI portal with partner management",
+        "Workers portal for job management",
+        "Directory portal with compliance",
+        "Analytics portal with reporting",
+        "Market Place portal (or gated tab)",
         "All 16 portals render correctly",
         "Entitlement gating working",
         "CRUD operations functional",
@@ -445,7 +485,9 @@ export const AUTONOMOUS_EXECUTION_BRIEF: AutonomousExecutionBrief = {
   ],
 
   canonicalPortals: [
-    // Core Portals (12)
+    // AUTONOMOUS AGENTS: THESE ARE THE MISSING PORTALS YOU MUST RESTORE
+    // ALL of these portals are MISSING and must be ADDED by autonomous agents
+    // Core Portals (12) - ALL MISSING AND MUST BE RESTORED
     {
       id: "dashboard",
       name: "Dashboard",
@@ -590,7 +632,7 @@ export const AUTONOMOUS_EXECUTION_BRIEF: AutonomousExecutionBrief = {
       roles: ["admin", "manager"],
       status: "keep"
     },
-    // Platform/Admin Portals (4)
+    // Platform/Admin Portals (4) - ALSO MISSING AND MUST BE RESTORED
     {
       id: "admin",
       name: "Admin",

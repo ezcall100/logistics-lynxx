@@ -42,6 +42,9 @@ const brief = getAutonomousBrief();
 
 console.log(`\n🎯 MISSION:`);
 console.log(`   ${brief.mission}`);
+console.log(`\n⚠️  CRITICAL: ALL MISSING PORTALS MUST BE RESTORED BY AUTONOMOUS AGENTS`);
+console.log(`   Dashboard, CRM, Load Board, Rates, Shipper, Broker, Carrier, Driver, Financials, EDI, Workers, Directory, Analytics, Market Place`);
+console.log(`   These portals are MISSING and must be ADDED by autonomous agents.`);
 
 console.log('\n👑 FULL AUTHORITY GRANTED:');
 brief.authority.forEach((auth, index) => {
