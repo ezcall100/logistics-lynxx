@@ -1,65 +1,58 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
+import './App.css';
+
+// Import all portal components
+import HomePage from './pages/HomePage';
+import CarrierPortal from './pages/carrier/CarrierPortal';
+import BrokerPortal from './pages/broker/BrokerPortal';
+import ShipperPortal from './pages/shipper/ShipperPortal';
+import DriverPortal from './pages/driver/DriverPortal';
+import OwnerOperatorPortal from './pages/owner-operator/OwnerOperatorPortal';
+
+// Import AI dashboard components
+import AgentMonitoring from './pages/super-admin/ai-dashboard/AgentMonitoring';
+import AutonomousSystem from './pages/super-admin/ai-dashboard/AutonomousSystem';
+import AIAnalytics from './pages/super-admin/ai-dashboard/AIAnalytics';
+import AIHealth from './pages/super-admin/ai-dashboard/AIHealth';
+import AIAgents from './pages/super-admin/ai-dashboard/AIAgents';
+
+// Create a client
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#1e40af', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      color: 'white',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>🚀 Trans Bot AI</h1>
-        <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>Autonomous TMS System</p>
-        <div style={{ 
-          backgroundColor: 'white', 
-          color: '#1e40af', 
-          padding: '2rem', 
-          borderRadius: '0.5rem',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
-        }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>✅ System Status</h2>
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ marginBottom: '0.5rem' }}>
-              <span style={{ 
-                display: 'inline-block', 
-                width: '12px', 
-                height: '12px', 
-                backgroundColor: '#10b981', 
-                borderRadius: '50%', 
-                marginRight: '0.5rem' 
-              }}></span>
-              Supabase API: Connected
-            </div>
-            <div style={{ marginBottom: '0.5rem' }}>
-              <span style={{ 
-                display: 'inline-block', 
-                width: '12px', 
-                height: '12px', 
-                backgroundColor: '#10b981', 
-                borderRadius: '50%', 
-                marginRight: '0.5rem' 
-              }}></span>
-              Autonomous Agents: 250+ Active
-            </div>
-            <div style={{ marginBottom: '0.5rem' }}>
-              <span style={{ 
-                display: 'inline-block', 
-                width: '12px', 
-                height: '12px', 
-                backgroundColor: '#10b981', 
-                borderRadius: '50%', 
-                marginRight: '0.5rem' 
-              }}></span>
-              Real-time Development: Active
-            </div>
-          </div>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <div className="App">
+          <Toaster position="top-right" />
+          <Routes>
+            {/* Home page with portal selection */}
+            <Route path="/" element={<HomePage />} />
+            
+            {/* Portal routes */}
+            <Route path="/carrier" element={<CarrierPortal />} />
+            <Route path="/broker" element={<BrokerPortal />} />
+            <Route path="/shipper" element={<ShipperPortal />} />
+            <Route path="/driver" element={<DriverPortal />} />
+            <Route path="/owner-operator" element={<OwnerOperatorPortal />} />
+            
+            {/* AI Dashboard routes */}
+            <Route path="/ai/analytics" element={<AIAnalytics />} />
+            <Route path="/ai/health" element={<AIHealth />} />
+            <Route path="/ai/agents" element={<AIAgents />} />
+            <Route path="/ai/autonomous-system" element={<AutonomousSystem />} />
+            <Route path="/ai/autonomous-agents" element={<AgentMonitoring />} />
+            <Route path="/ai/monitoring" element={<AgentMonitoring />} />
+            
+            {/* Default redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </div>
-      </div>
-    </div>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
