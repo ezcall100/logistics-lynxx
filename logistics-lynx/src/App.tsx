@@ -591,27 +591,26 @@ function App() {
                     gap: 'clamp(0.75rem, 2vw, 1rem)'
                   }}>
                     {[
-                      { name: 'Carrier Portal', icon: '🚛', path: '/carrier', color: '#3b82f6' },
-                      { name: 'Broker Portal', icon: '🏢', path: '/broker', color: '#10b981' },
-                      { name: 'Shipper Portal', icon: '📦', path: '/shipper', color: '#f59e0b' },
-                      { name: 'Driver Portal', icon: '🚗', path: '/driver', color: '#ec4899' },
-                      { name: 'Owner Operator', icon: '🚚', path: '/owner-operator', color: '#8b5cf6' },
-                      { name: 'Super Admin', icon: '👑', path: '/super-admin', color: '#7c3aed' },
-                      { name: 'Autonomous AI', icon: '🤖', path: '/autonomous', color: '#6366f1' },
-                      { name: 'Analytics', icon: '📊', path: '/analytics', color: '#06b6d4' },
-                      { name: 'Admin', icon: '⚙️', path: '/admin', color: '#6b7280' },
-                      { name: 'Factoring', icon: '💰', path: '/factoring', color: '#eab308' },
-                      { name: 'Financials', icon: '💳', path: '/financials', color: '#22c55e' },
-                      { name: 'Rates', icon: '💰', path: '/rates', color: '#f97316' },
-                      { name: 'Load Board', icon: '📋', path: '/load-board', color: '#ef4444' },
-                      { name: 'Workers', icon: '👷', path: '/workers', color: '#84cc16' },
-                      { name: 'CRM', icon: '👥', path: '/crm', color: '#06b6d4' },
-                      { name: 'Directory', icon: '📚', path: '/directory', color: '#64748b' },
-                      { name: 'EDI', icon: '📡', path: '/edi', color: '#7c3aed' },
-                      { name: 'Marketplace', icon: '🛒', path: '/marketplace', color: '#f97316' },
-                              { name: 'Testing', icon: '🧪', path: '/testing', color: '#84cc16' },
-        { name: 'Logistics Management', icon: '📦', path: '/logistics-management', color: '#059669' },
-        { name: 'Master Autonomous Agent', icon: '🤖', path: '/master-autonomous-agent', color: '#7c3aed' }
+                      { name: 'Carrier Portal', icon: '🚛', path: '/carrier/*', color: '#3b82f6' },
+                      { name: 'Broker Portal', icon: '🏢', path: '/broker/*', color: '#10b981' },
+                      { name: 'Shipper Portal', icon: '📦', path: '/shipper/*', color: '#f59e0b' },
+                      { name: 'Driver Portal', icon: '🚗', path: '/driver/*', color: '#ec4899' },
+                      { name: 'Owner Operator', icon: '🚚', path: '/owner-operator/*', color: '#8b5cf6' },
+                      { name: 'Super Admin', icon: '👑', path: '/super-admin/*', color: '#7c3aed' },
+                      { name: 'Autonomous AI', icon: '🤖', path: '/autonomous/*', color: '#6366f1' },
+                      { name: 'Analytics', icon: '📊', path: '/analytics/*', color: '#06b6d4' },
+                      { name: 'Software Admin', icon: '⚙️', path: '/admin/software-admin', color: '#6b7280' },
+                      { name: 'Factoring', icon: '💰', path: '/factoring/*', color: '#eab308' },
+                      { name: 'Financials', icon: '💳', path: '/financials/*', color: '#22c55e' },
+                      { name: 'Rates', icon: '💰', path: '/rates/*', color: '#f97316' },
+                      { name: 'Load Board', icon: '📋', path: '/load-board/*', color: '#ef4444' },
+                      { name: 'Workers', icon: '👷', path: '/workers/*', color: '#84cc16' },
+                      { name: 'CRM', icon: '👥', path: '/crm/*', color: '#06b6d4' },
+                      { name: 'Directory', icon: '📚', path: '/directory/*', color: '#64748b' },
+                      { name: 'EDI', icon: '📡', path: '/edi/*', color: '#7c3aed' },
+                      { name: 'Marketplace', icon: '🛒', path: '/marketplace/*', color: '#f97316' },
+                      { name: 'Testing', icon: '🧪', path: '/testing/*', color: '#84cc16' },
+                      { name: 'Master Autonomous Agent', icon: '🤖', path: '/master-autonomous-agent', color: '#7c3aed' }
                     ].map((portal, index) => (
                       <Link key={index} to={portal.path} className="portal-card" style={{
                         backgroundColor: 'white',
@@ -844,6 +843,12 @@ function App() {
           } />
 
           {/* Role-Based Portals */}
+          <Route path="/admin" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <SoftwareAdminPortal />
+            </div>
+          } />
+          
           <Route path="/admin/software-admin" element={
             <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
               <SoftwareAdminPortal />

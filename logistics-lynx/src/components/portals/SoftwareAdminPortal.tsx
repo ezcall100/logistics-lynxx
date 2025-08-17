@@ -3,942 +3,536 @@
  * Comprehensive system administration with autonomous agent monitoring
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DashboardLayout } from '@/components/ui/dashboard-layout';
 import { EnhancedCard } from '@/components/ui/enhanced-card';
-import { EnhancedTable } from '@/components/ui/enhanced-table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Settings, 
-  Users, 
-  Shield, 
-  BarChart3, 
-  Database, 
-  Server, 
-  Activity, 
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  TrendingUp,
-  TrendingDown,
-  Globe,
-  Lock,
-  Unlock,
-  Eye,
-  Edit,
-  Trash2,
-  Plus,
-  Download,
-  Upload,
-  RefreshCw,
-  Bell,
-  UserCheck,
-  FileCheck,
-  Truck,
-  Building2,
-  Package,
-  CreditCard,
-  Calendar,
-  Mail,
-  Phone,
-  Star,
-  Zap,
-  Target,
-  Award,
-  DollarSign,
-  PieChart,
-  LineChart,
-  BarChart,
-  Grid3X3,
-  List,
-  Filter,
-  Search,
-  Cpu,
-  HardDrive,
-  Network,
-  Wifi,
-  Shield as ShieldIcon,
-  Key,
-  Database as DatabaseIcon,
-  Cloud,
-  Monitor,
-  Smartphone,
-  Tablet,
-  Globe as GlobeIcon,
-  Server as ServerIcon,
-  Activity as ActivityIcon,
-  AlertCircle,
-  CheckSquare,
-  FileX,
-  Archive,
-  Copy,
-  ExternalLink,
-  MoreHorizontal,
-  ChevronUp,
-  ChevronDown,
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus,
-  X,
-  Info,
-  HelpCircle,
-  Settings as SettingsIcon,
-  User,
-  LogOut,
-  Sun,
-  Moon,
-  Search as SearchIcon
+  LayoutDashboard, Users, LifeBuoy, Network, BriefcaseBusiness, 
+  FileStack, Wallet, PlugZap, Store, BarChart4, Search, Plus,
+  Bell, Settings, User, ChevronDown, Globe, Zap, Shield, 
+  Activity, TrendingUp, AlertTriangle, CheckCircle, Clock
 } from 'lucide-react';
 
-interface SystemStats {
-  totalUsers: number;
-  activeUsers: number;
-  totalCarriers: number;
-  totalBrokers: number;
-  totalShippers: number;
-  systemHealth: number;
-  uptime: number;
-  activeSessions: number;
-  pendingReviews: number;
-  completedReviews: number;
-  revenue: number;
-  growthRate: number;
-  cpuUsage: number;
-  memoryUsage: number;
-  diskUsage: number;
-  networkUsage: number;
-  autonomousAgents: number;
-  activeAgents: number;
-  failedAgents: number;
-  systemAlerts: number;
-  securityScore: number;
-  complianceScore: number;
-}
+// Types for the admin system
+export type Entitlement = 
+  | "crm.core" | "tickets.core" | "networks.core" | "workforce.core"
+  | "docs.core" | "financials.core" | "payroll.core"
+  | "api.core" | "marketplace.core" | "reports.core"
+  | "edi.x12" | "autonomous.full" | "admin.super";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  lastLogin: string;
-  createdAt: string;
-  avatar: string;
-  permissions: string[];
-  department: string;
-  location: string;
-  phone: string;
-  isActive: boolean;
-  loginCount: number;
-  lastActivity: string;
-}
+export type Role =
+  | "owner" | "admin" | "manager" | "ops" | "finance" | "sre" | "sales" | "autonomous";
 
-interface SystemAlert {
-  id: string;
-  type: 'info' | 'warning' | 'error' | 'success';
+export interface NavItem {
+  key: string;
   title: string;
-  message: string;
-  timestamp: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  category: string;
-  resolved: boolean;
-  assignedTo?: string;
+  icon?: React.ComponentType<any>;
+  path?: string;
+  children?: NavItem[];
+  roles?: Role[];
+  feature?: Entitlement;
+  badgeKey?: string;
+  order?: number;
+  autonomous?: boolean; // Special flag for autonomous agent access
 }
 
-interface AutonomousAgent {
-  id: string;
-  name: string;
-  type: string;
-  status: 'active' | 'inactive' | 'error' | 'maintenance';
-  health: number;
-  uptime: number;
-  lastActivity: string;
-  tasksCompleted: number;
-  tasksFailed: number;
-  performance: number;
-  memoryUsage: number;
-  cpuUsage: number;
-  version: string;
-  location: string;
+// Navigation Registry
+export const ADMIN_NAV: NavItem[] = [
+  { 
+    key: "overview", 
+    title: "Overview", 
+    icon: LayoutDashboard, 
+    path: "/admin/software-admin", 
+    order: 10 
+  },
+  {
+    key: "relationships", 
+    title: "Relationships", 
+    icon: Users, 
+    order: 20, 
+    feature: "crm.core",
+    children: [
+      { key: "rel-overview", title: "Overview", path: "/admin/relationships" },
+      { key: "email", title: "Email", path: "/admin/relationships/email" },
+      { key: "leads", title: "Leads", path: "/admin/relationships/leads" },
+      { key: "contacts", title: "Contacts", path: "/admin/relationships/contacts" },
+      { key: "projects", title: "Projects", path: "/admin/relationships/projects" },
+      { key: "calendar", title: "Calendar", path: "/admin/relationships/calendar" },
+      { key: "opportunities", title: "Opportunities", path: "/admin/relationships/opportunities" },
+    ],
+  },
+  {
+    key: "desk", 
+    title: "Service Desk", 
+    icon: LifeBuoy, 
+    order: 30, 
+    feature: "tickets.core",
+    children: [
+      { key: "all", title: "All Tickets", path: "/admin/tickets", badgeKey: "tickets:all" },
+      { key: "assigned", title: "Assigned", path: "/admin/tickets/assigned", badgeKey: "tickets:assigned" },
+      { key: "unassigned", title: "Unassigned", path: "/admin/tickets/unassigned", badgeKey: "tickets:unassigned" },
+      { key: "incidents", title: "Incidents", path: "/admin/tickets/incidents" },
+      { key: "service-requests", title: "Service Requests", path: "/admin/tickets/requests" },
+      { key: "changes", title: "Changes", path: "/admin/tickets/changes" },
+      { key: "problems", title: "Problems", path: "/admin/tickets/problems" },
+    ],
+  },
+  {
+    key: "networks", 
+    title: "Networks", 
+    icon: Network, 
+    order: 40, 
+    feature: "networks.core",
+    children: [
+      { key: "customers", title: "Customers", path: "/admin/networks/customers" },
+      { key: "vendors", title: "Vendors", path: "/admin/networks/vendors" },
+    ],
+  },
+  {
+    key: "workforce", 
+    title: "Workforce", 
+    icon: BriefcaseBusiness, 
+    order: 50, 
+    feature: "workforce.core",
+    children: [
+      { key: "exec", title: "Executives", path: "/admin/workforce/executives" },
+      { key: "emp", title: "Employees", path: "/admin/workforce/employees" },
+      { key: "drivers", title: "Drivers", path: "/admin/workforce/drivers" },
+      { key: "agents", title: "Agents", path: "/admin/workforce/agents" },
+      { key: "scheduling", title: "Scheduling & Timesheets", path: "/admin/workforce/scheduling" },
+    ],
+  },
+  {
+    key: "docs", 
+    title: "Documents", 
+    icon: FileStack, 
+    order: 60, 
+    feature: "docs.core",
+    children: [
+      { key: "all-docs", title: "All Documents", path: "/admin/documents" },
+      { key: "upload", title: "Upload", path: "/admin/documents/upload" },
+      { key: "setup", title: "Templates & Setup", path: "/admin/documents/setup" },
+    ],
+  },
+  {
+    key: "fin", 
+    title: "Financials", 
+    icon: Wallet, 
+    order: 70, 
+    feature: "financials.core",
+    children: [
+      { key: "sales", title: "Sales & Payments", path: "/admin/financials/sales" },
+      { key: "purchases", title: "Purchases", path: "/admin/financials/purchases" },
+      { key: "accounting", title: "Accounting", path: "/admin/financials/accounting" },
+      { key: "payroll", title: "Payroll", path: "/admin/financials/payroll", feature: "payroll.core" },
+    ],
+  },
+  {
+    key: "api", 
+    title: "Integrations & API", 
+    icon: PlugZap, 
+    order: 80, 
+    feature: "api.core",
+    children: [
+      { key: "keys", title: "API Keys", path: "/admin/api/keys" },
+      { key: "logs", title: "API Logs", path: "/admin/api/logs" },
+      { key: "errors", title: "API Errors", path: "/admin/api/errors" },
+      { key: "edi", title: "EDI Partners & Flows", path: "/admin/edi", feature: "edi.x12" },
+    ],
+  },
+  {
+    key: "market", 
+    title: "Marketplace", 
+    icon: Store, 
+    order: 90, 
+    feature: "marketplace.core",
+    children: [
+      { key: "all", title: "All", path: "/admin/marketplace" },
+      { key: "acct", title: "Accounting", path: "/admin/marketplace/accounting" },
+      { key: "compliance", title: "Carrier Compliance", path: "/admin/marketplace/compliance" },
+      { key: "api-cat", title: "API", path: "/admin/marketplace/api" },
+      { key: "edi-cat", title: "EDI", path: "/admin/marketplace/edi" },
+      { key: "elds", title: "ELDs", path: "/admin/marketplace/elds" },
+      { key: "factoring", title: "Factoring", path: "/admin/marketplace/factoring" },
+      { key: "fuel", title: "Fuel Cards", path: "/admin/marketplace/fuel" },
+      { key: "loadboard", title: "Load Board", path: "/admin/marketplace/loadboard" },
+      { key: "mileage", title: "Mileage", path: "/admin/marketplace/mileage" },
+      { key: "payments", title: "Payments", path: "/admin/marketplace/payments" },
+      { key: "tolls", title: "Tolls", path: "/admin/marketplace/tolls" },
+      { key: "visibility", title: "Visibility", path: "/admin/marketplace/visibility" },
+    ],
+  },
+  { 
+    key: "reports", 
+    title: "Reports", 
+    icon: BarChart4, 
+    path: "/admin/reports", 
+    order: 100, 
+    feature: "reports.core" 
+  },
+  {
+    key: "autonomous", 
+    title: "Autonomous Agents", 
+    icon: Zap, 
+    order: 110, 
+    feature: "autonomous.full",
+    autonomous: true,
+    children: [
+      { key: "agents", title: "Agent Management", path: "/admin/autonomous/agents" },
+      { key: "monitoring", title: "System Monitoring", path: "/admin/autonomous/monitoring" },
+      { key: "development", title: "Development", path: "/admin/autonomous/development" },
+      { key: "configuration", title: "Configuration", path: "/admin/autonomous/config" },
+    ],
+  },
+];
+
+// Mock data for demonstration
+const mockUser = {
+  role: "admin" as Role,
+  entitlements: [
+    "crm.core", "tickets.core", "networks.core", "workforce.core",
+    "docs.core", "financials.core", "payroll.core", "api.core", 
+    "marketplace.core", "reports.core", "edi.x12", "autonomous.full"
+  ]
+};
+
+const mockBadges = {
+  "tickets:all": 156,
+  "tickets:assigned": 89,
+  "tickets:unassigned": 67,
+  "autonomous:active": 250,
+  "system:alerts": 3
+};
+
+// Utility functions
+function hasEntitlement(feature?: Entitlement): boolean {
+  if (!feature) return true;
+  return mockUser.entitlements.includes(feature);
 }
 
-const SoftwareAdminPortal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [selectedAlerts, setSelectedAlerts] = useState<SystemAlert[]>([]);
-  const [selectedAgents, setSelectedAgents] = useState<AutonomousAgent[]>([]);
+function allow(item: NavItem, role: string, has: (f?: Entitlement) => boolean): boolean {
+  const roleOk = !item.roles || item.roles.includes(role as any) || item.roles.includes("owner");
+  const featOk = !item.feature || has(item.feature);
+  return roleOk && featOk;
+}
 
-  // Mock data
-  const systemStats: SystemStats = {
-    totalUsers: 1247,
-    activeUsers: 892,
-    totalCarriers: 456,
-    totalBrokers: 234,
-    totalShippers: 557,
-    systemHealth: 98.5,
-    uptime: 99.9,
-    activeSessions: 156,
-    pendingReviews: 23,
-    completedReviews: 1247,
-    revenue: 2450000,
-    growthRate: 12.5,
-    cpuUsage: 45.2,
-    memoryUsage: 67.8,
-    diskUsage: 34.1,
-    networkUsage: 23.4,
-    autonomousAgents: 250,
-    activeAgents: 248,
-    failedAgents: 2,
-    systemAlerts: 5,
-    securityScore: 95.8,
-    complianceScore: 98.2,
+function getBadge(key: string): number | undefined {
+  return mockBadges[key as keyof typeof mockBadges];
+}
+
+// Sidebar Component
+function Sidebar() {
+  const role = mockUser.role;
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['overview']));
+
+  const items = useMemo(() => {
+    const walk = (list: NavItem[]): NavItem[] =>
+      list
+        .filter(i => allow(i, role, hasEntitlement))
+        .map(i => i.children ? { ...i, children: walk(i.children) } : i)
+        .filter(i => i.path || (i.children && i.children.length))
+        .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+    return walk(ADMIN_NAV);
+  }, [role]);
+
+  const toggleGroup = (key: string) => {
+    const newExpanded = new Set(expandedGroups);
+    if (newExpanded.has(key)) {
+      newExpanded.delete(key);
+    } else {
+      newExpanded.add(key);
+    }
+    setExpandedGroups(newExpanded);
   };
 
-  const mockUsers: User[] = [
-    {
-      id: '1',
-      name: 'John Smith',
-      email: 'john.smith@company.com',
-      role: 'System Administrator',
-      status: 'active',
-      lastLogin: '2024-01-15T10:30:00Z',
-      createdAt: '2023-01-15',
-      avatar: '/avatars/john.jpg',
-      permissions: ['admin', 'user_management', 'system_config'],
-      department: 'IT',
-      location: 'New York',
-      phone: '+1-555-0123',
-      isActive: true,
-      loginCount: 156,
-      lastActivity: '2024-01-15T10:30:00Z',
-    },
-    {
-      id: '2',
-      name: 'Sarah Johnson',
-      email: 'sarah.johnson@company.com',
-      role: 'Security Manager',
-      status: 'active',
-      lastLogin: '2024-01-15T09:15:00Z',
-      createdAt: '2023-03-20',
-      avatar: '/avatars/sarah.jpg',
-      permissions: ['security', 'compliance', 'audit'],
-      department: 'Security',
-      location: 'Los Angeles',
-      phone: '+1-555-0124',
-      isActive: true,
-      loginCount: 89,
-      lastActivity: '2024-01-15T09:15:00Z',
-    },
-    {
-      id: '3',
-      name: 'Mike Davis',
-      email: 'mike.davis@company.com',
-      role: 'Database Administrator',
-      status: 'inactive',
-      lastLogin: '2024-01-10T16:45:00Z',
-      createdAt: '2023-06-10',
-      avatar: '/avatars/mike.jpg',
-      permissions: ['database', 'backup', 'maintenance'],
-      department: 'IT',
-      location: 'Chicago',
-      phone: '+1-555-0125',
-      isActive: false,
-      loginCount: 234,
-      lastActivity: '2024-01-10T16:45:00Z',
-    },
-  ];
-
-  const mockAlerts: SystemAlert[] = [
-    {
-      id: '1',
-      type: 'warning',
-      title: 'High CPU Usage',
-      message: 'Server CPU usage has exceeded 80% for the last 10 minutes',
-      timestamp: '2024-01-15T10:25:00Z',
-      severity: 'medium',
-      category: 'Performance',
-      resolved: false,
-      assignedTo: 'John Smith',
-    },
-    {
-      id: '2',
-      type: 'error',
-      title: 'Database Connection Failed',
-      message: 'Unable to establish connection to primary database',
-      timestamp: '2024-01-15T09:45:00Z',
-      severity: 'high',
-      category: 'Database',
-      resolved: false,
-      assignedTo: 'Mike Davis',
-    },
-    {
-      id: '3',
-      type: 'info',
-      title: 'System Update Available',
-      message: 'New system update v2.1.5 is available for installation',
-      timestamp: '2024-01-15T08:30:00Z',
-      severity: 'low',
-      category: 'Updates',
-      resolved: true,
-    },
-  ];
-
-  const mockAgents: AutonomousAgent[] = [
-    {
-      id: '1',
-      name: 'Shipment Management Agent',
-      type: 'Core TMS',
-      status: 'active',
-      health: 98,
-      uptime: 99.9,
-      lastActivity: '2024-01-15T10:30:00Z',
-      tasksCompleted: 1247,
-      tasksFailed: 3,
-      performance: 95.2,
-      memoryUsage: 45.6,
-      cpuUsage: 23.4,
-      version: '2.1.4',
-      location: 'US-East-1',
-    },
-    {
-      id: '2',
-      name: 'Route Optimization Agent',
-      type: 'AI/ML',
-      status: 'active',
-      health: 97,
-      uptime: 99.8,
-      lastActivity: '2024-01-15T10:29:00Z',
-      tasksCompleted: 892,
-      tasksFailed: 1,
-      performance: 94.8,
-      memoryUsage: 67.2,
-      cpuUsage: 34.1,
-      version: '2.1.4',
-      location: 'US-West-2',
-    },
-    {
-      id: '3',
-      name: 'Financial Management Agent',
-      type: 'Core TMS',
-      status: 'error',
-      health: 45,
-      uptime: 85.2,
-      lastActivity: '2024-01-15T09:15:00Z',
-      tasksCompleted: 567,
-      tasksFailed: 23,
-      performance: 67.3,
-      memoryUsage: 89.1,
-      cpuUsage: 78.9,
-      version: '2.1.3',
-      location: 'US-Central-1',
-    },
-  ];
-
-  // Navigation items
-  const navigation = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'users', label: 'User Management', icon: Users, badge: 3 },
-    { id: 'security', label: 'Security', icon: Shield, badge: 2 },
-    { id: 'analytics', label: 'Analytics', icon: PieChart },
-    { id: 'system', label: 'System', icon: Server },
-    { id: 'agents', label: 'Autonomous Agents', icon: Activity, badge: 1 },
-    { id: 'alerts', label: 'Alerts', icon: AlertTriangle, badge: 5 },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
-
-  // User table columns
-  const userColumns = [
-    {
-      key: 'name',
-      header: 'User',
-      accessor: (user: User) => user.name,
-      sortable: true,
-      filterable: true,
-      render: (value: string, user: User) => (
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-primary-600" />
+  return (
+    <aside className="w-72 border-r bg-gradient-to-b from-slate-50 to-slate-100 p-4 space-y-4">
+      <div className="flex items-center gap-2 px-2">
+        <Shield className="h-5 w-5 text-blue-600" />
+        <span className="text-sm font-semibold text-slate-700">Software Admin</span>
+      </div>
+      
+      <nav className="space-y-2">
+        {items.map(group => (
+          <div key={group.key} className="space-y-1">
+            {group.children ? (
+              <>
+                <button
+                  onClick={() => toggleGroup(group.key)}
+                  className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    {group.icon && <group.icon className="h-4 w-4" />}
+                    <span>{group.title}</span>
+                  </div>
+                  <ChevronDown 
+                    className={`h-4 w-4 transition-transform ${
+                      expandedGroups.has(group.key) ? 'rotate-180' : ''
+                    }`} 
+                  />
+                </button>
+                <AnimatePresence>
+                  {expandedGroups.has(group.key) && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="ml-6 space-y-1"
+                    >
+                      {group.children.map((item) => (
+                        <a
+                          key={item.key}
+                          href={item.path}
+                          className="flex items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors"
+                        >
+                          <span>{item.title}</span>
+                          {item.badgeKey && (
+                            <span className="inline-flex items-center justify-center w-5 h-5 text-xs bg-blue-100 text-blue-800 rounded-full">
+                              {getBadge(item.badgeKey)}
+                            </span>
+                          )}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            ) : (
+              <a
+                href={group.path}
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
+              >
+                {group.icon && <group.icon className="h-4 w-4" />}
+                <span>{group.title}</span>
+              </a>
+            )}
           </div>
-          <div>
-            <div className="font-medium text-secondary-900">{user.name}</div>
-            <div className="text-sm text-secondary-500">{user.email}</div>
+        ))}
+      </nav>
+
+      {/* Bottom Rail */}
+      <div className="pt-4 border-t border-slate-200">
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex gap-2">
+            <a href="/learn" className="hover:text-slate-700">Learn</a>
+            <a href="/help" className="hover:text-slate-700">Help</a>
           </div>
+          <button className="hover:text-slate-700">🌓</button>
         </div>
-      ),
-    },
-    {
-      key: 'role',
-      header: 'Role',
-      accessor: (user: User) => user.role,
-      sortable: true,
-      filterable: true,
-      render: (value: string) => (
-        <Badge variant="outline" className="bg-secondary-50">
-          {value}
-        </Badge>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Status',
-      accessor: (user: User) => user.status,
-      sortable: true,
-      filterable: true,
-      render: (value: string) => (
-        <Badge
-          variant={value === 'active' ? 'default' : 'secondary'}
-          className={value === 'active' ? 'bg-success-100 text-success-800' : 'bg-secondary-100 text-secondary-800'}
-        >
-          {value === 'active' ? <CheckCircle className="w-3 h-3 mr-1" /> : <Clock className="w-3 h-3 mr-1" />}
-          {value}
-        </Badge>
-      ),
-    },
-    {
-      key: 'department',
-      header: 'Department',
-      accessor: (user: User) => user.department,
-      sortable: true,
-      filterable: true,
-    },
-    {
-      key: 'lastLogin',
-      header: 'Last Login',
-      accessor: (user: User) => user.lastLogin,
-      sortable: true,
-      render: (value: string) => new Date(value).toLocaleDateString(),
-    },
-    {
-      key: 'loginCount',
-      header: 'Login Count',
-      accessor: (user: User) => user.loginCount,
-      sortable: true,
-      align: 'center' as const,
-    },
-  ];
+      </div>
+    </aside>
+  );
+}
 
-  // Alert table columns
-  const alertColumns = [
-    {
-      key: 'type',
-      header: 'Type',
-      accessor: (alert: SystemAlert) => alert.type,
-      sortable: true,
-      filterable: true,
-      render: (value: string, alert: SystemAlert) => {
-        const icons = {
-          info: Info,
-          warning: AlertTriangle,
-          error: X,
-          success: CheckCircle,
-        };
-        const Icon = icons[value as keyof typeof icons];
-        return (
-          <div className="flex items-center space-x-2">
-            <Icon className={`w-4 h-4 ${
-              value === 'info' ? 'text-blue-500' :
-              value === 'warning' ? 'text-yellow-500' :
-              value === 'error' ? 'text-red-500' :
-              'text-green-500'
-            }`} />
-            <span className="capitalize">{value}</span>
-          </div>
-        );
-      },
-    },
-    {
-      key: 'title',
-      header: 'Title',
-      accessor: (alert: SystemAlert) => alert.title,
-      sortable: true,
-      filterable: true,
-    },
-    {
-      key: 'severity',
-      header: 'Severity',
-      accessor: (alert: SystemAlert) => alert.severity,
-      sortable: true,
-      filterable: true,
-      render: (value: string) => (
-        <Badge
-          variant={
-            value === 'critical' ? 'destructive' :
-            value === 'high' ? 'default' :
-            value === 'medium' ? 'secondary' :
-            'outline'
-          }
-        >
-          {value}
-        </Badge>
-      ),
-    },
-    {
-      key: 'category',
-      header: 'Category',
-      accessor: (alert: SystemAlert) => alert.category,
-      sortable: true,
-      filterable: true,
-    },
-    {
-      key: 'timestamp',
-      header: 'Timestamp',
-      accessor: (alert: SystemAlert) => alert.timestamp,
-      sortable: true,
-      render: (value: string) => new Date(value).toLocaleString(),
-    },
-    {
-      key: 'resolved',
-      header: 'Status',
-      accessor: (alert: SystemAlert) => alert.resolved,
-      sortable: true,
-      filterable: true,
-      render: (value: boolean) => (
-        <Badge variant={value ? 'default' : 'secondary'}>
-          {value ? 'Resolved' : 'Open'}
-        </Badge>
-      ),
-    },
-  ];
+// Top Bar Component
+function TopBar() {
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
-  // Agent table columns
-  const agentColumns = [
-    {
-      key: 'name',
-      header: 'Agent',
-      accessor: (agent: AutonomousAgent) => agent.name,
-      sortable: true,
-      filterable: true,
-      render: (value: string, agent: AutonomousAgent) => (
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-            <Activity className="w-4 h-4 text-primary-600" />
-          </div>
-          <div>
-            <div className="font-medium text-secondary-900">{agent.name}</div>
-            <div className="text-sm text-secondary-500">{agent.type}</div>
-          </div>
+  return (
+    <header className="h-16 border-b bg-white px-6 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Globe className="h-5 w-5 text-blue-600" />
+          <span className="text-sm font-medium">Trans Bot AI</span>
+          <ChevronDown className="h-4 w-4 text-slate-400" />
         </div>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Status',
-      accessor: (agent: AutonomousAgent) => agent.status,
-      sortable: true,
-      filterable: true,
-      render: (value: string, agent: AutonomousAgent) => (
-        <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full ${
-            value === 'active' ? 'bg-success-500' :
-            value === 'inactive' ? 'bg-secondary-400' :
-            value === 'error' ? 'bg-error-500' :
-            'bg-warning-500'
-          }`} />
-          <Badge
-            variant={
-              value === 'active' ? 'default' :
-              value === 'error' ? 'destructive' :
-              'secondary'
-            }
+      </div>
+
+      <div className="flex items-center gap-3">
+        {/* Command Palette */}
+        <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors">
+          <Search className="h-4 w-4" />
+          <span>Search...</span>
+          <kbd className="text-xs bg-slate-200 px-1 rounded">⌘K</kbd>
+        </button>
+
+        {/* Quick Add */}
+        <div className="relative">
+          <button
+            onClick={() => setShowQuickAdd(!showQuickAdd)}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors"
           >
-            {value}
-          </Badge>
+            <Plus className="h-4 w-4" />
+            <span>Quick Add</span>
+          </button>
+          {showQuickAdd && (
+            <div className="absolute right-0 top-full mt-1 w-48 bg-white border rounded-md shadow-lg py-1 z-50">
+              <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Lead</a>
+              <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Contact</a>
+              <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Opportunity</a>
+              <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Ticket</a>
+              <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Invoice</a>
+              <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Load</a>
+            </div>
+          )}
         </div>
-      ),
-    },
-    {
-      key: 'health',
-      header: 'Health',
-      accessor: (agent: AutonomousAgent) => agent.health,
-      sortable: true,
-      render: (value: number) => (
-        <div className="flex items-center space-x-2">
-          <Progress value={value} className="w-16 h-2" />
-          <span className="text-sm font-medium">{value}%</span>
-        </div>
-      ),
-    },
-    {
-      key: 'performance',
-      header: 'Performance',
-      accessor: (agent: AutonomousAgent) => agent.performance,
-      sortable: true,
-      render: (value: number) => (
-        <div className="flex items-center space-x-2">
-          <Progress value={value} className="w-16 h-2" />
-          <span className="text-sm font-medium">{value}%</span>
-        </div>
-      ),
-    },
-    {
-      key: 'tasksCompleted',
-      header: 'Tasks Completed',
-      accessor: (agent: AutonomousAgent) => agent.tasksCompleted,
-      sortable: true,
-      align: 'center' as const,
-    },
-    {
-      key: 'uptime',
-      header: 'Uptime',
-      accessor: (agent: AutonomousAgent) => agent.uptime,
-      sortable: true,
-      render: (value: number) => `${value}%`,
-    },
+
+        {/* Notifications */}
+        <button
+          onClick={() => setShowNotifications(!showNotifications)}
+          className="relative p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+        >
+          <Bell className="h-5 w-5" />
+          {mockBadges["system:alerts"] > 0 && (
+            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+              {mockBadges["system:alerts"]}
+            </span>
+          )}
+        </button>
+
+        {/* Settings */}
+        <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
+          <Settings className="h-5 w-5" />
+        </button>
+
+        {/* Profile */}
+        <button className="flex items-center gap-2 p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
+          <User className="h-5 w-5" />
+          <span className="text-sm">Admin</span>
+        </button>
+      </div>
+    </header>
+  );
+}
+
+// Main Dashboard Content
+function DashboardContent() {
+  const systemHealth = {
+    status: 'healthy',
+    uptime: '99.9%',
+    responseTime: '150ms',
+    activeAgents: 250,
+    alerts: 3
+  };
+
+  const recentActivity = [
+    { id: 1, type: 'ticket', message: 'New support ticket created', time: '2 min ago', status: 'pending' },
+    { id: 2, type: 'agent', message: 'Autonomous agent completed task', time: '5 min ago', status: 'success' },
+    { id: 3, type: 'system', message: 'System backup completed', time: '15 min ago', status: 'success' },
+    { id: 4, type: 'alert', message: 'High CPU usage detected', time: '1 hour ago', status: 'warning' }
   ];
 
   return (
-    <DashboardLayout
-      navigation={navigation}
-      title="Software Admin Portal"
-      subtitle="System administration and autonomous agent monitoring"
-      user={{
-        name: 'Admin User',
-        email: 'admin@tms.com',
-        role: 'System Administrator',
-      }}
-      notifications={5}
-      onNavigationChange={(item) => setActiveTab(item.id)}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {activeTab === 'overview' && (
-            <div className="space-y-6">
-              {/* System Overview Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <EnhancedCard
-                  variant="gradient"
-                  gradient="bg-gradient-to-br from-blue-500 to-blue-600"
-                  icon={<Users className="w-6 h-6 text-white" />}
-                  header={
-                    <div className="text-white">
-                      <h3 className="text-lg font-semibold">Total Users</h3>
-                      <p className="text-blue-100">Active system users</p>
-                    </div>
-                  }
-                >
-                  <div className="text-white">
-                    <div className="text-3xl font-bold">{systemStats.totalUsers.toLocaleString()}</div>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm">+{systemStats.growthRate}% this month</span>
-                    </div>
-                  </div>
-                </EnhancedCard>
+    <div className="flex-1 p-6 space-y-6">
+      {/* Welcome Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+        <h1 className="text-2xl font-bold mb-2">Welcome to Software Admin</h1>
+        <p className="text-blue-100">Full autonomous agent authority enabled. System running at peak performance.</p>
+      </div>
 
-                <EnhancedCard
-                  variant="gradient"
-                  gradient="bg-gradient-to-br from-green-500 to-green-600"
-                  icon={<Activity className="w-6 h-6 text-white" />}
-                  header={
-                    <div className="text-white">
-                      <h3 className="text-lg font-semibold">System Health</h3>
-                      <p className="text-green-100">Overall system status</p>
-                    </div>
-                  }
-                >
-                  <div className="text-white">
-                    <div className="text-3xl font-bold">{systemStats.systemHealth}%</div>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <CheckCircle className="w-4 h-4" />
-                      <span className="text-sm">All systems operational</span>
-                    </div>
-                  </div>
-                </EnhancedCard>
+      {/* System Health Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <EnhancedCard className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <CheckCircle className="h-6 w-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">System Status</p>
+              <p className="text-lg font-semibold text-green-600">{systemHealth.status}</p>
+            </div>
+          </div>
+        </EnhancedCard>
 
-                <EnhancedCard
-                  variant="gradient"
-                  gradient="bg-gradient-to-br from-purple-500 to-purple-600"
-                  icon={<Shield className="w-6 h-6 text-white" />}
-                  header={
-                    <div className="text-white">
-                      <h3 className="text-lg font-semibold">Security Score</h3>
-                      <p className="text-purple-100">System security rating</p>
-                    </div>
-                  }
-                >
-                  <div className="text-white">
-                    <div className="text-3xl font-bold">{systemStats.securityScore}%</div>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <Lock className="w-4 h-4" />
-                      <span className="text-sm">High security level</span>
-                    </div>
-                  </div>
-                </EnhancedCard>
+        <EnhancedCard className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Activity className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">Uptime</p>
+              <p className="text-lg font-semibold text-blue-600">{systemHealth.uptime}</p>
+            </div>
+          </div>
+        </EnhancedCard>
 
-                <EnhancedCard
-                  variant="gradient"
-                  gradient="bg-gradient-to-br from-orange-500 to-orange-600"
-                  icon={<DollarSign className="w-6 h-6 text-white" />}
-                  header={
-                    <div className="text-white">
-                      <h3 className="text-lg font-semibold">Revenue</h3>
-                      <p className="text-orange-100">Monthly revenue</p>
-                    </div>
-                  }
-                >
-                  <div className="text-white">
-                    <div className="text-3xl font-bold">${(systemStats.revenue / 1000000).toFixed(1)}M</div>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm">+{systemStats.growthRate}% growth</span>
-                    </div>
-                  </div>
-                </EnhancedCard>
+        <EnhancedCard className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Zap className="h-6 w-6 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">Active Agents</p>
+              <p className="text-lg font-semibold text-purple-600">{systemHealth.activeAgents}+</p>
+            </div>
+          </div>
+        </EnhancedCard>
+
+        <EnhancedCard className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <AlertTriangle className="h-6 w-6 text-orange-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">Alerts</p>
+              <p className="text-lg font-semibold text-orange-600">{systemHealth.alerts}</p>
+            </div>
+          </div>
+        </EnhancedCard>
+      </div>
+
+      {/* Recent Activity */}
+      <EnhancedCard className="p-6">
+        <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+        <div className="space-y-3">
+          {recentActivity.map((activity) => (
+            <div key={activity.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+              <div className={`p-2 rounded-lg ${
+                activity.status === 'success' ? 'bg-green-100' :
+                activity.status === 'warning' ? 'bg-orange-100' :
+                'bg-blue-100'
+              }`}>
+                {activity.status === 'success' ? <CheckCircle className="h-4 w-4 text-green-600" /> :
+                 activity.status === 'warning' ? <AlertTriangle className="h-4 w-4 text-orange-600" /> :
+                 <Clock className="h-4 w-4 text-blue-600" />}
               </div>
-
-              {/* System Metrics */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <EnhancedCard
-                  title="System Performance"
-                  subtitle="Real-time system metrics"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">CPU Usage</span>
-                      <span className="text-sm text-secondary-600">{systemStats.cpuUsage}%</span>
-                    </div>
-                    <Progress value={systemStats.cpuUsage} className="h-2" />
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Memory Usage</span>
-                      <span className="text-sm text-secondary-600">{systemStats.memoryUsage}%</span>
-                    </div>
-                    <Progress value={systemStats.memoryUsage} className="h-2" />
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Disk Usage</span>
-                      <span className="text-sm text-secondary-600">{systemStats.diskUsage}%</span>
-                    </div>
-                    <Progress value={systemStats.diskUsage} className="h-2" />
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Network Usage</span>
-                      <span className="text-sm text-secondary-600">{systemStats.networkUsage}%</span>
-                    </div>
-                    <Progress value={systemStats.networkUsage} className="h-2" />
-                  </div>
-                </EnhancedCard>
-
-                <EnhancedCard
-                  title="Autonomous Agents"
-                  subtitle="Agent status and performance"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Active Agents</span>
-                      <span className="text-sm text-success-600">{systemStats.activeAgents}/{systemStats.autonomousAgents}</span>
-                    </div>
-                    <Progress value={(systemStats.activeAgents / systemStats.autonomousAgents) * 100} className="h-2" />
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Failed Agents</span>
-                      <span className="text-sm text-error-600">{systemStats.failedAgents}</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">System Uptime</span>
-                      <span className="text-sm text-success-600">{systemStats.uptime}%</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Active Sessions</span>
-                      <span className="text-sm text-secondary-600">{systemStats.activeSessions}</span>
-                    </div>
-                  </div>
-                </EnhancedCard>
+              <div className="flex-1">
+                <p className="text-sm font-medium">{activity.message}</p>
+                <p className="text-xs text-slate-500">{activity.time}</p>
               </div>
-
-              {/* Recent Activity */}
-              <EnhancedCard
-                title="Recent System Activity"
-                subtitle="Latest system events and alerts"
-              >
-                <div className="space-y-4">
-                  {mockAlerts.slice(0, 5).map((alert) => (
-                    <div key={alert.id} className="flex items-center space-x-3 p-3 rounded-lg bg-secondary-50">
-                      <div className={`w-2 h-2 rounded-full ${
-                        alert.type === 'error' ? 'bg-error-500' :
-                        alert.type === 'warning' ? 'bg-warning-500' :
-                        alert.type === 'success' ? 'bg-success-500' :
-                        'bg-blue-500'
-                      }`} />
-                      <div className="flex-1">
-                        <div className="font-medium text-secondary-900">{alert.title}</div>
-                        <div className="text-sm text-secondary-600">{alert.message}</div>
-                      </div>
-                      <div className="text-sm text-secondary-500">
-                        {new Date(alert.timestamp).toLocaleTimeString()}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </EnhancedCard>
             </div>
-          )}
+          ))}
+        </div>
+      </EnhancedCard>
 
-          {activeTab === 'users' && (
-            <div className="space-y-6">
-              <EnhancedCard
-                title="User Management"
-                subtitle="Manage system users and permissions"
-                actions={
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Download className="w-4 h-4 mr-2" />
-                      Export
-                    </Button>
-                    <Button size="sm">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add User
-                    </Button>
-                  </div>
-                }
-              >
-                <EnhancedTable
-                  data={mockUsers}
-                  columns={userColumns}
-                  selectable
-                  onSelectionChange={setSelectedUsers}
-                  onExport={() => console.log('Export users')}
-                  onRefresh={() => console.log('Refresh users')}
-                />
-              </EnhancedCard>
-            </div>
-          )}
-
-          {activeTab === 'alerts' && (
-            <div className="space-y-6">
-              <EnhancedCard
-                title="System Alerts"
-                subtitle="Monitor and manage system alerts"
-                actions={
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Download className="w-4 h-4 mr-2" />
-                      Export
-                    </Button>
-                    <Button size="sm">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Create Alert
-                    </Button>
-                  </div>
-                }
-              >
-                <EnhancedTable
-                  data={mockAlerts}
-                  columns={alertColumns}
-                  selectable
-                  onSelectionChange={setSelectedAlerts}
-                  onExport={() => console.log('Export alerts')}
-                  onRefresh={() => console.log('Refresh alerts')}
-                />
-              </EnhancedCard>
-            </div>
-          )}
-
-          {activeTab === 'agents' && (
-            <div className="space-y-6">
-              <EnhancedCard
-                title="Autonomous Agents"
-                subtitle="Monitor and manage autonomous agents"
-                actions={
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Download className="w-4 h-4 mr-2" />
-                      Export
-                    </Button>
-                    <Button size="sm">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Deploy Agent
-                    </Button>
-                  </div>
-                }
-              >
-                <EnhancedTable
-                  data={mockAgents}
-                  columns={agentColumns}
-                  selectable
-                  onSelectionChange={setSelectedAgents}
-                  onExport={() => console.log('Export agents')}
-                  onRefresh={() => console.log('Refresh agents')}
-                />
-              </EnhancedCard>
-            </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="space-y-6">
-              <EnhancedCard title="System Settings" subtitle="Configure system preferences">
-                <Tabs defaultValue="general" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="general">General</TabsTrigger>
-                    <TabsTrigger value="security">Security</TabsTrigger>
-                    <TabsTrigger value="notifications">Notifications</TabsTrigger>
-                    <TabsTrigger value="advanced">Advanced</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="general" className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium">System Name</label>
-                        <input
-                          type="text"
-                          defaultValue="TMS Autonomous System"
-                          className="mt-1 w-full px-3 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium">Timezone</label>
-                        <select className="mt-1 w-full px-3 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
-                          <option>UTC</option>
-                          <option>EST</option>
-                          <option>PST</option>
-                        </select>
-                      </div>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="security" className="space-y-4">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium">Two-Factor Authentication</h4>
-                          <p className="text-sm text-secondary-600">Require 2FA for all users</p>
-                        </div>
-                        <Button variant="outline" size="sm">Enable</Button>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium">Session Timeout</h4>
-                          <p className="text-sm text-secondary-600">Auto-logout after inactivity</p>
-                        </div>
-                        <select className="px-3 py-2 border border-secondary-300 rounded-lg">
-                          <option>30 minutes</option>
-                          <option>1 hour</option>
-                          <option>4 hours</option>
-                        </select>
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </EnhancedCard>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </DashboardLayout>
+      {/* Autonomous Agent Status */}
+      <EnhancedCard className="p-6">
+        <h2 className="text-lg font-semibold mb-4">Autonomous Agent Status</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+            <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-green-600">250+</p>
+            <p className="text-sm text-green-700">Active Agents</p>
+          </div>
+          <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+            <Zap className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-blue-600">98.5%</p>
+            <p className="text-sm text-blue-700">Success Rate</p>
+          </div>
+          <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
+            <Activity className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+            <p className="text-2xl font-bold text-purple-600">~150ms</p>
+            <p className="text-sm text-purple-700">Response Time</p>
+          </div>
+        </div>
+      </EnhancedCard>
+    </div>
   );
-};
+}
 
-export default SoftwareAdminPortal;
+// Main Software Admin Portal Component
+export default function SoftwareAdminPortal() {
+  return (
+    <div className="flex h-screen bg-slate-50">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <TopBar />
+        <main className="flex-1 overflow-auto">
+          <DashboardContent />
+        </main>
+      </div>
+    </div>
+  );
+}
