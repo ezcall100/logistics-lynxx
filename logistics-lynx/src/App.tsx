@@ -15,7 +15,11 @@ import {
   CarrierDashboard,
   BrokerDashboard,
   AutonomousDashboard,
-  AnalyticsDashboard
+  AnalyticsDashboard,
+  ShipperDashboard,
+  DriverDashboard,
+  OwnerOperatorDashboard,
+  SuperAdminDashboard
 } from './components/PortalDashboards';
 
 function App() {
@@ -676,37 +680,25 @@ function App() {
           {/* Other portal routes with basic layout */}
           <Route path="/shipper/*" element={
             <PortalLayout portalType="shipper" title="📦 Shipper Portal" description="Shipment tracking and logistics management">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2>Shipment Management</h2>
-                <p>Track and manage your shipments efficiently.</p>
-              </div>
+              <ShipperDashboard />
             </PortalLayout>
           } />
           
           <Route path="/driver/*" element={
             <PortalLayout portalType="driver" title="🚗 Driver Portal" description="Personalized driving command center">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2>Driver Dashboard</h2>
-                <p>Access your routes, loads, and driving information.</p>
-              </div>
+              <DriverDashboard />
             </PortalLayout>
           } />
           
           <Route path="/owner-operator/*" element={
             <PortalLayout portalType="owner-operator" title="🚚 Owner Operator Portal" description="Independent trucking business management">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2>Business Management</h2>
-                <p>Manage your independent trucking business.</p>
-              </div>
+              <OwnerOperatorDashboard />
             </PortalLayout>
           } />
           
           <Route path="/super-admin/*" element={
             <PortalLayout portalType="super-admin" title="👑 Super Admin Portal" description="Global command center with AI-powered oversight">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2>System Administration</h2>
-                <p>Complete system control and oversight.</p>
-              </div>
+              <SuperAdminDashboard />
             </PortalLayout>
           } />
           
