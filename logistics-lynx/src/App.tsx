@@ -18,6 +18,7 @@ import {
 import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard';
 import LogisticsManagementDashboard from './pages/LogisticsManagementDashboard';
 import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAgent.tsx';
+import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -407,7 +408,8 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
+      <GlobalErrorBoundary>
+        <div className="App">
         {/* Navigation Header */}
         <nav style={{
           backgroundColor: '#1e40af',
@@ -821,7 +823,8 @@ function App() {
             </div>
           } />
         </Routes>
-      </div>
+        </div>
+      </GlobalErrorBoundary>
     </Router>
   );
 }

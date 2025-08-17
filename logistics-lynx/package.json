@@ -41,6 +41,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "verify": "npm run typecheck && npm run lint && npm run format:check",
     "verify:google-maps": "node scripts/verify-google-maps-setup.mjs",
+    "autonomy:seal": "node scripts/autonomy-seal.mjs",
+    "db:bootstrap": "node scripts/db-bootstrap.mjs",
+    "ops:green": "node scripts/run-self-checks.mjs",
+    "ops:repair": "node scripts/self-heal.mjs",
+    "ops:strict-on": "node -e \"console.log('READYZ=strict');\" && echo",
+    "ops:strict-off": "node -e \"console.log('READYZ=lenient');\" && echo",
     "prepare": "husky"
   },
   "dependencies": {

@@ -23,7 +23,15 @@
     "portal:scan": "cd logistics-lynx && npm run portal:scan",
     "autonomous:build": "cd logistics-lynx && npm run autonomous:build",
     "autonomous:continuous": "cd logistics-lynx && npm run autonomous:continuous",
-    "knowledge:lint": "node scripts/knowledge-lint.js"
+    "knowledge:lint": "node scripts/knowledge-lint.js",
+    "test:autonomous:comprehensive": "node scripts/test-autonomous-agents.mjs",
+    "autonomy:seal": "node scripts/autonomy-seal.mjs",
+    "db:bootstrap": "node scripts/db-bootstrap.mjs",
+    "ops:green": "node scripts/run-self-checks.mjs",
+    "ops:repair": "node scripts/self-heal.mjs",
+    "ops:strict-on": "node -e \"console.log('READYZ=strict');\" && echo",
+    "ops:strict-off": "node -e \"console.log('READYZ=lenient');\" && echo",
+    "test:access-control": "vitest run tests/access-control.spec.ts"
   },
   "description": "Parent package for Trans Bot AI project",
   "engines": {
