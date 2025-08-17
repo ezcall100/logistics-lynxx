@@ -228,7 +228,8 @@ if (require.main === module) {
     const options = parseArgs();
     signDlqBody(options);
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('❌ Error:', errorMessage);
     process.exit(1);
   }
 }

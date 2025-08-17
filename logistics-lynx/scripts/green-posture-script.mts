@@ -191,7 +191,7 @@ async function main(): Promise<void> {
       flags,
       agents: {
         running: locked,
-        lockPid
+        lockPid: lockPid || undefined
       },
       database,
       metrics

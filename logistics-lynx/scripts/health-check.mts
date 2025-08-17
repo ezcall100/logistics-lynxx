@@ -119,7 +119,7 @@ const server = http.createServer(async (req, res) => {
       
       // In strict mode, validate credentials first
       let credentialsOk = true;
-      let credentialsReason = undefined;
+      let credentialsReason: string | undefined = undefined;
       
       if (mode === 'strict') {
         const credCheck = validateSupabaseCredentials();
@@ -167,7 +167,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const PORT = process.env.HEALTH_PORT || 8089;
+const PORT = parseInt(process.env.HEALTH_PORT || '8089', 10);
 
 // Function to find an available port
 async function findAvailablePort(startPort: number): Promise<number> {

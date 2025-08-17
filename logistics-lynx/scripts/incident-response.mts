@@ -76,12 +76,13 @@ async function emergencyStop(): Promise<IncidentResponse> {
 
   } catch (error) {
     console.error('❌ Failed to activate emergency stop:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return {
       action: 'stop',
       timestamp: new Date().toISOString(),
       success: false,
-      message: `Failed to activate emergency stop: ${error}`,
-      details: { error: error.message }
+      message: `Failed to activate emergency stop: ${errorMessage}`,
+      details: { error: errorMessage }
     };
   }
 }
@@ -142,12 +143,13 @@ async function resume(): Promise<IncidentResponse> {
 
   } catch (error) {
     console.error('❌ Failed to clear emergency stop:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return {
       action: 'resume',
       timestamp: new Date().toISOString(),
       success: false,
-      message: `Failed to clear emergency stop: ${error}`,
-      details: { error: error.message }
+      message: `Failed to clear emergency stop: ${errorMessage}`,
+      details: { error: errorMessage }
     };
   }
 }
@@ -192,12 +194,13 @@ async function status(): Promise<IncidentResponse> {
 
   } catch (error) {
     console.error('❌ Failed to check emergency stop status:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return {
       action: 'status',
       timestamp: new Date().toISOString(),
       success: false,
-      message: `Failed to check status: ${error}`,
-      details: { error: error.message }
+      message: `Failed to check status: ${errorMessage}`,
+      details: { error: errorMessage }
     };
   }
 }
