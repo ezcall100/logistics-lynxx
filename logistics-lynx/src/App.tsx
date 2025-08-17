@@ -215,8 +215,12 @@ function App() {
               color: 'white',
               cursor: 'pointer',
               fontSize: '1.25rem',
-              padding: '0.5rem'
+              padding: '0.5rem',
+              borderRadius: '0.25rem',
+              transition: 'background-color 0.2s'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
             {sidebarOpen ? '◀' : '▶'}
           </button>
@@ -231,7 +235,7 @@ function App() {
                   <button
                     onClick={() => toggleMenu(item.name)}
                     style={{
-                      width: '100%',
+                      width: 'calc(100% - 1rem)',
                       background: 'none',
                       border: 'none',
                       color: 'white',
@@ -241,19 +245,34 @@ function App() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.75rem',
-                      fontSize: '0.875rem'
+                      fontSize: '0.875rem',
+                      transition: 'background-color 0.2s',
+                      borderRadius: '0.25rem',
+                      margin: '0 0.5rem'
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <span>{item.icon}</span>
                     {sidebarOpen && (
                       <>
                         <span style={{ flex: 1 }}>{item.name}</span>
-                        <span>{expandedMenus[item.name] ? '▼' : '▶'}</span>
+                        <span style={{ 
+                          transition: 'transform 0.2s',
+                          transform: expandedMenus[item.name] ? 'rotate(90deg)' : 'rotate(0deg)'
+                        }}>
+                          ▶
+                        </span>
                       </>
                     )}
                   </button>
                   {expandedMenus[item.name] && sidebarOpen && (
-                    <div style={{ backgroundColor: '#0f172a' }}>
+                    <div style={{ 
+                      backgroundColor: '#0f172a',
+                      margin: '0 0.5rem',
+                      borderRadius: '0.25rem',
+                      overflow: 'hidden'
+                    }}>
                       {item.submenu.map((subItem, subIndex) => (
                         <Link
                           key={subIndex}
@@ -263,8 +282,11 @@ function App() {
                             padding: '0.5rem 1rem 0.5rem 3rem',
                             color: 'white',
                             textDecoration: 'none',
-                            fontSize: '0.8rem'
+                            fontSize: '0.8rem',
+                            transition: 'background-color 0.2s'
                           }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                         >
                           {subItem.name}
                         </Link>
@@ -282,8 +304,14 @@ function App() {
                     padding: '0.75rem 1rem',
                     color: 'white',
                     textDecoration: 'none',
-                    fontSize: '0.875rem'
+                    fontSize: '0.875rem',
+                    transition: 'background-color 0.2s',
+                    borderRadius: '0.25rem',
+                    margin: '0 0.5rem',
+                    width: 'calc(100% - 1rem)'
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <span>{item.icon}</span>
                   {sidebarOpen && <span>{item.name}</span>}
@@ -292,6 +320,31 @@ function App() {
             </div>
           ))}
         </nav>
+
+        {/* Sidebar Footer */}
+        {sidebarOpen && (
+          <div style={{
+            padding: '1rem',
+            borderTop: '1px solid #334155',
+            marginTop: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.75rem',
+              color: '#94a3b8'
+            }}>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#10b981'
+              }} />
+              System Online
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -598,6 +651,7 @@ function App() {
                   type="success" 
                   title="System Status" 
                   message="All systems are operating normally. Fleet efficiency is at 94%."
+                  onDismiss={() => {}}
                 />
                 
                 {/* Metrics Grid */}
@@ -631,6 +685,7 @@ function App() {
                   type="warning" 
                   title="Rate Optimization" 
                   message="15 loads need rate optimization. AI suggestions available."
+                  onDismiss={() => {}}
                 />
                 
                 {/* Metrics Grid */}
