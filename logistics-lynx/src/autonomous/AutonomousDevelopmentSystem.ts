@@ -316,6 +316,90 @@ class AutonomousDevelopmentSystem {
     - Enterprise Tier ($499-999/month): Everything except add-ons, unlimited quotas
     - Custom Tier: Add-ons with usage-based or flat pricing
     
+    CRITICAL SIGNUP IMPLEMENTATION REQUIREMENTS:
+    If implementing signup/auth features, follow these EXACT specifications:
+    
+    MISSION: Implement world-class, secure, multi-tenant Sign Up experience at /signup that:
+    - Creates a user, a new organization (tenant), and an initial subscription (trial or plan)
+    - Grants role & entitlements, sets org_id context, and
+    - Drops the user into /portal-selection with the correct portal cards (Included / Trial / Add-on / Locked)
+    
+    GUARDRAILS:
+    - Respect autonomy.emergencyStop immediately
+    - SLO: success ≥ 98%, p95 route paint ≤ 2.5s
+    - Security: RLS on, invite tokens signed & short-lived, email verification required, rate-limit and CAPTCHA on public endpoints
+    - Privacy: GDPR/CCPA consent checkboxes; audit every critical step
+    
+    FEATURE FLAGS (seed):
+    insert into feature_flags_v2(key,scope,value) values
+    ('auth.signup.enabled','global',true),
+    ('auth.signup.requireEmailVerify','global',true),
+    ('auth.signup.defaultPlan','global','pro'),
+    ('auth.signup.trialDays','global',14),
+    ('auth.signup.captcha','global',true)
+    on conflict (key,scope) do update set value=excluded.value;
+    
+    DB HOOKS (Postgres) — tenant creation & entitlements:
+    create or replace function saas_create_org_with_owner(
+      p_user uuid, p_org_name text, p_plan text, p_trial_days int default 14
+    ) returns table(org_id uuid) language plpgsql security definer as $$
+    declare v_org uuid;
+    begin
+      insert into organizations(name) values (p_org_name) returning id into v_org;
+      insert into org_memberships(org_id,user_id,role) values (v_org, p_user, 'owner');
+      insert into subscriptions(org_id,plan,status,current_period_end)
+        values (v_org, p_plan, 'trialing', now() + make_interval(days => p_trial_days))
+        on conflict (org_id) do update set plan=excluded.plan;
+      perform rebuildEntitlements(v_org, p_plan);
+      return query select v_org;
+    end $$;
+    
+    BACKEND ENDPOINTS (ESM/TypeScript):
+    POST /api/auth/signup
+    Body: { email, password, fullName, company, plan?: 'free'|'pro'|'enterprise', inviteToken?: string }
+    
+    Flow:
+    1. Validate CAPTCHA if enabled
+    2. Create auth user (password or magic-link)
+    3. If inviteToken present → join existing org; else create new org via saas_create_org_with_owner
+    4. If requireEmailVerify → send verification email; else continue
+    5. Issue session + set org_id claim/context (for RLS)
+    6. Return { next: "/portal-selection" }
+    
+    FRONTEND — /signup (multi-step, WCAG, design-system):
+    Steps (cards with progress indicators):
+    1. Account — Email, Password, Full name (show strength, caps-lock, show/hide)
+    2. Company — Company name, industry (optional), user role (default: owner)
+    3. Plan — Free / Pro / Enterprise comparison (include billing URL if selecting paid)
+    4. Consent — ToS & Privacy checkboxes; marketing opt-in (optional)
+    5. Submit — POST /api/auth/signup, handle verify state
+    
+    UX notes:
+    - Use tokens.css, shadcn/ui components, accent color from design system
+    - Provide SSO buttons (Google/Microsoft) if configured
+    - Accessibility: labeled inputs, error summaries, keyboard flow, proper focus management
+    - Anti-abuse: show reCAPTCHA only on suspicious patterns or after N attempts
+    
+    SECURITY & RATE LIMITS:
+    - POST /api/auth/signup → 10/min/IP, 5/min/email (429 on breach)
+    - Enforce email verification before enabling write actions
+    - All writes scoped by org_id via RLS; set org_id claim on session
+    - Invite tokens: HMAC-signed, expire in ≤ 48h, single-use
+    - PII redaction in logs
+    
+    OBSERVABILITY:
+    - Emit SLI events (auth.signup.started, auth.signup.succeeded, auth.signup.failed, invite.consumed)
+    - Attach trace_id and include p95 timings for each step
+    - Add /readyz item: "auth & invites healthy"
+    - Evidence artifacts saved: artifacts/signup/<DATE>/{flags.json,events.json,p95.csv,trace-sample.txt}
+    
+    ACCEPTANCE (must pass):
+    ✅ /signup is reachable and a11y-clean (axe pass)
+    ✅ Creating new org: user becomes owner; plan = default; trial applied; entitlements created; redirected to /portal-selection
+    ✅ Joining via invite skips org creation; role matches token; portals reflect plan
+    ✅ Email verification enforced when flag enabled
+    ✅ SLO: p95 ≤ 2.5s signup API; success ≥ 98%
+    
     FULL UI/UX DESIGN AUTHORITY:
     You have COMPLETE authority to redesign the user interface and user experience:
     
@@ -362,6 +446,9 @@ class AutonomousDevelopmentSystem {
     - Usage tracking and billing integration
     - API rate limiting per organization
     - Scalable architecture for thousands of organizations
+    - Secure authentication and authorization
+    - Email verification and invite system
+    - CAPTCHA and rate limiting for public endpoints
     
     DATABASE SCHEMA:
     - portals table: portal catalog with key, title, path
@@ -371,6 +458,9 @@ class AutonomousDevelopmentSystem {
     - org_addons table: add-ons purchased per organization
     - org_trials table: trials and promotions
     - usage_events table: usage tracking for billing
+    - organizations table: multi-tenant orgs
+    - org_memberships table: user-org relationships
+    - subscriptions table: org subscription plans
     
     ACCESS CONTROL:
     - can_access_portal(org_id, portal_key): Check portal access
@@ -398,6 +488,8 @@ class AutonomousDevelopmentSystem {
     - Include trial and add-on management
     - Support usage-based billing
     - Implement performance monitoring
+    - Ensure security best practices
+    - Implement accessibility compliance (WCAG 2.2 AA)
     
     UI/UX DESIGN PRINCIPLES:
     - Prioritize user experience and usability
@@ -425,6 +517,11 @@ class AutonomousDevelopmentSystem {
     13. Mobile-responsive and accessible design
     14. Interactive elements and micro-interactions
     15. Comprehensive design system implementation
+    16. Secure authentication and signup flow
+    17. Email verification and invite system
+    18. Rate limiting and CAPTCHA integration
+    19. Observability and monitoring
+    20. Testing and validation procedures
     `;
 
     const completion = await this.openai.chat.completions.create({

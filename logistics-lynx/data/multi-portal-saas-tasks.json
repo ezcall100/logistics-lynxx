@@ -6,6 +6,150 @@
     "dependencies": [],
     "tasks": [
       {
+        "id": "auth.signup.multi_tenant",
+        "title": "Trans Bot AI Multi-Tenant Signup Flow",
+        "description": "Implement world-class, secure, multi-tenant Sign Up experience at /signup that creates user, organization, subscription, and drops user into portal selection",
+        "priority": "critical",
+        "category": "authentication",
+        "estimated_hours": 24,
+        "acceptance_criteria": [
+          "/signup route is reachable and a11y-clean (axe pass)",
+          "Creating new org: user becomes owner; plan = default; trial applied; entitlements created; redirected to /portal-selection",
+          "Joining via invite skips org creation; role matches token; portals reflect plan",
+          "Email verification enforced when flag enabled",
+          "SLO: p95 ≤ 2.5s signup API; success ≥ 98%",
+          "Security: RLS on, invite tokens signed & short-lived, email verification required, rate-limit and CAPTCHA",
+          "Privacy: GDPR/CCPA consent checkboxes; audit every critical step"
+        ],
+        "implementation_steps": [
+          "1. Feature Flags Setup",
+          "2. Database Hooks & RPC Functions",
+          "3. Backend Endpoints (signup, magic-link, invites)",
+          "4. Frontend Multi-step Signup Form",
+          "5. Billing Integration",
+          "6. Observability & Monitoring",
+          "7. Security & Rate Limits",
+          "8. Testing & Validation"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000008_signup_feature_flags.sql",
+          "supabase/migrations/20241201000009_signup_functions.sql",
+          "src/server/routes/auth/signup.ts",
+          "src/server/routes/auth/magic-link.ts",
+          "src/server/routes/invites/create.ts",
+          "src/server/routes/invites/consume.ts",
+          "src/pages/signup/SignupPage.tsx",
+          "src/components/signup/SignupWizard.tsx",
+          "src/components/signup/AccountStep.tsx",
+          "src/components/signup/CompanyStep.tsx",
+          "src/components/signup/PlanStep.tsx",
+          "src/components/signup/ConsentStep.tsx",
+          "src/components/signup/SubmitStep.tsx",
+          "src/hooks/useSignup.ts",
+          "src/services/signup.ts",
+          "src/utils/captcha.ts",
+          "src/utils/invites.ts"
+        ],
+        "files_to_modify": [
+          "src/App.tsx",
+          "src/routes.tsx",
+          "src/middleware/auth.ts",
+          "src/services/auth.ts",
+          "src/components/PortalSelection.tsx"
+        ],
+        "technical_specifications": {
+          "feature_flags": {
+            "auth.signup.enabled": "global",
+            "auth.signup.requireEmailVerify": "global", 
+            "auth.signup.defaultPlan": "global",
+            "auth.signup.trialDays": "global",
+            "auth.signup.captcha": "global"
+          },
+          "database_functions": [
+            "saas_create_org_with_owner(p_user, p_org_name, p_plan, p_trial_days)",
+            "rebuildEntitlements(org, plan)"
+          ],
+          "api_endpoints": [
+            "POST /api/auth/signup",
+            "POST /api/auth/magic-link", 
+            "POST /api/invites/create",
+            "POST /api/invites/consume"
+          ],
+          "security_requirements": [
+            "RLS enabled on all tables",
+            "Invite tokens HMAC-signed, expire ≤ 48h, single-use",
+            "Rate limits: 10/min/IP, 5/min/email",
+            "Email verification required before write actions",
+            "PII redaction in logs"
+          ],
+          "observability": [
+            "SLI events: auth.signup.started, auth.signup.succeeded, auth.signup.failed",
+            "Trace_id attachment for p95 monitoring",
+            "/readyz health check for auth & invites",
+            "Evidence artifacts saved to artifacts/signup/<DATE>/"
+          ]
+        },
+        "ui_requirements": {
+          "multi_step_wizard": [
+            "Account Step: Email, Password, Full name (strength meter, caps-lock, show/hide)",
+            "Company Step: Company name, industry, user role (default: owner)",
+            "Plan Step: Free/Pro/Enterprise comparison with billing integration",
+            "Consent Step: ToS & Privacy checkboxes, marketing opt-in",
+            "Submit Step: POST to /api/auth/signup, handle verification"
+          ],
+          "accessibility": [
+            "WCAG 2.2 AA compliance",
+            "Labeled inputs and error summaries",
+            "Keyboard navigation flow",
+            "Proper focus management",
+            "Screen reader compatibility"
+          ],
+          "design_system": [
+            "Use tokens.css and shadcn/ui components",
+            "Glassmorphism cards with accent colors",
+            "Left progress rail with step indicators",
+            "SSO buttons (Google/Microsoft) if configured",
+            "reCAPTCHA integration for anti-abuse"
+          ]
+        },
+        "business_logic": {
+          "signup_flow": [
+            "Validate CAPTCHA if enabled",
+            "Create auth user (password or magic-link)",
+            "If inviteToken present → join existing org; else create new org",
+            "If requireEmailVerify → send verification email; else continue",
+            "Issue session + set org_id claim/context (for RLS)",
+            "Return { next: '/portal-selection' }"
+          ],
+          "billing_integration": [
+            "If Pro/Enterprise selected: create checkout session",
+            "Webhook checkout.session.completed → update subscriptions",
+            "Call rebuildEntitlements(org, plan) on completion",
+            "If payment skipped → keep trialing per trialDays"
+          ],
+          "invite_system": [
+            "Signed, short-lived invite tokens",
+            "Role-scoped invitations",
+            "Single-use token consumption",
+            "Automatic org membership creation"
+          ]
+        },
+        "testing_scenarios": [
+          "Open /signup, create user owner@demo.tba, company Demo Co, plan pro",
+          "Expect trialing pro, membership owner, portals show Included/Trial/Addon/Locked correctly",
+          "Hit /api/me/portals → verify access states",
+          "Trigger invite to analyst@demo.tba, consume token, verify role",
+          "Test email verification flow when enabled",
+          "Test rate limiting and CAPTCHA functionality",
+          "Test accessibility with axe-core"
+        ],
+        "rollback_plan": [
+          "Toggle auth.signup.enabled=false to disable public signup instantly",
+          "Keep invites working for controlled access",
+          "Maintain existing user sessions and org access"
+        ]
+      },
+      {
         "id": "saas.portals.catalog.seed",
         "title": "Seed Portal Catalog and Feature Mapping",
         "description": "Create database schema and seed data for 20 portals with feature classification",
@@ -590,6 +734,15 @@
         "Accessibility compliance",
         "Floating Action Buttons where beneficial",
         "Enhanced navigation patterns"
+      ],
+      "signup_success": [
+        "/signup is reachable and a11y-clean (axe pass)",
+        "Creating new org: user becomes owner; plan = default; trial applied",
+        "Entitlements created; redirected to /portal-selection",
+        "Joining via invite skips org creation; role matches token",
+        "Portals reflect plan correctly",
+        "Email verification enforced when flag enabled",
+        "SLO: p95 ≤ 2.5s signup API; success ≥ 98%"
       ]
     },
     "technical_requirements": [
@@ -601,7 +754,10 @@
       "Scalable architecture for thousands of organizations",
       "Modern UI/UX design patterns",
       "Responsive and accessible design",
-      "Performance optimization"
+      "Performance optimization",
+      "Secure authentication and authorization",
+      "Email verification and invite system",
+      "CAPTCHA and rate limiting for public endpoints"
     ],
     "design_authority": {
       "full_ui_ux_redesign": true,
@@ -615,8 +771,8 @@
       "accessibility_improvements": true
     },
     "dependencies": [],
-    "estimated_total_hours": 134,
+    "estimated_total_hours": 158,
     "risk_level": "medium",
-    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience."
+    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority and comprehensive signup flow. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience. The signup flow is the critical entry point for new customers and must be world-class."
   }
 }
