@@ -844,12 +844,8 @@ function App() {
 
           {/* Role-Based Portals */}
           <Route path="/admin" element={
-            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', padding: '2rem' }}>
-              <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Admin Portal Loading...</h1>
-              <p>If you see this message, the route is working. The SoftwareAdminPortal component should load below:</p>
-              <div style={{ marginTop: '2rem' }}>
-                <SoftwareAdminPortal />
-              </div>
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <SoftwareAdminPortal />
             </div>
           } />
           
