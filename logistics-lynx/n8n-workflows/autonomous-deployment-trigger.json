@@ -1,0 +1,446 @@
+{
+  "name": "Autonomous Deployment Trigger",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "autonomous-deployment",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "autonomous-deployment-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.agent_id }}",
+              "operation": "exists"
+            }
+          ]
+        }
+      },
+      "id": "validate-payload",
+      "name": "Validate Payload",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse deployment request\nconst payload = $input.first().json;\nconst agentId = payload.agent_id;\nconst task = payload.task;\nconst priority = payload.priority;\nconst context = payload.context || {};\n\n// Log the deployment request\nconsole.log(`Autonomous Agent ${agentId} requesting deployment for task: ${task}`);\nconsole.log(`Priority: ${priority}`);\nconsole.log(`Context:`, context);\n\n// Determine deployment type based on task\nlet deploymentType = 'development';\nlet environment = 'staging';\n\nif (task.includes('portal') || task.includes('ui/ux')) {\n  deploymentType = 'portal';\n  environment = 'staging';\n} else if (task.includes('production') || task.includes('rollout')) {\n  deploymentType = 'production';\n  environment = 'production';\n} else if (task.includes('test') || task.includes('smoke')) {\n  deploymentType = 'testing';\n  environment = 'testing';\n}\n\n// Return deployment configuration\nreturn {\n  agentId,\n  task,\n  priority,\n  context,\n  deploymentType,\n  environment,\n  timestamp: new Date().toISOString(),\n  deploymentId: `deploy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`\n};"
+      },
+      "id": "parse-deployment-request",
+      "name": "Parse Deployment Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.priority }}",
+              "value2": "critical"
+            }
+          ]
+        }
+      },
+      "id": "check-priority",
+      "name": "Check Priority",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "resource": "issue",
+        "operation": "create",
+        "repository": "your-org/logistics-lynx",
+        "title": "={{ `🚨 CRITICAL: Autonomous Agent ${$json.agentId} Deployment Request` }}",
+        "body": "={{ `## 🚨 Critical Autonomous Agent Deployment Request\n\n**Agent ID**: ${$json.agentId}\n**Task**: ${$json.task}\n**Priority**: ${$json.priority}\n**Environment**: ${$json.environment}\n**Deployment Type**: ${$json.deploymentType}\n**Timestamp**: ${$json.timestamp}\n\n### Context\n\`\`\`json\n${JSON.stringify($json.context, null, 2)}\n\`\`\`\n\n### Required Actions\n- [ ] Review deployment request\n- [ ] Approve or reject deployment\n- [ ] Monitor deployment progress\n- [ ] Verify deployment success\n\n### Safety Checks\n- [ ] Emergency stop not activated\n- [ ] Performance thresholds met\n- [ ] Security requirements satisfied\n- [ ] Rollback plan ready\n\n---\n\n*This issue was automatically created by the Autonomous Deployment Trigger workflow.*` }}",
+        "labels": ["autonomous-agent", "critical", "deployment", "urgent"],
+        "assignees": ["team-lead", "devops-lead"]
+      },
+      "id": "create-critical-issue",
+      "name": "Create Critical Issue",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ `🚨 CRITICAL: Autonomous Agent ${$json.agentId} requesting ${$json.deploymentType} deployment for task: ${$json.task}` }}"
+            },
+            {
+              "name": "channel",
+              "value": "#autonomous-alerts"
+            }
+          ]
+        }
+      },
+      "id": "send-slack-alert",
+      "name": "Send Slack Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.GITHUB_API_URL }}/repos/your-org/logistics-lynx/dispatches",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github.v3+json"
+            },
+            {
+              "name": "Authorization",
+              "value": "token {{ $env.GITHUB_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "autonomous-deployment"
+            },
+            {
+              "name": "client_payload",
+              "value": "={{ JSON.stringify($json) }}"
+            }
+          ]
+        }
+      },
+      "id": "trigger-github-workflow",
+      "name": "Trigger GitHub Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DEPLOYMENT_API_URL }}/deployments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.DEPLOYMENT_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "deployment_id",
+              "value": "={{ $json.deploymentId }}"
+            },
+            {
+              "name": "agent_id",
+              "value": "={{ $json.agentId }}"
+            },
+            {
+              "name": "task",
+              "value": "={{ $json.task }}"
+            },
+            {
+              "name": "environment",
+              "value": "={{ $json.environment }}"
+            },
+            {
+              "name": "deployment_type",
+              "value": "={{ $json.deploymentType }}"
+            },
+            {
+              "name": "priority",
+              "value": "={{ $json.priority }}"
+            },
+            {
+              "name": "context",
+              "value": "={{ JSON.stringify($json.context) }}"
+            }
+          ]
+        }
+      },
+      "id": "initiate-deployment",
+      "name": "Initiate Deployment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.MONITORING_API_URL }}/deployments/{{ $json.deploymentId }}/monitor",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.MONITORING_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "deployment_id",
+              "value": "={{ $json.deploymentId }}"
+            },
+            {
+              "name": "agent_id",
+              "value": "={{ $json.agentId }}"
+            },
+            {
+              "name": "environment",
+              "value": "={{ $json.environment }}"
+            },
+            {
+              "name": "monitoring_config",
+              "value": "={{ JSON.stringify({\n  health_checks: ['/healthz', '/readyz'],\n  performance_thresholds: {\n    p95_response_time: 2500,\n    error_rate: 0.01,\n    success_rate: 0.98\n  },\n  rollback_triggers: [\n    'error_rate > 0.05',\n    'p95_response_time > 5000',\n    'health_check_failure'\n  ]\n}) }}"
+            }
+          ]
+        }
+      },
+      "id": "start-monitoring",
+      "name": "Start Monitoring",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  success: true,\n  message: 'Autonomous deployment request processed successfully',\n  deployment_id: $json.deploymentId,\n  agent_id: $json.agentId,\n  environment: $json.environment,\n  deployment_type: $json.deploymentType,\n  priority: $json.priority,\n  timestamp: $json.timestamp,\n  next_steps: [\n    'Deployment initiated',\n    'Monitoring started',\n    'GitHub workflow triggered',\n    priority === 'critical' ? 'Critical alerts sent' : 'Standard deployment process'\n  ]\n} }}"
+      },
+      "id": "response",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.LOGGING_API_URL }}/logs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.LOGGING_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "level",
+              "value": "info"
+            },
+            {
+              "name": "message",
+              "value": "={{ `Autonomous deployment request processed: ${$json.agentId} -> ${$json.deploymentType} -> ${$json.environment}` }}"
+            },
+            {
+              "name": "metadata",
+              "value": "={{ JSON.stringify($json) }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $json.timestamp }}"
+            }
+          ]
+        }
+      },
+      "id": "log-deployment",
+      "name": "Log Deployment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Payload": {
+      "main": [
+        [
+          {
+            "node": "Parse Deployment Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Deployment Request": {
+      "main": [
+        [
+          {
+            "node": "Check Priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Priority": {
+      "main": [
+        [
+          {
+            "node": "Create Critical Issue",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Trigger GitHub Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Critical Issue": {
+      "main": [
+        [
+          {
+            "node": "Trigger GitHub Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Slack Alert": {
+      "main": [
+        [
+          {
+            "node": "Trigger GitHub Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger GitHub Workflow": {
+      "main": [
+        [
+          {
+            "node": "Initiate Deployment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initiate Deployment": {
+      "main": [
+        [
+          {
+            "node": "Start Monitoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Monitoring": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Deployment": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "autonomous-deployment",
+      "name": "autonomous-deployment"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

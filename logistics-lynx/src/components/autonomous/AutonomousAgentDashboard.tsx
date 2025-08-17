@@ -1,199 +1,480 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
+  Activity, 
   Brain, 
-  Cpu, 
+  Code, 
+  Database, 
+  Eye, 
+  GitBranch, 
+  Globe, 
   Monitor, 
-  Palette, 
+  Play, 
+  Pause, 
   RefreshCw, 
-  GraduationCap,
-  Activity,
-  CheckCircle,
+  Settings, 
+  Shield, 
+  Terminal, 
+  Users,
+  Zap,
   AlertTriangle,
-  Clock
+  CheckCircle,
+  Clock,
+  TrendingUp
 } from 'lucide-react';
 
-const AutonomousAgentDashboard = () => {
-  const {
-    agents,
-    systemStatus,
-    setSystemStatus,
-    getSystemStats,
-    executeAgentTask
-  } = useAutonomousAgentManager();
-
-  const stats = getSystemStats();
-
-  const getAgentIcon = (type: string) => {
-    switch (type) {
-      case 'refactoring': return <RefreshCw className="h-4 w-4" />;
-      case 'optimization': return <Cpu className="h-4 w-4" />;
-      case 'ui_improvement': return <Palette className="h-4 w-4" />;
-      case 'monitoring': return <Monitor className="h-4 w-4" />;
-      case 'learning': return <GraduationCap className="h-4 w-4" />;
-      default: return <Brain className="h-4 w-4" />;
-    }
+interface AgentLog {
+  id: string;
+  agentId: string;
+  agentName: string;
+  task: string;
+  status: 'running' | 'completed' | 'failed' | 'pending';
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  progress: number;
+  startTime: string;
+  endTime?: string;
+  duration?: number;
+  logs: string[];
+  metrics: {
+    successRate: number;
+    errorRate: number;
+    performance: number;
+    memoryUsage: number;
   };
+}
+
+interface PortalStatus {
+  id: string;
+  name: string;
+  status: 'implemented' | 'in-progress' | 'pending' | 'failed';
+  progress: number;
+  lastUpdated: string;
+  agentId?: string;
+}
+
+interface SystemMetrics {
+  totalAgents: number;
+  activeAgents: number;
+  totalPortals: number;
+  implementedPortals: number;
+  systemHealth: number;
+  performanceScore: number;
+  uptime: number;
+}
+
+export default function AutonomousAgentDashboard() {
+  const [agentLogs, setAgentLogs] = useState<AgentLog[]>([]);
+  const [portalStatus, setPortalStatus] = useState<PortalStatus[]>([]);
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetrics>({
+    totalAgents: 0,
+    activeAgents: 0,
+    totalPortals: 17,
+    implementedPortals: 0,
+    systemHealth: 0,
+    performanceScore: 0,
+    uptime: 0
+  });
+  const [isMonitoring, setIsMonitoring] = useState(true);
+  const [refreshInterval, setRefreshInterval] = useState(5000);
+
+  // Mock data - replace with real API calls
+  useEffect(() => {
+    const fetchData = async () => {
+      // Simulate API calls
+      const mockAgentLogs: AgentLog[] = [
+        {
+          id: '1',
+          agentId: 'portal-implementation-agent',
+          agentName: 'Portal Implementation Agent',
+          task: 'Implementing CRM portal with full CRUD operations',
+          status: 'running',
+          priority: 'critical',
+          progress: 75,
+          startTime: new Date(Date.now() - 3600000).toISOString(),
+          logs: [
+            '2024-01-01 10:00:00 - Starting CRM portal implementation',
+            '2024-01-01 10:15:00 - Creating database schema for accounts table',
+            '2024-01-01 10:30:00 - Implementing React components for account management',
+            '2024-01-01 10:45:00 - Adding form validation and error handling'
+          ],
+          metrics: {
+            successRate: 95,
+            errorRate: 2,
+            performance: 88,
+            memoryUsage: 45
+          }
+        },
+        {
+          id: '2',
+          agentId: 'ui-ux-agent',
+          agentName: 'UI/UX Redesign Agent',
+          task: 'Implementing design tokens and app shell',
+          status: 'completed',
+          priority: 'high',
+          progress: 100,
+          startTime: new Date(Date.now() - 7200000).toISOString(),
+          endTime: new Date(Date.now() - 1800000).toISOString(),
+          duration: 5400,
+          logs: [
+            '2024-01-01 08:00:00 - Starting UI/UX redesign',
+            '2024-01-01 08:30:00 - Implementing design tokens',
+            '2024-01-01 09:00:00 - Creating app shell components',
+            '2024-01-01 09:30:00 - UI/UX redesign completed successfully'
+          ],
+          metrics: {
+            successRate: 100,
+            errorRate: 0,
+            performance: 95,
+            memoryUsage: 30
+          }
+        }
+      ];
+
+      const mockPortalStatus: PortalStatus[] = [
+        { id: 'dashboard', name: 'Dashboard', status: 'implemented', progress: 100, lastUpdated: new Date().toISOString() },
+        { id: 'crm', name: 'CRM', status: 'in-progress', progress: 75, lastUpdated: new Date().toISOString(), agentId: 'portal-implementation-agent' },
+        { id: 'load-board', name: 'Load Board', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'rates', name: 'Rates', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'shipper', name: 'Shipper', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'broker', name: 'Broker', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'carrier', name: 'Carrier', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'driver', name: 'Driver', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'financials', name: 'Financials', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'edi', name: 'EDI', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'workers', name: 'Workers', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'directory', name: 'Directory', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'analytics', name: 'Analytics', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'admin', name: 'Admin', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'super-admin', name: 'Super Admin', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'autonomous-ops', name: 'Autonomous Ops', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() },
+        { id: 'market-place', name: 'Market Place', status: 'pending', progress: 0, lastUpdated: new Date().toISOString() }
+      ];
+
+      const implementedPortals = mockPortalStatus.filter(p => p.status === 'implemented').length;
+      const activeAgents = mockAgentLogs.filter(a => a.status === 'running').length;
+
+      setAgentLogs(mockAgentLogs);
+      setPortalStatus(mockPortalStatus);
+      setSystemMetrics({
+        totalAgents: 5,
+        activeAgents,
+        totalPortals: 17,
+        implementedPortals,
+        systemHealth: 95,
+        performanceScore: 92,
+        uptime: 99.9
+      });
+    };
+
+    fetchData();
+
+    if (isMonitoring) {
+      const interval = setInterval(fetchData, refreshInterval);
+      return () => clearInterval(interval);
+    }
+  }, [isMonitoring, refreshInterval]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'working': return 'bg-blue-100 text-blue-800';
-      case 'error': return 'bg-red-100 text-red-800';
+      case 'running': return 'bg-blue-500';
+      case 'completed': return 'bg-green-500';
+      case 'failed': return 'bg-red-500';
+      case 'pending': return 'bg-gray-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'critical': return 'bg-red-100 text-red-800';
+      case 'high': return 'bg-orange-100 text-orange-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getPortalStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'working': return <Activity className="h-4 w-4 text-blue-600 animate-pulse" />;
-      case 'error': return <AlertTriangle className="h-4 w-4 text-red-600" />;
-      default: return <Clock className="h-4 w-4 text-gray-600" />;
+      case 'implemented': return 'bg-green-100 text-green-800';
+      case 'in-progress': return 'bg-blue-100 text-blue-800';
+      case 'pending': return 'bg-gray-100 text-gray-800';
+      case 'failed': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* System Overview */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="h-5 w-5" />
-                24/7 Autonomous TMS System
-              </CardTitle>
-              <CardDescription>
-                AI agents working continuously to improve and optimize the platform
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-3">
-              <Badge 
-                variant={systemStatus === 'autonomous' ? 'default' : 'secondary'}
-                className="text-sm"
-              >
-                {systemStatus.toUpperCase()}
-              </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSystemStatus(systemStatus === 'autonomous' ? 'manual' : 'autonomous')}
-              >
-                {systemStatus === 'autonomous' ? 'Switch to Manual' : 'Enable Autonomous'}
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.active_agents}</div>
-              <div className="text-sm text-muted-foreground">Active Agents</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.total_tasks_completed}</div>
-              <div className="text-sm text-muted-foreground">Tasks Completed</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.average_success_rate}%</div>
-              <div className="text-sm text-muted-foreground">Success Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">{stats.uptime_hours}h</div>
-              <div className="text-sm text-muted-foreground">Uptime Today</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Agent Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {agents.map((agent) => (
-          <Card key={agent.id} className="relative">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {getAgentIcon(agent.type)}
-                  <CardTitle className="text-lg">{agent.name}</CardTitle>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getStatusIcon(agent.status)}
-                  <Badge className={getStatusColor(agent.status)}>
-                    {agent.status}
-                  </Badge>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Success Rate</span>
-                  <span>{Math.round(agent.successRate)}%</span>
-                </div>
-                <Progress value={agent.successRate} className="h-2" />
-              </div>
-              
-              <div className="space-y-2 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Tasks Completed:</span>
-                  <span className="ml-2 font-medium">{agent.tasksCompleted}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Last Action:</span>
-                  <p className="mt-1 text-xs bg-gray-50 p-2 rounded">{agent.lastAction}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Next Run:</span>
-                  <span className="ml-2 text-xs">
-                    {new Date(agent.nextScheduledRun).toLocaleTimeString()}
-                  </span>
-                </div>
-              </div>
-
-              {agent.status === 'active' && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => executeAgentTask(agent)}
-                >
-                  Execute Task Now
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+    <div className="container mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Autonomous Agent Dashboard</h1>
+          <p className="text-gray-600">Real-time monitoring of autonomous agent activities and portal implementation progress</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={isMonitoring ? "default" : "outline"}
+            onClick={() => setIsMonitoring(!isMonitoring)}
+          >
+            {isMonitoring ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+            {isMonitoring ? 'Pause Monitoring' : 'Start Monitoring'}
+          </Button>
+          <Button variant="outline" onClick={() => window.location.reload()}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      {/* GitHub Actions Integration Info */}
-      <Card className="border-blue-200 bg-blue-50/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-800">
-            <Activity className="h-5 w-5" />
-            GitHub Actions Integration Active
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-blue-700">
-          <p className="mb-2">
-            Autonomous agents are also triggered via GitHub Actions every 5 minutes for continuous development.
-          </p>
-          <div className="text-sm">
-            <div>✅ Automated code quality checks</div>
-            <div>✅ Performance monitoring triggers</div>
-            <div>✅ UI/UX improvement workflows</div>
-            <div>✅ Secure credential management</div>
+      {/* System Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Agents</CardTitle>
+            <Brain className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemMetrics.activeAgents}</div>
+            <p className="text-xs text-muted-foreground">
+              of {systemMetrics.totalAgents} total agents
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Portals Implemented</CardTitle>
+            <Globe className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemMetrics.implementedPortals}</div>
+            <p className="text-xs text-muted-foreground">
+              of {systemMetrics.totalPortals} total portals
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">System Health</CardTitle>
+            <Shield className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemMetrics.systemHealth}%</div>
+            <p className="text-xs text-muted-foreground">
+              Performance score: {systemMetrics.performanceScore}%
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Uptime</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemMetrics.uptime}%</div>
+            <p className="text-xs text-muted-foreground">
+              Last 30 days
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content Tabs */}
+      <Tabs defaultValue="agents" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="agents" className="flex items-center gap-2">
+            <Brain className="w-4 h-4" />
+            Agent Logs
+          </TabsTrigger>
+          <TabsTrigger value="portals" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            Portal Status
+          </TabsTrigger>
+          <TabsTrigger value="metrics" className="flex items-center gap-2">
+            <Monitor className="w-4 h-4" />
+            System Metrics
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="agents" className="space-y-4">
+          <div className="grid gap-4">
+            {agentLogs.map((log) => (
+              <Card key={log.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${getStatusColor(log.status)}`} />
+                        {log.agentName}
+                      </CardTitle>
+                      <CardDescription>{log.task}</CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                      <Badge className={getPriorityColor(log.priority)}>
+                        {log.priority}
+                      </Badge>
+                      <Badge variant="outline">
+                        {log.status}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Progress</span>
+                      <span>{log.progress}%</span>
+                    </div>
+                    <Progress value={log.progress} className="w-full" />
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <div className="font-medium">Success Rate</div>
+                      <div className="text-green-600">{log.metrics.successRate}%</div>
+                    </div>
+                    <div>
+                      <div className="font-medium">Error Rate</div>
+                      <div className="text-red-600">{log.metrics.errorRate}%</div>
+                    </div>
+                    <div>
+                      <div className="font-medium">Performance</div>
+                      <div className="text-blue-600">{log.metrics.performance}%</div>
+                    </div>
+                    <div>
+                      <div className="font-medium">Memory Usage</div>
+                      <div className="text-orange-600">{log.metrics.memoryUsage}%</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-medium mb-2">Recent Logs</div>
+                    <div className="bg-gray-50 p-3 rounded-md max-h-32 overflow-y-auto">
+                      {log.logs.slice(-3).map((logEntry, index) => (
+                        <div key={index} className="text-sm text-gray-600 mb-1">
+                          {logEntry}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
+
+        <TabsContent value="portals" className="space-y-4">
+          <div className="grid gap-4">
+            {portalStatus.map((portal) => (
+              <Card key={portal.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${getStatusColor(portal.status)}`} />
+                        {portal.name}
+                      </CardTitle>
+                      <CardDescription>
+                        Last updated: {new Date(portal.lastUpdated).toLocaleString()}
+                      </CardDescription>
+                    </div>
+                    <Badge className={getPortalStatusColor(portal.status)}>
+                      {portal.status}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Implementation Progress</span>
+                      <span>{portal.progress}%</span>
+                    </div>
+                    <Progress value={portal.progress} className="w-full" />
+                  </div>
+                  {portal.agentId && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      Assigned to: {portal.agentId}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="metrics" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Metrics</CardTitle>
+                <CardDescription>Real-time system performance indicators</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Response Time (P95)</span>
+                    <span>2.1s</span>
+                  </div>
+                  <Progress value={84} className="w-full" />
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Error Rate</span>
+                    <span>0.02%</span>
+                  </div>
+                  <Progress value={98} className="w-full" />
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Success Rate</span>
+                    <span>99.98%</span>
+                  </div>
+                  <Progress value={99.98} className="w-full" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Resource Usage</CardTitle>
+                <CardDescription>System resource consumption</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>CPU Usage</span>
+                    <span>45%</span>
+                  </div>
+                  <Progress value={45} className="w-full" />
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Memory Usage</span>
+                    <span>62%</span>
+                  </div>
+                  <Progress value={62} className="w-full" />
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Disk Usage</span>
+                    <span>28%</span>
+                  </div>
+                  <Progress value={28} className="w-full" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
-};
-
-export default AutonomousAgentDashboard;
+}
