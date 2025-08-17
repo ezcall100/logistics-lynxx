@@ -132,6 +132,8 @@ jobs:
         run: npm run test --if-present
 
       - name: 🏗️ Build
+        env:
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: npm run build
 
       - name: 📦 Package build artifact
@@ -171,15 +173,18 @@ jobs:
           SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}"
           OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
           N8N_API_KEY="${{ secrets.N8N_API_KEY }}"
+          GOOGLE_MAPS_API_KEY="${{ secrets.GOOGLE_MAPS_API_KEY }}"
 
           # Mask sensitive
           [[ -n "${OPENAI_API_KEY:-}" ]] && echo "::add-mask::$OPENAI_API_KEY"
           [[ -n "${N8N_API_KEY:-}" ]] && echo "::add-mask::$N8N_API_KEY"
+          [[ -n "${GOOGLE_MAPS_API_KEY:-}" ]] && echo "::add-mask::$GOOGLE_MAPS_API_KEY"
 
           # Hard-validate required deployment secrets
           [[ -n "${SUPABASE_URL:-}" ]] || { echo "❌ SUPABASE_URL missing"; exit 1; }
           [[ -n "${SUPABASE_ANON_KEY:-}" ]] || { echo "❌ SUPABASE_ANON_KEY missing"; exit 1; }
           [[ -n "${OPENAI_API_KEY:-}" ]] || { echo "❌ OPENAI_API_KEY missing"; exit 1; }
+          [[ -n "${GOOGLE_MAPS_API_KEY:-}" ]] || { echo "❌ GOOGLE_MAPS_API_KEY missing"; exit 1; }
 
           # Export for later steps
           {
@@ -188,6 +193,8 @@ jobs:
             echo "OPENAI_API_KEY=$OPENAI_API_KEY"
             echo "N8N_API_KEY=${N8N_API_KEY:-}"
             echo "N8N_BASE_URL=${N8N_BASE_URL:-}"
+            echo "GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY"
+            echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY"
           } >> "$GITHUB_ENV"
 
       - name: 🟢 Setup Node

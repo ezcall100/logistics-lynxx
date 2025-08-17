@@ -360,6 +360,7 @@ async function main() {
   await runMigration('20250101000000_access_control_v1.sql');
   await runMigration('20250101000001_access_control_seeds.sql');
   await runMigration('20250101000002_autonomous_agent_permissions.sql');
+  await runMigration('20250101000003_google_maps_integration.sql');
     
     // Verify setup
     console.log('\n🔍 Verifying setup...');

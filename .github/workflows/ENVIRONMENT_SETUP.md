@@ -15,6 +15,7 @@ Set these in your GitHub repository's **Settings > Environments > production**:
 | `N8N_ENABLED` | Enable/disable n8n integration | No | `true` or `false` |
 | `APP_URL` | Application URL for environment | Yes | `https://app.yourdomain.com` |
 | `ENVIRONMENT_NAME` | Environment name (defaults to 'production') | No | `staging`, `production` |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps API key for mapping features | Yes | `AIza...` |
 
 ### Required Secrets
 
@@ -26,6 +27,7 @@ Set these in your GitHub repository's **Settings > Secrets and variables > Actio
 | `OPENAI_API_KEY` | OpenAI API key for AI features | Yes | `sk-...` |
 | `SUPABASE_URL` | Supabase project URL | Yes | `https://project.supabase.co` |
 | `SUPABASE_ANON_KEY` | Supabase anonymous key | Yes | `eyJ...` |
+| `GOOGLE_MAPS_API_KEY` | Google Maps API key (for server-side operations) | Yes | `AIza...` |
 
 ## Environment-Specific Configuration
 
