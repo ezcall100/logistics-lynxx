@@ -235,3 +235,14 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
+
+// Keep the process alive
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  // Don't exit, just log the error
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit, just log the error
+});

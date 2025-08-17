@@ -170,6 +170,11 @@ class ContinuousAutonomousAgent {
         process.exit(0);
       });
       
+      // Keep the process alive indefinitely
+      setInterval(() => {
+        // Just keep the process running
+      }, 60000); // Check every minute
+      
     } catch (error) {
       this.log(`💥 Failed to start agent: ${error.message}`, 'error');
       process.exit(1);

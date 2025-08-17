@@ -37,7 +37,12 @@ try {
 
   // Wait for systems to stabilize
   console.log("⏳ Waiting for systems to stabilize...");
-  execSync("timeout 10 || sleep 10", { stdio: "ignore", shell: true });
+  try {
+    execSync("Start-Sleep -Seconds 15", { stdio: "ignore", shell: true });
+  } catch (e) {
+    // Fallback for non-PowerShell environments
+    execSync("sleep 15", { stdio: "ignore", shell: true });
+  }
 
   // 3) Health/Ready — fail build if red
   console.log("\n🏥 Step 3: Health & Readiness Check");
