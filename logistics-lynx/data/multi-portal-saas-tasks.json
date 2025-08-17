@@ -6,6 +6,155 @@
     "dependencies": [],
     "tasks": [
       {
+        "id": "access.control.v1",
+        "title": "User Control & Access Control (RBAC + ABAC + Entitlements)",
+        "description": "Implement production-grade access control system with tenant isolation, RBAC, ABAC, plan entitlements, temporary elevation, audits, and API access",
+        "priority": "critical",
+        "category": "security",
+        "estimated_hours": 40,
+        "acceptance_criteria": [
+          "Portal cards reflect entitlements; locked states offer upgrade",
+          "API enforces entitlements + permissions + ABAC (LoB/region)",
+          "Temporary elevation works end-to-end with auto-revoke",
+          "Audit & reports generated; tests pass",
+          "Tenant-first isolation with org_id + RLS everywhere",
+          "Least privilege by default; deny by default",
+          "Everything is auditable (who/what/when/why)"
+        ],
+        "implementation_steps": [
+          "1. Database Schema & Seeding",
+          "2. RBAC System Implementation",
+          "3. ABAC System Implementation",
+          "4. Entitlement Integration",
+          "5. Middleware & Enforcement",
+          "6. Frontend Access Control",
+          "7. Temporary Elevation System",
+          "8. Service Accounts & API Keys",
+          "9. Audit & Reporting",
+          "10. Testing & Validation"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000011_access_control_schema.sql",
+          "supabase/seed/roles_permissions.sql",
+          "src/types/access-control.ts",
+          "src/constants/roles-permissions.ts",
+          "src/middleware/access-control.ts",
+          "src/middleware/abac.ts",
+          "src/api/access-control/roles.ts",
+          "src/api/access-control/permissions.ts",
+          "src/api/access-control/elevation.ts",
+          "src/components/access-control/FeatureGate.tsx",
+          "src/components/access-control/PermissionGate.tsx",
+          "src/components/access-control/AccessControlCenter.tsx",
+          "src/components/access-control/TemporaryAccess.tsx",
+          "src/components/access-control/ApiKeyManager.tsx",
+          "src/services/access-control.ts",
+          "src/hooks/useAccessControl.ts",
+          "src/utils/audit-logger.ts",
+          "src/utils/access-validator.ts"
+        ],
+        "files_to_modify": [
+          "src/App.tsx",
+          "src/components/PortalDashboards.tsx",
+          "src/api/routes.ts",
+          "src/middleware/auth.ts",
+          "src/services/entitlements.ts"
+        ],
+        "technical_specifications": {
+          "principles": {
+            "tenant_first": "Tenant-first isolation (org_id + RLS everywhere)",
+            "least_privilege": "Least privilege by default; deny by default",
+            "two_dimensions": "Who you are (role/permissions) + What you paid for (plan/licensing)",
+            "one_enforcement": "UI hints for UX, server is the source of truth",
+            "auditable": "Everything is auditable (who/what/when/why)"
+          },
+          "default_roles": [
+            "owner", "admin", "broker_admin", "shipper_admin", "carrier_admin",
+            "driver", "analyst", "ops", "billing_admin", "auditor", "read_only"
+          ],
+          "permission_verbs": [
+            "read", "create", "update", "delete", "manage", "approve", "export", "configure"
+          ],
+          "permission_resources": [
+            "portal", "load", "tender", "rate", "invoice", "payment", "document", "user", "api_key", "feature_flag"
+          ],
+          "database_schema": {
+            "roles_table": "key (primary), description",
+            "permissions_table": "key (primary), resource, action",
+            "role_permissions_table": "role_key, permission_key (composite primary key)",
+            "custom_roles_table": "id, org_id, key, label",
+            "custom_role_permissions_table": "custom_role_id, permission_key",
+            "permission_scopes_table": "id, org_id, subject_type, subject_key, attribute (jsonb)",
+            "access_requests_table": "org_id, user_id, requested_permissions[], reason, status, expires_at"
+          },
+          "api_endpoints": [
+            "GET /api/access-control/roles",
+            "POST /api/access-control/permissions",
+            "POST /api/access-control/elevation/request",
+            "POST /api/access-control/elevation/approve",
+            "GET /api/access-control/audit"
+          ]
+        },
+        "ui_requirements": {
+          "feature_gate": [
+            "Wrap panels with FeatureGate component",
+            "Show upgrade CTA for locked features",
+            "Inline locked state with missing requirements",
+            "Just-In-Time access request flow"
+          ],
+          "permission_gate": [
+            "Wrap components with PermissionGate",
+            "Show permission requirements",
+            "Request access workflow",
+            "Temporary elevation indicators"
+          ],
+          "access_control_center": [
+            "People management interface",
+            "Roles and custom roles management",
+            "Temporary access requests and approvals",
+            "API key management",
+            "Audit log viewer"
+          ]
+        },
+        "business_logic": {
+          "rbac_system": {
+            "role_based_access": "Users have roles that grant permissions",
+            "custom_roles": "Organizations can create custom roles",
+            "permission_inheritance": "Roles inherit permissions from base roles",
+            "role_assignment": "Users can have multiple roles per organization"
+          },
+          "abac_system": {
+            "attribute_based": "Access controlled by attributes (LoB, region, etc.)",
+            "dynamic_scoping": "Permissions can be scoped by business attributes",
+            "context_aware": "Access decisions based on request context"
+          },
+          "entitlement_integration": {
+            "plan_based": "Features available based on subscription plan",
+            "addon_based": "Additional features through add-ons",
+            "usage_based": "Features with usage quotas and limits"
+          },
+          "temporary_elevation": {
+            "request_workflow": "User requests → approver approves → time-boxed grant",
+            "auto_revoke": "Automatic revocation after expiration",
+            "break_glass": "Emergency access with extra MFA and notifications"
+          }
+        },
+        "testing_scenarios": [
+          "Free org: cannot open /analytics (UI locked, API 402)",
+          "Pro org: can open /analytics, but cannot export invoices without invoice.export (403)",
+          "Enterprise org + ocean add-on: can create Ocean loads (200), others denied by LoB ABAC",
+          "Temporary elevation: grant invoice.export for 2h → succeeds then auto-revokes",
+          "API key with load.read only: list loads OK, create returns 403"
+        ],
+        "monitoring_requirements": [
+          "Log every allow/deny decision with full context",
+          "Quarterly access reviews with attestation reports",
+          "Daily evidence packs stored as JSON",
+          "Real-time access violation alerts",
+          "Performance monitoring for access control overhead"
+        ]
+      },
+      {
         "id": "lob.configure.v1",
         "title": "Lines of Business (LoB) Configuration System",
         "description": "Implement comprehensive LoB configuration for multi-modal transportation management with declarative rules, portal mapping, and workflow automation",
@@ -907,6 +1056,15 @@
         "API 402 when not entitled for specific LoBs",
         "All LoB compliance requirements implemented",
         "p95 & success SLOs pass for all LoB operations"
+      ],
+      "access_control": [
+        "Portal cards reflect entitlements; locked states offer upgrade",
+        "API enforces entitlements + permissions + ABAC (LoB/region)",
+        "Temporary elevation works end-to-end with auto-revoke",
+        "Audit & reports generated; tests pass",
+        "Tenant-first isolation with org_id + RLS everywhere",
+        "Least privilege by default; deny by default",
+        "Everything is auditable (who/what/when/why)"
       ]
     },
     "technical_requirements": [
@@ -924,7 +1082,10 @@
       "CAPTCHA and rate limiting for public endpoints",
       "LoB configuration and validation system",
       "Multi-modal transportation management",
-      "Compliance and documentation management"
+      "Compliance and documentation management",
+      "RBAC and ABAC access control systems",
+      "Temporary elevation and approval workflows",
+      "Comprehensive audit logging and reporting"
     ],
     "design_authority": {
       "full_ui_ux_redesign": true,
@@ -938,8 +1099,8 @@
       "accessibility_improvements": true
     },
     "dependencies": [],
-    "estimated_total_hours": 190,
+    "estimated_total_hours": 230,
     "risk_level": "medium",
-    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority, comprehensive signup flow, and advanced Lines of Business configuration. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience. The LoB system is essential for multi-modal transportation management."
+    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority, comprehensive signup flow, advanced Lines of Business configuration, and production-grade access control. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience. The access control system is essential for security and compliance."
   }
 }
