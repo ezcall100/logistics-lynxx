@@ -7,7 +7,8 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
-      jsxImportSource: 'react'
+      jsxImportSource: 'react',
+      plugins: []
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
@@ -28,8 +29,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  esbuild: {
-    jsx: 'automatic',
-    jsxImportSource: 'react',
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
   },
 }));
