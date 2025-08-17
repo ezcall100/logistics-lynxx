@@ -16,6 +16,7 @@ import {
   ShipperDashboard, DriverDashboard, OwnerOperatorDashboard, SuperAdminDashboard
 } from './components/PortalDashboards';
 import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard';
+import LogisticsManagementDashboard from './pages/LogisticsManagementDashboard';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -599,7 +600,8 @@ function App() {
                       { name: 'Directory', icon: '📚', path: '/directory', color: '#64748b' },
                       { name: 'EDI', icon: '📡', path: '/edi', color: '#7c3aed' },
                       { name: 'Marketplace', icon: '🛒', path: '/marketplace', color: '#f97316' },
-                      { name: 'Testing', icon: '🧪', path: '/testing', color: '#84cc16' }
+                      { name: 'Testing', icon: '🧪', path: '/testing', color: '#84cc16' },
+                      { name: 'Logistics Management', icon: '📦', path: '/logistics-management', color: '#059669' }
                     ].map((portal, index) => (
                       <Link key={index} to={portal.path} className="portal-card" style={{
                         backgroundColor: 'white',
@@ -801,6 +803,13 @@ function App() {
             <PortalLayout portalType="software-company" title="👨‍💻 Software Company Portal" description="Software development and product management">
               <SoftwareCompanyDashboard />
             </PortalLayout>
+          } />
+
+          {/* Logistics Management Dashboard */}
+          <Route path="/logistics-management" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <LogisticsManagementDashboard />
+            </div>
           } />
         </Routes>
       </div>
