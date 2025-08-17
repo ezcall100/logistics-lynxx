@@ -4,6 +4,279 @@ import './App.css';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Sidebar menu structure for portals
+  const portalMenus = {
+    carrier: [
+      { name: 'Dashboard', icon: '📊', path: '/carrier/dashboard' },
+      { name: 'Fleet Management', icon: '🚛', submenu: [
+        { name: 'Vehicles', path: '/carrier/vehicles' },
+        { name: 'Drivers', path: '/carrier/drivers' },
+        { name: 'Maintenance', path: '/carrier/maintenance' }
+      ]},
+      { name: 'Load Management', icon: '📦', submenu: [
+        { name: 'Available Loads', path: '/carrier/loads' },
+        { name: 'Active Loads', path: '/carrier/active-loads' },
+        { name: 'Completed Loads', path: '/carrier/completed-loads' }
+      ]},
+      { name: 'Route Optimization', icon: '🗺️', path: '/carrier/routes' },
+      { name: 'Reports', icon: '📈', path: '/carrier/reports' },
+      { name: 'Settings', icon: '⚙️', path: '/carrier/settings' }
+    ],
+    broker: [
+      { name: 'Dashboard', icon: '📊', path: '/broker/dashboard' },
+      { name: 'Load Board', icon: '📋', submenu: [
+        { name: 'Available Loads', path: '/broker/loads' },
+        { name: 'Post Load', path: '/broker/post-load' },
+        { name: 'Load History', path: '/broker/load-history' }
+      ]},
+      { name: 'Carrier Network', icon: '🚛', submenu: [
+        { name: 'Carriers', path: '/broker/carriers' },
+        { name: 'Add Carrier', path: '/broker/add-carrier' },
+        { name: 'Carrier Ratings', path: '/broker/carrier-ratings' }
+      ]},
+      { name: 'Rate Management', icon: '💰', path: '/broker/rates' },
+      { name: 'Analytics', icon: '📈', path: '/broker/analytics' },
+      { name: 'Settings', icon: '⚙️', path: '/broker/settings' }
+    ],
+    autonomous: [
+      { name: 'AI Dashboard', icon: '🤖', path: '/autonomous/dashboard' },
+      { name: 'Agent Management', icon: '👥', submenu: [
+        { name: 'Active Agents', path: '/autonomous/agents' },
+        { name: 'Agent Performance', path: '/autonomous/performance' },
+        { name: 'Agent Logs', path: '/autonomous/logs' }
+      ]},
+      { name: 'System Monitoring', icon: '📊', submenu: [
+        { name: 'Real-time Metrics', path: '/autonomous/metrics' },
+        { name: 'System Health', path: '/autonomous/health' },
+        { name: 'Alert Management', path: '/autonomous/alerts' }
+      ]},
+      { name: 'Development', icon: '💻', submenu: [
+        { name: 'Code Changes', path: '/autonomous/code' },
+        { name: 'Deployments', path: '/autonomous/deployments' },
+        { name: 'Testing', path: '/autonomous/testing' }
+      ]},
+      { name: 'Configuration', icon: '⚙️', path: '/autonomous/config' }
+    ],
+    analytics: [
+      { name: 'Overview', icon: '📊', path: '/analytics/overview' },
+      { name: 'Performance', icon: '📈', submenu: [
+        { name: 'Business Metrics', path: '/analytics/business' },
+        { name: 'Operational KPIs', path: '/analytics/operational' },
+        { name: 'Financial Reports', path: '/analytics/financial' }
+      ]},
+      { name: 'Data Insights', icon: '🔍', submenu: [
+        { name: 'Trend Analysis', path: '/analytics/trends' },
+        { name: 'Predictive Analytics', path: '/analytics/predictive' },
+        { name: 'Custom Reports', path: '/analytics/custom' }
+      ]},
+      { name: 'Export', icon: '📤', path: '/analytics/export' }
+    ]
+  };
+
+  const Sidebar = ({ portalType, currentPath }) => {
+    const [expandedMenus, setExpandedMenus] = useState({});
+    const menu = portalMenus[portalType] || [];
+
+    const toggleMenu = (menuName) => {
+      setExpandedMenus(prev => ({
+        ...prev,
+        [menuName]: !prev[menuName]
+      }));
+    };
+
+    return (
+      <div style={{
+        width: sidebarOpen ? '280px' : '60px',
+        backgroundColor: '#1e293b',
+        color: 'white',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        zIndex: 100,
+        transition: 'width 0.3s ease',
+        overflowY: 'auto',
+        '@media (max-width: 768px)': {
+          transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+          width: '280px'
+        }
+      }}>
+        {/* Sidebar Header */}
+        <div style={{
+          padding: '1rem',
+          borderBottom: '1px solid #334155',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          {sidebarOpen && (
+            <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
+              {portalType.charAt(0).toUpperCase() + portalType.slice(1)} Portal
+            </h2>
+          )}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '1.25rem',
+              padding: '0.5rem'
+            }}
+          >
+            {sidebarOpen ? '◀' : '▶'}
+          </button>
+        </div>
+
+        {/* Navigation Menu */}
+        <nav style={{ padding: '1rem 0' }}>
+          {menu.map((item, index) => (
+            <div key={index}>
+              {item.submenu ? (
+                <div>
+                  <button
+                    onClick={() => toggleMenu(item.name)}
+                    style={{
+                      width: '100%',
+                      background: 'none',
+                      border: 'none',
+                      color: 'white',
+                      padding: '0.75rem 1rem',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      fontSize: '0.875rem',
+                      '&:hover': { backgroundColor: '#334155' }
+                    }}
+                  >
+                    <span>{item.icon}</span>
+                    {sidebarOpen && (
+                      <>
+                        <span style={{ flex: 1 }}>{item.name}</span>
+                        <span>{expandedMenus[item.name] ? '▼' : '▶'}</span>
+                      </>
+                    )}
+                  </button>
+                  {expandedMenus[item.name] && sidebarOpen && (
+                    <div style={{ backgroundColor: '#0f172a' }}>
+                      {item.submenu.map((subItem, subIndex) => (
+                        <Link
+                          key={subIndex}
+                          to={subItem.path}
+                          style={{
+                            display: 'block',
+                            padding: '0.5rem 1rem 0.5rem 3rem',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontSize: '0.8rem',
+                            '&:hover': { backgroundColor: '#334155' }
+                          }}
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to={item.path}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.75rem 1rem',
+                    color: 'white',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    '&:hover': { backgroundColor: '#334155' }
+                  }}
+                >
+                  <span>{item.icon}</span>
+                  {sidebarOpen && <span>{item.name}</span>}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    );
+  };
+
+  const PortalLayout = ({ children, portalType, title, description }) => (
+    <div style={{ display: 'flex' }}>
+      <Sidebar portalType={portalType} />
+      
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 50,
+            '@media (min-width: 769px)': { display: 'none' }
+          }}
+        />
+      )}
+
+      {/* Main content */}
+      <div style={{
+        marginLeft: sidebarOpen ? '280px' : '60px',
+        flex: 1,
+        transition: 'margin-left 0.3s ease',
+        '@media (max-width: 768px)': {
+          marginLeft: 0
+        }
+      }}>
+        {/* Top bar */}
+        <div style={{
+          backgroundColor: 'white',
+          padding: '1rem 2rem',
+          borderBottom: '1px solid #e2e8f0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.875rem', color: '#1e40af' }}>
+              {title}
+            </h1>
+            <p style={{ margin: '0.25rem 0 0 0', color: '#64748b' }}>
+              {description}
+            </p>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              display: 'none',
+              background: 'none',
+              border: 'none',
+              fontSize: '1.5rem',
+              cursor: 'pointer',
+              '@media (max-width: 768px)': { display: 'block' }
+            }}
+          >
+            ☰
+          </button>
+        </div>
+
+        {/* Page content */}
+        <div style={{ padding: '2rem' }}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <Router>
@@ -29,11 +302,7 @@ function App() {
             </div>
             
             {/* Desktop Navigation */}
-            <div style={{ 
-              display: 'flex', 
-              gap: '1rem',
-              '@media (max-width: 768px)': { display: 'none' }
-            }}>
+            <div className="desktop-nav" style={{ display: 'flex', gap: '1rem' }}>
               <Link to="/" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Home</Link>
               <Link to="/autonomous" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>AI Dashboard</Link>
               <Link to="/analytics" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Analytics</Link>
@@ -41,6 +310,7 @@ function App() {
 
             {/* Mobile Menu Button */}
             <button 
+              className="mobile-menu-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               style={{
                 display: 'none',
@@ -48,8 +318,7 @@ function App() {
                 border: 'none',
                 color: 'white',
                 fontSize: '1.5rem',
-                cursor: 'pointer',
-                '@media (max-width: 768px)': { display: 'block' }
+                cursor: 'pointer'
               }}
             >
               {mobileMenuOpen ? '✕' : '☰'}
@@ -58,15 +327,7 @@ function App() {
 
           {/* Mobile Navigation Menu */}
           {mobileMenuOpen && (
-            <div style={{
-              display: 'none',
-              '@media (max-width: 768px)': {
-                display: 'block',
-                paddingTop: '1rem',
-                borderTop: '1px solid rgba(255,255,255,0.2)',
-                marginTop: '1rem'
-              }
-            }}>
+            <div className="mobile-menu">
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -123,15 +384,11 @@ function App() {
                       marginBottom: '1rem', 
                       color: '#1e40af' 
                     }}>✅ System Status</h2>
-                    <div style={{ 
+                    <div className="status-grid" style={{ 
                       textAlign: 'left', 
                       display: 'grid', 
                       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-                      gap: '1rem',
-                      '@media (max-width: 768px)': {
-                        gridTemplateColumns: '1fr',
-                        gap: '0.75rem'
-                      }
+                      gap: '1rem'
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span style={{
@@ -193,18 +450,10 @@ function App() {
                     color: '#1e40af',
                     textAlign: 'center'
                   }}>🌐 Access All Portals</h2>
-                  <div style={{
+                  <div className="portal-grid" style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                    gap: 'clamp(0.75rem, 2vw, 1rem)',
-                    '@media (max-width: 640px)': {
-                      gridTemplateColumns: '1fr',
-                      gap: '0.75rem'
-                    },
-                    '@media (min-width: 641px) and (max-width: 1024px)': {
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                      gap: '1rem'
-                    }
+                    gap: 'clamp(0.75rem, 2vw, 1rem)'
                   }}>
                     {[
                       { name: 'Carrier Portal', icon: '🚛', path: '/carrier', color: '#3b82f6' },
@@ -227,7 +476,7 @@ function App() {
                       { name: 'Marketplace', icon: '🛒', path: '/marketplace', color: '#f97316' },
                       { name: 'Testing', icon: '🧪', path: '/testing', color: '#84cc16' }
                     ].map((portal, index) => (
-                      <Link key={index} to={portal.path} style={{
+                      <Link key={index} to={portal.path} className="portal-card" style={{
                         backgroundColor: 'white',
                         padding: 'clamp(1rem, 3vw, 1.5rem)',
                         borderRadius: '0.5rem',
@@ -239,11 +488,7 @@ function App() {
                         gap: 'clamp(0.5rem, 2vw, 1rem)',
                         transition: 'transform 0.2s, box-shadow 0.2s',
                         borderLeft: `4px solid ${portal.color}`,
-                        minHeight: '80px',
-                        '@media (max-width: 640px)': {
-                          padding: '1rem',
-                          gap: '0.75rem'
-                        }
+                        minHeight: '80px'
                       }} onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
                         e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
@@ -277,102 +522,66 @@ function App() {
             </div>
           } />
           
-          {/* Enhanced Portal Pages */}
-          <Route path="/carrier" element={
-            <div style={{
-              padding: 'clamp(1rem, 4vw, 2rem)', 
-              maxWidth: '1200px', 
-              margin: '0 auto'
-            }}>
-              <h1 style={{
-                fontSize: 'clamp(2rem, 6vw, 2.5rem)', 
-                color: '#1e40af', 
-                marginBottom: '1rem',
-                lineHeight: '1.2'
-              }}>🚛 Carrier Portal</h1>
-              <p style={{
-                fontSize: 'clamp(1rem, 3vw, 1.2rem)', 
-                color: '#64748b', 
-                marginBottom: '2rem',
-                lineHeight: '1.4'
-              }}>Fleet management and operations dashboard</p>
-              <div style={{
-                backgroundColor: 'white', 
-                padding: 'clamp(1rem, 4vw, 2rem)', 
-                borderRadius: '0.5rem', 
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-              }}>
+          {/* Portal Pages with Sidebar */}
+          <Route path="/carrier/*" element={
+            <PortalLayout portalType="carrier" title="🚛 Carrier Portal" description="Fleet management and operations dashboard">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
                 <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>Fleet Operations</h2>
                 <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Manage your fleet, drivers, routes, and loads efficiently.</p>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
+                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
+                    <h3>Active Vehicles</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1e40af' }}>24</p>
+                  </div>
+                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
+                    <h3>Active Drivers</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1e40af' }}>18</p>
+                  </div>
+                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
+                    <h3>Active Loads</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1e40af' }}>12</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </PortalLayout>
           } />
           
-          <Route path="/broker" element={
-            <div style={{
-              padding: 'clamp(1rem, 4vw, 2rem)', 
-              maxWidth: '1200px', 
-              margin: '0 auto'
-            }}>
-              <h1 style={{
-                fontSize: 'clamp(2rem, 6vw, 2.5rem)', 
-                color: '#1e40af', 
-                marginBottom: '1rem',
-                lineHeight: '1.2'
-              }}>🏢 Broker Portal</h1>
-              <p style={{
-                fontSize: 'clamp(1rem, 3vw, 1.2rem)', 
-                color: '#64748b', 
-                marginBottom: '2rem',
-                lineHeight: '1.4'
-              }}>Smart load matching and rate optimization</p>
-              <div style={{
-                backgroundColor: 'white', 
-                padding: 'clamp(1rem, 4vw, 2rem)', 
-                borderRadius: '0.5rem', 
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-              }}>
+          <Route path="/broker/*" element={
+            <PortalLayout portalType="broker" title="🏢 Broker Portal" description="Smart load matching and rate optimization">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
                 <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>Load Management</h2>
                 <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Match loads with carriers and optimize rates using AI.</p>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
+                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
+                    <h3>Available Loads</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>156</p>
+                  </div>
+                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
+                    <h3>Active Carriers</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>89</p>
+                  </div>
+                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
+                    <h3>Match Rate</h3>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>96.7%</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </PortalLayout>
           } />
           
-          <Route path="/autonomous" element={
-            <div style={{
-              padding: 'clamp(1rem, 4vw, 2rem)', 
-              maxWidth: '1200px', 
-              margin: '0 auto'
-            }}>
-              <h1 style={{
-                fontSize: 'clamp(2rem, 6vw, 2.5rem)', 
-                color: '#1e40af', 
-                marginBottom: '1rem',
-                lineHeight: '1.2'
-              }}>🤖 Autonomous Portal</h1>
-              <p style={{
-                fontSize: 'clamp(1rem, 3vw, 1.2rem)', 
-                color: '#64748b', 
-                marginBottom: '2rem',
-                lineHeight: '1.4'
-              }}>24/7 No-Human Operations Control Center</p>
-              <div style={{
-                backgroundColor: 'white', 
-                padding: 'clamp(1rem, 4vw, 2rem)', 
-                borderRadius: '0.5rem', 
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-              }}>
+          <Route path="/autonomous/*" element={
+            <PortalLayout portalType="autonomous" title="🤖 Autonomous Portal" description="24/7 No-Human Operations Control Center">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
                 <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>AI Agent Dashboard</h2>
                 <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Monitor 250+ autonomous agents in real-time.</p>
-                <div style={{
+                
+                <div className="agent-grid" style={{
                   display: 'grid', 
                   gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
                   gap: '1rem', 
-                  marginTop: '1rem',
-                  '@media (max-width: 640px)': {
-                    gridTemplateColumns: '1fr',
-                    gap: '0.75rem'
-                  }
+                  marginTop: '1rem'
                 }}>
                   <div style={{
                     padding: 'clamp(0.75rem, 2vw, 1rem)', 
@@ -400,105 +609,152 @@ function App() {
                   </div>
                 </div>
               </div>
-            </div>
+            </PortalLayout>
           } />
           
-          {/* Other portal routes with enhanced responsive styling */}
-          <Route path="/shipper" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>📦 Shipper Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Shipment tracking and logistics management</p>
-            </div>
+          <Route path="/analytics/*" element={
+            <PortalLayout portalType="analytics" title="📊 Analytics Portal" description="Business intelligence and performance analytics">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>Business Intelligence</h2>
+                <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Comprehensive analytics and insights for your business.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/driver" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>🚗 Driver Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Personalized driving command center</p>
-            </div>
+          
+          {/* Other portal routes with basic layout */}
+          <Route path="/shipper/*" element={
+            <PortalLayout portalType="shipper" title="📦 Shipper Portal" description="Shipment tracking and logistics management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Shipment Management</h2>
+                <p>Track and manage your shipments efficiently.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/owner-operator" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>🚚 Owner Operator Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Independent trucking business management</p>
-            </div>
+          
+          <Route path="/driver/*" element={
+            <PortalLayout portalType="driver" title="🚗 Driver Portal" description="Personalized driving command center">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Driver Dashboard</h2>
+                <p>Access your routes, loads, and driving information.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/super-admin" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>👑 Super Admin Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Global command center with AI-powered oversight</p>
-            </div>
+          
+          <Route path="/owner-operator/*" element={
+            <PortalLayout portalType="owner-operator" title="🚚 Owner Operator Portal" description="Independent trucking business management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Business Management</h2>
+                <p>Manage your independent trucking business.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/analytics" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>📊 Analytics Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Business intelligence and performance analytics</p>
-            </div>
+          
+          <Route path="/super-admin/*" element={
+            <PortalLayout portalType="super-admin" title="👑 Super Admin Portal" description="Global command center with AI-powered oversight">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>System Administration</h2>
+                <p>Complete system control and oversight.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/admin" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>⚙️ Admin Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>System administration and configuration</p>
-            </div>
+          
+          <Route path="/admin/*" element={
+            <PortalLayout portalType="admin" title="⚙️ Admin Portal" description="System administration and configuration">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Administration</h2>
+                <p>System configuration and management.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/factoring" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>💰 Factoring Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Financial services and invoice factoring</p>
-            </div>
+          
+          <Route path="/factoring/*" element={
+            <PortalLayout portalType="factoring" title="💰 Factoring Portal" description="Financial services and invoice factoring">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Invoice Factoring</h2>
+                <p>Manage your factoring services and payments.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/financials" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>💳 Financials Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Financial management and reporting</p>
-            </div>
+          
+          <Route path="/financials/*" element={
+            <PortalLayout portalType="financials" title="💳 Financials Portal" description="Financial management and reporting">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Financial Management</h2>
+                <p>Comprehensive financial reporting and management.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/rates" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>💰 Rates Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Rate management and pricing optimization</p>
-            </div>
+          
+          <Route path="/rates/*" element={
+            <PortalLayout portalType="rates" title="💰 Rates Portal" description="Rate management and pricing optimization">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Rate Management</h2>
+                <p>Optimize your pricing and rate strategies.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/load-board" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>📋 Load Board</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Real-time load matching and dispatch</p>
-            </div>
+          
+          <Route path="/load-board/*" element={
+            <PortalLayout portalType="load-board" title="📋 Load Board" description="Real-time load matching and dispatch">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Load Board</h2>
+                <p>Real-time load matching and dispatch system.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/workers" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>👷 Workers Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Workforce and resource management</p>
-            </div>
+          
+          <Route path="/workers/*" element={
+            <PortalLayout portalType="workers" title="👷 Workers Portal" description="Workforce and resource management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Workforce Management</h2>
+                <p>Manage your workforce and resources effectively.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/crm" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>👥 CRM Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Customer relationship and lead management</p>
-            </div>
+          
+          <Route path="/crm/*" element={
+            <PortalLayout portalType="crm" title="👥 CRM Portal" description="Customer relationship and lead management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Customer Relationship Management</h2>
+                <p>Manage customer relationships and leads.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/directory" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>📚 Directory Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Business directory and network management</p>
-            </div>
+          
+          <Route path="/directory/*" element={
+            <PortalLayout portalType="directory" title="📚 Directory Portal" description="Business directory and network management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Business Directory</h2>
+                <p>Access and manage business network directory.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/edi" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>📡 EDI Portal</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Electronic data interchange management</p>
-            </div>
+          
+          <Route path="/edi/*" element={
+            <PortalLayout portalType="edi" title="📡 EDI Portal" description="Electronic data interchange management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>EDI Management</h2>
+                <p>Manage electronic data interchange processes.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/marketplace" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>🛒 Marketplace</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>TMS marketplace and integrations</p>
-            </div>
+          
+          <Route path="/marketplace/*" element={
+            <PortalLayout portalType="marketplace" title="🛒 Marketplace" description="TMS marketplace and integrations">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>TMS Marketplace</h2>
+                <p>Access integrations and services marketplace.</p>
+              </div>
+            </PortalLayout>
           } />
-          <Route path="/testing" element={
-            <div style={{padding: 'clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto'}}>
-              <h1 style={{fontSize: 'clamp(2rem, 6vw, 2.5rem)', color: '#1e40af', lineHeight: '1.2'}}>🧪 Testing Center</h1>
-              <p style={{fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.4'}}>Development and testing environment</p>
-            </div>
+          
+          <Route path="/testing/*" element={
+            <PortalLayout portalType="testing" title="🧪 Testing Center" description="Development and testing environment">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Testing Environment</h2>
+                <p>Development and testing tools and utilities.</p>
+              </div>
+            </PortalLayout>
           } />
         </Routes>
       </div>
