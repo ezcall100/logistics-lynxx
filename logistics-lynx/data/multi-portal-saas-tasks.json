@@ -1,0 +1,622 @@
+{
+  "multi_portal_saas_implementation": {
+    "overview": "Implement comprehensive multi-portal SaaS architecture with portal-level and feature-level gating, quotas, and pricing",
+    "priority": "critical",
+    "estimated_duration": "2-3 weeks",
+    "dependencies": [],
+    "tasks": [
+      {
+        "id": "saas.portals.catalog.seed",
+        "title": "Seed Portal Catalog and Feature Mapping",
+        "description": "Create database schema and seed data for 20 portals with feature classification",
+        "priority": "high",
+        "category": "database",
+        "estimated_hours": 4,
+        "acceptance_criteria": [
+          "portals table created with 20 canonical portals",
+          "portal_features table created with core/premium/addon classification",
+          "All 20 portals seeded with proper titles and paths",
+          "Feature mapping completed for all portals",
+          "Database constraints and relationships properly defined"
+        ],
+        "implementation_steps": [
+          "Create portals table schema",
+          "Create portal_features table schema",
+          "Seed 20 portal definitions",
+          "Define feature classification for each portal",
+          "Add database constraints and indexes",
+          "Test portal access resolution functions"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000003_multi_portal_saas.sql",
+          "supabase/seed/portal_catalog.sql"
+        ]
+      },
+      {
+        "id": "saas.plans.components.seed",
+        "title": "Implement Plan Components and Quotas",
+        "description": "Create plan_components table with quotas and caps for different subscription tiers",
+        "priority": "high",
+        "category": "database",
+        "estimated_hours": 3,
+        "acceptance_criteria": [
+          "plan_components table created with proper structure",
+          "Free tier quotas defined (1,000 ops/month per core feature)",
+          "Professional tier quotas defined (5,000-10,000 ops/month)",
+          "Enterprise tier quotas defined (unlimited for most features)",
+          "Soft caps and hard caps properly configured"
+        ],
+        "implementation_steps": [
+          "Create plan_components table schema",
+          "Define quota structure for each plan tier",
+          "Configure soft caps and hard caps",
+          "Seed plan component data",
+          "Test quota enforcement logic"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000004_plan_components.sql",
+          "supabase/seed/plan_components.sql"
+        ]
+      },
+      {
+        "id": "saas.pricing.seed",
+        "title": "Implement Pricing Components",
+        "description": "Create price_components table with flexible pricing (flat/seat/usage tiers)",
+        "priority": "high",
+        "category": "database",
+        "estimated_hours": 3,
+        "acceptance_criteria": [
+          "price_components table created with proper structure",
+          "Flat pricing defined for premium features",
+          "Seat-based pricing defined for user-based features",
+          "Usage-based pricing tiers defined for metered features",
+          "Pricing data seeded for all feature types"
+        ],
+        "implementation_steps": [
+          "Create price_components table schema",
+          "Define pricing structure for different component types",
+          "Configure usage tiers for metered features",
+          "Seed pricing data",
+          "Test pricing calculation logic"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000005_pricing_components.sql",
+          "supabase/seed/pricing_components.sql"
+        ]
+      },
+      {
+        "id": "saas.portalgate.api",
+        "title": "Implement Portal Access Middleware",
+        "description": "Add requirePortal() middleware to all portal server routes",
+        "priority": "high",
+        "category": "backend",
+        "estimated_hours": 6,
+        "acceptance_criteria": [
+          "requirePortal middleware function implemented",
+          "All portal routes protected with portal access checks",
+          "Proper error responses for unauthorized access",
+          "Integration with organization authentication",
+          "Performance optimized for frequent access checks"
+        ],
+        "implementation_steps": [
+          "Create requirePortal middleware function",
+          "Integrate with existing authentication system",
+          "Apply middleware to all portal routes",
+          "Implement proper error handling",
+          "Add performance monitoring",
+          "Test portal access enforcement"
+        ],
+        "files_to_create": [
+          "src/middleware/portal-gate.ts",
+          "src/middleware/auth.ts"
+        ],
+        "files_to_modify": [
+          "src/api/routes.ts",
+          "src/pages/**/*.tsx"
+        ]
+      },
+      {
+        "id": "saas.feature.quota.api",
+        "title": "Implement Feature Quota Middleware",
+        "description": "Add requireFeatureWithQuota() middleware for sensitive endpoints",
+        "priority": "high",
+        "category": "backend",
+        "estimated_hours": 8,
+        "acceptance_criteria": [
+          "requireFeatureWithQuota middleware implemented",
+          "Usage tracking integrated with quota enforcement",
+          "Soft caps trigger warnings, hard caps block access",
+          "Usage events properly recorded",
+          "Quota calculations accurate and efficient"
+        ],
+        "implementation_steps": [
+          "Create requireFeatureWithQuota middleware",
+          "Implement usage tracking system",
+          "Add quota calculation logic",
+          "Integrate with billing system",
+          "Apply middleware to sensitive endpoints",
+          "Test quota enforcement and usage tracking"
+        ],
+        "files_to_create": [
+          "src/middleware/feature-quota.ts",
+          "src/services/usage-tracking.ts"
+        ],
+        "files_to_modify": [
+          "src/api/routes.ts",
+          "src/services/billing.ts"
+        ]
+      },
+      {
+        "id": "saas.portalselect.api",
+        "title": "Build Portal Selection API",
+        "description": "Create /api/me/portals endpoint returning access state for each portal",
+        "priority": "medium",
+        "category": "backend",
+        "estimated_hours": 4,
+        "acceptance_criteria": [
+          "/api/me/portals endpoint implemented",
+          "Returns access state for all 20 portals",
+          "Includes feature-level access information",
+          "Usage data included for quota tracking",
+          "Proper error handling and caching"
+        ],
+        "implementation_steps": [
+          "Create portal access resolver function",
+          "Implement /api/me/portals endpoint",
+          "Add usage data aggregation",
+          "Implement caching for performance",
+          "Add proper error handling",
+          "Test with different organization types"
+        ],
+        "files_to_create": [
+          "src/api/portals.ts",
+          "src/services/portal-access.ts"
+        ],
+        "files_to_modify": [
+          "src/api/routes.ts"
+        ]
+      },
+      {
+        "id": "saas.trials.addon.ops",
+        "title": "Implement Trial and Add-on Management",
+        "description": "Create trial and add-on management flows with UI",
+        "priority": "medium",
+        "category": "fullstack",
+        "estimated_hours": 12,
+        "acceptance_criteria": [
+          "Trial management functions implemented",
+          "Add-on purchase flows working",
+          "UI for trial and add-on management",
+          "Integration with billing system",
+          "Proper notification and expiration handling"
+        ],
+        "implementation_steps": [
+          "Create trial management database functions",
+          "Implement add-on management functions",
+          "Create trial and add-on UI components",
+          "Integrate with billing system",
+          "Add notification system",
+          "Test trial and add-on flows"
+        ],
+        "files_to_create": [
+          "src/components/TrialManager.tsx",
+          "src/components/AddonManager.tsx",
+          "src/services/trial-management.ts",
+          "src/services/addon-management.ts"
+        ],
+        "files_to_modify": [
+          "src/pages/billing/BillingPage.tsx",
+          "src/components/PortalCardGate.tsx"
+        ]
+      },
+      {
+        "id": "saas.billing.reconciliation",
+        "title": "Implement Billing Reconciliation",
+        "description": "Create nightly usage → invoice draft system",
+        "priority": "low",
+        "category": "backend",
+        "estimated_hours": 8,
+        "acceptance_criteria": [
+          "Nightly usage aggregation working",
+          "Invoice draft generation implemented",
+          "Usage-based billing calculations accurate",
+          "Integration with payment processors",
+          "Proper audit trail maintained"
+        ],
+        "implementation_steps": [
+          "Create usage aggregation service",
+          "Implement invoice generation logic",
+          "Add billing reconciliation cron job",
+          "Integrate with payment processors",
+          "Add audit trail and logging",
+          "Test billing accuracy"
+        ],
+        "files_to_create": [
+          "src/services/billing-reconciliation.ts",
+          "src/cron/billing-reconciliation.ts"
+        ],
+        "files_to_modify": [
+          "src/services/billing.ts"
+        ]
+      },
+      {
+        "id": "saas.slo.portal",
+        "title": "Implement Performance Monitoring",
+        "description": "Add p95 monitoring per portal with quota warnings",
+        "priority": "medium",
+        "category": "monitoring",
+        "estimated_hours": 6,
+        "acceptance_criteria": [
+          "p95 monitoring implemented per portal",
+          "Quota warning system working",
+          "Performance alerts configured",
+          "Dashboard for monitoring metrics",
+          "Integration with existing monitoring"
+        ],
+        "implementation_steps": [
+          "Create performance monitoring service",
+          "Implement p95 calculations",
+          "Add quota warning system",
+          "Create monitoring dashboard",
+          "Configure alerts and notifications",
+          "Test monitoring accuracy"
+        ],
+        "files_to_create": [
+          "src/services/performance-monitoring.ts",
+          "src/components/PerformanceDashboard.tsx"
+        ],
+        "files_to_modify": [
+          "src/middleware/portal-gate.ts",
+          "src/middleware/feature-quota.ts"
+        ]
+      },
+      {
+        "id": "saas.frontend.portalgate",
+        "title": "Implement Frontend Portal Gating",
+        "description": "Create PortalCardGate component and integrate with portal selection",
+        "priority": "medium",
+        "category": "frontend",
+        "estimated_hours": 8,
+        "acceptance_criteria": [
+          "PortalCardGate component implemented",
+          "Portal selection page updated with access states",
+          "Proper UI for locked/trial/addon states",
+          "Upgrade paths clearly visible",
+          "Responsive design for all screen sizes"
+        ],
+        "implementation_steps": [
+          "Create PortalCardGate component",
+          "Update portal selection page",
+          "Implement access state display",
+          "Add upgrade path buttons",
+          "Test responsive design",
+          "Integrate with billing system"
+        ],
+        "files_to_create": [
+          "src/components/PortalCardGate.tsx",
+          "src/hooks/usePortalAccess.ts"
+        ],
+        "files_to_modify": [
+          "src/pages/PortalSelection.tsx",
+          "src/App.tsx"
+        ]
+      },
+      {
+        "id": "saas.database.functions",
+        "title": "Implement Database Access Functions",
+        "description": "Create can_access_portal and can_use_feature database functions",
+        "priority": "high",
+        "category": "database",
+        "estimated_hours": 4,
+        "acceptance_criteria": [
+          "can_access_portal function implemented",
+          "can_use_feature function implemented",
+          "Proper quota checking logic",
+          "Trial and add-on support",
+          "Performance optimized queries"
+        ],
+        "implementation_steps": [
+          "Create can_access_portal function",
+          "Create can_use_feature function",
+          "Add quota checking logic",
+          "Integrate trial and add-on checks",
+          "Optimize query performance",
+          "Test function accuracy"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000006_access_functions.sql"
+        ]
+      },
+      {
+        "id": "saas.usage.tracking",
+        "title": "Implement Usage Tracking System",
+        "description": "Create comprehensive usage tracking for billing and analytics",
+        "priority": "medium",
+        "category": "backend",
+        "estimated_hours": 6,
+        "acceptance_criteria": [
+          "Usage events properly recorded",
+          "Usage aggregation working",
+          "Billing integration complete",
+          "Analytics dashboard available",
+          "Real-time usage monitoring"
+        ],
+        "implementation_steps": [
+          "Create usage_events table",
+          "Implement usage tracking service",
+          "Add usage aggregation logic",
+          "Create usage analytics dashboard",
+          "Integrate with billing system",
+          "Test usage tracking accuracy"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000007_usage_tracking.sql",
+          "src/services/usage-tracking.ts",
+          "src/components/UsageDashboard.tsx"
+        ]
+      },
+      {
+        "id": "ui.ux.complete.redesign",
+        "title": "Complete UI/UX Redesign with Full Authority",
+        "description": "Redesign entire user interface and user experience with full autonomous authority",
+        "priority": "high",
+        "category": "ui_ux_design",
+        "estimated_hours": 20,
+        "acceptance_criteria": [
+          "Modern, clean design implemented across all portals",
+          "Improved user experience and usability",
+          "Responsive design for all screen sizes",
+          "Accessibility compliance (WCAG 2.1)",
+          "Consistent design language throughout platform"
+        ],
+        "implementation_steps": [
+          "Analyze current UI/UX and identify improvement opportunities",
+          "Design new component library and design system",
+          "Implement modern navigation patterns",
+          "Redesign all portal interfaces",
+          "Add animations and micro-interactions",
+          "Test and optimize for different user roles"
+        ],
+        "files_to_create": [
+          "src/components/ui/DesignSystem.tsx",
+          "src/styles/design-tokens.css",
+          "src/components/ui/ModernComponents.tsx",
+          "src/hooks/useDesignSystem.ts"
+        ],
+        "files_to_modify": [
+          "src/App.tsx",
+          "src/components/**/*.tsx",
+          "src/pages/**/*.tsx",
+          "src/styles/**/*.css"
+        ],
+        "design_authority": {
+          "navigation_redesign": true,
+          "component_redesign": true,
+          "layout_changes": true,
+          "feature_additions": true,
+          "architectural_decisions": true,
+          "design_system": true
+        }
+      },
+      {
+        "id": "ui.navigation.redesign",
+        "title": "Navigation System Redesign",
+        "description": "Redesign navigation system with full authority to remove/modify menus and add new patterns",
+        "priority": "high",
+        "category": "ui_ux_design",
+        "estimated_hours": 12,
+        "acceptance_criteria": [
+          "Improved navigation usability and efficiency",
+          "Modern navigation patterns implemented",
+          "Mobile-responsive navigation",
+          "Intuitive user workflows",
+          "Reduced cognitive load"
+        ],
+        "implementation_steps": [
+          "Analyze current navigation pain points",
+          "Design new navigation architecture",
+          "Implement modern navigation patterns",
+          "Add breadcrumbs and contextual navigation",
+          "Optimize for mobile and tablet",
+          "Test navigation with different user roles"
+        ],
+        "files_to_create": [
+          "src/components/navigation/ModernNavigation.tsx",
+          "src/components/navigation/BreadcrumbNav.tsx",
+          "src/components/navigation/FloatingNav.tsx",
+          "src/hooks/useNavigation.ts"
+        ],
+        "files_to_modify": [
+          "src/components/Sidebar.tsx",
+          "src/App.tsx",
+          "src/components/PortalLayout.tsx"
+        ],
+        "design_authority": {
+          "remove_sidebar": true,
+          "add_fab": true,
+          "modify_menus": true,
+          "change_layout": true
+        }
+      },
+      {
+        "id": "ui.component.library",
+        "title": "Modern Component Library",
+        "description": "Create comprehensive modern component library with Floating Action Buttons and enhanced UI",
+        "priority": "medium",
+        "category": "ui_ux_design",
+        "estimated_hours": 16,
+        "acceptance_criteria": [
+          "Modern component library implemented",
+          "Floating Action Buttons added where beneficial",
+          "Enhanced user interactions and animations",
+          "Consistent design patterns",
+          "Reusable component system"
+        ],
+        "implementation_steps": [
+          "Design modern component specifications",
+          "Implement enhanced UI components",
+          "Add Floating Action Buttons",
+          "Create animation and interaction patterns",
+          "Build component documentation",
+          "Test component accessibility"
+        ],
+        "files_to_create": [
+          "src/components/ui/FloatingActionButton.tsx",
+          "src/components/ui/EnhancedCards.tsx",
+          "src/components/ui/ModernTables.tsx",
+          "src/components/ui/InteractiveElements.tsx",
+          "src/styles/animations.css"
+        ],
+        "files_to_modify": [
+          "src/components/DashboardComponents.tsx",
+          "src/components/PortalDashboards.tsx"
+        ],
+        "design_authority": {
+          "add_fab": true,
+          "redesign_components": true,
+          "add_animations": true,
+          "enhance_interactions": true
+        }
+      },
+      {
+        "id": "ui.responsive.enhancement",
+        "title": "Responsive Design Enhancement",
+        "description": "Enhance responsive design with mobile-first approach and modern breakpoints",
+        "priority": "medium",
+        "category": "ui_ux_design",
+        "estimated_hours": 10,
+        "acceptance_criteria": [
+          "Mobile-first responsive design",
+          "Optimized for all screen sizes",
+          "Touch-friendly interfaces",
+          "Fast loading on mobile devices",
+          "Consistent experience across devices"
+        ],
+        "implementation_steps": [
+          "Audit current responsive design",
+          "Implement mobile-first CSS approach",
+          "Optimize touch targets and interactions",
+          "Add mobile-specific navigation patterns",
+          "Test on various devices and screen sizes",
+          "Optimize performance for mobile"
+        ],
+        "files_to_create": [
+          "src/styles/responsive.css",
+          "src/components/mobile/MobileNavigation.tsx",
+          "src/components/mobile/TouchOptimized.tsx",
+          "src/hooks/useResponsive.ts"
+        ],
+        "files_to_modify": [
+          "src/App.css",
+          "src/components/**/*.tsx",
+          "src/pages/**/*.tsx"
+        ],
+        "design_authority": {
+          "mobile_optimization": true,
+          "responsive_layout": true,
+          "touch_interactions": true,
+          "performance_optimization": true
+        }
+      },
+      {
+        "id": "ui.accessibility.improvement",
+        "title": "Accessibility Improvements",
+        "description": "Implement comprehensive accessibility improvements and WCAG 2.1 compliance",
+        "priority": "medium",
+        "category": "ui_ux_design",
+        "estimated_hours": 8,
+        "acceptance_criteria": [
+          "WCAG 2.1 AA compliance",
+          "Keyboard navigation support",
+          "Screen reader compatibility",
+          "High contrast mode support",
+          "Focus management improvements"
+        ],
+        "implementation_steps": [
+          "Audit current accessibility",
+          "Implement keyboard navigation",
+          "Add ARIA labels and roles",
+          "Create high contrast theme",
+          "Test with screen readers",
+          "Add focus management"
+        ],
+        "files_to_create": [
+          "src/components/accessibility/AccessibleComponents.tsx",
+          "src/styles/high-contrast.css",
+          "src/hooks/useAccessibility.ts",
+          "src/utils/accessibility.ts"
+        ],
+        "files_to_modify": [
+          "src/components/**/*.tsx",
+          "src/pages/**/*.tsx"
+        ],
+        "design_authority": {
+          "accessibility_enhancement": true,
+          "keyboard_navigation": true,
+          "screen_reader_support": true,
+          "high_contrast": true
+        }
+      }
+    ],
+    "success_metrics": {
+      "free_organization": [
+        "Can access Broker/Carrier/Shipper/Driver portals",
+        "Premium tabs show as 'Locked' with upgrade CTAs",
+        "API returns 402 for gated features",
+        "Basic quotas enforced"
+      ],
+      "professional_organization": [
+        "Premium features included",
+        "Higher quotas (5,000-10,000 ops/month)",
+        "p95 ≤ 2.5s across portals",
+        "Real-time analytics available"
+      ],
+      "enterprise_organization": [
+        "Everything included except add-ons",
+        "Unlimited quotas for most features",
+        "White-label options available",
+        "Dedicated support"
+      ],
+      "trial_addon_features": [
+        "Trial flips card state to 'Trial'",
+        "API returns 200 until trial expires",
+        "Add-on purchase immediately unlocks features",
+        "Usage metered and visible in billing"
+      ],
+      "ui_ux_improvements": [
+        "Modern, clean design implemented",
+        "Improved user experience and usability",
+        "Mobile-responsive design",
+        "Accessibility compliance",
+        "Floating Action Buttons where beneficial",
+        "Enhanced navigation patterns"
+      ]
+    },
+    "technical_requirements": [
+      "Multi-tenant database design with organization isolation",
+      "Portal access middleware (requirePortal)",
+      "Feature quota middleware (requireFeatureWithQuota)",
+      "Usage tracking and billing integration",
+      "API rate limiting per organization",
+      "Scalable architecture for thousands of organizations",
+      "Modern UI/UX design patterns",
+      "Responsive and accessible design",
+      "Performance optimization"
+    ],
+    "design_authority": {
+      "full_ui_ux_redesign": true,
+      "navigation_modification": true,
+      "component_redesign": true,
+      "layout_changes": true,
+      "feature_additions": true,
+      "architectural_decisions": true,
+      "floating_action_buttons": true,
+      "mobile_optimization": true,
+      "accessibility_improvements": true
+    },
+    "dependencies": [],
+    "estimated_total_hours": 134,
+    "risk_level": "medium",
+    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience."
+  }
+}

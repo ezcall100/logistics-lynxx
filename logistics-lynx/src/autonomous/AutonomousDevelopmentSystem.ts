@@ -287,18 +287,96 @@ class AutonomousDevelopmentSystem {
   }
 
   private async executeFeatureDevelopment(task: DevelopmentTask, agent: Agent) {
-    // Use AI to generate feature code with software company business model understanding
+    // Use AI to generate feature code with multi-portal SaaS architecture understanding
     const prompt = `Develop a new feature: ${task.description}
     
-    CRITICAL SOFTWARE COMPANY CONTEXT:
-    This is a SOFTWARE COMPANY that provides TMS (Transportation Management System) software to customers.
-    We are NOT a carrier, broker, or shipper - we are the software provider serving these customers.
+    CRITICAL MULTI-PORTAL SAAS ARCHITECTURE CONTEXT:
+    This is a SOFTWARE COMPANY providing TMS solutions with a multi-portal SaaS architecture.
     
     BUSINESS MODEL:
-    - SaaS (Software-as-a-Service) provider
-    - Multi-tenant architecture serving multiple customers
-    - Subscription-based pricing with tiered features
-    - Revenue from customer subscriptions and premium features
+    - SaaS (Software-as-a-Service) provider with 20 portals
+    - Multi-tenant architecture serving multiple organizations
+    - Portal-level and feature-level gating with quotas and pricing
+    - Core features (free) vs Premium features (paid) vs Add-on features (explicit purchase)
+    
+    PORTAL ARCHITECTURE:
+    - 20 Canonical Portals: superAdmin, admin, tmsAdmin, onboarding, broker, shipper, carrier, driver, ownerOperator, factoring, loadBoard, crm, financials, edi, marketplace, analytics, autonomous, workers, rates, directory
+    - Each portal has specific features classified as core/premium/addon
+    - Portal access controlled by organization entitlements
+    - Feature access controlled by subscription tier and quotas
+    
+    FEATURE CLASSIFICATION:
+    - Core Features: Must-have functionality included in all plans (broker.core, shipper.core, carrier.core, driver.core, crm.core, marketplace.post)
+    - Premium Features: Advanced capabilities included in higher tiers (crm.advanced, analytics.realtime, rates.dynamic, directory.enriched, loadboard.priority, workers.optimizer)
+    - Add-on Features: Optional features requiring explicit purchase (edi.x12, rates.predict, autonomous.ai, financials.ap, financials.ar)
+    
+    PLAN STRUCTURE:
+    - Free Tier: Core portals only, 1,000 ops/month quotas
+    - Professional Tier ($99-299/month): Core + premium features, 5,000-10,000 ops/month
+    - Enterprise Tier ($499-999/month): Everything except add-ons, unlimited quotas
+    - Custom Tier: Add-ons with usage-based or flat pricing
+    
+    FULL UI/UX DESIGN AUTHORITY:
+    You have COMPLETE authority to redesign the user interface and user experience:
+    
+    ✅ NAVIGATION REDESIGN:
+    - Remove, modify, or completely redesign left sidebar menus
+    - Change navigation structure and hierarchy
+    - Add new navigation patterns (breadcrumbs, tabs, etc.)
+    - Implement different menu layouts (horizontal, vertical, floating)
+    
+    ✅ COMPONENT REDESIGN:
+    - Redesign any UI component for better usability
+    - Add Floating Action Buttons (FAB) where beneficial
+    - Implement new interaction patterns
+    - Change color schemes, typography, and visual design
+    
+    ✅ LAYOUT CHANGES:
+    - Modify page layouts and grid systems
+    - Add or remove sidebars, panels, and containers
+    - Implement responsive design improvements
+    - Change component positioning and spacing
+    
+    ✅ FEATURE ADDITIONS/REMOVALS:
+    - Add new UI features that improve user experience
+    - Remove unnecessary or confusing elements
+    - Implement new interaction patterns
+    - Add animations, transitions, and micro-interactions
+    
+    ✅ ARCHITECTURAL DECISIONS:
+    - Change component structure and organization
+    - Modify routing and navigation patterns
+    - Implement new state management approaches
+    - Add or remove entire sections/modules
+    
+    ✅ DESIGN SYSTEM ENHANCEMENTS:
+    - Create new design tokens and components
+    - Implement consistent design patterns
+    - Add accessibility improvements
+    - Enhance mobile responsiveness
+    
+    TECHNICAL REQUIREMENTS:
+    - Multi-tenant database design with organization isolation
+    - Portal access middleware (requirePortal)
+    - Feature quota middleware (requireFeatureWithQuota)
+    - Usage tracking and billing integration
+    - API rate limiting per organization
+    - Scalable architecture for thousands of organizations
+    
+    DATABASE SCHEMA:
+    - portals table: portal catalog with key, title, path
+    - portal_features table: portal → feature mapping with kind (core/premium/addon)
+    - plan_components table: plan quotas and caps per feature
+    - price_components table: pricing (flat/seat/usage tiers)
+    - org_addons table: add-ons purchased per organization
+    - org_trials table: trials and promotions
+    - usage_events table: usage tracking for billing
+    
+    ACCESS CONTROL:
+    - can_access_portal(org_id, portal_key): Check portal access
+    - can_use_feature(org_id, feature_key): Check feature access with quotas
+    - Portal-level gating controls overall access
+    - Feature-level gating controls specific capabilities
     
     CUSTOMER TYPES WE SERVE:
     1. Shippers: Companies that need to ship goods
@@ -306,77 +384,47 @@ class AutonomousDevelopmentSystem {
     3. Carriers: Trucking companies that transport goods
     4. Software Company Admins: Our internal team managing the platform
     
-    PRICING TIERS:
-    - Free Tier: Basic features for small businesses
-    - Professional Tier ($99-299/month): Core features for growing businesses
-    - Enterprise Tier ($499-999/month): Full features for large companies
-    - Custom Tier: Premium features with custom pricing
-    
-    FEATURE GATING REQUIREMENTS:
-    - Core Functions: Available in all tiers (basic user management, load management, fleet management)
-    - Premium Features: Additional cost or higher tiers (advanced analytics, integrations, custom development)
-    - Multi-tenant isolation: Each customer's data must be completely separated
-    - Usage tracking: Monitor feature usage for billing and optimization
-    
-    TECHNICAL REQUIREMENTS:
-    - Multi-tenant database design with customer isolation
-    - Feature flags and access control based on subscription tier
-    - Usage tracking and billing integration
-    - API rate limiting per customer
-    - Scalable architecture for multiple customers
-    - Customer onboarding and support systems
-    
-    CUSTOMER-SPECIFIC FEATURES:
-    
-    For Shippers:
-    - Load posting and carrier matching
-    - Shipment tracking and cost analysis
-    - Integration with existing systems
-    - Reporting and analytics
-    
-    For Brokers:
-    - Load board and carrier network management
-    - Rate negotiation and commission tracking
-    - Financial reporting and compliance
-    - Advanced analytics for market insights
-    
-    For Carriers:
-    - Fleet management and driver management
-    - Route optimization and maintenance tracking
-    - Financial management and compliance
-    - Mobile applications for drivers
-    
-    For Software Company Admins:
-    - Customer management and billing
-    - System monitoring and support
-    - Feature development and deployment
-    - Platform analytics and optimization
-    
     Requirements:
     - Use React with TypeScript
     - Follow multi-tenant architecture patterns
-    - Implement feature gating and access control
-    - Include usage tracking and billing integration
-    - Ensure customer data isolation
+    - Implement portal-level and feature-level gating
+    - Include usage tracking and quota enforcement
+    - Ensure organization data isolation
     - Add appropriate TypeScript interfaces
     - Include comments for maintainability
-    - Ensure scalability for multiple customers
+    - Ensure scalability for thousands of organizations
     - Implement proper error handling
     - Add comprehensive logging and audit trails
-    - Include customer onboarding flows
-    - Support subscription management
+    - Include trial and add-on management
+    - Support usage-based billing
+    - Implement performance monitoring
+    
+    UI/UX DESIGN PRINCIPLES:
+    - Prioritize user experience and usability
+    - Implement modern, clean design patterns
+    - Ensure accessibility and mobile responsiveness
+    - Create intuitive navigation and workflows
+    - Use consistent design language across all portals
+    - Optimize for different user roles and skill levels
+    - Implement progressive disclosure for complex features
+    - Add helpful onboarding and guidance elements
     
     Generate complete implementation including:
-    1. Multi-tenant component architecture
-    2. Feature gate implementation and access control
-    3. Customer-specific interfaces and dashboards
+    1. Multi-tenant component architecture with portal gating
+    2. Feature access control with quota enforcement
+    3. Organization-specific interfaces and dashboards
     4. Usage tracking and billing integration
-    5. Customer onboarding and support systems
-    6. API management with rate limiting
-    7. Subscription management and billing
-    8. Customer success and analytics
+    5. Trial and add-on management systems
+    6. Portal access API with access state resolution
+    7. Performance monitoring and alerting
+    8. Database schema extensions for new features
     9. Security and compliance features
-    10. Documentation for customer onboarding
+    10. Documentation for portal and feature access
+    11. Enhanced UI/UX with modern design patterns
+    12. Improved navigation and user workflows
+    13. Mobile-responsive and accessible design
+    14. Interactive elements and micro-interactions
+    15. Comprehensive design system implementation
     `;
 
     const completion = await this.openai.chat.completions.create({
