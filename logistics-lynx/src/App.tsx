@@ -19,6 +19,8 @@ import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard'
 import LogisticsManagementDashboard from './pages/LogisticsManagementDashboard';
 import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAgent.tsx';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
+import CarrierBrokerRiskReview from './components/onboarding/CarrierBrokerRiskReview';
+import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -820,6 +822,20 @@ function App() {
           <Route path="/master-autonomous-agent" element={
             <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
               <MasterAutonomousAgentDashboard />
+            </div>
+          } />
+
+          {/* Phase 7.3: Carrier & Broker Compliant Risk Management Onboarding */}
+          <Route path="/onboarding/carrier-broker-risk-review" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <CarrierBrokerRiskReview />
+            </div>
+          } />
+
+          {/* Phase 7.3: Admin Review Dashboard */}
+          <Route path="/admin/onboarding-review" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <OnboardingReviewDashboard />
             </div>
           } />
         </Routes>
