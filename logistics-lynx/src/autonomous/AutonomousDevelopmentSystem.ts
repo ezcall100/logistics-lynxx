@@ -316,6 +316,176 @@ class AutonomousDevelopmentSystem {
     - Enterprise Tier ($499-999/month): Everything except add-ons, unlimited quotas
     - Custom Tier: Add-ons with usage-based or flat pricing
     
+    CRITICAL LINES OF BUSINESS (LOB) CONFIGURATION REQUIREMENTS:
+    If implementing LoB or transportation features, follow these EXACT specifications:
+    
+    MENTAL MODEL (keep it simple):
+    - LoB = a commercial product you sell (Truckload, LTL, Ocean...)
+    - Mode = how it moves (truck/rail/air/ocean)
+    - Service options = speed/quality add-ons (expedited, white-glove...)
+    - Equipment = the physical asset (53' dry van, 40' container, sprinter...)
+    - "All" = a UI filter only (never stored)
+    
+    CANONICAL LOBS (normalized):
+    Use a small, explicit list; keep labels separate for i18n.
+    
+    export const LOB = [
+      "truckload",          // FTL
+      "ltl",                // Less Than Truckload
+      "volume_partial",     // 8–18 pallets
+      "intermodal",         // rail + dray legs
+      "drayage",
+      "air",
+      "lcr_air",            // low-cost regional air
+      "international_air",
+      "parcel",
+      "hot_shot",           // expedited pickup trailers/sprinter
+      "ocean"               // FCL/LCL
+    ] as const;
+    export type LobKey = typeof LOB[number];
+    
+    DATABASE SCHEMA:
+    create table if not exists lob (
+      key text primary key,                -- e.g., 'intermodal'
+      mode text not null,                  -- 'truck'|'rail'|'air'|'ocean'|'mixed'
+      active boolean default true
+    );
+    
+    insert into lob(key, mode) values
+    ('truckload','truck'),
+    ('ltl','truck'),
+    ('volume_partial','truck'),
+    ('intermodal','mixed'),
+    ('drayage','truck'),
+    ('air','air'),
+    ('lcr_air','air'),
+    ('international_air','air'),
+    ('parcel','truck'),
+    ('hot_shot','truck'),
+    ('ocean','ocean')
+    on conflict (key) do nothing;
+    
+    LOB RULES (declarative rules drive UI, validation, pricing, docs, and workflows):
+    type RequiredField = "pieces"|"weight"|"dims"|"nmfc"|"hazmat"|"equipment"|
+                         "origin"|"destination"|"incoterms"|"portLoad"|"portDischarge"|
+                         "customsBroker"|"containerType"|"awbill"|"proNumber"|"isf"|"vgm";
+    
+    export const LOB_RULES: Record<LobKey, {
+      required: RequiredField[];
+      defaults?: Record<string, unknown>;
+      docs?: string[]; // human short-codes for UI (MAWB/HAWB, ISF, VGM, BOL, PRO…)
+      workflowAddOns?: string[]; // steps to add in execution
+    }> = {
+      truckload: {
+        required: ["weight","equipment","origin","destination"],
+        docs: ["BOL"], defaults: { equipment: "dry_van_53" }
+      },
+      ltl: {
+        required: ["pieces","weight","dims","nmfc","origin","destination"],
+        docs: ["BOL","PRO"], workflowAddOns: ["terminalConsolidation"]
+      },
+      volume_partial: {
+        required: ["pieces","weight","dims","origin","destination"],
+        docs: ["BOL"], workflowAddOns: ["sharedCapacityMatch"]
+      },
+      intermodal: {
+        required: ["origin","destination","containerType"],
+        docs: ["BOL","GateIn/Out"], workflowAddOns: ["originDray","railLineHaul","destDray"]
+      },
+      drayage: {
+        required: ["origin","destination","containerType"],
+        docs: ["BOL","GatePass"], workflowAddOns: ["terminalAppt","chassisAlloc"]
+      },
+      air: {
+        required: ["pieces","weight","dims","origin","destination","awbill"],
+        docs: ["MAWB/HAWB"], defaults: { service: "standard" }
+      },
+      lcr_air: {
+        required: ["pieces","weight","dims","origin","destination","awbill"],
+        docs: ["MAWB/HAWB"], defaults: { service: "economy" }
+      },
+      international_air: {
+        required: ["pieces","weight","dims","origin","destination","awbill","incoterms","customsBroker"],
+        docs: ["MAWB/HAWB","CommercialInvoice","PackingList","CustomsDocs"]
+      },
+      parcel: {
+        required: ["pieces","weight","dims","origin","destination"],
+        docs: ["Label"], workflowAddOns: ["labelPurchase","pickupSchedule"]
+      },
+      hot_shot: {
+        required: ["pieces","weight","dims","origin","destination"],
+        docs: ["BOL"], defaults: { equipment: "gooseneck" }, workflowAddOns: ["expediteClock"]
+      },
+      ocean: {
+        required: ["origin","destination","containerType","incoterms","customsBroker","portLoad","portDischarge","isf","vgm"],
+        docs: ["Booking","ISF","VGM","B/L","CommercialInvoice","PackingList"],
+        workflowAddOns: ["booking","containerRelease","vesselDeparture","arrivalNotice"]
+      }
+    };
+    
+    PORTAL MAPPING + ENTITLEMENTS:
+    Don't hardcode plans—tie LoBs to features so you can promo/override per org.
+    
+    Default enablement (typical):
+    - Shipper: truckload, ltl, volume_partial, intermodal, drayage, parcel, air, lcr_air, international_air, ocean
+    - Broker: truckload, ltl, volume_partial, intermodal, air, lcr_air, international_air, hot_shot, ocean
+    - Carrier: truckload, ltl, intermodal, drayage, parcel, hot_shot, ocean
+    
+    Plan → entitlement examples:
+    - Free: loads.core → truckload, ltl, drayage
+    - Pro: + loads.intermodal, loads.volume_partial, loads.parcel
+    - Enterprise: + loads.air, loads.ocean, loads.international_air
+    - Add-ons: edi.x12, air.awb.issuance, ocean.isf.vgm, autonomous.ai
+    
+    API GATE EXAMPLE:
+    app.post("/api/loads", requireFeature("loads.core"), requireLobAccess(), createLoad);
+    
+    function requireLobAccess() {
+      return async (req,res,next) => {
+        const lob: LobKey = req.body.lob;
+        const featureMap: Record<LobKey,string> = {
+          truckload: "loads.core",
+          ltl: "loads.core",
+          volume_partial: "loads.intermodal",
+          intermodal: "loads.intermodal",
+          drayage: "loads.core",
+          parcel: "loads.parcel",
+          air: "loads.air",
+          lcr_air: "loads.air",
+          international_air: "loads.air",
+          hot_shot: "loads.core",
+          ocean: "loads.ocean"
+        };
+        const feat = featureMap[lob];
+        if (!await hasEntitlement(req.orgId, feat)) return res.status(402).json({ error: "feature_not_enabled", feature: feat });
+        return next();
+      };
+    }
+    
+    UI BEHAVIORS (zero confusion):
+    - Selecting a LoB dynamically reveals only the fields from LOB_RULES[lob].required
+    - Auto-defaults: pre-fill equipment/service if rules provide defaults
+    - Docs checklist: render docs per LoB; mark complete when uploaded/emitted
+    - Workflows: show additional steps (e.g., Intermodal displays Origin Dray → Rail → Dest Dray)
+    - "All" = quick switch that disables LoB filtering in tables. No persistence.
+    
+    ROUTING TEMPLATES:
+    - Intermodal = Dray (A) → Rail → Dray (B)
+    - Ocean FCL = Dray (A) → Port Load → Vessel → Port Discharge → Dray (B)
+    - Air Intl = Pickup → Export → MAWB/HAWB → Flight → Import → Delivery
+    
+    COMPLIANCE MATRIX (quick ref):
+    - Air: MAWB/HAWB, security screening, IATA codes
+    - Intl Air: + Commercial Invoice, Packing List, Incoterms, Customs broker
+    - Ocean: Booking, ISF, VGM, B/L, ports (UN/LOCODE)
+    - LTL: NMFC/Class, PRO
+    - Dray: Gate passes, chassis, terminal appointments
+    - Parcel: label purchase + pickup
+    
+    MONITORING (per LoB):
+    Emit SLI events lob.quote, lob.book, lob.doc.ready, lob.dispatch, lob.pod, lob.invoice.
+    Watch success ≥ 98%, p95 route paint ≤ 2.5s, doc readiness SLA (e.g., ISF < 24h before vessel).
+    
     CRITICAL SIGNUP IMPLEMENTATION REQUIREMENTS:
     If implementing signup/auth features, follow these EXACT specifications:
     
@@ -375,8 +545,8 @@ class AutonomousDevelopmentSystem {
     5. Submit — POST /api/auth/signup, handle verify state
     
     UX notes:
-    - Use tokens.css, shadcn/ui components, accent color from design system
-    - Provide SSO buttons (Google/Microsoft) if configured
+    - Use your tokens.css, shadcn/ui components, accent color from design system
+    - Provide SSO buttons (Google/Microsoft) if configured (/api/auth/oauth/:provider)
     - Accessibility: labeled inputs, error summaries, keyboard flow, proper focus management
     - Anti-abuse: show reCAPTCHA only on suspicious patterns or after N attempts
     
@@ -449,6 +619,9 @@ class AutonomousDevelopmentSystem {
     - Secure authentication and authorization
     - Email verification and invite system
     - CAPTCHA and rate limiting for public endpoints
+    - LoB configuration and validation system
+    - Multi-modal transportation management
+    - Compliance and documentation management
     
     DATABASE SCHEMA:
     - portals table: portal catalog with key, title, path
@@ -461,12 +634,16 @@ class AutonomousDevelopmentSystem {
     - organizations table: multi-tenant orgs
     - org_memberships table: user-org relationships
     - subscriptions table: org subscription plans
+    - lob table: LoB definitions with mode and active status
+    - lob_rules table: LoB-specific rules and requirements
     
     ACCESS CONTROL:
     - can_access_portal(org_id, portal_key): Check portal access
     - can_use_feature(org_id, feature_key): Check feature access with quotas
+    - can_access_lob(org_id, lob_key): Check LoB access via entitlements
     - Portal-level gating controls overall access
     - Feature-level gating controls specific capabilities
+    - LoB-level gating controls transportation modes
     
     CUSTOMER TYPES WE SERVE:
     1. Shippers: Companies that need to ship goods
@@ -490,6 +667,9 @@ class AutonomousDevelopmentSystem {
     - Implement performance monitoring
     - Ensure security best practices
     - Implement accessibility compliance (WCAG 2.2 AA)
+    - Implement LoB configuration and validation
+    - Support multi-modal transportation management
+    - Include compliance and documentation management
     
     UI/UX DESIGN PRINCIPLES:
     - Prioritize user experience and usability
@@ -522,6 +702,11 @@ class AutonomousDevelopmentSystem {
     18. Rate limiting and CAPTCHA integration
     19. Observability and monitoring
     20. Testing and validation procedures
+    21. LoB configuration and validation system
+    22. Multi-modal transportation management
+    23. Compliance and documentation management
+    24. Workflow templates and routing
+    25. Performance optimization for all LoB operations
     `;
 
     const completion = await this.openai.chat.completions.create({

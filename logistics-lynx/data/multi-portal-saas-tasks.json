@@ -6,6 +6,161 @@
     "dependencies": [],
     "tasks": [
       {
+        "id": "lob.configure.v1",
+        "title": "Lines of Business (LoB) Configuration System",
+        "description": "Implement comprehensive LoB configuration for multi-modal transportation management with declarative rules, portal mapping, and workflow automation",
+        "priority": "critical",
+        "category": "core_functionality",
+        "estimated_hours": 32,
+        "acceptance_criteria": [
+          "All LoBs can be enabled per tenant via entitlements",
+          "Creating loads enforces required fields per LoB",
+          "All LoB workflows and routing templates implemented",
+          "Portal mapping and entitlement system working",
+          "API 402 when not entitled for specific LoBs",
+          "All LoB compliance requirements implemented",
+          "p95 & success SLOs pass for all LoB operations"
+        ],
+        "implementation_steps": [
+          "1. Database Schema & Seeding",
+          "2. LoB Rules & Validation System",
+          "3. Portal Mapping & Entitlements",
+          "4. API Middleware & Access Control",
+          "5. UI Components & Form Logic",
+          "6. Workflow Templates & Routing",
+          "7. Compliance Matrix Implementation",
+          "8. Monitoring & SLI Events",
+          "9. First-time Setup Wizard",
+          "10. Testing & Validation"
+        ],
+        "files_to_create": [
+          "supabase/migrations/20241201000010_lob_schema.sql",
+          "supabase/seed/lob_data.sql",
+          "src/types/lob.ts",
+          "src/constants/lob-rules.ts",
+          "src/middleware/lob-access.ts",
+          "src/api/lob/rules.ts",
+          "src/api/lob/validation.ts",
+          "src/components/lob/LobSelector.tsx",
+          "src/components/lob/LoadForm.tsx",
+          "src/components/lob/WorkflowSteps.tsx",
+          "src/components/lob/ComplianceMatrix.tsx",
+          "src/components/lob/FirstTimeSetup.tsx",
+          "src/services/lob-service.ts",
+          "src/hooks/useLobRules.ts",
+          "src/utils/lob-validation.ts",
+          "src/utils/lob-routing.ts"
+        ],
+        "files_to_modify": [
+          "src/App.tsx",
+          "src/components/PortalDashboards.tsx",
+          "src/api/routes.ts",
+          "src/middleware/auth.ts",
+          "src/services/entitlements.ts"
+        ],
+        "technical_specifications": {
+          "mental_model": {
+            "lob": "Commercial product you sell (Truckload, LTL, Ocean...)",
+            "mode": "How it moves (truck/rail/air/ocean)",
+            "service_options": "Speed/quality add-ons (expedited, white-glove...)",
+            "equipment": "Physical asset (53' dry van, 40' container, sprinter...)",
+            "all": "UI filter only (never stored)"
+          },
+          "canonical_lobs": [
+            "truckload", "ltl", "volume_partial", "intermodal", "drayage",
+            "air", "lcr_air", "international_air", "parcel", "hot_shot", "ocean"
+          ],
+          "database_schema": {
+            "lob_table": "key (primary), mode, active",
+            "lob_rules_table": "lob_key, required_fields, defaults, docs, workflow_addons"
+          },
+          "api_endpoints": [
+            "GET /api/lob/rules",
+            "POST /api/loads (with requireLobAccess middleware)",
+            "GET /api/lob/workflows/:lob",
+            "POST /api/lob/setup"
+          ],
+          "entitlement_mapping": {
+            "loads.core": ["truckload", "ltl", "drayage", "hot_shot"],
+            "loads.intermodal": ["volume_partial", "intermodal"],
+            "loads.parcel": ["parcel"],
+            "loads.air": ["air", "lcr_air", "international_air"],
+            "loads.ocean": ["ocean"]
+          }
+        },
+        "ui_requirements": {
+          "lob_selector": [
+            "Dynamic field revelation based on LOB_RULES",
+            "Auto-defaults for equipment/service",
+            "Docs checklist per LoB",
+            "Workflow step display",
+            "All filter (UI only, no persistence)"
+          ],
+          "load_form": [
+            "Required field validation per LoB",
+            "Dynamic form fields based on selection",
+            "Auto-completion and suggestions",
+            "Real-time validation feedback",
+            "Compliance requirement indicators"
+          ],
+          "first_time_setup": [
+            "Company profile configuration",
+            "LoB selection checklist",
+            "Required add-ons identification",
+            "Compliance setup wizard",
+            "Pricing source configuration",
+            "Go-live testing interface"
+          ]
+        },
+        "business_logic": {
+          "lob_rules": {
+            "truckload": {
+              "required": ["weight", "equipment", "origin", "destination"],
+              "docs": ["BOL"],
+              "defaults": { "equipment": "dry_van_53" }
+            },
+            "ltl": {
+              "required": ["pieces", "weight", "dims", "nmfc", "origin", "destination"],
+              "docs": ["BOL", "PRO"],
+              "workflowAddOns": ["terminalConsolidation"]
+            },
+            "ocean": {
+              "required": ["origin", "destination", "containerType", "incoterms", "customsBroker", "portLoad", "portDischarge", "isf", "vgm"],
+              "docs": ["Booking", "ISF", "VGM", "B/L", "CommercialInvoice", "PackingList"],
+              "workflowAddOns": ["booking", "containerRelease", "vesselDeparture", "arrivalNotice"]
+            }
+          },
+          "routing_templates": {
+            "intermodal": "Dray (A) → Rail → Dray (B)",
+            "ocean_fcl": "Dray (A) → Port Load → Vessel → Port Discharge → Dray (B)",
+            "air_intl": "Pickup → Export → MAWB/HAWB → Flight → Import → Delivery"
+          },
+          "compliance_matrix": {
+            "air": ["MAWB/HAWB", "security screening", "IATA codes"],
+            "international_air": ["Commercial Invoice", "Packing List", "Incoterms", "Customs broker"],
+            "ocean": ["Booking", "ISF", "VGM", "B/L", "ports (UN/LOCODE)"],
+            "ltl": ["NMFC/Class", "PRO"],
+            "dray": ["Gate passes", "chassis", "terminal appointments"]
+          }
+        },
+        "testing_scenarios": [
+          "Post sample load per LoB type",
+          "Verify required fields enforcement",
+          "Test API 402 for unauthorized LoB access",
+          "Validate workflow steps per LoB",
+          "Test compliance document requirements",
+          "Verify All filter functionality (UI only)",
+          "Test entitlement-based LoB access"
+        ],
+        "monitoring_requirements": [
+          "SLI events: lob.quote, lob.book, lob.doc.ready, lob.dispatch, lob.pod, lob.invoice",
+          "Success rate ≥ 98% per LoB",
+          "p95 route paint ≤ 2.5s per LoB",
+          "Document readiness SLA monitoring",
+          "LoB-specific performance metrics"
+        ]
+      },
+      {
         "id": "auth.signup.multi_tenant",
         "title": "Trans Bot AI Multi-Tenant Signup Flow",
         "description": "Implement world-class, secure, multi-tenant Sign Up experience at /signup that creates user, organization, subscription, and drops user into portal selection",
@@ -743,6 +898,15 @@
         "Portals reflect plan correctly",
         "Email verification enforced when flag enabled",
         "SLO: p95 ≤ 2.5s signup API; success ≥ 98%"
+      ],
+      "lob_configuration": [
+        "All LoBs can be enabled per tenant via entitlements",
+        "Creating loads enforces required fields per LoB",
+        "All LoB workflows and routing templates implemented",
+        "Portal mapping and entitlement system working",
+        "API 402 when not entitled for specific LoBs",
+        "All LoB compliance requirements implemented",
+        "p95 & success SLOs pass for all LoB operations"
       ]
     },
     "technical_requirements": [
@@ -757,7 +921,10 @@
       "Performance optimization",
       "Secure authentication and authorization",
       "Email verification and invite system",
-      "CAPTCHA and rate limiting for public endpoints"
+      "CAPTCHA and rate limiting for public endpoints",
+      "LoB configuration and validation system",
+      "Multi-modal transportation management",
+      "Compliance and documentation management"
     ],
     "design_authority": {
       "full_ui_ux_redesign": true,
@@ -771,8 +938,8 @@
       "accessibility_improvements": true
     },
     "dependencies": [],
-    "estimated_total_hours": 158,
+    "estimated_total_hours": 190,
     "risk_level": "medium",
-    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority and comprehensive signup flow. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience. The signup flow is the critical entry point for new customers and must be world-class."
+    "notes": "This is a critical implementation that establishes the foundation for the multi-portal SaaS business model with full UI/UX design authority, comprehensive signup flow, and advanced Lines of Business configuration. All tasks should be implemented in parallel where possible to accelerate delivery. Autonomous agents have complete authority to redesign interfaces, navigation, and user experience. The LoB system is essential for multi-modal transportation management."
   }
 }
