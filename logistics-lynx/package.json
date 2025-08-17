@@ -47,6 +47,7 @@
     "ops:repair": "node scripts/self-heal.mjs",
     "ops:strict-on": "node -e \"console.log('READYZ=strict');\" && echo",
     "ops:strict-off": "node -e \"console.log('READYZ=lenient');\" && echo",
+    "improvement:agent": "node scripts/autonomous-improvement-agent.mjs",
     "prepare": "husky"
   },
   "dependencies": {
