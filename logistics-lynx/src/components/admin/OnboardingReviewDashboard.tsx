@@ -41,7 +41,32 @@ import {
   UserCheck,
   FileCheck,
   Truck,
-  Building2
+  Building2,
+  Menu,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  Database,
+  Activity,
+  AlertCircle,
+  CheckSquare,
+  FileX,
+  Zap,
+  Target,
+  PieChart,
+  LineChart,
+  BarChart,
+  Grid3X3,
+  List,
+  MoreHorizontal,
+  SortAsc,
+  SortDesc,
+  Filter as FilterIcon,
+  Archive,
+  Trash2,
+  Copy,
+  ExternalLink
 } from 'lucide-react';
 
 interface ReviewStats {
@@ -75,6 +100,26 @@ const OnboardingReviewDashboard: React.FC = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviewNotes, setReviewNotes] = useState('');
   const [reviewDecision, setReviewDecision] = useState<'approved' | 'rejected' | 'requires_changes'>('approved');
+  
+  // Sidebar state
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [sortField, setSortField] = useState<string>('createdAt');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'table' | 'grid' | 'list'>('table');
+
+  // Navigation items
+  const navigationItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: Home, color: 'text-blue-600' },
+    { id: 'reviews', label: 'Reviews', icon: Shield, color: 'text-green-600' },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'text-purple-600' },
+    { id: 'reports', label: 'Reports', icon: FileText, color: 'text-orange-600' },
+    { id: 'settings', label: 'Settings', icon: Settings, color: 'text-gray-600' },
+    { id: 'users', label: 'Users', icon: Users, color: 'text-indigo-600' },
+    { id: 'database', label: 'Database', icon: Database, color: 'text-red-600' },
+    { id: 'activity', label: 'Activity', icon: Activity, color: 'text-teal-600' },
+  ];
 
   // Mock data for demonstration
   const mockReviews: AdminReview[] = [
@@ -170,6 +215,34 @@ const OnboardingReviewDashboard: React.FC = () => {
     setIsReviewModalOpen(false);
   };
 
+  // Sorting function
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Row selection
+  const handleRowSelect = (reviewId: string) => {
+    setSelectedRows(prev => 
+      prev.includes(reviewId) 
+        ? prev.filter(id => id !== reviewId)
+        : [...prev, reviewId]
+    );
+  };
+
+  // Bulk actions
+  const handleBulkAction = (action: string) => {
+    console.log(`Bulk ${action} for:`, selectedRows);
+    setSelectedRows([]);
+  };
+
+  // Toggle sidebar
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
@@ -199,37 +272,123 @@ const OnboardingReviewDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex">
+      {/* Sidebar */}
+      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-white border-r border-gray-200 transition-all duration-300 ease-in-out flex-shrink-0`}>
+        <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Shield className="h-8 w-8 text-blue-600 mr-3" />
-                Onboarding Review Dashboard
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Manage carrier and broker onboarding reviews and compliance verification
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" size="sm">
-                <Bell className="h-4 w-4 mr-2" />
-                Notifications
-              </Button>
-              <Button variant="outline" size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
+            {sidebarOpen && (
+              <h2 className="text-lg font-bold text-gray-900 flex items-center">
+                <Shield className="h-6 w-6 text-blue-600 mr-2" />
+                Admin Panel
+              </h2>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleSidebar}
+              className="hover:bg-gray-100"
+            >
+              {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+        
+        <nav className="p-4 space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeSection === item.id
+                    ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`}
+              >
+                <Icon className={`h-5 w-5 mr-3 ${item.color}`} />
+                {sidebarOpen && <span>{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleSidebar}
+                  className="lg:hidden hover:bg-gray-100"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+                    <Shield className="h-8 w-8 text-blue-600 mr-3" />
+                    Onboarding Review Dashboard
+                  </h1>
+                  <p className="text-gray-600 mt-1">
+                    Manage carrier and broker onboarding reviews and compliance verification
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Button variant="outline" size="sm">
+                  <Bell className="h-4 w-4 mr-2" />
+                  Notifications
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+              <div className="flex-1 p-6">
+          {/* Quick Stats Bar */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Total: {stats.total}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Pending: {stats.pending}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">In Progress: {stats.inProgress}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Completed: {stats.completed}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Urgent: {stats.urgent}</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600">Completion Rate:</span>
+                <span className="text-sm font-semibold text-green-600">{stats.completionRate}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
           <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -380,10 +539,59 @@ const OnboardingReviewDashboard: React.FC = () => {
                       {filteredReviews.length} reviews found • Last updated: {new Date().toLocaleTimeString()}
                     </CardDescription>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export
-                  </Button>
+                  <div className="flex items-center space-x-3">
+                    {/* View Mode Toggle */}
+                    <div className="flex items-center space-x-1 bg-white rounded-lg border border-gray-200 p-1">
+                      <Button
+                        variant={viewMode === 'table' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setViewMode('table')}
+                        className="h-8 px-2"
+                      >
+                        <List className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setViewMode('grid')}
+                        className="h-8 px-2"
+                      >
+                        <Grid3X3 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={viewMode === 'list' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setViewMode('list')}
+                        className="h-8 px-2"
+                      >
+                        <BarChart className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    
+                    {/* Bulk Actions */}
+                    {selectedRows.length > 0 && (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-600">{selectedRows.length} selected</span>
+                        <Button variant="outline" size="sm" onClick={() => handleBulkAction('approve')}>
+                          <CheckSquare className="h-4 w-4 mr-1" />
+                          Approve
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleBulkAction('reject')}>
+                          <FileX className="h-4 w-4 mr-1" />
+                          Reject
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleBulkAction('archive')}>
+                          <Archive className="h-4 w-4 mr-1" />
+                          Archive
+                        </Button>
+                      </div>
+                    )}
+                    
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-2" />
+                      Export
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
@@ -391,17 +599,94 @@ const OnboardingReviewDashboard: React.FC = () => {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-gray-50">
-                        <TableHead className="font-semibold text-gray-700">Company</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Type</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Priority</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Status</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Score</TableHead>
+                        <TableHead className="font-semibold text-gray-700 w-12">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.length === filteredReviews.length && filteredReviews.length > 0}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedRows(filteredReviews.map(r => r.id));
+                              } else {
+                                setSelectedRows([]);
+                              }
+                            }}
+                            className="rounded border-gray-300"
+                          />
+                        </TableHead>
+                        <TableHead 
+                          className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('companyName')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Company</span>
+                            {sortField === 'companyName' && (
+                              sortDirection === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />
+                            )}
+                          </div>
+                        </TableHead>
+                        <TableHead 
+                          className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('reviewType')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Type</span>
+                            {sortField === 'reviewType' && (
+                              sortDirection === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />
+                            )}
+                          </div>
+                        </TableHead>
+                        <TableHead 
+                          className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('reviewPriority')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Priority</span>
+                            {sortField === 'reviewPriority' && (
+                              sortDirection === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />
+                            )}
+                          </div>
+                        </TableHead>
+                        <TableHead 
+                          className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('reviewStatus')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Status</span>
+                            {sortField === 'reviewStatus' && (
+                              sortDirection === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />
+                            )}
+                          </div>
+                        </TableHead>
+                        <TableHead 
+                          className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('totalScore')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Score</span>
+                            {sortField === 'totalScore' && (
+                              sortDirection === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />
+                            )}
+                          </div>
+                        </TableHead>
                         <TableHead className="font-semibold text-gray-700">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredReviews.map((review) => (
-                        <TableRow key={review.id} className="hover:bg-gray-50 transition-colors">
+                        <TableRow 
+                          key={review.id} 
+                          className={`hover:bg-gray-50 transition-colors ${
+                            selectedRows.includes(review.id) ? 'bg-blue-50 border-blue-200' : ''
+                          }`}
+                        >
+                          <TableCell>
+                            <input
+                              type="checkbox"
+                              checked={selectedRows.includes(review.id)}
+                              onChange={() => handleRowSelect(review.id)}
+                              className="rounded border-gray-300"
+                            />
+                          </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-3">
                               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -439,7 +724,7 @@ const OnboardingReviewDashboard: React.FC = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex space-x-2">
+                            <div className="flex items-center space-x-2">
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -448,6 +733,7 @@ const OnboardingReviewDashboard: React.FC = () => {
                                   setIsReviewModalOpen(true);
                                 }}
                                 className="hover:bg-blue-50 hover:border-blue-300"
+                                title="View Details"
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
@@ -457,10 +743,28 @@ const OnboardingReviewDashboard: React.FC = () => {
                                   size="sm"
                                   onClick={() => handleAssignReview(review.id)}
                                   className="hover:bg-green-50 hover:border-green-300"
+                                  title="Assign Review"
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                               )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => navigator.clipboard.writeText(review.id)}
+                                className="hover:bg-gray-50 hover:border-gray-300"
+                                title="Copy ID"
+                              >
+                                <Copy className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="hover:bg-gray-50 hover:border-gray-300"
+                                title="More Actions"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -595,6 +899,36 @@ const OnboardingReviewDashboard: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Floating Action Button */}
+        <div className="fixed bottom-6 right-6 z-40">
+          <div className="flex flex-col space-y-2">
+            <Button
+              variant="default"
+              size="lg"
+              className="w-14 h-14 rounded-full shadow-lg bg-blue-600 hover:bg-blue-700"
+              title="Quick Actions"
+            >
+              <Zap className="h-6 w-6" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-10 h-10 rounded-full shadow-lg bg-white hover:bg-gray-50"
+              title="Refresh"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-10 h-10 rounded-full shadow-lg bg-white hover:bg-gray-50"
+              title="Settings"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
