@@ -131,7 +131,7 @@
   "lastCheck": "2025-08-14T19:04:31.139Z",
   "overall": "RED",
   "autonomy.emergencyStop": false,
-  "lastUpdated": "2025-08-15T06:38:56.582Z",
+  "lastUpdated": "2025-08-17T06:39:15.311Z",
   "activationStep": 4,
   "autonomy.mode": "FULL",
   "agents.autonomousEnabled": true,
