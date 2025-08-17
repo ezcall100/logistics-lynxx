@@ -356,9 +356,10 @@ async function main() {
   
   try {
     // Run migrations
-    console.log('📦 Running migrations...');
-    await runMigration('20250101000000_access_control_v1.sql');
-    await runMigration('20250101000001_access_control_seeds.sql');
+      console.log('📦 Running migrations...');
+  await runMigration('20250101000000_access_control_v1.sql');
+  await runMigration('20250101000001_access_control_seeds.sql');
+  await runMigration('20250101000002_autonomous_agent_permissions.sql');
     
     // Verify setup
     console.log('\n🔍 Verifying setup...');
