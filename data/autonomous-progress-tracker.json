@@ -1,0 +1,244 @@
+{
+  "mission": {
+    "name": "Admin First, Then Core-16 (0→100%)",
+    "description": "Finish Software Admin portal end-to-end, then auto-advance through Core-16 sequence",
+    "startDate": "2025-08-17",
+    "targetCompletion": "2025-12-31",
+    "status": "in-progress"
+  },
+  "admin": {
+    "percent": 15,
+    "status": "in-progress",
+    "currentPhase": "Phase 1: Foundation",
+    "passed": ["basic-ui", "routing"],
+    "inProgress": ["app-shell", "design-system"],
+    "blocked": [],
+    "next": ["authentication", "rbac"],
+    "evidence": null,
+    "lastUpdated": "2025-08-17T10:00:00Z",
+    "areas": {
+      "overview": { "percent": 0, "status": "pending" },
+      "relationships": { "percent": 0, "status": "pending" },
+      "serviceDesk": { "percent": 0, "status": "pending" },
+      "networks": { "percent": 0, "status": "pending" },
+      "workforce": { "percent": 0, "status": "pending" },
+      "documents": { "percent": 0, "status": "pending" },
+      "financials": { "percent": 0, "status": "pending" },
+      "integrations": { "percent": 0, "status": "pending" },
+      "marketplace": { "percent": 0, "status": "pending" },
+      "reports": { "percent": 0, "status": "pending" },
+      "autonomousAgents": { "percent": 0, "status": "pending" }
+    },
+    "features": {
+      "crud": { "percent": 0, "status": "pending" },
+      "search": { "percent": 0, "status": "pending" },
+      "print": { "percent": 0, "status": "pending" },
+      "export": { "percent": 0, "status": "pending" },
+      "upload": { "percent": 0, "status": "pending" },
+      "audit": { "percent": 0, "status": "pending" },
+      "rbac": { "percent": 0, "status": "pending" },
+      "e2e": { "percent": 0, "status": "pending" },
+      "lighthouse": { "percent": 0, "status": "pending" },
+      "p95": { "percent": 0, "status": "pending" }
+    }
+  },
+  "core16": {
+    "crm": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "loadBoard": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "rates": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "edi": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "workers": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "directory": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "financials": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "analytics": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "shipper": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "broker": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "carrier": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "driver": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "apiIntegrations": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "marketplace": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "autonomousOps": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    },
+    "superAdmin": {
+      "percent": 0,
+      "status": "pending",
+      "next": false,
+      "blocked": [],
+      "evidence": null,
+      "lastUpdated": null
+    }
+  },
+  "metrics": {
+    "overallProgress": 1.0,
+    "adminProgress": 15.0,
+    "core16Progress": 0.0,
+    "totalPortals": 16,
+    "completedPortals": 0,
+    "inProgressPortals": 1,
+    "pendingPortals": 15
+  },
+  "quality": {
+    "performance": {
+      "p95RoutePaint": null,
+      "lighthouseScore": null,
+      "errorRate": null,
+      "uptime": null
+    },
+    "testing": {
+      "e2ePassRate": null,
+      "unitTestCoverage": null,
+      "accessibilityScore": null
+    },
+    "security": {
+      "vulnerabilities": null,
+      "rlsEnforced": null,
+      "securityScore": null
+    }
+  },
+  "deployment": {
+    "currentEnvironment": "development",
+    "canaryPercentage": 0,
+    "featureFlags": {
+      "ui.v2.enabled": false,
+      "ui.v2.accentMap": false,
+      "autonomy.emergencyStop": false,
+      "obs.otelEnabled": false
+    },
+    "lastDeployment": null,
+    "rollbackAvailable": false
+  },
+  "artifacts": {
+    "admin": null,
+    "crm": null,
+    "loadBoard": null,
+    "rates": null,
+    "edi": null,
+    "workers": null,
+    "directory": null,
+    "financials": null,
+    "analytics": null,
+    "shipper": null,
+    "broker": null,
+    "carrier": null,
+    "driver": null,
+    "apiIntegrations": null,
+    "marketplace": null,
+    "autonomousOps": null,
+    "superAdmin": null
+  },
+  "incidents": [],
+  "alerts": [],
+  "nextActions": [
+    "Complete Admin portal foundation (app-shell, design-system)",
+    "Implement authentication and RBAC",
+    "Begin Admin areas implementation",
+    "Set up progress tracking automation"
+  ],
+  "autoAdvanceReady": false,
+  "lastUpdated": "2025-08-17T10:00:00Z",
+  "version": "1.0.0"
+}
