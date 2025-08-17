@@ -21,6 +21,10 @@ import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAge
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import CarrierBrokerRiskReview from './components/onboarding/CarrierBrokerRiskReview';
 import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
+import SoftwareAdminPortal from './components/portals/SoftwareAdminPortal';
+import ShippersPortal from './components/portals/ShippersPortal';
+import BrokersPortal from './components/portals/BrokersPortal';
+import CarriersPortal from './components/portals/CarriersPortal';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -836,6 +840,31 @@ function App() {
           <Route path="/admin/onboarding-review" element={
             <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
               <OnboardingReviewDashboard />
+            </div>
+          } />
+
+          {/* Role-Based Portals */}
+          <Route path="/admin/software-admin" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <SoftwareAdminPortal />
+            </div>
+          } />
+
+          <Route path="/shippers/portal" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <ShippersPortal />
+            </div>
+          } />
+
+          <Route path="/brokers/portal" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <BrokersPortal />
+            </div>
+          } />
+
+          <Route path="/carriers/portal" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <CarriersPortal />
             </div>
           } />
         </Routes>
