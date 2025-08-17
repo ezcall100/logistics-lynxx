@@ -287,8 +287,27 @@ class AutonomousDevelopmentSystem {
   }
 
   private async executeFeatureDevelopment(task: DevelopmentTask, agent: Agent) {
-    // Use AI to generate feature code
+    // Use AI to generate feature code with enhanced understanding of carrier portal structure
     const prompt = `Develop a new feature: ${task.description}
+    
+    IMPORTANT CONTEXT:
+    - This is for a CARRIER PORTAL that includes both general carrier portal features AND a comprehensive TMS (Transportation Management System) for carriers
+    - The carrier portal should have role-based access with different user types:
+      * Fleet Manager: Full TMS access, fleet management, route optimization
+      * Dispatcher: Load assignment, driver management, real-time tracking
+      * Driver: Personal dashboard, load details, route information
+      * Owner/Operator: Business management, financial tracking, maintenance
+      * Admin: User management, system configuration, reporting
+    
+    TMS Software Features for Carriers:
+    - Fleet Management (vehicle tracking, maintenance, fuel management)
+    - Load Management (load assignment, tracking, delivery confirmation)
+    - Route Optimization (real-time routing, fuel efficiency, time optimization)
+    - Driver Management (scheduling, performance tracking, compliance)
+    - Financial Management (revenue tracking, expense management, invoicing)
+    - Maintenance Management (service scheduling, parts inventory, cost tracking)
+    - Compliance Management (DOT regulations, ELD compliance, safety records)
+    - Real-time Analytics (performance metrics, operational insights)
     
     Requirements:
     - Use React with TypeScript
@@ -296,18 +315,22 @@ class AutonomousDevelopmentSystem {
     - Include proper error handling
     - Add appropriate tests
     - Ensure responsive design
+    - Implement role-based access control (RBAC)
+    - Include real-time data integration
+    - Support mobile responsiveness for drivers
     
     Generate the complete implementation including:
-    1. Component code
-    2. TypeScript interfaces
-    3. Unit tests
-    4. Documentation
+    1. Component code with role-based rendering
+    2. TypeScript interfaces for different user roles
+    3. Route protection based on user permissions
+    4. Unit tests for role-based functionality
+    5. Documentation for TMS features
     `;
 
     const completion = await this.openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 2000,
+      max_tokens: 3000,
     });
 
     const generatedCode = completion.choices[0]?.message?.content;

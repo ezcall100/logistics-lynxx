@@ -199,29 +199,64 @@ class AutonomousDevelopmentAgent {
   private async developFeature(task: DevelopmentTask) {
     console.log(`🚀 Developing feature: ${task.description}`);
 
-    // Generate feature code using AI
+    // Generate feature code using AI with TMS understanding
     const prompt = `Develop a new feature: ${task.description}
+
+    CRITICAL TMS CONTEXT:
+    This is for a CARRIER PORTAL that includes both general carrier portal features AND a comprehensive TMS (Transportation Management System) for carriers.
+    
+    The carrier portal must include role-based access with different user types:
+    - Fleet Manager: Full TMS access, fleet management, route optimization, analytics
+    - Dispatcher: Load assignment, driver management, real-time tracking, scheduling
+    - Driver: Personal dashboard, load details, route information, compliance tracking
+    - Owner/Operator: Business management, financial tracking, maintenance oversight
+    - Admin: User management, system configuration, reporting, audit logs
+    
+    TMS Software Core Features for Carriers:
+    1. Fleet Management: Vehicle tracking, maintenance scheduling, fuel management, driver assignment
+    2. Load Management: Load assignment, real-time tracking, delivery confirmation, documentation
+    3. Route Optimization: Real-time routing, fuel efficiency optimization, time optimization, traffic integration
+    4. Driver Management: Scheduling, performance tracking, compliance monitoring, ELD integration
+    5. Financial Management: Revenue tracking, expense management, invoicing, profit analysis
+    6. Maintenance Management: Service scheduling, parts inventory, cost tracking, preventive maintenance
+    7. Compliance Management: DOT regulations, ELD compliance, safety records, audit trails
+    8. Real-time Analytics: Performance metrics, operational insights, predictive analytics
+    9. Mobile Integration: Driver mobile app, real-time updates, offline capability
+    10. Integration Capabilities: GPS tracking, fuel cards, accounting systems, ELD devices
 
     Requirements:
     - Use React with TypeScript
     - Follow modern best practices
     - Include proper error handling
     - Ensure responsive design
+    - Implement role-based access control (RBAC)
+    - Include real-time data integration
+    - Support mobile responsiveness for drivers
+    - Include comprehensive TMS functionality
     - Add appropriate TypeScript interfaces
     - Include comments for maintainability
+    - Ensure scalability for large fleets
+    - Include offline capability for drivers
+    - Implement real-time notifications
+    - Add comprehensive logging and audit trails
 
     Generate complete implementation including:
-    1. Main component code
-    2. TypeScript interfaces/types
-    3. Styling (CSS or styled-components)
-    4. Error boundaries if needed
-    5. Integration with existing system
+    1. Main component code with role-based rendering
+    2. TypeScript interfaces for different user roles and TMS entities
+    3. Route protection based on user permissions
+    4. Real-time data integration hooks
+    5. Mobile-responsive design considerations
+    6. Unit tests for role-based functionality
+    7. Integration tests for TMS features
+    8. Documentation for TMS features and API endpoints
+    9. Error boundaries and fallback components
+    10. Performance optimization considerations
     `;
 
     const completion = await this.openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 3000,
+      max_tokens: 4000,
     });
 
     const generatedCode = completion.choices[0]?.message?.content;

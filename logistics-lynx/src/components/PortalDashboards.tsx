@@ -13,44 +13,135 @@ import {
 // Enhanced Portal Dashboard Components
 export const CarrierDashboard = () => {
   const [selectedTab, setSelectedTab] = useState('overview');
+  const [userRole, setUserRole] = useState('fleet-manager'); // fleet-manager, dispatcher, driver, owner, admin
   
   const fleetData = {
     vehicles: [
-      { id: 'V001', type: 'Semi-Truck', status: 'Active', driver: 'John Smith', location: 'Chicago, IL', fuel: 85 },
-      { id: 'V002', type: 'Box Truck', status: 'Maintenance', driver: 'Mike Johnson', location: 'Detroit, MI', fuel: 45 },
-      { id: 'V003', type: 'Semi-Truck', status: 'Active', driver: 'Sarah Wilson', location: 'Atlanta, GA', fuel: 92 },
-      { id: 'V004', type: 'Flatbed', status: 'Active', driver: 'David Brown', location: 'Dallas, TX', fuel: 78 }
+      { id: 'V001', type: 'Semi-Truck', status: 'Active', driver: 'John Smith', location: 'Chicago, IL', fuel: 85, maintenance: 'Good', nextService: '2024-02-15' },
+      { id: 'V002', type: 'Box Truck', status: 'Maintenance', driver: 'Mike Johnson', location: 'Detroit, MI', fuel: 45, maintenance: 'Due', nextService: '2024-01-20' },
+      { id: 'V003', type: 'Semi-Truck', status: 'Active', driver: 'Sarah Wilson', location: 'Atlanta, GA', fuel: 92, maintenance: 'Good', nextService: '2024-02-20' },
+      { id: 'V004', type: 'Flatbed', status: 'Active', driver: 'David Brown', location: 'Dallas, TX', fuel: 78, maintenance: 'Good', nextService: '2024-02-25' }
     ],
     drivers: [
-      { id: 'D001', name: 'John Smith', status: 'Active', rating: 4.8, hours: 42, location: 'Chicago, IL' },
-      { id: 'D002', name: 'Mike Johnson', status: 'Off Duty', rating: 4.5, hours: 38, location: 'Detroit, MI' },
-      { id: 'D003', name: 'Sarah Wilson', status: 'Active', rating: 4.9, hours: 45, location: 'Atlanta, GA' },
-      { id: 'D004', name: 'David Brown', status: 'Active', rating: 4.7, hours: 40, location: 'Dallas, TX' }
+      { id: 'D001', name: 'John Smith', status: 'Active', rating: 4.8, hours: 42, location: 'Chicago, IL', license: 'Valid', medical: 'Valid', eldStatus: 'Compliant' },
+      { id: 'D002', name: 'Mike Johnson', status: 'Off Duty', rating: 4.5, hours: 38, location: 'Detroit, MI', license: 'Valid', medical: 'Valid', eldStatus: 'Compliant' },
+      { id: 'D003', name: 'Sarah Wilson', status: 'Active', rating: 4.9, hours: 45, location: 'Atlanta, GA', license: 'Valid', medical: 'Valid', eldStatus: 'Compliant' },
+      { id: 'D004', name: 'David Brown', status: 'Active', rating: 4.7, hours: 40, location: 'Dallas, TX', license: 'Valid', medical: 'Valid', eldStatus: 'Compliant' }
     ],
     loads: [
-      { id: 'L001', origin: 'Chicago, IL', destination: 'Atlanta, GA', status: 'In Transit', value: '$2,500', eta: '2 hours' },
-      { id: 'L002', origin: 'Detroit, MI', destination: 'Dallas, TX', status: 'Loading', value: '$3,200', eta: '4 hours' },
-      { id: 'L003', origin: 'Atlanta, GA', destination: 'Chicago, IL', status: 'Delivered', value: '$2,800', eta: 'Completed' },
-      { id: 'L004', origin: 'Dallas, TX', destination: 'Detroit, MI', status: 'Scheduled', value: '$2,900', eta: '6 hours' }
-    ]
+      { id: 'L001', origin: 'Chicago, IL', destination: 'Atlanta, GA', status: 'In Transit', value: '$2,500', eta: '2 hours', driver: 'John Smith', vehicle: 'V001', fuelUsed: 45, miles: 750 },
+      { id: 'L002', origin: 'Detroit, MI', destination: 'Dallas, TX', status: 'Loading', value: '$3,200', eta: '4 hours', driver: 'Mike Johnson', vehicle: 'V002', fuelUsed: 0, miles: 0 },
+      { id: 'L003', origin: 'Atlanta, GA', destination: 'Chicago, IL', status: 'Delivered', value: '$2,800', eta: 'Completed', driver: 'Sarah Wilson', vehicle: 'V003', fuelUsed: 42, miles: 720 },
+      { id: 'L004', origin: 'Dallas, TX', destination: 'Detroit, MI', status: 'Scheduled', value: '$2,900', eta: '6 hours', driver: 'David Brown', vehicle: 'V004', fuelUsed: 0, miles: 0 }
+    ],
+    financials: {
+      revenue: { mtd: 45600, ytd: 234500, projected: 280000 },
+      expenses: { fuel: 12500, maintenance: 8500, insurance: 4200, other: 6800 },
+      profit: { mtd: 13600, ytd: 213500, margin: 91.1 }
+    }
   };
 
-  const tabs = [
-    { id: 'overview', label: 'Overview', icon: '📊' },
-    { id: 'fleet', label: 'Fleet Management', icon: '🚛' },
-    { id: 'drivers', label: 'Driver Management', icon: '👤' },
-    { id: 'loads', label: 'Load Management', icon: '📦' },
-    { id: 'routes', label: 'Route Optimization', icon: '🗺️' },
-    { id: 'maintenance', label: 'Maintenance', icon: '🔧' }
-  ];
+  // Role-based tab configuration
+  const getTabsForRole = (role: string) => {
+    const baseTabs = [
+      { id: 'overview', label: 'Overview', icon: '📊' },
+      { id: 'fleet', label: 'Fleet Management', icon: '🚛' },
+      { id: 'loads', label: 'Load Management', icon: '📦' },
+      { id: 'drivers', label: 'Driver Management', icon: '👤' },
+      { id: 'routes', label: 'Route Optimization', icon: '🗺️' },
+      { id: 'maintenance', label: 'Maintenance', icon: '🔧' }
+    ];
+
+    switch (role) {
+      case 'fleet-manager':
+        return [
+          ...baseTabs,
+          { id: 'analytics', label: 'Analytics', icon: '📈' },
+          { id: 'compliance', label: 'Compliance', icon: '✅' },
+          { id: 'reports', label: 'Reports', icon: '📋' }
+        ];
+      case 'dispatcher':
+        return [
+          { id: 'overview', label: 'Overview', icon: '📊' },
+          { id: 'loads', label: 'Load Management', icon: '📦' },
+          { id: 'drivers', label: 'Driver Management', icon: '👤' },
+          { id: 'routes', label: 'Route Optimization', icon: '🗺️' },
+          { id: 'tracking', label: 'Real-time Tracking', icon: '📍' },
+          { id: 'scheduling', label: 'Scheduling', icon: '📅' }
+        ];
+      case 'driver':
+        return [
+          { id: 'overview', label: 'My Dashboard', icon: '📊' },
+          { id: 'current-load', label: 'Current Load', icon: '📦' },
+          { id: 'route', label: 'Route Info', icon: '🗺️' },
+          { id: 'documents', label: 'Documents', icon: '📋' },
+          { id: 'earnings', label: 'Earnings', icon: '💰' },
+          { id: 'compliance', label: 'Compliance', icon: '✅' }
+        ];
+      case 'owner':
+        return [
+          { id: 'overview', label: 'Business Overview', icon: '📊' },
+          { id: 'financials', label: 'Financial Management', icon: '💰' },
+          { id: 'fleet', label: 'Fleet Management', icon: '🚛' },
+          { id: 'analytics', label: 'Analytics', icon: '📈' },
+          { id: 'compliance', label: 'Compliance', icon: '✅' },
+          { id: 'reports', label: 'Reports', icon: '📋' }
+        ];
+      case 'admin':
+        return [
+          { id: 'overview', label: 'System Overview', icon: '📊' },
+          { id: 'users', label: 'User Management', icon: '👥' },
+          { id: 'settings', label: 'System Settings', icon: '⚙️' },
+          { id: 'compliance', label: 'Compliance', icon: '✅' },
+          { id: 'reports', label: 'Reports', icon: '📋' },
+          { id: 'audit', label: 'Audit Logs', icon: '📝' }
+        ];
+      default:
+        return baseTabs;
+    }
+  };
+
+  const tabs = getTabsForRole(userRole);
 
   return (
     <div style={{ display: 'grid', gap: '2rem' }}>
+      {/* Role Selector */}
+      <div style={{
+        backgroundColor: 'white',
+        padding: '1rem',
+        borderRadius: '0.75rem',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <span style={{ fontWeight: '600', color: '#374151' }}>Role:</span>
+          {['fleet-manager', 'dispatcher', 'driver', 'owner', 'admin'].map(role => (
+            <button
+              key={role}
+              onClick={() => setUserRole(role)}
+              style={{
+                padding: '0.5rem 1rem',
+                border: 'none',
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'all 0.2s',
+                backgroundColor: userRole === role ? '#1e40af' : '#f3f4f6',
+                color: userRole === role ? 'white' : '#374151'
+              }}
+            >
+              {role.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Alerts */}
       <AlertCard 
         type="success" 
-        title="System Status" 
-        message="All systems are operating normally. Fleet efficiency is at 94%."
+        title="TMS System Status" 
+        message={`Carrier Portal TMS is operating normally. ${userRole.replace('-', ' ')} dashboard active.`}
         onDismiss={() => {}}
       />
       
@@ -102,26 +193,84 @@ export const CarrierDashboard = () => {
       {/* Tab Content */}
       {selectedTab === 'overview' && (
         <>
-          {/* Metrics Grid */}
+          {/* Role-specific metrics */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-            <MetricCard title="Active Vehicles" value="24" change={12} icon="🚛" color="#3b82f6" />
-            <MetricCard title="Active Drivers" value="18" change={8} icon="👤" color="#10b981" />
-            <MetricCard title="Active Loads" value="12" change={-3} icon="📦" color="#f59e0b" />
-            <MetricCard title="Revenue (MTD)" value="$45,231" change={23} icon="💰" color="#8b5cf6" />
+            {userRole === 'fleet-manager' && (
+              <>
+                <MetricCard title="Active Vehicles" value="24" change={12} icon="🚛" color="#3b82f6" />
+                <MetricCard title="Active Drivers" value="18" change={8} icon="👤" color="#10b981" />
+                <MetricCard title="Active Loads" value="12" change={-3} icon="📦" color="#f59e0b" />
+                <MetricCard title="Revenue (MTD)" value="$45,600" change={23} icon="💰" color="#8b5cf6" />
+              </>
+            )}
+            {userRole === 'dispatcher' && (
+              <>
+                <MetricCard title="Pending Loads" value="8" change={2} icon="📦" color="#f59e0b" />
+                <MetricCard title="Available Drivers" value="6" change={1} icon="👤" color="#10b981" />
+                <MetricCard title="In Transit" value="12" change={-1} icon="🚛" color="#3b82f6" />
+                <MetricCard title="On-Time Rate" value="96%" change={2} icon="✅" color="#8b5cf6" />
+              </>
+            )}
+            {userRole === 'driver' && (
+              <>
+                <MetricCard title="Current Load" value="L001" change={0} icon="📦" color="#f59e0b" />
+                <MetricCard title="Hours This Week" value="42" change={5} icon="⏰" color="#3b82f6" />
+                <MetricCard title="Miles Driven" value="750" change={120} icon="🚗" color="#10b981" />
+                <MetricCard title="This Week's Pay" value="$1,250" change={150} icon="💰" color="#8b5cf6" />
+              </>
+            )}
+            {userRole === 'owner' && (
+              <>
+                <MetricCard title="Monthly Revenue" value="$45,600" change={15} icon="💰" color="#8b5cf6" />
+                <MetricCard title="Profit Margin" value="91.1%" change={3} icon="📈" color="#10b981" />
+                <MetricCard title="Active Fleet" value="24" change={2} icon="🚛" color="#3b82f6" />
+                <MetricCard title="Fuel Efficiency" value="6.8 mpg" change={-0.2} icon="⛽" color="#f59e0b" />
+              </>
+            )}
+            {userRole === 'admin' && (
+              <>
+                <MetricCard title="Active Users" value="18" change={2} icon="👥" color="#3b82f6" />
+                <MetricCard title="System Uptime" value="99.9%" change={0.1} icon="✅" color="#10b981" />
+                <MetricCard title="Compliance Score" value="98%" change={1} icon="📋" color="#f59e0b" />
+                <MetricCard title="Data Storage" value="2.4 TB" change={8} icon="💾" color="#8b5cf6" />
+              </>
+            )}
           </div>
           
           {/* Main Content Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
             <div style={{ display: 'grid', gap: '1.5rem' }}>
-              <QuickActions actions={[
-                { icon: '➕', label: 'Add Vehicle' },
-                { icon: '👤', label: 'Add Driver' },
-                { icon: '📦', label: 'Assign Load' },
-                { icon: '🗺️', label: 'Plan Route' }
-              ]} />
-              <ChartCard title="Fleet Performance Overview">
+              <QuickActions actions={
+                userRole === 'fleet-manager' ? [
+                  { icon: '➕', label: 'Add Vehicle' },
+                  { icon: '👤', label: 'Add Driver' },
+                  { icon: '📦', label: 'Assign Load' },
+                  { icon: '🗺️', label: 'Plan Route' }
+                ] : userRole === 'dispatcher' ? [
+                  { icon: '📦', label: 'Assign Load' },
+                  { icon: '👤', label: 'Manage Drivers' },
+                  { icon: '📍', label: 'Track Vehicles' },
+                  { icon: '📅', label: 'Schedule' }
+                ] : userRole === 'driver' ? [
+                  { icon: '📦', label: 'View Load' },
+                  { icon: '🗺️', label: 'Route Info' },
+                  { icon: '📋', label: 'Documents' },
+                  { icon: '💰', label: 'Earnings' }
+                ] : userRole === 'owner' ? [
+                  { icon: '💰', label: 'Financials' },
+                  { icon: '🚛', label: 'Fleet Status' },
+                  { icon: '📈', label: 'Analytics' },
+                  { icon: '📋', label: 'Reports' }
+                ] : [
+                  { icon: '👥', label: 'Manage Users' },
+                  { icon: '⚙️', label: 'Settings' },
+                  { icon: '📋', label: 'Reports' },
+                  { icon: '📝', label: 'Audit Logs' }
+                ]
+              } />
+              <ChartCard title={`${userRole.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} Performance Overview`}>
                 <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-                  Chart visualization would go here
+                  TMS Chart visualization would go here
                 </div>
               </ChartCard>
             </div>
@@ -135,11 +284,12 @@ export const CarrierDashboard = () => {
         </>
       )}
 
+      {/* Fleet Management Tab */}
       {selectedTab === 'fleet' && (
         <div style={{ display: 'grid', gap: '1.5rem' }}>
           <DataTable 
-            title="Fleet Overview"
-            headers={['Vehicle ID', 'Type', 'Status', 'Driver', 'Location', 'Fuel %', 'Actions']}
+            title="Fleet Management - TMS"
+            headers={['Vehicle ID', 'Type', 'Status', 'Driver', 'Location', 'Fuel %', 'Maintenance', 'Next Service', 'Actions']}
             data={fleetData.vehicles.map(v => [
               v.id,
               v.type,
@@ -147,6 +297,8 @@ export const CarrierDashboard = () => {
               v.driver,
               v.location,
               <ProgressBar key={v.id} value={v.fuel} max={100} label="" color={v.fuel > 20 ? '#10b981' : '#ef4444'} />,
+              <StatusIndicator key={v.id} status={v.maintenance === 'Good' ? 'online' : 'offline'} label={v.maintenance} />,
+              v.nextService,
               <button key={v.id} style={{
                 padding: '0.25rem 0.5rem',
                 border: 'none',
@@ -161,37 +313,12 @@ export const CarrierDashboard = () => {
         </div>
       )}
 
-      {selectedTab === 'drivers' && (
-        <div style={{ display: 'grid', gap: '1.5rem' }}>
-          <DataTable 
-            title="Driver Management"
-            headers={['Driver ID', 'Name', 'Status', 'Rating', 'Hours', 'Location', 'Actions']}
-            data={fleetData.drivers.map(d => [
-              d.id,
-              d.name,
-              <StatusIndicator key={d.id} status={d.status === 'Active' ? 'online' : 'offline'} label={d.status} />,
-              `${d.rating} ⭐`,
-              `${d.hours}h`,
-              d.location,
-              <button key={d.id} style={{
-                padding: '0.25rem 0.5rem',
-                border: 'none',
-                borderRadius: '0.25rem',
-                backgroundColor: '#1e40af',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '0.75rem'
-              }}>View Details</button>
-            ])}
-          />
-        </div>
-      )}
-
+      {/* Load Management Tab */}
       {selectedTab === 'loads' && (
         <div style={{ display: 'grid', gap: '1.5rem' }}>
           <DataTable 
-            title="Load Management"
-            headers={['Load ID', 'Origin', 'Destination', 'Status', 'Value', 'ETA', 'Actions']}
+            title="Load Management - TMS"
+            headers={['Load ID', 'Origin', 'Destination', 'Status', 'Value', 'ETA', 'Driver', 'Vehicle', 'Fuel Used', 'Miles', 'Actions']}
             data={fleetData.loads.map(l => [
               l.id,
               l.origin,
@@ -199,6 +326,10 @@ export const CarrierDashboard = () => {
               <StatusIndicator key={l.id} status={l.status === 'In Transit' ? 'online' : 'offline'} label={l.status} />,
               l.value,
               l.eta,
+              l.driver,
+              l.vehicle,
+              `${l.fuelUsed} gal`,
+              `${l.miles} mi`,
               <button key={l.id} style={{
                 padding: '0.25rem 0.5rem',
                 border: 'none',
@@ -213,23 +344,55 @@ export const CarrierDashboard = () => {
         </div>
       )}
 
+      {/* Driver Management Tab */}
+      {selectedTab === 'drivers' && (
+        <div style={{ display: 'grid', gap: '1.5rem' }}>
+          <DataTable 
+            title="Driver Management - TMS"
+            headers={['Driver ID', 'Name', 'Status', 'Rating', 'Hours', 'Location', 'License', 'Medical', 'ELD Status', 'Actions']}
+            data={fleetData.drivers.map(d => [
+              d.id,
+              d.name,
+              <StatusIndicator key={d.id} status={d.status === 'Active' ? 'online' : 'offline'} label={d.status} />,
+              `${d.rating} ⭐`,
+              `${d.hours}h`,
+              d.location,
+              <StatusIndicator key={d.id} status="online" label={d.license} />,
+              <StatusIndicator key={d.id} status="online" label={d.medical} />,
+              <StatusIndicator key={d.id} status="online" label={d.eldStatus} />,
+              <button key={d.id} style={{
+                padding: '0.25rem 0.5rem',
+                border: 'none',
+                borderRadius: '0.25rem',
+                backgroundColor: '#1e40af',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '0.75rem'
+              }}>View Details</button>
+            ])}
+          />
+        </div>
+      )}
+
+      {/* Route Optimization Tab */}
       {selectedTab === 'routes' && (
         <div style={{ display: 'grid', gap: '1.5rem' }}>
-          <ChartCard title="Route Optimization">
+          <ChartCard title="Route Optimization - TMS">
             <div style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-              Interactive map with route optimization would go here
+              Interactive TMS route optimization map would go here
             </div>
           </ChartCard>
         </div>
       )}
 
+      {/* Maintenance Tab */}
       {selectedTab === 'maintenance' && (
         <div style={{ display: 'grid', gap: '1.5rem' }}>
           <DataTable 
-            title="Maintenance Schedule"
-            headers={['Vehicle ID', 'Type', 'Last Service', 'Next Service', 'Status', 'Actions']}
+            title="Maintenance Schedule - TMS"
+            headers={['Vehicle ID', 'Type', 'Last Service', 'Next Service', 'Status', 'Cost', 'Actions']}
             data={[
-              ['V002', 'Box Truck', '2024-01-15', '2024-02-15', <StatusIndicator status="offline" label="Due Soon" />, 
+              ['V002', 'Box Truck', '2024-01-15', '2024-01-20', <StatusIndicator status="offline" label="Due Soon" />, '$850',
                <button style={{
                  padding: '0.25rem 0.5rem',
                  border: 'none',
@@ -239,7 +402,7 @@ export const CarrierDashboard = () => {
                  cursor: 'pointer',
                  fontSize: '0.75rem'
                }}>Schedule Service</button>],
-              ['V005', 'Semi-Truck', '2024-01-20', '2024-02-20', <StatusIndicator status="online" label="Good" />,
+              ['V005', 'Semi-Truck', '2024-01-20', '2024-02-20', <StatusIndicator status="online" label="Good" />, '$0',
                <button style={{
                  padding: '0.25rem 0.5rem',
                  border: 'none',
@@ -249,6 +412,76 @@ export const CarrierDashboard = () => {
                  cursor: 'pointer',
                  fontSize: '0.75rem'
                }}>View History</button>]
+            ]}
+          />
+        </div>
+      )}
+
+      {/* Financial Management Tab (Owner Role) */}
+      {selectedTab === 'financials' && userRole === 'owner' && (
+        <div style={{ display: 'grid', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <MetricCard title="MTD Revenue" value={`$${fleetData.financials.revenue.mtd.toLocaleString()}`} change={15} icon="💰" color="#8b5cf6" />
+            <MetricCard title="MTD Expenses" value={`$${Object.values(fleetData.financials.expenses).reduce((a, b) => a + b, 0).toLocaleString()}`} change={-8} icon="💸" color="#ef4444" />
+            <MetricCard title="MTD Profit" value={`$${fleetData.financials.profit.mtd.toLocaleString()}`} change={23} icon="📈" color="#10b981" />
+            <MetricCard title="Profit Margin" value={`${fleetData.financials.profit.margin}%`} change={3} icon="📊" color="#f59e0b" />
+          </div>
+          <ChartCard title="Financial Overview - TMS">
+            <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+              TMS Financial charts would go here
+            </div>
+          </ChartCard>
+        </div>
+      )}
+
+      {/* Analytics Tab */}
+      {selectedTab === 'analytics' && (
+        <div style={{ display: 'grid', gap: '1.5rem' }}>
+          <ChartCard title="TMS Analytics Dashboard">
+            <div style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+              Comprehensive TMS analytics would go here
+            </div>
+          </ChartCard>
+        </div>
+      )}
+
+      {/* Compliance Tab */}
+      {selectedTab === 'compliance' && (
+        <div style={{ display: 'grid', gap: '1.5rem' }}>
+          <DataTable 
+            title="Compliance Management - TMS"
+            headers={['Category', 'Status', 'Last Check', 'Next Due', 'Score', 'Actions']}
+            data={[
+              ['DOT Regulations', <StatusIndicator status="online" label="Compliant" />, '2024-01-20', '2024-02-20', '98%',
+               <button style={{
+                 padding: '0.25rem 0.5rem',
+                 border: 'none',
+                 borderRadius: '0.25rem',
+                 backgroundColor: '#1e40af',
+                 color: 'white',
+                 cursor: 'pointer',
+                 fontSize: '0.75rem'
+               }}>View Details</button>],
+              ['ELD Compliance', <StatusIndicator status="online" label="Compliant" />, '2024-01-21', '2024-02-21', '100%',
+               <button style={{
+                 padding: '0.25rem 0.5rem',
+                 border: 'none',
+                 borderRadius: '0.25rem',
+                 backgroundColor: '#1e40af',
+                 color: 'white',
+                 cursor: 'pointer',
+                 fontSize: '0.75rem'
+               }}>View Details</button>],
+              ['Safety Records', <StatusIndicator status="online" label="Good" />, '2024-01-19', '2024-02-19', '95%',
+               <button style={{
+                 padding: '0.25rem 0.5rem',
+                 border: 'none',
+                 borderRadius: '0.25rem',
+                 backgroundColor: '#1e40af',
+                 color: 'white',
+                 cursor: 'pointer',
+                 fontSize: '0.75rem'
+               }}>View Details</button>]
             ]}
           />
         </div>
