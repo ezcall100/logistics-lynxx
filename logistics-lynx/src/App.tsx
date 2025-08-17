@@ -17,6 +17,7 @@ import {
 } from './components/PortalDashboards';
 import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard';
 import LogisticsManagementDashboard from './pages/LogisticsManagementDashboard';
+import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAgent';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -600,8 +601,9 @@ function App() {
                       { name: 'Directory', icon: '📚', path: '/directory', color: '#64748b' },
                       { name: 'EDI', icon: '📡', path: '/edi', color: '#7c3aed' },
                       { name: 'Marketplace', icon: '🛒', path: '/marketplace', color: '#f97316' },
-                      { name: 'Testing', icon: '🧪', path: '/testing', color: '#84cc16' },
-                      { name: 'Logistics Management', icon: '📦', path: '/logistics-management', color: '#059669' }
+                              { name: 'Testing', icon: '🧪', path: '/testing', color: '#84cc16' },
+        { name: 'Logistics Management', icon: '📦', path: '/logistics-management', color: '#059669' },
+        { name: 'Master Autonomous Agent', icon: '🤖', path: '/master-autonomous-agent', color: '#7c3aed' }
                     ].map((portal, index) => (
                       <Link key={index} to={portal.path} className="portal-card" style={{
                         backgroundColor: 'white',
@@ -809,6 +811,13 @@ function App() {
           <Route path="/logistics-management" element={
             <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
               <LogisticsManagementDashboard />
+            </div>
+          } />
+
+          {/* Master Autonomous Agent Dashboard */}
+          <Route path="/master-autonomous-agent" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <MasterAutonomousAgentDashboard />
             </div>
           } />
         </Routes>
