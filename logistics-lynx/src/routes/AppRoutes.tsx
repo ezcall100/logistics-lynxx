@@ -15,6 +15,7 @@ const CarrierDashboard = lazy(() => import('@/pages/carrier/dashboard'));
 const ShipperDashboard = lazy(() => import('@/pages/shipper/dashboard'));
 const DriverDashboard = lazy(() => import('@/pages/driver/dashboard'));
 const SuperAdminDashboard = lazy(() => import('@/pages/superAdmin/dashboard'));
+const LogisticsManagementDashboard = lazy(() => import('@/pages/LogisticsManagementDashboard'));
 
 export default function AppRoutes() {
   return (
@@ -30,6 +31,7 @@ export default function AppRoutes() {
             <Route path="/shipper/dashboard" element={<ShipperDashboard />} />
             <Route path="/driver/dashboard" element={<DriverDashboard />} />
             <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
+            <Route path="/logistics-management" element={<LogisticsManagementDashboard />} />
 
             {/* Rates Portal (Shippers, Brokers, Carriers, Super/Admin) */}
             <Route
