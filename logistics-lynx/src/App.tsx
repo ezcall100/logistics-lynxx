@@ -11,6 +11,12 @@ import {
   DataTable,
   AlertCard
 } from './components/DashboardComponents';
+import {
+  CarrierDashboard,
+  BrokerDashboard,
+  AutonomousDashboard,
+  AnalyticsDashboard
+} from './components/PortalDashboards';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -181,7 +187,7 @@ function App() {
       }));
     };
 
-    return (
+  return (
       <div style={{
         width: sidebarOpen ? '280px' : '60px',
         backgroundColor: '#1e293b',
@@ -645,128 +651,25 @@ function App() {
           {/* Enhanced Portal Dashboards */}
           <Route path="/carrier/*" element={
             <PortalLayout portalType="carrier" title="🚛 Carrier Portal" description="Fleet management and operations dashboard">
-              <div style={{ display: 'grid', gap: '2rem' }}>
-                {/* Alerts */}
-                <AlertCard 
-                  type="success" 
-                  title="System Status" 
-                  message="All systems are operating normally. Fleet efficiency is at 94%."
-                  onDismiss={() => {}}
-                />
-                
-                {/* Metrics Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-                  {carrierData.metrics.map((metric, index) => (
-                    <MetricCard key={index} {...metric} />
-                  ))}
-                </div>
-                
-                {/* Main Content Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
-                  <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <QuickActions actions={carrierData.quickActions} />
-                    <ChartCard title="Fleet Performance Overview">
-                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-                        Chart visualization would go here
-                      </div>
-                    </ChartCard>
-                  </div>
-                  <ActivityFeed activities={carrierData.activities} />
-                </div>
-              </div>
+              <CarrierDashboard />
             </PortalLayout>
           } />
           
           <Route path="/broker/*" element={
             <PortalLayout portalType="broker" title="🏢 Broker Portal" description="Smart load matching and rate optimization">
-              <div style={{ display: 'grid', gap: '2rem' }}>
-                {/* Alerts */}
-                <AlertCard 
-                  type="warning" 
-                  title="Rate Optimization" 
-                  message="15 loads need rate optimization. AI suggestions available."
-                  onDismiss={() => {}}
-                />
-                
-                {/* Metrics Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-                  {brokerData.metrics.map((metric, index) => (
-                    <MetricCard key={index} {...metric} />
-                  ))}
-                </div>
-                
-                {/* Main Content Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
-                  <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <QuickActions actions={brokerData.quickActions} />
-                    <ChartCard title="Load Matching Performance">
-                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-                        Chart visualization would go here
-                      </div>
-                    </ChartCard>
-                  </div>
-                  <ActivityFeed activities={brokerData.activities} />
-                </div>
-              </div>
+              <BrokerDashboard />
             </PortalLayout>
           } />
           
           <Route path="/autonomous/*" element={
             <PortalLayout portalType="autonomous" title="🤖 Autonomous Portal" description="24/7 No-Human Operations Control Center">
-              <div style={{ display: 'grid', gap: '2rem' }}>
-                {/* System Status */}
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                  <StatusIndicator status="online" label="System Online" />
-                  <StatusIndicator status="online" label="250+ Agents Active" />
-                  <StatusIndicator status="online" label="98.5% Success Rate" />
-                </div>
-                
-                {/* Metrics Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-                  {autonomousData.metrics.map((metric, index) => (
-                    <MetricCard key={index} {...metric} />
-                  ))}
-                </div>
-                
-                {/* Main Content Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
-                  <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <QuickActions actions={autonomousData.quickActions} />
-                    <ChartCard title="Agent Performance Metrics">
-                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-                        Chart visualization would go here
-                      </div>
-                    </ChartCard>
-                  </div>
-                  <ActivityFeed activities={autonomousData.activities} />
-                </div>
-              </div>
+              <AutonomousDashboard />
             </PortalLayout>
           } />
           
           <Route path="/analytics/*" element={
             <PortalLayout portalType="analytics" title="📊 Analytics Portal" description="Business intelligence and performance analytics">
-              <div style={{ display: 'grid', gap: '2rem' }}>
-                {/* Metrics Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-                  {analyticsData.metrics.map((metric, index) => (
-                    <MetricCard key={index} {...metric} />
-                  ))}
-                </div>
-                
-                {/* Main Content Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
-                  <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <QuickActions actions={analyticsData.quickActions} />
-                    <ChartCard title="Revenue Trends">
-                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-                        Chart visualization would go here
-                      </div>
-                    </ChartCard>
-                  </div>
-                  <ActivityFeed activities={analyticsData.activities} />
-                </div>
-              </div>
+              <AnalyticsDashboard />
             </PortalLayout>
           } />
           
