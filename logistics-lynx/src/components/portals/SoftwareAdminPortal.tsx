@@ -246,7 +246,7 @@ function Sidebar() {
     setExpandedGroups(newExpanded);
   };
 
-  return (
+        return (
     <aside className="w-72 border-r bg-gradient-to-b from-slate-50 to-slate-100 p-4 space-y-4">
       <div className="flex items-center gap-2 px-2">
         <Shield className="h-5 w-5 text-blue-600" />
@@ -265,7 +265,7 @@ function Sidebar() {
                   <div className="flex items-center gap-2">
                     {group.icon && <group.icon className="h-4 w-4" />}
                     <span>{group.title}</span>
-                  </div>
+          </div>
                   <ChevronDown 
                     className={`h-4 w-4 transition-transform ${
                       expandedGroups.has(group.key) ? 'rotate-180' : ''
@@ -319,8 +319,8 @@ function Sidebar() {
             <a href="/help" className="hover:text-slate-700">Help</a>
           </div>
           <button className="hover:text-slate-700">🌓</button>
+          </div>
         </div>
-      </div>
     </aside>
   );
 }
@@ -365,7 +365,7 @@ function TopBar() {
               <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Ticket</a>
               <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Invoice</a>
               <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Load</a>
-            </div>
+        </div>
           )}
         </div>
 
@@ -392,7 +392,7 @@ function TopBar() {
           <User className="h-5 w-5" />
           <span className="text-sm">Admin</span>
         </button>
-      </div>
+        </div>
     </header>
   );
 }
@@ -428,50 +428,50 @@ function DashboardContent() {
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-100 rounded-lg">
               <CheckCircle className="h-6 w-6 text-green-600" />
-            </div>
+                    </div>
             <div>
               <p className="text-sm text-slate-600">System Status</p>
               <p className="text-lg font-semibold text-green-600">{systemHealth.status}</p>
-            </div>
-          </div>
-        </EnhancedCard>
+                    </div>
+                  </div>
+                </EnhancedCard>
 
         <EnhancedCard className="p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">
               <Activity className="h-6 w-6 text-blue-600" />
-            </div>
+                    </div>
             <div>
               <p className="text-sm text-slate-600">Uptime</p>
               <p className="text-lg font-semibold text-blue-600">{systemHealth.uptime}</p>
-            </div>
-          </div>
-        </EnhancedCard>
+                    </div>
+                  </div>
+                </EnhancedCard>
 
         <EnhancedCard className="p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-purple-100 rounded-lg">
               <Zap className="h-6 w-6 text-purple-600" />
-            </div>
+                    </div>
             <div>
               <p className="text-sm text-slate-600">Active Agents</p>
               <p className="text-lg font-semibold text-purple-600">{systemHealth.activeAgents}+</p>
-            </div>
-          </div>
-        </EnhancedCard>
+                    </div>
+                  </div>
+                </EnhancedCard>
 
         <EnhancedCard className="p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-orange-100 rounded-lg">
               <AlertTriangle className="h-6 w-6 text-orange-600" />
-            </div>
+                    </div>
             <div>
               <p className="text-sm text-slate-600">Alerts</p>
               <p className="text-lg font-semibold text-orange-600">{systemHealth.alerts}</p>
-            </div>
-          </div>
-        </EnhancedCard>
-      </div>
+                    </div>
+                  </div>
+                </EnhancedCard>
+              </div>
 
       {/* Recent Activity */}
       <EnhancedCard className="p-6">
@@ -487,15 +487,15 @@ function DashboardContent() {
                 {activity.status === 'success' ? <CheckCircle className="h-4 w-4 text-green-600" /> :
                  activity.status === 'warning' ? <AlertTriangle className="h-4 w-4 text-orange-600" /> :
                  <Clock className="h-4 w-4 text-blue-600" />}
-              </div>
+                    </div>
               <div className="flex-1">
                 <p className="text-sm font-medium">{activity.message}</p>
                 <p className="text-xs text-slate-500">{activity.time}</p>
-              </div>
-            </div>
+                    </div>
+                    </div>
           ))}
-        </div>
-      </EnhancedCard>
+                  </div>
+                </EnhancedCard>
 
       {/* Autonomous Agent Status */}
       <EnhancedCard className="p-6">
@@ -505,20 +505,20 @@ function DashboardContent() {
             <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-2" />
             <p className="text-2xl font-bold text-green-600">250+</p>
             <p className="text-sm text-green-700">Active Agents</p>
-          </div>
+                    </div>
           <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
             <Zap className="h-8 w-8 text-blue-600 mx-auto mb-2" />
             <p className="text-2xl font-bold text-blue-600">98.5%</p>
             <p className="text-sm text-blue-700">Success Rate</p>
-          </div>
+                    </div>
           <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
             <Activity className="h-8 w-8 text-purple-600 mx-auto mb-2" />
             <p className="text-2xl font-bold text-purple-600">~150ms</p>
             <p className="text-sm text-purple-700">Response Time</p>
-          </div>
-        </div>
-      </EnhancedCard>
-    </div>
+                    </div>
+                  </div>
+                </EnhancedCard>
+              </div>
   );
 }
 
@@ -535,15 +535,15 @@ export default function SoftwareAdminPortal() {
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Software Admin Portal</h1>
               <p className="text-slate-600 mt-2">Full autonomous agent authority enabled</p>
-            </div>
+                      </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 px-3 py-2 bg-green-100 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-sm font-medium text-green-700">System Online</span>
-              </div>
+                      </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
@@ -556,8 +556,8 @@ export default function SoftwareAdminPortal() {
                 <p className="text-sm text-slate-600">Active Agents</p>
                 <p className="text-2xl font-bold text-blue-600">250+</p>
               </div>
+                  </div>
             </div>
-          </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center gap-3">
@@ -568,8 +568,8 @@ export default function SoftwareAdminPortal() {
                 <p className="text-sm text-slate-600">Success Rate</p>
                 <p className="text-2xl font-bold text-green-600">98.5%</p>
               </div>
+                  </div>
             </div>
-          </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center gap-3">
@@ -580,15 +580,15 @@ export default function SoftwareAdminPortal() {
                 <p className="text-sm text-slate-600">Response Time</p>
                 <p className="text-2xl font-bold text-purple-600">~150ms</p>
               </div>
+                  </div>
             </div>
-          </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <span className="text-orange-600 text-lg">⚠️</span>
-              </div>
-              <div>
+                      </div>
+                      <div>
                 <p className="text-sm text-slate-600">Alerts</p>
                 <p className="text-2xl font-bold text-orange-600">3</p>
               </div>
@@ -617,8 +617,8 @@ export default function SoftwareAdminPortal() {
                 <span className="text-orange-600">👷</span>
                 <span className="font-medium">Workforce</span>
               </a>
-            </div>
-          </div>
+                      </div>
+                    </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-slate-900 mb-4">System Status</h2>
@@ -627,15 +627,15 @@ export default function SoftwareAdminPortal() {
                 <span className="text-sm text-slate-600">Database</span>
                 <span className="text-sm font-medium text-green-600">Connected</span>
               </div>
-              <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">API Services</span>
                 <span className="text-sm font-medium text-green-600">Online</span>
-              </div>
+                        </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">Autonomous Agents</span>
                 <span className="text-sm font-medium text-green-600">250+ Active</span>
-              </div>
-              <div className="flex items-center justify-between">
+                      </div>
+                      <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">Real-time Updates</span>
                 <span className="text-sm font-medium text-green-600">Enabled</span>
               </div>
@@ -668,9 +668,9 @@ export default function SoftwareAdminPortal() {
                 <p className="text-xs text-slate-500">15 minutes ago</p>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                        </div>
+                      </div>
+                    </div>
+            </div>
   );
 }
