@@ -1,10 +1,105 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import {
+  MetricCard,
+  ChartCard,
+  ActivityFeed,
+  QuickActions,
+  StatusIndicator,
+  ProgressBar,
+  DataTable,
+  AlertCard
+} from './components/DashboardComponents';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Sample data for dashboards
+  const carrierData = {
+    metrics: [
+      { title: 'Active Vehicles', value: '24', change: 12, icon: '🚛', color: '#3b82f6' },
+      { title: 'Active Drivers', value: '18', change: 8, icon: '👤', color: '#10b981' },
+      { title: 'Active Loads', value: '12', change: -3, icon: '📦', color: '#f59e0b' },
+      { title: 'Revenue (MTD)', value: '$45,231', change: 23, icon: '💰', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Load #1234 delivered successfully', time: '2 minutes ago' },
+      { type: 'warning', title: 'Vehicle #567 needs maintenance', time: '15 minutes ago' },
+      { type: 'success', title: 'New driver John Smith onboarded', time: '1 hour ago' },
+      { type: 'success', title: 'Route optimization completed', time: '2 hours ago' }
+    ],
+    quickActions: [
+      { icon: '➕', label: 'Add Vehicle' },
+      { icon: '👤', label: 'Add Driver' },
+      { icon: '📦', label: 'Assign Load' },
+      { icon: '🗺️', label: 'Plan Route' }
+    ]
+  };
+
+  const brokerData = {
+    metrics: [
+      { title: 'Available Loads', value: '156', change: 15, icon: '📋', color: '#10b981' },
+      { title: 'Active Carriers', value: '89', change: 7, icon: '🚛', color: '#3b82f6' },
+      { title: 'Match Rate', value: '96.7%', change: 2.1, icon: '🎯', color: '#f59e0b' },
+      { title: 'Revenue (MTD)', value: '$67,890', change: 18, icon: '💰', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Load matched with carrier ABC Trucking', time: '5 minutes ago' },
+      { type: 'success', title: 'Rate negotiation completed for Load #5678', time: '20 minutes ago' },
+      { type: 'warning', title: 'Carrier XYZ needs documentation update', time: '1 hour ago' },
+      { type: 'success', title: 'New shipper account created', time: '2 hours ago' }
+    ],
+    quickActions: [
+      { icon: '📋', label: 'Post Load' },
+      { icon: '🚛', label: 'Add Carrier' },
+      { icon: '💰', label: 'Set Rates' },
+      { icon: '📊', label: 'View Analytics' }
+    ]
+  };
+
+  const autonomousData = {
+    metrics: [
+      { title: 'Active Agents', value: '250+', change: 5, icon: '🤖', color: '#6366f1' },
+      { title: 'Success Rate', value: '98.5%', change: 0.3, icon: '✅', color: '#10b981' },
+      { title: 'Response Time', value: '~150ms', change: -12, icon: '⚡', color: '#f59e0b' },
+      { title: 'Code Changes', value: '47', change: 23, icon: '💻', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Agent #123 completed code review', time: '1 minute ago' },
+      { type: 'success', title: 'Deployment to staging successful', time: '5 minutes ago' },
+      { type: 'success', title: 'Performance optimization completed', time: '15 minutes ago' },
+      { type: 'warning', title: 'Agent #456 needs attention', time: '30 minutes ago' }
+    ],
+    quickActions: [
+      { icon: '🤖', label: 'Add Agent' },
+      { icon: '📊', label: 'View Metrics' },
+      { icon: '⚙️', label: 'Configure' },
+      { icon: '📝', label: 'View Logs' }
+    ]
+  };
+
+  const analyticsData = {
+    metrics: [
+      { title: 'Total Revenue', value: '$234,567', change: 15, icon: '💰', color: '#10b981' },
+      { title: 'Active Users', value: '1,234', change: 8, icon: '👥', color: '#3b82f6' },
+      { title: 'Conversion Rate', value: '3.2%', change: 0.5, icon: '📈', color: '#f59e0b' },
+      { title: 'Avg. Order Value', value: '$189', change: 12, icon: '🛒', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Monthly report generated', time: '10 minutes ago' },
+      { type: 'success', title: 'New insights available', time: '1 hour ago' },
+      { type: 'success', title: 'Data export completed', time: '2 hours ago' },
+      { type: 'success', title: 'Performance alert resolved', time: '3 hours ago' }
+    ],
+    quickActions: [
+      { icon: '📊', label: 'Generate Report' },
+      { icon: '📈', label: 'View Trends' },
+      { icon: '📤', label: 'Export Data' },
+      { icon: '⚙️', label: 'Settings' }
+    ]
+  };
 
   // Sidebar menu structure for portals
   const portalMenus = {
@@ -75,7 +170,7 @@ function App() {
     ]
   };
 
-  const Sidebar = ({ portalType, currentPath }) => {
+  const Sidebar = ({ portalType }) => {
     const [expandedMenus, setExpandedMenus] = useState({});
     const menu = portalMenus[portalType] || [];
 
@@ -97,11 +192,7 @@ function App() {
         top: 0,
         zIndex: 100,
         transition: 'width 0.3s ease',
-        overflowY: 'auto',
-        '@media (max-width: 768px)': {
-          transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-          width: '280px'
-        }
+        overflowY: 'auto'
       }}>
         {/* Sidebar Header */}
         <div style={{
@@ -150,8 +241,7 @@ function App() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.75rem',
-                      fontSize: '0.875rem',
-                      '&:hover': { backgroundColor: '#334155' }
+                      fontSize: '0.875rem'
                     }}
                   >
                     <span>{item.icon}</span>
@@ -173,8 +263,7 @@ function App() {
                             padding: '0.5rem 1rem 0.5rem 3rem',
                             color: 'white',
                             textDecoration: 'none',
-                            fontSize: '0.8rem',
-                            '&:hover': { backgroundColor: '#334155' }
+                            fontSize: '0.8rem'
                           }}
                         >
                           {subItem.name}
@@ -193,8 +282,7 @@ function App() {
                     padding: '0.75rem 1rem',
                     color: 'white',
                     textDecoration: 'none',
-                    fontSize: '0.875rem',
-                    '&:hover': { backgroundColor: '#334155' }
+                    fontSize: '0.875rem'
                   }}
                 >
                   <span>{item.icon}</span>
@@ -212,31 +300,11 @@ function App() {
     <div style={{ display: 'flex' }}>
       <Sidebar portalType={portalType} />
       
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          onClick={() => setSidebarOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            zIndex: 50,
-            '@media (min-width: 769px)': { display: 'none' }
-          }}
-        />
-      )}
-
       {/* Main content */}
       <div style={{
         marginLeft: sidebarOpen ? '280px' : '60px',
         flex: 1,
-        transition: 'margin-left 0.3s ease',
-        '@media (max-width: 768px)': {
-          marginLeft: 0
-        }
+        transition: 'margin-left 0.3s ease'
       }}>
         {/* Top bar */}
         <div style={{
@@ -262,8 +330,7 @@ function App() {
               background: 'none',
               border: 'none',
               fontSize: '1.5rem',
-              cursor: 'pointer',
-              '@media (max-width: 768px)': { display: 'block' }
+              cursor: 'pointer'
             }}
           >
             ☰
@@ -271,7 +338,7 @@ function App() {
         </div>
 
         {/* Page content */}
-        <div style={{ padding: '2rem' }}>
+        <div style={{ padding: '2rem', backgroundColor: '#f8fafc', minHeight: 'calc(100vh - 80px)' }}>
           {children}
         </div>
       </div>
@@ -522,26 +589,35 @@ function App() {
             </div>
           } />
           
-          {/* Portal Pages with Sidebar */}
+          {/* Enhanced Portal Dashboards */}
           <Route path="/carrier/*" element={
             <PortalLayout portalType="carrier" title="🚛 Carrier Portal" description="Fleet management and operations dashboard">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>Fleet Operations</h2>
-                <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Manage your fleet, drivers, routes, and loads efficiently.</p>
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                {/* Alerts */}
+                <AlertCard 
+                  type="success" 
+                  title="System Status" 
+                  message="All systems are operating normally. Fleet efficiency is at 94%."
+                />
                 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
-                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
-                    <h3>Active Vehicles</h3>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1e40af' }}>24</p>
+                {/* Metrics Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                  {carrierData.metrics.map((metric, index) => (
+                    <MetricCard key={index} {...metric} />
+                  ))}
+                </div>
+                
+                {/* Main Content Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+                  <div style={{ display: 'grid', gap: '1.5rem' }}>
+                    <QuickActions actions={carrierData.quickActions} />
+                    <ChartCard title="Fleet Performance Overview">
+                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+                        Chart visualization would go here
+                      </div>
+                    </ChartCard>
                   </div>
-                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
-                    <h3>Active Drivers</h3>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1e40af' }}>18</p>
-                  </div>
-                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
-                    <h3>Active Loads</h3>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1e40af' }}>12</p>
-                  </div>
+                  <ActivityFeed activities={carrierData.activities} />
                 </div>
               </div>
             </PortalLayout>
@@ -549,23 +625,32 @@ function App() {
           
           <Route path="/broker/*" element={
             <PortalLayout portalType="broker" title="🏢 Broker Portal" description="Smart load matching and rate optimization">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>Load Management</h2>
-                <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Match loads with carriers and optimize rates using AI.</p>
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                {/* Alerts */}
+                <AlertCard 
+                  type="warning" 
+                  title="Rate Optimization" 
+                  message="15 loads need rate optimization. AI suggestions available."
+                />
                 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
-                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
-                    <h3>Available Loads</h3>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>156</p>
+                {/* Metrics Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                  {brokerData.metrics.map((metric, index) => (
+                    <MetricCard key={index} {...metric} />
+                  ))}
+                </div>
+                
+                {/* Main Content Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+                  <div style={{ display: 'grid', gap: '1.5rem' }}>
+                    <QuickActions actions={brokerData.quickActions} />
+                    <ChartCard title="Load Matching Performance">
+                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+                        Chart visualization would go here
+                      </div>
+                    </ChartCard>
                   </div>
-                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
-                    <h3>Active Carriers</h3>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>89</p>
-                  </div>
-                  <div style={{ padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem' }}>
-                    <h3>Match Rate</h3>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>96.7%</p>
-                  </div>
+                  <ActivityFeed activities={brokerData.activities} />
                 </div>
               </div>
             </PortalLayout>
@@ -573,40 +658,32 @@ function App() {
           
           <Route path="/autonomous/*" element={
             <PortalLayout portalType="autonomous" title="🤖 Autonomous Portal" description="24/7 No-Human Operations Control Center">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>AI Agent Dashboard</h2>
-                <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Monitor 250+ autonomous agents in real-time.</p>
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                {/* System Status */}
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  <StatusIndicator status="online" label="System Online" />
+                  <StatusIndicator status="online" label="250+ Agents Active" />
+                  <StatusIndicator status="online" label="98.5% Success Rate" />
+                </div>
                 
-                <div className="agent-grid" style={{
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                  gap: '1rem', 
-                  marginTop: '1rem'
-                }}>
-                  <div style={{
-                    padding: 'clamp(0.75rem, 2vw, 1rem)', 
-                    backgroundColor: '#f1f5f9', 
-                    borderRadius: '0.25rem',
-                    fontSize: 'clamp(0.875rem, 2.5vw, 1rem)'
-                  }}>
-                    <strong>Active Agents:</strong> 250+
+                {/* Metrics Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                  {autonomousData.metrics.map((metric, index) => (
+                    <MetricCard key={index} {...metric} />
+                  ))}
+                </div>
+                
+                {/* Main Content Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+                  <div style={{ display: 'grid', gap: '1.5rem' }}>
+                    <QuickActions actions={autonomousData.quickActions} />
+                    <ChartCard title="Agent Performance Metrics">
+                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+                        Chart visualization would go here
+                      </div>
+                    </ChartCard>
                   </div>
-                  <div style={{
-                    padding: 'clamp(0.75rem, 2vw, 1rem)', 
-                    backgroundColor: '#f1f5f9', 
-                    borderRadius: '0.25rem',
-                    fontSize: 'clamp(0.875rem, 2.5vw, 1rem)'
-                  }}>
-                    <strong>Success Rate:</strong> 98.5%
-                  </div>
-                  <div style={{
-                    padding: 'clamp(0.75rem, 2vw, 1rem)', 
-                    backgroundColor: '#f1f5f9', 
-                    borderRadius: '0.25rem',
-                    fontSize: 'clamp(0.875rem, 2.5vw, 1rem)'
-                  }}>
-                    <strong>Response Time:</strong> ~150ms
-                  </div>
+                  <ActivityFeed activities={autonomousData.activities} />
                 </div>
               </div>
             </PortalLayout>
@@ -614,9 +691,26 @@ function App() {
           
           <Route path="/analytics/*" element={
             <PortalLayout portalType="analytics" title="📊 Analytics Portal" description="Business intelligence and performance analytics">
-              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>Business Intelligence</h2>
-                <p style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)', lineHeight: '1.6' }}>Comprehensive analytics and insights for your business.</p>
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                {/* Metrics Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                  {analyticsData.metrics.map((metric, index) => (
+                    <MetricCard key={index} {...metric} />
+                  ))}
+                </div>
+                
+                {/* Main Content Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+                  <div style={{ display: 'grid', gap: '1.5rem' }}>
+                    <QuickActions actions={analyticsData.quickActions} />
+                    <ChartCard title="Revenue Trends">
+                      <div style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+                        Chart visualization would go here
+                      </div>
+                    </ChartCard>
+                  </div>
+                  <ActivityFeed activities={analyticsData.activities} />
+                </div>
               </div>
             </PortalLayout>
           } />
