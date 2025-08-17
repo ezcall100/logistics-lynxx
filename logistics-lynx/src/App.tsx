@@ -12,15 +12,10 @@ import {
   AlertCard
 } from './components/DashboardComponents';
 import {
-  CarrierDashboard,
-  BrokerDashboard,
-  AutonomousDashboard,
-  AnalyticsDashboard,
-  ShipperDashboard,
-  DriverDashboard,
-  OwnerOperatorDashboard,
-  SuperAdminDashboard
+  CarrierDashboard, BrokerDashboard, AutonomousDashboard, AnalyticsDashboard,
+  ShipperDashboard, DriverDashboard, OwnerOperatorDashboard, SuperAdminDashboard
 } from './components/PortalDashboards';
+import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -798,6 +793,13 @@ function App() {
                 <h2>Testing Environment</h2>
                 <p>Development and testing tools and utilities.</p>
               </div>
+            </PortalLayout>
+          } />
+
+          {/* Software Company Dashboard */}
+          <Route path="/software-company/*" element={
+            <PortalLayout portalType="software-company" title="👨‍💻 Software Company Portal" description="Software development and product management">
+              <SoftwareCompanyDashboard />
             </PortalLayout>
           } />
         </Routes>

@@ -287,50 +287,102 @@ class AutonomousDevelopmentSystem {
   }
 
   private async executeFeatureDevelopment(task: DevelopmentTask, agent: Agent) {
-    // Use AI to generate feature code with enhanced understanding of carrier portal structure
+    // Use AI to generate feature code with software company business model understanding
     const prompt = `Develop a new feature: ${task.description}
     
-    IMPORTANT CONTEXT:
-    - This is for a CARRIER PORTAL that includes both general carrier portal features AND a comprehensive TMS (Transportation Management System) for carriers
-    - The carrier portal should have role-based access with different user types:
-      * Fleet Manager: Full TMS access, fleet management, route optimization
-      * Dispatcher: Load assignment, driver management, real-time tracking
-      * Driver: Personal dashboard, load details, route information
-      * Owner/Operator: Business management, financial tracking, maintenance
-      * Admin: User management, system configuration, reporting
+    CRITICAL SOFTWARE COMPANY CONTEXT:
+    This is a SOFTWARE COMPANY that provides TMS (Transportation Management System) software to customers.
+    We are NOT a carrier, broker, or shipper - we are the software provider serving these customers.
     
-    TMS Software Features for Carriers:
-    - Fleet Management (vehicle tracking, maintenance, fuel management)
-    - Load Management (load assignment, tracking, delivery confirmation)
-    - Route Optimization (real-time routing, fuel efficiency, time optimization)
-    - Driver Management (scheduling, performance tracking, compliance)
-    - Financial Management (revenue tracking, expense management, invoicing)
-    - Maintenance Management (service scheduling, parts inventory, cost tracking)
-    - Compliance Management (DOT regulations, ELD compliance, safety records)
-    - Real-time Analytics (performance metrics, operational insights)
+    BUSINESS MODEL:
+    - SaaS (Software-as-a-Service) provider
+    - Multi-tenant architecture serving multiple customers
+    - Subscription-based pricing with tiered features
+    - Revenue from customer subscriptions and premium features
+    
+    CUSTOMER TYPES WE SERVE:
+    1. Shippers: Companies that need to ship goods
+    2. Brokers: Freight brokers connecting shippers and carriers
+    3. Carriers: Trucking companies that transport goods
+    4. Software Company Admins: Our internal team managing the platform
+    
+    PRICING TIERS:
+    - Free Tier: Basic features for small businesses
+    - Professional Tier ($99-299/month): Core features for growing businesses
+    - Enterprise Tier ($499-999/month): Full features for large companies
+    - Custom Tier: Premium features with custom pricing
+    
+    FEATURE GATING REQUIREMENTS:
+    - Core Functions: Available in all tiers (basic user management, load management, fleet management)
+    - Premium Features: Additional cost or higher tiers (advanced analytics, integrations, custom development)
+    - Multi-tenant isolation: Each customer's data must be completely separated
+    - Usage tracking: Monitor feature usage for billing and optimization
+    
+    TECHNICAL REQUIREMENTS:
+    - Multi-tenant database design with customer isolation
+    - Feature flags and access control based on subscription tier
+    - Usage tracking and billing integration
+    - API rate limiting per customer
+    - Scalable architecture for multiple customers
+    - Customer onboarding and support systems
+    
+    CUSTOMER-SPECIFIC FEATURES:
+    
+    For Shippers:
+    - Load posting and carrier matching
+    - Shipment tracking and cost analysis
+    - Integration with existing systems
+    - Reporting and analytics
+    
+    For Brokers:
+    - Load board and carrier network management
+    - Rate negotiation and commission tracking
+    - Financial reporting and compliance
+    - Advanced analytics for market insights
+    
+    For Carriers:
+    - Fleet management and driver management
+    - Route optimization and maintenance tracking
+    - Financial management and compliance
+    - Mobile applications for drivers
+    
+    For Software Company Admins:
+    - Customer management and billing
+    - System monitoring and support
+    - Feature development and deployment
+    - Platform analytics and optimization
     
     Requirements:
     - Use React with TypeScript
-    - Follow best practices
-    - Include proper error handling
-    - Add appropriate tests
-    - Ensure responsive design
-    - Implement role-based access control (RBAC)
-    - Include real-time data integration
-    - Support mobile responsiveness for drivers
+    - Follow multi-tenant architecture patterns
+    - Implement feature gating and access control
+    - Include usage tracking and billing integration
+    - Ensure customer data isolation
+    - Add appropriate TypeScript interfaces
+    - Include comments for maintainability
+    - Ensure scalability for multiple customers
+    - Implement proper error handling
+    - Add comprehensive logging and audit trails
+    - Include customer onboarding flows
+    - Support subscription management
     
-    Generate the complete implementation including:
-    1. Component code with role-based rendering
-    2. TypeScript interfaces for different user roles
-    3. Route protection based on user permissions
-    4. Unit tests for role-based functionality
-    5. Documentation for TMS features
+    Generate complete implementation including:
+    1. Multi-tenant component architecture
+    2. Feature gate implementation and access control
+    3. Customer-specific interfaces and dashboards
+    4. Usage tracking and billing integration
+    5. Customer onboarding and support systems
+    6. API management with rate limiting
+    7. Subscription management and billing
+    8. Customer success and analytics
+    9. Security and compliance features
+    10. Documentation for customer onboarding
     `;
 
     const completion = await this.openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 3000,
+      max_tokens: 4000,
     });
 
     const generatedCode = completion.choices[0]?.message?.content;
