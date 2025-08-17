@@ -17,7 +17,7 @@ import {
 } from './components/PortalDashboards';
 import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard';
 import LogisticsManagementDashboard from './pages/LogisticsManagementDashboard';
-import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAgent';
+import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAgent.tsx';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
