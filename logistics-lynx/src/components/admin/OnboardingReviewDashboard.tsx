@@ -354,7 +354,7 @@ const OnboardingReviewDashboard: React.FC = () => {
           </div>
         </div>
 
-              <div className="flex-1 p-6">
+        <div className="flex-1 p-6">
           {/* Quick Stats Bar */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <div className="flex items-center justify-between">
