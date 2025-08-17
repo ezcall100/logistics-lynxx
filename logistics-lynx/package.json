@@ -15,6 +15,7 @@
     "setup:supabase": "node setup-supabase.js",
     "setup:supabase-tables": "node setup-supabase-tables.js",
     "start:autonomous": "npm run build:ts && node dist/autonomous/start-autonomous.js",
+    "start:autonomous:full": "node scripts/start-autonomous-system.mjs",
     "monitor:start": "npm run build:ts && node dist/monitoring/start-monitoring.js",
     "agents:start": "npm run build:ts && node dist/agents/start-agents.js",
     "health:check": "npm run build:ts && node dist/monitoring/health-check.js",
