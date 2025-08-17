@@ -900,6 +900,8 @@ const OnboardingReviewDashboard: React.FC = () => {
           </div>
         )}
 
+        </div>
+
         {/* Floating Action Button */}
         <div className="fixed bottom-6 right-6 z-40">
           <div className="flex flex-col space-y-2">
