@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import AIAgentManager from './AIAgentManager';
 import { AutonomousTaskManager } from './AutonomousTaskManager';
 import AutonomousKnowledgeBase from './AutonomousKnowledgeBase';
@@ -15,13 +17,43 @@ import { AutonomousWebsiteUpdater } from './AutonomousWebsiteUpdater';
 import { LiveWebsiteUpdater } from './LiveWebsiteUpdater';
 import { RealAutonomousUpdater } from './RealAutonomousUpdater';
 import { DashboardTemplate } from '../dashboard/DashboardTemplate';
-import AgentDashboard from '../../pages/autonomous/AgentDashboard';
-import PerformanceMonitor from '../../pages/autonomous/PerformanceMonitor';
-import LearningModels from '../../pages/autonomous/LearningModels';
-import DecisionLogs from '../../pages/autonomous/DecisionLogs';
-import AutoScaling from '../../pages/autonomous/AutoScaling';
 
 const AutonomousTabs = () => {
+  const location = useLocation();
+
+  const mainNavigationItems = [
+    {
+      title: 'Agent Dashboard',
+      path: '/autonomous/agent-dashboard',
+      description: 'Monitor and manage autonomous AI agents',
+      icon: '🤖'
+    },
+    {
+      title: 'Performance Monitor',
+      path: '/autonomous/performance-monitor',
+      description: 'Real-time system performance monitoring',
+      icon: '📊'
+    },
+    {
+      title: 'Learning Models',
+      path: '/autonomous/learning-models',
+      description: 'Manage machine learning models',
+      icon: '🧠'
+    },
+    {
+      title: 'Decision Logs',
+      path: '/autonomous/decision-logs',
+      description: 'Track autonomous AI decisions',
+      icon: '📝'
+    },
+    {
+      title: 'Auto Scaling',
+      path: '/autonomous/auto-scaling',
+      description: 'Intelligent infrastructure scaling',
+      icon: '⚡'
+    }
+  ];
+
   return (
     <div className="space-y-6">
       <div>
@@ -31,14 +63,44 @@ const AutonomousTabs = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="dashboard" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-12">
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="agent-dashboard">Agent Dashboard</TabsTrigger>
-          <TabsTrigger value="performance-monitor">Performance Monitor</TabsTrigger>
-          <TabsTrigger value="learning-models">Learning Models</TabsTrigger>
-          <TabsTrigger value="decision-logs">Decision Logs</TabsTrigger>
-          <TabsTrigger value="auto-scaling">Auto Scaling</TabsTrigger>
+      {/* Main Navigation Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {mainNavigationItems.map((item) => (
+          <Link key={item.path} to={item.path}>
+            <Card className="h-full hover:shadow-lg transition-all duration-200 hover:scale-105 cursor-pointer border-2 hover:border-blue-300">
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{item.icon}</span>
+                  <CardTitle className="text-lg">{item.title}</CardTitle>
+                </div>
+                <CardDescription>{item.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  Open {item.title}
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+
+      {/* System Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle>System Overview</CardTitle>
+          <CardDescription>
+            Real-time metrics and performance indicators for the autonomous TMS
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RealtimeDashboard />
+        </CardContent>
+      </Card>
+
+      {/* Additional Features Tabs */}
+      <Tabs defaultValue="agents" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="agents">AI Agents</TabsTrigger>
           <TabsTrigger value="tasks">Task Manager</TabsTrigger>
           <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
@@ -46,40 +108,6 @@ const AutonomousTabs = () => {
           <TabsTrigger value="scaling">Scaling</TabsTrigger>
           <TabsTrigger value="healing">Self-Healing</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="dashboard" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Real-time System Overview</CardTitle>
-              <CardDescription>
-                Live metrics and performance indicators for the autonomous TMS
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RealtimeDashboard />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="agent-dashboard" className="space-y-4">
-          <AgentDashboard />
-        </TabsContent>
-
-        <TabsContent value="performance-monitor" className="space-y-4">
-          <PerformanceMonitor />
-        </TabsContent>
-
-        <TabsContent value="learning-models" className="space-y-4">
-          <LearningModels />
-        </TabsContent>
-
-        <TabsContent value="decision-logs" className="space-y-4">
-          <DecisionLogs />
-        </TabsContent>
-
-        <TabsContent value="auto-scaling" className="space-y-4">
-          <AutoScaling />
-        </TabsContent>
 
         <TabsContent value="agents" className="space-y-4">
           <AIAgentManager />
@@ -103,62 +131,6 @@ const AutonomousTabs = () => {
 
         <TabsContent value="healing" className="space-y-4">
           <SelfHealingDashboard />
-        </TabsContent>
-
-        <TabsContent value="ui-design" className="space-y-4">
-          <AutonomousUIDesignDashboard />
-        </TabsContent>
-
-        <TabsContent value="website-updater" className="space-y-4">
-          <AutonomousWebsiteUpdater />
-        </TabsContent>
-
-        <TabsContent value="live-updater" className="space-y-4">
-          <LiveWebsiteUpdater />
-        </TabsContent>
-
-        <TabsContent value="real-updater" className="space-y-4">
-          <RealAutonomousUpdater />
-        </TabsContent>
-
-        <TabsContent value="portal-dashboards" className="space-y-4">
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold">Portal Dashboards</h2>
-                <p className="text-muted-foreground">
-                  All 20 portal dashboards generated by autonomous agents
-                </p>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {['broker', 'carrier', 'shipper', 'driver', 'superAdmin'].map((portalKey) => (
-                <div key={portalKey} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <h3 className="font-semibold capitalize mb-2">{portalKey} Dashboard</h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Complete dashboard with KPIs, charts, tables, and alerts
-                  </p>
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={() => window.open(`/${portalKey}/dashboard`, '_blank')}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                    >
-                      View Dashboard
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <h3 className="font-semibold text-green-800 mb-2">✅ Dashboard System Complete</h3>
-              <p className="text-green-700 text-sm">
-                All 20 portal dashboards have been generated with consistent design, 
-                real-time data integration, and autonomous agent monitoring.
-              </p>
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

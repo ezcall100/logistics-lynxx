@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,14 +32,14 @@ import {
   Database, 
   Network, 
   HardDrive, 
-  Cpu, 
-  Memory, 
+  Cpu,
   BarChart3, 
   Target,
   ArrowUpDown,
   Eye,
   Edit,
-  Trash2
+  Trash2,
+  Home
 } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -397,7 +399,7 @@ const AutoScaling: React.FC = () => {
   const getResourceIcon = (type: ResourceMetrics['type']) => {
     switch (type) {
       case 'cpu': return <Cpu className="w-4 h-4" />;
-      case 'memory': return <Memory className="w-4 h-4" />;
+      case 'memory': return <HardDrive className="w-4 h-4" />;
       case 'network': return <Network className="w-4 h-4" />;
       case 'storage': return <HardDrive className="w-4 h-4" />;
       case 'database': return <Database className="w-4 h-4" />;
@@ -552,6 +554,16 @@ const AutoScaling: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Navigation Breadcrumb */}
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <Link to="/autonomous" className="flex items-center space-x-1 hover:text-foreground transition-colors">
+          <Home className="h-4 w-4" />
+          <span>Autonomous System</span>
+        </Link>
+        <span>/</span>
+        <span className="text-foreground font-medium">Auto Scaling</span>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

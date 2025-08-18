@@ -36,6 +36,7 @@ import { AutonomousPortalSelector } from './components/portal/AutonomousPortalSe
 // Autonomous System Components
 import { MasterAutonomousAgent } from './autonomous/MasterAutonomousAgent';
 import AutonomousDevelopmentSystem from './autonomous/AutonomousDevelopmentSystem';
+import AutonomousDashboardPage from './pages/AutonomousDashboardPage';
 
 // UI Components
 import { Button } from './components/ui/button';
@@ -213,7 +214,7 @@ function AppContent() {
         <Route path="/edi/*" element={<SuperAdminPage />} />
         <Route path="/marketplace/*" element={<SuperAdminPage />} />
         <Route path="/analytics/*" element={<AnalyticsPage />} />
-        <Route path="/autonomous/*" element={<SuperAdminPage />} />
+        <Route path="/autonomous/*" element={<AutonomousDashboardPage />} />
         <Route path="/workers/*" element={<SystemHealthPage />} />
         <Route path="/rates/*" element={<SuperAdminPage />} />
         <Route path="/directory/*" element={<SuperAdminPage />} />

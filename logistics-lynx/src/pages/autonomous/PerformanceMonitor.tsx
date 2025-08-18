@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,7 +20,7 @@ import {
   Cpu,
   Database,
   HardDrive,
-  Memory,
+
   Monitor,
   Network,
   RefreshCw,
@@ -38,7 +40,8 @@ import {
   Play,
   Pause,
   Square,
-  RotateCcw
+  RotateCcw,
+  Home
 } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -381,6 +384,16 @@ const PerformanceMonitor: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Navigation Breadcrumb */}
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <Link to="/autonomous" className="flex items-center space-x-1 hover:text-foreground transition-colors">
+          <Home className="h-4 w-4" />
+          <span>Autonomous System</span>
+        </Link>
+        <span>/</span>
+        <span className="text-foreground font-medium">Performance Monitor</span>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -718,7 +731,7 @@ const PerformanceMonitor: React.FC = () => {
                       Memory usage is approaching warning threshold. Consider implementing memory optimization.
                     </p>
                     <div className="flex items-center space-x-2">
-                      <Badge variant="warning">Medium Priority</Badge>
+                                              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Medium Priority</Badge>
                       <span className="text-xs text-muted-foreground">Detected 2 minutes ago</span>
                     </div>
                   </div>

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -42,7 +44,9 @@ import {
   Upload,
   Search,
   Filter,
-  MoreHorizontal
+  MoreHorizontal,
+  ArrowLeft,
+  Home
 } from 'lucide-react';
 
 interface Agent {
@@ -453,6 +457,16 @@ const AgentDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Navigation Breadcrumb */}
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <Link to="/autonomous" className="flex items-center space-x-1 hover:text-foreground transition-colors">
+          <Home className="h-4 w-4" />
+          <span>Autonomous System</span>
+        </Link>
+        <span>/</span>
+        <span className="text-foreground font-medium">Agent Dashboard</span>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

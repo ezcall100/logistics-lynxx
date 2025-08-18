@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,7 +34,8 @@ import {
   BarChart3,
   Zap,
   Target,
-  Activity
+  Activity,
+  Home
 } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -468,6 +471,16 @@ const LearningModels: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Navigation Breadcrumb */}
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <Link to="/autonomous" className="flex items-center space-x-1 hover:text-foreground transition-colors">
+          <Home className="h-4 w-4" />
+          <span>Autonomous System</span>
+        </Link>
+        <span>/</span>
+        <span className="text-foreground font-medium">Learning Models</span>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -860,7 +873,7 @@ const LearningModels: React.FC = () => {
                     Models with accuracy below 90% may benefit from retraining with updated data.
                   </p>
                   <div className="flex items-center space-x-2">
-                    <Badge variant="warning">1 model</Badge>
+                                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">1 model</Badge>
                     <span className="text-xs text-muted-foreground">Package Damage Detection</span>
                   </div>
                 </div>
@@ -870,7 +883,7 @@ const LearningModels: React.FC = () => {
                     Consider increasing dataset size for NLP models to improve accuracy.
                   </p>
                   <div className="flex items-center space-x-2">
-                    <Badge variant="info">Optimization</Badge>
+                                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">Optimization</Badge>
                     <span className="text-xs text-muted-foreground">Data augmentation suggested</span>
                   </div>
                 </div>

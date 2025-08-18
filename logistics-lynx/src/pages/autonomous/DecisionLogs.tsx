@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -35,7 +37,8 @@ import {
   Calendar,
   ArrowUpDown,
   FilterX,
-  MoreHorizontal
+  MoreHorizontal,
+  Home
 } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -432,6 +435,16 @@ const DecisionLogs: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Navigation Breadcrumb */}
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <Link to="/autonomous" className="flex items-center space-x-1 hover:text-foreground transition-colors">
+          <Home className="h-4 w-4" />
+          <span>Autonomous System</span>
+        </Link>
+        <span>/</span>
+        <span className="text-foreground font-medium">Decision Logs</span>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -791,7 +804,7 @@ const DecisionLogs: React.FC = () => {
                     Risk assessment decisions are being escalated for manual review due to unusual patterns.
                   </p>
                   <div className="flex items-center space-x-2">
-                    <Badge variant="warning">1 decision</Badge>
+                                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">1 decision</Badge>
                     <span className="text-xs text-muted-foreground">Requires human oversight</span>
                   </div>
                 </div>
@@ -801,7 +814,7 @@ const DecisionLogs: React.FC = () => {
                     Average execution time is within acceptable limits. Consider optimizing complex algorithms for faster processing.
                   </p>
                   <div className="flex items-center space-x-2">
-                    <Badge variant="info">Optimization</Badge>
+                                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">Optimization</Badge>
                     <span className="text-xs text-muted-foreground">Algorithm tuning recommended</span>
                   </div>
                 </div>
