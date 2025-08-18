@@ -31,10 +31,20 @@ import { useTheme } from '@/components/theme-provider';
 import { EnterpriseSidebar } from '@/components/sidebar/EnterpriseSidebar';
 import { enterpriseSidebarConfig, superAdminSidebarConfig, getPortalSidebarConfig } from '@/components/sidebar/EnterpriseSidebarConfig';
 
+interface SidebarConfig {
+  title: string;
+  items: Array<{
+    title: string;
+    path: string;
+    icon?: React.ComponentType<{ className?: string }>;
+    badge?: string;
+  }>;
+}
+
 interface EnterpriseLayoutProps {
   className?: string;
   showSidebar?: boolean;
-  sidebarConfig?: any;
+  sidebarConfig?: SidebarConfig[];
   portalType?: string;
 }
 

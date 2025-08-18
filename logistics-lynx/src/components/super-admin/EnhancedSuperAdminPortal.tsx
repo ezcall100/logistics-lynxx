@@ -304,7 +304,7 @@ const EnhancedSuperAdminPortal = () => {
     if (currentGroup && !expandedGroups.includes(currentGroup.id)) {
       setExpandedGroups(prev => [...prev, currentGroup.id]);
     }
-  }, [location.pathname, expandedGroups]);
+  }, [location.pathname, expandedGroups, navigationItems]);
 
   return (
     <TooltipProvider>
