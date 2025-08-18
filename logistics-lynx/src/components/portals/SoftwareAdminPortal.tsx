@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import FloatingActionButton from '../admin/FloatingActionButton';
 
 export default function SoftwareAdminPortal() {
   console.log('SoftwareAdminPortal component loaded successfully!');
@@ -608,6 +609,13 @@ export default function SoftwareAdminPortal() {
           </div>
         </div>
       </div>
+      
+      {/* Floating Action Button */}
+      <FloatingActionButton 
+        userRole="admin"
+        userEntitlements={['admin.core', 'crm.core', 'tickets.core', 'networks.core', 'workforce.core', 'docs.core', 'financials.core', 'payroll.core', 'api.core', 'marketplace.core', 'reports.core', 'edi.x12']}
+        isAdmin={true}
+      />
     </div>
   );
 }
