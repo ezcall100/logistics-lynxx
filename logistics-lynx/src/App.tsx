@@ -1,48 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-
-// Simple test component for Software Admin
-const SimpleSoftwareAdmin = () => {
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#f8fafc',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1 style={{ color: '#1e40af', marginBottom: '20px' }}>⚙️ Software Admin Portal</h1>
-      <p style={{ color: '#64748b', marginBottom: '20px' }}>This is a test version of the Software Admin portal.</p>
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '20px', 
-        borderRadius: '8px', 
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        marginBottom: '20px'
-      }}>
-        <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>System Status</h2>
-        <ul style={{ color: '#64748b' }}>
-          <li>✅ React App: Running</li>
-          <li>✅ Routing: Working</li>
-          <li>✅ Basic Components: Loaded</li>
-          <li>🔄 Enhanced Sidebar: In Development</li>
-          <li>🔄 FAB System: In Development</li>
-        </ul>
-      </div>
-      <Link to="/" style={{
-        display: 'inline-block',
-        padding: '10px 20px',
-        backgroundColor: '#1e40af',
-        color: 'white',
-        textDecoration: 'none',
-        borderRadius: '6px',
-        marginTop: '10px'
-      }}>
-        ← Back to Home
-      </Link>
-    </div>
-  );
-};
+import SoftwareAdminPortal from './components/portals/SoftwareAdminPortal';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -268,9 +227,9 @@ function App() {
           } />
 
           {/* Software Admin Portal */}
-          <Route path="/admin" element={<SimpleSoftwareAdmin />} />
+          <Route path="/admin" element={<SoftwareAdminPortal />} />
           
-          <Route path="/admin/software-admin" element={<SimpleSoftwareAdmin />} />
+          <Route path="/admin/software-admin" element={<SoftwareAdminPortal />} />
         </Routes>
       </div>
     </Router>
