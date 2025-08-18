@@ -65,6 +65,9 @@ const AutonomousSystem = {
 import FrontendDeveloperPage from './pages/FrontendDeveloperPage';
 import BackendAPIPage from './pages/BackendAPIPage';
 import QATestingPage from './pages/QATestingPage';
+import UIUXDesignerPage from './pages/UIUXDesignerPage';
+import DevOpsPage from './pages/DevOpsPage';
+import DatabaseOptimizerPage from './pages/DatabaseOptimizerPage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
@@ -740,9 +743,9 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/engineering/frontend" element={<FrontendDeveloperPage />} />
                   <Route path="/engineering/backend" element={<BackendAPIPage />} />
                   <Route path="/engineering/qa" element={<QATestingPage />} />
-                  <Route path="/engineering/design" element={<DashboardPage />} />
-                  <Route path="/engineering/devops" element={<DashboardPage />} />
-                  <Route path="/engineering/database" element={<DashboardPage />} />
+                  <Route path="/engineering/design" element={<UIUXDesignerPage />} />
+                  <Route path="/engineering/devops" element={<DevOpsPage />} />
+                  <Route path="/engineering/database" element={<DatabaseOptimizerPage />} />
                   <Route path="/engineering/security" element={<DashboardPage />} />
                   <Route path="/engineering/perf" element={<DashboardPage />} />
                 </Routes>
