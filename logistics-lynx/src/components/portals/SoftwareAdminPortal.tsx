@@ -75,16 +75,16 @@ export default function SoftwareAdminPortal() {
       badge: null
     },
     {
-      key: 'relationships',
-      label: 'Relationships',
+      key: 'crm',
+      label: 'CRM',
       icon: '👥',
       children: [
-        { key: 'email', label: 'Email', icon: '📧', path: '/admin/relationships/email' },
-        { key: 'leads', label: 'Leads', icon: '🎯', path: '/admin/relationships/leads' },
-        { key: 'contacts', label: 'Contacts', icon: '👤', path: '/admin/relationships/contacts' },
-        { key: 'projects', label: 'Projects', icon: '📁', path: '/admin/relationships/projects' },
-        { key: 'calendar', label: 'Calendar', icon: '📅', path: '/admin/relationships/calendar' },
-        { key: 'opportunities', label: 'Opportunities', icon: '💼', path: '/admin/relationships/opportunities' }
+        { key: 'email', label: 'Email', icon: '📧', path: '/admin/crm/email' },
+        { key: 'leads', label: 'Leads', icon: '🎯', path: '/admin/crm/leads' },
+        { key: 'contacts', label: 'Contacts', icon: '👤', path: '/admin/crm/contacts' },
+        { key: 'projects', label: 'Projects', icon: '📁', path: '/admin/crm/projects' },
+        { key: 'calendar', label: 'Calendar', icon: '📅', path: '/admin/crm/calendar' },
+        { key: 'opportunities', label: 'Opportunities', icon: '💼', path: '/admin/crm/opportunities' }
       ]
     },
     {
