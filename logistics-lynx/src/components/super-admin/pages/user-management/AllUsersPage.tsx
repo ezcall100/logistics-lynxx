@@ -123,7 +123,7 @@ const AllUsersPage: React.FC = () => {
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
-      status: newUser.status as any,
+      status: newUser.status as 'active' | 'pending' | 'suspended' | 'inactive',
       lastLogin: 'Never',
       createdAt: new Date().toISOString().split('T')[0],
       department: newUser.department
@@ -146,7 +146,7 @@ const AllUsersPage: React.FC = () => {
 
   const handleStatusChange = (userId: string, newStatus: string) => {
     setUsers(prev => prev.map(user => 
-      user.id === userId ? { ...user, status: newStatus as any } : user
+      user.id === userId ? { ...user, status: newStatus as 'active' | 'pending' | 'suspended' | 'inactive' } : user
     ));
   };
 
@@ -486,7 +486,7 @@ const AllUsersPage: React.FC = () => {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-status" className="text-right">Status</Label>
-                <Select value={currentUser.status} onValueChange={(value) => setCurrentUser(prev => prev ? { ...prev, status: value as any } : null)}>
+                <Select value={currentUser.status} onValueChange={(value) => setCurrentUser(prev => prev ? { ...prev, status: value as 'active' | 'pending' | 'suspended' | 'inactive' } : null)}>
                   <SelectTrigger className="col-span-3">
                     <SelectValue />
                   </SelectTrigger>

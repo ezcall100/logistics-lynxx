@@ -91,7 +91,7 @@ const SuperAdminPortal = () => {
     if (path.includes('/settings')) newExpanded.add('settings');
     
     setExpandedGroups(newExpanded);
-  }, [location.pathname]);
+  }, [location.pathname, expandedGroups]);
 
   const toggleGroup = (key: string) => {
     const newExpanded = new Set(expandedGroups);
