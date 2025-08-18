@@ -1,9 +1,9 @@
+/* Import Modern Theme - must come before Tailwind */
+@import './styles/modern-theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import Modern Theme */
-@import './styles/modern-theme.css';
 
 /* ===== PRODUCTION-READY CSS FOUNDATION FOR RADIX UI ===== */
 

@@ -94,7 +94,6 @@ const iconMap = {
   '🔧': Settings,
   '📡': Network,
   '💾': HardDrive,
-  '🖥️': Monitor,
   '📶': Signal,
   '📶-high': SignalHigh,
   '📶-medium': SignalMedium,
