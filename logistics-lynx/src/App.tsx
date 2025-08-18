@@ -27,6 +27,7 @@ import EnhancedSuperAdminPortal from './components/super-admin/EnhancedSuperAdmi
 import ShippersPortal from './components/portals/ShippersPortal';
 import BrokersPortal from './components/portals/BrokersPortal';
 import CarriersPortal from './components/portals/CarriersPortal';
+import { AccessAllPortals } from './components/portals/AccessAllPortals';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -581,80 +582,8 @@ function App() {
 
                 {/* Portal Grid */}
                 <div style={{ marginBottom: '2rem' }}>
-                  <h2 style={{ 
-                    fontSize: 'clamp(1.5rem, 6vw, 2rem)', 
-                    marginBottom: '1rem', 
-                    color: '#1e40af',
-                    textAlign: 'center'
-                  }}>🌐 Access All Portals</h2>
-                  <div className="portal-grid" style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                    gap: 'clamp(0.75rem, 2vw, 1rem)'
-                  }}>
-                    {[
-                      { name: 'Carrier Portal', icon: '🚛', path: '/carrier/*', color: '#3b82f6' },
-                      { name: 'Broker Portal', icon: '🏢', path: '/broker/*', color: '#10b981' },
-                      { name: 'Shipper Portal', icon: '📦', path: '/shipper/*', color: '#f59e0b' },
-                      { name: 'Driver Portal', icon: '🚗', path: '/driver/*', color: '#ec4899' },
-                      { name: 'Owner Operator', icon: '🚚', path: '/owner-operator/*', color: '#8b5cf6' },
-                      { name: 'Super Admin', icon: '👑', path: '/super-admin/*', color: '#7c3aed' },
-                      { name: 'Autonomous AI', icon: '🤖', path: '/autonomous/*', color: '#6366f1' },
-                      { name: 'Analytics', icon: '📊', path: '/analytics/*', color: '#06b6d4' },
-                      { name: 'Software Admin', icon: '⚙️', path: '/admin/software-admin', color: '#6b7280' },
-                      { name: 'Factoring', icon: '💰', path: '/factoring/*', color: '#eab308' },
-                      { name: 'Financials', icon: '💳', path: '/financials/*', color: '#22c55e' },
-                      { name: 'Rates', icon: '💰', path: '/rates/*', color: '#f97316' },
-                      { name: 'Load Board', icon: '📋', path: '/load-board/*', color: '#ef4444' },
-                      { name: 'Workers', icon: '👷', path: '/workers/*', color: '#84cc16' },
-                      { name: 'CRM', icon: '👥', path: '/crm/*', color: '#06b6d4' },
-                      { name: 'Directory', icon: '📚', path: '/directory/*', color: '#64748b' },
-                      { name: 'EDI', icon: '📡', path: '/edi/*', color: '#7c3aed' },
-                      { name: 'Marketplace', icon: '🛒', path: '/marketplace/*', color: '#f97316' },
-                      { name: 'Testing', icon: '🧪', path: '/testing/*', color: '#84cc16' },
-                      { name: 'Master Autonomous Agent', icon: '🤖', path: '/master-autonomous-agent', color: '#7c3aed' }
-                    ].map((portal, index) => (
-                      <Link key={index} to={portal.path} className="portal-card" style={{
-                        backgroundColor: 'white',
-                        padding: 'clamp(1rem, 3vw, 1.5rem)',
-                        borderRadius: '0.5rem',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'clamp(0.5rem, 2vw, 1rem)',
-                        transition: 'transform 0.2s, box-shadow 0.2s',
-                        borderLeft: `4px solid ${portal.color}`,
-                        minHeight: '80px'
-                      }} onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
-                      }} onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-                      }}>
-                        <span style={{ 
-                          fontSize: 'clamp(1.5rem, 5vw, 2rem)',
-                          flexShrink: 0
-                        }}>{portal.icon}</span>
-                        <div style={{ minWidth: 0 }}>
-                          <h3 style={{ 
-                            margin: 0, 
-                            color: '#1e293b',
-                            fontSize: 'clamp(1rem, 3vw, 1.125rem)',
-                            lineHeight: '1.3'
-                          }}>{portal.name}</h3>
-                          <p style={{ 
-                            margin: 0, 
-                            color: '#64748b', 
-                            fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
-                            lineHeight: '1.4'
-                          }}>Click to access</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                  {/* Radix UI redesign */}
+                  <AccessAllPortals />
                 </div>
               </div>
             </div>
