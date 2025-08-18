@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -16,12 +16,3 @@ const initialState: ThemeProviderState = {
 };
 
 export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
-
-export const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
-  
-  if (context === undefined)
-    throw new Error('useTheme must be used within a ThemeProvider');
-  
-  return context;
-};

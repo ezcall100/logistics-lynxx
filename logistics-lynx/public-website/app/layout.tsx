@@ -7,8 +7,6 @@ import { metadata } from './constants'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export { metadata }
-
 export default function RootLayout({
   children,
 }: {
