@@ -44,7 +44,7 @@ const DashboardPage: React.FC = () => {
     apiRequests: 15420
   });
 
-  const [performanceMetrics, setPerformanceMetrics] = useState({
+  const [performanceMetrics] = useState({
     cpuUsage: 45,
     memoryUsage: 67,
     diskUsage: 23,
@@ -53,7 +53,7 @@ const DashboardPage: React.FC = () => {
     cacheHitRate: 94.2
   });
 
-  const [securityMetrics, setSecurityMetrics] = useState({
+  const [securityMetrics] = useState({
     failedLogins: 12,
     blockedIPs: 8,
     securityScans: 156,
@@ -62,7 +62,7 @@ const DashboardPage: React.FC = () => {
     encryptionStatus: 'AES-256'
   });
 
-  const [recentActivity, setRecentActivity] = useState([
+  const [recentActivity] = useState([
     { id: 1, action: 'New user registered', user: 'john.doe@company.com', time: '2 min ago', type: 'user', priority: 'low' },
     { id: 2, action: 'Security scan completed', user: 'System', time: '5 min ago', type: 'security', priority: 'medium' },
     { id: 3, action: 'Database backup completed', user: 'System', time: '15 min ago', type: 'system', priority: 'high' },
@@ -71,7 +71,7 @@ const DashboardPage: React.FC = () => {
     { id: 6, action: 'API rate limit exceeded', user: 'api-client-3', time: '3 hours ago', type: 'warning', priority: 'medium' }
   ]);
 
-  const [notifications, setNotifications] = useState([
+  const [notifications] = useState([
     { id: 1, type: 'info', message: 'System backup completed successfully', time: '2 min ago', read: false },
     { id: 2, type: 'warning', message: 'High memory usage detected', time: '5 min ago', read: false },
     { id: 3, type: 'success', message: 'New user registration approved', time: '10 min ago', read: true },
@@ -79,7 +79,6 @@ const DashboardPage: React.FC = () => {
   ]);
 
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
-  const [selectedMetric, setSelectedMetric] = useState('all');
   const [activeTab, setActiveTab] = useState('overview');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -89,7 +88,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const dismissNotification = (id: number) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    console.log(`Dismiss notification: ${id}`);
   };
 
   const refreshData = () => {
@@ -122,7 +121,7 @@ const DashboardPage: React.FC = () => {
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300">
         <div className="space-y-6 p-6">
-          {/* Enterprise Header with Enhanced Design */}
+          {/* Enterprise Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,13 +146,13 @@ const DashboardPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  {/* System Status with Enhanced Badges */}
+                  {/* System Status */}
                   <div className="flex flex-wrap gap-4 mt-6">
                     {[
-                      { label: 'System Online', value: 'Operational', color: 'green', icon: '🟢' },
-                      { label: 'Security', value: systemStats.security, color: 'yellow', icon: '🟡' },
-                      { label: 'Uptime', value: systemStats.uptime, color: 'green', icon: '🟢' },
-                      { label: 'Response', value: systemStats.responseTime, color: 'blue', icon: '🔵' }
+                      { label: 'System Online', value: 'Operational', icon: '🟢' },
+                      { label: 'Security', value: systemStats.security, icon: '🟡' },
+                      { label: 'Uptime', value: systemStats.uptime, icon: '🟢' },
+                      { label: 'Response', value: systemStats.responseTime, icon: '🔵' }
                     ].map((status) => (
                       <div key={status.label} className="flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
                         <span className="text-lg">{status.icon}</span>
@@ -166,7 +165,7 @@ const DashboardPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Controls */}
+                {/* Controls */}
                 <div className="flex items-center gap-4">
                   <Button
                     variant="ghost"
@@ -204,7 +203,7 @@ const DashboardPage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Quick Actions with Enhanced Tooltips */}
+          {/* Quick Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -243,12 +242,12 @@ const DashboardPage: React.FC = () => {
             ))}
           </motion.div>
 
-          {/* Enhanced Tabs with Pure Tailwind Styling */}
+          {/* Tabs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="sticky top-0 z-10 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700"
+            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700"
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-5 h-14 bg-transparent">
@@ -270,8 +269,8 @@ const DashboardPage: React.FC = () => {
                 ))}
               </TabsList>
               
-              <TabsContent value="overview" className="space-y-6 mt-6">
-                {/* System Health Grid with Enhanced Progress */}
+              <TabsContent value="overview" className="space-y-6 mt-6 p-6">
+                {/* System Health Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[
                     { icon: '👥', label: 'Total Users', value: systemStats.users.toLocaleString(), trend: '+12.5%', color: 'purple', progress: 85 },
@@ -289,17 +288,26 @@ const DashboardPage: React.FC = () => {
                       <Card className="h-full transition-all duration-300 hover:shadow-xl border-2 hover:border-blue-200 dark:hover:border-blue-800 cursor-pointer">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-4">
-                            <div className={`p-4 rounded-xl bg-${stat.color}-100 dark:bg-${stat.color}-900/30`}>
+                            <div className={`p-4 rounded-xl ${
+                              stat.color === 'purple' ? 'bg-purple-100 dark:bg-purple-900/30' :
+                              stat.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30' :
+                              stat.color === 'green' ? 'bg-green-100 dark:bg-green-900/30' :
+                              'bg-orange-100 dark:bg-orange-900/30'
+                            }`}>
                               <span className="text-3xl">{stat.icon}</span>
                             </div>
                             <div className="flex-1">
                               <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.label}</p>
-                              <p className={`text-3xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
+                              <p className={`text-3xl font-bold ${
+                                stat.color === 'purple' ? 'text-purple-600 dark:text-purple-400' :
+                                stat.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
+                                stat.color === 'green' ? 'text-green-600 dark:text-green-400' :
+                                'text-orange-600 dark:text-orange-400'
+                              }`}>{stat.value}</p>
                               <p className="text-xs text-green-600 dark:text-green-400 font-medium">{stat.trend}</p>
                             </div>
                           </div>
                           
-                          {/* Enhanced Progress Bar */}
                           <div className="mt-4">
                             <Progress value={stat.progress} className="w-full h-2" />
                           </div>
@@ -311,7 +319,7 @@ const DashboardPage: React.FC = () => {
 
                 {/* Quick Stats and Notifications */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Quick Stats with Enhanced Badges */}
+                  {/* Quick Stats */}
                   <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -332,7 +340,12 @@ const DashboardPage: React.FC = () => {
                         ].map((stat) => (
                           <div key={stat.label} className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                             <div className="text-2xl mb-2">{stat.icon}</div>
-                            <p className={`text-2xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
+                            <p className={`text-2xl font-bold ${
+                              stat.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
+                              stat.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
+                              stat.color === 'red' ? 'text-red-600 dark:text-red-400' :
+                              'text-green-600 dark:text-green-400'
+                            }`}>{stat.value}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.label}</p>
                           </div>
                         ))}
@@ -340,7 +353,7 @@ const DashboardPage: React.FC = () => {
                     </CardContent>
                   </Card>
 
-                  {/* Notifications with Enhanced Avatars */}
+                  {/* Notifications */}
                   <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -390,8 +403,7 @@ const DashboardPage: React.FC = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="performance" className="space-y-6 mt-6">
-                {/* Performance with Enhanced Switches */}
+              <TabsContent value="performance" className="space-y-6 mt-6 p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
                     <CardHeader>
@@ -412,7 +424,12 @@ const DashboardPage: React.FC = () => {
                           <div className="flex justify-between mb-2">
                             <Label className="font-medium">{metric.label}</Label>
                             <div className="flex items-center gap-2">
-                              <span className={`text-sm font-semibold text-${metric.color}-600 dark:text-${metric.color}-400`}>
+                              <span className={`text-sm font-semibold ${
+                                metric.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
+                                metric.color === 'green' ? 'text-green-600 dark:text-green-400' :
+                                metric.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
+                                'text-purple-600 dark:text-purple-400'
+                              }`}>
                                 {metric.value}%
                               </span>
                               <Badge variant="secondary" className={`${
@@ -481,7 +498,203 @@ const DashboardPage: React.FC = () => {
                 </div>
               </TabsContent>
 
-              {/* Additional tabs content would continue here... */}
+              <TabsContent value="security" className="space-y-6 mt-6 p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span className="text-2xl">🔒</span>
+                        Security Status
+                      </CardTitle>
+                      <CardDescription>Current security posture and threat assessment</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-3">
+                        {[
+                          { label: 'Firewall Status', value: 'Active', status: 'success', icon: '🛡️' },
+                          { label: 'Encryption', value: securityMetrics.encryptionStatus, status: 'success', icon: '🔐' },
+                          { label: 'MFA Enabled', value: 'Yes', status: 'success', icon: '📱' },
+                          { label: 'Failed Logins (24h)', value: securityMetrics.failedLogins.toString(), status: securityMetrics.failedLogins > 10 ? 'warning' : 'success', icon: '🚫' },
+                          { label: 'Blocked IPs', value: securityMetrics.blockedIPs.toString(), status: 'info', icon: '🌍' },
+                          { label: 'Last Security Scan', value: securityMetrics.lastBackup, status: 'info', icon: '🔍' }
+                        ].map((item) => (
+                          <div key={item.label} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center gap-3">
+                              <span className="text-lg">{item.icon}</span>
+                              <span className="font-medium">{item.label}</span>
+                            </div>
+                            <Badge variant="secondary" className={`${
+                              item.status === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                              item.status === 'warning' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
+                              'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                            }`}>
+                              {item.value}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span className="text-2xl">🎛️</span>
+                        Security Controls
+                      </CardTitle>
+                      <CardDescription>Security settings and threat prevention</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-4">
+                        {[
+                          { label: 'Auto Security Scan', description: 'Automated security scanning' },
+                          { label: 'Threat Detection', description: 'Real-time threat monitoring' },
+                          { label: 'Access Logging', description: 'Comprehensive access tracking' }
+                        ].map((control) => (
+                          <div key={control.label} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                            <div>
+                              <Label htmlFor={control.label.toLowerCase().replace(/\s+/g, '-')} className="font-medium">
+                                {control.label}
+                              </Label>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{control.description}</p>
+                            </div>
+                            <Switch id={control.label.toLowerCase().replace(/\s+/g, '-')} defaultChecked />
+                          </div>
+                        ))}
+                        
+                        <Separator />
+                        
+                        <div>
+                          <Label className="font-medium mb-3 block">Security Level</Label>
+                          <div className="space-y-3">
+                            {['Low', 'Medium', 'High'].map((level) => (
+                              <div key={level} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                                <input 
+                                  type="radio" 
+                                  id={`security-${level.toLowerCase()}`} 
+                                  name="security" 
+                                  value={level.toLowerCase()} 
+                                  defaultChecked={level === 'High'}
+                                  className="text-blue-600 focus:ring-blue-500"
+                                />
+                                <Label htmlFor={`security-${level.toLowerCase()}`} className="font-medium cursor-pointer">{level}</Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="analytics" className="space-y-6 mt-6 p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span className="text-2xl">👥</span>
+                        User Analytics
+                      </CardTitle>
+                      <CardDescription>User activity and engagement metrics</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {[
+                          { label: 'Active Users', value: '1,247', progress: 75, trend: '+5.2%' },
+                          { label: 'Session Duration', value: '24m 32s', progress: 60, trend: '+2.1%' },
+                          { label: 'Page Views', value: '45,892', progress: 85, trend: '+12.8%' }
+                        ].map((metric) => (
+                          <div key={metric.label} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">{metric.label}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">{metric.value}</span>
+                                <span className="text-xs text-green-600 dark:text-green-400 font-medium">{metric.trend}</span>
+                              </div>
+                            </div>
+                            <Progress value={metric.progress} className="w-full h-2" />
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span className="text-2xl">⚙️</span>
+                        System Analytics
+                      </CardTitle>
+                      <CardDescription>System performance and usage analytics</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {[
+                          { label: 'API Requests', value: '15,420', progress: 90, trend: '+8.5%' },
+                          { label: 'Response Time', value: '45ms', progress: 95, trend: '-12.3%' },
+                          { label: 'Error Rate', value: '0.02%', progress: 98, trend: '-5.1%' }
+                        ].map((metric) => (
+                          <div key={metric.label} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">{metric.label}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">{metric.value}</span>
+                                <span className={`text-xs font-medium ${
+                                  metric.trend.startsWith('+') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                                }`}>
+                                  {metric.trend}
+                                </span>
+                              </div>
+                            </div>
+                            <Progress value={metric.progress} className="w-full h-2" />
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="activity" className="space-y-6 mt-6 p-6">
+                <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <span className="text-2xl">🕒</span>
+                      Recent Activity Feed
+                    </CardTitle>
+                    <CardDescription>Real-time system activity and user actions with priority filtering</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {recentActivity.map((activity, index) => (
+                        <motion.div
+                          key={activity.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                          className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${
+                            isDarkMode ? 'border-gray-700 hover:bg-gray-800' : 'border-gray-200 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className={`p-3 rounded-lg ${getPriorityColor(activity.priority)}`}>
+                            <span className="text-xl">{getTypeIcon(activity.type)}</span>
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium">{activity.action}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {activity.user} • {activity.time}
+                            </p>
+                          </div>
+                          <Badge variant="secondary" className={`${getPriorityColor(activity.priority)} font-medium`}>
+                            {activity.priority}
+                          </Badge>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
             </Tabs>
           </motion.div>
         </div>
