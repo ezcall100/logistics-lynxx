@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  Brain, 
-  Activity,
-  CheckCircle,
-  Clock,
-  Zap,
-  Target,
-  TrendingUp
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+
+// Import all Super Admin pages
+import DashboardPage from './pages/DashboardPage';
+import UserManagementPage from './pages/UserManagementPage';
+import SystemAdminPage from './pages/SystemAdminPage';
+import SecurityCenterPage from './pages/SecurityCenterPage';
+import SystemMonitoringPage from './pages/SystemMonitoringPage';
+import PortalManagementPage from './pages/PortalManagementPage';
+import ReportsPage from './pages/ReportsPage';
+import GlobalSettingsPage from './pages/GlobalSettingsPage';
 
 // Type definitions
 interface NavigationChild {
@@ -37,6 +35,7 @@ interface NavigationItem {
 
 const SuperAdminPortal = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarMobileOpen, setSidebarMobileOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['dashboard']));
@@ -58,20 +57,6 @@ const SuperAdminPortal = () => {
     responseTime: '1.2s'
   });
 
-  // Portal URLs
-  const portalUrls = {
-    dashboard: '/',
-    broker: '/broker',
-    carrier: '/carrier',
-    driver: '/driver',
-    shipper: '/shipper',
-    superAdmin: '/super-admin',
-    analytics: '/analytics',
-    autonomous: '/autonomous',
-    factoring: '/factoring',
-    ownerOperator: '/owner-operator'
-  };
-
   // Responsive detection
   useEffect(() => {
     const checkMobile = () => {
@@ -91,6 +76,22 @@ const SuperAdminPortal = () => {
     const timer = setTimeout(() => setIsLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Auto-expand current section based on location
+  useEffect(() => {
+    const path = location.pathname;
+    const newExpanded = new Set(expandedGroups);
+    
+    if (path.includes('/users')) newExpanded.add('users');
+    if (path.includes('/system')) newExpanded.add('system');
+    if (path.includes('/security')) newExpanded.add('security');
+    if (path.includes('/monitoring')) newExpanded.add('monitoring');
+    if (path.includes('/portals')) newExpanded.add('portals');
+    if (path.includes('/reports')) newExpanded.add('reports');
+    if (path.includes('/settings')) newExpanded.add('settings');
+    
+    setExpandedGroups(newExpanded);
+  }, [location.pathname]);
 
   const toggleGroup = (key: string) => {
     const newExpanded = new Set(expandedGroups);
@@ -149,7 +150,9 @@ const SuperAdminPortal = () => {
         { key: 'database', label: 'Database Management', icon: '🗄️', path: '/super-admin/system/database' },
         { key: 'api-management', label: 'API Management', icon: '🔌', path: '/super-admin/system/api' },
         { key: 'network-settings', label: 'Network Settings', icon: '🌍', path: '/super-admin/system/network' },
-        { key: 'file-management', label: 'File Management', icon: '📁', path: '/super-admin/system/files' }
+        { key: 'file-management', label: 'File Management', icon: '📁', path: '/super-admin/system/files' },
+        { key: 'backup-restore', label: 'Backup & Restore', icon: '💾', path: '/super-admin/system/backup' },
+        { key: 'system-updates', label: 'System Updates', icon: '🔄', path: '/super-admin/system/updates' }
       ]
     },
     {
@@ -160,7 +163,9 @@ const SuperAdminPortal = () => {
         { key: 'security-audit', label: 'Security Audit', icon: '🔍', path: '/super-admin/security/audit' },
         { key: 'access-control', label: 'Access Control', icon: '🔐', path: '/super-admin/security/access' },
         { key: 'encryption', label: 'Encryption', icon: '🔒', path: '/super-admin/security/encryption' },
-        { key: 'firewall', label: 'Firewall', icon: '🛡️', path: '/super-admin/security/firewall' }
+        { key: 'firewall', label: 'Firewall', icon: '🛡️', path: '/super-admin/security/firewall' },
+        { key: 'mfa-settings', label: 'MFA Settings', icon: '🔐', path: '/super-admin/security/mfa' },
+        { key: 'ip-whitelist', label: 'IP Whitelist', icon: '🌍', path: '/super-admin/security/ip' }
       ]
     },
     {
@@ -170,7 +175,9 @@ const SuperAdminPortal = () => {
       children: [
         { key: 'log-analysis', label: 'Log Analysis', icon: '📝', path: '/super-admin/monitoring/logs' },
         { key: 'performance', label: 'Performance Monitoring', icon: '📈', path: '/super-admin/monitoring/performance' },
-        { key: 'alerts', label: 'Alert Management', icon: '🔔', path: '/super-admin/monitoring/alerts' }
+        { key: 'alerts', label: 'Alert Management', icon: '🔔', path: '/super-admin/monitoring/alerts' },
+        { key: 'health-checks', label: 'Health Checks', icon: '❤️', path: '/super-admin/monitoring/health' },
+        { key: 'error-tracking', label: 'Error Tracking', icon: '❌', path: '/super-admin/monitoring/errors' }
       ]
     },
     {
@@ -178,13 +185,13 @@ const SuperAdminPortal = () => {
       label: 'Portal Management',
       icon: '🌐',
       children: [
-        { key: 'dashboard-portal', label: 'Dashboard Portal', icon: '📊', path: '/' },
-        { key: 'broker-portal', label: 'Broker Portal', icon: '👥', path: '/broker' },
-        { key: 'carrier-portal', label: 'Carrier Portal', icon: '🚛', path: '/carrier' },
-        { key: 'driver-portal', label: 'Driver Portal', icon: '🚗', path: '/driver' },
-        { key: 'shipper-portal', label: 'Shipper Portal', icon: '📦', path: '/shipper' },
-        { key: 'analytics-portal', label: 'Analytics Portal', icon: '📈', path: '/analytics' },
-        { key: 'autonomous-portal', label: 'Autonomous Portal', icon: '🤖', path: '/autonomous' }
+        { key: 'dashboard-portal', label: 'Dashboard Portal', icon: '📊', path: '/super-admin/portals/dashboard' },
+        { key: 'broker-portal', label: 'Broker Portal', icon: '👥', path: '/super-admin/portals/broker' },
+        { key: 'carrier-portal', label: 'Carrier Portal', icon: '🚛', path: '/super-admin/portals/carrier' },
+        { key: 'driver-portal', label: 'Driver Portal', icon: '🚗', path: '/super-admin/portals/driver' },
+        { key: 'shipper-portal', label: 'Shipper Portal', icon: '📦', path: '/super-admin/portals/shipper' },
+        { key: 'analytics-portal', label: 'Analytics Portal', icon: '📈', path: '/super-admin/portals/analytics' },
+        { key: 'autonomous-portal', label: 'Autonomous Portal', icon: '🤖', path: '/super-admin/portals/autonomous' }
       ]
     },
     {
@@ -195,7 +202,9 @@ const SuperAdminPortal = () => {
         { key: 'system-reports', label: 'System Reports', icon: '📊', path: '/super-admin/reports/system' },
         { key: 'user-reports', label: 'User Reports', icon: '👥', path: '/super-admin/reports/users' },
         { key: 'security-reports', label: 'Security Reports', icon: '🔒', path: '/super-admin/reports/security' },
-        { key: 'performance-reports', label: 'Performance Reports', icon: '📈', path: '/super-admin/reports/performance' }
+        { key: 'performance-reports', label: 'Performance Reports', icon: '📈', path: '/super-admin/reports/performance' },
+        { key: 'audit-logs', label: 'Audit Logs', icon: '📝', path: '/super-admin/reports/audit' },
+        { key: 'compliance-reports', label: 'Compliance Reports', icon: '✅', path: '/super-admin/reports/compliance' }
       ]
     },
     {
@@ -206,7 +215,9 @@ const SuperAdminPortal = () => {
         { key: 'general-settings', label: 'General Settings', icon: '⚙️', path: '/super-admin/settings/general' },
         { key: 'appearance', label: 'Appearance', icon: '🎨', path: '/super-admin/settings/appearance' },
         { key: 'notifications', label: 'Notifications', icon: '🔔', path: '/super-admin/settings/notifications' },
-        { key: 'integrations', label: 'Integrations', icon: '🔌', path: '/super-admin/settings/integrations' }
+        { key: 'integrations', label: 'Integrations', icon: '🔌', path: '/super-admin/settings/integrations' },
+        { key: 'email-settings', label: 'Email Settings', icon: '📧', path: '/super-admin/settings/email' },
+        { key: 'billing-settings', label: 'Billing Settings', icon: '💳', path: '/super-admin/settings/billing' }
       ]
     }
   ];
@@ -290,7 +301,11 @@ const SuperAdminPortal = () => {
                   <div>
                     <button
                       onClick={() => toggleGroup(item.key)}
-                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors group"
+                      className={`flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors group ${
+                        expandedGroups.has(item.key) 
+                          ? 'bg-purple-100 text-purple-700' 
+                          : 'text-slate-700 hover:bg-slate-200'
+                      }`}
                     >
                       <div className="flex items-center gap-2">
                         <span className="text-base">{item.icon}</span>
@@ -332,7 +347,11 @@ const SuperAdminPortal = () => {
                                 }
                                 if (isMobile) closeMobileSidebar();
                               }}
-                              className="flex items-center justify-between w-full px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors group"
+                              className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-colors group ${
+                                location.pathname === child.path
+                                  ? 'bg-purple-50 text-purple-700 border-l-2 border-purple-500'
+                                  : 'text-slate-600 hover:bg-slate-200'
+                              }`}
                             >
                               <div className="flex items-center gap-2">
                                 <span className="text-sm">{child.icon}</span>
@@ -358,7 +377,11 @@ const SuperAdminPortal = () => {
                       }
                       if (isMobile) closeMobileSidebar();
                     }}
-                    className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors group"
+                    className={`flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors group ${
+                      location.pathname === item.path
+                        ? 'bg-purple-100 text-purple-700'
+                        : 'text-slate-700 hover:bg-slate-200'
+                    }`}
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-base">{item.icon}</span>
@@ -502,154 +525,18 @@ const SuperAdminPortal = () => {
           </div>
         </header>
 
-        {/* Dashboard Content */}
-        <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-auto">
-          {/* Welcome Section */}
-          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-4 lg:p-6 text-white">
-            <h1 className="text-xl lg:text-2xl font-bold mb-2">Welcome to Super Admin Portal</h1>
-            <p className="text-purple-100 text-sm lg:text-base">Complete system control with full administrative authority. All systems operational.</p>
-          </div>
-
-          {/* System Health Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <span className="text-purple-600 text-lg">👥</span>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600">Total Users</p>
-                  <p className="text-lg font-semibold text-purple-600">{systemStats.users.toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <span className="text-blue-600 text-lg">🌐</span>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600">Active Portals</p>
-                  <p className="text-lg font-semibold text-blue-600">{systemStats.portals}/{systemStats.portals}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <span className="text-green-600 text-lg">✅</span>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600">System Health</p>
-                  <p className="text-lg font-semibold text-green-600">{systemStats.health}%</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-orange-100 rounded-lg">
-                  <span className="text-orange-600 text-lg">🛡️</span>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600">Security Score</p>
-                  <p className="text-lg font-semibold text-orange-600">{systemStats.security}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Portal Navigation Cards */}
-          <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
-            <h2 className="text-lg font-semibold mb-4">Portal Navigation</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {Object.entries(portalUrls).map(([key, url]) => {
-                const portalConfig = {
-                  dashboard: { icon: '📊', label: 'Dashboard', color: 'from-blue-500 to-cyan-500' },
-                  broker: { icon: '👥', label: 'Broker', color: 'from-purple-500 to-pink-500' },
-                  carrier: { icon: '🚛', label: 'Carrier', color: 'from-green-500 to-emerald-500' },
-                  driver: { icon: '🚗', label: 'Driver', color: 'from-orange-500 to-yellow-500' },
-                  shipper: { icon: '📦', label: 'Shipper', color: 'from-red-500 to-pink-500' },
-                  superAdmin: { icon: '👑', label: 'Super Admin', color: 'from-purple-500 to-violet-500' },
-                  analytics: { icon: '📈', label: 'Analytics', color: 'from-teal-500 to-cyan-500' },
-                  autonomous: { icon: '🤖', label: 'Autonomous', color: 'from-indigo-500 to-purple-500' },
-                  factoring: { icon: '💼', label: 'Factoring', color: 'from-blue-500 to-indigo-500' },
-                  ownerOperator: { icon: '👨‍💼', label: 'Owner Operator', color: 'from-indigo-500 to-blue-500' }
-                }[key];
-
-                if (!portalConfig) return null;
-
-                return (
-                  <button
-                    key={key}
-                    onClick={() => handlePortalNavigation(url)}
-                    className="h-20 flex-col bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all duration-300 hover:scale-105 border-2 hover:border-purple-300 rounded-lg flex items-center justify-center"
-                  >
-                    <span className="text-2xl mb-1">{portalConfig.icon}</span>
-                    <span className="text-sm font-medium">{portalConfig.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
-            <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button className="h-20 flex-col bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 shadow-lg rounded-lg flex items-center justify-center text-white">
-                <span className="text-xl mb-1">🔒</span>
-                <span className="text-sm font-medium">Security Audit</span>
-                <span className="text-xs opacity-90">System Security</span>
-              </button>
-              <button className="h-20 flex-col bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 border-0 shadow-lg rounded-lg flex items-center justify-center">
-                <span className="text-xl mb-1">💾</span>
-                <span className="text-sm font-medium">Database Backup</span>
-                <span className="text-xs opacity-90">Data Protection</span>
-              </button>
-              <button className="h-20 flex-col bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 border-0 shadow-lg rounded-lg flex items-center justify-center">
-                <span className="text-xl mb-1">🔄</span>
-                <span className="text-sm font-medium">System Update</span>
-                <span className="text-xs opacity-90">Version Control</span>
-              </button>
-              <button className="h-20 flex-col bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 border-0 shadow-lg rounded-lg flex items-center justify-center">
-                <span className="text-xl mb-1">🔌</span>
-                <span className="text-sm font-medium">API Management</span>
-                <span className="text-xs opacity-90">Integration Control</span>
-              </button>
-              <button className="h-20 flex-col bg-gradient-to-br from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 hover:scale-105 border-0 shadow-lg rounded-lg flex items-center justify-center">
-                <span className="text-xl mb-1">📝</span>
-                <span className="text-sm font-medium">Log Analysis</span>
-                <span className="text-xs opacity-90">System Monitoring</span>
-              </button>
-              <button className="h-20 flex-col bg-gradient-to-br from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 transition-all duration-300 hover:scale-105 border-0 shadow-lg rounded-lg flex items-center justify-center">
-                <span className="text-xl mb-1">🚨</span>
-                <span className="text-sm font-medium">Emergency Mode</span>
-                <span className="text-xs opacity-90">Crisis Management</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
-            <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-            <div className="space-y-3">
-              {notifications.map((notification) => (
-                <div key={notification.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                  <div className={`w-2 h-2 rounded-full ${
-                    notification.type === 'warning' ? 'bg-yellow-500' : 
-                    notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-                  }`}></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{notification.message}</p>
-                    <p className="text-xs text-slate-500">{notification.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Page Content */}
+        <div className="flex-1 overflow-auto">
+          <Routes>
+            <Route path="/" element={<DashboardPage systemStats={systemStats} notifications={notifications} />} />
+            <Route path="/users/*" element={<UserManagementPage />} />
+            <Route path="/system/*" element={<SystemAdminPage />} />
+            <Route path="/security/*" element={<SecurityCenterPage />} />
+            <Route path="/monitoring/*" element={<SystemMonitoringPage />} />
+            <Route path="/portals/*" element={<PortalManagementPage />} />
+            <Route path="/reports/*" element={<ReportsPage />} />
+            <Route path="/settings/*" element={<GlobalSettingsPage />} />
+          </Routes>
         </div>
       </div>
     </div>
