@@ -15,6 +15,11 @@ import { AutonomousWebsiteUpdater } from './AutonomousWebsiteUpdater';
 import { LiveWebsiteUpdater } from './LiveWebsiteUpdater';
 import { RealAutonomousUpdater } from './RealAutonomousUpdater';
 import { DashboardTemplate } from '../dashboard/DashboardTemplate';
+import AgentDashboard from '../../pages/autonomous/AgentDashboard';
+import PerformanceMonitor from '../../pages/autonomous/PerformanceMonitor';
+import LearningModels from '../../pages/autonomous/LearningModels';
+import DecisionLogs from '../../pages/autonomous/DecisionLogs';
+import AutoScaling from '../../pages/autonomous/AutoScaling';
 
 const AutonomousTabs = () => {
   return (
