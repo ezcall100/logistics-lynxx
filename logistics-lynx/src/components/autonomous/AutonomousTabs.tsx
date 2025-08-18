@@ -61,6 +61,26 @@ const AutonomousTabs = () => {
           </Card>
         </TabsContent>
 
+        <TabsContent value="agent-dashboard" className="space-y-4">
+          <AgentDashboard />
+        </TabsContent>
+
+        <TabsContent value="performance-monitor" className="space-y-4">
+          <PerformanceMonitor />
+        </TabsContent>
+
+        <TabsContent value="learning-models" className="space-y-4">
+          <LearningModels />
+        </TabsContent>
+
+        <TabsContent value="decision-logs" className="space-y-4">
+          <DecisionLogs />
+        </TabsContent>
+
+        <TabsContent value="auto-scaling" className="space-y-4">
+          <AutoScaling />
+        </TabsContent>
+
         <TabsContent value="agents" className="space-y-4">
           <AIAgentManager />
         </TabsContent>
