@@ -202,7 +202,7 @@ const EnhancedSuperAdminPortal = () => {
   }, [isDarkMode]);
 
   // Navigation structure with modern SVG icons
-  const navigationItems = [
+  const navigationItems = React.useMemo(() => [
     {
       id: 'dashboard',
       title: 'Dashboard',
@@ -284,7 +284,7 @@ const EnhancedSuperAdminPortal = () => {
       path: '/super-admin/global-settings',
       description: 'Global system configuration'
     }
-  ];
+  ], []);
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => 
