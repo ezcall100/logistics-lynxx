@@ -20,10 +20,10 @@ const DashboardOverview = () => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold">Dashboard Overview</h1>
-      <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Last updated: 2 minutes ago</span>
-      </div>
-    </div>
+              </div>
+            </div>
     
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div className="bg-card p-6 rounded-lg border">
@@ -31,11 +31,11 @@ const DashboardOverview = () => (
           <div>
             <p className="text-sm font-medium text-muted-foreground">Total Portals</p>
             <p className="text-2xl font-bold">20</p>
-          </div>
+              </div>
           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
             <span className="text-blue-600 text-lg">🌐</span>
-          </div>
-        </div>
+              </div>
+              </div>
       </div>
       
       <div className="bg-card p-6 rounded-lg border">
@@ -46,10 +46,10 @@ const DashboardOverview = () => (
           </div>
           <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
             <span className="text-green-600 text-lg">👥</span>
+            </div>
           </div>
         </div>
-      </div>
-      
+
       <div className="bg-card p-6 rounded-lg border">
         <div className="flex items-center justify-between">
           <div>
@@ -60,8 +60,8 @@ const DashboardOverview = () => (
             <span className="text-green-600 text-lg">✅</span>
           </div>
         </div>
-      </div>
-      
+        </div>
+
       <div className="bg-card p-6 rounded-lg border">
         <div className="flex items-center justify-between">
           <div>
@@ -70,10 +70,10 @@ const DashboardOverview = () => (
           </div>
           <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
             <span className="text-purple-600 text-lg">🤖</span>
-          </div>
-        </div>
-      </div>
-    </div>
+            </div>
+            </div>
+            </div>
+            </div>
     
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-card p-6 rounded-lg border">
@@ -83,7 +83,7 @@ const DashboardOverview = () => (
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
             <span className="text-sm">New load posted in Carrier Portal</span>
             <span className="text-xs text-muted-foreground ml-auto">2 min ago</span>
-          </div>
+            </div>
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             <span className="text-sm">Payment processed in Financials Portal</span>
@@ -93,10 +93,10 @@ const DashboardOverview = () => (
             <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
             <span className="text-sm">System maintenance scheduled</span>
             <span className="text-xs text-muted-foreground ml-auto">1 hour ago</span>
+            </div>
           </div>
         </div>
-      </div>
-      
+
       <div className="bg-card p-6 rounded-lg border">
         <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
         <div className="grid grid-cols-2 gap-3">
@@ -131,7 +131,7 @@ const PortalPage = ({ title, description, icon, features, stats }: any) => (
         <h1 className="text-3xl font-bold">{title}</h1>
         <p className="text-lg text-muted-foreground">{description}</p>
       </div>
-    </div>
+                </div>
     
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="bg-card p-6 rounded-lg border">
@@ -142,10 +142,10 @@ const PortalPage = ({ title, description, icon, features, stats }: any) => (
               <span className="w-2 h-2 bg-primary rounded-full"></span>
               <span className="text-sm">{feature}</span>
             </li>
-          ))}
-        </ul>
-      </div>
-      
+                    ))}
+                  </ul>
+                </div>
+
       <div className="bg-card p-6 rounded-lg border">
         <h3 className="text-lg font-semibold mb-4">Statistics</h3>
         <div className="space-y-3">
@@ -156,25 +156,25 @@ const PortalPage = ({ title, description, icon, features, stats }: any) => (
             </div>
           ))}
         </div>
-      </div>
-      
+        </div>
+
       <div className="bg-card p-6 rounded-lg border">
         <h3 className="text-lg font-semibold mb-4">Quick Access</h3>
         <div className="space-y-2">
           <button className="w-full p-2 text-left text-sm hover:bg-accent rounded transition-colors">
             Dashboard
-          </button>
+            </button>
           <button className="w-full p-2 text-left text-sm hover:bg-accent rounded transition-colors">
             Reports
-          </button>
+            </button>
           <button className="w-full p-2 text-left text-sm hover:bg-accent rounded transition-colors">
             Settings
-          </button>
+            </button>
+        </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 
 // Portal Data
 const portalData = {
@@ -399,7 +399,7 @@ function AppAuthenticated() {
                   <h1 className="text-3xl font-bold">Page Not Found</h1>
                   <div className="bg-card p-6 rounded-lg border">
                     <p className="text-muted-foreground">The page you're looking for doesn't exist.</p>
-                  </div>
+                </div>
                 </div>
               } />
             </Routes>
