@@ -5,14 +5,11 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { LayoutDashboard, BarChart3, Package, Truck, Building2, DollarSign, Users, Settings, Brain, Activity, Globe, Bell, ChevronRight, Target, FileText, Shield, Calendar, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 const ModernSidebar = () => {
-  const {
-    state
-  } = useSidebar();
-  const collapsed = state === 'collapsed';
+  const collapsed = false; // Simplified for now
   const location = useLocation();
   const {
     selectedRole
