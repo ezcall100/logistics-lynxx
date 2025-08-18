@@ -1,14 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import FloatingActionButton from '../admin/FloatingActionButton';
+
+// Type definitions
+interface NavigationChild {
+  key: string;
+  label: string;
+  icon: string;
+  path: string;
+  badge?: string;
+}
+
+interface NavigationItem {
+  key: string;
+  label: string;
+  icon: string;
+  path?: string;
+  badge?: string | null;
+  children?: NavigationChild[];
+}
 
 export default function SoftwareAdminPortal() {
   console.log('SoftwareAdminPortal component loaded successfully!');
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarMobileOpen, setSidebarMobileOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['overview']));
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Responsive detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setSidebarMobileOpen(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const toggleGroup = (key: string) => {
     const newExpanded = new Set(expandedGroups);
@@ -21,10 +55,18 @@ export default function SoftwareAdminPortal() {
   };
 
   const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
+    if (isMobile) {
+      setSidebarMobileOpen(!sidebarMobileOpen);
+    } else {
+      setSidebarCollapsed(!sidebarCollapsed);
+    }
   };
 
-  const navigationItems = [
+  const closeMobileSidebar = () => {
+    setSidebarMobileOpen(false);
+  };
+
+  const navigationItems: NavigationItem[] = [
     {
       key: 'overview',
       label: 'Overview',
@@ -153,20 +195,39 @@ export default function SoftwareAdminPortal() {
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50">
+    <div className="flex h-screen bg-slate-50 relative">
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isMobile && sidebarMobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={closeMobileSidebar}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Left Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: sidebarCollapsed ? 64 : 288 }}
+        animate={{ 
+          width: isMobile ? (sidebarMobileOpen ? 280 : 0) : (sidebarCollapsed ? 64 : 288),
+          x: isMobile ? (sidebarMobileOpen ? 0 : -280) : 0
+        }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="border-r bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden"
+        className={`border-r bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden ${
+          isMobile ? 'fixed left-0 top-0 h-full z-50' : 'relative'
+        }`}
       >
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 h-full flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between">
             <motion.div 
               className="flex items-center gap-2"
-              animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+              animate={{ opacity: (sidebarCollapsed && !isMobile) ? 0 : 1 }}
               transition={{ duration: 0.2 }}
             >
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
@@ -192,7 +253,7 @@ export default function SoftwareAdminPortal() {
           </div>
           
           {/* Navigation */}
-          <nav className="space-y-1">
+          <nav className="space-y-1 flex-1 overflow-y-auto">
             {navigationItems.map((item) => (
               <div key={item.key} className="space-y-1">
                 {item.children ? (
@@ -205,7 +266,7 @@ export default function SoftwareAdminPortal() {
                       <div className="flex items-center gap-2">
                         <span className="text-base">{item.icon}</span>
                         <motion.span
-                          animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+                          animate={{ opacity: (sidebarCollapsed && !isMobile) ? 0 : 1 }}
                           transition={{ duration: 0.2 }}
                           className="whitespace-nowrap"
                         >
@@ -215,7 +276,7 @@ export default function SoftwareAdminPortal() {
                       <motion.span
                         animate={{ 
                           rotate: expandedGroups.has(item.key) ? 180 : 0,
-                          opacity: sidebarCollapsed ? 0 : 1
+                          opacity: (sidebarCollapsed && !isMobile) ? 0 : 1
                         }}
                         transition={{ duration: 0.2 }}
                         className="text-xs"
@@ -225,7 +286,7 @@ export default function SoftwareAdminPortal() {
                     </button>
                     
                     <AnimatePresence>
-                      {expandedGroups.has(item.key) && !sidebarCollapsed && (
+                      {expandedGroups.has(item.key) && (!sidebarCollapsed || isMobile) && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
@@ -238,6 +299,7 @@ export default function SoftwareAdminPortal() {
                               key={child.key}
                               href={child.path}
                               className="flex items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors group"
+                              onClick={isMobile ? closeMobileSidebar : undefined}
                             >
                               <div className="flex items-center gap-2">
                                 <span className="text-sm">{child.icon}</span>
@@ -259,11 +321,12 @@ export default function SoftwareAdminPortal() {
                   <a
                     href={item.path}
                     className="flex items-center justify-between px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors group"
+                    onClick={isMobile ? closeMobileSidebar : undefined}
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-base">{item.icon}</span>
                       <motion.span
-                        animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+                        animate={{ opacity: (sidebarCollapsed && !isMobile) ? 0 : 1 }}
                         transition={{ duration: 0.2 }}
                         className="whitespace-nowrap"
                       >
@@ -272,7 +335,7 @@ export default function SoftwareAdminPortal() {
                     </div>
                     {item.badge && (
                       <motion.span
-                        animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+                        animate={{ opacity: (sidebarCollapsed && !isMobile) ? 0 : 1 }}
                         transition={{ duration: 0.2 }}
                         className="inline-flex items-center justify-center min-w-[20px] h-5 text-xs bg-blue-100 text-blue-800 rounded-full px-1"
                       >
@@ -288,7 +351,7 @@ export default function SoftwareAdminPortal() {
           {/* Bottom Rail */}
           <motion.div 
             className="pt-4 border-t border-slate-200"
-            animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+            animate={{ opacity: (sidebarCollapsed && !isMobile) ? 0 : 1 }}
             transition={{ duration: 0.2 }}
           >
             <div className="flex items-center justify-between text-xs text-slate-500">
@@ -302,24 +365,51 @@ export default function SoftwareAdminPortal() {
         </div>
       </motion.aside>
 
+      {/* Floating Toggle Button for Collapsed Sidebar */}
+      <AnimatePresence>
+        {sidebarCollapsed && !isMobile && (
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            onClick={toggleSidebar}
+            className="fixed left-4 top-20 z-30 w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110"
+            title="Expand Sidebar"
+          >
+            <span className="text-lg">▶</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
-        <header className="h-16 border-b bg-white px-6 flex items-center justify-between">
+        <header className="h-16 border-b bg-white px-4 lg:px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
+            {/* Mobile Menu Button */}
+            {isMobile && (
+              <button
+                onClick={toggleSidebar}
+                className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors lg:hidden"
+              >
+                <span className="text-lg">☰</span>
+              </button>
+            )}
+            
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🌐</span>
-              <span className="text-sm font-medium">Trans Bot AI</span>
-              <span className="text-slate-400">▼</span>
+              <span className="text-xl lg:text-2xl">🌐</span>
+              <span className="text-sm font-medium hidden sm:block">Trans Bot AI</span>
+              <span className="text-slate-400 hidden lg:block">▼</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 lg:gap-3">
             {/* Command Palette */}
-            <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors">
+            <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors">
               <span>🔍</span>
-              <span>Search...</span>
-              <kbd className="text-xs bg-slate-200 px-1 rounded">⌘K</kbd>
+              <span className="hidden md:block">Search...</span>
+              <kbd className="text-xs bg-slate-200 px-1 rounded hidden lg:block">⌘K</kbd>
             </button>
 
             {/* Quick Add */}
@@ -329,7 +419,7 @@ export default function SoftwareAdminPortal() {
                 className="flex items-center gap-1 px-3 py-1.5 text-sm text-slate-600 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors"
               >
                 <span>➕</span>
-                <span>Quick Add</span>
+                <span className="hidden sm:block">Quick Add</span>
               </button>
               <AnimatePresence>
                 {showQuickAdd && (
@@ -370,21 +460,21 @@ export default function SoftwareAdminPortal() {
             {/* Profile */}
             <button className="flex items-center gap-2 p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
               <span className="text-lg">👤</span>
-              <span className="text-sm">Admin</span>
+              <span className="text-sm hidden sm:block">Admin</span>
             </button>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <div className="flex-1 p-6 space-y-6 overflow-auto">
+        <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-auto">
           {/* Welcome Section */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
-            <h1 className="text-2xl font-bold mb-2">Welcome to Software Admin</h1>
-            <p className="text-blue-100">Full autonomous agent authority enabled. System running at peak performance.</p>
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 lg:p-6 text-white">
+            <h1 className="text-xl lg:text-2xl font-bold mb-2">Welcome to Software Admin</h1>
+            <p className="text-blue-100 text-sm lg:text-base">Full autonomous agent authority enabled. System running at peak performance.</p>
           </div>
 
           {/* System Health Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-lg">
@@ -435,7 +525,7 @@ export default function SoftwareAdminPortal() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
             <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
@@ -463,22 +553,22 @@ export default function SoftwareAdminPortal() {
           </div>
 
           {/* Autonomous Agent Status */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
             <h2 className="text-lg font-semibold mb-4">Autonomous Agent Status</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-                <span className="text-3xl">📈</span>
-                <p className="text-2xl font-bold text-green-600">250+</p>
+                <span className="text-2xl lg:text-3xl">📈</span>
+                <p className="text-xl lg:text-2xl font-bold text-green-600">250+</p>
                 <p className="text-sm text-green-700">Active Agents</p>
               </div>
               <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                <span className="text-3xl">⚡</span>
-                <p className="text-2xl font-bold text-blue-600">98.5%</p>
+                <span className="text-2xl lg:text-3xl">⚡</span>
+                <p className="text-xl lg:text-2xl font-bold text-blue-600">98.5%</p>
                 <p className="text-sm text-blue-700">Success Rate</p>
               </div>
               <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-                <span className="text-3xl">📊</span>
-                <p className="text-2xl font-bold text-purple-600">~150ms</p>
+                <span className="text-2xl lg:text-3xl">📊</span>
+                <p className="text-xl lg:text-2xl font-bold text-purple-600">~150ms</p>
                 <p className="text-sm text-purple-700">Response Time</p>
               </div>
             </div>
