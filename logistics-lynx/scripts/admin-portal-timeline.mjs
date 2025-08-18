@@ -417,7 +417,7 @@ class AdminPortalTimeline {
     const todayTasks = this.getTodayTasks();
     
     console.log('\n🎯 SOFTWARE ADMIN PORTAL TIMELINE');
-    console.log('=' * 60);
+    console.log('============================================================');
     console.log(`📅 Start Date: ${this.startDate.toLocaleDateString()}`);
     console.log(`🎯 Target Completion: ${this.targetCompletion.toLocaleDateString()}`);
     console.log(`📊 Current Day: ${status.currentDay}/${this.timeline.mission.totalDays}`);
@@ -427,7 +427,7 @@ class AdminPortalTimeline {
     console.log(`✅ On Track: ${status.onTrack ? 'YES' : 'NO'}`);
     
     console.log('\n📋 TODAY\'S PRIORITY TASKS:');
-    console.log('-'.repeat(40));
+    console.log('----------------------------------------');
     
     if (todayTasks.length === 0) {
       console.log('No tasks scheduled for today');
@@ -441,7 +441,7 @@ class AdminPortalTimeline {
     }
     
     console.log('\n🎯 MILESTONES:');
-    console.log('-'.repeat(40));
+    console.log('----------------------------------------');
     this.timeline.milestones.forEach(milestone => {
       const milestoneDate = new Date(milestone.date);
       const daysUntil = Math.ceil((milestoneDate - this.currentDate) / (1000 * 60 * 60 * 24));
@@ -449,13 +449,13 @@ class AdminPortalTimeline {
     });
     
     console.log('\n⚠️  RISKS:');
-    console.log('-'.repeat(40));
+    console.log('----------------------------------------');
     this.timeline.risks.forEach(risk => {
       console.log(`${risk.id}: ${risk.name} (${risk.probability}/${risk.impact})`);
     });
     
     console.log('\n📊 RESOURCES:');
-    console.log('-'.repeat(40));
+    console.log('----------------------------------------');
     console.log(`Total Hours: ${this.timeline.resources.totalEstimatedHours}h`);
     console.log(`Daily Target: ${this.timeline.resources.dailyTargetHours}h`);
     console.log(`Team Size: ${this.timeline.resources.teamSize} + ${this.timeline.resources.autonomousAgents} agents`);
@@ -464,7 +464,7 @@ class AdminPortalTimeline {
 
   async run() {
     console.log('🤖 Admin Portal Timeline Generator');
-    console.log('=' * 40);
+    console.log('========================================');
     
     await this.saveTimeline();
     this.printTimeline();
@@ -472,7 +472,7 @@ class AdminPortalTimeline {
     // Create daily action plan
     const actionPlan = this.createDailyActionPlan();
     console.log('\n🚀 DAILY ACTION PLAN:');
-    console.log('-'.repeat(40));
+    console.log('----------------------------------------');
     actionPlan.forEach((action, index) => {
       console.log(`${index + 1}. ${action}`);
     });
