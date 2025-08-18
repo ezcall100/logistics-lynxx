@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 interface AdminReview {
@@ -23,7 +23,7 @@ interface FormData {
   legal_business_name: string;
   total_score: number;
   risk_level: string;
-  [key: string]: any;
+  [key: string]: string | number | boolean;
 }
 
 export const useAdminFlagging = () => {
@@ -182,7 +182,13 @@ export const useAdminFlagging = () => {
     decision?: 'approved' | 'rejected' | 'requires_changes'
   ): Promise<void> => {
     try {
-      const updateData: any = {
+      const updateData: {
+        review_status: string;
+        updated_at: string;
+        review_notes?: string;
+        review_decision?: string;
+        completed_at?: string;
+      } = {
         review_status: status,
         updated_at: new Date().toISOString()
       };
@@ -251,7 +257,7 @@ export const useAdminFlagging = () => {
     }
   };
 
-  const loadAdminReviews = async (): Promise<void> => {
+  const loadAdminReviews = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -310,7 +316,7 @@ export const useAdminFlagging = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase]);
 
   const getPendingReviews = (): AdminReview[] => {
     return adminReviews.filter(review => review.reviewStatus === 'pending');
@@ -355,7 +361,7 @@ export const useAdminFlagging = () => {
 
   useEffect(() => {
     loadAdminReviews();
-  }, []);
+  }, [loadAdminReviews]);
 
   return {
     adminReviews,

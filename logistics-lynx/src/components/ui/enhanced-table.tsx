@@ -38,7 +38,7 @@ interface Column<T> {
   filterable?: boolean;
   width?: string;
   align?: 'left' | 'center' | 'right';
-  render?: (value: any, item: T) => React.ReactNode;
+  render?: (value: React.ReactNode, item: T) => React.ReactNode;
 }
 
 interface EnhancedTableProps<T> {

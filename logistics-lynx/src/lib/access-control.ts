@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Request, Response, NextFunction } from 'express';
 
 // Types for access control
@@ -38,7 +38,7 @@ export interface AuditLogData {
 
 // Access Control Middleware
 export class AccessControl {
-  private supabase: any;
+  private supabase: SupabaseClient;
 
   constructor() {
     this.supabase = createClient(
@@ -534,14 +534,14 @@ export class AccessControl {
 
       // Add role permissions
       rolePermissions?.forEach(membership => {
-        membership.role_permissions?.forEach((rp: any) => {
+        membership.role_permissions?.forEach((rp: { permission_key: string }) => {
           permissions.add(rp.permission_key);
         });
       });
 
       // Add custom role permissions
       customPermissions?.forEach(ucr => {
-        ucr.custom_roles?.custom_role_permissions?.forEach((crp: any) => {
+        ucr.custom_roles?.custom_role_permissions?.forEach((crp: { permission_key: string }) => {
           permissions.add(crp.permission_key);
         });
       });

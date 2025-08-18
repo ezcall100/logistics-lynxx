@@ -4,7 +4,7 @@
  * Integrates with FMCSA and TIN verification systems
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { createClient } from '@supabase/supabase-js';
 import { entityValidator, EntityValidationRequest, EntityValidationResponse } from '../../onboarding/validateEntity';
@@ -153,7 +153,7 @@ export const EntityOnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   // Define onboarding steps
-  const steps: OnboardingStep[] = [
+  const steps: OnboardingStep[] = useMemo(() => [
     {
       id: 'entity-type',
       title: 'Entity Type',
@@ -218,7 +218,7 @@ export const EntityOnboardingFlow: React.FC<OnboardingFlowProps> = ({
       isActive: currentStep === 7,
       isDisabled: currentStep < 7
     }
-  ];
+  ], [currentStep]);
 
   // Update step completion status
   useEffect(() => {
@@ -228,10 +228,10 @@ export const EntityOnboardingFlow: React.FC<OnboardingFlowProps> = ({
       isActive: index === currentStep,
       isDisabled: index > currentStep
     }));
-  }, [currentStep, formData]);
+  }, [currentStep, formData, steps]);
 
   // Handle form data changes
-  const handleFormChange = (field: string, value: any) => {
+  const handleFormChange = (field: string, value: string | number | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -239,7 +239,7 @@ export const EntityOnboardingFlow: React.FC<OnboardingFlowProps> = ({
   };
 
   // Handle nested form changes
-  const handleNestedChange = (parent: string, field: string, value: any) => {
+  const handleNestedChange = (parent: string, field: string, value: string | number | boolean) => {
     setFormData(prev => ({
       ...prev,
       [parent]: {
@@ -599,7 +599,7 @@ export const EntityOnboardingFlow: React.FC<OnboardingFlowProps> = ({
 // Step Components
 const EntityTypeStep: React.FC<{
   formData: OnboardingFormData;
-  onChange: (field: string, value: any) => void;
+  onChange: (field: string, value: string | number | boolean) => void;
 }> = ({ formData, onChange }) => (
   <div>
     <h2 className="text-xl font-semibold mb-6">Select Entity Type</h2>
@@ -628,7 +628,7 @@ const EntityTypeStep: React.FC<{
 
 const BasicInfoStep: React.FC<{
   formData: OnboardingFormData;
-  onChange: (field: string, value: any) => void;
+  onChange: (field: string, value: string | number | boolean) => void;
 }> = ({ formData, onChange }) => (
   <div>
     <h2 className="text-xl font-semibold mb-6">Basic Information</h2>
@@ -701,7 +701,7 @@ const BasicInfoStep: React.FC<{
 
 const ContactInfoStep: React.FC<{
   formData: OnboardingFormData;
-  onChange: (field: string, value: any) => void;
+  onChange: (field: string, value: string | number | boolean) => void;
 }> = ({ formData, onChange }) => (
   <div>
     <h2 className="text-xl font-semibold mb-6">Contact Information</h2>
@@ -749,7 +749,7 @@ const ContactInfoStep: React.FC<{
 
 const AddressStep: React.FC<{
   formData: OnboardingFormData;
-  onChange: (parent: string, field: string, value: any) => void;
+  onChange: (parent: string, field: string, value: string | number | boolean) => void;
 }> = ({ formData, onChange }) => (
   <div>
     <h2 className="text-xl font-semibold mb-6">Business Address</h2>
@@ -816,7 +816,7 @@ const AddressStep: React.FC<{
 
 const ComplianceStep: React.FC<{
   formData: OnboardingFormData;
-  onChange: (field: string, value: any) => void;
+  onChange: (field: string, value: string | number | boolean) => void;
 }> = ({ formData, onChange }) => (
   <div>
     <h2 className="text-xl font-semibold mb-6">Compliance Information</h2>
@@ -890,7 +890,7 @@ const ComplianceStep: React.FC<{
 
 const DocumentsStep: React.FC<{
   formData: OnboardingFormData;
-  onChange: (field: string, value: any) => void;
+  onChange: (field: string, value: string | number | boolean) => void;
 }> = ({ formData, onChange }) => (
   <div>
     <h2 className="text-xl font-semibold mb-6">Document Upload</h2>

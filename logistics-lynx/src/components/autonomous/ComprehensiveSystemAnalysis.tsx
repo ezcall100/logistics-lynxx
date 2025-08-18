@@ -74,7 +74,8 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
     progress: 0,
     findings: [],
     improvements: []
-  }));
+  })),
+
     // PORTAL ANALYSIS
     {
       id: 'all-portals',

@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 
-export function apiErrorHandler(err: any, _req: Request, res: Response, _next: NextFunction) {
+export function apiErrorHandler(err: Error & { status?: number; code?: string }, _req: Request, res: Response, _next: NextFunction) {
   const status = Number(err?.status || 500);
   const code = String(err?.code || "internal_error");
   const msg = err?.message || "Unexpected error";

@@ -4,7 +4,7 @@ export class GlobalErrorBoundary extends React.Component<
   { children: React.ReactNode },
   { hasError: boolean; message?: string }
 > {
-  constructor(props: any) { 
+  constructor(props: { children: React.ReactNode }) { 
     super(props); 
     this.state = { hasError: false }; 
   }
@@ -13,7 +13,7 @@ export class GlobalErrorBoundary extends React.Component<
     return { hasError: true, message: err.message }; 
   }
   
-  componentDidCatch(err: Error, info: any) { 
+  componentDidCatch(err: Error, info: React.ErrorInfo) { 
     console.error("UI error:", err, info); 
   }
   
