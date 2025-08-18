@@ -22,6 +22,7 @@ import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import CarrierBrokerRiskReview from './components/onboarding/CarrierBrokerRiskReview';
 import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
 import SuperAdminPortal from './components/super-admin/SuperAdminPortal';
+import EnhancedSuperAdminPortal from './components/super-admin/EnhancedSuperAdminPortal';
 
 import ShippersPortal from './components/portals/ShippersPortal';
 import BrokersPortal from './components/portals/BrokersPortal';
@@ -703,7 +704,7 @@ function App() {
             </PortalLayout>
           } />
           
-          <Route path="/super-admin/*" element={<SuperAdminPortal />} />
+          <Route path="/super-admin/*" element={<EnhancedSuperAdminPortal />} />
           
           <Route path="/admin/*" element={
             <PortalLayout portalType="admin" title="⚙️ Admin Portal" description="System administration and configuration">
