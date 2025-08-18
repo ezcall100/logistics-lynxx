@@ -6,11 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
   plugins: [
-    react({
-      // Explicitly configure JSX handling
-      jsxImportSource: 'react',
-      tsDecorators: true,
-    }),
+    react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
@@ -29,17 +25,5 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-  },
-  esbuild: {
-    jsx: 'automatic',
-    jsxImportSource: 'react',
-    target: 'es2020',
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom'],
-    esbuildOptions: {
-      jsx: 'automatic',
-      target: 'es2020',
-    },
   },
 }));
