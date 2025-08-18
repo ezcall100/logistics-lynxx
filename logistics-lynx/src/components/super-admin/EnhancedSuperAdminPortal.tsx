@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
-import { useToast } from '@/hooks/use-toast';
 
 // Import enhanced UI components
 import {
