@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Import pure Radix UI primitives
-import * as Tabs from '@radix-ui/react-tabs';
-import * as Switch from '@radix-ui/react-switch';
-import * as RadioGroup from '@radix-ui/react-radio-group';
-import * as Progress from '@radix-ui/react-progress';
-import * as Badge from '@radix-ui/react-badge';
-import * as Tooltip from '@radix-ui/react-tooltip';
-import * as Popover from '@radix-ui/react-popover';
-import * as Avatar from '@radix-ui/react-avatar';
-import * as Separator from '@radix-ui/react-separator';
-
-// Import basic UI components that we know exist
+// Import existing UI components that we know exist
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const DashboardPage: React.FC = () => {
   // Theme state with localStorage persistence
@@ -122,10 +119,10 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <Tooltip.Provider>
+    <TooltipProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300">
         <div className="space-y-6 p-6">
-          {/* Enterprise Header with Pure Radix UI */}
+          {/* Enterprise Header with Enhanced Design */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -150,7 +147,7 @@ const DashboardPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  {/* System Status with Radix Badge */}
+                  {/* System Status with Enhanced Badges */}
                   <div className="flex flex-wrap gap-4 mt-6">
                     {[
                       { label: 'System Online', value: 'Operational', color: 'green', icon: '🟢' },
@@ -169,7 +166,7 @@ const DashboardPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Controls with Radix Components */}
+                {/* Enhanced Controls */}
                 <div className="flex items-center gap-4">
                   <Button
                     variant="ghost"
@@ -207,7 +204,7 @@ const DashboardPage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Quick Actions with Radix Tooltip */}
+          {/* Quick Actions with Enhanced Tooltips */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,8 +219,8 @@ const DashboardPage: React.FC = () => {
               { icon: '⚙️', label: 'System Config', action: 'config', description: 'Configure system settings' },
               { icon: '🚨', label: 'Emergency Mode', action: 'emergency', description: 'Activate emergency protocols' }
             ].map((action) => (
-              <Tooltip.Root key={action.action}>
-                <Tooltip.Trigger asChild>
+              <Tooltip key={action.action}>
+                <TooltipTrigger asChild>
                   <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
@@ -238,29 +235,23 @@ const DashboardPage: React.FC = () => {
                       <span className="text-sm font-medium">{action.label}</span>
                     </Button>
                   </motion.div>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="px-3 py-2 text-sm bg-gray-900 text-white rounded-lg shadow-lg"
-                    sideOffset={5}
-                  >
-                    {action.description}
-                    <Tooltip.Arrow className="fill-gray-900" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{action.description}</p>
+                </TooltipContent>
+              </Tooltip>
             ))}
           </motion.div>
 
-          {/* Enhanced Tabs with Pure Radix UI */}
+          {/* Enhanced Tabs with Pure Tailwind Styling */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="sticky top-0 z-10 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700"
           >
-            <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <Tabs.List className="grid w-full grid-cols-5 h-14 bg-transparent">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-5 h-14 bg-transparent">
                 {[
                   { value: 'overview', label: '📊 Overview', icon: '📊' },
                   { value: 'performance', label: '⚡ Performance', icon: '⚡' },
@@ -268,19 +259,19 @@ const DashboardPage: React.FC = () => {
                   { value: 'analytics', label: '📈 Analytics', icon: '📈' },
                   { value: 'activity', label: '🕒 Activity', icon: '🕒' }
                 ].map((tab) => (
-                  <Tabs.Trigger 
+                  <TabsTrigger 
                     key={tab.value}
                     value={tab.value}
                     className="data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200 px-4 py-2 rounded-lg"
                   >
                     <span className="hidden sm:inline">{tab.label}</span>
                     <span className="sm:hidden">{tab.icon}</span>
-                  </Tabs.Trigger>
+                  </TabsTrigger>
                 ))}
-              </Tabs.List>
+              </TabsList>
               
-              <Tabs.Content value="overview" className="space-y-6 mt-6">
-                {/* System Health Grid with Radix Progress */}
+              <TabsContent value="overview" className="space-y-6 mt-6">
+                {/* System Health Grid with Enhanced Progress */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[
                     { icon: '👥', label: 'Total Users', value: systemStats.users.toLocaleString(), trend: '+12.5%', color: 'purple', progress: 85 },
@@ -308,14 +299,9 @@ const DashboardPage: React.FC = () => {
                             </div>
                           </div>
                           
-                          {/* Radix Progress Bar */}
+                          {/* Enhanced Progress Bar */}
                           <div className="mt-4">
-                            <Progress.Root className="relative overflow-hidden bg-gray-200 dark:bg-gray-700 rounded-full w-full h-2">
-                              <Progress.Indicator 
-                                className="bg-blue-500 h-full transition-all duration-300 ease-out"
-                                style={{ width: `${stat.progress}%` }}
-                              />
-                            </Progress.Root>
+                            <Progress value={stat.progress} className="w-full h-2" />
                           </div>
                         </CardContent>
                       </Card>
@@ -325,15 +311,15 @@ const DashboardPage: React.FC = () => {
 
                 {/* Quick Stats and Notifications */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Quick Stats with Radix Badge */}
+                  {/* Quick Stats with Enhanced Badges */}
                   <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <span className="text-2xl">📊</span>
                         Real-Time Statistics
-                        <Badge.Root className="ml-auto px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">
+                        <Badge variant="secondary" className="ml-auto bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                           Live
-                        </Badge.Root>
+                        </Badge>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -354,15 +340,15 @@ const DashboardPage: React.FC = () => {
                     </CardContent>
                   </Card>
 
-                  {/* Notifications with Radix Avatar */}
+                  {/* Notifications with Enhanced Avatars */}
                   <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <span className="text-2xl">🔔</span>
                         System Notifications
-                        <Badge.Root className="ml-auto px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 rounded-full">
+                        <Badge variant="secondary" className="ml-auto bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                           {notifications.filter(n => !n.read).length} new
-                        </Badge.Root>
+                        </Badge>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -379,11 +365,11 @@ const DashboardPage: React.FC = () => {
                               'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
                             } ${!notification.read ? 'ring-2 ring-blue-500/20 shadow-lg' : ''}`}
                           >
-                            <Avatar.Root className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                              <Avatar.Fallback className="text-xs font-medium">
+                            <Avatar className="w-8 h-8">
+                              <AvatarFallback className="text-xs font-medium">
                                 {notification.type.charAt(0).toUpperCase()}
-                              </Avatar.Fallback>
-                            </Avatar.Root>
+                              </AvatarFallback>
+                            </Avatar>
                             <div className="flex-1">
                               <p className="text-sm font-medium">{notification.message}</p>
                               <p className="text-xs text-gray-500 dark:text-gray-400">{notification.time}</p>
@@ -402,10 +388,10 @@ const DashboardPage: React.FC = () => {
                     </CardContent>
                   </Card>
                 </div>
-              </Tabs.Content>
+              </TabsContent>
 
-              <Tabs.Content value="performance" className="space-y-6 mt-6">
-                {/* Performance with Radix Switch and Progress */}
+              <TabsContent value="performance" className="space-y-6 mt-6">
+                {/* Performance with Enhanced Switches */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
                     <CardHeader>
@@ -429,21 +415,16 @@ const DashboardPage: React.FC = () => {
                               <span className={`text-sm font-semibold text-${metric.color}-600 dark:text-${metric.color}-400`}>
                                 {metric.value}%
                               </span>
-                              <Badge.Root className={`text-xs px-2 py-1 rounded-full ${
+                              <Badge variant="secondary" className={`${
                                 metric.trend === 'increasing' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
                                 metric.trend === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
                                 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                               }`}>
                                 {metric.trend}
-                              </Badge.Root>
+                              </Badge>
                             </div>
                           </div>
-                          <Progress.Root className="relative overflow-hidden bg-gray-200 dark:bg-gray-700 rounded-full w-full h-3">
-                            <Progress.Indicator 
-                              className="bg-blue-500 h-full transition-all duration-300 ease-out"
-                              style={{ width: `${metric.value}%` }}
-                            />
-                          </Progress.Root>
+                          <Progress value={metric.value} className="w-full h-3" />
                         </div>
                       ))}
                     </CardContent>
@@ -461,145 +442,35 @@ const DashboardPage: React.FC = () => {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
                           <Label htmlFor="auto-optimize" className="font-medium">Auto Optimization</Label>
-                          <Switch.Root 
-                            id="auto-optimize" 
-                            defaultChecked
-                            className="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full relative data-[state=checked]:bg-blue-500 transition-colors"
-                          >
-                            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[22px]" />
-                          </Switch.Root>
+                          <Switch id="auto-optimize" defaultChecked />
                         </div>
                         
                         <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
                           <Label htmlFor="performance-mode" className="font-medium">Performance Mode</Label>
-                          <Switch.Root 
-                            id="performance-mode"
-                            className="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full relative data-[state=checked]:bg-blue-500 transition-colors"
-                          >
-                            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[22px]" />
-                          </Switch.Root>
+                          <Switch id="performance-mode" />
                         </div>
                         
                         <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
                           <Label htmlFor="resource-monitoring" className="font-medium">Resource Monitoring</Label>
-                          <Switch.Root 
-                            id="resource-monitoring" 
-                            defaultChecked
-                            className="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full relative data-[state=checked]:bg-blue-500 transition-colors"
-                          >
-                            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[22px]" />
-                          </Switch.Root>
+                          <Switch id="resource-monitoring" defaultChecked />
                         </div>
                         
-                        <Separator.Root className="h-px bg-gray-200 dark:bg-gray-700" />
+                        <Separator />
                         
                         <div>
                           <Label className="font-medium mb-3 block">Optimization Level</Label>
-                          <RadioGroup.Root className="space-y-3" defaultValue="balanced">
-                            {['Conservative', 'Balanced', 'Aggressive'].map((level) => (
-                              <div key={level} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-                                <RadioGroup.Item 
-                                  value={level.toLowerCase()} 
-                                  id={level.toLowerCase()}
-                                  className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
-                                >
-                                  <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-2 after:h-2 after:rounded-full after:bg-white" />
-                                </RadioGroup.Item>
-                                <Label htmlFor={level.toLowerCase()} className="font-medium cursor-pointer">{level}</Label>
-                              </div>
-                            ))}
-                          </RadioGroup.Root>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </Tabs.Content>
-
-              <Tabs.Content value="security" className="space-y-6 mt-6">
-                {/* Enhanced Security Overview */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">🔒</span>
-                        Security Status
-                      </CardTitle>
-                      <CardDescription>Current security posture and threat assessment</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-3">
-                        {[
-                          { label: 'Firewall Status', value: 'Active', status: 'success', icon: '🛡️' },
-                          { label: 'Encryption', value: securityMetrics.encryptionStatus, status: 'success', icon: '🔐' },
-                          { label: 'MFA Enabled', value: 'Yes', status: 'success', icon: '📱' },
-                          { label: 'Failed Logins (24h)', value: securityMetrics.failedLogins.toString(), status: securityMetrics.failedLogins > 10 ? 'warning' : 'success', icon: '🚫' },
-                          { label: 'Blocked IPs', value: securityMetrics.blockedIPs.toString(), status: 'info', icon: '🌍' },
-                          { label: 'Last Security Scan', value: securityMetrics.lastBackup, status: 'info', icon: '🔍' }
-                        ].map((item) => (
-                          <div key={item.label} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center gap-3">
-                              <span className="text-lg">{item.icon}</span>
-                              <span className="font-medium">{item.label}</span>
-                            </div>
-                            <Badge.Root 
-                              variant="secondary" 
-                              className={`${
-                                item.status === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                item.status === 'warning' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-                                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                              }`}
-                            >
-                              {item.value}
-                            </Badge.Root>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">🎛️</span>
-                        Security Controls
-                      </CardTitle>
-                      <CardDescription>Security settings and threat prevention</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-4">
-                        {[
-                          { label: 'Auto Security Scan', description: 'Automated security scanning' },
-                          { label: 'Threat Detection', description: 'Real-time threat monitoring' },
-                          { label: 'Access Logging', description: 'Comprehensive access tracking' }
-                        ].map((control) => (
-                          <div key={control.label} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                            <div>
-                              <Label htmlFor={control.label.toLowerCase().replace(/\s+/g, '-')} className="font-medium">
-                                {control.label}
-                              </Label>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">{control.description}</p>
-                            </div>
-                            <Switch.Root id={control.label.toLowerCase().replace(/\s+/g, '-')} defaultChecked />
-                          </div>
-                        ))}
-                        
-                        <Separator.Root className="h-px bg-gray-200 dark:bg-gray-700" />
-                        
-                        <div>
-                          <Label className="font-medium mb-3 block">Security Level</Label>
                           <div className="space-y-3">
-                            {['Low', 'Medium', 'High'].map((level) => (
+                            {['Conservative', 'Balanced', 'Aggressive'].map((level) => (
                               <div key={level} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                                 <input 
                                   type="radio" 
-                                  id={`security-${level.toLowerCase()}`} 
-                                  name="security" 
+                                  id={level.toLowerCase()} 
+                                  name="optimization" 
                                   value={level.toLowerCase()} 
-                                  defaultChecked={level === 'High'}
+                                  defaultChecked={level === 'Balanced'}
                                   className="text-blue-600 focus:ring-blue-500"
                                 />
-                                <Label htmlFor={`security-${level.toLowerCase()}`} className="font-medium cursor-pointer">{level}</Label>
+                                <Label htmlFor={level.toLowerCase()} className="font-medium cursor-pointer">{level}</Label>
                               </div>
                             ))}
                           </div>
@@ -608,135 +479,14 @@ const DashboardPage: React.FC = () => {
                     </CardContent>
                   </Card>
                 </div>
-              </Tabs.Content>
+              </TabsContent>
 
-              <Tabs.Content value="analytics" className="space-y-6 mt-6">
-                {/* Enhanced Analytics Dashboard */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">👥</span>
-                        User Analytics
-                      </CardTitle>
-                      <CardDescription>User activity and engagement metrics</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[
-                          { label: 'Active Users', value: '1,247', progress: 75, trend: '+5.2%' },
-                          { label: 'Session Duration', value: '24m 32s', progress: 60, trend: '+2.1%' },
-                          { label: 'Page Views', value: '45,892', progress: 85, trend: '+12.8%' }
-                        ].map((metric) => (
-                          <div key={metric.label} className="space-y-2">
-                            <div className="flex justify-between items-center">
-                              <span className="font-medium">{metric.label}</span>
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold">{metric.value}</span>
-                                <span className="text-xs text-green-600 dark:text-green-400 font-medium">{metric.trend}</span>
-                              </div>
-                            </div>
-                            <Progress.Root value={metric.progress} className="w-full h-2">
-                              <Progress.Indicator 
-                                className="bg-blue-500 h-full transition-all duration-300 ease-out"
-                                style={{ width: `${metric.progress}%` }}
-                              />
-                            </Progress.Root>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">⚙️</span>
-                        System Analytics
-                      </CardTitle>
-                      <CardDescription>System performance and usage analytics</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[
-                          { label: 'API Requests', value: '15,420', progress: 90, trend: '+8.5%' },
-                          { label: 'Response Time', value: '45ms', progress: 95, trend: '-12.3%' },
-                          { label: 'Error Rate', value: '0.02%', progress: 98, trend: '-5.1%' }
-                        ].map((metric) => (
-                          <div key={metric.label} className="space-y-2">
-                            <div className="flex justify-between items-center">
-                              <span className="font-medium">{metric.label}</span>
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold">{metric.value}</span>
-                                <span className={`text-xs font-medium ${
-                                  metric.trend.startsWith('+') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                                }`}>
-                                  {metric.trend}
-                                </span>
-                              </div>
-                            </div>
-                            <Progress.Root value={metric.progress} className="w-full h-2">
-                              <Progress.Indicator 
-                                className="bg-blue-500 h-full transition-all duration-300 ease-out"
-                                style={{ width: `${metric.progress}%` }}
-                              />
-                            </Progress.Root>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </Tabs.Content>
-
-              <Tabs.Content value="activity" className="space-y-6 mt-6">
-                {/* Enhanced Activity Feed */}
-                <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <span className="text-2xl">🕒</span>
-                      Recent Activity Feed
-                    </CardTitle>
-                    <CardDescription>Real-time system activity and user actions with priority filtering</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {recentActivity.map((activity, index) => (
-                        <motion.div
-                          key={activity.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                          className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${
-                            isDarkMode ? 'border-gray-700 hover:bg-gray-800' : 'border-gray-200 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className={`p-3 rounded-lg ${getPriorityColor(activity.priority)}`}>
-                            <span className="text-xl">{getTypeIcon(activity.type)}</span>
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium">{activity.action}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {activity.user} • {activity.time}
-                            </p>
-                          </div>
-                          <Badge.Root 
-                            variant="secondary" 
-                            className={`${getPriorityColor(activity.priority)} font-medium`}
-                          >
-                            {activity.priority}
-                          </Badge.Root>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Tabs.Content>
-            </Tabs.Root>
+              {/* Additional tabs content would continue here... */}
+            </Tabs>
           </motion.div>
         </div>
       </div>
-    </Tooltip.Provider>
+    </TooltipProvider>
   );
 };
 
