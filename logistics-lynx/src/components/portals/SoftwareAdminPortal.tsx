@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import FloatingActionButton from '../admin/FloatingActionButton';
 
 export default function SoftwareAdminPortal() {
   console.log('SoftwareAdminPortal component loaded successfully!');
   
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['overview']));
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -18,421 +20,287 @@ export default function SoftwareAdminPortal() {
     setExpandedGroups(newExpanded);
   };
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
+  const navigationItems = [
+    {
+      key: 'overview',
+      label: 'Overview',
+      icon: '📊',
+      path: '/admin/overview',
+      badge: null
+    },
+    {
+      key: 'relationships',
+      label: 'Relationships',
+      icon: '👥',
+      children: [
+        { key: 'email', label: 'Email', icon: '📧', path: '/admin/relationships/email' },
+        { key: 'leads', label: 'Leads', icon: '🎯', path: '/admin/relationships/leads' },
+        { key: 'contacts', label: 'Contacts', icon: '👤', path: '/admin/relationships/contacts' },
+        { key: 'projects', label: 'Projects', icon: '📁', path: '/admin/relationships/projects' },
+        { key: 'calendar', label: 'Calendar', icon: '📅', path: '/admin/relationships/calendar' },
+        { key: 'opportunities', label: 'Opportunities', icon: '💼', path: '/admin/relationships/opportunities' }
+      ]
+    },
+    {
+      key: 'desk',
+      label: 'Service Desk',
+      icon: '🛟',
+      children: [
+        { key: 'all-tickets', label: 'All Tickets', icon: '📋', path: '/admin/tickets', badge: '156' },
+        { key: 'assigned', label: 'Assigned', icon: '👤', path: '/admin/tickets/assigned', badge: '89' },
+        { key: 'unassigned', label: 'Unassigned', icon: '❓', path: '/admin/tickets/unassigned', badge: '67' },
+        { key: 'incidents', label: 'Incidents', icon: '🚨', path: '/admin/tickets/incidents' },
+        { key: 'service-requests', label: 'Service Requests', icon: '📝', path: '/admin/tickets/requests' },
+        { key: 'changes', label: 'Changes', icon: '🔄', path: '/admin/tickets/changes' },
+        { key: 'problems', label: 'Problems', icon: '⚠️', path: '/admin/tickets/problems' }
+      ]
+    },
+    {
+      key: 'networks',
+      label: 'Networks',
+      icon: '🌐',
+      children: [
+        { key: 'customers', label: 'Customers', icon: '🏢', path: '/admin/networks/customers' },
+        { key: 'vendors', label: 'Vendors', icon: '🏭', path: '/admin/networks/vendors' }
+      ]
+    },
+    {
+      key: 'workforce',
+      label: 'Workforce',
+      icon: '👷',
+      children: [
+        { key: 'executives', label: 'Executives', icon: '👔', path: '/admin/workforce/executives' },
+        { key: 'employees', label: 'Employees', icon: '👥', path: '/admin/workforce/employees' },
+        { key: 'drivers', label: 'Drivers', icon: '🚗', path: '/admin/workforce/drivers' },
+        { key: 'agents', label: 'Agents', icon: '🤖', path: '/admin/workforce/agents' },
+        { key: 'scheduling', label: 'Scheduling & Timesheets', icon: '⏰', path: '/admin/workforce/scheduling' }
+      ]
+    },
+    {
+      key: 'docs',
+      label: 'Documents',
+      icon: '📄',
+      children: [
+        { key: 'all-docs', label: 'All Documents', icon: '📁', path: '/admin/documents' },
+        { key: 'upload', label: 'Upload', icon: '📤', path: '/admin/documents/upload' },
+        { key: 'templates', label: 'Templates & Setup', icon: '📋', path: '/admin/documents/templates' }
+      ]
+    },
+    {
+      key: 'fin',
+      label: 'Financials',
+      icon: '💰',
+      children: [
+        { key: 'sales', label: 'Sales & Payments', icon: '💳', path: '/admin/financials/sales' },
+        { key: 'purchases', label: 'Purchases', icon: '🛒', path: '/admin/financials/purchases' },
+        { key: 'accounting', label: 'Accounting', icon: '📊', path: '/admin/financials/accounting' },
+        { key: 'payroll', label: 'Payroll', icon: '💵', path: '/admin/financials/payroll' }
+      ]
+    },
+    {
+      key: 'api',
+      label: 'Integrations & API',
+      icon: '🔌',
+      children: [
+        { key: 'api-keys', label: 'API Keys', icon: '🔑', path: '/admin/api/keys' },
+        { key: 'api-logs', label: 'API Logs', icon: '📝', path: '/admin/api/logs' },
+        { key: 'api-errors', label: 'API Errors', icon: '❌', path: '/admin/api/errors' },
+        { key: 'edi', label: 'EDI Partners & Flows', icon: '📡', path: '/admin/edi' }
+      ]
+    },
+    {
+      key: 'market',
+      label: 'Marketplace',
+      icon: '🛒',
+      children: [
+        { key: 'all-market', label: 'All', icon: '📦', path: '/admin/marketplace' },
+        { key: 'accounting-market', label: 'Accounting', icon: '📊', path: '/admin/marketplace/accounting' },
+        { key: 'compliance', label: 'Carrier Compliance', icon: '✅', path: '/admin/marketplace/compliance' },
+        { key: 'api-market', label: 'API', icon: '🔌', path: '/admin/marketplace/api' },
+        { key: 'edi-market', label: 'EDI', icon: '📡', path: '/admin/marketplace/edi' },
+        { key: 'elds', label: 'ELDs', icon: '📱', path: '/admin/marketplace/elds' },
+        { key: 'factoring', label: 'Factoring', icon: '💳', path: '/admin/marketplace/factoring' },
+        { key: 'fuel-cards', label: 'Fuel Cards', icon: '⛽', path: '/admin/marketplace/fuel' },
+        { key: 'load-board', label: 'Load Board', icon: '📋', path: '/admin/marketplace/loadboard' },
+        { key: 'mileage', label: 'Mileage', icon: '🛣️', path: '/admin/marketplace/mileage' },
+        { key: 'payments', label: 'Payments', icon: '💸', path: '/admin/marketplace/payments' },
+        { key: 'tolls', label: 'Tolls', icon: '🛣️', path: '/admin/marketplace/tolls' },
+        { key: 'visibility', label: 'Visibility', icon: '👁️', path: '/admin/marketplace/visibility' }
+      ]
+    },
+    {
+      key: 'reports',
+      label: 'Reports',
+      icon: '📊',
+      path: '/admin/reports',
+      badge: null
+    },
+    {
+      key: 'autonomous',
+      label: 'Autonomous Agents',
+      icon: '🤖',
+      children: [
+        { key: 'agent-management', label: 'Agent Management', icon: '🤖', path: '/admin/autonomous/management' },
+        { key: 'system-monitoring', label: 'System Monitoring', icon: '📊', path: '/admin/autonomous/monitoring' },
+        { key: 'development', label: 'Development', icon: '🔧', path: '/admin/autonomous/development' },
+        { key: 'configuration', label: 'Configuration', icon: '⚙️', path: '/admin/autonomous/config' }
+      ]
+    }
+  ];
+
   return (
     <div className="flex h-screen bg-slate-50">
       {/* Left Sidebar */}
-      <aside className="w-72 border-r bg-gradient-to-b from-slate-50 to-slate-100 p-4 space-y-4">
-        <div className="flex items-center gap-2 px-2">
-          <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center">
-            <span className="text-white text-xs font-bold">⚙️</span>
-          </div>
-          <span className="text-sm font-semibold text-slate-700">Software Admin</span>
-        </div>
-        
-        <nav className="space-y-2">
-          {/* Overview */}
-          <div className="space-y-1">
-            <a href="#" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors">
-              <span>📊</span>
-              <span>Overview</span>
-            </a>
-          </div>
-
-          {/* Relationships */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('relationships')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
+      <motion.aside
+        initial={false}
+        animate={{ width: sidebarCollapsed ? 64 : 288 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="border-r bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden"
+      >
+        <div className="p-4 space-y-4">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <motion.div 
+              className="flex items-center gap-2"
+              animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+              transition={{ duration: 0.2 }}
             >
-              <div className="flex items-center gap-2">
-                <span>👥</span>
-                <span>Relationships</span>
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm font-bold">⚙️</span>
               </div>
-              <span className={`transition-transform ${expandedGroups.has('relationships') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('relationships') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📧</span>
-                  <span className="ml-2">Email</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🎯</span>
-                  <span className="ml-2">Leads</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>👤</span>
-                  <span className="ml-2">Contacts</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📁</span>
-                  <span className="ml-2">Projects</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📅</span>
-                  <span className="ml-2">Calendar</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>💼</span>
-                  <span className="ml-2">Opportunities</span>
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Service Desk */}
-          <div className="space-y-1">
+              <span className="text-sm font-semibold text-slate-700 whitespace-nowrap">Software Admin</span>
+            </motion.div>
+            
+            {/* Toggle Button */}
             <button
-              onClick={() => toggleGroup('desk')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
+              onClick={toggleSidebar}
+              className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
+              title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
-              <div className="flex items-center gap-2">
-                <span>🛟</span>
-                <span>Service Desk</span>
-              </div>
-              <span className={`transition-transform ${expandedGroups.has('desk') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
+              <motion.span
+                animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-lg"
+              >
+                {sidebarCollapsed ? '◀' : '▶'}
+              </motion.span>
             </button>
-            {expandedGroups.has('desk') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📋</span>
-                  <span className="ml-2">All Tickets</span>
-                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs bg-blue-100 text-blue-800 rounded-full">156</span>
-                </a>
-                <a href="#" className="flex items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>👤</span>
-                  <span className="ml-2">Assigned</span>
-                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs bg-green-100 text-green-800 rounded-full">89</span>
-                </a>
-                <a href="#" className="flex items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>❓</span>
-                  <span className="ml-2">Unassigned</span>
-                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs bg-orange-100 text-orange-800 rounded-full">67</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🚨</span>
-                  <span className="ml-2">Incidents</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📝</span>
-                  <span className="ml-2">Service Requests</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🔄</span>
-                  <span className="ml-2">Changes</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>⚠️</span>
-                  <span className="ml-2">Problems</span>
-                </a>
-              </div>
-            )}
           </div>
-
-          {/* Networks */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('networks')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>🌐</span>
-                <span>Networks</span>
-          </div>
-              <span className={`transition-transform ${expandedGroups.has('networks') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('networks') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🏢</span>
-                  <span className="ml-2">Customers</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🏭</span>
-                  <span className="ml-2">Vendors</span>
-                </a>
-          </div>
-            )}
-        </div>
-
-          {/* Workforce */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('workforce')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>👷</span>
-                <span>Workforce</span>
-              </div>
-              <span className={`transition-transform ${expandedGroups.has('workforce') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('workforce') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>👔</span>
-                  <span className="ml-2">Executives</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>👥</span>
-                  <span className="ml-2">Employees</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🚗</span>
-                  <span className="ml-2">Drivers</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🤖</span>
-                  <span className="ml-2">Agents</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>⏰</span>
-                  <span className="ml-2">Scheduling & Timesheets</span>
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Documents */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('docs')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>📄</span>
-                <span>Documents</span>
-              </div>
-              <span className={`transition-transform ${expandedGroups.has('docs') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('docs') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📁</span>
-                  <span className="ml-2">All Documents</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📤</span>
-                  <span className="ml-2">Upload</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📋</span>
-                  <span className="ml-2">Templates & Setup</span>
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Financials */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('fin')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>💰</span>
-                <span>Financials</span>
-          </div>
-              <span className={`transition-transform ${expandedGroups.has('fin') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('fin') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>💳</span>
-                  <span className="ml-2">Sales & Payments</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🛒</span>
-                  <span className="ml-2">Purchases</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📊</span>
-                  <span className="ml-2">Accounting</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>💵</span>
-                  <span className="ml-2">Payroll</span>
-                </a>
-          </div>
-            )}
-        </div>
-
-          {/* Integrations & API */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('api')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>🔌</span>
-                <span>Integrations & API</span>
-        </div>
-              <span className={`transition-transform ${expandedGroups.has('api') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('api') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🔑</span>
-                  <span className="ml-2">API Keys</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📝</span>
-                  <span className="ml-2">API Logs</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>❌</span>
-                  <span className="ml-2">API Errors</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📡</span>
-                  <span className="ml-2">EDI Partners & Flows</span>
-                </a>
-        </div>
-            )}
-        </div>
-
-          {/* Marketplace */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('market')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>🛒</span>
-                <span>Marketplace</span>
-                    </div>
-              <span className={`transition-transform ${expandedGroups.has('market') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('market') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📦</span>
-                  <span className="ml-2">All</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📊</span>
-                  <span className="ml-2">Accounting</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>✅</span>
-                  <span className="ml-2">Carrier Compliance</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🔌</span>
-                  <span className="ml-2">API</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📡</span>
-                  <span className="ml-2">EDI</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📱</span>
-                  <span className="ml-2">ELDs</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>💳</span>
-                  <span className="ml-2">Factoring</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>⛽</span>
-                  <span className="ml-2">Fuel Cards</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📋</span>
-                  <span className="ml-2">Load Board</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🛣️</span>
-                  <span className="ml-2">Mileage</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>💸</span>
-                  <span className="ml-2">Payments</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🛣️</span>
-                  <span className="ml-2">Tolls</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>👁️</span>
-                  <span className="ml-2">Visibility</span>
-                </a>
-                    </div>
-            )}
+          
+          {/* Navigation */}
+          <nav className="space-y-1">
+            {navigationItems.map((item) => (
+              <div key={item.key} className="space-y-1">
+                {item.children ? (
+                  // Group with children
+                  <div>
+                    <button
+                      onClick={() => toggleGroup(item.key)}
+                      className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{item.icon}</span>
+                        <motion.span
+                          animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+                          transition={{ duration: 0.2 }}
+                          className="whitespace-nowrap"
+                        >
+                          {item.label}
+                        </motion.span>
+                      </div>
+                      <motion.span
+                        animate={{ 
+                          rotate: expandedGroups.has(item.key) ? 180 : 0,
+                          opacity: sidebarCollapsed ? 0 : 1
+                        }}
+                        transition={{ duration: 0.2 }}
+                        className="text-xs"
+                      >
+                        ▼
+                      </motion.span>
+                    </button>
+                    
+                    <AnimatePresence>
+                      {expandedGroups.has(item.key) && !sidebarCollapsed && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="ml-6 space-y-1 overflow-hidden"
+                        >
+                          {item.children.map((child) => (
+                            <a
+                              key={child.key}
+                              href={child.path}
+                              className="flex items-center justify-between px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors group"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">{child.icon}</span>
+                                <span className="whitespace-nowrap">{child.label}</span>
+                              </div>
+                              {child.badge && (
+                                <span className="inline-flex items-center justify-center min-w-[20px] h-5 text-xs bg-blue-100 text-blue-800 rounded-full px-1">
+                                  {child.badge}
+                                </span>
+                              )}
+                            </a>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-
-          {/* Reports */}
-          <div className="space-y-1">
-            <a href="#" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors">
-              <span>📊</span>
-              <span>Reports</span>
-            </a>
+                ) : (
+                  // Single item
+                  <a
+                    href={item.path}
+                    className="flex items-center justify-between px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">{item.icon}</span>
+                      <motion.span
+                        animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+                        transition={{ duration: 0.2 }}
+                        className="whitespace-nowrap"
+                      >
+                        {item.label}
+                      </motion.span>
                     </div>
-
-          {/* Autonomous Agents */}
-          <div className="space-y-1">
-            <button
-              onClick={() => toggleGroup('autonomous')}
-              className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-md transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>🤖</span>
-                <span>Autonomous Agents</span>
+                    {item.badge && (
+                      <motion.span
+                        animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+                        transition={{ duration: 0.2 }}
+                        className="inline-flex items-center justify-center min-w-[20px] h-5 text-xs bg-blue-100 text-blue-800 rounded-full px-1"
+                      >
+                        {item.badge}
+                      </motion.span>
+                    )}
+                  </a>
+                )}
               </div>
-              <span className={`transition-transform ${expandedGroups.has('autonomous') ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
-            {expandedGroups.has('autonomous') && (
-              <div className="ml-6 space-y-1">
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🤖</span>
-                  <span className="ml-2">Agent Management</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>📊</span>
-                  <span className="ml-2">System Monitoring</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>🔧</span>
-                  <span className="ml-2">Development</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded-md transition-colors">
-                  <span>⚙️</span>
-                  <span className="ml-2">Configuration</span>
-                </a>
-                    </div>
-            )}
-                  </div>
-        </nav>
+            ))}
+          </nav>
 
-        {/* Bottom Rail */}
-        <div className="pt-4 border-t border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500">
-            <div className="flex gap-2">
-              <a href="/learn" className="hover:text-slate-700">Learn</a>
-              <a href="/help" className="hover:text-slate-700">Help</a>
-                    </div>
-            <button className="hover:text-slate-700">🌓</button>
-                    </div>
-                  </div>
-      </aside>
+          {/* Bottom Rail */}
+          <motion.div 
+            className="pt-4 border-t border-slate-200"
+            animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex items-center justify-between text-xs text-slate-500">
+              <div className="flex gap-2">
+                <a href="/learn" className="hover:text-slate-700 transition-colors">Learn</a>
+                <a href="/help" className="hover:text-slate-700 transition-colors">Help</a>
+              </div>
+              <button className="hover:text-slate-700 transition-colors">🌓</button>
+            </div>
+          </motion.div>
+        </div>
+      </motion.aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
@@ -443,8 +311,8 @@ export default function SoftwareAdminPortal() {
               <span className="text-2xl">🌐</span>
               <span className="text-sm font-medium">Trans Bot AI</span>
               <span className="text-slate-400">▼</span>
-                    </div>
-                  </div>
+            </div>
+          </div>
 
           <div className="flex items-center gap-3">
             {/* Command Palette */}
@@ -463,17 +331,25 @@ export default function SoftwareAdminPortal() {
                 <span>➕</span>
                 <span>Quick Add</span>
               </button>
-              {showQuickAdd && (
-                <div className="absolute right-0 top-full mt-1 w-48 bg-white border rounded-md shadow-lg py-1 z-50">
-                  <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Lead</a>
-                  <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Contact</a>
-                  <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Opportunity</a>
-                  <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Ticket</a>
-                  <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Invoice</a>
-                  <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50">Load</a>
-                </div>
-              )}
-              </div>
+              <AnimatePresence>
+                {showQuickAdd && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-full mt-1 w-48 bg-white border rounded-md shadow-lg py-1 z-50"
+                  >
+                    <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50 transition-colors">Lead</a>
+                    <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50 transition-colors">Contact</a>
+                    <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50 transition-colors">Opportunity</a>
+                    <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50 transition-colors">Ticket</a>
+                    <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50 transition-colors">Invoice</a>
+                    <a href="#" className="block px-3 py-2 text-sm hover:bg-slate-50 transition-colors">Load</a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Notifications */}
             <button
@@ -496,7 +372,7 @@ export default function SoftwareAdminPortal() {
               <span className="text-lg">👤</span>
               <span className="text-sm">Admin</span>
             </button>
-                    </div>
+          </div>
         </header>
 
         {/* Dashboard Content */}
@@ -505,7 +381,7 @@ export default function SoftwareAdminPortal() {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
             <h1 className="text-2xl font-bold mb-2">Welcome to Software Admin</h1>
             <p className="text-blue-100">Full autonomous agent authority enabled. System running at peak performance.</p>
-                    </div>
+          </div>
 
           {/* System Health Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -519,20 +395,20 @@ export default function SoftwareAdminPortal() {
                   <p className="text-lg font-semibold text-green-600">Healthy</p>
                 </div>
               </div>
-                    </div>
+            </div>
 
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <span className="text-blue-600 text-lg">📊</span>
-                    </div>
+                </div>
                 <div>
                   <p className="text-sm text-slate-600">Uptime</p>
                   <p className="text-lg font-semibold text-blue-600">99.9%</p>
-                  </div>
-                    </div>
-                    </div>
-                    
+                </div>
+              </div>
+            </div>
+            
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-purple-100 rounded-lg">
@@ -543,8 +419,8 @@ export default function SoftwareAdminPortal() {
                   <p className="text-lg font-semibold text-purple-600">250+</p>
                 </div>
               </div>
-                    </div>
-                    
+            </div>
+            
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-orange-100 rounded-lg">
@@ -554,37 +430,37 @@ export default function SoftwareAdminPortal() {
                   <p className="text-sm text-slate-600">Alerts</p>
                   <p className="text-lg font-semibold text-orange-600">3</p>
                 </div>
-                    </div>
-                  </div>
               </div>
+            </div>
+          </div>
 
-              {/* Recent Activity */}
+          {/* Recent Activity */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <div className="flex-1">
+                <div className="flex-1">
                   <p className="text-sm font-medium">New support ticket created</p>
                   <p className="text-xs text-slate-500">2 minutes ago</p>
-                      </div>
-                    </div>
+                </div>
+              </div>
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium">Autonomous agent completed task</p>
                   <p className="text-xs text-slate-500">5 minutes ago</p>
                 </div>
-            </div>
+              </div>
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium">System backup completed</p>
                   <p className="text-xs text-slate-500">15 minutes ago</p>
-                  </div>
+                </div>
+              </div>
             </div>
-                  </div>
-            </div>
+          </div>
 
           {/* Autonomous Agent Status */}
           <div className="bg-white rounded-lg shadow-sm p-6">
@@ -594,21 +470,21 @@ export default function SoftwareAdminPortal() {
                 <span className="text-3xl">📈</span>
                 <p className="text-2xl font-bold text-green-600">250+</p>
                 <p className="text-sm text-green-700">Active Agents</p>
-                  </div>
+              </div>
               <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
                 <span className="text-3xl">⚡</span>
                 <p className="text-2xl font-bold text-blue-600">98.5%</p>
                 <p className="text-sm text-blue-700">Success Rate</p>
-            </div>
+              </div>
               <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
                 <span className="text-3xl">📊</span>
                 <p className="text-2xl font-bold text-purple-600">~150ms</p>
                 <p className="text-sm text-purple-700">Response Time</p>
-                      </div>
-                    </div>
-                        </div>
-                      </div>
-                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* Floating Action Button */}
       <FloatingActionButton 
@@ -616,6 +492,6 @@ export default function SoftwareAdminPortal() {
         userEntitlements={['admin.core', 'crm.core', 'tickets.core', 'networks.core', 'workforce.core', 'docs.core', 'financials.core', 'payroll.core', 'api.core', 'marketplace.core', 'reports.core', 'edi.x12']}
         isAdmin={true}
       />
-            </div>
+    </div>
   );
 }
