@@ -28,7 +28,7 @@ import {
   Server, Cloud, GitPullRequest, GitCommit, GitMerge,
   Package, Docker, Kubernetes, Loader, Terminal, Workflow,
   Rocket, ShieldCheck, Monitor, BarChart3, ActivitySquare,
-  Search, Table as TableIcon, Index, Key as KeyIcon, Link,
+  Search, Table as TableIcon, Key as KeyIcon, Link,
   BarChart, PieChart, TrendingDown, Gauge, Zap,
   Virus, Bug, Skull, Crosshair, Target, Database,
   Network, WifiIcon, ShieldX, ShieldAlert, ShieldCheck as ShieldCheckIcon
