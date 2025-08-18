@@ -1,62 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-// Import enhanced Radix UI components
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Button,
-  Badge,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Slider,
-  RadioGroup,
-  RadioGroupItem,
-  ToggleGroup,
-  ToggleGroupItem,
-  Progress,
-  Separator,
-  Switch,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  useToast
-} from '@/components/ui/enhanced-ui-index';
+// Import basic UI components that we know exist
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const DashboardPage: React.FC = () => {
-  const { toast } = useToast();
-  
   const [systemStats] = useState({
     users: 2847,
     portals: 7,
@@ -122,12 +83,40 @@ const DashboardPage: React.FC = () => {
             
             {/* Enhanced Controls */}
             <div className="flex items-center space-x-4">
-              <ToggleGroup type="single" value={selectedTimeRange} onValueChange={(value) => value && setSelectedTimeRange(value)}>
-                <ToggleGroupItem value="1h" aria-label="1 hour">1H</ToggleGroupItem>
-                <ToggleGroupItem value="24h" aria-label="24 hours">24H</ToggleGroupItem>
-                <ToggleGroupItem value="7d" aria-label="7 days">7D</ToggleGroupItem>
-                <ToggleGroupItem value="30d" aria-label="30 days">30D</ToggleGroupItem>
-              </ToggleGroup>
+              <div className="flex bg-white/10 rounded-lg p-1">
+                <Button
+                  variant={selectedTimeRange === '1h' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedTimeRange('1h')}
+                  className="text-white hover:bg-white/20"
+                >
+                  1H
+                </Button>
+                <Button
+                  variant={selectedTimeRange === '24h' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedTimeRange('24h')}
+                  className="text-white hover:bg-white/20"
+                >
+                  24H
+                </Button>
+                <Button
+                  variant={selectedTimeRange === '7d' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedTimeRange('7d')}
+                  className="text-white hover:bg-white/20"
+                >
+                  7D
+                </Button>
+                <Button
+                  variant={selectedTimeRange === '30d' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSelectedTimeRange('30d')}
+                  className="text-white hover:bg-white/20"
+                >
+                  30D
+                </Button>
+              </div>
               
               <Select value={selectedMetric} onValueChange={setSelectedMetric}>
                 <SelectTrigger className="w-[180px] bg-white/10 border-white/20 text-white">
@@ -299,13 +288,7 @@ const DashboardPage: React.FC = () => {
                           <Label>CPU Usage</Label>
                           <span className="text-sm text-slate-600">{performanceMetrics.cpuUsage}%</span>
                         </div>
-                        <Slider
-                          value={[performanceMetrics.cpuUsage]}
-                          onValueChange={(value) => setPerformanceMetrics(prev => ({ ...prev, cpuUsage: value[0] }))}
-                          max={100}
-                          step={1}
-                          className="w-full"
-                        />
+                        <Progress value={performanceMetrics.cpuUsage} className="w-full" />
                       </div>
                       
                       <div>
@@ -313,13 +296,7 @@ const DashboardPage: React.FC = () => {
                           <Label>Memory Usage</Label>
                           <span className="text-sm text-slate-600">{performanceMetrics.memoryUsage}%</span>
                         </div>
-                        <Slider
-                          value={[performanceMetrics.memoryUsage]}
-                          onValueChange={(value) => setPerformanceMetrics(prev => ({ ...prev, memoryUsage: value[0] }))}
-                          max={100}
-                          step={1}
-                          className="w-full"
-                        />
+                        <Progress value={performanceMetrics.memoryUsage} className="w-full" />
                       </div>
                       
                       <div>
@@ -327,13 +304,7 @@ const DashboardPage: React.FC = () => {
                           <Label>Disk Usage</Label>
                           <span className="text-sm text-slate-600">{performanceMetrics.diskUsage}%</span>
                         </div>
-                        <Slider
-                          value={[performanceMetrics.diskUsage]}
-                          onValueChange={(value) => setPerformanceMetrics(prev => ({ ...prev, diskUsage: value[0] }))}
-                          max={100}
-                          step={1}
-                          className="w-full"
-                        />
+                        <Progress value={performanceMetrics.diskUsage} className="w-full" />
                       </div>
                       
                       <div>
@@ -341,13 +312,7 @@ const DashboardPage: React.FC = () => {
                           <Label>Network Usage</Label>
                           <span className="text-sm text-slate-600">{performanceMetrics.networkUsage}%</span>
                         </div>
-                        <Slider
-                          value={[performanceMetrics.networkUsage]}
-                          onValueChange={(value) => setPerformanceMetrics(prev => ({ ...prev, networkUsage: value[0] }))}
-                          max={100}
-                          step={1}
-                          className="w-full"
-                        />
+                        <Progress value={performanceMetrics.networkUsage} className="w-full" />
                       </div>
                     </div>
                   </CardContent>
@@ -379,20 +344,20 @@ const DashboardPage: React.FC = () => {
                       
                       <div>
                         <Label>Optimization Level</Label>
-                        <RadioGroup defaultValue="balanced" className="mt-2">
+                        <div className="mt-2 space-y-2">
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="conservative" id="conservative" />
+                            <input type="radio" id="conservative" name="optimization" value="conservative" defaultChecked={false} />
                             <Label htmlFor="conservative">Conservative</Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="balanced" id="balanced" />
+                            <input type="radio" id="balanced" name="optimization" value="balanced" defaultChecked={true} />
                             <Label htmlFor="balanced">Balanced</Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="aggressive" id="aggressive" />
+                            <input type="radio" id="aggressive" name="optimization" value="aggressive" defaultChecked={false} />
                             <Label htmlFor="aggressive">Aggressive</Label>
                           </div>
-                        </RadioGroup>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -456,20 +421,20 @@ const DashboardPage: React.FC = () => {
                       
                       <div>
                         <Label>Security Level</Label>
-                        <RadioGroup defaultValue="high" className="mt-2">
+                        <div className="mt-2 space-y-2">
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="low" id="low" />
+                            <input type="radio" id="low" name="security" value="low" defaultChecked={false} />
                             <Label htmlFor="low">Low</Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="medium" id="medium" />
+                            <input type="radio" id="medium" name="security" value="medium" defaultChecked={false} />
                             <Label htmlFor="medium">Medium</Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="high" id="high" />
+                            <input type="radio" id="high" name="security" value="high" defaultChecked={true} />
                             <Label htmlFor="high">High</Label>
                           </div>
-                        </RadioGroup>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
