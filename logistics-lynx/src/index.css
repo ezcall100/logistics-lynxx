@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Enterprise Theme */
-@import './styles/enterprise-theme.css';
+/* Import Modern Theme */
+@import './styles/modern-theme.css';
 
 /* ===== PRODUCTION-READY CSS FOUNDATION FOR RADIX UI ===== */
 

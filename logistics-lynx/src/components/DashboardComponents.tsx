@@ -1,287 +1,463 @@
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Progress } from './ui/progress';
+import { Separator } from './ui/separator';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Truck, 
+  User, 
+  Package, 
+  DollarSign,
+  FileText,
+  Target,
+  Activity,
+  Plus,
+  MapPin,
+  Settings,
+  BarChart3,
+  Users,
+  Calendar,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  Info
+} from 'lucide-react';
 
-// Enhanced Dashboard Components
-export const MetricCard = ({ title, value, change, icon, color = '#1e40af' }) => (
-  <div style={{
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    border: `1px solid #e5e7eb`,
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    cursor: 'pointer'
-  }} onMouseEnter={(e) => {
-    e.currentTarget.style.transform = 'translateY(-2px)';
-    e.currentTarget.style.boxShadow = '0 10px 25px -3px rgba(0, 0, 0, 0.1)';
-  }} onMouseLeave={(e) => {
-    e.currentTarget.style.transform = 'translateY(0)';
-    e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-  }}>
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-      <div style={{
-        width: '48px',
-        height: '48px',
-        borderRadius: '12px',
-        backgroundColor: `${color}15`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.5rem'
-      }}>
-        {icon}
-      </div>
-      <div style={{
-        padding: '0.25rem 0.75rem',
-        borderRadius: '9999px',
-        fontSize: '0.75rem',
-        fontWeight: '600',
-        backgroundColor: change > 0 ? '#dcfce7' : '#fef2f2',
-        color: change > 0 ? '#166534' : '#dc2626'
-      }}>
-        {change > 0 ? '+' : ''}{change}%
+// Icon mapping for different metric types
+const iconMap = {
+  '🚛': Truck,
+  '👤': User,
+  '📦': Package,
+  '💰': DollarSign,
+  '📋': FileText,
+  '🎯': Target,
+  '🤖': Activity,
+  '➕': Plus,
+  '🗺️': MapPin,
+  '⚙️': Settings,
+  '📊': BarChart3,
+  '👥': Users,
+  '📅': Calendar,
+  '⏰': Clock
+};
+
+// Status icon mapping
+const statusIconMap = {
+  success: CheckCircle,
+  warning: AlertTriangle,
+  error: XCircle,
+  info: Info
+};
+
+interface MetricCardProps {
+  title: string;
+  value: string;
+  change?: number;
+  icon?: string;
+  color?: string;
+  onClick?: () => void;
+}
+
+export const MetricCard: React.FC<MetricCardProps> = ({ 
+  title, 
+  value, 
+  change, 
+  icon = '📊', 
+  color = '#3b82f6',
+  onClick 
+}) => {
+  const IconComponent = iconMap[icon as keyof typeof iconMap] || Activity;
+  const isPositive = change && change > 0;
+  const isNegative = change && change < 0;
+
+  return (
+    <Card 
+      className={`card-interactive ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div 
+            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+            style={{ 
+              backgroundColor: `${color}15`,
+              color: color 
+            }}
+          >
+            <IconComponent size={24} />
+          </div>
+          {change !== undefined && (
+            <Badge 
+              variant={isPositive ? 'default' : isNegative ? 'destructive' : 'secondary'}
+              className="text-xs font-semibold"
+            >
+              <div className="flex items-center gap-1">
+                {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                {isPositive ? '+' : ''}{change}%
+              </div>
+            </Badge>
+          )}
+        </div>
+        <h3 className="text-sm text-muted-foreground font-medium mb-2">
+          {title}
+        </h3>
+        <p className="text-3xl font-bold text-primary">
+          {value}
+        </p>
+      </CardContent>
+    </Card>
+  );
+};
+
+interface ChartCardProps {
+  title: string;
+  children: React.ReactNode;
+  height?: string;
+  className?: string;
+}
+
+export const ChartCard: React.FC<ChartCardProps> = ({ 
+  title, 
+  children, 
+  height = '300px',
+  className = ''
+}) => {
+  return (
+    <Card className={className}>
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent style={{ height }}>
+        {children}
+      </CardContent>
+    </Card>
+  );
+};
+
+interface ActivityItem {
+  type: 'success' | 'warning' | 'error' | 'info';
+  title: string;
+  time: string;
+  description?: string;
+}
+
+interface ActivityFeedProps {
+  activities: ActivityItem[];
+  title?: string;
+  maxHeight?: string;
+}
+
+export const ActivityFeed: React.FC<ActivityFeedProps> = ({ 
+  activities, 
+  title = 'Recent Activity',
+  maxHeight = '400px'
+}) => {
+  return (
+    <Card>
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold flex items-center gap-2">
+          <Activity size={20} />
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4" style={{ maxHeight, overflowY: 'auto' }}>
+          {activities.map((activity, index) => {
+            const StatusIcon = statusIconMap[activity.type];
+            const statusColors = {
+              success: 'text-green-600 bg-green-50',
+              warning: 'text-yellow-600 bg-yellow-50',
+              error: 'text-red-600 bg-red-50',
+              info: 'text-blue-600 bg-blue-50'
+            };
+
+            return (
+              <div key={index} className="flex items-start gap-3">
+                <div className={`p-2 rounded-full ${statusColors[activity.type]}`}>
+                  <StatusIcon size={16} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-primary mb-1">
+                    {activity.title}
+                  </p>
+                  {activity.description && (
+                    <p className="text-xs text-muted-foreground mb-1">
+                      {activity.description}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    {activity.time}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+interface QuickAction {
+  icon: string;
+  label: string;
+  onClick?: () => void;
+  variant?: 'default' | 'secondary' | 'outline';
+}
+
+interface QuickActionsProps {
+  actions: QuickAction[];
+  title?: string;
+}
+
+export const QuickActions: React.FC<QuickActionsProps> = ({ 
+  actions, 
+  title = 'Quick Actions' 
+}) => {
+  return (
+    <Card>
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3">
+          {actions.map((action, index) => {
+            const IconComponent = iconMap[action.icon as keyof typeof iconMap] || Plus;
+            
+            return (
+              <Button
+                key={index}
+                variant={action.variant || 'outline'}
+                className="h-auto p-4 flex flex-col items-center gap-2"
+                onClick={action.onClick}
+              >
+                <IconComponent size={20} />
+                <span className="text-sm font-medium">{action.label}</span>
+              </Button>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+interface StatusIndicatorProps {
+  status: 'online' | 'offline' | 'warning' | 'error';
+  label: string;
+  description?: string;
+}
+
+export const StatusIndicator: React.FC<StatusIndicatorProps> = ({ 
+  status, 
+  label, 
+  description 
+}) => {
+  const statusConfig = {
+    online: { color: 'text-green-600', bg: 'bg-green-50', icon: CheckCircle },
+    offline: { color: 'text-gray-600', bg: 'bg-gray-50', icon: XCircle },
+    warning: { color: 'text-yellow-600', bg: 'bg-yellow-50', icon: AlertTriangle },
+    error: { color: 'text-red-600', bg: 'bg-red-50', icon: XCircle }
+  };
+
+  const config = statusConfig[status];
+  const IconComponent = config.icon;
+
+  return (
+    <div className={`flex items-center gap-3 p-3 rounded-lg ${config.bg}`}>
+      <IconComponent size={20} className={config.color} />
+      <div>
+        <p className={`text-sm font-medium ${config.color}`}>
+          {label}
+        </p>
+        {description && (
+          <p className="text-xs text-muted-foreground">
+            {description}
+          </p>
+        )}
       </div>
     </div>
-    <h3 style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0 0 0.5rem 0', fontWeight: '500' }}>
-      {title}
-    </h3>
-    <p style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', margin: 0 }}>
-      {value}
-    </p>
-  </div>
-);
+  );
+};
 
-export const ChartCard = ({ title, children, height = '300px' }) => (
-  <div style={{
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #e5e7eb',
-    height
-  }}>
-    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', margin: '0 0 1rem 0' }}>
-      {title}
-    </h3>
-    {children}
-  </div>
-);
+interface ProgressBarProps {
+  value: number;
+  max?: number;
+  label?: string;
+  showPercentage?: boolean;
+  color?: 'default' | 'success' | 'warning' | 'error';
+}
 
-export const ActivityFeed = ({ activities }) => (
-  <div style={{
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #e5e7eb'
-  }}>
-    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', margin: '0 0 1rem 0' }}>
-      Recent Activity
-    </h3>
-    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-      {activities.map((activity, index) => (
-        <div key={index} style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0.75rem 0',
-          borderBottom: index < activities.length - 1 ? '1px solid #f3f4f6' : 'none'
-        }}>
-          <div style={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            backgroundColor: activity.type === 'success' ? '#10b981' : 
-                           activity.type === 'warning' ? '#f59e0b' : '#ef4444',
-            marginRight: '0.75rem'
-          }} />
-          <div style={{ flex: 1 }}>
-            <p style={{ margin: 0, fontSize: '0.875rem', color: '#111827', fontWeight: '500' }}>
-              {activity.title}
-            </p>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: '#6b7280' }}>
-              {activity.time}
-            </p>
+export const ProgressBar: React.FC<ProgressBarProps> = ({ 
+  value, 
+  max = 100, 
+  label,
+  showPercentage = true,
+  color = 'default'
+}) => {
+  const percentage = (value / max) * 100;
+  
+  const colorClasses = {
+    default: 'bg-primary',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    error: 'bg-red-500'
+  };
+
+  return (
+    <div className="space-y-2">
+      {(label || showPercentage) && (
+        <div className="flex justify-between items-center">
+          {label && <span className="text-sm font-medium">{label}</span>}
+          {showPercentage && <span className="text-sm text-muted-foreground">{Math.round(percentage)}%</span>}
+        </div>
+      )}
+      <Progress value={percentage} className="h-2" />
+    </div>
+  );
+};
+
+interface DataTableProps {
+  data: Array<Record<string, unknown>>;
+  columns: Array<{
+    key: string;
+    label: string;
+    render?: (value: unknown, row: Record<string, unknown>) => React.ReactNode;
+  }>;
+  title?: string;
+  className?: string;
+}
+
+export const DataTable: React.FC<DataTableProps> = ({ 
+  data, 
+  columns, 
+  title,
+  className = ''
+}) => {
+  return (
+    <Card className={className}>
+      {title && (
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        </CardHeader>
+      )}
+      <CardContent>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b">
+                {columns.map((column) => (
+                  <th 
+                    key={column.key}
+                    className="text-left py-3 px-4 font-medium text-sm text-muted-foreground"
+                  >
+                    {column.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, rowIndex) => (
+                <tr key={rowIndex} className="border-b last:border-b-0">
+                  {columns.map((column) => (
+                    <td key={column.key} className="py-3 px-4">
+                      {column.render 
+                        ? column.render(row[column.key], row)
+                        : row[column.key]
+                      }
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+interface AlertCardProps {
+  type: 'success' | 'warning' | 'error' | 'info';
+  title: string;
+  description?: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+}
+
+export const AlertCard: React.FC<AlertCardProps> = ({ 
+  type, 
+  title, 
+  description, 
+  action 
+}) => {
+  const alertConfig = {
+    success: { 
+      color: 'text-green-600', 
+      bg: 'bg-green-50', 
+      border: 'border-green-200',
+      icon: CheckCircle 
+    },
+    warning: { 
+      color: 'text-yellow-600', 
+      bg: 'bg-yellow-50', 
+      border: 'border-yellow-200',
+      icon: AlertTriangle 
+    },
+    error: { 
+      color: 'text-red-600', 
+      bg: 'bg-red-50', 
+      border: 'border-red-200',
+      icon: XCircle 
+    },
+    info: { 
+      color: 'text-blue-600', 
+      bg: 'bg-blue-50', 
+      border: 'border-blue-200',
+      icon: Info 
+    }
+  };
+
+  const config = alertConfig[type];
+  const IconComponent = config.icon;
+
+  return (
+    <Card className={`${config.bg} ${config.border}`}>
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          <IconComponent size={20} className={config.color} />
+          <div className="flex-1">
+            <h3 className={`text-sm font-medium ${config.color} mb-1`}>
+              {title}
+            </h3>
+            {description && (
+              <p className="text-sm text-muted-foreground mb-3">
+                {description}
+              </p>
+            )}
+            {action && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={action.onClick}
+                className="mt-2"
+              >
+                {action.label}
+              </Button>
+            )}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-);
-
-export const QuickActions = ({ actions }) => (
-  <div style={{
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #e5e7eb'
-  }}>
-    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', margin: '0 0 1rem 0' }}>
-      Quick Actions
-    </h3>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem' }}>
-      {actions.map((action, index) => (
-        <button key={index} style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '1rem',
-          border: '1px solid #e5e7eb',
-          borderRadius: '0.5rem',
-          backgroundColor: '#f9fafb',
-          cursor: 'pointer',
-          transition: 'all 0.2s',
-          fontSize: '0.875rem',
-          fontWeight: '500'
-        }} onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#f3f4f6';
-          e.currentTarget.style.borderColor = '#d1d5db';
-        }} onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#f9fafb';
-          e.currentTarget.style.borderColor = '#e5e7eb';
-        }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{action.icon}</span>
-          {action.label}
-        </button>
-      ))}
-    </div>
-  </div>
-);
-
-export const StatusIndicator = ({ status, label }) => (
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.5rem 1rem',
-    backgroundColor: status === 'online' ? '#dcfce7' : '#fef2f2',
-    color: status === 'online' ? '#166534' : '#dc2626',
-    borderRadius: '9999px',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    width: 'fit-content'
-  }}>
-    <div style={{
-      width: '8px',
-      height: '8px',
-      borderRadius: '50%',
-      backgroundColor: status === 'online' ? '#16a34a' : '#dc2626',
-      marginRight: '0.5rem'
-    }} />
-    {label}
-  </div>
-);
-
-export const ProgressBar = ({ value, max, label, color = '#1e40af' }) => (
-  <div style={{ marginBottom: '1rem' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-      <span style={{ fontSize: '0.875rem', fontWeight: '500', color: '#374151' }}>{label}</span>
-      <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{value}/{max}</span>
-    </div>
-    <div style={{
-      width: '100%',
-      height: '8px',
-      backgroundColor: '#e5e7eb',
-      borderRadius: '4px',
-      overflow: 'hidden'
-    }}>
-      <div style={{
-        width: `${(value / max) * 100}%`,
-        height: '100%',
-        backgroundColor: color,
-        borderRadius: '4px',
-        transition: 'width 0.3s ease'
-      }} />
-    </div>
-  </div>
-);
-
-export const DataTable = ({ headers, data, title }) => (
-  <div style={{
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #e5e7eb'
-  }}>
-    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', margin: '0 0 1rem 0' }}>
-      {title}
-    </h3>
-    <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
-            {headers.map((header, index) => (
-              <th key={index} style={{
-                padding: '0.75rem',
-                textAlign: 'left',
-                fontSize: '0.875rem',
-                fontWeight: '600',
-                color: '#374151',
-                backgroundColor: '#f9fafb'
-              }}>
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex} style={{
-              borderBottom: '1px solid #f3f4f6',
-              '&:hover': { backgroundColor: '#f9fafb' }
-            }}>
-              {row.map((cell, cellIndex) => (
-                <td key={cellIndex} style={{
-                  padding: '0.75rem',
-                  fontSize: '0.875rem',
-                  color: '#374151'
-                }}>
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-);
-
-export const AlertCard = ({ type, title, message, onDismiss }) => (
-  <div style={{
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    border: '1px solid',
-    backgroundColor: type === 'success' ? '#f0fdf4' : 
-                   type === 'warning' ? '#fffbeb' : 
-                   type === 'error' ? '#fef2f2' : '#eff6ff',
-    borderColor: type === 'success' ? '#bbf7d0' : 
-                type === 'warning' ? '#fde68a' : 
-                type === 'error' ? '#fecaca' : '#bfdbfe',
-    color: type === 'success' ? '#166534' : 
-           type === 'warning' ? '#92400e' : 
-           type === 'error' ? '#dc2626' : '#1e40af',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '1rem'
-  }}>
-    <div>
-      <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '0.875rem', fontWeight: '600' }}>
-        {title}
-      </h4>
-      <p style={{ margin: 0, fontSize: '0.75rem' }}>{message}</p>
-    </div>
-    {onDismiss && (
-      <button onClick={onDismiss} style={{
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '1.25rem',
-        color: 'inherit',
-        opacity: 0.7
-      }}>
-        ×
-      </button>
-    )}
-  </div>
-);
+      </CardContent>
+    </Card>
+  );
+};
