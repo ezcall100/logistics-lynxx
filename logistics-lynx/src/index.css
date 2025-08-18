@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Enterprise Theme */
+@import './styles/enterprise-theme.css';
+
 /* ===== PRODUCTION-READY CSS FOUNDATION FOR RADIX UI ===== */
 
 /* 🎯 Core CSS Variables & Theme Tokens */
