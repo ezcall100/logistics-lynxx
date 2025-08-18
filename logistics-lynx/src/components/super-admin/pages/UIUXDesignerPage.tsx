@@ -19,14 +19,14 @@ import { useToast } from '@/hooks/use-toast';
 // Icons
 import { 
   Palette, LayoutDashboard, FileText, CheckCircle, AlertTriangle, Clock, TrendingUp, Activity,
-  Play, Pause, Stop, RotateCcw, Save, Download, Upload,
+  Play, Pause, RotateCcw, Save, Download, Upload,
   Trash2, Edit, Plus, Filter, MoreHorizontal, Bell, User,
   Zap, Eye, EyeOff, RefreshCw, Settings, Code,
   ExternalLink, Copy, Share2, Maximize2, Minimize2,
   Globe, Lock, Shield, Key, Wifi, HardDrive, Cpu,
   HardDriveIcon, WifiOff, AlertCircle, Info,
   Database, Server, Brush, Layers, Type, Image, Grid,
-  Smartphone, Monitor, Tablet, EyeDropper, PaletteIcon
+  Smartphone, Monitor, Tablet, PaletteIcon
 } from 'lucide-react';
 
 // Real data models

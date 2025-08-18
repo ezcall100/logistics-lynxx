@@ -24,7 +24,7 @@ import {
   Zap, Eye, EyeOff, RefreshCw, Settings, Code,
   ExternalLink, Copy, Share2, Maximize2, Minimize2,
   Globe, Lock, Shield, Key, Wifi, HardDrive, Cpu,
-  Memory, HardDriveIcon, WifiOff, AlertCircle, Info,
+  HardDriveIcon, WifiOff, AlertCircle, Info,
   Database, Server, Cloud, GitPullRequest, GitCommit, GitMerge,
   Package, Docker, Kubernetes, Loader, Terminal, Workflow,
   Rocket, ShieldCheck, Monitor, BarChart3, ActivitySquare

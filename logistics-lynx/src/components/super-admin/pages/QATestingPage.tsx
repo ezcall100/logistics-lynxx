@@ -19,12 +19,12 @@ import { useToast } from '@/hooks/use-toast';
 // Icons
 import { 
   Bug, TestTube, CheckCircle, AlertTriangle, Clock, TrendingUp, Activity,
-  Play, Pause, Stop, RotateCcw, Save, Download, Upload,
+  Play, Pause, RotateCcw, Save, Download, Upload,
   Trash2, Edit, Plus, Filter, MoreHorizontal, Bell, User,
   Zap, Eye, EyeOff, RefreshCw, Settings, Code,
   ExternalLink, Copy, Share2, Maximize2, Minimize2,
   Globe, Lock, Shield, Key, Wifi, HardDrive, Cpu,
-  Memory, HardDriveIcon, WifiOff, AlertCircle, Info,
+  HardDriveIcon, WifiOff, AlertCircle, Info,
   FileText, Database, Server
 } from 'lucide-react';
 

@@ -19,7 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 // Icons
 import { 
   Code, GitBranch, Palette, LayoutDashboard, FileText, 
-  Play, Pause, Stop, RotateCcw, Save, Download, Upload,
+  Play, Pause, RotateCcw, Save, Download, Upload,
   Trash2, Edit, Plus, Filter, MoreHorizontal, Bell, User,
   CheckCircle, AlertTriangle, Clock, TrendingUp, Activity,
   Zap, Eye, EyeOff, RefreshCw, Settings, Database,
