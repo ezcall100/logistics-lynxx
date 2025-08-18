@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/lib/supabaseClient";
+import { useAuth } from "@/context/auth/AuthProvider";
+import { supabase } from "@/integrations/supabase/client";
 import { Mail, Lock, Eye, EyeOff, Building2, ShieldCheck, AlertTriangle } from "lucide-react";
 
 type State = {

@@ -30,6 +30,7 @@ import ReportsPage from './pages/ReportsPage';
 import SystemHealthPage from './pages/SystemHealthPage';
 import UserManagement from './components/admin/UserManagement';
 import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
+import LoginPage from './pages/auth/LoginPage';
 
 // Autonomous System Components
 import { MasterAutonomousAgent } from './autonomous/MasterAutonomousAgent';
@@ -634,33 +635,20 @@ function AppContent() {
   const { user } = useAuth();
   const location = useLocation();
 
-  // Check if user is authenticated
+  // Check if user is authenticated - Temporarily bypass for demo
   if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <Card className="w-full max-w-md bg-white/10 backdrop-blur-sm border-white/20">
-          <CardHeader>
-            <CardTitle className="text-white text-center">Authentication Required</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-300 text-center mb-4">
-              Please log in to access the autonomous portal system.
-            </p>
-            <Button className="w-full" onClick={() => window.location.href = '/login'}>
-              <User className="w-4 h-4 mr-2" />
-              Login
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    // For demo purposes, allow access without authentication
+    console.log('Demo mode: Bypassing authentication');
   }
 
   return (
-    <div className="App">
-      <Routes>
-        {/* Main Portal Selection */}
+        <div className="App">
+          <Routes>
+            {/* Main Portal Selection */}
         <Route path="/" element={<AutonomousPortalSelector />} />
+
+        {/* Authentication Routes */}
+        <Route path="/login" element={<LoginPage />} />
 
         {/* Portal Routes - Based on knowledge base registry */}
         <Route path="/super-admin/*" element={<EnhancedSuperAdminPortal />} />
@@ -693,8 +681,8 @@ function AppContent() {
 
         {/* Catch-all route */}
         <Route path="*" element={<AutonomousPortalSelector />} />
-      </Routes>
-    </div>
+          </Routes>
+        </div>
   );
 }
 
