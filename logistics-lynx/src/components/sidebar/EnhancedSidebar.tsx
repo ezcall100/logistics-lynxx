@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/context/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/components/theme-provider';
 
 // Enhanced Sidebar Item Interface
 interface EnhancedSidebarItem {
@@ -149,11 +150,8 @@ const EnhancedSidebarItem: React.FC<{
   const itemContent = (
     <div
       className={cn(
-        "group relative flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out cursor-pointer",
-        "hover:scale-[1.02] hover:shadow-sm",
-        isActive 
-          ? "bg-primary/10 text-primary border-l-4 border-primary shadow-sm" 
-          : "text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent/60",
+        "enhanced-sidebar-item",
+        isActive && "active",
         depth > 0 && "ml-4",
         item.isDisabled && "opacity-50 cursor-not-allowed"
       )}
@@ -175,7 +173,7 @@ const EnhancedSidebarItem: React.FC<{
             {item.aiInsights?.isRecommended && (
               <Tooltip>
                 <TooltipTrigger>
-                  <Badge variant="secondary" className="h-5 px-1.5 text-xs bg-blue-100 text-blue-700">
+                  <Badge variant="secondary" className="h-5 px-1.5 text-xs bg-info text-info-foreground">
                     <Brain className="h-3 w-3" />
                   </Badge>
                 </TooltipTrigger>
@@ -317,7 +315,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
   const location = useLocation();
   const { user } = useAuth();
   const isMobile = useIsMobile();
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { theme, setTheme } = useTheme();
   
   const {
     collapsed,
@@ -348,7 +346,6 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
   const handleThemeToggle = (isDark: boolean) => {
     const newTheme = isDark ? 'dark' : 'light';
     setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
   };
 
   // Effect to sync with external toggle
@@ -360,17 +357,16 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          "bg-[var(--color-surface)] text-[var(--color-text)] border-r border-[var(--color-border)] h-screen transition-all duration-300 ease-in-out",
-          "flex flex-col",
-          collapsed ? "w-16" : "w-60",
+          "enhanced-sidebar",
+          collapsed && "collapsed",
           "md:block", // Hidden on mobile by default
           className
         )}
       >
         {/* Header */}
-        <div className="flex h-16 items-center justify-between border-b border-border/60 px-4 bg-gradient-to-r from-primary/5 via-transparent to-primary/5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-primary-foreground shadow-lg ring-2 ring-primary/20">
+        <div className="enhanced-sidebar-header">
+          <div className="enhanced-sidebar-logo">
+            <div className="enhanced-sidebar-logo-icon">
               <Activity className="h-5 w-5" />
             </div>
             {!collapsed && (
@@ -396,9 +392,9 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
 
         {/* Search */}
         {showSearch && !collapsed && (
-          <div className="p-4 border-b border-border/30">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="enhanced-sidebar-search">
+            <div className="enhanced-sidebar-search-input">
+              <Search className="enhanced-sidebar-search-icon" />
               <Input
                 placeholder="Search..."
                 value={searchQuery}
@@ -410,11 +406,11 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-4">
+        <nav className="enhanced-sidebar-nav">
           {/* Favorites Section */}
           {showFavorites && favorites.length > 0 && !collapsed && (
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <h3 className="enhanced-sidebar-section-title">
                 Favorites
               </h3>
               <div className="space-y-1">
@@ -442,7 +438,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
           {/* Recent Section */}
           {showRecent && recentItems.length > 0 && !collapsed && (
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <h3 className="enhanced-sidebar-section-title">
                 Recent
               </h3>
               <div className="space-y-1">
@@ -469,9 +465,9 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
 
           {/* Main Sections */}
           {filteredSections.map((section) => (
-            <div key={section.id} className="space-y-2">
+            <div key={section.id} className="enhanced-sidebar-section">
               {!collapsed && (
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <h3 className="enhanced-sidebar-section-title">
                   {section.title}
                 </h3>
               )}
@@ -493,12 +489,12 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-border/30 p-4 space-y-4">
+        <div className="enhanced-sidebar-footer">
           {/* Theme Toggle */}
           {showThemeToggle && (
             <div className={cn(
-              "flex items-center justify-between",
-              collapsed ? "justify-center" : ""
+              "enhanced-sidebar-theme-toggle",
+              collapsed && "justify-center"
             )}>
               {!collapsed && (
                 <div className="flex items-center gap-2">
@@ -529,8 +525,8 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
           {/* User Profile */}
           {showUserProfile && (
             <div className={cn(
-              "flex items-center gap-3",
-              collapsed ? "justify-center" : ""
+              "enhanced-sidebar-user-profile",
+              collapsed && "justify-center"
             )}>
               <Avatar className="h-8 w-8">
                 <AvatarImage src={user?.avatar} alt={user?.name} />
@@ -539,9 +535,9 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
                 </AvatarFallback>
               </Avatar>
               {!collapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{user?.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                <div className="enhanced-sidebar-user-info">
+                  <p className="enhanced-sidebar-user-name">{user?.name}</p>
+                  <p className="enhanced-sidebar-user-email">{user?.email}</p>
                 </div>
               )}
               {!collapsed && (

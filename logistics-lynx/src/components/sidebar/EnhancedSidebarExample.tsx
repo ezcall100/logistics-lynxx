@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import EnhancedSidebarLayout from './EnhancedSidebarLayout';
 import { getSidebarConfig } from './EnhancedSidebarConfig';
+import ThemeProvider from '@/components/theme/theme-provider';
 import './enhanced-sidebar-styles.css';
 
 // Example page components
@@ -11,21 +12,21 @@ const DashboardPage = () => (
       <h1 className="text-3xl font-bold">Dashboard</h1>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div className="p-6 bg-card rounded-lg border">
+      <div className="card p-6">
         <h3 className="font-semibold">Total Shipments</h3>
         <p className="text-2xl font-bold text-primary">1,234</p>
       </div>
-      <div className="p-6 bg-card rounded-lg border">
+      <div className="card p-6">
         <h3 className="font-semibold">Active Deliveries</h3>
-        <p className="text-2xl font-bold text-green-600">89</p>
+        <p className="text-2xl font-bold text-success">89</p>
       </div>
-      <div className="p-6 bg-card rounded-lg border">
+      <div className="card p-6">
         <h3 className="font-semibold">Revenue</h3>
-        <p className="text-2xl font-bold text-blue-600">$45,678</p>
+        <p className="text-2xl font-bold text-info">$45,678</p>
       </div>
-      <div className="p-6 bg-card rounded-lg border">
+      <div className="card p-6">
         <h3 className="font-semibold">Pending Invoices</h3>
-        <p className="text-2xl font-bold text-orange-600">12</p>
+        <p className="text-2xl font-bold text-warning">12</p>
       </div>
     </div>
   </div>
@@ -35,11 +36,11 @@ const ShipmentsPage = () => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold">Shipments</h1>
-      <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg">
+      <button className="btn btn-primary">
         New Shipment
       </button>
     </div>
-    <div className="bg-card rounded-lg border p-6">
+    <div className="card p-6">
       <p className="text-muted-foreground">Shipment management interface would go here...</p>
     </div>
   </div>
@@ -49,11 +50,11 @@ const InvoicesPage = () => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold">Invoices</h1>
-      <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg">
+      <button className="btn btn-primary">
         Create Invoice
       </button>
     </div>
-    <div className="bg-card rounded-lg border p-6">
+    <div className="card p-6">
       <p className="text-muted-foreground">Invoice management interface would go here...</p>
     </div>
   </div>
@@ -62,7 +63,7 @@ const InvoicesPage = () => (
 const SettingsPage = () => (
   <div className="space-y-6">
     <h1 className="text-3xl font-bold">Settings</h1>
-    <div className="bg-card rounded-lg border p-6">
+    <div className="card p-6">
       <p className="text-muted-foreground">Settings interface would go here...</p>
     </div>
   </div>
@@ -96,30 +97,32 @@ export const EnhancedSidebarExample: React.FC = () => {
   };
 
   return (
-    <MockAuthProvider>
-      <Router>
-        <EnhancedSidebarLayout
-          onSidebarToggle={handleSidebarToggle}
-          onItemClick={handleItemClick}
-        >
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/operations/shipments" element={<ShipmentsPage />} />
-            <Route path="/finance/invoices" element={<InvoicesPage />} />
-            <Route path="/settings/*" element={<SettingsPage />} />
-            <Route path="*" element={<DashboardPage />} />
-          </Routes>
-        </EnhancedSidebarLayout>
-      </Router>
-    </MockAuthProvider>
+    <ThemeProvider defaultTheme="system">
+      <MockAuthProvider>
+        <Router>
+          <EnhancedSidebarLayout
+            onSidebarToggle={handleSidebarToggle}
+            onItemClick={handleItemClick}
+          >
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/operations/shipments" element={<ShipmentsPage />} />
+              <Route path="/finance/invoices" element={<InvoicesPage />} />
+              <Route path="/settings/*" element={<SettingsPage />} />
+              <Route path="*" element={<DashboardPage />} />
+            </Routes>
+          </EnhancedSidebarLayout>
+        </Router>
+      </MockAuthProvider>
+    </ThemeProvider>
   );
 };
 
 // Usage Instructions Component
 export const EnhancedSidebarUsage: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <div className="container-responsive py-6 space-y-8">
       <div className="space-y-4">
         <h1 className="text-3xl font-bold">Enhanced Enterprise Sidebar System</h1>
         <p className="text-lg text-muted-foreground">
@@ -133,43 +136,43 @@ export const EnhancedSidebarUsage: React.FC = () => {
           <h2 className="text-xl font-semibold">Features</h2>
           <ul className="space-y-2 text-sm">
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Collapsible sidebar with smooth animations
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Search functionality with real-time filtering
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Favorites and recent items tracking
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               AI insights and recommendations
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Dynamic badges and notifications
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Theme toggle (light/dark mode)
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               User profile integration
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Responsive mobile design
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Role-based navigation
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-success rounded-full"></span>
               Accessibility support
             </li>
           </ul>
