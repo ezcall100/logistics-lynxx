@@ -1,14 +1,421 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import {
+  MetricCard,
+  ChartCard,
+  ActivityFeed,
+  QuickActions,
+  StatusIndicator,
+  ProgressBar,
+  DataTable,
+  AlertCard
+} from './components/DashboardComponents';
+import {
+  CarrierDashboard, BrokerDashboard, AutonomousDashboard, AnalyticsDashboard,
+  ShipperDashboard, DriverDashboard, OwnerOperatorDashboard, SuperAdminDashboard
+} from './components/PortalDashboards';
+import { SoftwareCompanyDashboard } from './components/SoftwareCompanyDashboard';
+import LogisticsManagementDashboard from './pages/LogisticsManagementDashboard';
+import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAgent.tsx';
+import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
+import CarrierBrokerRiskReview from './components/onboarding/CarrierBrokerRiskReview';
+import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
 import SoftwareAdminPortal from './components/portals/SoftwareAdminPortal';
+import ShippersPortal from './components/portals/ShippersPortal';
+import BrokersPortal from './components/portals/BrokersPortal';
+import CarriersPortal from './components/portals/CarriersPortal';
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Sample data for dashboards
+  const carrierData = {
+    metrics: [
+      { title: 'Active Vehicles', value: '24', change: 12, icon: '🚛', color: '#3b82f6' },
+      { title: 'Active Drivers', value: '18', change: 8, icon: '👤', color: '#10b981' },
+      { title: 'Active Loads', value: '12', change: -3, icon: '📦', color: '#f59e0b' },
+      { title: 'Revenue (MTD)', value: '$45,231', change: 23, icon: '💰', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Load #1234 delivered successfully', time: '2 minutes ago' },
+      { type: 'warning', title: 'Vehicle #567 needs maintenance', time: '15 minutes ago' },
+      { type: 'success', title: 'New driver John Smith onboarded', time: '1 hour ago' },
+      { type: 'success', title: 'Route optimization completed', time: '2 hours ago' }
+    ],
+    quickActions: [
+      { icon: '➕', label: 'Add Vehicle' },
+      { icon: '👤', label: 'Add Driver' },
+      { icon: '📦', label: 'Assign Load' },
+      { icon: '🗺️', label: 'Plan Route' }
+    ]
+  };
+
+  const brokerData = {
+    metrics: [
+      { title: 'Available Loads', value: '156', change: 15, icon: '📋', color: '#10b981' },
+      { title: 'Active Carriers', value: '89', change: 7, icon: '🚛', color: '#3b82f6' },
+      { title: 'Match Rate', value: '96.7%', change: 2.1, icon: '🎯', color: '#f59e0b' },
+      { title: 'Revenue (MTD)', value: '$67,890', change: 18, icon: '💰', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Load matched with carrier ABC Trucking', time: '5 minutes ago' },
+      { type: 'success', title: 'Rate negotiation completed for Load #5678', time: '20 minutes ago' },
+      { type: 'warning', title: 'Carrier XYZ needs documentation update', time: '1 hour ago' },
+      { type: 'success', title: 'New shipper account created', time: '2 hours ago' }
+    ],
+    quickActions: [
+      { icon: '📋', label: 'Post Load' },
+      { icon: '🚛', label: 'Add Carrier' },
+      { icon: '💰', label: 'Set Rates' },
+      { icon: '📊', label: 'View Analytics' }
+    ]
+  };
+
+  const autonomousData = {
+    metrics: [
+      { title: 'Active Agents', value: '250+', change: 5, icon: '🤖', color: '#6366f1' },
+      { title: 'Success Rate', value: '98.5%', change: 0.3, icon: '✅', color: '#10b981' },
+      { title: 'Response Time', value: '~150ms', change: -12, icon: '⚡', color: '#f59e0b' },
+      { title: 'Code Changes', value: '47', change: 23, icon: '💻', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Agent #123 completed code review', time: '1 minute ago' },
+      { type: 'success', title: 'Deployment to staging successful', time: '5 minutes ago' },
+      { type: 'success', title: 'Performance optimization completed', time: '15 minutes ago' },
+      { type: 'warning', title: 'Agent #456 needs attention', time: '30 minutes ago' }
+    ],
+    quickActions: [
+      { icon: '🤖', label: 'Add Agent' },
+      { icon: '📊', label: 'View Metrics' },
+      { icon: '⚙️', label: 'Configure' },
+      { icon: '📝', label: 'View Logs' }
+    ]
+  };
+
+  const analyticsData = {
+    metrics: [
+      { title: 'Total Revenue', value: '$234,567', change: 15, icon: '💰', color: '#10b981' },
+      { title: 'Active Users', value: '1,234', change: 8, icon: '👥', color: '#3b82f6' },
+      { title: 'Conversion Rate', value: '3.2%', change: 0.5, icon: '📈', color: '#f59e0b' },
+      { title: 'Avg. Order Value', value: '$189', change: 12, icon: '🛒', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success', title: 'Monthly report generated', time: '10 minutes ago' },
+      { type: 'success', title: 'New insights available', time: '1 hour ago' },
+      { type: 'success', title: 'Data export completed', time: '2 hours ago' },
+      { type: 'success', title: 'Performance alert resolved', time: '3 hours ago' }
+    ],
+    quickActions: [
+      { icon: '📊', label: 'Generate Report' },
+      { icon: '📈', label: 'View Trends' },
+      { icon: '📤', label: 'Export Data' },
+      { icon: '⚙️', label: 'Settings' }
+    ]
+  };
+
+  // Sidebar menu structure for portals
+  const portalMenus = {
+    carrier: [
+      { name: 'Dashboard', icon: '📊', path: '/carrier/dashboard' },
+      { name: 'Fleet Management', icon: '🚛', submenu: [
+        { name: 'Vehicles', path: '/carrier/vehicles' },
+        { name: 'Drivers', path: '/carrier/drivers' },
+        { name: 'Maintenance', path: '/carrier/maintenance' }
+      ]},
+      { name: 'Load Management', icon: '📦', submenu: [
+        { name: 'Available Loads', path: '/carrier/loads' },
+        { name: 'Active Loads', path: '/carrier/active-loads' },
+        { name: 'Completed Loads', path: '/carrier/completed-loads' }
+      ]},
+      { name: 'Route Optimization', icon: '🗺️', path: '/carrier/routes' },
+      { name: 'Reports', icon: '📈', path: '/carrier/reports' },
+      { name: 'Settings', icon: '⚙️', path: '/carrier/settings' }
+    ],
+    broker: [
+      { name: 'Dashboard', icon: '📊', path: '/broker/dashboard' },
+      { name: 'Load Board', icon: '📋', submenu: [
+        { name: 'Available Loads', path: '/broker/loads' },
+        { name: 'Post Load', path: '/broker/post-load' },
+        { name: 'Load History', path: '/broker/load-history' }
+      ]},
+      { name: 'Carrier Network', icon: '🚛', submenu: [
+        { name: 'Carriers', path: '/broker/carriers' },
+        { name: 'Add Carrier', path: '/broker/add-carrier' },
+        { name: 'Carrier Ratings', path: '/broker/carrier-ratings' }
+      ]},
+      { name: 'Rate Management', icon: '💰', path: '/broker/rates' },
+      { name: 'Analytics', icon: '📈', path: '/broker/analytics' },
+      { name: 'Settings', icon: '⚙️', path: '/broker/settings' }
+    ],
+    autonomous: [
+      { name: 'AI Dashboard', icon: '🤖', path: '/autonomous/dashboard' },
+      { name: 'Agent Management', icon: '👥', submenu: [
+        { name: 'Active Agents', path: '/autonomous/agents' },
+        { name: 'Agent Performance', path: '/autonomous/performance' },
+        { name: 'Agent Logs', path: '/autonomous/logs' }
+      ]},
+      { name: 'System Monitoring', icon: '📊', submenu: [
+        { name: 'Real-time Metrics', path: '/autonomous/metrics' },
+        { name: 'System Health', path: '/autonomous/health' },
+        { name: 'Alert Management', path: '/autonomous/alerts' }
+      ]},
+      { name: 'Development', icon: '💻', submenu: [
+        { name: 'Code Changes', path: '/autonomous/code' },
+        { name: 'Deployments', path: '/autonomous/deployments' },
+        { name: 'Testing', path: '/autonomous/testing' }
+      ]},
+      { name: 'Configuration', icon: '⚙️', path: '/autonomous/config' }
+    ],
+    analytics: [
+      { name: 'Overview', icon: '📊', path: '/analytics/overview' },
+      { name: 'Performance', icon: '📈', submenu: [
+        { name: 'Business Metrics', path: '/analytics/business' },
+        { name: 'Operational KPIs', path: '/analytics/operational' },
+        { name: 'Financial Reports', path: '/analytics/financial' }
+      ]},
+      { name: 'Data Insights', icon: '🔍', submenu: [
+        { name: 'Trend Analysis', path: '/analytics/trends' },
+        { name: 'Predictive Analytics', path: '/analytics/predictive' },
+        { name: 'Custom Reports', path: '/analytics/custom' }
+      ]},
+      { name: 'Export', icon: '📤', path: '/analytics/export' }
+    ]
+  };
+
+  const Sidebar = ({ portalType }) => {
+    const [expandedMenus, setExpandedMenus] = useState({});
+    const menu = portalMenus[portalType] || [];
+
+    const toggleMenu = (menuName) => {
+      setExpandedMenus(prev => ({
+        ...prev,
+        [menuName]: !prev[menuName]
+      }));
+    };
+
+  return (
+      <div style={{
+        width: sidebarOpen ? '280px' : '60px',
+        backgroundColor: '#1e293b',
+        color: 'white',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        zIndex: 100,
+        transition: 'width 0.3s ease',
+        overflowY: 'auto'
+      }}>
+        {/* Sidebar Header */}
+        <div style={{
+          padding: '1rem',
+          borderBottom: '1px solid #334155',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          {sidebarOpen && (
+            <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
+              {portalType.charAt(0).toUpperCase() + portalType.slice(1)} Portal
+            </h2>
+          )}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '1.25rem',
+              padding: '0.5rem',
+              borderRadius: '0.25rem',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            {sidebarOpen ? '◀' : '▶'}
+          </button>
+        </div>
+
+        {/* Navigation Menu */}
+        <nav style={{ padding: '1rem 0' }}>
+          {menu.map((item, index) => (
+            <div key={index}>
+              {item.submenu ? (
+                <div>
+                  <button
+                    onClick={() => toggleMenu(item.name)}
+                    style={{
+                      width: 'calc(100% - 1rem)',
+                      background: 'none',
+                      border: 'none',
+                      color: 'white',
+                      padding: '0.75rem 1rem',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      fontSize: '0.875rem',
+                      transition: 'background-color 0.2s',
+                      borderRadius: '0.25rem',
+                      margin: '0 0.5rem'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  >
+                    <span>{item.icon}</span>
+                    {sidebarOpen && (
+                      <>
+                        <span style={{ flex: 1 }}>{item.name}</span>
+                        <span style={{ 
+                          transition: 'transform 0.2s',
+                          transform: expandedMenus[item.name] ? 'rotate(90deg)' : 'rotate(0deg)'
+                        }}>
+                          ▶
+                        </span>
+                      </>
+                    )}
+                  </button>
+                  {expandedMenus[item.name] && sidebarOpen && (
+                    <div style={{ 
+                      backgroundColor: '#0f172a',
+                      margin: '0 0.5rem',
+                      borderRadius: '0.25rem',
+                      overflow: 'hidden'
+                    }}>
+                      {item.submenu.map((subItem, subIndex) => (
+                        <Link
+                          key={subIndex}
+                          to={subItem.path}
+                          style={{
+                            display: 'block',
+                            padding: '0.5rem 1rem 0.5rem 3rem',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontSize: '0.8rem',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to={item.path}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.75rem 1rem',
+                    color: 'white',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    transition: 'background-color 0.2s',
+                    borderRadius: '0.25rem',
+                    margin: '0 0.5rem',
+                    width: 'calc(100% - 1rem)'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#334155'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <span>{item.icon}</span>
+                  {sidebarOpen && <span>{item.name}</span>}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* Sidebar Footer */}
+        {sidebarOpen && (
+          <div style={{
+            padding: '1rem',
+            borderTop: '1px solid #334155',
+            marginTop: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.75rem',
+              color: '#94a3b8'
+            }}>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#10b981'
+              }} />
+              System Online
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const PortalLayout = ({ children, portalType, title, description }) => (
+    <div style={{ display: 'flex' }}>
+      <Sidebar portalType={portalType} />
+      
+      {/* Main content */}
+      <div style={{
+        marginLeft: sidebarOpen ? '280px' : '60px',
+        flex: 1,
+        transition: 'margin-left 0.3s ease'
+      }}>
+        {/* Top bar */}
+        <div style={{
+          backgroundColor: 'white',
+          padding: '1rem 2rem',
+          borderBottom: '1px solid #e2e8f0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.875rem', color: '#1e40af' }}>
+              {title}
+            </h1>
+            <p style={{ margin: '0.25rem 0 0 0', color: '#64748b' }}>
+              {description}
+            </p>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              display: 'none',
+              background: 'none',
+              border: 'none',
+              fontSize: '1.5rem',
+              cursor: 'pointer'
+            }}
+          >
+            ☰
+          </button>
+        </div>
+
+        {/* Page content */}
+        <div style={{ padding: '2rem', backgroundColor: '#f8fafc', minHeight: 'calc(100vh - 80px)' }}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <Router>
-      <div className="App">
+      <GlobalErrorBoundary>
+        <div className="App">
         {/* Navigation Header */}
         <nav style={{
           backgroundColor: '#1e40af',
@@ -32,7 +439,8 @@ function App() {
             {/* Desktop Navigation */}
             <div className="desktop-nav" style={{ display: 'flex', gap: '1rem' }}>
               <Link to="/" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Home</Link>
-              <Link to="/admin" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Software Admin</Link>
+              <Link to="/autonomous" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>AI Dashboard</Link>
+              <Link to="/analytics" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Analytics</Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -61,7 +469,8 @@ function App() {
                 gap: '0.5rem'
               }}>
                 <Link to="/" style={{ color: 'white', textDecoration: 'none', padding: '0.75rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Home</Link>
-                <Link to="/admin" style={{ color: 'white', textDecoration: 'none', padding: '0.75rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Software Admin</Link>
+                <Link to="/autonomous" style={{ color: 'white', textDecoration: 'none', padding: '0.75rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>AI Dashboard</Link>
+                <Link to="/analytics" style={{ color: 'white', textDecoration: 'none', padding: '0.75rem 1rem', borderRadius: '0.25rem', backgroundColor: 'rgba(255,255,255,0.1)' }}>Analytics</Link>
               </div>
             </div>
           )}
@@ -126,7 +535,7 @@ function App() {
                           marginRight: '0.5rem',
                           flexShrink: 0
                         }}></span>
-                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>React App: Running</span>
+                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>Supabase API: Connected</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span style={{
@@ -138,7 +547,7 @@ function App() {
                           marginRight: '0.5rem',
                           flexShrink: 0
                         }}></span>
-                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>Software Admin: Available</span>
+                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>Autonomous Agents: 250+ Active</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span style={{
@@ -150,7 +559,7 @@ function App() {
                           marginRight: '0.5rem',
                           flexShrink: 0
                         }}></span>
-                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>Enhanced Sidebar: Active</span>
+                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>Real-time Development: Active</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span style={{
@@ -162,7 +571,7 @@ function App() {
                           marginRight: '0.5rem',
                           flexShrink: 0
                         }}></span>
-                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>FAB System: Ready</span>
+                        <span style={{ fontSize: 'clamp(0.875rem, 3vw, 1rem)' }}>20 Portals: All Available</span>
                       </div>
                     </div>
                   </div>
@@ -175,63 +584,297 @@ function App() {
                     marginBottom: '1rem', 
                     color: '#1e40af',
                     textAlign: 'center'
-                  }}>🌐 Access Portals</h2>
+                  }}>🌐 Access All Portals</h2>
                   <div className="portal-grid" style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
                     gap: 'clamp(0.75rem, 2vw, 1rem)'
                   }}>
-                    <Link to="/admin" className="portal-card" style={{
-                      backgroundColor: 'white',
-                      padding: 'clamp(1rem, 3vw, 1.5rem)',
-                      borderRadius: '0.5rem',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'clamp(0.5rem, 2vw, 1rem)',
-                      transition: 'transform 0.2s, box-shadow 0.2s',
-                      borderLeft: '4px solid #6b7280',
-                      minHeight: '80px'
-                    }} onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
-                    }} onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-                    }}>
-                      <span style={{ 
-                        fontSize: 'clamp(1.5rem, 5vw, 2rem)',
-                        flexShrink: 0
-                      }}>⚙️</span>
-                      <div style={{ minWidth: 0 }}>
-                        <h3 style={{ 
-                          margin: 0, 
-                          color: '#1e293b',
-                          fontSize: 'clamp(1rem, 3vw, 1.125rem)',
-                          lineHeight: '1.3'
-                        }}>Software Admin Portal</h3>
-                        <p style={{ 
-                          margin: 0, 
-                          color: '#64748b', 
-                          fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
-                          lineHeight: '1.4'
-                        }}>Enhanced sidebar & FAB system</p>
-                      </div>
-                    </Link>
+                    {[
+                      { name: 'Carrier Portal', icon: '🚛', path: '/carrier/*', color: '#3b82f6' },
+                      { name: 'Broker Portal', icon: '🏢', path: '/broker/*', color: '#10b981' },
+                      { name: 'Shipper Portal', icon: '📦', path: '/shipper/*', color: '#f59e0b' },
+                      { name: 'Driver Portal', icon: '🚗', path: '/driver/*', color: '#ec4899' },
+                      { name: 'Owner Operator', icon: '🚚', path: '/owner-operator/*', color: '#8b5cf6' },
+                      { name: 'Super Admin', icon: '👑', path: '/super-admin/*', color: '#7c3aed' },
+                      { name: 'Autonomous AI', icon: '🤖', path: '/autonomous/*', color: '#6366f1' },
+                      { name: 'Analytics', icon: '📊', path: '/analytics/*', color: '#06b6d4' },
+                      { name: 'Software Admin', icon: '⚙️', path: '/admin/software-admin', color: '#6b7280' },
+                      { name: 'Factoring', icon: '💰', path: '/factoring/*', color: '#eab308' },
+                      { name: 'Financials', icon: '💳', path: '/financials/*', color: '#22c55e' },
+                      { name: 'Rates', icon: '💰', path: '/rates/*', color: '#f97316' },
+                      { name: 'Load Board', icon: '📋', path: '/load-board/*', color: '#ef4444' },
+                      { name: 'Workers', icon: '👷', path: '/workers/*', color: '#84cc16' },
+                      { name: 'CRM', icon: '👥', path: '/crm/*', color: '#06b6d4' },
+                      { name: 'Directory', icon: '📚', path: '/directory/*', color: '#64748b' },
+                      { name: 'EDI', icon: '📡', path: '/edi/*', color: '#7c3aed' },
+                      { name: 'Marketplace', icon: '🛒', path: '/marketplace/*', color: '#f97316' },
+                      { name: 'Testing', icon: '🧪', path: '/testing/*', color: '#84cc16' },
+                      { name: 'Master Autonomous Agent', icon: '🤖', path: '/master-autonomous-agent', color: '#7c3aed' }
+                    ].map((portal, index) => (
+                      <Link key={index} to={portal.path} className="portal-card" style={{
+                        backgroundColor: 'white',
+                        padding: 'clamp(1rem, 3vw, 1.5rem)',
+                        borderRadius: '0.5rem',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'clamp(0.5rem, 2vw, 1rem)',
+                        transition: 'transform 0.2s, box-shadow 0.2s',
+                        borderLeft: `4px solid ${portal.color}`,
+                        minHeight: '80px'
+                      }} onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+                      }} onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                      }}>
+                        <span style={{ 
+                          fontSize: 'clamp(1.5rem, 5vw, 2rem)',
+                          flexShrink: 0
+                        }}>{portal.icon}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <h3 style={{ 
+                            margin: 0, 
+                            color: '#1e293b',
+                            fontSize: 'clamp(1rem, 3vw, 1.125rem)',
+                            lineHeight: '1.3'
+                          }}>{portal.name}</h3>
+                          <p style={{ 
+                            margin: 0, 
+                            color: '#64748b', 
+                            fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
+                            lineHeight: '1.4'
+                          }}>Click to access</p>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           } />
-
-          {/* Software Admin Portal */}
-          <Route path="/admin" element={<SoftwareAdminPortal />} />
           
-          <Route path="/admin/software-admin" element={<SoftwareAdminPortal />} />
+          {/* Enhanced Portal Dashboards */}
+          <Route path="/carrier/*" element={
+            <PortalLayout portalType="carrier" title="🚛 Carrier Portal" description="Fleet management and operations dashboard">
+              <CarrierDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/broker/*" element={
+            <PortalLayout portalType="broker" title="🏢 Broker Portal" description="Smart load matching and rate optimization">
+              <BrokerDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/autonomous/*" element={
+            <PortalLayout portalType="autonomous" title="🤖 Autonomous Portal" description="24/7 No-Human Operations Control Center">
+              <AutonomousDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/analytics/*" element={
+            <PortalLayout portalType="analytics" title="📊 Analytics Portal" description="Business intelligence and performance analytics">
+              <AnalyticsDashboard />
+            </PortalLayout>
+          } />
+          
+          {/* Other portal routes with basic layout */}
+          <Route path="/shipper/*" element={
+            <PortalLayout portalType="shipper" title="📦 Shipper Portal" description="Shipment tracking and logistics management">
+              <ShipperDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/driver/*" element={
+            <PortalLayout portalType="driver" title="🚗 Driver Portal" description="Personalized driving command center">
+              <DriverDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/owner-operator/*" element={
+            <PortalLayout portalType="owner-operator" title="🚚 Owner Operator Portal" description="Independent trucking business management">
+              <OwnerOperatorDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/super-admin/*" element={
+            <PortalLayout portalType="super-admin" title="👑 Super Admin Portal" description="Global command center with AI-powered oversight">
+              <SuperAdminDashboard />
+            </PortalLayout>
+          } />
+          
+          <Route path="/admin/*" element={
+            <PortalLayout portalType="admin" title="⚙️ Admin Portal" description="System administration and configuration">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Administration</h2>
+                <p>System configuration and management.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/factoring/*" element={
+            <PortalLayout portalType="factoring" title="💰 Factoring Portal" description="Financial services and invoice factoring">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Invoice Factoring</h2>
+                <p>Manage your factoring services and payments.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/financials/*" element={
+            <PortalLayout portalType="financials" title="💳 Financials Portal" description="Financial management and reporting">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Financial Management</h2>
+                <p>Comprehensive financial reporting and management.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/rates/*" element={
+            <PortalLayout portalType="rates" title="💰 Rates Portal" description="Rate management and pricing optimization">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Rate Management</h2>
+                <p>Optimize your pricing and rate strategies.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/load-board/*" element={
+            <PortalLayout portalType="load-board" title="📋 Load Board" description="Real-time load matching and dispatch">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Load Board</h2>
+                <p>Real-time load matching and dispatch system.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/workers/*" element={
+            <PortalLayout portalType="workers" title="👷 Workers Portal" description="Workforce and resource management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Workforce Management</h2>
+                <p>Manage your workforce and resources effectively.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/crm/*" element={
+            <PortalLayout portalType="crm" title="👥 CRM Portal" description="Customer relationship and lead management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Customer Relationship Management</h2>
+                <p>Manage customer relationships and leads.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/directory/*" element={
+            <PortalLayout portalType="directory" title="📚 Directory Portal" description="Business directory and network management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Business Directory</h2>
+                <p>Access and manage business network directory.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/edi/*" element={
+            <PortalLayout portalType="edi" title="📡 EDI Portal" description="Electronic data interchange management">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>EDI Management</h2>
+                <p>Manage electronic data interchange processes.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/marketplace/*" element={
+            <PortalLayout portalType="marketplace" title="🛒 Marketplace" description="TMS marketplace and integrations">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>TMS Marketplace</h2>
+                <p>Access integrations and services marketplace.</p>
+              </div>
+            </PortalLayout>
+          } />
+          
+          <Route path="/testing/*" element={
+            <PortalLayout portalType="testing" title="🧪 Testing Center" description="Development and testing environment">
+              <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2>Testing Environment</h2>
+                <p>Development and testing tools and utilities.</p>
+              </div>
+            </PortalLayout>
+          } />
+
+          {/* Software Company Dashboard */}
+          <Route path="/software-company/*" element={
+            <PortalLayout portalType="software-company" title="👨‍💻 Software Company Portal" description="Software development and product management">
+              <SoftwareCompanyDashboard />
+            </PortalLayout>
+          } />
+
+          {/* Logistics Management Dashboard */}
+          <Route path="/logistics-management" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <LogisticsManagementDashboard />
+            </div>
+          } />
+
+          {/* Master Autonomous Agent Dashboard */}
+          <Route path="/master-autonomous-agent" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <MasterAutonomousAgentDashboard />
+            </div>
+          } />
+
+          {/* Phase 7.3: Carrier & Broker Compliant Risk Management Onboarding */}
+          <Route path="/onboarding/carrier-broker-risk-review" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <CarrierBrokerRiskReview />
+            </div>
+          } />
+
+          {/* Phase 7.3: Admin Review Dashboard */}
+          <Route path="/admin/onboarding-review" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <OnboardingReviewDashboard />
+            </div>
+          } />
+
+          {/* Role-Based Portals */}
+          <Route path="/admin" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <SoftwareAdminPortal />
+            </div>
+          } />
+          
+          <Route path="/admin/software-admin" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <SoftwareAdminPortal />
+            </div>
+          } />
+
+          <Route path="/shippers/portal" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <ShippersPortal />
+            </div>
+          } />
+
+          <Route path="/brokers/portal" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <BrokersPortal />
+            </div>
+          } />
+
+          <Route path="/carriers/portal" element={
+            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+              <CarriersPortal />
+            </div>
+          } />
         </Routes>
-      </div>
+        </div>
+      </GlobalErrorBoundary>
     </Router>
   );
 }
