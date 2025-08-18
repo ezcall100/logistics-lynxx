@@ -32,10 +32,11 @@ import {
   BarChart, PieChart, Database, Network,
   ShieldX, ShieldAlert, ShieldCheck as ShieldCheckIcon,
   Target, Database as DatabaseIcon, Cpu as CpuIcon,
-  HardDrive as HardDriveIcon, Wifi as WifiIcon, Clock as ClockIcon
+  HardDrive as HardDriveIcon, Wifi as WifiIcon, Clock as ClockIcon,
+  AlertTriangle, CheckCircle, Minus, ArrowUpRight, ArrowDownRight
 } from 'lucide-react';
 
-// Real data models
+// Enhanced data models with comprehensive typing
 interface PerformanceMetric {
   id: string;
   name: string;
@@ -48,6 +49,8 @@ interface PerformanceMetric {
   trend: 'up' | 'down' | 'stable';
   changePercent: number;
   description: string;
+  server?: string;
+  environment?: 'production' | 'staging' | 'development';
 }
 
 interface PerformanceAlert {
@@ -63,6 +66,8 @@ interface PerformanceAlert {
   assignedTo?: string;
   resolution?: string;
   category: 'performance' | 'availability' | 'error_rate' | 'latency';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  estimatedResolutionTime?: string;
 }
 
 interface APIPerformance {
@@ -78,6 +83,8 @@ interface APIPerformance {
   lastUpdated: string;
   throughput: number;
   concurrentUsers: number;
+  version?: string;
+  environment?: string;
 }
 
 interface DatabasePerformance {
@@ -94,6 +101,7 @@ interface DatabasePerformance {
   lastAnalyzed: string;
   tableSize: string;
   indexUsage: number;
+  databaseType?: 'postgresql' | 'mysql' | 'mongodb' | 'redis';
 }
 
 interface FrontendPerformance {
@@ -111,6 +119,8 @@ interface FrontendPerformance {
   accessibility: number;
   bestPractices: number;
   seo: number;
+  browser?: string;
+  device?: string;
 }
 
 interface PerformanceOptimization {
@@ -128,10 +138,51 @@ interface PerformanceOptimization {
   assignedTo?: string;
   deadline?: string;
   progress: number;
+  tags?: string[];
+  dependencies?: string[];
 }
 
-// Mock API functions
+// Form interfaces for CRUD operations
+interface MetricFormData {
+  name: string;
+  category: PerformanceMetric['category'];
+  value: number;
+  unit: string;
+  threshold: number;
+  description: string;
+  server?: string;
+  environment?: PerformanceMetric['environment'];
+}
+
+interface AlertFormData {
+  title: string;
+  description: string;
+  severity: PerformanceAlert['severity'];
+  metric: string;
+  currentValue: number;
+  threshold: number;
+  category: PerformanceAlert['category'];
+  priority: PerformanceAlert['priority'];
+  assignedTo?: string;
+}
+
+interface OptimizationFormData {
+  title: string;
+  description: string;
+  category: PerformanceOptimization['category'];
+  priority: PerformanceOptimization['priority'];
+  impact: PerformanceOptimization['impact'];
+  effort: PerformanceOptimization['effort'];
+  estimatedSavings: number;
+  implementationCost: number;
+  assignedTo?: string;
+  deadline?: string;
+  tags?: string[];
+}
+
+// Enhanced Mock API functions with comprehensive CRUD operations
 const mockAPI = {
+  // Performance Metrics CRUD
   getPerformanceMetrics: (): Promise<PerformanceMetric[]> => Promise.resolve([
     {
       id: 'metric-001',
@@ -144,7 +195,9 @@ const mockAPI = {
       timestamp: '2024-01-15T10:30:00Z',
       trend: 'up',
       changePercent: 5.2,
-      description: 'Average CPU utilization across all servers'
+      description: 'Average CPU utilization across all servers',
+      server: 'prod-server-01',
+      environment: 'production'
     },
     {
       id: 'metric-002',
@@ -157,7 +210,9 @@ const mockAPI = {
       timestamp: '2024-01-15T10:30:00Z',
       trend: 'stable',
       changePercent: 0.1,
-      description: 'Average memory utilization across all servers'
+      description: 'Average memory utilization across all servers',
+      server: 'prod-server-01',
+      environment: 'production'
     },
     {
       id: 'metric-003',
@@ -170,7 +225,8 @@ const mockAPI = {
       timestamp: '2024-01-15T10:30:00Z',
       trend: 'down',
       changePercent: -12.3,
-      description: 'Average API response time across all endpoints'
+      description: 'Average API response time across all endpoints',
+      environment: 'production'
     },
     {
       id: 'metric-004',
@@ -183,7 +239,8 @@ const mockAPI = {
       timestamp: '2024-01-15T10:30:00Z',
       trend: 'stable',
       changePercent: 1.2,
-      description: 'Average database query execution time'
+      description: 'Average database query execution time',
+      environment: 'production'
     },
     {
       id: 'metric-005',
@@ -196,198 +253,241 @@ const mockAPI = {
       timestamp: '2024-01-15T10:30:00Z',
       trend: 'down',
       changePercent: -8.5,
-      description: 'Average page load time across all pages'
+      description: 'Average page load time across all pages',
+      environment: 'production'
+    },
+    {
+      id: 'metric-006',
+      name: 'Network Latency',
+      category: 'network',
+      value: 45,
+      unit: 'ms',
+      threshold: 100,
+      status: 'normal',
+      timestamp: '2024-01-15T10:30:00Z',
+      trend: 'down',
+      changePercent: -3.1,
+      description: 'Average network latency to external services',
+      environment: 'production'
+    },
+    {
+      id: 'metric-007',
+      name: 'Disk I/O',
+      category: 'disk',
+      value: 1250,
+      unit: 'MB/s',
+      threshold: 2000,
+      status: 'normal',
+      timestamp: '2024-01-15T10:30:00Z',
+      trend: 'up',
+      changePercent: 2.8,
+      description: 'Disk I/O operations per second',
+      server: 'prod-server-01',
+      environment: 'production'
     }
   ]),
-
+  
+  createPerformanceMetric: (metric: MetricFormData): Promise<PerformanceMetric> => 
+    Promise.resolve({
+      ...metric,
+      id: `metric-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      status: 'normal',
+      trend: 'stable',
+      changePercent: 0
+    }),
+    
+  updatePerformanceMetric: (id: string, updates: Partial<PerformanceMetric>): Promise<PerformanceMetric> => 
+    Promise.resolve({ id, ...updates } as PerformanceMetric),
+    
+  deletePerformanceMetric: (id: string): Promise<void> => Promise.resolve(),
+  
+  // Performance Alerts CRUD
   getPerformanceAlerts: (): Promise<PerformanceAlert[]> => Promise.resolve([
     {
       id: 'alert-001',
       title: 'High CPU Usage Detected',
-      description: 'CPU usage has exceeded 80% threshold on production servers',
+      description: 'CPU usage has exceeded 80% threshold on multiple servers',
       severity: 'high',
       metric: 'CPU Usage',
       currentValue: 85.2,
       threshold: 80,
       triggeredAt: '2024-01-15T10:25:00Z',
       status: 'active',
-      assignedTo: 'devops-team',
-      category: 'performance'
+      category: 'performance',
+      priority: 'high'
     },
     {
       id: 'alert-002',
-      title: 'Slow API Response Time',
-      description: 'API response time has increased significantly',
+      title: 'API Response Time Degradation',
+      description: 'API response times have increased by 15% in the last hour',
       severity: 'medium',
       metric: 'API Response Time',
-      currentValue: 650,
+      currentValue: 520,
       threshold: 500,
       triggeredAt: '2024-01-15T09:45:00Z',
       status: 'acknowledged',
-      assignedTo: 'backend-team',
-      resolution: 'Investigating database connection pool issues',
-      category: 'latency'
+      assignedTo: 'John Smith',
+      category: 'latency',
+      priority: 'medium'
     },
     {
       id: 'alert-003',
       title: 'Database Connection Pool Exhausted',
-      description: 'Database connection pool has reached maximum capacity',
+      description: 'Database connection pool is at 95% capacity',
       severity: 'critical',
       metric: 'Database Connections',
-      currentValue: 100,
-      threshold: 95,
-      triggeredAt: '2024-01-15T08:30:00Z',
-      status: 'resolved',
-      assignedTo: 'database-admin',
-      resolution: 'Increased connection pool size and optimized queries',
-      category: 'availability'
+      currentValue: 95,
+      threshold: 90,
+      triggeredAt: '2024-01-15T10:15:00Z',
+      status: 'active',
+      category: 'availability',
+      priority: 'critical'
     }
   ]),
-
+  
+  createPerformanceAlert: (alert: AlertFormData): Promise<PerformanceAlert> => 
+    Promise.resolve({
+      ...alert,
+      id: `alert-${Date.now()}`,
+      triggeredAt: new Date().toISOString(),
+      status: 'active'
+    }),
+    
+  updatePerformanceAlert: (id: string, updates: Partial<PerformanceAlert>): Promise<PerformanceAlert> => 
+    Promise.resolve({ id, ...updates } as PerformanceAlert),
+    
+  deletePerformanceAlert: (id: string): Promise<void> => Promise.resolve(),
+  
+  // API Performance CRUD
   getAPIPerformance: (): Promise<APIPerformance[]> => Promise.resolve([
     {
       id: 'api-001',
       endpoint: '/api/users',
       method: 'GET',
-      avgResponseTime: 120,
-      p95ResponseTime: 350,
-      p99ResponseTime: 580,
-      requestCount: 15420,
-      errorRate: 0.2,
+      avgResponseTime: 245,
+      p95ResponseTime: 450,
+      p99ResponseTime: 890,
+      requestCount: 12500,
+      errorRate: 0.5,
       status: 'healthy',
       lastUpdated: '2024-01-15T10:30:00Z',
       throughput: 1250,
-      concurrentUsers: 45
+      concurrentUsers: 450,
+      version: 'v1.2.0',
+      environment: 'production'
     },
     {
       id: 'api-002',
       endpoint: '/api/orders',
       method: 'POST',
-      avgResponseTime: 280,
-      p95ResponseTime: 650,
+      avgResponseTime: 320,
+      p95ResponseTime: 680,
       p99ResponseTime: 1200,
-      requestCount: 8230,
-      errorRate: 1.5,
+      requestCount: 8500,
+      errorRate: 1.2,
       status: 'degraded',
       lastUpdated: '2024-01-15T10:30:00Z',
-      throughput: 680,
-      concurrentUsers: 32
+      throughput: 850,
+      concurrentUsers: 320,
+      version: 'v1.2.0',
+      environment: 'production'
     },
     {
       id: 'api-003',
-      endpoint: '/api/reports',
+      endpoint: '/api/analytics',
       method: 'GET',
-      avgResponseTime: 850,
-      p95ResponseTime: 2100,
-      p99ResponseTime: 3500,
-      requestCount: 2340,
-      errorRate: 0.8,
-      status: 'healthy',
+      avgResponseTime: 890,
+      p95ResponseTime: 1500,
+      p99ResponseTime: 2800,
+      requestCount: 3200,
+      errorRate: 2.1,
+      status: 'unhealthy',
       lastUpdated: '2024-01-15T10:30:00Z',
-      throughput: 180,
-      concurrentUsers: 12
+      throughput: 320,
+      concurrentUsers: 180,
+      version: 'v1.1.0',
+      environment: 'production'
     }
   ]),
-
+  
+  // Database Performance CRUD
   getDatabasePerformance: (): Promise<DatabasePerformance[]> => Promise.resolve([
     {
       id: 'db-001',
-      database: 'users_db',
+      database: 'main_db',
       query: 'SELECT * FROM users WHERE status = ?',
       avgExecutionTime: 45,
       maxExecutionTime: 120,
-      executionCount: 12500,
+      executionCount: 8500,
       cacheHitRate: 92.5,
       slowQueries: 15,
-      connections: 25,
+      connections: 85,
       status: 'optimal',
       lastAnalyzed: '2024-01-15T10:30:00Z',
-      tableSize: '2.5 GB',
-      indexUsage: 95.2
+      tableSize: '2.5GB',
+      indexUsage: 95.2,
+      databaseType: 'postgresql'
     },
     {
       id: 'db-002',
-      database: 'orders_db',
-      query: 'SELECT o.*, u.name FROM orders o JOIN users u ON o.user_id = u.id',
+      database: 'analytics_db',
+      query: 'SELECT COUNT(*) FROM events WHERE date >= ?',
       avgExecutionTime: 180,
       maxExecutionTime: 450,
-      executionCount: 8200,
+      executionCount: 1200,
       cacheHitRate: 78.3,
       slowQueries: 45,
-      connections: 18,
+      connections: 120,
       status: 'warning',
       lastAnalyzed: '2024-01-15T10:30:00Z',
-      tableSize: '8.2 GB',
-      indexUsage: 82.1
-    },
-    {
-      id: 'db-003',
-      database: 'analytics_db',
-      query: 'SELECT date, SUM(amount) FROM transactions GROUP BY date',
-      avgExecutionTime: 320,
-      maxExecutionTime: 1200,
-      executionCount: 1200,
-      cacheHitRate: 65.8,
-      slowQueries: 28,
-      connections: 12,
-      status: 'optimal',
-      lastAnalyzed: '2024-01-15T10:30:00Z',
-      tableSize: '15.8 GB',
-      indexUsage: 88.7
+      tableSize: '15.2GB',
+      indexUsage: 82.1,
+      databaseType: 'postgresql'
     }
   ]),
-
+  
+  // Frontend Performance CRUD
   getFrontendPerformance: (): Promise<FrontendPerformance[]> => Promise.resolve([
     {
       id: 'fe-001',
       page: '/dashboard',
-      loadTime: 1.2,
+      loadTime: 1.8,
       firstContentfulPaint: 0.8,
-      largestContentfulPaint: 1.5,
+      largestContentfulPaint: 1.2,
       cumulativeLayoutShift: 0.05,
-      firstInputDelay: 0.1,
-      lighthouseScore: 95,
+      firstInputDelay: 0.12,
+      lighthouseScore: 92,
       status: 'excellent',
       lastTested: '2024-01-15T10:30:00Z',
-      userExperience: 98,
-      accessibility: 92,
-      bestPractices: 96,
-      seo: 94
+      userExperience: 95,
+      accessibility: 98,
+      bestPractices: 90,
+      seo: 88,
+      browser: 'Chrome',
+      device: 'Desktop'
     },
     {
       id: 'fe-002',
-      page: '/orders',
-      loadTime: 2.1,
-      firstContentfulPaint: 1.3,
+      page: '/analytics',
+      loadTime: 3.2,
+      firstContentfulPaint: 1.5,
       largestContentfulPaint: 2.8,
       cumulativeLayoutShift: 0.12,
-      firstInputDelay: 0.3,
+      firstInputDelay: 0.25,
       lighthouseScore: 78,
-      status: 'good',
-      lastTested: '2024-01-15T10:30:00Z',
-      userExperience: 82,
-      accessibility: 85,
-      bestPractices: 88,
-      seo: 90
-    },
-    {
-      id: 'fe-003',
-      page: '/reports',
-      loadTime: 3.5,
-      firstContentfulPaint: 2.1,
-      largestContentfulPaint: 4.2,
-      cumulativeLayoutShift: 0.18,
-      firstInputDelay: 0.6,
-      lighthouseScore: 65,
       status: 'needs_improvement',
       lastTested: '2024-01-15T10:30:00Z',
-      userExperience: 68,
-      accessibility: 75,
-      bestPractices: 72,
-      seo: 78
+      userExperience: 82,
+      accessibility: 95,
+      bestPractices: 85,
+      seo: 90,
+      browser: 'Chrome',
+      device: 'Desktop'
     }
   ]),
-
+  
+  // Performance Optimization CRUD
   getPerformanceOptimizations: (): Promise<PerformanceOptimization[]> => Promise.resolve([
     {
       id: 'opt-001',
@@ -401,9 +501,11 @@ const mockAPI = {
       estimatedSavings: 45,
       implementationCost: 15,
       roi: 300,
-      assignedTo: 'backend-team',
-      deadline: '2024-01-25T00:00:00Z',
-      progress: 60
+      assignedTo: 'Sarah Johnson',
+      deadline: '2024-02-15',
+      progress: 65,
+      tags: ['caching', 'redis', 'database'],
+      dependencies: ['redis-infrastructure']
     },
     {
       id: 'opt-002',
@@ -413,57 +515,153 @@ const mockAPI = {
       priority: 'medium',
       impact: 'medium',
       effort: 'low',
-      status: 'completed',
+      status: 'proposed',
       estimatedSavings: 25,
       implementationCost: 8,
       roi: 312,
-      assignedTo: 'frontend-team',
-      progress: 100
+      assignedTo: 'Mike Chen',
+      deadline: '2024-01-30',
+      progress: 0,
+      tags: ['bundle', 'optimization', 'webpack'],
+      dependencies: []
     },
     {
       id: 'opt-003',
-      title: 'Upgrade Database Indexes',
-      description: 'Add composite indexes for frequently used query patterns',
-      category: 'database',
-      priority: 'high',
+      title: 'Upgrade API Rate Limiting',
+      description: 'Implement more sophisticated rate limiting to prevent API abuse',
+      category: 'backend',
+      priority: 'critical',
       impact: 'high',
-      effort: 'low',
-      status: 'proposed',
-      estimatedSavings: 35,
-      implementationCost: 5,
-      roi: 700,
-      assignedTo: 'database-admin',
-      progress: 0
+      effort: 'high',
+      status: 'completed',
+      estimatedSavings: 60,
+      implementationCost: 20,
+      roi: 300,
+      assignedTo: 'Alex Rodriguez',
+      deadline: '2024-01-10',
+      progress: 100,
+      tags: ['security', 'rate-limiting', 'api'],
+      dependencies: []
     }
-  ])
+  ]),
+  
+  createPerformanceOptimization: (optimization: OptimizationFormData): Promise<PerformanceOptimization> => 
+    Promise.resolve({
+      ...optimization,
+      id: `opt-${Date.now()}`,
+      status: 'proposed',
+      progress: 0,
+      roi: optimization.estimatedSavings / optimization.implementationCost * 100
+    }),
+    
+  updatePerformanceOptimization: (id: string, updates: Partial<PerformanceOptimization>): Promise<PerformanceOptimization> => 
+    Promise.resolve({ id, ...updates } as PerformanceOptimization),
+    
+  deletePerformanceOptimization: (id: string): Promise<void> => Promise.resolve(),
+  
+  // Real-time monitoring functions
+  startRealTimeMonitoring: (): Promise<void> => Promise.resolve(),
+  stopRealTimeMonitoring: (): Promise<void> => Promise.resolve(),
+  getRealTimeMetrics: (): Promise<PerformanceMetric[]> => Promise.resolve([]),
+  
+  // Analytics and reporting
+  generatePerformanceReport: (startDate: string, endDate: string): Promise<any> => Promise.resolve({
+    summary: 'Performance report generated successfully',
+    metrics: [],
+    recommendations: []
+  }),
+  
+  exportPerformanceData: (format: 'csv' | 'json' | 'pdf'): Promise<string> => 
+    Promise.resolve(`performance-data-${Date.now()}.${format}`)
 };
 
-const PerformanceMonitorPage = () => {
+// Main Performance Monitor Component
+const PerformanceMonitorPage: React.FC = () => {
+  const { toast } = useToast();
+  
+  // State management
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
   const [alerts, setAlerts] = useState<PerformanceAlert[]>([]);
   const [apiPerformance, setApiPerformance] = useState<APIPerformance[]>([]);
-  const [dbPerformance, setDbPerformance] = useState<DatabasePerformance[]>([]);
+  const [databasePerformance, setDatabasePerformance] = useState<DatabasePerformance[]>([]);
   const [frontendPerformance, setFrontendPerformance] = useState<FrontendPerformance[]>([]);
   const [optimizations, setOptimizations] = useState<PerformanceOptimization[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newAlertDialog, setNewAlertDialog] = useState(false);
-  const [newOptimizationDialog, setNewOptimizationDialog] = useState(false);
-  const { toast } = useToast();
+  const [realTimeMode, setRealTimeMode] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
+  
+  // Form states
+  const [showMetricForm, setShowMetricForm] = useState(false);
+  const [showAlertForm, setShowAlertForm] = useState(false);
+  const [showOptimizationForm, setShowOptimizationForm] = useState(false);
+  const [editingItem, setEditingItem] = useState<any>(null);
+  
+  // Form data
+  const [metricFormData, setMetricFormData] = useState<MetricFormData>({
+    name: '',
+    category: 'cpu',
+    value: 0,
+    unit: '%',
+    threshold: 80,
+    description: '',
+    server: '',
+    environment: 'production'
+  });
+  
+  const [alertFormData, setAlertFormData] = useState<AlertFormData>({
+    title: '',
+    description: '',
+    severity: 'medium',
+    metric: '',
+    currentValue: 0,
+    threshold: 0,
+    category: 'performance',
+    priority: 'medium',
+    assignedTo: ''
+  });
+  
+  const [optimizationFormData, setOptimizationFormData] = useState<OptimizationFormData>({
+    title: '',
+    description: '',
+    category: 'frontend',
+    priority: 'medium',
+    impact: 'medium',
+    effort: 'medium',
+    estimatedSavings: 0,
+    implementationCost: 0,
+    assignedTo: '',
+    deadline: '',
+    tags: []
+  });
 
+  // Load data on component mount
   useEffect(() => {
-    loadData();
+    loadAllData();
   }, []);
 
-  const loadData = async () => {
-    setLoading(true);
+  // Real-time monitoring effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (realTimeMode) {
+      interval = setInterval(() => {
+        loadAllData();
+      }, 5000); // Update every 5 seconds
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [realTimeMode]);
+
+  const loadAllData = async () => {
     try {
+      setLoading(true);
       const [
         metricsData,
         alertsData,
         apiData,
         dbData,
-        frontendData,
-        optimizationsData
+        feData,
+        optData
       ] = await Promise.all([
         mockAPI.getPerformanceMetrics(),
         mockAPI.getPerformanceAlerts(),
@@ -472,13 +670,13 @@ const PerformanceMonitorPage = () => {
         mockAPI.getFrontendPerformance(),
         mockAPI.getPerformanceOptimizations()
       ]);
-
+      
       setMetrics(metricsData);
       setAlerts(alertsData);
       setApiPerformance(apiData);
-      setDbPerformance(dbData);
-      setFrontendPerformance(frontendData);
-      setOptimizations(optimizationsData);
+      setDatabasePerformance(dbData);
+      setFrontendPerformance(feData);
+      setOptimizations(optData);
     } catch (error) {
       toast({
         title: "Error",
@@ -490,89 +688,205 @@ const PerformanceMonitorPage = () => {
     }
   };
 
+  // CRUD Operations
+  const handleCreateMetric = async () => {
+    try {
+      const newMetric = await mockAPI.createPerformanceMetric(metricFormData);
+      setMetrics(prev => [...prev, newMetric]);
+      setShowMetricForm(false);
+      setMetricFormData({
+        name: '',
+        category: 'cpu',
+        value: 0,
+        unit: '%',
+        threshold: 80,
+        description: '',
+        server: '',
+        environment: 'production'
+      });
+      toast({
+        title: "Success",
+        description: "Performance metric created successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create performance metric",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCreateAlert = async () => {
+    try {
+      const newAlert = await mockAPI.createPerformanceAlert(alertFormData);
+      setAlerts(prev => [...prev, newAlert]);
+      setShowAlertForm(false);
+      setAlertFormData({
+        title: '',
+        description: '',
+        severity: 'medium',
+        metric: '',
+        currentValue: 0,
+        threshold: 0,
+        category: 'performance',
+        priority: 'medium',
+        assignedTo: ''
+      });
+      toast({
+        title: "Success",
+        description: "Performance alert created successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create performance alert",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCreateOptimization = async () => {
+    try {
+      const newOptimization = await mockAPI.createPerformanceOptimization(optimizationFormData);
+      setOptimizations(prev => [...prev, newOptimization]);
+      setShowOptimizationForm(false);
+      setOptimizationFormData({
+        title: '',
+        description: '',
+        category: 'frontend',
+        priority: 'medium',
+        impact: 'medium',
+        effort: 'medium',
+        estimatedSavings: 0,
+        implementationCost: 0,
+        assignedTo: '',
+        deadline: '',
+        tags: []
+      });
+      toast({
+        title: "Success",
+        description: "Performance optimization created successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create performance optimization",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteMetric = async (id: string) => {
+    try {
+      await mockAPI.deletePerformanceMetric(id);
+      setMetrics(prev => prev.filter(m => m.id !== id));
+      toast({
+        title: "Success",
+        description: "Performance metric deleted successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete performance metric",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteAlert = async (id: string) => {
+    try {
+      await mockAPI.deletePerformanceAlert(id);
+      setAlerts(prev => prev.filter(a => a.id !== id));
+      toast({
+        title: "Success",
+        description: "Performance alert deleted successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete performance alert",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteOptimization = async (id: string) => {
+    try {
+      await mockAPI.deletePerformanceOptimization(id);
+      setOptimizations(prev => prev.filter(o => o.id !== id));
+      toast({
+        title: "Success",
+        description: "Performance optimization deleted successfully"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete performance optimization",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const toggleRealTimeMode = () => {
+    setRealTimeMode(!realTimeMode);
+    if (!realTimeMode) {
+      toast({
+        title: "Real-time Mode",
+        description: "Real-time monitoring enabled"
+      });
+    } else {
+      toast({
+        title: "Real-time Mode",
+        description: "Real-time monitoring disabled"
+      });
+    }
+  };
+
+  const exportData = async (format: 'csv' | 'json' | 'pdf') => {
+    try {
+      const filename = await mockAPI.exportPerformanceData(format);
+      toast({
+        title: "Export Successful",
+        description: `Data exported as ${filename}`
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export performance data",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Utility functions
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'normal':
-      case 'healthy':
-      case 'optimal':
-      case 'excellent':
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'warning':
-      case 'degraded':
-      case 'good':
-      case 'in_progress':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'critical':
-      case 'unhealthy':
-      case 'needs_improvement':
-      case 'poor':
-      case 'active':
-        return 'bg-red-100 text-red-800';
-      case 'acknowledged':
-      case 'proposed':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+      case 'normal': return 'bg-green-500';
+      case 'warning': return 'bg-yellow-500';
+      case 'critical': return 'bg-red-500';
+      case 'offline': return 'bg-gray-500';
+      default: return 'bg-gray-500';
     }
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-500 text-white';
-      case 'high': return 'bg-orange-500 text-white';
-      case 'medium': return 'bg-yellow-500 text-black';
-      case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-gray-500 text-white';
+      case 'low': return 'bg-blue-500';
+      case 'medium': return 'bg-yellow-500';
+      case 'high': return 'bg-orange-500';
+      case 'critical': return 'bg-red-500';
+      default: return 'bg-gray-500';
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'critical': return 'bg-red-500 text-white';
-      case 'high': return 'bg-orange-500 text-white';
-      case 'medium': return 'bg-yellow-500 text-black';
-      case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-gray-500 text-white';
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'up': return <TrendingUp className="h-4 w-4 text-red-500" />;
+      case 'down': return <TrendingDown className="h-4 w-4 text-green-500" />;
+      case 'stable': return <Minus className="h-4 w-4 text-gray-500" />;
+      default: return <Minus className="h-4 w-4 text-gray-500" />;
     }
-  };
-
-  const handleAcknowledgeAlert = (id: string) => {
-    setAlerts(prev => 
-      prev.map(a => a.id === id ? { ...a, status: 'acknowledged' as const } : a)
-    );
-    toast({
-      title: "Alert Acknowledged",
-      description: "Performance alert has been acknowledged",
-    });
-  };
-
-  const handleResolveAlert = (id: string) => {
-    setAlerts(prev => 
-      prev.map(a => a.id === id ? { ...a, status: 'resolved' as const } : a)
-    );
-    toast({
-      title: "Alert Resolved",
-      description: "Performance alert has been resolved",
-    });
-  };
-
-  const handleAddOptimization = () => {
-    toast({
-      title: "Optimization Added",
-      description: "New performance optimization has been added",
-    });
-    setNewOptimizationDialog(false);
-  };
-
-  const handleUpdateOptimizationProgress = (id: string, progress: number) => {
-    setOptimizations(prev => 
-      prev.map(o => o.id === id ? { ...o, progress } : o)
-    );
-    toast({
-      title: "Progress Updated",
-      description: `Optimization progress updated to ${progress}%`,
-    });
   };
 
   if (loading) {
@@ -587,23 +901,31 @@ const PerformanceMonitorPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Performance Monitor Agent</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Performance Monitor</h1>
           <p className="text-muted-foreground">
-            Real-time performance monitoring, optimization, and alerting
+            Real-time performance monitoring and optimization management
           </p>
         </div>
-        <div className="flex space-x-2">
-          <Button onClick={() => setNewAlertDialog(true)}>
-            <Bell className="h-4 w-4 mr-2" />
-            Create Alert
+        <div className="flex items-center space-x-2">
+          <Button
+            variant={realTimeMode ? "default" : "outline"}
+            onClick={toggleRealTimeMode}
+            className="flex items-center space-x-2"
+          >
+            {realTimeMode ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            <span>{realTimeMode ? 'Stop' : 'Start'} Real-time</span>
           </Button>
-          <Button onClick={() => setNewOptimizationDialog(true)} variant="outline">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Optimization
+          <Button variant="outline" onClick={loadAllData}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button variant="outline" onClick={() => exportData('csv')}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
           </Button>
         </div>
       </div>
@@ -612,55 +934,54 @@ const PerformanceMonitorPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">System Health</CardTitle>
-            <Gauge className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">92%</div>
-            <p className="text-xs text-muted-foreground">
-              {metrics.filter(m => m.status === 'normal').length} of {metrics.length} metrics healthy
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
-            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {alerts.filter(a => a.status === 'active').length}
-            </div>
+            <div className="text-2xl font-bold">{alerts.filter(a => a.status === 'active').length}</div>
             <p className="text-xs text-muted-foreground">
-              {alerts.filter(a => a.severity === 'critical').length} critical alerts
+              {alerts.filter(a => a.severity === 'critical').length} critical
             </p>
           </CardContent>
         </Card>
-
+        
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">245ms</div>
+            <div className="text-2xl font-bold">
+              {Math.round(apiPerformance.reduce((acc, api) => acc + api.avgResponseTime, 0) / apiPerformance.length)}ms
+            </div>
             <p className="text-xs text-muted-foreground">
-              <TrendingDown className="h-3 w-3 inline mr-1" />
-              12% improvement
+              Across {apiPerformance.length} endpoints
             </p>
           </CardContent>
         </Card>
-
+        
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Optimizations</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">System Health</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {optimizations.filter(o => o.status === 'in_progress').length}
+              {Math.round((metrics.filter(m => m.status === 'normal').length / metrics.length) * 100)}%
             </div>
+            <p className="text-xs text-muted-foreground">
+              {metrics.filter(m => m.status === 'normal').length} of {metrics.length} metrics healthy
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Optimizations</CardTitle>
+            <Rocket className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{optimizations.length}</div>
             <p className="text-xs text-muted-foreground">
               {optimizations.filter(o => o.status === 'completed').length} completed
             </p>
@@ -669,36 +990,101 @@ const PerformanceMonitorPage = () => {
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="metrics" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="metrics">Performance Metrics</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="metrics">Metrics</TabsTrigger>
           <TabsTrigger value="alerts">Alerts</TabsTrigger>
           <TabsTrigger value="api">API Performance</TabsTrigger>
-          <TabsTrigger value="database">Database Performance</TabsTrigger>
-          <TabsTrigger value="frontend">Frontend Performance</TabsTrigger>
+          <TabsTrigger value="database">Database</TabsTrigger>
           <TabsTrigger value="optimizations">Optimizations</TabsTrigger>
         </TabsList>
 
-        {/* Performance Metrics Tab */}
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recent Alerts */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  <span>Recent Alerts</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {alerts.slice(0, 5).map((alert) => (
+                    <div key={alert.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${getSeverityColor(alert.severity)}`} />
+                        <div>
+                          <p className="font-medium text-sm">{alert.title}</p>
+                          <p className="text-xs text-muted-foreground">{alert.metric}</p>
+                        </div>
+                      </div>
+                      <Badge variant={alert.status === 'active' ? 'destructive' : 'secondary'}>
+                        {alert.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Performance Trends */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5" />
+                  <span>Performance Trends</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {metrics.slice(0, 5).map((metric) => (
+                    <div key={metric.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        {getTrendIcon(metric.trend)}
+                        <div>
+                          <p className="font-medium text-sm">{metric.name}</p>
+                          <p className="text-xs text-muted-foreground">{metric.value}{metric.unit}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-sm font-medium ${metric.changePercent > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                          {metric.changePercent > 0 ? '+' : ''}{metric.changePercent.toFixed(1)}%
+                        </p>
+                        <p className="text-xs text-muted-foreground">{metric.trend}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Metrics Tab */}
         <TabsContent value="metrics" className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Performance Metrics</h2>
+            <Button onClick={() => setShowMetricForm(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Metric
+            </Button>
+          </div>
+          
           <Card>
-            <CardHeader>
-              <CardTitle>Real-time Performance Metrics</CardTitle>
-              <CardDescription>
-                Monitor key performance indicators across all systems
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Metric</TableHead>
-                    <TableHead>Current Value</TableHead>
-                    <TableHead>Threshold</TableHead>
+                    <TableHead>Value</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Trend</TableHead>
-                    <TableHead>Change</TableHead>
                     <TableHead>Last Updated</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -706,44 +1092,40 @@ const PerformanceMonitorPage = () => {
                     <TableRow key={metric.id}>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{metric.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {metric.description}
-                          </div>
+                          <p className="font-medium">{metric.name}</p>
+                          <p className="text-sm text-muted-foreground">{metric.description}</p>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <span className="font-medium">
-                            {metric.value}{metric.unit}
-                          </span>
-                          <Progress 
-                            value={(metric.value / metric.threshold) * 100} 
-                            className="w-16" 
-                          />
+                          <span className="font-medium">{metric.value}{metric.unit}</span>
+                          <span className="text-sm text-muted-foreground">/ {metric.threshold}{metric.unit}</span>
                         </div>
                       </TableCell>
-                      <TableCell>{metric.threshold}{metric.unit}</TableCell>
                       <TableCell>
-                        <Badge className={getStatusColor(metric.status)}>
+                        <Badge variant={metric.status === 'normal' ? 'default' : 'destructive'}>
                           {metric.status}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-1">
-                          {metric.trend === 'up' && <TrendingUp className="h-4 w-4 text-red-500" />}
-                          {metric.trend === 'down' && <TrendingDown className="h-4 w-4 text-green-500" />}
-                          {metric.trend === 'stable' && <Activity className="h-4 w-4 text-gray-500" />}
-                          <span className="text-sm">{metric.trend}</span>
+                          {getTrendIcon(metric.trend)}
+                          <span className="text-sm">{metric.changePercent.toFixed(1)}%</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={metric.changePercent > 0 ? 'text-red-500' : 'text-green-500'}>
-                          {metric.changePercent > 0 ? '+' : ''}{metric.changePercent.toFixed(1)}%
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(metric.timestamp).toLocaleString()}
                         </span>
                       </TableCell>
                       <TableCell>
-                        {new Date(metric.timestamp).toLocaleTimeString()}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteMetric(metric.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -755,24 +1137,24 @@ const PerformanceMonitorPage = () => {
 
         {/* Alerts Tab */}
         <TabsContent value="alerts" className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Performance Alerts</h2>
+            <Button onClick={() => setShowAlertForm(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Alert
+            </Button>
+          </div>
+          
           <Card>
-            <CardHeader>
-              <CardTitle>Performance Alerts</CardTitle>
-              <CardDescription>
-                Monitor and manage performance alerts and notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Alert</TableHead>
                     <TableHead>Severity</TableHead>
-                    <TableHead>Metric</TableHead>
-                    <TableHead>Current Value</TableHead>
-                    <TableHead>Threshold</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Assigned To</TableHead>
+                    <TableHead>Triggered</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -781,10 +1163,8 @@ const PerformanceMonitorPage = () => {
                     <TableRow key={alert.id}>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{alert.title}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {alert.description}
-                          </div>
+                          <p className="font-medium">{alert.title}</p>
+                          <p className="text-sm text-muted-foreground">{alert.description}</p>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -792,38 +1172,27 @@ const PerformanceMonitorPage = () => {
                           {alert.severity}
                         </Badge>
                       </TableCell>
-                      <TableCell>{alert.metric}</TableCell>
-                      <TableCell>{alert.currentValue}</TableCell>
-                      <TableCell>{alert.threshold}</TableCell>
                       <TableCell>
-                        <Badge className={getStatusColor(alert.status)}>
+                        <Badge variant={alert.status === 'active' ? 'destructive' : 'secondary'}>
                           {alert.status}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {alert.assignedTo || 'Unassigned'}
+                        <span className="text-sm">{alert.assignedTo || 'Unassigned'}</span>
                       </TableCell>
                       <TableCell>
-                        <div className="flex space-x-2">
-                          {alert.status === 'active' && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleAcknowledgeAlert(alert.id)}
-                            >
-                              Acknowledge
-                            </Button>
-                          )}
-                          {alert.status === 'acknowledged' && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleResolveAlert(alert.id)}
-                            >
-                              Resolve
-                            </Button>
-                          )}
-                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(alert.triggeredAt).toLocaleString()}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteAlert(alert.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -835,55 +1204,53 @@ const PerformanceMonitorPage = () => {
 
         {/* API Performance Tab */}
         <TabsContent value="api" className="space-y-4">
+          <h2 className="text-xl font-semibold">API Performance</h2>
+          
           <Card>
-            <CardHeader>
-              <CardTitle>API Performance Monitoring</CardTitle>
-              <CardDescription>
-                Track API response times, error rates, and throughput
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Endpoint</TableHead>
                     <TableHead>Method</TableHead>
-                    <TableHead>Avg Response Time</TableHead>
-                    <TableHead>P95 Response Time</TableHead>
+                    <TableHead>Avg Response</TableHead>
                     <TableHead>Error Rate</TableHead>
-                    <TableHead>Throughput</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>Throughput</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {apiPerformance.map((api) => (
                     <TableRow key={api.id}>
-                      <TableCell className="font-medium">{api.endpoint}</TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{api.endpoint}</p>
+                          <p className="text-sm text-muted-foreground">v{api.version}</p>
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline">{api.method}</Badge>
                       </TableCell>
-                      <TableCell>{api.avgResponseTime}ms</TableCell>
-                      <TableCell>{api.p95ResponseTime}ms</TableCell>
                       <TableCell>
-                        <span className={api.errorRate > 1 ? 'text-red-500' : 'text-green-500'}>
+                        <div>
+                          <p className="font-medium">{api.avgResponseTime}ms</p>
+                          <p className="text-sm text-muted-foreground">P95: {api.p95ResponseTime}ms</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className={`font-medium ${api.errorRate > 1 ? 'text-red-500' : 'text-green-500'}`}>
                           {api.errorRate}%
                         </span>
                       </TableCell>
-                      <TableCell>{api.throughput} req/s</TableCell>
                       <TableCell>
-                        <Badge className={getStatusColor(api.status)}>
+                        <Badge variant={api.status === 'healthy' ? 'default' : 'destructive'}>
                           {api.status}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Settings className="h-4 w-4" />
-                          </Button>
+                        <div>
+                          <p className="font-medium">{api.throughput}/s</p>
+                          <p className="text-sm text-muted-foreground">{api.concurrentUsers} users</p>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -896,122 +1263,56 @@ const PerformanceMonitorPage = () => {
 
         {/* Database Performance Tab */}
         <TabsContent value="database" className="space-y-4">
+          <h2 className="text-xl font-semibold">Database Performance</h2>
+          
           <Card>
-            <CardHeader>
-              <CardTitle>Database Performance</CardTitle>
-              <CardDescription>
-                Monitor database query performance and optimization opportunities
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Database</TableHead>
                     <TableHead>Query</TableHead>
-                    <TableHead>Avg Execution Time</TableHead>
+                    <TableHead>Avg Time</TableHead>
                     <TableHead>Cache Hit Rate</TableHead>
-                    <TableHead>Slow Queries</TableHead>
-                    <TableHead>Connections</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>Connections</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {dbPerformance.map((db) => (
+                  {databasePerformance.map((db) => (
                     <TableRow key={db.id}>
-                      <TableCell className="font-medium">{db.database}</TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{db.database}</p>
+                          <p className="text-sm text-muted-foreground">{db.databaseType}</p>
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <div className="max-w-xs truncate">
-                          {db.query}
-                        </div>
-                      </TableCell>
-                      <TableCell>{db.avgExecutionTime}ms</TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <span>{db.cacheHitRate}%</span>
-                          <Progress value={db.cacheHitRate} className="w-16" />
+                          <p className="text-sm font-mono">{db.query}</p>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={db.slowQueries > 20 ? 'text-red-500' : 'text-green-500'}>
-                          {db.slowQueries}
-                        </span>
+                        <div>
+                          <p className="font-medium">{db.avgExecutionTime}ms</p>
+                          <p className="text-sm text-muted-foreground">Max: {db.maxExecutionTime}ms</p>
+                        </div>
                       </TableCell>
-                      <TableCell>{db.connections}</TableCell>
                       <TableCell>
-                        <Badge className={getStatusColor(db.status)}>
+                        <div>
+                          <p className="font-medium">{db.cacheHitRate}%</p>
+                          <Progress value={db.cacheHitRate} className="h-2 mt-1" />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={db.status === 'optimal' ? 'default' : 'destructive'}>
                           {db.status}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <DatabaseIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Frontend Performance Tab */}
-        <TabsContent value="frontend" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Frontend Performance</CardTitle>
-              <CardDescription>
-                Monitor page load times and Core Web Vitals
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Page</TableHead>
-                    <TableHead>Load Time</TableHead>
-                    <TableHead>LCP</TableHead>
-                    <TableHead>CLS</TableHead>
-                    <TableHead>FID</TableHead>
-                    <TableHead>Lighthouse Score</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {frontendPerformance.map((fe) => (
-                    <TableRow key={fe.id}>
-                      <TableCell className="font-medium">{fe.page}</TableCell>
-                      <TableCell>{fe.loadTime}s</TableCell>
-                      <TableCell>{fe.largestContentfulPaint}s</TableCell>
-                      <TableCell>{fe.cumulativeLayoutShift}</TableCell>
-                      <TableCell>{fe.firstInputDelay}s</TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <span className="font-medium">{fe.lighthouseScore}</span>
-                          <Progress value={fe.lighthouseScore} className="w-16" />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(fe.status)}>
-                          {fe.status.replace('_', ' ')}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Zap className="h-4 w-4" />
-                          </Button>
+                        <div>
+                          <p className="font-medium">{db.connections}</p>
+                          <p className="text-sm text-muted-foreground">{db.slowQueries} slow</p>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -1024,111 +1325,194 @@ const PerformanceMonitorPage = () => {
 
         {/* Optimizations Tab */}
         <TabsContent value="optimizations" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance Optimizations</CardTitle>
-              <CardDescription>
-                Track and manage performance optimization initiatives
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Optimization</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Priority</TableHead>
-                    <TableHead>Impact</TableHead>
-                    <TableHead>ROI</TableHead>
-                    <TableHead>Progress</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {optimizations.map((opt) => (
-                    <TableRow key={opt.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{opt.title}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {opt.description}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{opt.category}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getPriorityColor(opt.priority)}>
-                          {opt.priority}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{opt.impact}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-green-500 font-medium">
-                          {opt.roi}%
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={opt.progress} className="w-16" />
-                          <span className="text-sm">{opt.progress}%</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(opt.status)}>
-                          {opt.status.replace('_', ' ')}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleUpdateOptimizationProgress(opt.id, Math.min(opt.progress + 10, 100))}
-                          >
-                            <TrendingUp className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Performance Optimizations</h2>
+            <Button onClick={() => setShowOptimizationForm(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Optimization
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {optimizations.map((optimization) => (
+              <Card key={optimization.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">{optimization.title}</CardTitle>
+                    <Badge variant={optimization.status === 'completed' ? 'default' : 'secondary'}>
+                      {optimization.status}
+                    </Badge>
+                  </div>
+                  <CardDescription>{optimization.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Progress</span>
+                    <span>{optimization.progress}%</span>
+                  </div>
+                  <Progress value={optimization.progress} className="h-2" />
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">ROI</p>
+                      <p className="font-medium">{optimization.roi.toFixed(0)}%</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Savings</p>
+                      <p className="font-medium">${optimization.estimatedSavings}k</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline">{optimization.category}</Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteOptimization(optimization.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
 
-      {/* New Alert Dialog */}
-      <Dialog open={newAlertDialog} onOpenChange={setNewAlertDialog}>
-        <DialogContent>
+      {/* Forms */}
+      {/* Metric Form */}
+      <Dialog open={showMetricForm} onOpenChange={setShowMetricForm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add Performance Metric</DialogTitle>
+            <DialogDescription>
+              Create a new performance metric to monitor.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">Name</Label>
+              <Input
+                id="name"
+                value={metricFormData.name}
+                onChange={(e) => setMetricFormData(prev => ({ ...prev, name: e.target.value }))}
+                className="col-span-3"
+                placeholder="CPU Usage"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="category" className="text-right">Category</Label>
+              <Select
+                value={metricFormData.category}
+                onValueChange={(value: any) => setMetricFormData(prev => ({ ...prev, category: value }))}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cpu">CPU</SelectItem>
+                  <SelectItem value="memory">Memory</SelectItem>
+                  <SelectItem value="disk">Disk</SelectItem>
+                  <SelectItem value="network">Network</SelectItem>
+                  <SelectItem value="database">Database</SelectItem>
+                  <SelectItem value="api">API</SelectItem>
+                  <SelectItem value="frontend">Frontend</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="value" className="text-right">Value</Label>
+              <Input
+                id="value"
+                type="number"
+                value={metricFormData.value}
+                onChange={(e) => setMetricFormData(prev => ({ ...prev, value: parseFloat(e.target.value) || 0 }))}
+                className="col-span-3"
+                placeholder="75.2"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="unit" className="text-right">Unit</Label>
+              <Input
+                id="unit"
+                value={metricFormData.unit}
+                onChange={(e) => setMetricFormData(prev => ({ ...prev, unit: e.target.value }))}
+                className="col-span-3"
+                placeholder="%"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="threshold" className="text-right">Threshold</Label>
+              <Input
+                id="threshold"
+                type="number"
+                value={metricFormData.threshold}
+                onChange={(e) => setMetricFormData(prev => ({ ...prev, threshold: parseFloat(e.target.value) || 0 }))}
+                className="col-span-3"
+                placeholder="80"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">Description</Label>
+              <Textarea
+                id="description"
+                value={metricFormData.description}
+                onChange={(e) => setMetricFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="col-span-3"
+                placeholder="Description of the metric"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowMetricForm(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateMetric}>
+              Create Metric
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Alert Form */}
+      <Dialog open={showAlertForm} onOpenChange={setShowAlertForm}>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Create Performance Alert</DialogTitle>
             <DialogDescription>
-              Set up a new performance monitoring alert
+              Create a new performance alert to monitor system health.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="alert-title">Alert Title</Label>
-              <Input id="alert-title" placeholder="Enter alert title" />
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alert-title" className="text-right">Title</Label>
+              <Input
+                id="alert-title"
+                value={alertFormData.title}
+                onChange={(e) => setAlertFormData(prev => ({ ...prev, title: e.target.value }))}
+                className="col-span-3"
+                placeholder="High CPU Usage Detected"
+              />
             </div>
-            <div>
-              <Label htmlFor="alert-description">Description</Label>
-              <Textarea id="alert-description" placeholder="Enter alert description" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alert-description" className="text-right">Description</Label>
+              <Textarea
+                id="alert-description"
+                value={alertFormData.description}
+                onChange={(e) => setAlertFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="col-span-3"
+                placeholder="Description of the alert"
+              />
             </div>
-            <div>
-              <Label htmlFor="alert-severity">Severity</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select severity" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alert-severity" className="text-right">Severity</Label>
+              <Select
+                value={alertFormData.severity}
+                onValueChange={(value: any) => setAlertFormData(prev => ({ ...prev, severity: value }))}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="low">Low</SelectItem>
@@ -1138,49 +1522,88 @@ const PerformanceMonitorPage = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="alert-metric">Metric</Label>
-              <Input id="alert-metric" placeholder="Enter metric name" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alert-metric" className="text-right">Metric</Label>
+              <Input
+                id="alert-metric"
+                value={alertFormData.metric}
+                onChange={(e) => setAlertFormData(prev => ({ ...prev, metric: e.target.value }))}
+                className="col-span-3"
+                placeholder="CPU Usage"
+              />
             </div>
-            <div>
-              <Label htmlFor="alert-threshold">Threshold</Label>
-              <Input id="alert-threshold" placeholder="Enter threshold value" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alert-current-value" className="text-right">Current Value</Label>
+              <Input
+                id="alert-current-value"
+                type="number"
+                value={alertFormData.currentValue}
+                onChange={(e) => setAlertFormData(prev => ({ ...prev, currentValue: parseFloat(e.target.value) || 0 }))}
+                className="col-span-3"
+                placeholder="85.2"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alert-threshold" className="text-right">Threshold</Label>
+              <Input
+                id="alert-threshold"
+                type="number"
+                value={alertFormData.threshold}
+                onChange={(e) => setAlertFormData(prev => ({ ...prev, threshold: parseFloat(e.target.value) || 0 }))}
+                className="col-span-3"
+                placeholder="80"
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setNewAlertDialog(false)}>
+            <Button variant="outline" onClick={() => setShowAlertForm(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setNewAlertDialog(false)}>
+            <Button onClick={handleCreateAlert}>
               Create Alert
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* New Optimization Dialog */}
-      <Dialog open={newOptimizationDialog} onOpenChange={setNewOptimizationDialog}>
-        <DialogContent>
+      {/* Optimization Form */}
+      <Dialog open={showOptimizationForm} onOpenChange={setShowOptimizationForm}>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add Performance Optimization</DialogTitle>
             <DialogDescription>
-              Propose a new performance optimization initiative
+              Create a new performance optimization initiative.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="opt-title">Optimization Title</Label>
-              <Input id="opt-title" placeholder="Enter optimization title" />
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="opt-title" className="text-right">Title</Label>
+              <Input
+                id="opt-title"
+                value={optimizationFormData.title}
+                onChange={(e) => setOptimizationFormData(prev => ({ ...prev, title: e.target.value }))}
+                className="col-span-3"
+                placeholder="Implement Database Caching"
+              />
             </div>
-            <div>
-              <Label htmlFor="opt-description">Description</Label>
-              <Textarea id="opt-description" placeholder="Enter optimization description" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="opt-description" className="text-right">Description</Label>
+              <Textarea
+                id="opt-description"
+                value={optimizationFormData.description}
+                onChange={(e) => setOptimizationFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="col-span-3"
+                placeholder="Description of the optimization"
+              />
             </div>
-            <div>
-              <Label htmlFor="opt-category">Category</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="opt-category" className="text-right">Category</Label>
+              <Select
+                value={optimizationFormData.category}
+                onValueChange={(value: any) => setOptimizationFormData(prev => ({ ...prev, category: value }))}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="frontend">Frontend</SelectItem>
@@ -1190,11 +1613,14 @@ const PerformanceMonitorPage = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="opt-priority">Priority</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select priority" />
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="opt-priority" className="text-right">Priority</Label>
+              <Select
+                value={optimizationFormData.priority}
+                onValueChange={(value: any) => setOptimizationFormData(prev => ({ ...prev, priority: value }))}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="low">Low</SelectItem>
@@ -1204,26 +1630,35 @@ const PerformanceMonitorPage = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="opt-impact">Impact</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select impact" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="opt-savings" className="text-right">Est. Savings (k$)</Label>
+              <Input
+                id="opt-savings"
+                type="number"
+                value={optimizationFormData.estimatedSavings}
+                onChange={(e) => setOptimizationFormData(prev => ({ ...prev, estimatedSavings: parseFloat(e.target.value) || 0 }))}
+                className="col-span-3"
+                placeholder="45"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="opt-cost" className="text-right">Implementation Cost (k$)</Label>
+              <Input
+                id="opt-cost"
+                type="number"
+                value={optimizationFormData.implementationCost}
+                onChange={(e) => setOptimizationFormData(prev => ({ ...prev, implementationCost: parseFloat(e.target.value) || 0 }))}
+                className="col-span-3"
+                placeholder="15"
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setNewOptimizationDialog(false)}>
+            <Button variant="outline" onClick={() => setShowOptimizationForm(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAddOptimization}>
-              Add Optimization
+            <Button onClick={handleCreateOptimization}>
+              Create Optimization
             </Button>
           </DialogFooter>
         </DialogContent>
