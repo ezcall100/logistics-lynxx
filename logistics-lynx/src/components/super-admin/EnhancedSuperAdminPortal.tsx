@@ -1,126 +1,429 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
+import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
+
+// Import enhanced UI components
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ToggleGroup,
+  ToggleGroupItem,
+  Slider,
+  RadioGroup,
+  RadioGroupItem,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Button,
+  Badge,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Checkbox,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Progress,
+  Separator,
+  Switch,
+  useToast
+} from '@/components/ui/enhanced-ui-index';
+
+// Import all Super Admin pages
+import DashboardPage from './pages/DashboardPage';
+import UserManagementPage from './pages/UserManagementPage';
+import SystemAdminPage from './pages/SystemAdminPage';
+import SecurityCenterPage from './pages/SecurityCenterPage';
+import SystemMonitoringPage from './pages/SystemMonitoringPage';
+import PortalManagementPage from './pages/PortalManagementPage';
+import ReportsPage from './pages/ReportsPage';
+import GlobalSettingsPage from './pages/GlobalSettingsPage';
 
 const EnhancedSuperAdminPortal = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
+  const { autonomousAgents, systemStatus } = useAutonomousAgentManager();
+  
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['dashboard', 'user-management']);
+
+  // Navigation structure
+  const navigationItems = [
+    {
+      id: 'dashboard',
+      title: 'Dashboard',
+      icon: '📊',
+      path: '/super-admin',
+      description: 'System overview and key metrics'
+    },
+    {
+      id: 'user-management',
+      title: 'User Management',
+      icon: '👥',
+      path: '/super-admin/user-management',
+      description: 'Manage users, roles, and permissions',
+      subItems: [
+        { title: 'All Users', path: '/super-admin/user-management/all-users', icon: '👤' },
+        { title: 'Active Users', path: '/super-admin/user-management/active-users', icon: '✅' },
+        { title: 'Pending Users', path: '/super-admin/user-management/pending-users', icon: '⏳' },
+        { title: 'Suspended Users', path: '/super-admin/user-management/suspended-users', icon: '🚫' },
+        { title: 'Role Management', path: '/super-admin/user-management/role-management', icon: '🔐' },
+        { title: 'Permissions', path: '/super-admin/user-management/permissions', icon: '🔑' },
+        { title: 'User Groups', path: '/super-admin/user-management/user-groups', icon: '👥' }
+      ]
+    },
+    {
+      id: 'system-admin',
+      title: 'System Admin',
+      icon: '⚙️',
+      path: '/super-admin/system-admin',
+      description: 'System configuration and administration',
+      subItems: [
+        { title: 'Database Management', path: '/super-admin/system-admin/database', icon: '🗄️' },
+        { title: 'API Management', path: '/super-admin/system-admin/api', icon: '🔌' },
+        { title: 'Network Settings', path: '/super-admin/system-admin/network', icon: '🌐' },
+        { title: 'File Management', path: '/super-admin/system-admin/files', icon: '📁' },
+        { title: 'Backup & Restore', path: '/super-admin/system-admin/backup', icon: '💾' },
+        { title: 'System Updates', path: '/super-admin/system-admin/updates', icon: '🔄' }
+      ]
+    },
+    {
+      id: 'security-center',
+      title: 'Security Center',
+      icon: '🔒',
+      path: '/super-admin/security-center',
+      description: 'Security monitoring and controls',
+      subItems: [
+        { title: 'Security Audit', path: '/super-admin/security-center/audit', icon: '🔍' },
+        { title: 'Access Control', path: '/super-admin/security-center/access-control', icon: '🚪' },
+        { title: 'Encryption', path: '/super-admin/security-center/encryption', icon: '🔐' },
+        { title: 'Firewall', path: '/super-admin/security-center/firewall', icon: '🔥' },
+        { title: 'MFA Settings', path: '/super-admin/security-center/mfa', icon: '📱' },
+        { title: 'IP Whitelist', path: '/super-admin/security-center/ip-whitelist', icon: '🌍' }
+      ]
+    },
+    {
+      id: 'system-monitoring',
+      title: 'System Monitoring',
+      icon: '📈',
+      path: '/super-admin/system-monitoring',
+      description: 'Real-time system monitoring and alerts'
+    },
+    {
+      id: 'portal-management',
+      title: 'Portal Management',
+      icon: '🏛️',
+      path: '/super-admin/portal-management',
+      description: 'Manage all system portals and access'
+    },
+    {
+      id: 'reports',
+      title: 'Reports & Analytics',
+      icon: '📊',
+      path: '/super-admin/reports',
+      description: 'Comprehensive reporting and analytics'
+    },
+    {
+      id: 'global-settings',
+      title: 'Global Settings',
+      icon: '⚙️',
+      path: '/super-admin/global-settings',
+      description: 'Global system configuration'
+    }
+  ];
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups(prev => 
+      prev.includes(groupId) 
+        ? prev.filter(id => id !== groupId)
+        : [...prev, groupId]
+    );
+  };
+
+  useEffect(() => {
+    // Auto-expand the current section
+    const currentPath = location.pathname;
+    const currentGroup = navigationItems.find(item => 
+      currentPath.startsWith(item.path)
+    );
+    
+    if (currentGroup && !expandedGroups.includes(currentGroup.id)) {
+      setExpandedGroups(prev => [...prev, currentGroup.id]);
+    }
+  }, [location.pathname, expandedGroups]);
+
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#f8fafc',
-      padding: '2rem',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1 style={{ color: '#1f2937', marginBottom: '1rem' }}>
-        🏛️ Enhanced Super Admin Portal
-      </h1>
-      <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
-        This is the enhanced Super Admin Portal with Radix UI components.
-      </p>
-      
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '2rem', 
-        borderRadius: '0.5rem', 
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        marginBottom: '2rem'
-      }}>
-        <h2 style={{ color: '#374151', marginBottom: '1rem' }}>
-          🎯 Portal Status
-        </h2>
-        <p style={{ color: '#6b7280' }}>
-          ✅ Enhanced UI Components Loaded<br/>
-          ✅ Radix UI Integration Complete<br/>
-          ✅ Modern Design System Active<br/>
-          ✅ Responsive Layout Ready
-        </p>
-      </div>
-
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '2rem', 
-        borderRadius: '0.5rem', 
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        marginBottom: '2rem'
-      }}>
-        <h2 style={{ color: '#374151', marginBottom: '1rem' }}>
-          🚀 Quick Actions
-        </h2>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <button style={{
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            border: 'none',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '0.375rem',
-            cursor: 'pointer',
-            fontSize: '0.875rem',
-            fontWeight: '500'
-          }}>
-            Dashboard
-          </button>
-          <button style={{
-            backgroundColor: '#10b981',
-            color: 'white',
-            border: 'none',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '0.375rem',
-            cursor: 'pointer',
-            fontSize: '0.875rem',
-            fontWeight: '500'
-          }}>
-            User Management
-          </button>
-          <button style={{
-            backgroundColor: '#f59e0b',
-            color: 'white',
-            border: 'none',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '0.375rem',
-            cursor: 'pointer',
-            fontSize: '0.875rem',
-            fontWeight: '500'
-          }}>
-            System Admin
-          </button>
-        </div>
-      </div>
-
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '2rem', 
-        borderRadius: '0.5rem', 
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ color: '#374151', marginBottom: '1rem' }}>
-          📊 System Overview
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          <div style={{ 
-            backgroundColor: '#f0f9ff', 
-            padding: '1rem', 
-            borderRadius: '0.375rem',
-            border: '1px solid #bae6fd'
-          }}>
-            <h3 style={{ color: '#0369a1', margin: '0 0 0.5rem 0', fontSize: '0.875rem' }}>Active Users</h3>
-            <p style={{ color: '#0c4a6e', margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>1,247</p>
-          </div>
-          <div style={{ 
-            backgroundColor: '#f0fdf4', 
-            padding: '1rem', 
-            borderRadius: '0.375rem',
-            border: '1px solid #bbf7d0'
-          }}>
-            <h3 style={{ color: '#166534', margin: '0 0 0.5rem 0', fontSize: '0.875rem' }}>System Health</h3>
-            <p style={{ color: '#14532d', margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>98.5%</p>
-          </div>
-          <div style={{ 
-            backgroundColor: '#fef3c7', 
-            padding: '1rem', 
-            borderRadius: '0.375rem',
-            border: '1px solid #fde68a'
-          }}>
-            <h3 style={{ color: '#92400e', margin: '0 0 0.5rem 0', fontSize: '0.875rem' }}>Active Sessions</h3>
-            <p style={{ color: '#78350f', margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>89</p>
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Enhanced Sidebar */}
+      <motion.div
+        initial={{ width: 280 }}
+        animate={{ width: sidebarCollapsed ? 80 : 280 }}
+        className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white shadow-xl"
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-slate-700">
+          <div className="flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 1 }}
+              animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
+              className="flex items-center space-x-3"
+            >
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">SA</span>
+              </div>
+              <div>
+                <h1 className="font-bold text-lg">Super Admin</h1>
+                <p className="text-slate-400 text-xs">System Control Center</p>
+              </div>
+            </motion.div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="text-slate-400 hover:text-white"
+            >
+              {sidebarCollapsed ? '→' : '←'}
+            </Button>
           </div>
         </div>
+
+        {/* Navigation */}
+        <nav className="p-4 space-y-2">
+          {navigationItems.map((item) => (
+            <div key={item.id}>
+              {item.subItems ? (
+                <div>
+                  <button
+                    onClick={() => toggleGroup(item.id)}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                      expandedGroups.includes(item.id)
+                        ? 'bg-slate-700 text-white'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-lg">{item.icon}</span>
+                      {!sidebarCollapsed && (
+                        <span className="font-medium">{item.title}</span>
+                      )}
+                    </div>
+                    {!sidebarCollapsed && (
+                      <span className={`transition-transform duration-200 ${
+                        expandedGroups.includes(item.id) ? 'rotate-180' : ''
+                      }`}>
+                        ▼
+                      </span>
+                    )}
+                  </button>
+                  
+                  <AnimatePresence>
+                    {expandedGroups.includes(item.id) && !sidebarCollapsed && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="ml-8 mt-2 space-y-1"
+                      >
+                        {item.subItems.map((subItem) => (
+                          <button
+                            key={subItem.path}
+                            onClick={() => navigate(subItem.path)}
+                            className={`w-full flex items-center space-x-3 p-2 rounded-lg text-sm transition-all duration-200 ${
+                              location.pathname === subItem.path
+                                ? 'bg-blue-600 text-white'
+                                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                            }`}
+                          >
+                            <span>{subItem.icon}</span>
+                            <span>{subItem.title}</span>
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <button
+                  onClick={() => navigate(item.path)}
+                  className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
+                    location.pathname === item.path
+                      ? 'bg-slate-700 text-white'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  {!sidebarCollapsed && (
+                    <span className="font-medium">{item.title}</span>
+                  )}
+                </button>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* Footer */}
+        {!sidebarCollapsed && (
+          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700">
+            <div className="text-center">
+              <p className="text-slate-400 text-xs">System Status</p>
+              <div className="flex items-center justify-center space-x-2 mt-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-green-400 text-sm">Operational</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Enhanced Header */}
+        <header className="bg-white shadow-sm border-b border-slate-200">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center space-x-4">
+              <h2 className="text-xl font-semibold text-slate-900">
+                {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
+              </h2>
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                Enhanced UI
+              </Badge>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              {/* Enhanced Menubar */}
+              <Menubar>
+                <MenubarMenu>
+                  <MenubarTrigger>System</MenubarTrigger>
+                  <MenubarContent>
+                    <MenubarItem>Status</MenubarItem>
+                    <MenubarItem>Settings</MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem>Restart</MenubarItem>
+                  </MenubarContent>
+                </MenubarMenu>
+                <MenubarMenu>
+                  <MenubarTrigger>Help</MenubarTrigger>
+                  <MenubarContent>
+                    <MenubarItem>Documentation</MenubarItem>
+                    <MenubarItem>Support</MenubarItem>
+                  </MenubarContent>
+                </MenubarMenu>
+              </Menubar>
+
+              {/* User Menu */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/avatars/super-admin.png" alt="Super Admin" />
+                      <AvatarFallback>SA</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end" forceMount>
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/avatars/super-admin.png" alt="Super Admin" />
+                      <AvatarFallback>SA</AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <p className="text-sm font-medium leading-none">Super Administrator</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        system@logistics-lynx.com
+                      </p>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="grid gap-1 p-2">
+                    <Button variant="ghost" className="justify-start">
+                      Profile Settings
+                    </Button>
+                    <Button variant="ghost" className="justify-start">
+                      System Preferences
+                    </Button>
+                    <Separator />
+                    <Button variant="ghost" className="justify-start text-red-600">
+                      Sign Out
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/user-management/*" element={<UserManagementPage />} />
+                <Route path="/system-admin/*" element={<SystemAdminPage />} />
+                <Route path="/security-center/*" element={<SecurityCenterPage />} />
+                <Route path="/system-monitoring" element={<SystemMonitoringPage />} />
+                <Route path="/portal-management" element={<PortalManagementPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/global-settings" element={<GlobalSettingsPage />} />
+              </Routes>
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
     </div>
   );
