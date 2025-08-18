@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 import './App.css';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { AuthProvider, useAuth } from './context/auth/AuthProvider';
+import { useTheme } from './components/theme/theme-provider';
 
 // 🚀 AUTONOMOUS PORTAL SYSTEM - BASED ON KNOWLEDGE BASE
 // This system follows the actual portal structure from the knowledge base
@@ -167,19 +168,21 @@ import {
   Package,
   ShoppingCart,
   Wrench,
-  Fuel
+  Fuel,
+  Sun,
+  Moon
 } from 'lucide-react';
 
-// 🎯 PORTAL CONFIGURATION - BASED ON KNOWLEDGE BASE REGISTRY
+// 🎯 PORTAL CONFIGURATION - EYE-FRIENDLY SOFTWARE DESIGN PATTERNS
 // This matches the actual portal structure from knowledge/10-agent-registry/registry.json
 const PORTAL_CONFIG = {
-  // Core Administrative Portals
+  // Core Administrative Portals - Professional Blues
   superAdmin: {
     path: '/super-admin',
     title: 'Super Admin',
     description: 'System-wide administration and oversight',
     icon: Shield,
-    color: 'bg-red-500',
+    color: 'bg-gradient-to-r from-blue-700 to-indigo-700',
     roles: ['super_admin', 'owner'],
     flag: 'portal.superAdmin.enabled',
     autonomous: true,
@@ -190,7 +193,7 @@ const PORTAL_CONFIG = {
     title: 'Admin Portal',
     description: 'User management and system configuration',
     icon: Settings,
-    color: 'bg-blue-500',
+    color: 'bg-gradient-to-r from-slate-600 to-slate-700',
     roles: ['admin', 'owner'],
     flag: 'portal.admin.enabled',
     autonomous: true,
@@ -201,20 +204,20 @@ const PORTAL_CONFIG = {
     title: 'TMS Admin',
     description: 'Transportation Management System administration',
     icon: Truck,
-    color: 'bg-green-500',
+    color: 'bg-gradient-to-r from-teal-600 to-teal-700',
     roles: ['tms_admin', 'admin'],
     flag: 'portal.tmsAdmin.enabled',
     autonomous: true,
     component: null // Will use default layout
   },
 
-  // Primary Business Portals - Based on knowledge base
+  // Primary Business Portals - Trustworthy Blues and Greens
   carrier: {
     path: '/carrier',
     title: 'Carrier Portal',
     description: 'Fleet management and load operations',
     icon: Truck,
-    color: 'bg-blue-600',
+    color: 'bg-gradient-to-r from-blue-600 to-blue-700',
     roles: ['carrier_admin', 'carrier_user', 'driver', 'owner', 'admin'],
     flag: 'portal.carrier.enabled',
     autonomous: true,
@@ -225,7 +228,7 @@ const PORTAL_CONFIG = {
     title: 'Broker Portal',
     description: 'Load matching and relationship management',
     icon: Users,
-    color: 'bg-purple-600',
+    color: 'bg-gradient-to-r from-indigo-600 to-indigo-700',
     roles: ['broker_admin', 'broker_user', 'owner', 'admin'],
     flag: 'portal.broker.enabled',
     autonomous: true,
@@ -236,20 +239,20 @@ const PORTAL_CONFIG = {
     title: 'Shipper Portal',
     description: 'Shipping requests and shipment tracking',
     icon: Package,
-    color: 'bg-orange-600',
+    color: 'bg-gradient-to-r from-emerald-600 to-emerald-700',
     roles: ['shipper_admin', 'shipper_user', 'owner', 'admin'],
     flag: 'portal.shipper.enabled',
     autonomous: true,
     component: ShippersPortal
   },
 
-  // Operational Portals
+  // Operational Portals - Action-oriented Colors
   driver: {
     path: '/driver',
     title: 'Driver Portal',
     description: 'Mobile-friendly driver operations',
     icon: Car,
-    color: 'bg-yellow-600',
+    color: 'bg-gradient-to-r from-amber-600 to-amber-700',
     roles: ['driver', 'carrier_admin', 'carrier_user'],
     flag: 'portal.driver.enabled',
     autonomous: true,
@@ -260,20 +263,20 @@ const PORTAL_CONFIG = {
     title: 'Owner Operator',
     description: 'Independent operator management',
     icon: Building2,
-    color: 'bg-indigo-600',
+    color: 'bg-gradient-to-r from-violet-600 to-violet-700',
     roles: ['owner_operator', 'carrier_admin', 'broker_admin', 'shipper_admin'],
     flag: 'portal.ownerOperator.enabled',
     autonomous: true,
     component: null
   },
 
-  // Financial Portals
+  // Financial Portals - Success Greens
   factoring: {
     path: '/factoring',
     title: 'Factoring Portal',
     description: 'Invoice factoring and cash flow management',
     icon: DollarSign,
-    color: 'bg-green-600',
+    color: 'bg-gradient-to-r from-green-600 to-green-700',
     roles: ['factoring', 'admin'],
     flag: 'portal.factoring.enabled',
     autonomous: true,
@@ -284,20 +287,20 @@ const PORTAL_CONFIG = {
     title: 'Financials Portal',
     description: 'Financial reporting and accounting',
     icon: Calculator,
-    color: 'bg-emerald-600',
+    color: 'bg-gradient-to-r from-emerald-600 to-emerald-700',
     roles: ['finance', 'admin'],
     flag: 'portal.financials.enabled',
     autonomous: true,
     component: BillingPage
   },
 
-  // Market and Trading Portals
+  // Market and Trading Portals - Dynamic Colors
   loadBoard: {
     path: '/load-board',
     title: 'Load Board',
     description: 'Load posting and matching marketplace',
     icon: Briefcase,
-    color: 'bg-teal-600',
+    color: 'bg-gradient-to-r from-cyan-600 to-cyan-700',
     roles: ['broker_admin', 'carrier_admin', 'shipper_admin'],
     flag: 'portal.loadBoard.enabled',
     autonomous: true,
@@ -308,7 +311,7 @@ const PORTAL_CONFIG = {
     title: 'Marketplace',
     description: 'Trading platform and auctions',
     icon: Globe,
-    color: 'bg-cyan-600',
+    color: 'bg-gradient-to-r from-sky-600 to-sky-700',
     roles: ['all'],
     flag: 'portal.marketplace.enabled',
     autonomous: true,
@@ -319,20 +322,20 @@ const PORTAL_CONFIG = {
     title: 'Rates Portal',
     description: 'Rate management and pricing optimization',
     icon: TrendingUp,
-    color: 'bg-pink-600',
+    color: 'bg-gradient-to-r from-blue-600 to-blue-700',
     roles: ['broker_admin', 'carrier_admin', 'admin'],
     flag: 'portal.rates.enabled',
     autonomous: true,
     component: null
   },
 
-  // Integration and Data Portals
+  // Integration and Data Portals - Technical Colors
   edi: {
     path: '/edi',
     title: 'EDI Portal',
     description: 'Electronic Data Interchange management',
     icon: Network,
-    color: 'bg-violet-600',
+    color: 'bg-gradient-to-r from-slate-600 to-slate-700',
     roles: ['edi_admin', 'edi_user', 'admin', 'owner'],
     flag: 'portal.edi.enabled',
     autonomous: true,
@@ -343,20 +346,20 @@ const PORTAL_CONFIG = {
     title: 'Analytics Portal',
     description: 'Business intelligence and reporting',
     icon: BarChart3,
-    color: 'bg-slate-600',
+    color: 'bg-gradient-to-r from-purple-600 to-purple-700',
     roles: ['analytics_admin', 'analytics_user', 'admin', 'owner'],
     flag: 'portal.analytics.enabled',
     autonomous: true,
     component: AnalyticsPage
   },
 
-  // Management Portals
+  // Management Portals - Professional Colors
   crm: {
     path: '/crm',
     title: 'CRM Portal',
     description: 'Customer relationship management',
     icon: Users,
-    color: 'bg-rose-600',
+    color: 'bg-gradient-to-r from-rose-600 to-rose-700',
     roles: ['crm_admin', 'crm_user', 'admin', 'owner'],
     flag: 'portal.crm.enabled',
     autonomous: true,
@@ -367,20 +370,20 @@ const PORTAL_CONFIG = {
     title: 'Directory Portal',
     description: 'Company and contact directory',
     icon: Phone,
-    color: 'bg-amber-600',
+    color: 'bg-gradient-to-r from-orange-600 to-orange-700',
     roles: ['all'],
     flag: 'portal.directory.enabled',
     autonomous: true,
     component: null
   },
 
-  // Autonomous and AI Portals
+  // Autonomous and AI Portals - Futuristic Colors
   autonomous: {
     path: '/autonomous',
     title: 'Autonomous Portal',
     description: 'AI agent management and monitoring',
     icon: Brain,
-    color: 'bg-gradient-to-r from-purple-600 to-pink-600',
+    color: 'bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700',
     roles: ['autonomous_admin', 'autonomous_user', 'admin'],
     flag: 'portal.autonomous.enabled',
     autonomous: true,
@@ -391,33 +394,33 @@ const PORTAL_CONFIG = {
     title: 'Workers Portal',
     description: 'Background job management and monitoring',
     icon: Activity,
-    color: 'bg-gradient-to-r from-blue-600 to-cyan-600',
+    color: 'bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700',
     roles: ['admin', 'devops'],
     flag: 'portal.workers.enabled',
     autonomous: true,
     component: null
   },
 
-  // Onboarding Portal
+  // Onboarding Portal - Welcoming Colors
   onboarding: {
     path: '/onboarding',
     title: 'Onboarding Portal',
     description: 'User onboarding and setup wizard',
     icon: User,
-    color: 'bg-gradient-to-r from-green-600 to-emerald-600',
+    color: 'bg-gradient-to-r from-green-600 via-emerald-600 to-green-700',
     roles: ['all'],
     flag: 'portal.onboarding.enabled',
     autonomous: true,
     component: OnboardingReviewDashboard
   },
 
-  // Software Company Portal (Special)
+  // Software Company Portal - Professional Tech Colors
   softwareCompany: {
     path: '/software-company',
     title: 'Software Company Dashboard',
     description: 'Software company management and development',
     icon: Monitor,
-    color: 'bg-gradient-to-r from-purple-600 to-blue-600',
+    color: 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700',
     roles: ['admin', 'owner', 'software_admin'],
     flag: 'portal.softwareCompany.enabled',
     autonomous: true,
@@ -432,6 +435,12 @@ const AutonomousPortalSelector = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const { theme, setTheme, isDark } = useTheme();
+
+  // Toggle theme
+  const toggleTheme = () => {
+    setTheme(isDark ? 'light' : 'dark');
+  };
 
   // Filter portals based on user role and search
   const filteredPortals = Object.entries(PORTAL_CONFIG).filter(([key, portal]) => {
@@ -455,35 +464,87 @@ const AutonomousPortalSelector = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      isDark 
+        ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' 
+        : 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100'
+    }`}>
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+              <div className={`backdrop-blur-sm border-b transition-colors duration-300 ${
+          isDark 
+            ? 'bg-slate-800/80 border-slate-600' 
+            : 'bg-white/80 border-slate-200'
+        }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">Logistics Lynx</h1>
-                  <p className="text-purple-200 text-sm">Autonomous TMS Platform</p>
+                  <h1 className={`text-2xl font-bold transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-800' : 'text-slate-800'
+                  }`}>
+                    Logistics Lynx
+                  </h1>
+                  <p className={`text-sm transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-600' : 'text-slate-600'
+                  }`}>
+                    Autonomous TMS Platform
+                  </p>
                 </div>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'text-slate-700 hover:bg-slate-100' 
+                    : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
                 <Bell className="w-4 h-4 mr-2" />
                 Notifications
               </Button>
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'text-slate-700 hover:bg-slate-100' 
+                    : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
                 <Cog className="w-4 h-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'text-slate-700 hover:bg-slate-100' 
+                    : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
                 <HelpCircle className="w-4 h-4 mr-2" />
                 Help
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={toggleTheme}
+                className={`transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'text-slate-700 hover:bg-slate-100' 
+                    : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
             </div>
           </div>
@@ -497,12 +558,18 @@ const AutonomousPortalSelector = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
+                  isDarkMode ? 'text-slate-500' : 'text-slate-500'
+                }`} />
                 <Input
                   placeholder="Search portals..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:bg-white/20"
+                  className={`pl-10 transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'bg-white/70 border-slate-300 text-slate-800 placeholder-slate-500 focus:bg-white focus:border-blue-500' 
+                      : 'bg-white/70 border-slate-300 text-slate-800 placeholder-slate-500 focus:bg-white focus:border-blue-500'
+                  }`}
                 />
               </div>
             </div>
@@ -511,7 +578,15 @@ const AutonomousPortalSelector = () => {
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className="text-white"
+                className={`transition-colors duration-300 ${
+                  isDarkMode 
+                    ? viewMode === 'grid' 
+                      ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                      : 'text-slate-700 hover:bg-slate-100'
+                    : viewMode === 'grid' 
+                      ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                      : 'text-slate-700 hover:bg-slate-100'
+                }`}
               >
                 <Grid className="w-4 h-4" />
               </Button>
@@ -519,7 +594,15 @@ const AutonomousPortalSelector = () => {
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className="text-white"
+                className={`transition-colors duration-300 ${
+                  isDarkMode 
+                    ? viewMode === 'list' 
+                      ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                      : 'text-slate-700 hover:bg-slate-100'
+                    : viewMode === 'list' 
+                      ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                      : 'text-slate-700 hover:bg-slate-100'
+                }`}
               >
                 <List className="w-4 h-4" />
               </Button>
@@ -528,12 +611,20 @@ const AutonomousPortalSelector = () => {
 
           {/* Category Tabs */}
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-white/10">
+            <TabsList className={`grid w-full grid-cols-5 transition-colors duration-300 ${
+              isDarkMode 
+                ? 'bg-white/70 border border-slate-200' 
+                : 'bg-white/70 border border-slate-200'
+            }`}>
               {categories.map((category) => (
                 <TabsTrigger
                   key={category.key}
                   value={category.key}
-                  className="text-white data-[state=active]:bg-white/20"
+                  className={`transition-colors duration-300 ${
+                    isDarkMode 
+                      ? 'text-slate-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white' 
+                      : 'text-slate-700 data-[state=active]:bg-blue-600 data-[state=active]:text-white'
+                  }`}
                 >
                   <category.icon className="w-4 h-4 mr-2" />
                   {category.label}
@@ -550,29 +641,33 @@ const AutonomousPortalSelector = () => {
             return (
               <Card
                 key={key}
-                className={`group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+                className={`group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl ${
                   viewMode === 'grid' 
-                    ? 'bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20' 
-                    : 'bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20'
+                    ? `bg-white/80 backdrop-blur-sm border border-slate-200 hover:bg-white hover:border-blue-300 shadow-md` 
+                    : `bg-white/80 backdrop-blur-sm border border-slate-200 hover:bg-white hover:border-blue-300 shadow-md`
                 }`}
                 onClick={() => navigate(portal.path)}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 ${portal.color} rounded-xl flex items-center justify-center`}>
+                    <div className={`w-12 h-12 ${portal.color} rounded-xl flex items-center justify-center shadow-md`}>
                       <IconComponent className="w-6 h-6 text-white" />
                     </div>
                     {portal.autonomous && (
-                      <Badge variant="secondary" className="bg-purple-500/20 text-purple-200 border-purple-500/30">
+                      <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-sm">
                         <Brain className="w-3 h-3 mr-1" />
                         AI
                       </Badge>
                     )}
                   </div>
-                  <CardTitle className="text-white text-lg font-semibold mt-3">
+                  <CardTitle className={`text-lg font-semibold mt-3 transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-800' : 'text-slate-800'
+                  }`}>
                     {portal.title}
                   </CardTitle>
-                  <CardDescription className="text-gray-300 text-sm">
+                  <CardDescription className={`text-sm transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-600' : 'text-slate-600'
+                  }`}>
                     {portal.description}
                   </CardDescription>
                 </CardHeader>
@@ -580,17 +675,27 @@ const AutonomousPortalSelector = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       {portal.roles.slice(0, 2).map((role, index) => (
-                        <Badge key={index} variant="outline" className="text-xs text-gray-300 border-gray-600">
+                        <Badge key={index} variant="outline" className={`text-xs transition-colors duration-300 ${
+                          isDarkMode 
+                            ? 'text-slate-600 border-slate-300 bg-slate-50' 
+                            : 'text-slate-600 border-slate-300 bg-slate-50'
+                        }`}>
                           {role}
                         </Badge>
                       ))}
                       {portal.roles.length > 2 && (
-                        <Badge variant="outline" className="text-xs text-gray-300 border-gray-600">
+                        <Badge variant="outline" className={`text-xs transition-colors duration-300 ${
+                          isDarkMode 
+                            ? 'text-slate-600 border-slate-300 bg-slate-50' 
+                            : 'text-slate-600 border-slate-300 bg-slate-50'
+                        }`}>
                           +{portal.roles.length - 2}
                         </Badge>
                       )}
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                    <ChevronRight className={`w-4 h-4 transition-colors duration-300 ${
+                      isDarkMode ? 'text-slate-400 group-hover:text-blue-600' : 'text-slate-400 group-hover:text-blue-600'
+                    }`} />
                   </div>
                 </CardContent>
               </Card>
@@ -600,26 +705,44 @@ const AutonomousPortalSelector = () => {
 
         {/* Autonomous System Status */}
         <div className="mt-12">
-          <Card className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-sm border-purple-500/30">
+          <Card className={`transition-colors duration-300 ${
+            isDarkMode 
+              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200' 
+              : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+          }`}>
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Brain className="w-5 h-5 mr-2" />
+              <CardTitle className={`flex items-center transition-colors duration-300 ${
+                isDarkMode ? 'text-slate-800' : 'text-slate-800'
+              }`}>
+                <Brain className="w-5 h-5 mr-2 text-blue-600" />
                 Autonomous System Status
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-200">Master Agent: Active</span>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
+                  <span className={`transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-700' : 'text-slate-700'
+                  }`}>
+                    Master Agent: Active
+                  </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                  <span className="text-blue-200">Development System: Running</span>
+                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-sm"></div>
+                  <span className={`transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-700' : 'text-slate-700'
+                  }`}>
+                    Development System: Running
+                  </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
-                  <span className="text-purple-200">AI Optimization: Enabled</span>
+                  <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse shadow-sm"></div>
+                  <span className={`transition-colors duration-300 ${
+                    isDarkMode ? 'text-slate-700' : 'text-slate-700'
+                  }`}>
+                    AI Optimization: Enabled
+                  </span>
                 </div>
               </div>
             </CardContent>
