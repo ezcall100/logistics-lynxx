@@ -1,703 +1,839 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-// Import existing UI components that we know exist
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+import TransBotLogo from '../../ui/TransBotLogo';
 
-const DashboardPage: React.FC = () => {
-  // Theme state with localStorage persistence
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+// Icons
+import { 
+  Brain, Shield, Users, Settings, Database, Globe, Activity, 
+  BarChart3, Lock, Search, AlertTriangle, CheckCircle, Clock,
+  TrendingUp, Server, Network, Zap, Eye, EyeOff, RefreshCw,
+  Play, Pause, Stop, RotateCcw, Save, Download, Upload,
+  Trash2, Edit, Plus, Filter, MoreHorizontal, Bell, User,
+  LogOut, Sun, Moon, ChevronDown, ChevronLeft, ChevronRight,
+  Home, Building2, Phone, Mail, MapPin, Calendar, DollarSign,
+  Truck, Package, Car, Briefcase, Calculator, FileText,
+  ShieldCheck, Key, Fingerprint, Wifi, HardDrive, Cpu,
+  Memory, HardDriveIcon, WifiOff, AlertCircle, Info,
+  ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu,
+  Code, Bug, Palette, LayoutDashboard, GitBranch, Cloud,
+  Database as DatabaseIcon, Shield as ShieldIcon, Activity as ActivityIcon
+} from 'lucide-react';
+
+// Real data models
+interface SystemMetrics {
+  cpu: number;
+  memory: number;
+  storage: number;
+  network: number;
+  uptime: string;
+  lastBackup: string;
+}
+
+interface AgentStatus {
+  id: string;
+  name: string;
+  type: 'frontend' | 'backend' | 'qa' | 'design' | 'devops' | 'database' | 'security' | 'performance';
+  status: 'active' | 'idle' | 'error' | 'offline';
+  uptime: string;
+  tasks: number;
+  performance: number;
+  lastActivity: string;
+}
+
+interface SystemAlert {
+  id: string;
+  type: 'info' | 'warning' | 'error' | 'success';
+  title: string;
+  message: string;
+  timestamp: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  resolved: boolean;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: 'active' | 'inactive' | 'suspended';
+  lastLogin: string;
+  avatar?: string;
+}
+
+// Mock API functions
+const mockAPI = {
+  getSystemMetrics: (): Promise<SystemMetrics> => 
+    Promise.resolve({
+      cpu: 68,
+      memory: 72,
+      storage: 45,
+      network: 89,
+      uptime: '15 days, 7 hours, 32 minutes',
+      lastBackup: '2 hours ago'
+    }),
+
+  getAgentStatus: (): Promise<AgentStatus[]> => 
+    Promise.resolve([
+      {
+        id: '1',
+        name: 'Frontend Developer Agent',
+        type: 'frontend',
+        status: 'active',
+        uptime: '12 days',
+        tasks: 15,
+        performance: 95,
+        lastActivity: '2 minutes ago'
+      },
+      {
+        id: '2',
+        name: 'Backend API Agent',
+        type: 'backend',
+        status: 'active',
+        uptime: '8 days',
+        tasks: 23,
+        performance: 88,
+        lastActivity: '1 minute ago'
+      },
+      {
+        id: '3',
+        name: 'QA Testing Agent',
+        type: 'qa',
+        status: 'active',
+        uptime: '5 days',
+        tasks: 8,
+        performance: 92,
+        lastActivity: '5 minutes ago'
+      },
+      {
+        id: '4',
+        name: 'UI/UX Designer Agent',
+        type: 'design',
+        status: 'idle',
+        uptime: '3 days',
+        tasks: 0,
+        performance: 100,
+        lastActivity: '1 hour ago'
+      },
+      {
+        id: '5',
+        name: 'DevOps Agent',
+        type: 'devops',
+        status: 'active',
+        uptime: '20 days',
+        tasks: 12,
+        performance: 97,
+        lastActivity: '30 seconds ago'
+      },
+      {
+        id: '6',
+        name: 'Database Optimizer',
+        type: 'database',
+        status: 'active',
+        uptime: '25 days',
+        tasks: 6,
+        performance: 89,
+        lastActivity: '10 minutes ago'
+      },
+      {
+        id: '7',
+        name: 'Security Scanner',
+        type: 'security',
+        status: 'active',
+        uptime: '18 days',
+        tasks: 4,
+        performance: 94,
+        lastActivity: '15 minutes ago'
+      },
+      {
+        id: '8',
+        name: 'Performance Monitor',
+        type: 'performance',
+        status: 'active',
+        uptime: '22 days',
+        tasks: 19,
+        performance: 91,
+        lastActivity: '1 minute ago'
+      }
+    ]),
+
+  getSystemAlerts: (): Promise<SystemAlert[]> => 
+    Promise.resolve([
+      {
+        id: '1',
+        type: 'info',
+        title: 'System Optimization',
+        message: 'Autonomous system optimization in progress',
+        timestamp: '2 minutes ago',
+        severity: 'low',
+        resolved: false
+      },
+      {
+        id: '2',
+        type: 'warning',
+        title: 'High Memory Usage',
+        message: 'Memory usage has reached 85% threshold',
+        timestamp: '5 minutes ago',
+        severity: 'medium',
+        resolved: false
+      },
+      {
+        id: '3',
+        type: 'success',
+        title: 'Backup Completed',
+        message: 'System backup completed successfully',
+        timestamp: '10 minutes ago',
+        severity: 'low',
+        resolved: true
+      },
+      {
+        id: '4',
+        type: 'error',
+        title: 'Database Connection',
+        message: 'Temporary database connection issue detected',
+        timestamp: '15 minutes ago',
+        severity: 'high',
+        resolved: false
+      }
+    ]),
+
+  getUsers: (): Promise<User[]> => 
+    Promise.resolve([
+      {
+        id: '1',
+        name: 'John Smith',
+        email: 'john.smith@transbot.ai',
+        role: 'Super Admin',
+        status: 'active',
+        lastLogin: '2 minutes ago',
+        avatar: '/avatars/john.jpg'
+      },
+      {
+        id: '2',
+        name: 'Sarah Johnson',
+        email: 'sarah.johnson@transbot.ai',
+        role: 'System Admin',
+        status: 'active',
+        lastLogin: '1 hour ago',
+        avatar: '/avatars/sarah.jpg'
+      },
+      {
+        id: '3',
+        name: 'Mike Davis',
+        email: 'mike.davis@transbot.ai',
+        role: 'Developer',
+        status: 'active',
+        lastLogin: '3 hours ago',
+        avatar: '/avatars/mike.jpg'
+      },
+      {
+        id: '4',
+        name: 'Lisa Wilson',
+        email: 'lisa.wilson@transbot.ai',
+        role: 'QA Engineer',
+        status: 'inactive',
+        lastLogin: '2 days ago',
+        avatar: '/avatars/lisa.jpg'
+      }
+    ])
+};
+
+const DashboardPage = () => {
+  const { toast } = useToast();
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null);
+  const [agents, setAgents] = useState<AgentStatus[]>([]);
+  const [alerts, setAlerts] = useState<SystemAlert[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Form states
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: '',
+    email: '',
+    role: '',
+    status: 'active' as const
   });
 
-  // Apply theme to document
+  // Load data
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
+    const loadData = async () => {
+      try {
+        const [metrics, agentData, alertData, userData] = await Promise.all([
+          mockAPI.getSystemMetrics(),
+          mockAPI.getAgentStatus(),
+          mockAPI.getSystemAlerts(),
+          mockAPI.getUsers()
+        ]);
 
-  const [systemStats] = useState({
-    users: 2847,
-    portals: 7,
-    health: 99.9,
-    security: 'A+',
-    uptime: '99.9%',
-    responseTime: '45ms',
-    activeSessions: 1247,
-    pendingApprovals: 23,
-    systemAlerts: 3,
-    apiRequests: 15420
-  });
+        setSystemMetrics(metrics);
+        setAgents(agentData);
+        setAlerts(alertData);
+        setUsers(userData);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load dashboard data",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [performanceMetrics] = useState({
-    cpuUsage: 45,
-    memoryUsage: 67,
-    diskUsage: 23,
-    networkUsage: 89,
-    databaseConnections: 156,
-    cacheHitRate: 94.2
-  });
+    loadData();
+    const interval = setInterval(loadData, 30000); // Refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, [toast]);
 
-  const [securityMetrics] = useState({
-    failedLogins: 12,
-    blockedIPs: 8,
-    securityScans: 156,
-    vulnerabilities: 2,
-    lastBackup: '2 hours ago',
-    encryptionStatus: 'AES-256'
-  });
+  // Action handlers
+  const handleAddUser = async () => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const user: User = {
+        id: Date.now().toString(),
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        status: newUser.status,
+        lastLogin: 'Never'
+      };
 
-  const [recentActivity] = useState([
-    { id: 1, action: 'New user registered', user: 'john.doe@company.com', time: '2 min ago', type: 'user', priority: 'low' },
-    { id: 2, action: 'Security scan completed', user: 'System', time: '5 min ago', type: 'security', priority: 'medium' },
-    { id: 3, action: 'Database backup completed', user: 'System', time: '15 min ago', type: 'system', priority: 'high' },
-    { id: 4, action: 'Portal access granted', user: 'admin@company.com', time: '1 hour ago', type: 'access', priority: 'low' },
-    { id: 5, action: 'System update deployed', user: 'System', time: '2 hours ago', type: 'update', priority: 'high' },
-    { id: 6, action: 'API rate limit exceeded', user: 'api-client-3', time: '3 hours ago', type: 'warning', priority: 'medium' }
-  ]);
+      setUsers(prev => [...prev, user]);
+      setShowAddUserDialog(false);
+      setNewUser({ name: '', email: '', role: '', status: 'active' });
 
-  const [notifications] = useState([
-    { id: 1, type: 'info', message: 'System backup completed successfully', time: '2 min ago', read: false },
-    { id: 2, type: 'warning', message: 'High memory usage detected', time: '5 min ago', read: false },
-    { id: 3, type: 'success', message: 'New user registration approved', time: '10 min ago', read: true },
-    { id: 4, type: 'error', message: 'Database connection timeout', time: '1 hour ago', read: false }
-  ]);
-
-  const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
-  const [activeTab, setActiveTab] = useState('overview');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // Quick actions
-  const handleQuickAction = (action: string) => {
-    console.log(`Quick action: ${action}`);
-  };
-
-  const dismissNotification = (id: number) => {
-    console.log(`Dismiss notification: ${id}`);
-  };
-
-  const refreshData = () => {
-    setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 1000);
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'text-red-500 bg-red-50 dark:bg-red-900/20';
-      case 'medium': return 'text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20';
-      case 'low': return 'text-green-500 bg-green-50 dark:bg-green-900/20';
-      default: return 'text-gray-500 bg-gray-50 dark:bg-gray-900/20';
+      toast({
+        title: "Success",
+        description: "User added successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add user",
+        variant: "destructive"
+      });
     }
   };
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'user': return '👤';
-      case 'security': return '🔒';
-      case 'system': return '⚙️';
-      case 'access': return '🚪';
-      case 'update': return '🔄';
-      case 'warning': return '⚠️';
-      default: return '📋';
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setUsers(prev => prev.filter(user => user.id !== userId));
+      
+      toast({
+        title: "Success",
+        description: "User deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete user",
+        variant: "destructive"
+      });
     }
   };
+
+  const handleToggleAgent = async (agentId: string) => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setAgents(prev => prev.map(agent => 
+        agent.id === agentId 
+          ? { ...agent, status: agent.status === 'active' ? 'idle' : 'active' }
+          : agent
+      ));
+
+      toast({
+        title: "Success",
+        description: "Agent status updated",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update agent status",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleResolveAlert = async (alertId: string) => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setAlerts(prev => prev.map(alert => 
+        alert.id === alertId 
+          ? { ...alert, resolved: true }
+          : alert
+      ));
+
+      toast({
+        title: "Success",
+        description: "Alert resolved",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to resolve alert",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-green-500';
+      case 'idle': return 'bg-yellow-500';
+      case 'error': return 'bg-red-500';
+      case 'offline': return 'bg-gray-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'low': return 'bg-blue-100 text-blue-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'high': return 'bg-orange-100 text-orange-800';
+      case 'critical': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300">
-        <div className="space-y-6 p-6">
-          {/* Enterprise Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 text-white shadow-xl"
-          >
-            <div className="absolute inset-0 bg-grid-white/[0.1] bg-[size:20px_20px]" />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-transparent to-indigo-600/20" />
-            
-            <div className="relative p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-6">
-                    <div className="p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
-                      <span className="text-3xl">🚀</span>
-                    </div>
-                    <div>
-                      <h1 className="text-4xl font-bold mb-3 tracking-tight">Super Admin Command Center</h1>
-                      <p className="text-xl text-blue-100 dark:text-blue-200 max-w-2xl">
-                        Complete system control with real-time monitoring and advanced analytics
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* System Status */}
-                  <div className="flex flex-wrap gap-4 mt-6">
-                    {[
-                      { label: 'System Online', value: 'Operational', icon: '🟢' },
-                      { label: 'Security', value: systemStats.security, icon: '🟡' },
-                      { label: 'Uptime', value: systemStats.uptime, icon: '🟢' },
-                      { label: 'Response', value: systemStats.responseTime, icon: '🔵' }
-                    ].map((status) => (
-                      <div key={status.label} className="flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                        <span className="text-lg">{status.icon}</span>
-                        <div>
-                          <p className="text-sm text-blue-200">{status.label}</p>
-                          <p className="font-semibold">{status.value}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+      <div className="p-4 md:p-6 space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Super Admin Command Center
+            </h1>
+            <p className="text-sm md:text-base mt-2 text-slate-600">
+              Autonomous TMS System Control & Monitoring
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+              <CheckCircle className="w-4 h-4 mr-1" />
+              System Operational
+            </Badge>
+            <Button onClick={() => window.location.reload()}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
 
-                {/* Controls */}
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsDarkMode(!isDarkMode)}
-                    className="text-white hover:bg-white/20 backdrop-blur-sm"
-                  >
-                    {isDarkMode ? '☀️' : '🌙'}
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={refreshData}
-                    className={`text-white hover:bg-white/20 backdrop-blur-sm ${isRefreshing ? 'animate-spin' : ''}`}
-                  >
-                    🔄
-                  </Button>
-                  
-                  <div className="flex bg-white/10 backdrop-blur-sm rounded-lg p-1 border border-white/20">
-                    {['1h', '24h', '7d', '30d'].map((range) => (
-                      <Button
-                        key={range}
-                        variant={selectedTimeRange === range ? 'default' : 'ghost'}
-                        size="sm"
-                        onClick={() => setSelectedTimeRange(range)}
-                        className="text-sm text-white hover:bg-white/20"
-                      >
-                        {range}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+        {/* System Overview */}
+        <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <CardHeader>
+            <div className="flex items-center space-x-3">
+              <TransBotLogo size="md" animated={true} />
+              <div>
+                <CardTitle className="text-xl">System Overview</CardTitle>
+                <CardDescription>Real-time system metrics and performance</CardDescription>
               </div>
             </div>
-          </motion.div>
+          </CardHeader>
+          <CardContent>
+            {systemMetrics && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">CPU Usage</span>
+                    <span className="text-sm font-bold text-slate-800">{systemMetrics.cpu}%</span>
+                  </div>
+                  <Progress value={systemMetrics.cpu} className="h-2" />
+                </div>
 
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
-          >
-            {[
-              { icon: '👥', label: 'Add User', action: 'add-user', description: 'Create new user account' },
-              { icon: '🔒', label: 'Security Scan', action: 'security-scan', description: 'Run security audit' },
-              { icon: '💾', label: 'Backup Now', action: 'backup', description: 'Create system backup' },
-              { icon: '📊', label: 'Generate Report', action: 'report', description: 'Export system report' },
-              { icon: '⚙️', label: 'System Config', action: 'config', description: 'Configure system settings' },
-              { icon: '🚨', label: 'Emergency Mode', action: 'emergency', description: 'Activate emergency protocols' }
-            ].map((action) => (
-              <Tooltip key={action.action}>
-                <TooltipTrigger asChild>
-                  <motion.div
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button
-                      variant="outline"
-                      onClick={() => handleQuickAction(action.action)}
-                      className="h-24 flex flex-col gap-3 border-2 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
-                    >
-                      <span className="text-3xl">{action.icon}</span>
-                      <span className="text-sm font-medium">{action.label}</span>
-                    </Button>
-                  </motion.div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{action.description}</p>
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </motion.div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">Memory Usage</span>
+                    <span className="text-sm font-bold text-slate-800">{systemMetrics.memory}%</span>
+                  </div>
+                  <Progress value={systemMetrics.memory} className="h-2" />
+                </div>
 
-          {/* Tabs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700"
-          >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 h-14 bg-transparent">
-                {[
-                  { value: 'overview', label: '📊 Overview', icon: '📊' },
-                  { value: 'performance', label: '⚡ Performance', icon: '⚡' },
-                  { value: 'security', label: '🔒 Security', icon: '🔒' },
-                  { value: 'analytics', label: '📈 Analytics', icon: '📈' },
-                  { value: 'activity', label: '🕒 Activity', icon: '🕒' }
-                ].map((tab) => (
-                  <TabsTrigger 
-                    key={tab.value}
-                    value={tab.value}
-                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200 px-4 py-2 rounded-lg"
-                  >
-                    <span className="hidden sm:inline">{tab.label}</span>
-                    <span className="sm:hidden">{tab.icon}</span>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              
-              <TabsContent value="overview" className="space-y-6 mt-6 p-6">
-                {/* System Health Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {[
-                    { icon: '👥', label: 'Total Users', value: systemStats.users.toLocaleString(), trend: '+12.5%', color: 'purple', progress: 85 },
-                    { icon: '🌐', label: 'Active Portals', value: `${systemStats.portals}/${systemStats.portals}`, trend: 'All Operational', color: 'blue', progress: 100 },
-                    { icon: '💚', label: 'System Health', value: `${systemStats.health}%`, trend: 'Optimal', color: 'green', progress: 99 },
-                    { icon: '🔒', label: 'Security Score', value: systemStats.security, trend: 'Excellent', color: 'orange', progress: 95 }
-                  ].map((stat, index) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      whileHover={{ y: -4 }}
-                    >
-                      <Card className="h-full transition-all duration-300 hover:shadow-xl border-2 hover:border-blue-200 dark:hover:border-blue-800 cursor-pointer">
-                        <CardContent className="p-6">
-                          <div className="flex items-center gap-4">
-                            <div className={`p-4 rounded-xl ${
-                              stat.color === 'purple' ? 'bg-purple-100 dark:bg-purple-900/30' :
-                              stat.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30' :
-                              stat.color === 'green' ? 'bg-green-100 dark:bg-green-900/30' :
-                              'bg-orange-100 dark:bg-orange-900/30'
-                            }`}>
-                              <span className="text-3xl">{stat.icon}</span>
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.label}</p>
-                              <p className={`text-3xl font-bold ${
-                                stat.color === 'purple' ? 'text-purple-600 dark:text-purple-400' :
-                                stat.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
-                                stat.color === 'green' ? 'text-green-600 dark:text-green-400' :
-                                'text-orange-600 dark:text-orange-400'
-                              }`}>{stat.value}</p>
-                              <p className="text-xs text-green-600 dark:text-green-400 font-medium">{stat.trend}</p>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">Storage</span>
+                    <span className="text-sm font-bold text-slate-800">{systemMetrics.storage}%</span>
+                  </div>
+                  <Progress value={systemMetrics.storage} className="h-2" />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">Network</span>
+                    <span className="text-sm font-bold text-slate-800">{systemMetrics.network}%</span>
+                  </div>
+                  <Progress value={systemMetrics.network} className="h-2" />
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="agents" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="agents">Autonomous Agents</TabsTrigger>
+            <TabsTrigger value="alerts">System Alerts</TabsTrigger>
+            <TabsTrigger value="users">User Management</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          </TabsList>
+
+          {/* Autonomous Agents Tab */}
+          <TabsContent value="agents" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Autonomous Agents Status</CardTitle>
+                    <CardDescription>Monitor and control all AI agents</CardDescription>
+                  </div>
+                  <Badge variant="outline">{agents.filter(a => a.status === 'active').length} Active</Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {agents.map((agent) => (
+                    <Card key={agent.id} className="hover:shadow-lg transition-all duration-300">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status)}`} />
+                            <div>
+                              <CardTitle className="text-lg">{agent.name}</CardTitle>
+                              <CardDescription>Uptime: {agent.uptime}</CardDescription>
                             </div>
                           </div>
-                          
-                          <div className="mt-4">
-                            <Progress value={stat.progress} className="w-full h-2" />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleToggleAgent(agent.id)}
+                          >
+                            {agent.status === 'active' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>Tasks:</span>
+                            <span className="font-medium">{agent.tasks}</span>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
+                          <div className="flex justify-between text-sm">
+                            <span>Performance:</span>
+                            <span className="font-medium">{agent.performance}%</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>Last Activity:</span>
+                            <span className="font-medium">{agent.lastActivity}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-                {/* Quick Stats and Notifications */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Quick Stats */}
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">📊</span>
-                        Real-Time Statistics
-                        <Badge variant="secondary" className="ml-auto bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                          Live
-                        </Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 gap-4">
-                        {[
-                          { label: 'Active Sessions', value: systemStats.activeSessions.toLocaleString(), color: 'blue', icon: '👥' },
-                          { label: 'Pending Approvals', value: systemStats.pendingApprovals, color: 'orange', icon: '⏳' },
-                          { label: 'System Alerts', value: systemStats.systemAlerts, color: 'red', icon: '🚨' },
-                          { label: 'API Requests', value: systemStats.apiRequests.toLocaleString(), color: 'green', icon: '🔌' }
-                        ].map((stat) => (
-                          <div key={stat.label} className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <div className="text-2xl mb-2">{stat.icon}</div>
-                            <p className={`text-2xl font-bold ${
-                              stat.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
-                              stat.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
-                              stat.color === 'red' ? 'text-red-600 dark:text-red-400' :
-                              'text-green-600 dark:text-green-400'
-                            }`}>{stat.value}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.label}</p>
+          {/* System Alerts Tab */}
+          <TabsContent value="alerts" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>System Alerts</CardTitle>
+                <CardDescription>Monitor system notifications and issues</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Message</TableHead>
+                      <TableHead>Severity</TableHead>
+                      <TableHead>Time</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {alerts.map((alert) => (
+                      <TableRow key={alert.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            {alert.type === 'success' ? <CheckCircle className="w-4 h-4 text-green-600" /> :
+                             alert.type === 'warning' ? <AlertTriangle className="w-4 h-4 text-yellow-600" /> :
+                             alert.type === 'error' ? <AlertCircle className="w-4 h-4 text-red-600" /> :
+                             <Info className="w-4 h-4 text-blue-600" />}
+                            <span className="capitalize">{alert.type}</span>
                           </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Notifications */}
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">🔔</span>
-                        System Notifications
-                        <Badge variant="secondary" className="ml-auto bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
-                          {notifications.filter(n => !n.read).length} new
-                        </Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {notifications.slice(0, 4).map((notification) => (
-                          <motion.div
-                            key={notification.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 ${
-                              notification.type === 'info' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' :
-                              notification.type === 'warning' ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800' :
-                              notification.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' :
-                              'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
-                            } ${!notification.read ? 'ring-2 ring-blue-500/20 shadow-lg' : ''}`}
-                          >
-                            <Avatar className="w-8 h-8">
-                              <AvatarFallback className="text-xs font-medium">
-                                {notification.type.charAt(0).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                              <p className="text-sm font-medium">{notification.message}</p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">{notification.time}</p>
-                            </div>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => dismissNotification(notification.id)}
-                              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            >
-                              ×
-                            </Button>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="performance" className="space-y-6 mt-6 p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">⚡</span>
-                        System Performance
-                      </CardTitle>
-                      <CardDescription>Real-time performance metrics with trend analysis</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {[
-                        { label: 'CPU Usage', value: performanceMetrics.cpuUsage, color: 'blue', trend: 'stable' },
-                        { label: 'Memory Usage', value: performanceMetrics.memoryUsage, color: 'green', trend: 'increasing' },
-                        { label: 'Disk Usage', value: performanceMetrics.diskUsage, color: 'orange', trend: 'stable' },
-                        { label: 'Network Usage', value: performanceMetrics.networkUsage, color: 'purple', trend: 'high' }
-                      ].map((metric) => (
-                        <div key={metric.label}>
-                          <div className="flex justify-between mb-2">
-                            <Label className="font-medium">{metric.label}</Label>
-                            <div className="flex items-center gap-2">
-                              <span className={`text-sm font-semibold ${
-                                metric.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
-                                metric.color === 'green' ? 'text-green-600 dark:text-green-400' :
-                                metric.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
-                                'text-purple-600 dark:text-purple-400'
-                              }`}>
-                                {metric.value}%
-                              </span>
-                              <Badge variant="secondary" className={`${
-                                metric.trend === 'increasing' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-                                metric.trend === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                              }`}>
-                                {metric.trend}
-                              </Badge>
-                            </div>
-                          </div>
-                          <Progress value={metric.value} className="w-full h-3" />
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">🎛️</span>
-                        Performance Controls
-                      </CardTitle>
-                      <CardDescription>System optimization and monitoring settings</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                          <Label htmlFor="auto-optimize" className="font-medium">Auto Optimization</Label>
-                          <Switch id="auto-optimize" defaultChecked />
-                        </div>
-                        
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                          <Label htmlFor="performance-mode" className="font-medium">Performance Mode</Label>
-                          <Switch id="performance-mode" />
-                        </div>
-                        
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                          <Label htmlFor="resource-monitoring" className="font-medium">Resource Monitoring</Label>
-                          <Switch id="resource-monitoring" defaultChecked />
-                        </div>
-                        
-                        <Separator />
-                        
-                        <div>
-                          <Label className="font-medium mb-3 block">Optimization Level</Label>
-                          <div className="space-y-3">
-                            {['Conservative', 'Balanced', 'Aggressive'].map((level) => (
-                              <div key={level} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-                                <input 
-                                  type="radio" 
-                                  id={level.toLowerCase()} 
-                                  name="optimization" 
-                                  value={level.toLowerCase()} 
-                                  defaultChecked={level === 'Balanced'}
-                                  className="text-blue-600 focus:ring-blue-500"
-                                />
-                                <Label htmlFor={level.toLowerCase()} className="font-medium cursor-pointer">{level}</Label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="security" className="space-y-6 mt-6 p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">🔒</span>
-                        Security Status
-                      </CardTitle>
-                      <CardDescription>Current security posture and threat assessment</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-3">
-                        {[
-                          { label: 'Firewall Status', value: 'Active', status: 'success', icon: '🛡️' },
-                          { label: 'Encryption', value: securityMetrics.encryptionStatus, status: 'success', icon: '🔐' },
-                          { label: 'MFA Enabled', value: 'Yes', status: 'success', icon: '📱' },
-                          { label: 'Failed Logins (24h)', value: securityMetrics.failedLogins.toString(), status: securityMetrics.failedLogins > 10 ? 'warning' : 'success', icon: '🚫' },
-                          { label: 'Blocked IPs', value: securityMetrics.blockedIPs.toString(), status: 'info', icon: '🌍' },
-                          { label: 'Last Security Scan', value: securityMetrics.lastBackup, status: 'info', icon: '🔍' }
-                        ].map((item) => (
-                          <div key={item.label} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center gap-3">
-                              <span className="text-lg">{item.icon}</span>
-                              <span className="font-medium">{item.label}</span>
-                            </div>
-                            <Badge variant="secondary" className={`${
-                              item.status === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                              item.status === 'warning' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-                              'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                            }`}>
-                              {item.value}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">🎛️</span>
-                        Security Controls
-                      </CardTitle>
-                      <CardDescription>Security settings and threat prevention</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-4">
-                        {[
-                          { label: 'Auto Security Scan', description: 'Automated security scanning' },
-                          { label: 'Threat Detection', description: 'Real-time threat monitoring' },
-                          { label: 'Access Logging', description: 'Comprehensive access tracking' }
-                        ].map((control) => (
-                          <div key={control.label} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                            <div>
-                              <Label htmlFor={control.label.toLowerCase().replace(/\s+/g, '-')} className="font-medium">
-                                {control.label}
-                              </Label>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">{control.description}</p>
-                            </div>
-                            <Switch id={control.label.toLowerCase().replace(/\s+/g, '-')} defaultChecked />
-                          </div>
-                        ))}
-                        
-                        <Separator />
-                        
-                        <div>
-                          <Label className="font-medium mb-3 block">Security Level</Label>
-                          <div className="space-y-3">
-                            {['Low', 'Medium', 'High'].map((level) => (
-                              <div key={level} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-                                <input 
-                                  type="radio" 
-                                  id={`security-${level.toLowerCase()}`} 
-                                  name="security" 
-                                  value={level.toLowerCase()} 
-                                  defaultChecked={level === 'High'}
-                                  className="text-blue-600 focus:ring-blue-500"
-                                />
-                                <Label htmlFor={`security-${level.toLowerCase()}`} className="font-medium cursor-pointer">{level}</Label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="analytics" className="space-y-6 mt-6 p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">👥</span>
-                        User Analytics
-                      </CardTitle>
-                      <CardDescription>User activity and engagement metrics</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[
-                          { label: 'Active Users', value: '1,247', progress: 75, trend: '+5.2%' },
-                          { label: 'Session Duration', value: '24m 32s', progress: 60, trend: '+2.1%' },
-                          { label: 'Page Views', value: '45,892', progress: 85, trend: '+12.8%' }
-                        ].map((metric) => (
-                          <div key={metric.label} className="space-y-2">
-                            <div className="flex justify-between items-center">
-                              <span className="font-medium">{metric.label}</span>
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold">{metric.value}</span>
-                                <span className="text-xs text-green-600 dark:text-green-400 font-medium">{metric.trend}</span>
-                              </div>
-                            </div>
-                            <Progress value={metric.progress} className="w-full h-2" />
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <span className="text-2xl">⚙️</span>
-                        System Analytics
-                      </CardTitle>
-                      <CardDescription>System performance and usage analytics</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[
-                          { label: 'API Requests', value: '15,420', progress: 90, trend: '+8.5%' },
-                          { label: 'Response Time', value: '45ms', progress: 95, trend: '-12.3%' },
-                          { label: 'Error Rate', value: '0.02%', progress: 98, trend: '-5.1%' }
-                        ].map((metric) => (
-                          <div key={metric.label} className="space-y-2">
-                            <div className="flex justify-between items-center">
-                              <span className="font-medium">{metric.label}</span>
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold">{metric.value}</span>
-                                <span className={`text-xs font-medium ${
-                                  metric.trend.startsWith('+') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                                }`}>
-                                  {metric.trend}
-                                </span>
-                              </div>
-                            </div>
-                            <Progress value={metric.progress} className="w-full h-2" />
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="activity" className="space-y-6 mt-6 p-6">
-                <Card className="border-2 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <span className="text-2xl">🕒</span>
-                      Recent Activity Feed
-                    </CardTitle>
-                    <CardDescription>Real-time system activity and user actions with priority filtering</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {recentActivity.map((activity, index) => (
-                        <motion.div
-                          key={activity.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                          className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${
-                            isDarkMode ? 'border-gray-700 hover:bg-gray-800' : 'border-gray-200 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className={`p-3 rounded-lg ${getPriorityColor(activity.priority)}`}>
-                            <span className="text-xl">{getTypeIcon(activity.type)}</span>
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium">{activity.action}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {activity.user} • {activity.time}
-                            </p>
-                          </div>
-                          <Badge variant="secondary" className={`${getPriorityColor(activity.priority)} font-medium`}>
-                            {activity.priority}
+                        </TableCell>
+                        <TableCell className="font-medium">{alert.title}</TableCell>
+                        <TableCell>{alert.message}</TableCell>
+                        <TableCell>
+                          <Badge className={getSeverityColor(alert.severity)}>
+                            {alert.severity}
                           </Badge>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </motion.div>
-        </div>
+                        </TableCell>
+                        <TableCell>{alert.timestamp}</TableCell>
+                        <TableCell>
+                          <Badge variant={alert.resolved ? "secondary" : "default"}>
+                            {alert.resolved ? "Resolved" : "Active"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {!alert.resolved && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleResolveAlert(alert.id)}
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* User Management Tab */}
+          <TabsContent value="users" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>User Management</CardTitle>
+                    <CardDescription>Manage system users and permissions</CardDescription>
+                  </div>
+                  <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add User
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New User</DialogTitle>
+                        <DialogDescription>
+                          Create a new user account with appropriate permissions.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="name">Name</Label>
+                          <Input
+                            id="name"
+                            value={newUser.name}
+                            onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                            placeholder="Enter full name"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email">Email</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={newUser.email}
+                            onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                            placeholder="Enter email address"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="role">Role</Label>
+                          <Select value={newUser.role} onValueChange={(value) => setNewUser(prev => ({ ...prev, role: value }))}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Super Admin">Super Admin</SelectItem>
+                              <SelectItem value="System Admin">System Admin</SelectItem>
+                              <SelectItem value="Developer">Developer</SelectItem>
+                              <SelectItem value="QA Engineer">QA Engineer</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="status">Status</Label>
+                          <Select value={newUser.status} onValueChange={(value: 'active' | 'inactive') => setNewUser(prev => ({ ...prev, status: value }))}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="active">Active</SelectItem>
+                              <SelectItem value="inactive">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowAddUserDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleAddUser} disabled={!newUser.name || !newUser.email || !newUser.role}>
+                          Add User
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Login</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={user.avatar} />
+                              <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            <span className="font-medium">{user.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>{user.role}</TableCell>
+                        <TableCell>
+                          <Badge variant={user.status === 'active' ? 'default' : 'secondary'}>
+                            {user.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{user.lastLogin}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button variant="ghost" size="sm">
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteUser(user.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{users.length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    +2 from last month
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Agents</CardTitle>
+                  <Brain className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{agents.filter(a => a.status === 'active').length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {agents.length} total agents
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
+                  <Activity className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">99.9%</div>
+                  <p className="text-xs text-muted-foreground">
+                    {systemMetrics?.uptime}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
+                  <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{alerts.filter(a => !a.resolved).length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {alerts.length} total alerts
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Overview</CardTitle>
+                <CardDescription>System performance metrics over time</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[200px] flex items-center justify-center text-muted-foreground">
+                  Performance charts would be rendered here
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </TooltipProvider>
   );

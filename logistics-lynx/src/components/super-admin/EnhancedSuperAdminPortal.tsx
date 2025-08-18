@@ -25,14 +25,15 @@ import {
   Brain, Shield, Users, Settings, Database, Globe, Activity, 
   BarChart3, Lock, Search, AlertTriangle, CheckCircle, Clock,
   TrendingUp, Server, Network, Zap, Eye, EyeOff, RefreshCw,
-  Play, Pause, Stop, RotateCcw, Save, Download, Upload,
+  Play, Pause, RotateCcw, Save, Download, Upload,
   Trash2, Edit, Plus, Filter, MoreHorizontal, Bell, User,
   LogOut, Sun, Moon, ChevronDown, ChevronLeft, ChevronRight,
   Home, Building2, Phone, Mail, MapPin, Calendar, DollarSign,
   Truck, Package, Car, Briefcase, Calculator, FileText,
   ShieldCheck, Key, Fingerprint, Wifi, HardDrive, Cpu,
-  Memory, HardDriveIcon, WifiOff, AlertCircle, Info,
-  ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu
+  HardDriveIcon, WifiOff, AlertCircle, Info,
+  ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu,
+  Code, Bug, Palette, LayoutDashboard
 } from 'lucide-react';
 
 // Custom Logo Component
@@ -60,6 +61,11 @@ const AutonomousSystem = {
   ]
 };
 
+// Import engineering agent pages
+import FrontendDeveloperPage from './pages/FrontendDeveloperPage';
+import BackendAPIPage from './pages/BackendAPIPage';
+import QATestingPage from './pages/QATestingPage';
+
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
   const navigate = useNavigate();
@@ -72,12 +78,26 @@ const EnhancedSuperAdminPortal = () => {
     const saved = localStorage.getItem('super-admin-theme');
     return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
   });
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 1024px)').matches);
 
   // Apply theme
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
     localStorage.setItem('super-admin-theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
+
+  // Desktop persistent sidebar behavior
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const handler = (e: MediaQueryListEvent | MediaQueryList) => {
+      const matches = 'matches' in e ? e.matches : (e as MediaQueryList).matches;
+      setIsDesktop(matches);
+      setMobileSidebarOpen(false);
+    };
+    handler(mq);
+    mq.addEventListener('change', handler as (ev: MediaQueryListEvent) => void);
+    return () => mq.removeEventListener('change', handler as (ev: MediaQueryListEvent) => void);
+  }, []);
 
   // Close mobile sidebar when clicking outside
   useEffect(() => {
@@ -102,6 +122,23 @@ const EnhancedSuperAdminPortal = () => {
       icon: Brain,
       path: '/super-admin',
       description: 'System overview and autonomous status'
+    },
+    {
+      id: 'engineering',
+      title: 'Engineering Suite',
+      icon: LayoutDashboard,
+      path: '/super-admin/engineering',
+      description: 'End-to-end engineering operations',
+      subItems: [
+        { title: 'Frontend Developer', path: '/super-admin/engineering/frontend', icon: Code },
+        { title: 'Backend API Agent', path: '/super-admin/engineering/backend', icon: Server },
+        { title: 'QA Testing Agent', path: '/super-admin/engineering/qa', icon: Bug },
+        { title: 'UI/UX Designer', path: '/super-admin/engineering/design', icon: Palette },
+        { title: 'DevOps Agent', path: '/super-admin/engineering/devops', icon: Settings },
+        { title: 'Database Optimizer', path: '/super-admin/engineering/database', icon: Database },
+        { title: 'Security Scanner', path: '/super-admin/engineering/security', icon: ShieldCheck },
+        { title: 'Performance Monitor', path: '/super-admin/engineering/perf', icon: Activity }
+      ]
     },
     {
       id: 'autonomous',
@@ -410,7 +447,7 @@ const EnhancedSuperAdminPortal = () => {
           : 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-slate-900'
       }`}>
         {/* Mobile Sidebar Overlay */}
-        {mobileSidebarOpen && (
+        {mobileSidebarOpen && !isDesktop && (
           <div 
             className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
             onClick={() => setMobileSidebarOpen(false)}
@@ -420,12 +457,12 @@ const EnhancedSuperAdminPortal = () => {
         {/* Enhanced Sidebar */}
         <motion.div
           id="mobile-sidebar"
-          initial={{ x: -280 }}
+          initial={{ x: isDesktop ? 0 : -280 }}
           animate={{ 
-            x: mobileSidebarOpen ? 0 : -280,
+            x: isDesktop ? 0 : (mobileSidebarOpen ? 0 : -280),
             width: sidebarCollapsed ? 80 : 280 
           }}
-          className={`fixed lg:relative z-50 ${
+          className={`${isDesktop ? 'relative' : 'fixed'} z-50 ${
             isDarkMode 
               ? 'bg-slate-800 border-slate-700 text-slate-100' 
               : 'bg-white border-slate-200 text-slate-900'
@@ -456,18 +493,18 @@ const EnhancedSuperAdminPortal = () => {
                 </div>
               </motion.div>
               
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                 className={`transition-all duration-300 ${
-                  isDarkMode 
-                    ? 'text-slate-400 hover:text-white hover:bg-slate-700' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                      isDarkMode 
+                        ? 'text-slate-400 hover:text-white hover:bg-slate-700' 
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-              </Button>
+                  </Button>
             </div>
           </div>
 
@@ -477,30 +514,30 @@ const EnhancedSuperAdminPortal = () => {
               <div key={item.id}>
                 {item.subItems ? (
                   <div>
-                    <button
-                      onClick={() => toggleGroup(item.id)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 ${
-                        expandedGroups.includes(item.id)
-                          ? isDarkMode 
-                            ? 'bg-slate-700 text-white shadow-lg' 
+                        <button
+                          onClick={() => toggleGroup(item.id)}
+                          className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 ${
+                            expandedGroups.includes(item.id)
+                              ? isDarkMode 
+                                ? 'bg-slate-700 text-white shadow-lg' 
                             : 'bg-blue-100 text-blue-900 shadow-lg'
-                          : isDarkMode
-                            ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                              : isDarkMode
+                                ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
                             : 'hover:bg-slate-100'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
+                          }`}
+                        >
+                          <div className="flex items-center space-x-3">
                         <item.icon className="w-5 h-5" />
-                        {!sidebarCollapsed && (
-                          <span className="font-medium">{item.title}</span>
-                        )}
-                      </div>
-                      {!sidebarCollapsed && (
+                            {!sidebarCollapsed && (
+                              <span className="font-medium">{item.title}</span>
+                            )}
+                          </div>
+                          {!sidebarCollapsed && (
                         <ChevronDown className={`w-4 h-4 transition-transform ${
                           expandedGroups.includes(item.id) ? 'rotate-180' : ''
                         }`} />
-                      )}
-                    </button>
+                          )}
+                        </button>
                     
                     <AnimatePresence>
                       {expandedGroups.includes(item.id) && !sidebarCollapsed && (
@@ -511,49 +548,49 @@ const EnhancedSuperAdminPortal = () => {
                           className="ml-8 mt-2 space-y-1"
                         >
                           {item.subItems.map((subItem) => (
-                            <button
+                                <button
                               key={subItem.path}
                               onClick={() => {
                                 navigate(subItem.path);
                                 setMobileSidebarOpen(false);
                               }}
-                              className={`w-full flex items-center space-x-3 p-2 rounded-lg text-sm transition-all duration-300 ${
-                                location.pathname === subItem.path
-                                  ? 'bg-blue-600 text-white shadow-md'
-                                  : isDarkMode
-                                    ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                                  className={`w-full flex items-center space-x-3 p-2 rounded-lg text-sm transition-all duration-300 ${
+                                    location.pathname === subItem.path
+                                      ? 'bg-blue-600 text-white shadow-md'
+                                      : isDarkMode
+                                        ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
                                     : 'hover:bg-slate-100'
-                              }`}
-                            >
+                                  }`}
+                                >
                               <subItem.icon className="w-4 h-4" />
-                              <span>{subItem.title}</span>
-                            </button>
+                                  <span>{subItem.title}</span>
+                                </button>
                           ))}
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <button
+                      <button
                     onClick={() => {
                       navigate(item.path);
                       setMobileSidebarOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 ${
-                      location.pathname === item.path
-                        ? isDarkMode 
-                          ? 'bg-slate-700 text-white shadow-lg' 
+                        className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 ${
+                          location.pathname === item.path
+                            ? isDarkMode 
+                              ? 'bg-slate-700 text-white shadow-lg' 
                           : 'bg-blue-100 text-blue-900 shadow-lg'
-                        : isDarkMode
-                          ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                            : isDarkMode
+                              ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
                           : 'hover:bg-slate-100'
-                    }`}
-                  >
+                        }`}
+                      >
                     <item.icon className="w-5 h-5" />
-                    {!sidebarCollapsed && (
-                      <span className="font-medium">{item.title}</span>
-                    )}
-                  </button>
+                        {!sidebarCollapsed && (
+                          <span className="font-medium">{item.title}</span>
+                        )}
+                      </button>
                 )}
               </div>
             ))}
@@ -612,18 +649,18 @@ const EnhancedSuperAdminPortal = () => {
               
               <div className="flex items-center space-x-4">
                 {/* Enhanced Theme Toggle */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsDarkMode(!isDarkMode)}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsDarkMode(!isDarkMode)}
                   className={`transition-all duration-300 ${
-                    isDarkMode 
-                      ? 'text-slate-300 hover:bg-slate-700' 
-                      : 'text-slate-600 hover:bg-slate-100'
+                        isDarkMode 
+                          ? 'text-slate-300 hover:bg-slate-700' 
+                          : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
                   {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                </Button>
+                    </Button>
 
                 {/* Enhanced User Menu */}
                 <Popover>
@@ -698,6 +735,16 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/system/*" element={<DashboardPage />} />
                   <Route path="/portals" element={<DashboardPage />} />
                   <Route path="/analytics" element={<DashboardPage />} />
+                  {/* Engineering Suite Pages */}
+                  <Route path="/engineering" element={<DashboardPage />} />
+                  <Route path="/engineering/frontend" element={<FrontendDeveloperPage />} />
+                  <Route path="/engineering/backend" element={<BackendAPIPage />} />
+                  <Route path="/engineering/qa" element={<QATestingPage />} />
+                  <Route path="/engineering/design" element={<DashboardPage />} />
+                  <Route path="/engineering/devops" element={<DashboardPage />} />
+                  <Route path="/engineering/database" element={<DashboardPage />} />
+                  <Route path="/engineering/security" element={<DashboardPage />} />
+                  <Route path="/engineering/perf" element={<DashboardPage />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>
