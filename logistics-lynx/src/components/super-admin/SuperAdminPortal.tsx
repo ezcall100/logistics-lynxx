@@ -291,7 +291,7 @@ const SuperAdminPortal = () => {
               </motion.span>
             </button>
           </div>
-          
+
           {/* Navigation */}
           <nav className="space-y-1 flex-1 overflow-y-auto">
             {navigationItems.map((item) => (
@@ -316,7 +316,7 @@ const SuperAdminPortal = () => {
                         >
                           {item.label}
                         </motion.span>
-                      </div>
+              </div>
                       <motion.span
                         animate={{ 
                           rotate: expandedGroups.has(item.key) ? 180 : 0,
@@ -327,7 +327,7 @@ const SuperAdminPortal = () => {
                       >
                         ▼
                       </motion.span>
-                    </button>
+            </button>
                     
                     <AnimatePresence>
                       {expandedGroups.has(item.key) && (!sidebarCollapsed || isMobile) && (
@@ -339,7 +339,7 @@ const SuperAdminPortal = () => {
                           className="ml-6 space-y-1 overflow-hidden"
                         >
                           {item.children.map((child) => (
-                            <button
+                <button
                               key={child.key}
                               onClick={() => {
                                 if (child.path) {
@@ -361,8 +361,8 @@ const SuperAdminPortal = () => {
                                 <span className="inline-flex items-center justify-center min-w-[20px] h-5 text-xs bg-purple-100 text-purple-800 rounded-full px-1">
                                   {child.badge}
                                 </span>
-                              )}
-                            </button>
+                  )}
+                </button>
                           ))}
                         </motion.div>
                       )}
@@ -370,8 +370,8 @@ const SuperAdminPortal = () => {
                   </div>
                 ) : (
                   // Single item
-                  <button
-                    onClick={() => {
+                    <button
+                      onClick={() => {
                       if (item.path) {
                         handlePortalNavigation(item.path);
                       }
@@ -401,8 +401,8 @@ const SuperAdminPortal = () => {
                       >
                         {item.badge}
                       </motion.span>
-                    )}
-                  </button>
+                      )}
+                    </button>
                 )}
               </div>
             ))}
@@ -422,7 +422,7 @@ const SuperAdminPortal = () => {
               <button className="hover:text-slate-700 transition-colors">🌓</button>
             </div>
           </motion.div>
-        </div>
+            </div>
       </motion.aside>
 
       {/* Floating Toggle Button for Collapsed Sidebar */}
@@ -462,7 +462,7 @@ const SuperAdminPortal = () => {
               <span className="text-sm font-medium hidden sm:block">Super Admin Portal</span>
               <span className="text-slate-400 hidden lg:block">▼</span>
             </div>
-          </div>
+            </div>
 
           <div className="flex items-center gap-2 lg:gap-3">
             {/* Command Palette */}
@@ -499,7 +499,7 @@ const SuperAdminPortal = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+      </div>
 
             {/* Notifications */}
             <button
@@ -510,19 +510,19 @@ const SuperAdminPortal = () => {
               <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 {notifications.length}
               </span>
-            </button>
+              </button>
 
             {/* Settings */}
             <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
               <span className="text-lg">⚙️</span>
-            </button>
+              </button>
 
             {/* Profile */}
             <button className="flex items-center gap-2 p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
               <span className="text-lg">👤</span>
               <span className="text-sm hidden sm:block">Super Admin</span>
-            </button>
-          </div>
+              </button>
+            </div>
         </header>
 
         {/* Page Content */}
@@ -537,8 +537,8 @@ const SuperAdminPortal = () => {
             <Route path="/reports/*" element={<ReportsPage />} />
             <Route path="/settings/*" element={<GlobalSettingsPage />} />
           </Routes>
+          </div>
         </div>
-      </div>
     </div>
   );
 };
