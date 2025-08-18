@@ -34,17 +34,17 @@ const AutonomousTabs = () => {
       <Tabs defaultValue="dashboard" className="space-y-4">
         <TabsList className="grid w-full grid-cols-12">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="agent-dashboard">Agent Dashboard</TabsTrigger>
+          <TabsTrigger value="performance-monitor">Performance Monitor</TabsTrigger>
+          <TabsTrigger value="learning-models">Learning Models</TabsTrigger>
+          <TabsTrigger value="decision-logs">Decision Logs</TabsTrigger>
+          <TabsTrigger value="auto-scaling">Auto Scaling</TabsTrigger>
           <TabsTrigger value="agents">AI Agents</TabsTrigger>
           <TabsTrigger value="tasks">Task Manager</TabsTrigger>
           <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
           <TabsTrigger value="optimization">Optimization</TabsTrigger>
           <TabsTrigger value="scaling">Scaling</TabsTrigger>
           <TabsTrigger value="healing">Self-Healing</TabsTrigger>
-          <TabsTrigger value="ui-design">UI Design</TabsTrigger>
-          <TabsTrigger value="website-updater">Website Updater</TabsTrigger>
-          <TabsTrigger value="live-updater">Live Updates</TabsTrigger>
-          <TabsTrigger value="real-updater">Real Updates</TabsTrigger>
-          <TabsTrigger value="portal-dashboards">Portal Dashboards</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-4">
