@@ -487,7 +487,7 @@ export const AutonomousPortalSelector = () => {
                       <IconComponent className="w-6 h-6 text-white" />
                     </div>
                     {portal.autonomous && (
-                      <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-sm">
+                      <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-sm px-2 py-1 text-xs font-medium flex items-center">
                         <Brain className="w-3 h-3 mr-1" />
                         AI
                       </Badge>

@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/auth/AuthProvider';
+import ThemeProvider from './components/theme/theme-provider';
 import App from './App';
 import './index.css'
 import './styles/autonomous-updates.css';
@@ -27,9 +28,11 @@ const root = createRoot(container);
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );
