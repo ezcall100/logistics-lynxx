@@ -45,15 +45,15 @@ import {
 // Custom Logo Component
 import TransBotLogo from '../ui/TransBotLogo';
 
-// Portal Configuration with Eye-Friendly Colors
+// Portal Configuration with Professional Software Company Colors
 const PORTAL_CONFIG = {
-  // Core Administrative Portals - Professional Blues
+  // Core Administrative Portals - Professional Software Blues
   superAdmin: {
     path: '/super-admin',
     title: 'Super Admin',
     description: 'System-wide administration and oversight',
     icon: Shield,
-    color: 'bg-gradient-to-r from-blue-700 to-indigo-700',
+    color: 'bg-gradient-to-r from-slate-700 to-slate-800',
     roles: ['super_admin', 'owner'],
     autonomous: true
   },
@@ -71,18 +71,18 @@ const PORTAL_CONFIG = {
     title: 'TMS Admin',
     description: 'Transportation Management System administration',
     icon: Truck,
-    color: 'bg-gradient-to-r from-teal-600 to-teal-700',
+    color: 'bg-gradient-to-r from-blue-600 to-blue-700',
     roles: ['tms_admin', 'admin'],
     autonomous: true
   },
 
-  // Primary Business Portals - Trustworthy Blues and Greens
+  // Primary Business Portals - Professional Software Colors
   carrier: {
     path: '/carrier',
     title: 'Carrier Portal',
     description: 'Fleet management and load operations',
     icon: Truck,
-    color: 'bg-gradient-to-r from-blue-600 to-blue-700',
+    color: 'bg-gradient-to-r from-indigo-600 to-indigo-700',
     roles: ['carrier_admin', 'carrier_user', 'driver', 'owner', 'admin'],
     autonomous: true
   },
@@ -90,8 +90,8 @@ const PORTAL_CONFIG = {
     path: '/broker',
     title: 'Broker Portal',
     description: 'Load matching and relationship management',
-    icon: Users,
-    color: 'bg-gradient-to-r from-indigo-600 to-indigo-700',
+    icon: Network,
+    color: 'bg-gradient-to-r from-purple-700 to-purple-800',
     roles: ['broker_admin', 'broker_user', 'owner', 'admin'],
     autonomous: true
   },
@@ -100,7 +100,7 @@ const PORTAL_CONFIG = {
     title: 'Shipper Portal',
     description: 'Shipping requests and shipment tracking',
     icon: Package,
-    color: 'bg-gradient-to-r from-emerald-600 to-emerald-700',
+    color: 'bg-gradient-to-r from-blue-600 to-blue-700',
     roles: ['shipper_admin', 'shipper_user', 'owner', 'admin'],
     autonomous: true
   },
@@ -125,13 +125,13 @@ const PORTAL_CONFIG = {
     autonomous: true
   },
 
-  // Financial Portals - Success Greens
+  // Financial Portals - Professional Software Colors
   factoring: {
     path: '/factoring',
     title: 'Factoring Portal',
     description: 'Invoice factoring and cash flow management',
     icon: DollarSign,
-    color: 'bg-gradient-to-r from-green-600 to-green-700',
+    color: 'bg-gradient-to-r from-emerald-600 to-emerald-700',
     roles: ['factoring', 'admin'],
     autonomous: true
   },
@@ -140,7 +140,7 @@ const PORTAL_CONFIG = {
     title: 'Financials Portal',
     description: 'Financial reporting and accounting',
     icon: Calculator,
-    color: 'bg-gradient-to-r from-emerald-600 to-emerald-700',
+    color: 'bg-gradient-to-r from-teal-600 to-teal-700',
     roles: ['finance', 'admin'],
     autonomous: true
   },
@@ -150,8 +150,8 @@ const PORTAL_CONFIG = {
     path: '/load-board',
     title: 'Load Board',
     description: 'Load posting and matching marketplace',
-    icon: Briefcase,
-    color: 'bg-gradient-to-r from-cyan-600 to-cyan-700',
+    icon: Globe,
+    color: 'bg-gradient-to-r from-cyan-700 to-cyan-800',
     roles: ['broker_admin', 'carrier_admin', 'shipper_admin'],
     autonomous: true
   },
@@ -159,7 +159,7 @@ const PORTAL_CONFIG = {
     path: '/marketplace',
     title: 'Marketplace',
     description: 'Trading platform and auctions',
-    icon: Globe,
+    icon: Briefcase,
     color: 'bg-gradient-to-r from-sky-600 to-sky-700',
     roles: ['all'],
     autonomous: true
@@ -174,7 +174,7 @@ const PORTAL_CONFIG = {
     autonomous: true
   },
 
-  // Integration and Data Portals - Technical Colors
+  // Integration and Data Portals - Professional Software Colors
   edi: {
     path: '/edi',
     title: 'EDI Portal',
@@ -189,7 +189,7 @@ const PORTAL_CONFIG = {
     title: 'Analytics Portal',
     description: 'Business intelligence and reporting',
     icon: BarChart3,
-    color: 'bg-gradient-to-r from-purple-600 to-purple-700',
+    color: 'bg-gradient-to-r from-indigo-600 to-indigo-700',
     roles: ['analytics_admin', 'analytics_user', 'admin', 'owner'],
     autonomous: true
   },
@@ -214,13 +214,13 @@ const PORTAL_CONFIG = {
     autonomous: true
   },
 
-  // Autonomous and AI Portals - Futuristic Colors
+  // Autonomous and AI Portals - Professional Software Colors
   autonomous: {
     path: '/autonomous',
     title: 'Autonomous Portal',
     description: 'AI agent management and monitoring',
     icon: Brain,
-    color: 'bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700',
+    color: 'bg-gradient-to-r from-purple-700 to-purple-800',
     roles: ['autonomous_admin', 'autonomous_user', 'admin'],
     autonomous: true
   },
@@ -229,7 +229,7 @@ const PORTAL_CONFIG = {
     title: 'Workers Portal',
     description: 'Background job management and monitoring',
     icon: Activity,
-    color: 'bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700',
+    color: 'bg-gradient-to-r from-slate-600 to-slate-700',
     roles: ['admin', 'devops'],
     autonomous: true
   },
@@ -245,13 +245,13 @@ const PORTAL_CONFIG = {
     autonomous: true
   },
 
-  // Software Company Portal - Professional Tech Colors
+  // Software Company Portal - Professional Software Colors
   softwareCompany: {
     path: '/software-company',
     title: 'Software Company Dashboard',
     description: 'Software company management and development',
     icon: Monitor,
-    color: 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700',
+    color: 'bg-gradient-to-r from-slate-700 to-slate-800',
     roles: ['admin', 'owner', 'software_admin'],
     autonomous: true
   }
@@ -483,10 +483,10 @@ export const AutonomousPortalSelector = () => {
                 onClick={() => navigate(portal.path)}
               >
                 <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 ${portal.color} rounded-xl flex items-center justify-center shadow-md`}>
-                      <IconComponent className="w-6 h-6 text-white" />
-                    </div>
+                                     <div className="flex items-center justify-between">
+                     <div className={`w-12 h-12 ${portal.color} rounded-xl flex items-center justify-center shadow-md`}>
+                       <IconComponent className="w-6 h-6 text-white drop-shadow-sm" />
+                     </div>
                     {portal.autonomous && (
                       <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-sm px-2 py-1 text-xs font-medium flex items-center">
                         <Brain className="w-3 h-3 mr-1" />
