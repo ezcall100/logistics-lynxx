@@ -68,6 +68,8 @@ import QATestingPage from './pages/QATestingPage';
 import UIUXDesignerPage from './pages/UIUXDesignerPage';
 import DevOpsPage from './pages/DevOpsPage';
 import DatabaseOptimizerPage from './pages/DatabaseOptimizerPage';
+import SecurityScannerPage from './pages/SecurityScannerPage';
+import PerformanceMonitorPage from './pages/PerformanceMonitorPage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
@@ -746,8 +748,8 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/engineering/design" element={<UIUXDesignerPage />} />
                   <Route path="/engineering/devops" element={<DevOpsPage />} />
                   <Route path="/engineering/database" element={<DatabaseOptimizerPage />} />
-                  <Route path="/engineering/security" element={<DashboardPage />} />
-                  <Route path="/engineering/perf" element={<DashboardPage />} />
+                  <Route path="/engineering/security" element={<SecurityScannerPage />} />
+                  <Route path="/engineering/performance" element={<PerformanceMonitorPage />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>

@@ -28,8 +28,8 @@ import {
   Server, Cloud, GitPullRequest, GitCommit, GitMerge,
   Package, Docker, Kubernetes, Loader, Terminal, Workflow,
   Rocket, ShieldCheck, Monitor, BarChart3, ActivitySquare,
-  Search, Table as TableIcon, Index, Key as KeyIcon, Link,
-  BarChart, PieChart, TrendingDown, Gauge, Zap
+  Search, Table as TableIcon, Key as KeyIcon, Link,
+  BarChart, PieChart, TrendingDown, Gauge
 } from 'lucide-react';
 
 // Real data models
