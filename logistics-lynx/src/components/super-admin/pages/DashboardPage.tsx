@@ -118,6 +118,30 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const getColorClasses = (color: string) => {
+    switch (color) {
+      case 'blue': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
+      case 'green': return 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400';
+      case 'orange': return 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400';
+      case 'purple': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400';
+      case 'red': return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
+      case 'gray': return 'bg-gray-100 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400';
+      default: return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
+    }
+  };
+
+  const getChartColorClasses = (color: string) => {
+    switch (color) {
+      case 'blue': return 'bg-blue-200 dark:bg-blue-800';
+      case 'green': return 'bg-green-200 dark:bg-green-800';
+      case 'orange': return 'bg-orange-200 dark:bg-orange-800';
+      case 'purple': return 'bg-purple-200 dark:bg-purple-800';
+      case 'red': return 'bg-red-200 dark:bg-red-800';
+      case 'gray': return 'bg-gray-200 dark:bg-gray-800';
+      default: return 'bg-blue-200 dark:bg-blue-800';
+    }
+  };
+
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300">
@@ -229,7 +253,7 @@ const DashboardPage: React.FC = () => {
                 <Button
                   variant="outline"
                   onClick={() => handleQuickAction(action.action)}
-                  className={`h-24 flex flex-col gap-3 border-2 hover:border-${action.color}-500 hover:bg-${action.color}-50 dark:hover:bg-${action.color}-900/20 transition-all duration-200`}
+                  className="h-24 flex flex-col gap-3 border-2 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                 >
                   <span className="text-3xl">{action.icon}</span>
                   <span className="text-sm font-medium">{action.label}</span>
@@ -284,12 +308,12 @@ const DashboardPage: React.FC = () => {
                       <Card className="h-full transition-all duration-300 hover:shadow-xl border-2 hover:border-blue-200 dark:hover:border-blue-800 cursor-pointer">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-4">
-                            <div className={`p-4 rounded-xl bg-${stat.color}-100 dark:bg-${stat.color}-900/30`}>
+                            <div className={`p-4 rounded-xl ${getColorClasses(stat.color).split(' ')[0]} ${getColorClasses(stat.color).split(' ')[1]}`}>
                               <span className="text-3xl">{stat.icon}</span>
                             </div>
                             <div className="flex-1">
                               <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.label}</p>
-                              <p className={`text-3xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
+                              <p className={`text-3xl font-bold ${getColorClasses(stat.color).split(' ')[2]} ${getColorClasses(stat.color).split(' ')[3]}`}>{stat.value}</p>
                               <p className="text-xs text-green-600 dark:text-green-400 font-medium">{stat.trend}</p>
                             </div>
                           </div>
@@ -299,7 +323,7 @@ const DashboardPage: React.FC = () => {
                             {stat.chart.map((value, i) => (
                               <div
                                 key={i}
-                                className={`flex-1 bg-${stat.color}-200 dark:bg-${stat.color}-800 rounded-sm`}
+                                className={`flex-1 ${getChartColorClasses(stat.color)} rounded-sm`}
                                 style={{ height: `${value}%` }}
                               />
                             ))}
@@ -332,8 +356,8 @@ const DashboardPage: React.FC = () => {
                           { label: 'API Requests', value: systemStats.apiRequests.toLocaleString(), color: 'green', icon: '🔌' }
                         ].map((stat) => (
                           <div key={stat.label} className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <div className={`text-2xl mb-2`}>{stat.icon}</div>
-                            <p className={`text-2xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
+                            <div className="text-2xl mb-2">{stat.icon}</div>
+                            <p className={`text-2xl font-bold ${getColorClasses(stat.color).split(' ')[2]} ${getColorClasses(stat.color).split(' ')[3]}`}>{stat.value}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.label}</p>
                           </div>
                         ))}
@@ -413,7 +437,7 @@ const DashboardPage: React.FC = () => {
                           <div className="flex justify-between mb-2">
                             <Label className="font-medium">{metric.label}</Label>
                             <div className="flex items-center gap-2">
-                              <span className={`text-sm font-semibold text-${metric.color}-600 dark:text-${metric.color}-400`}>
+                              <span className={`text-sm font-semibold ${getColorClasses(metric.color).split(' ')[2]} ${getColorClasses(metric.color).split(' ')[3]}`}>
                                 {metric.value}%
                               </span>
                               <span className={`text-xs px-2 py-1 rounded-full ${
