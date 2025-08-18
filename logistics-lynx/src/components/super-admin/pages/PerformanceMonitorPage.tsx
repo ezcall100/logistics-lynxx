@@ -29,7 +29,7 @@ import {
   Package, Docker, Kubernetes, Loader, Terminal, Workflow,
   Rocket, ShieldCheck, Monitor, BarChart3, ActivitySquare,
   Search, Table as TableIcon, Index, Key as KeyIcon, Link,
-  BarChart, PieChart, Database, Network, WifiIcon,
+  BarChart, PieChart, Database, Network,
   ShieldX, ShieldAlert, ShieldCheck as ShieldCheckIcon,
   Target, Database as DatabaseIcon, Cpu as CpuIcon,
   HardDrive as HardDriveIcon, Wifi as WifiIcon, Clock as ClockIcon
