@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { ModernLayout, portalMenus } from './components/layout/ModernLayout';
 import { ModernDashboard } from './components/dashboard/ModernDashboard';
@@ -113,9 +113,8 @@ function App() {
 
   return (
     <GlobalErrorBoundary>
-      <Router>
-        <div className="App">
-          <Routes>
+      <div className="App">
+        <Routes>
             {/* Main Portal Selection */}
             <Route 
               path="/" 
@@ -218,8 +217,7 @@ function App() {
             />
           </Routes>
         </div>
-      </Router>
-    </GlobalErrorBoundary>
+      </GlobalErrorBoundary>
   );
 }
 
