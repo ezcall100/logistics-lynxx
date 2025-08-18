@@ -274,6 +274,15 @@ export const ModernLayout: React.FC<PortalLayoutProps> = ({
                   {description}
                 </p>
               </div>
+              
+              {/* Back to Portals Button */}
+              <Link
+                to="/"
+                className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Home size={16} />
+                Back to Portals
+              </Link>
             </div>
 
             <div className="flex items-center gap-4">

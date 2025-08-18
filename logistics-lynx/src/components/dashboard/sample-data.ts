@@ -81,5 +81,32 @@ export const sampleDashboardData: Record<string, DashboardData> = {
       { name: 'Deployment Pipeline', status: 'online' as const, description: 'CI/CD running' },
       { name: 'Monitoring', status: 'warning' as const, description: 'High memory usage' }
     ]
+  },
+  
+  analytics: {
+    metrics: [
+      { title: 'Data Points', value: '2.4M', change: 12, icon: '📊', color: '#f59e0b' },
+      { title: 'Reports Generated', value: '156', change: 8, icon: '📋', color: '#10b981' },
+      { title: 'Insights Found', value: '89', change: 15, icon: '🔍', color: '#3b82f6' },
+      { title: 'Accuracy Rate', value: '99.7%', change: 0.2, icon: '🎯', color: '#8b5cf6' }
+    ],
+    activities: [
+      { type: 'success' as const, title: 'Monthly performance report generated', time: '2 minutes ago' },
+      { type: 'success' as const, title: 'New trend analysis completed', time: '10 minutes ago' },
+      { type: 'success' as const, title: 'Data quality check passed', time: '30 minutes ago' },
+      { type: 'info' as const, title: 'Scheduled backup completed', time: '1 hour ago' }
+    ],
+    quickActions: [
+      { icon: '📊', label: 'Create Report', variant: 'outline' as const },
+      { icon: '🔍', label: 'Run Analysis', variant: 'outline' as const },
+      { icon: '📈', label: 'View Trends', variant: 'outline' as const },
+      { icon: '📤', label: 'Export Data', variant: 'outline' as const }
+    ],
+    systemStatus: [
+      { name: 'Data Pipeline', status: 'online' as const, description: 'Real-time data processing' },
+      { name: 'Analytics Engine', status: 'online' as const, description: 'All algorithms running' },
+      { name: 'Report Generator', status: 'online' as const, description: 'Automated reports active' },
+      { name: 'Data Storage', status: 'online' as const, description: '99.9% uptime maintained' }
+    ]
   }
 };
