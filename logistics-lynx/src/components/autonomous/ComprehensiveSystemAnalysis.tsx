@@ -68,20 +68,22 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
     category: area.name.split(' ')[0] + ' Analysis',
     name: area.name,
     description: area.description,
-    icon: <Search className="h-5 w-5" />,
+    icon: 'search',
     priority: area.priority,
     status: 'pending' as const,
     progress: 0,
     findings: [],
     improvements: []
   }));
+
+  const analysisAreas: AnalysisArea[] = [
     // PORTAL ANALYSIS
     {
       id: 'all-portals',
       category: 'Portal Management',
       name: 'All Portal Analysis',
       description: 'Comprehensive analysis of all TMS portals: Super Admin, Carrier, Shipper, Broker, Driver, Owner-Operator',
-      icon: <Globe className="h-5 w-5" />,
+      icon: 'globe',
       priority: 1,
       status: 'pending',
       progress: 0,
@@ -195,7 +197,7 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       category: 'Navigation',
       name: 'Left Sidebar Analysis',
       description: 'Analysis of left sidebar menus, submenus, navigation items, and user experience',
-      icon: <Menu className="h-5 w-5" />,
+      icon: 'menu',
       priority: 1,
       status: 'pending',
       progress: 0,
@@ -207,7 +209,7 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       category: 'Navigation',
       name: 'Right Sidebar Analysis',
       description: 'Analysis of right sidebar content, widgets, and supplementary information',
-      icon: <Menu className="h-5 w-5" />,
+      icon: 'menu',
       priority: 1,
       status: 'pending',
       progress: 0,
@@ -219,7 +221,7 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       category: 'Navigation',
       name: 'Header Navigation',
       description: 'Analysis of header navigation, branding, user controls, and top-level navigation',
-      icon: <Navigation className="h-5 w-5" />,
+      icon: 'navigation',
       priority: 1,
       status: 'pending',
       progress: 0,
@@ -233,7 +235,7 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       category: 'Feature Analysis',
       name: 'Missing Features Analysis',
       description: 'Identification of missing features, functionality gaps, and improvement opportunities',
-      icon: <Search className="h-5 w-5" />,
+      icon: 'search',
       priority: 1,
       status: 'pending',
       progress: 0,
@@ -245,7 +247,7 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       category: 'Feature Analysis',
       name: 'User Experience Optimization',
       description: 'Analysis of user workflows, pain points, and experience optimization opportunities',
-      icon: <Palette className="h-5 w-5" />,
+      icon: 'palette',
       priority: 1,
       status: 'pending',
       progress: 0,
@@ -261,6 +263,8 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
     areas: component.areas,
     status: 'pending' as const
   }));
+
+  const systemComponentsList: SystemComponent[] = [
     {
       id: 'super-admin-portal',
       name: 'Super Admin Portal',
