@@ -150,7 +150,7 @@ const EnhancedSidebarItem: React.FC<{
   const itemContent = (
     <div
       className={cn(
-        "enhanced-sidebar-item",
+        "enhanced-sidebar-item text-foreground",
         isActive && "active",
         depth > 0 && "ml-4",
         item.isDisabled && "opacity-50 cursor-not-allowed"
@@ -159,12 +159,12 @@ const EnhancedSidebarItem: React.FC<{
     >
       <item.icon className={cn(
         "h-4 w-4 shrink-0 transition-colors",
-        isActive ? "text-primary" : "group-hover:text-primary"
+        isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary"
       )} />
       
       {!collapsed && (
         <>
-          <span className="truncate font-medium text-sm flex-1">
+          <span className="truncate font-medium text-sm flex-1 text-foreground">
             {item.title}
           </span>
           
@@ -178,7 +178,7 @@ const EnhancedSidebarItem: React.FC<{
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{item.aiInsights.recommendation}</p>
+                  <p className="text-foreground">{item.aiInsights.recommendation}</p>
                 </TooltipContent>
               </Tooltip>
             )}
@@ -191,7 +191,7 @@ const EnhancedSidebarItem: React.FC<{
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Used {item.aiInsights.frequency} times recently</p>
+                  <p className="text-foreground">Used {item.aiInsights.frequency} times recently</p>
                 </TooltipContent>
               </Tooltip>
             )}
@@ -225,7 +225,7 @@ const EnhancedSidebarItem: React.FC<{
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</p>
+                <p className="text-foreground">{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</p>
               </TooltipContent>
             </Tooltip>
             
@@ -258,7 +258,7 @@ const EnhancedSidebarItem: React.FC<{
             )}
           </TooltipTrigger>
           <TooltipContent side="right">
-            <p>{item.title}</p>
+            <p className="text-foreground">{item.title}</p>
             {item.badge && (
               <p className="text-xs text-muted-foreground">
                 {item.badge.count} items
@@ -357,7 +357,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          "enhanced-sidebar",
+          "enhanced-sidebar bg-background text-foreground",
           collapsed && "collapsed",
           "md:block", // Hidden on mobile by default
           className
@@ -399,7 +399,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-background/50 border-border/30"
+                className="pl-10 bg-background/50 border-border/30 text-foreground"
               />
             </div>
           </div>
@@ -410,7 +410,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
           {/* Favorites Section */}
           {showFavorites && favorites.length > 0 && !collapsed && (
             <div className="space-y-2">
-              <h3 className="enhanced-sidebar-section-title">
+              <h3 className="enhanced-sidebar-section-title text-muted-foreground">
                 Favorites
               </h3>
               <div className="space-y-1">
@@ -438,7 +438,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
           {/* Recent Section */}
           {showRecent && recentItems.length > 0 && !collapsed && (
             <div className="space-y-2">
-              <h3 className="enhanced-sidebar-section-title">
+              <h3 className="enhanced-sidebar-section-title text-muted-foreground">
                 Recent
               </h3>
               <div className="space-y-1">
@@ -467,7 +467,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
           {filteredSections.map((section) => (
             <div key={section.id} className="enhanced-sidebar-section">
               {!collapsed && (
-                <h3 className="enhanced-sidebar-section-title">
+                <h3 className="enhanced-sidebar-section-title text-muted-foreground">
                   {section.title}
                 </h3>
               )}
@@ -515,7 +515,7 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent side="right">
-                    <p>Toggle theme</p>
+                    <p className="text-foreground">Toggle theme</p>
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -536,8 +536,8 @@ export const EnhancedSidebar: React.FC<EnhancedSidebarProps> = ({
               </Avatar>
               {!collapsed && (
                 <div className="enhanced-sidebar-user-info">
-                  <p className="enhanced-sidebar-user-name">{user?.name}</p>
-                  <p className="enhanced-sidebar-user-email">{user?.email}</p>
+                  <p className="enhanced-sidebar-user-name text-foreground">{user?.name}</p>
+                  <p className="enhanced-sidebar-user-email text-muted-foreground">{user?.email}</p>
                 </div>
               )}
               {!collapsed && (

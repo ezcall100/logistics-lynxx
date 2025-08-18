@@ -123,6 +123,11 @@
   border-color: hsl(var(--color-border));
 }
 
+html {
+  background-color: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+}
+
 body {
   background-color: hsl(var(--color-background));
   color: hsl(var(--color-foreground));
@@ -130,6 +135,13 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+#root {
+  background-color: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+  min-height: 100vh;
 }
 
 /* 📜 Custom Scrollbar Styling */
@@ -260,6 +272,10 @@ body {
 /* 🎨 Utility Classes */
 @layer components {
   /* Background Utilities */
+  .bg-background {
+    background-color: hsl(var(--color-background));
+  }
+
   .bg-surface {
     background-color: hsl(var(--color-background));
   }
@@ -280,6 +296,10 @@ body {
     background-color: hsl(var(--color-secondary));
   }
 
+  .bg-accent {
+    background-color: hsl(var(--color-accent));
+  }
+
   .bg-destructive {
     background-color: hsl(var(--color-destructive));
   }
@@ -297,33 +317,85 @@ body {
   }
 
   /* Text Utilities */
+  .text-background {
+    color: hsl(var(--color-background));
+  }
+
+  .text-foreground {
+    color: hsl(var(--color-foreground));
+  }
+
   .text-primary {
     color: hsl(var(--color-primary));
+  }
+
+  .text-primary-foreground {
+    color: hsl(var(--color-primary-foreground));
+  }
+
+  .text-secondary {
+    color: hsl(var(--color-secondary-foreground));
+  }
+
+  .text-secondary-foreground {
+    color: hsl(var(--color-secondary-foreground));
   }
 
   .text-muted {
     color: hsl(var(--color-muted-foreground));
   }
 
+  .text-muted-foreground {
+    color: hsl(var(--color-muted-foreground));
+  }
+
+  .text-accent {
+    color: hsl(var(--color-accent-foreground));
+  }
+
+  .text-accent-foreground {
+    color: hsl(var(--color-accent-foreground));
+  }
+
   .text-destructive {
     color: hsl(var(--color-destructive));
+  }
+
+  .text-destructive-foreground {
+    color: hsl(var(--color-destructive-foreground));
   }
 
   .text-success {
     color: hsl(var(--color-success));
   }
 
+  .text-success-foreground {
+    color: hsl(var(--color-success-foreground));
+  }
+
   .text-warning {
     color: hsl(var(--color-warning));
+  }
+
+  .text-warning-foreground {
+    color: hsl(var(--color-warning-foreground));
   }
 
   .text-info {
     color: hsl(var(--color-info));
   }
 
+  .text-info-foreground {
+    color: hsl(var(--color-info-foreground));
+  }
+
   /* Border Utilities */
   .border-border {
     border-color: hsl(var(--color-border));
+  }
+
+  .border-input {
+    border-color: hsl(var(--color-input));
   }
 
   .border-primary {
@@ -332,6 +404,11 @@ body {
 
   .border-destructive {
     border-color: hsl(var(--color-destructive));
+  }
+
+  /* Ring Utilities */
+  .ring-ring {
+    --tw-ring-color: hsl(var(--color-ring));
   }
 
   /* Glassmorphism */

@@ -197,6 +197,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: inherit;
 }
 
 /* 🏷️ Sidebar Item Badges */
@@ -497,11 +498,13 @@
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 0.25rem;
+  color: hsl(var(--color-foreground));
 }
 
 .enhanced-sidebar-empty-description {
   font-size: 0.75rem;
   line-height: 1.4;
+  color: hsl(var(--color-muted-foreground));
 }
 
 /* 🎨 Collapsed State Enhancements */
@@ -560,4 +563,68 @@
   .enhanced-sidebar-item:focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
+}
+
+/* 🎨 Text Color Fallbacks */
+.enhanced-sidebar * {
+  color: inherit;
+}
+
+.enhanced-sidebar h1,
+.enhanced-sidebar h2,
+.enhanced-sidebar h3,
+.enhanced-sidebar h4,
+.enhanced-sidebar h5,
+.enhanced-sidebar h6 {
+  color: hsl(var(--color-foreground));
+}
+
+.enhanced-sidebar p,
+.enhanced-sidebar span,
+.enhanced-sidebar div {
+  color: inherit;
+}
+
+.enhanced-sidebar input,
+.enhanced-sidebar textarea,
+.enhanced-sidebar select {
+  color: hsl(var(--color-foreground));
+}
+
+.enhanced-sidebar button {
+  color: inherit;
+}
+
+/* 🌙 Dark Mode Text Enhancements */
+.dark .enhanced-sidebar {
+  color: hsl(var(--color-foreground));
+}
+
+.dark .enhanced-sidebar-item {
+  color: hsl(var(--color-muted-foreground));
+}
+
+.dark .enhanced-sidebar-item:hover {
+  color: hsl(var(--color-foreground));
+}
+
+.dark .enhanced-sidebar-item.active {
+  color: hsl(var(--color-primary));
+}
+
+/* ☀️ Light Mode Text Enhancements */
+:root .enhanced-sidebar {
+  color: hsl(var(--color-foreground));
+}
+
+:root .enhanced-sidebar-item {
+  color: hsl(var(--color-muted-foreground));
+}
+
+:root .enhanced-sidebar-item:hover {
+  color: hsl(var(--color-foreground));
+}
+
+:root .enhanced-sidebar-item.active {
+  color: hsl(var(--color-primary));
 }
