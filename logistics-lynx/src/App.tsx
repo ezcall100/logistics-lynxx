@@ -21,6 +21,7 @@ import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAge
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import CarrierBrokerRiskReview from './components/onboarding/CarrierBrokerRiskReview';
 import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
+import SuperAdminPortal from './components/super-admin/SuperAdminPortal';
 
 import ShippersPortal from './components/portals/ShippersPortal';
 import BrokersPortal from './components/portals/BrokersPortal';
@@ -702,11 +703,7 @@ function App() {
             </PortalLayout>
           } />
           
-          <Route path="/super-admin/*" element={
-            <PortalLayout portalType="super-admin" title="👑 Super Admin Portal" description="Global command center with AI-powered oversight">
-              <SuperAdminDashboard />
-            </PortalLayout>
-          } />
+          <Route path="/super-admin/*" element={<SuperAdminPortal />} />
           
           <Route path="/admin/*" element={
             <PortalLayout portalType="admin" title="⚙️ Admin Portal" description="System administration and configuration">
