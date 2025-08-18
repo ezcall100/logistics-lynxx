@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Import basic UI components that we know exist
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,30 +18,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const DashboardPage: React.FC = () => {
+  // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [systemStats] = useState({
     users: 2847,
     portals: 7,
     health: 99.9,
     security: 'A+',
     uptime: '99.9%',
-    responseTime: '45ms'
-  });
-
-  const [notifications] = useState([
-    { id: 1, type: 'info', message: 'System backup completed successfully', time: '2 min ago' },
-    { id: 2, type: 'warning', message: 'High memory usage detected', time: '5 min ago' },
-    { id: 3, type: 'success', message: 'New user registration approved', time: '10 min ago' }
-  ]);
-
-  const [recentActivity, setRecentActivity] = useState([
-    { id: 1, action: 'New user registered', user: 'john.doe@company.com', time: '2 min ago', type: 'user' },
-    { id: 2, action: 'Security scan completed', user: 'System', time: '5 min ago', type: 'security' },
-    { id: 3, action: 'Database backup completed', user: 'System', time: '15 min ago', type: 'system' },
-    { id: 4, action: 'Portal access granted', user: 'admin@company.com', time: '1 hour ago', type: 'access' },
-    { id: 5, action: 'System update deployed', user: 'System', time: '2 hours ago', type: 'update' }
-  ]);
-
-  const [quickStats, setQuickStats] = useState({
+    responseTime: '45ms',
     activeSessions: 1247,
     pendingApprovals: 23,
     systemAlerts: 3,
@@ -52,496 +37,559 @@ const DashboardPage: React.FC = () => {
     cpuUsage: 45,
     memoryUsage: 67,
     diskUsage: 23,
-    networkUsage: 89
+    networkUsage: 89,
+    databaseConnections: 156,
+    cacheHitRate: 94.2
   });
+
+  const [securityMetrics, setSecurityMetrics] = useState({
+    failedLogins: 12,
+    blockedIPs: 8,
+    securityScans: 156,
+    vulnerabilities: 2,
+    lastBackup: '2 hours ago',
+    encryptionStatus: 'AES-256'
+  });
+
+  const [recentActivity, setRecentActivity] = useState([
+    { id: 1, action: 'New user registered', user: 'john.doe@company.com', time: '2 min ago', type: 'user', priority: 'low' },
+    { id: 2, action: 'Security scan completed', user: 'System', time: '5 min ago', type: 'security', priority: 'medium' },
+    { id: 3, action: 'Database backup completed', user: 'System', time: '15 min ago', type: 'system', priority: 'high' },
+    { id: 4, action: 'Portal access granted', user: 'admin@company.com', time: '1 hour ago', type: 'access', priority: 'low' },
+    { id: 5, action: 'System update deployed', user: 'System', time: '2 hours ago', type: 'update', priority: 'high' },
+    { id: 6, action: 'API rate limit exceeded', user: 'api-client-3', time: '3 hours ago', type: 'warning', priority: 'medium' }
+  ]);
+
+  const [notifications, setNotifications] = useState([
+    { id: 1, type: 'info', message: 'System backup completed successfully', time: '2 min ago', read: false },
+    { id: 2, type: 'warning', message: 'High memory usage detected', time: '5 min ago', read: false },
+    { id: 3, type: 'success', message: 'New user registration approved', time: '10 min ago', read: true },
+    { id: 4, type: 'error', message: 'Database connection timeout', time: '1 hour ago', read: false }
+  ]);
 
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
   const [selectedMetric, setSelectedMetric] = useState('all');
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // Quick actions
+  const handleQuickAction = (action: string) => {
+    console.log(`Quick action: ${action}`);
+    // Add actual functionality here
+  };
+
+  const dismissNotification = (id: number) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'text-red-500 bg-red-50 dark:bg-red-900/20';
+      case 'medium': return 'text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20';
+      case 'low': return 'text-green-500 bg-green-50 dark:bg-green-900/20';
+      default: return 'text-gray-500 bg-gray-50 dark:bg-gray-900/20';
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'user': return '👤';
+      case 'security': return '🔒';
+      case 'system': return '⚙️';
+      case 'access': return '🚪';
+      case 'update': return '🔄';
+      case 'warning': return '⚠️';
+      default: return '📋';
+    }
+  };
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
-        {/* Welcome Section with Enhanced Components */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-6 text-white"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold mb-2">Welcome to Super Admin Portal</h1>
-              <p className="text-purple-100 text-sm lg:text-base">
-                Complete system control with full administrative authority. All systems operational.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Badge variant="secondary" className="bg-white/20 text-white">System Online</Badge>
-                <Badge variant="secondary" className="bg-white/20 text-white">Security: A+</Badge>
-                <Badge variant="secondary" className="bg-white/20 text-white">Uptime: 99.9%</Badge>
-              </div>
-            </div>
-            
-            {/* Enhanced Controls */}
-            <div className="flex items-center space-x-4">
-              <div className="flex bg-white/10 rounded-lg p-1">
-                <Button
-                  variant={selectedTimeRange === '1h' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setSelectedTimeRange('1h')}
-                  className="text-white hover:bg-white/20"
-                >
-                  1H
-                </Button>
-                <Button
-                  variant={selectedTimeRange === '24h' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setSelectedTimeRange('24h')}
-                  className="text-white hover:bg-white/20"
-                >
-                  24H
-                </Button>
-                <Button
-                  variant={selectedTimeRange === '7d' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setSelectedTimeRange('7d')}
-                  className="text-white hover:bg-white/20"
-                >
-                  7D
-                </Button>
-                <Button
-                  variant={selectedTimeRange === '30d' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setSelectedTimeRange('30d')}
-                  className="text-white hover:bg-white/20"
-                >
-                  30D
-                </Button>
-              </div>
-              
-              <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                <SelectTrigger className="w-[180px] bg-white/10 border-white/20 text-white">
-                  <SelectValue placeholder="Select metric" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Metrics</SelectItem>
-                  <SelectItem value="performance">Performance</SelectItem>
-                  <SelectItem value="security">Security</SelectItem>
-                  <SelectItem value="users">Users</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Enhanced Tabs for Different Views */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="performance">Performance</TabsTrigger>
-              <TabsTrigger value="security">Security</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="overview" className="space-y-6">
-              {/* System Health Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="hover:shadow-lg transition-all duration-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-100 rounded-lg">
-                        <span className="text-purple-600 text-lg">👥</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-600">Total Users</p>
-                        <p className="text-lg font-semibold text-purple-600">{systemStats.users.toLocaleString()}</p>
-                        <p className="text-xs text-green-600">+12.5% from last month</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="hover:shadow-lg transition-all duration-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <span className="text-blue-600 text-lg">🌐</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-600">Active Portals</p>
-                        <p className="text-lg font-semibold text-blue-600">{systemStats.portals}/{systemStats.portals}</p>
-                        <p className="text-xs text-green-600">All operational</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+      <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+        <div className="space-y-6 p-6">
+          {/* Enhanced Header with Theme Toggle */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`rounded-xl p-6 ${isDarkMode 
+              ? 'bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600' 
+              : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white/20'}`}>
+                    <span className="text-2xl">🚀</span>
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold mb-2">Super Admin Command Center</h1>
+                    <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-blue-100'}`}>
+                      Complete system control with real-time monitoring and advanced analytics
+                    </p>
+                  </div>
+                </div>
                 
-                <Card className="hover:shadow-lg transition-all duration-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-100 rounded-lg">
-                        <span className="text-green-600 text-lg">💚</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-600">System Health</p>
-                        <p className="text-lg font-semibold text-green-600">{systemStats.health}%</p>
-                        <p className="text-xs text-green-600">Optimal performance</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="hover:shadow-lg transition-all duration-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-orange-100 rounded-lg">
-                        <span className="text-orange-600 text-lg">🔒</span>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-600">Security Score</p>
-                        <p className="text-lg font-semibold text-orange-600">{systemStats.security}</p>
-                        <p className="text-xs text-green-600">Excellent</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* System Status Indicators */}
+                <div className="flex flex-wrap gap-3 mt-4">
+                  <Badge variant="secondary" className={`${isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-white/20'}`}>
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                    System Online
+                  </Badge>
+                  <Badge variant="secondary" className={`${isDarkMode ? 'bg-blue-900/30 text-blue-400' : 'bg-white/20'}`}>
+                    Security: {systemStats.security}
+                  </Badge>
+                  <Badge variant="secondary" className={`${isDarkMode ? 'bg-purple-900/30 text-purple-400' : 'bg-white/20'}`}>
+                    Uptime: {systemStats.uptime}
+                  </Badge>
+                  <Badge variant="secondary" className={`${isDarkMode ? 'bg-orange-900/30 text-orange-400' : 'bg-white/20'}`}>
+                    Response: {systemStats.responseTime}
+                  </Badge>
+                </div>
               </div>
 
-              {/* Quick Stats and Recent Activity */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Quick Stats */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <span>📊</span>
-                      Quick Statistics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-3 bg-slate-50 rounded-lg">
-                        <p className="text-2xl font-bold text-blue-600">{quickStats.activeSessions.toLocaleString()}</p>
-                        <p className="text-sm text-slate-600">Active Sessions</p>
-                      </div>
-                      <div className="text-center p-3 bg-slate-50 rounded-lg">
-                        <p className="text-2xl font-bold text-orange-600">{quickStats.pendingApprovals}</p>
-                        <p className="text-sm text-slate-600">Pending Approvals</p>
-                      </div>
-                      <div className="text-center p-3 bg-slate-50 rounded-lg">
-                        <p className="text-2xl font-bold text-red-600">{quickStats.systemAlerts}</p>
-                        <p className="text-sm text-slate-600">System Alerts</p>
-                      </div>
-                      <div className="text-center p-3 bg-slate-50 rounded-lg">
-                        <p className="text-2xl font-bold text-green-600">{quickStats.apiRequests.toLocaleString()}</p>
-                        <p className="text-sm text-slate-600">API Requests</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* Theme Toggle and Controls */}
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className={`${isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-white hover:bg-white/20'}`}
+                >
+                  {isDarkMode ? '☀️' : '🌙'}
+                </Button>
+                
+                <div className="flex bg-white/10 rounded-lg p-1">
+                  {['1h', '24h', '7d', '30d'].map((range) => (
+                    <Button
+                      key={range}
+                      variant={selectedTimeRange === range ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setSelectedTimeRange(range)}
+                      className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-white'}`}
+                    >
+                      {range}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
-                {/* Recent Activity */}
-                <Card>
+          {/* Quick Actions Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className={`grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4`}
+          >
+            {[
+              { icon: '👥', label: 'Add User', action: 'add-user' },
+              { icon: '🔒', label: 'Security Scan', action: 'security-scan' },
+              { icon: '💾', label: 'Backup Now', action: 'backup' },
+              { icon: '📊', label: 'Generate Report', action: 'report' },
+              { icon: '⚙️', label: 'System Config', action: 'config' },
+              { icon: '🚨', label: 'Emergency Mode', action: 'emergency' }
+            ].map((action) => (
+              <Button
+                key={action.action}
+                variant="outline"
+                onClick={() => handleQuickAction(action.action)}
+                className={`h-20 flex flex-col gap-2 ${isDarkMode 
+                  ? 'border-gray-600 hover:bg-gray-800' 
+                  : 'border-gray-200 hover:bg-white'
+                }`}
+              >
+                <span className="text-2xl">{action.icon}</span>
+                <span className="text-xs font-medium">{action.label}</span>
+              </Button>
+            ))}
+          </motion.div>
+
+          {/* Enhanced Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className={`grid w-full grid-cols-5 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <TabsTrigger value="overview">📊 Overview</TabsTrigger>
+                <TabsTrigger value="performance">⚡ Performance</TabsTrigger>
+                <TabsTrigger value="security">🔒 Security</TabsTrigger>
+                <TabsTrigger value="analytics">📈 Analytics</TabsTrigger>
+                <TabsTrigger value="activity">🕒 Activity</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="overview" className="space-y-6 mt-6">
+                {/* System Health Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {[
+                    { icon: '👥', label: 'Total Users', value: systemStats.users.toLocaleString(), trend: '+12.5%', color: 'purple' },
+                    { icon: '🌐', label: 'Active Portals', value: `${systemStats.portals}/${systemStats.portals}`, trend: 'All Operational', color: 'blue' },
+                    { icon: '💚', label: 'System Health', value: `${systemStats.health}%`, trend: 'Optimal', color: 'green' },
+                    { icon: '🔒', label: 'Security Score', value: systemStats.security, trend: 'Excellent', color: 'orange' }
+                  ].map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      <Card className={`h-full transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-4">
+                            <div className={`p-3 rounded-lg bg-${stat.color}-100 dark:bg-${stat.color}-900/30`}>
+                              <span className="text-2xl">{stat.icon}</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</p>
+                              <p className={`text-2xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
+                              <p className={`text-xs text-green-600 dark:text-green-400`}>{stat.trend}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Quick Stats and Notifications */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Enhanced Quick Stats */}
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span>📊</span>
+                        Real-Time Statistics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 gap-4">
+                        {[
+                          { label: 'Active Sessions', value: systemStats.activeSessions.toLocaleString(), color: 'blue' },
+                          { label: 'Pending Approvals', value: systemStats.pendingApprovals, color: 'orange' },
+                          { label: 'System Alerts', value: systemStats.systemAlerts, color: 'red' },
+                          { label: 'API Requests', value: systemStats.apiRequests.toLocaleString(), color: 'green' }
+                        ].map((stat) => (
+                          <div key={stat.label} className="text-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                            <p className={`text-2xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
+                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Enhanced Notifications */}
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span>🔔</span>
+                        System Notifications
+                        <Badge variant="secondary" className="ml-auto">
+                          {notifications.filter(n => !n.read).length} new
+                        </Badge>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {notifications.slice(0, 4).map((notification) => (
+                          <motion.div
+                            key={notification.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className={`flex items-center gap-3 p-3 rounded-lg border ${
+                              notification.type === 'info' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' :
+                              notification.type === 'warning' ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800' :
+                              notification.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' :
+                              'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                            } ${!notification.read ? 'ring-2 ring-blue-500/20' : ''}`}
+                          >
+                            <div className={`w-2 h-2 rounded-full ${
+                              notification.type === 'info' ? 'bg-blue-500' :
+                              notification.type === 'warning' ? 'bg-orange-500' :
+                              notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                            }`}></div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">{notification.message}</p>
+                              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{notification.time}</p>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => dismissNotification(notification.id)}
+                              className="text-gray-400 hover:text-gray-600"
+                            >
+                              ×
+                            </Button>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="performance" className="space-y-6 mt-6">
+                {/* Performance Metrics */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle>System Performance</CardTitle>
+                      <CardDescription>Real-time performance metrics</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {[
+                        { label: 'CPU Usage', value: performanceMetrics.cpuUsage, color: 'blue' },
+                        { label: 'Memory Usage', value: performanceMetrics.memoryUsage, color: 'green' },
+                        { label: 'Disk Usage', value: performanceMetrics.diskUsage, color: 'orange' },
+                        { label: 'Network Usage', value: performanceMetrics.networkUsage, color: 'purple' }
+                      ].map((metric) => (
+                        <div key={metric.label}>
+                          <div className="flex justify-between mb-2">
+                            <Label>{metric.label}</Label>
+                            <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{metric.value}%</span>
+                          </div>
+                          <Progress value={metric.value} className="w-full" />
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle>Performance Controls</CardTitle>
+                      <CardDescription>System optimization settings</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="auto-optimize">Auto Optimization</Label>
+                          <Switch id="auto-optimize" defaultChecked />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="performance-mode">Performance Mode</Label>
+                          <Switch id="performance-mode" />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="resource-monitoring">Resource Monitoring</Label>
+                          <Switch id="resource-monitoring" defaultChecked />
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div>
+                          <Label>Optimization Level</Label>
+                          <div className="mt-2 space-y-2">
+                            {['Conservative', 'Balanced', 'Aggressive'].map((level) => (
+                              <div key={level} className="flex items-center space-x-2">
+                                <input 
+                                  type="radio" 
+                                  id={level.toLowerCase()} 
+                                  name="optimization" 
+                                  value={level.toLowerCase()} 
+                                  defaultChecked={level === 'Balanced'}
+                                />
+                                <Label htmlFor={level.toLowerCase()}>{level}</Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="security" className="space-y-6 mt-6">
+                {/* Security Overview */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle>Security Status</CardTitle>
+                      <CardDescription>Current security posture</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span>Firewall Status</span>
+                          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Active</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Encryption</span>
+                          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">{securityMetrics.encryptionStatus}</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>MFA Enabled</span>
+                          <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Yes</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Failed Logins (24h)</span>
+                          <span className={`text-sm ${securityMetrics.failedLogins > 10 ? 'text-red-600' : 'text-green-600'}`}>
+                            {securityMetrics.failedLogins}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Blocked IPs</span>
+                          <span className="text-sm text-orange-600">{securityMetrics.blockedIPs}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Last Security Scan</span>
+                          <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{securityMetrics.lastBackup}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle>Security Controls</CardTitle>
+                      <CardDescription>Security settings and options</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="auto-scan">Auto Security Scan</Label>
+                          <Switch id="auto-scan" defaultChecked />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="threat-detection">Threat Detection</Label>
+                          <Switch id="threat-detection" defaultChecked />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="access-logging">Access Logging</Label>
+                          <Switch id="access-logging" defaultChecked />
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div>
+                          <Label>Security Level</Label>
+                          <div className="mt-2 space-y-2">
+                            {['Low', 'Medium', 'High'].map((level) => (
+                              <div key={level} className="flex items-center space-x-2">
+                                <input 
+                                  type="radio" 
+                                  id={`security-${level.toLowerCase()}`} 
+                                  name="security" 
+                                  value={level.toLowerCase()} 
+                                  defaultChecked={level === 'High'}
+                                />
+                                <Label htmlFor={`security-${level.toLowerCase()}`}>{level}</Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="analytics" className="space-y-6 mt-6">
+                {/* Analytics Dashboard */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle>User Analytics</CardTitle>
+                      <CardDescription>User activity and engagement metrics</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {[
+                          { label: 'Active Users', value: '1,247', progress: 75 },
+                          { label: 'Session Duration', value: '24m 32s', progress: 60 },
+                          { label: 'Page Views', value: '45,892', progress: 85 }
+                        ].map((metric) => (
+                          <div key={metric.label} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span>{metric.label}</span>
+                              <span className="font-semibold">{metric.value}</span>
+                            </div>
+                            <Progress value={metric.progress} className="w-full" />
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
+                    <CardHeader>
+                      <CardTitle>System Analytics</CardTitle>
+                      <CardDescription>System performance and usage analytics</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {[
+                          { label: 'API Requests', value: '15,420', progress: 90 },
+                          { label: 'Response Time', value: '45ms', progress: 95 },
+                          { label: 'Error Rate', value: '0.02%', progress: 98 }
+                        ].map((metric) => (
+                          <div key={metric.label} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span>{metric.label}</span>
+                              <span className="font-semibold">{metric.value}</span>
+                            </div>
+                            <Progress value={metric.progress} className="w-full" />
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="activity" className="space-y-6 mt-6">
+                {/* Enhanced Activity Feed */}
+                <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <span>🕒</span>
-                      Recent Activity
+                      Recent Activity Feed
                     </CardTitle>
+                    <CardDescription>Real-time system activity and user actions</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      {recentActivity.map((activity) => (
-                        <div key={activity.id} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg">
-                          <div className={`w-2 h-2 rounded-full ${
-                            activity.type === 'user' ? 'bg-blue-500' :
-                            activity.type === 'security' ? 'bg-green-500' :
-                            activity.type === 'system' ? 'bg-purple-500' :
-                            activity.type === 'access' ? 'bg-orange-500' : 'bg-gray-500'
-                          }`}></div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">{activity.action}</p>
-                            <p className="text-xs text-slate-500">{activity.user} • {activity.time}</p>
+                    <div className="space-y-4">
+                      {recentActivity.map((activity, index) => (
+                        <motion.div
+                          key={activity.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                          className={`flex items-center gap-4 p-4 rounded-lg border ${
+                            isDarkMode ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className={`p-2 rounded-lg ${getPriorityColor(activity.priority)}`}>
+                            <span className="text-lg">{getTypeIcon(activity.type)}</span>
                           </div>
-                        </div>
+                          <div className="flex-1">
+                            <p className="font-medium">{activity.action}</p>
+                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              {activity.user} • {activity.time}
+                            </p>
+                          </div>
+                          <Badge 
+                            variant="secondary" 
+                            className={`${getPriorityColor(activity.priority)}`}
+                          >
+                            {activity.priority}
+                          </Badge>
+                        </motion.div>
                       ))}
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="performance" className="space-y-6">
-              {/* Performance Metrics with Sliders */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>System Performance</CardTitle>
-                    <CardDescription>Real-time performance metrics</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <Label>CPU Usage</Label>
-                          <span className="text-sm text-slate-600">{performanceMetrics.cpuUsage}%</span>
-                        </div>
-                        <Progress value={performanceMetrics.cpuUsage} className="w-full" />
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <Label>Memory Usage</Label>
-                          <span className="text-sm text-slate-600">{performanceMetrics.memoryUsage}%</span>
-                        </div>
-                        <Progress value={performanceMetrics.memoryUsage} className="w-full" />
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <Label>Disk Usage</Label>
-                          <span className="text-sm text-slate-600">{performanceMetrics.diskUsage}%</span>
-                        </div>
-                        <Progress value={performanceMetrics.diskUsage} className="w-full" />
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <Label>Network Usage</Label>
-                          <span className="text-sm text-slate-600">{performanceMetrics.networkUsage}%</span>
-                        </div>
-                        <Progress value={performanceMetrics.networkUsage} className="w-full" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Performance Controls</CardTitle>
-                    <CardDescription>System optimization settings</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="auto-optimize">Auto Optimization</Label>
-                        <Switch id="auto-optimize" defaultChecked />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="performance-mode">Performance Mode</Label>
-                        <Switch id="performance-mode" />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="resource-monitoring">Resource Monitoring</Label>
-                        <Switch id="resource-monitoring" defaultChecked />
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div>
-                        <Label>Optimization Level</Label>
-                        <div className="mt-2 space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <input type="radio" id="conservative" name="optimization" value="conservative" defaultChecked={false} />
-                            <Label htmlFor="conservative">Conservative</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <input type="radio" id="balanced" name="optimization" value="balanced" defaultChecked={true} />
-                            <Label htmlFor="balanced">Balanced</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <input type="radio" id="aggressive" name="optimization" value="aggressive" defaultChecked={false} />
-                            <Label htmlFor="aggressive">Aggressive</Label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="security" className="space-y-6">
-              {/* Security Overview */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Security Status</CardTitle>
-                    <CardDescription>Current security posture</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Firewall Status</span>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">Active</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Encryption</span>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">AES-256</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>MFA Enabled</span>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">Yes</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Last Security Scan</span>
-                        <span className="text-sm text-slate-600">2 hours ago</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Security Controls</CardTitle>
-                    <CardDescription>Security settings and options</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="auto-scan">Auto Security Scan</Label>
-                        <Switch id="auto-scan" defaultChecked />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="threat-detection">Threat Detection</Label>
-                        <Switch id="threat-detection" defaultChecked />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="access-logging">Access Logging</Label>
-                        <Switch id="access-logging" defaultChecked />
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div>
-                        <Label>Security Level</Label>
-                        <div className="mt-2 space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <input type="radio" id="low" name="security" value="low" defaultChecked={false} />
-                            <Label htmlFor="low">Low</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <input type="radio" id="medium" name="security" value="medium" defaultChecked={false} />
-                            <Label htmlFor="medium">Medium</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <input type="radio" id="high" name="security" value="high" defaultChecked={true} />
-                            <Label htmlFor="high">High</Label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="analytics" className="space-y-6">
-              {/* Analytics Dashboard */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>User Analytics</CardTitle>
-                    <CardDescription>User activity and engagement metrics</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span>Active Users</span>
-                        <span className="font-semibold">1,247</span>
-                      </div>
-                      <Progress value={75} className="w-full" />
-                      
-                      <div className="flex justify-between items-center">
-                        <span>Session Duration</span>
-                        <span className="font-semibold">24m 32s</span>
-                      </div>
-                      <Progress value={60} className="w-full" />
-                      
-                      <div className="flex justify-between items-center">
-                        <span>Page Views</span>
-                        <span className="font-semibold">45,892</span>
-                      </div>
-                      <Progress value={85} className="w-full" />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>System Analytics</CardTitle>
-                    <CardDescription>System performance and usage analytics</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span>API Requests</span>
-                        <span className="font-semibold">15,420</span>
-                      </div>
-                      <Progress value={90} className="w-full" />
-                      
-                      <div className="flex justify-between items-center">
-                        <span>Response Time</span>
-                        <span className="font-semibold">45ms</span>
-                      </div>
-                      <Progress value={95} className="w-full" />
-                      
-                      <div className="flex justify-between items-center">
-                        <span>Error Rate</span>
-                        <span className="font-semibold">0.02%</span>
-                      </div>
-                      <Progress value={98} className="w-full" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </motion.div>
-
-        {/* Notifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span>🔔</span>
-                System Notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {notifications.map((notification) => (
-                  <div key={notification.id} className={`flex items-center gap-3 p-3 rounded-lg ${
-                    notification.type === 'info' ? 'bg-blue-50 border border-blue-200' :
-                    notification.type === 'warning' ? 'bg-orange-50 border border-orange-200' :
-                    notification.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'
-                  }`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      notification.type === 'info' ? 'bg-blue-500' :
-                      notification.type === 'warning' ? 'bg-orange-500' :
-                      notification.type === 'success' ? 'bg-green-500' : 'bg-gray-500'
-                    }`}></div>
-                    <div className="flex-1">
-                      <p className="text-sm">{notification.message}</p>
-                      <p className="text-xs text-slate-500">{notification.time}</p>
-                    </div>
-                    <Button variant="ghost" size="sm">Dismiss</Button>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
+        </div>
       </div>
     </TooltipProvider>
   );

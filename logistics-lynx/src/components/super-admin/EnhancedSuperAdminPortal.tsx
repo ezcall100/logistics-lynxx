@@ -36,6 +36,7 @@ const EnhancedSuperAdminPortal = () => {
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['dashboard', 'user-management']);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Navigation structure
   const navigationItems = [
@@ -143,16 +144,16 @@ const EnhancedSuperAdminPortal = () => {
   }, [location.pathname, expandedGroups]);
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className={`flex h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gradient-to-br from-slate-50 to-slate-100'}`}>
       {/* Enhanced Sidebar */}
       <motion.div
         initial={{ width: 280 }}
         animate={{ width: sidebarCollapsed ? 80 : 280 }}
-        className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white shadow-xl"
+        className={`${isDarkMode ? 'bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900'} text-white shadow-xl`}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         {/* Header */}
-        <div className="p-4 border-b border-slate-700">
+        <div className={`p-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-slate-700'}`}>
           <div className="flex items-center justify-between">
             <motion.div
               initial={{ opacity: 1 }}
@@ -164,14 +165,14 @@ const EnhancedSuperAdminPortal = () => {
               </div>
               <div>
                 <h1 className="font-bold text-lg">Super Admin</h1>
-                <p className="text-slate-400 text-xs">System Control Center</p>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-slate-400'}`}>System Control Center</p>
               </div>
             </motion.div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="text-slate-400 hover:text-white"
+              className={`${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-slate-400 hover:text-white'}`}
             >
               {sidebarCollapsed ? '→' : '←'}
             </Button>
@@ -188,8 +189,8 @@ const EnhancedSuperAdminPortal = () => {
                     onClick={() => toggleGroup(item.id)}
                     className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
                       expandedGroups.includes(item.id)
-                        ? 'bg-slate-700 text-white'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? `${isDarkMode ? 'bg-gray-700' : 'bg-slate-700'} text-white`
+                        : `${isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-slate-300 hover:bg-slate-800'} hover:text-white`
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -222,7 +223,7 @@ const EnhancedSuperAdminPortal = () => {
                             className={`w-full flex items-center space-x-3 p-2 rounded-lg text-sm transition-all duration-200 ${
                               location.pathname === subItem.path
                                 ? 'bg-blue-600 text-white'
-                                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                : `${isDarkMode ? 'text-gray-400 hover:bg-gray-800' : 'text-slate-400 hover:bg-slate-800'} hover:text-white`
                             }`}
                           >
                             <span>{subItem.icon}</span>
@@ -238,8 +239,8 @@ const EnhancedSuperAdminPortal = () => {
                   onClick={() => navigate(item.path)}
                   className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
                     location.pathname === item.path
-                      ? 'bg-slate-700 text-white'
-                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                      ? `${isDarkMode ? 'bg-gray-700' : 'bg-slate-700'} text-white`
+                      : `${isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-slate-300 hover:bg-slate-800'} hover:text-white`
                   }`}
                 >
                   <span className="text-lg">{item.icon}</span>
@@ -254,9 +255,9 @@ const EnhancedSuperAdminPortal = () => {
 
         {/* Footer */}
         {!sidebarCollapsed && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700">
+          <div className={`absolute bottom-0 left-0 right-0 p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-slate-700'}`}>
             <div className="text-center">
-              <p className="text-slate-400 text-xs">System Status</p>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-slate-400'}`}>System Status</p>
               <div className="flex items-center justify-center space-x-2 mt-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-green-400 text-sm">Operational</span>
@@ -269,18 +270,28 @@ const EnhancedSuperAdminPortal = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Enhanced Header */}
-        <header className="bg-white shadow-sm border-b border-slate-200">
+        <header className={`shadow-sm border-b transition-colors duration-300 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-200'}`}>
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center space-x-4">
-              <h2 className="text-xl font-semibold text-slate-900">
+              <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
               </h2>
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Badge variant="secondary" className={`${isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-800'}`}>
                 Enhanced UI
               </Badge>
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`${isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-slate-600 hover:bg-slate-100'}`}
+              >
+                {isDarkMode ? '☀️' : '🌙'}
+              </Button>
+
               {/* User Menu */}
               <Popover>
                 <PopoverTrigger asChild>
