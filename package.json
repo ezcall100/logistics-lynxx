@@ -10,6 +10,8 @@
     "start:autonomous": "cd logistics-lynx && node --enable-source-maps dist/autonomous-orchestrator.mjs",
     "start:autonomous:full": "cd logistics-lynx && concurrently -n WEB,AGENTS,CTRL -c auto \"npm run dev\" \"node scripts/admin-portal-autonomous-agent.mjs --continuous\" \"npx tsx scripts/health-check.mts\"",
     "start:autonomous:accelerated": "cd logistics-lynx && concurrently -n WEB,AGENTS,CTRL -c auto \"npm run dev\" \"node scripts/admin-portal-autonomous-agent.mjs --accelerated --continuous\" \"npx tsx scripts/health-check.mts\"",
+    "monitor:admin:realtime": "cd logistics-lynx && node scripts/real-time-admin-monitor.mjs",
+    "admin:status": "cd logistics-lynx && node scripts/admin-status.mjs",
     "ops:status": "cd logistics-lynx && npx tsx scripts/green-posture-script.mts",
     "ops:daily": "cd logistics-lynx && npx tsx scripts/operational-cadence.mts daily",
     "ops:emergency-stop": "cd logistics-lynx && npx tsx scripts/incident-response.mts stop",

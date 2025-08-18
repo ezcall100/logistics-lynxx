@@ -467,10 +467,13 @@ export const ${area.charAt(0).toUpperCase() + area.slice(1)}Area: React.FC = () 
       process.exit(0);
     });
     
-    // Keep alive
-    setInterval(() => {
-      // Just keep the process running
-    }, 60000);
+    // Keep alive - prevent immediate exit
+    this.log('🔄 Agent running continuously...');
+    
+    // Keep the process running indefinitely
+    return new Promise(() => {
+      // This promise never resolves, keeping the process alive
+    });
   }
 }
 
