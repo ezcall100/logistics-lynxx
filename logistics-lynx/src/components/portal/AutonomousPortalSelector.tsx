@@ -42,6 +42,9 @@ import {
   User
 } from 'lucide-react';
 
+// Custom Logo Component
+import TransBotLogo from '../ui/TransBotLogo';
+
 // Portal Configuration with Eye-Friendly Colors
 const PORTAL_CONFIG = {
   // Core Administrative Portals - Professional Blues
@@ -303,22 +306,20 @@ export const AutonomousPortalSelector = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Brain className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className={`text-2xl font-bold transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-slate-800'
-                  }`}>
-                    Logistics Lynx
-                  </h1>
-                  <p className={`text-sm transition-colors duration-300 ${
-                    isDark ? 'text-slate-300' : 'text-slate-600'
-                  }`}>
-                    Autonomous TMS Platform
-                  </p>
-                </div>
+                             <div className="flex items-center space-x-3">
+                 <TransBotLogo size="md" animated={true} />
+                                 <div>
+                   <h1 className={`text-2xl font-bold transition-colors duration-300 ${
+                     isDark ? 'text-white' : 'text-slate-800'
+                   }`}>
+                     Trans Bot AI
+                   </h1>
+                   <p className={`text-sm transition-colors duration-300 ${
+                     isDark ? 'text-slate-300' : 'text-slate-600'
+                   }`}>
+                     Intelligent Transportation Platform
+                   </p>
+                 </div>
               </div>
             </div>
             
@@ -544,40 +545,40 @@ export const AutonomousPortalSelector = () => {
               : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
           }`}>
             <CardHeader>
-              <CardTitle className={`flex items-center transition-colors duration-300 ${
-                isDark ? 'text-white' : 'text-slate-800'
-              }`}>
-                <Brain className="w-5 h-5 mr-2 text-blue-400" />
-                Autonomous System Status
-              </CardTitle>
+                             <CardTitle className={`flex items-center transition-colors duration-300 ${
+                 isDark ? 'text-white' : 'text-slate-800'
+               }`}>
+                 <TransBotLogo size="sm" animated={true} className="mr-2" />
+                 Trans Bot AI System Status
+               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
-                  <span className={`transition-colors duration-300 ${
-                    isDark ? 'text-slate-300' : 'text-slate-700'
-                  }`}>
-                    Master Agent: Active
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-sm"></div>
-                  <span className={`transition-colors duration-300 ${
-                    isDark ? 'text-slate-300' : 'text-slate-700'
-                  }`}>
-                    Development System: Running
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse shadow-sm"></div>
-                  <span className={`transition-colors duration-300 ${
-                    isDark ? 'text-slate-300' : 'text-slate-700'
-                  }`}>
-                    AI Optimization: Enabled
-                  </span>
-                </div>
-              </div>
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <div className="flex items-center space-x-3">
+                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
+                   <span className={`transition-colors duration-300 ${
+                     isDark ? 'text-slate-300' : 'text-slate-700'
+                   }`}>
+                     Trans Bot Core: Active
+                   </span>
+                 </div>
+                 <div className="flex items-center space-x-3">
+                   <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-sm"></div>
+                   <span className={`transition-colors duration-300 ${
+                     isDark ? 'text-slate-300' : 'text-slate-700'
+                   }`}>
+                     AI Intelligence: Learning
+                   </span>
+                 </div>
+                 <div className="flex items-center space-x-3">
+                   <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse shadow-sm"></div>
+                   <span className={`transition-colors duration-300 ${
+                     isDark ? 'text-slate-300' : 'text-slate-700'
+                   }`}>
+                     Global Network: Connected
+                   </span>
+                 </div>
+               </div>
             </CardContent>
           </Card>
         </div>
