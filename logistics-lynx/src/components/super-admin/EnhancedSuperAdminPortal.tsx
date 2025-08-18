@@ -1,80 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
-import { useAutonomousAgentManager } from '@/hooks/autonomous/useAutonomousAgentManager';
 
-// Import enhanced UI components
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-  ToggleGroup,
-  ToggleGroupItem,
-  Slider,
-  RadioGroup,
-  RadioGroupItem,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Button,
-  Badge,
-  Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Checkbox,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Progress,
-  Separator,
-  Switch,
-  useToast
-} from '@/components/ui/enhanced-ui-index';
+// Import basic UI components that we know exist
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 
 // Import all Super Admin pages
 import DashboardPage from './pages/DashboardPage';
@@ -89,8 +33,6 @@ import GlobalSettingsPage from './pages/GlobalSettingsPage';
 const EnhancedSuperAdminPortal = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
-  const { autonomousAgents, systemStatus } = useAutonomousAgentManager();
   
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['dashboard', 'user-management']);
@@ -339,26 +281,6 @@ const EnhancedSuperAdminPortal = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Enhanced Menubar */}
-              <Menubar>
-                <MenubarMenu>
-                  <MenubarTrigger>System</MenubarTrigger>
-                  <MenubarContent>
-                    <MenubarItem>Status</MenubarItem>
-                    <MenubarItem>Settings</MenubarItem>
-                    <MenubarSeparator />
-                    <MenubarItem>Restart</MenubarItem>
-                  </MenubarContent>
-                </MenubarMenu>
-                <MenubarMenu>
-                  <MenubarTrigger>Help</MenubarTrigger>
-                  <MenubarContent>
-                    <MenubarItem>Documentation</MenubarItem>
-                    <MenubarItem>Support</MenubarItem>
-                  </MenubarContent>
-                </MenubarMenu>
-              </Menubar>
-
               {/* User Menu */}
               <Popover>
                 <PopoverTrigger asChild>
