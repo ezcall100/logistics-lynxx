@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Textarea } from '../../components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
   Users, 
   Shield, 
@@ -100,6 +101,156 @@ export const AccessControlCenter: React.FC = () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
+  const loadUsers = useCallback(async (orgId: string) => {
+    const { data, error } = await supabase
+      .from('org_memberships')
+      .select(`
+        user_id,
+        role,
+        status,
+        created_at,
+        profiles!inner(email, full_name)
+      `)
+      .eq('org_id', orgId);
+
+    if (!error && data) {
+      setUsers(data.map((item: any) => ({
+        id: item.user_id,
+        email: item.profiles.email,
+        full_name: item.profiles.full_name,
+        role: item.role,
+        status: item.status,
+        created_at: item.created_at
+      })));
+    }
+  }, [supabase]);
+
+  const loadRoles = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('roles')
+      .select('*')
+      .order('key');
+
+    if (!error && data) {
+      // Get user count for each role
+      const rolesWithCount = await Promise.all(
+        data.map(async (role) => {
+          const { count } = await supabase
+            .from('org_memberships')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', role.key)
+            .eq('status', 'active');
+
+          return {
+            ...role,
+            user_count: count || 0
+          };
+        })
+      );
+      setRoles(rolesWithCount);
+    }
+  }, [supabase]);
+
+  const loadCustomRoles = useCallback(async (orgId: string) => {
+    const { data, error } = await supabase
+      .from('custom_roles')
+      .select(`
+        *,
+        custom_role_permissions(permission_key)
+      `)
+      .eq('org_id', orgId);
+
+    if (!error && data) {
+      setCustomRoles(data.map(role => ({
+        id: role.id,
+        key: role.key,
+        label: role.label,
+        description: role.description,
+        permissions: role.custom_role_permissions?.map((p: any) => p.permission_key) || []
+      })));
+    }
+  }, [supabase]);
+
+  const loadAccessRequests = useCallback(async (orgId: string) => {
+    const { data, error } = await supabase
+      .from('access_requests')
+      .select(`
+        *,
+        profiles!inner(email)
+      `)
+      .eq('org_id', orgId)
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setAccessRequests(data.map(request => ({
+        id: request.id,
+        user_id: request.user_id,
+        user_email: request.profiles.email,
+        requested_permissions: request.requested_permissions || [],
+        reason: request.reason || '',
+        status: request.status,
+        created_at: request.created_at,
+        expires_at: request.expires_at || ''
+      })));
+    }
+  }, [supabase]);
+
+  const loadApiKeys = useCallback(async (orgId: string) => {
+    const { data, error } = await supabase
+      .from('api_keys')
+      .select('*')
+      .eq('org_id', orgId)
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setApiKeys(data.map(key => ({
+        id: key.id,
+        name: key.name,
+        scopes: key.scopes || [],
+        is_active: key.is_active || true,
+        created_at: key.created_at,
+        last_used_at: key.last_used_at || '',
+        expires_at: key.expires_at || ''
+      })));
+    }
+  }, [supabase]);
+
+  const loadAuditLogs = useCallback(async (orgId: string) => {
+    const { data, error } = await supabase
+      .from('audit_logs')
+      .select(`
+        *,
+        profiles!inner(email)
+      `)
+      .eq('org_id', orgId)
+      .order('created_at', { ascending: false })
+      .limit(100);
+
+    if (!error && data) {
+      setAuditLogs(data.map(log => ({
+        id: log.id,
+        user_email: log.profiles.email,
+        permission: log.permission || '',
+        resource: log.resource,
+        action: log.action,
+        result: log.result || '',
+        reason: log.reason || '',
+        created_at: log.created_at
+      })));
+    }
+  }, [supabase]);
+
+  const loadAllData = useCallback(async (orgId: string) => {
+    await Promise.all([
+      loadUsers(orgId),
+      loadRoles(),
+      loadCustomRoles(orgId),
+      loadAccessRequests(orgId),
+      loadApiKeys(orgId),
+      loadAuditLogs(orgId)
+    ]);
+  }, [loadUsers, loadRoles, loadCustomRoles, loadAccessRequests, loadApiKeys, loadAuditLogs]);
+
   useEffect(() => {
     const initializeData = async () => {
       try {
@@ -125,149 +276,9 @@ export const AccessControlCenter: React.FC = () => {
     };
 
     initializeData();
-  }, [supabase]);
+  }, [supabase, loadAllData]);
 
-  const loadAllData = async (orgId: string) => {
-    await Promise.all([
-      loadUsers(orgId),
-      loadRoles(),
-      loadCustomRoles(orgId),
-      loadAccessRequests(orgId),
-      loadApiKeys(orgId),
-      loadAuditLogs(orgId)
-    ]);
-  };
 
-  const loadUsers = async (orgId: string) => {
-    const { data, error } = await supabase
-      .from('org_memberships')
-      .select(`
-        user_id,
-        role,
-        status,
-        created_at,
-        profiles!inner(email, full_name)
-      `)
-      .eq('org_id', orgId);
-
-    if (!error && data) {
-      setUsers(data.map(item => ({
-        id: item.user_id,
-        email: item.profiles.email,
-        full_name: item.profiles.full_name,
-        role: item.role,
-        status: item.status,
-        created_at: item.created_at
-      })));
-    }
-  };
-
-  const loadRoles = async () => {
-    const { data, error } = await supabase
-      .from('roles')
-      .select('*')
-      .order('key');
-
-    if (!error && data) {
-      // Get user count for each role
-      const rolesWithCount = await Promise.all(
-        data.map(async (role) => {
-          const { count } = await supabase
-            .from('org_memberships')
-            .select('*', { count: 'exact', head: true })
-            .eq('role', role.key)
-            .eq('status', 'active');
-
-          return {
-            ...role,
-            user_count: count || 0
-          };
-        })
-      );
-      setRoles(rolesWithCount);
-    }
-  };
-
-  const loadCustomRoles = async (orgId: string) => {
-    const { data, error } = await supabase
-      .from('custom_roles')
-      .select(`
-        *,
-        custom_role_permissions(permission_key)
-      `)
-      .eq('org_id', orgId);
-
-    if (!error && data) {
-      setCustomRoles(data.map(role => ({
-        id: role.id,
-        key: role.key,
-        label: role.label,
-        description: role.description,
-        permissions: role.custom_role_permissions?.map((p: any) => p.permission_key) || []
-      })));
-    }
-  };
-
-  const loadAccessRequests = async (orgId: string) => {
-    const { data, error } = await supabase
-      .from('access_requests')
-      .select(`
-        *,
-        profiles!inner(email)
-      `)
-      .eq('org_id', orgId)
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setAccessRequests(data.map(request => ({
-        id: request.id,
-        user_id: request.user_id,
-        user_email: request.profiles.email,
-        requested_permissions: request.requested_permissions,
-        reason: request.reason,
-        status: request.status,
-        created_at: request.created_at,
-        expires_at: request.expires_at
-      })));
-    }
-  };
-
-  const loadApiKeys = async (orgId: string) => {
-    const { data, error } = await supabase
-      .from('api_keys')
-      .select('*')
-      .eq('org_id', orgId)
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setApiKeys(data);
-    }
-  };
-
-  const loadAuditLogs = async (orgId: string) => {
-    const { data, error } = await supabase
-      .from('access_audit_logs')
-      .select(`
-        *,
-        profiles!inner(email)
-      `)
-      .eq('org_id', orgId)
-      .order('created_at', { ascending: false })
-      .limit(100);
-
-    if (!error && data) {
-      setAuditLogs(data.map(log => ({
-        id: log.id,
-        user_email: log.profiles?.email || 'API Key',
-        permission: log.permission,
-        resource: log.resource,
-        action: log.action,
-        result: log.result,
-        reason: log.reason,
-        created_at: log.created_at
-      })));
-    }
-  };
 
   const handleApproveAccessRequest = async (requestId: string) => {
     if (!orgId) return;

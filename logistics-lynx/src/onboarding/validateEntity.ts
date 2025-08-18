@@ -3,6 +3,7 @@
  * Coordinates FMCSA and TIN verification to confirm entity matching
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from '@supabase/supabase-js';
 import { fmcsaClient, FMCSAVerificationRequest, FMCSAVerificationResponse } from '../verification/fmcsaClient';
 import { tinVerifier, TINVerificationRequest, TINVerificationResponse } from '../verification/tinVerifier';

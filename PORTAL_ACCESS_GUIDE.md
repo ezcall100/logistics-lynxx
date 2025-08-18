@@ -43,12 +43,7 @@ Your development server is running on **Port 5177**. Here are all your portal pa
 - **Rate Quotes** 💰
 - **Documentation** 📄
 
-### **⚙️ 6. Admin Portal** ⚙️
-**URL**: `http://localhost:5177/admin`
-- **System Management** ⚙️
-- **User Administration** 👥
-- **Configuration** 🔧
-- **Reports** 📊
+
 
 ### **🏛️ 7. Super Admin Portal** 🏛️
 **URL**: `http://localhost:5177/super-admin`
@@ -95,7 +90,7 @@ Each main menu has multiple submenus with specific functions:
 - **System Administration**: Database, API, Network, File Management
 - **Security Center**: Security Audit, Access Control, Encryption, Firewall
 - **System Monitoring**: Log Analysis, Performance Monitoring, Alert Management
-- **Portal Management**: Direct navigation to all 8 portals
+- **Portal Management**: Direct navigation to all 7 portals
 - **Reports & Analytics**: System, User, Security, Performance Reports
 - **Global Settings**: General, Appearance, Notifications, Integrations
 
@@ -175,7 +170,7 @@ From the Super Admin Portal, you can access all portals via:
 - **Carrier Portal**: ✅ Active
 - **Driver Portal**: ✅ Active
 - **Shipper Portal**: ✅ Active
-- **Admin Portal**: ✅ Active
+
 - **Super Admin Portal**: ✅ Active
 - **Analytics Portal**: ✅ Active
 - **Autonomous Portal**: ✅ Active

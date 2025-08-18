@@ -111,7 +111,7 @@ http://localhost:5177/super-admin
 - Carrier Portal
 - Driver Portal
 - Shipper Portal
-- Admin Portal
+
 - Analytics Portal
 - Autonomous Portal
 
@@ -121,7 +121,7 @@ http://localhost:5177/super-admin
 - **Carrier Portal** 👥 - `http://localhost:5177/carrier`
 - **Driver Portal** 👥 - `http://localhost:5177/driver`
 - **Shipper Portal** 👥 - `http://localhost:5177/shipper`
-- **Admin Portal** 🔧 - `http://localhost:5177/admin`
+
 - **Analytics Portal** 📈 - `http://localhost:5177/analytics`
 - **Autonomous Portal** ⚙️ - `http://localhost:5177/autonomous`
 

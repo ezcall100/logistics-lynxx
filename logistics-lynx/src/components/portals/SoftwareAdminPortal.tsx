@@ -225,7 +225,7 @@ export default function SoftwareAdminPortal() {
         <div className="p-4 space-y-4 h-full flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <motion.div 
+        <motion.div
               className="flex items-center gap-2"
               animate={{ opacity: (sidebarCollapsed && !isMobile) ? 0 : 1 }}
               transition={{ duration: 0.2 }}
@@ -244,13 +244,13 @@ export default function SoftwareAdminPortal() {
             >
               <motion.span
                 animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3 }}
                 className="text-lg"
               >
                 {sidebarCollapsed ? '◀' : '▶'}
               </motion.span>
             </button>
-          </div>
+                    </div>
           
           {/* Navigation */}
           <nav className="space-y-1 flex-1 overflow-y-auto">
@@ -272,7 +272,7 @@ export default function SoftwareAdminPortal() {
                         >
                           {item.label}
                         </motion.span>
-                      </div>
+                    </div>
                       <motion.span
                         animate={{ 
                           rotate: expandedGroups.has(item.key) ? 180 : 0,
@@ -304,7 +304,7 @@ export default function SoftwareAdminPortal() {
                               <div className="flex items-center gap-2">
                                 <span className="text-sm">{child.icon}</span>
                                 <span className="whitespace-nowrap">{child.label}</span>
-                              </div>
+                  </div>
                               {child.badge && (
                                 <span className="inline-flex items-center justify-center min-w-[20px] h-5 text-xs bg-blue-100 text-blue-800 rounded-full px-1">
                                   {child.badge}
@@ -315,7 +315,7 @@ export default function SoftwareAdminPortal() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </div>
+                    </div>
                 ) : (
                   // Single item
                   <a
@@ -344,7 +344,7 @@ export default function SoftwareAdminPortal() {
                     )}
                   </a>
                 )}
-              </div>
+                  </div>
             ))}
           </nav>
 
@@ -358,11 +358,11 @@ export default function SoftwareAdminPortal() {
               <div className="flex gap-2">
                 <a href="/learn" className="hover:text-slate-700 transition-colors">Learn</a>
                 <a href="/help" className="hover:text-slate-700 transition-colors">Help</a>
-              </div>
+                    </div>
               <button className="hover:text-slate-700 transition-colors">🌓</button>
-            </div>
+                    </div>
           </motion.div>
-        </div>
+                  </div>
       </motion.aside>
 
       {/* Floating Toggle Button for Collapsed Sidebar */}
@@ -401,8 +401,8 @@ export default function SoftwareAdminPortal() {
               <span className="text-xl lg:text-2xl">🌐</span>
               <span className="text-sm font-medium hidden sm:block">Trans Bot AI</span>
               <span className="text-slate-400 hidden lg:block">▼</span>
-            </div>
-          </div>
+                    </div>
+                  </div>
 
           <div className="flex items-center gap-2 lg:gap-3">
             {/* Command Palette */}
@@ -439,7 +439,7 @@ export default function SoftwareAdminPortal() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+              </div>
 
             {/* Notifications */}
             <button
@@ -462,7 +462,7 @@ export default function SoftwareAdminPortal() {
               <span className="text-lg">👤</span>
               <span className="text-sm hidden sm:block">Admin</span>
             </button>
-          </div>
+                    </div>
         </header>
 
         {/* Dashboard Content */}
@@ -471,7 +471,7 @@ export default function SoftwareAdminPortal() {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 lg:p-6 text-white">
             <h1 className="text-xl lg:text-2xl font-bold mb-2">Welcome to Software Admin</h1>
             <p className="text-blue-100 text-sm lg:text-base">Full autonomous agent authority enabled. System running at peak performance.</p>
-          </div>
+                    </div>
 
           {/* System Health Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -485,20 +485,20 @@ export default function SoftwareAdminPortal() {
                   <p className="text-lg font-semibold text-green-600">Healthy</p>
                 </div>
               </div>
-            </div>
+                    </div>
 
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <span className="text-blue-600 text-lg">📊</span>
-                </div>
+                    </div>
                 <div>
                   <p className="text-sm text-slate-600">Uptime</p>
                   <p className="text-lg font-semibold text-blue-600">99.9%</p>
-                </div>
-              </div>
-            </div>
-            
+                  </div>
+                    </div>
+                    </div>
+                    
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-purple-100 rounded-lg">
@@ -509,8 +509,8 @@ export default function SoftwareAdminPortal() {
                   <p className="text-lg font-semibold text-purple-600">250+</p>
                 </div>
               </div>
-            </div>
-            
+                    </div>
+                    
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-orange-100 rounded-lg">
@@ -520,37 +520,37 @@ export default function SoftwareAdminPortal() {
                   <p className="text-sm text-slate-600">Alerts</p>
                   <p className="text-lg font-semibold text-orange-600">3</p>
                 </div>
+                    </div>
+                  </div>
               </div>
-            </div>
-          </div>
 
-          {/* Recent Activity */}
+              {/* Recent Activity */}
           <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
             <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div className="flex-1">
+                      <div className="flex-1">
                   <p className="text-sm font-medium">New support ticket created</p>
                   <p className="text-xs text-slate-500">2 minutes ago</p>
-                </div>
-              </div>
+                      </div>
+                    </div>
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium">Autonomous agent completed task</p>
                   <p className="text-xs text-slate-500">5 minutes ago</p>
                 </div>
-              </div>
+            </div>
               <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium">System backup completed</p>
                   <p className="text-xs text-slate-500">15 minutes ago</p>
-                </div>
-              </div>
+                  </div>
             </div>
-          </div>
+                  </div>
+            </div>
 
           {/* Autonomous Agent Status */}
           <div className="bg-white rounded-lg shadow-sm p-4 lg:p-6">
@@ -560,21 +560,21 @@ export default function SoftwareAdminPortal() {
                 <span className="text-2xl lg:text-3xl">📈</span>
                 <p className="text-xl lg:text-2xl font-bold text-green-600">250+</p>
                 <p className="text-sm text-green-700">Active Agents</p>
-              </div>
+                  </div>
               <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
                 <span className="text-2xl lg:text-3xl">⚡</span>
                 <p className="text-xl lg:text-2xl font-bold text-blue-600">98.5%</p>
                 <p className="text-sm text-blue-700">Success Rate</p>
-              </div>
+            </div>
               <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
                 <span className="text-2xl lg:text-3xl">📊</span>
                 <p className="text-xl lg:text-2xl font-bold text-purple-600">~150ms</p>
                 <p className="text-sm text-purple-700">Response Time</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                      </div>
+                    </div>
+                        </div>
+                      </div>
+                    </div>
       
       {/* Floating Action Button */}
       <FloatingActionButton 
@@ -582,6 +582,6 @@ export default function SoftwareAdminPortal() {
         userEntitlements={['admin.core', 'crm.core', 'tickets.core', 'networks.core', 'workforce.core', 'docs.core', 'financials.core', 'payroll.core', 'api.core', 'marketplace.core', 'reports.core', 'edi.x12']}
         isAdmin={true}
       />
-    </div>
+            </div>
   );
 }

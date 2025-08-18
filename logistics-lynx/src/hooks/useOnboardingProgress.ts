@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 interface OnboardingProgress {
@@ -62,7 +62,7 @@ export const useOnboardingProgress = () => {
     }
   };
 
-  const loadProgressFromDatabase = async () => {
+  const loadProgressFromDatabase = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -90,7 +90,7 @@ export const useOnboardingProgress = () => {
     } catch (error) {
       console.error('Error loading progress:', error);
     }
-  };
+  }, [supabase]);
 
   const resetProgress = () => {
     const resetProgress: OnboardingProgress = {
@@ -107,7 +107,7 @@ export const useOnboardingProgress = () => {
 
   useEffect(() => {
     loadProgressFromDatabase();
-  }, []);
+  }, [loadProgressFromDatabase]);
 
   return {
     progress,

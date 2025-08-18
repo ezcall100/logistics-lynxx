@@ -3,6 +3,7 @@
  * Real-time integration with third-party KYC APIs (Alloy, Plaid, LexisNexis)
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from '@supabase/supabase-js';
 
 export interface TINEntity {

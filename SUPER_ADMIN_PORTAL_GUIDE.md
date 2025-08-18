@@ -51,9 +51,8 @@ http://localhost:3000/super-admin
 3. **Carrier** (`/carrier`) - Fleet operations
 4. **Driver** (`/driver`) - Mobile interface
 5. **Shipper** (`/shipper`) - Booking & tracking
-6. **Admin** (`/admin`) - System management
-7. **Analytics** (`/analytics`) - Data insights
-8. **Autonomous** (`/autonomous`) - AI management
+6. **Analytics** (`/analytics`) - Data insights
+7. **Autonomous** (`/autonomous`) - AI management
 
 ### **Portal Status Monitoring**
 - Real-time status tracking

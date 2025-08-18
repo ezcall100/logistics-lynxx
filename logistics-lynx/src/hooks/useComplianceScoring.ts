@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 interface ComplianceScore {
@@ -283,7 +283,7 @@ export const useComplianceScoring = () => {
     }
   };
 
-  const loadScoreFromDatabase = async () => {
+  const loadScoreFromDatabase = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -325,11 +325,11 @@ export const useComplianceScoring = () => {
     } catch (error) {
       console.error('Error loading compliance score:', error);
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     loadScoreFromDatabase();
-  }, []);
+  }, [loadScoreFromDatabase]);
 
   return {
     score: score.totalScore,

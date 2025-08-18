@@ -21,7 +21,7 @@ import { MasterAutonomousAgentDashboard } from './autonomous/MasterAutonomousAge
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import CarrierBrokerRiskReview from './components/onboarding/CarrierBrokerRiskReview';
 import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
-import SoftwareAdminPortal from './components/portals/SoftwareAdminPortal';
+
 import ShippersPortal from './components/portals/ShippersPortal';
 import BrokersPortal from './components/portals/BrokersPortal';
 import CarriersPortal from './components/portals/CarriersPortal';
@@ -842,18 +842,7 @@ function App() {
             </div>
           } />
 
-          {/* Role-Based Portals */}
-          <Route path="/admin" element={
-            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
-              <SoftwareAdminPortal />
-            </div>
-          } />
-          
-          <Route path="/admin/software-admin" element={
-            <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
-              <SoftwareAdminPortal />
-            </div>
-          } />
+
 
           <Route path="/shippers/portal" element={
             <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -63,18 +63,19 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
   const [activeAnalysis, setActiveAnalysis] = useState<AnalysisArea[]>([]);
   const [systemComponents, setSystemComponents] = useState<SystemComponent[]>([]);
 
-  const analysisAreas: AnalysisArea[] = getAnalysisAreas().map(area => ({
-    id: area.id,
-    category: area.name.split(' ')[0] + ' Analysis',
-    name: area.name,
-    description: area.description,
-    icon: <Search className="h-5 w-5" />,
-    priority: area.priority,
-    status: 'pending' as const,
-    progress: 0,
-    findings: [],
-    improvements: []
-  })),
+  const analysisAreas = useMemo((): AnalysisArea[] => [
+    ...getAnalysisAreas().map(area => ({
+      id: area.id,
+      category: area.name.split(' ')[0] + ' Analysis',
+      name: area.name,
+      description: area.description,
+      icon: <Search className="h-5 w-5" />,
+      priority: area.priority,
+      status: 'pending' as const,
+      progress: 0,
+      findings: [],
+      improvements: []
+    })),
 
     // PORTAL ANALYSIS
     {
@@ -253,15 +254,16 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       findings: [],
       improvements: []
     }
-  ];
+  ], []);
 
-  const systemComponentsList: SystemComponent[] = getSystemComponents().map(component => ({
-    id: component.id,
-    name: component.name,
-    description: component.description,
-    areas: component.areas,
-    status: 'pending' as const
-  }));
+  const systemComponentsList = useMemo((): SystemComponent[] => [
+    ...getSystemComponents().map(component => ({
+      id: component.id,
+      name: component.name,
+      description: component.description,
+      areas: component.areas,
+      status: 'pending' as const
+    })),
     {
       id: 'super-admin-portal',
       name: 'Super Admin Portal',
@@ -318,12 +320,12 @@ export const ComprehensiveSystemAnalysis: React.FC = () => {
       areas: ['floating-actions', 'user-experience', 'communications'],
       status: 'pending'
     }
-  ];
+  ], []);
 
   useEffect(() => {
     setActiveAnalysis(analysisAreas);
     setSystemComponents(systemComponentsList);
-  }, []);
+  }, [analysisAreas, systemComponentsList]);
 
   const startComprehensiveAnalysis = async () => {
     setIsAnalyzing(true);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 interface DocumentExpiration {
@@ -33,7 +33,70 @@ export const useDocumentWatcher = () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  const checkDocumentExpiration = async (): Promise<DocumentExpiration[]> => {
+  const saveDocumentAlerts = useCallback(async (alerts: DocumentAlert[]) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const alertsToSave = alerts.map(alert => ({
+        user_id: user.id,
+        alert_type: alert.type,
+        message: alert.message,
+        severity: alert.severity,
+        document_type: alert.documentType,
+        company_id: alert.companyId,
+        is_read: alert.isRead
+      }));
+
+      const { error } = await supabase
+        .from('document_alerts')
+        .insert(alertsToSave);
+
+      if (error) {
+        console.error('Error saving document alerts:', error);
+      }
+    } catch (error) {
+      console.error('Error saving document alerts:', error);
+    }
+  }, [supabase]);
+
+  const generateDocumentAlerts = useCallback(async (documents: DocumentExpiration[]) => {
+    const alerts: DocumentAlert[] = [];
+
+    documents.forEach(doc => {
+      let alertType: 'expired' | 'expiring_soon' | 'missing';
+      let severity: 'low' | 'medium' | 'high' | 'critical';
+      let message: string;
+
+      if (doc.isExpired) {
+        alertType = 'expired';
+        severity = 'critical';
+        message = `${doc.documentType} for ${doc.companyName} has expired on ${doc.expirationDate.toLocaleDateString()}`;
+      } else if (doc.isExpiringSoon) {
+        alertType = 'expiring_soon';
+        severity = doc.daysUntilExpiry <= 7 ? 'high' : 'medium';
+        message = `${doc.documentType} for ${doc.companyName} expires in ${doc.daysUntilExpiry} days`;
+      } else {
+        return; // Skip if not expiring soon
+      }
+
+      alerts.push({
+        id: `${doc.documentId}_${alertType}`,
+        type: alertType,
+        message,
+        severity,
+        documentType: doc.documentType,
+        companyId: doc.documentId,
+        createdAt: new Date(),
+        isRead: false
+      });
+    });
+
+    setDocumentAlerts(alerts);
+    await saveDocumentAlerts(alerts);
+  }, [saveDocumentAlerts]);
+
+  const checkDocumentExpiration = useCallback(async (): Promise<DocumentExpiration[]> => {
     setIsLoading(true);
     try {
       // Check insurance certificates expiration
@@ -116,70 +179,11 @@ export const useDocumentWatcher = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase, generateDocumentAlerts]);
 
-  const generateDocumentAlerts = async (documents: DocumentExpiration[]) => {
-    const alerts: DocumentAlert[] = [];
 
-    documents.forEach(doc => {
-      let alertType: 'expired' | 'expiring_soon' | 'missing';
-      let severity: 'low' | 'medium' | 'high' | 'critical';
-      let message: string;
 
-      if (doc.isExpired) {
-        alertType = 'expired';
-        severity = 'critical';
-        message = `${doc.documentType} for ${doc.companyName} has expired on ${doc.expirationDate.toLocaleDateString()}`;
-      } else if (doc.isExpiringSoon) {
-        alertType = 'expiring_soon';
-        severity = doc.daysUntilExpiry <= 7 ? 'high' : 'medium';
-        message = `${doc.documentType} for ${doc.companyName} expires in ${doc.daysUntilExpiry} days`;
-      } else {
-        return; // Skip if not expiring soon
-      }
 
-      alerts.push({
-        id: `${doc.documentId}_${alertType}`,
-        type: alertType,
-        message,
-        severity,
-        documentType: doc.documentType,
-        companyId: doc.documentId,
-        createdAt: new Date(),
-        isRead: false
-      });
-    });
-
-    setDocumentAlerts(alerts);
-    await saveDocumentAlerts(alerts);
-  };
-
-  const saveDocumentAlerts = async (alerts: DocumentAlert[]) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const alertsToSave = alerts.map(alert => ({
-        user_id: user.id,
-        alert_type: alert.type,
-        message: alert.message,
-        severity: alert.severity,
-        document_type: alert.documentType,
-        company_id: alert.companyId,
-        is_read: alert.isRead
-      }));
-
-      const { error } = await supabase
-        .from('document_alerts')
-        .insert(alertsToSave);
-
-      if (error) {
-        console.error('Error saving document alerts:', error);
-      }
-    } catch (error) {
-      console.error('Error saving document alerts:', error);
-    }
-  };
 
   const markAlertAsRead = async (alertId: string) => {
     try {
@@ -241,7 +245,7 @@ export const useDocumentWatcher = () => {
     }
   };
 
-  const loadDocumentAlerts = async () => {
+  const loadDocumentAlerts = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -272,7 +276,7 @@ export const useDocumentWatcher = () => {
     } catch (error) {
       console.error('Error loading document alerts:', error);
     }
-  };
+  }, [supabase]);
 
   // Auto-check for expiring documents every hour
   useEffect(() => {
@@ -281,12 +285,12 @@ export const useDocumentWatcher = () => {
     }, 60 * 60 * 1000); // 1 hour
 
     return () => clearInterval(interval);
-  }, []);
+  }, [checkDocumentExpiration]);
 
   // Load existing alerts on mount
   useEffect(() => {
     loadDocumentAlerts();
-  }, []);
+  }, [loadDocumentAlerts]);
 
   return {
     expiringDocuments,

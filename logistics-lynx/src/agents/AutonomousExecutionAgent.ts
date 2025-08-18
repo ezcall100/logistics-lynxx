@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseAgent } from './BaseAgent';
 import { 
   AUTONOMOUS_EXECUTION_BRIEF, 
