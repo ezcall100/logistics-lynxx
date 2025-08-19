@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
+import { AuthProvider } from '../../context/AuthContext';
 
 // UI Components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -70,6 +71,19 @@ import DevOpsPage from './pages/DevOpsPage';
 import DatabaseOptimizerPage from './pages/DatabaseOptimizerPage';
 import SecurityScannerPage from './pages/SecurityScannerPage';
 import PerformanceMonitorPage from './pages/PerformanceMonitorPage';
+
+// Import autonomous dashboard page
+import AutonomousDashboardPage from '../../pages/AutonomousDashboardPage';
+
+// Import user management page
+import UserManagementPage from '../../pages/super-admin/UserManagementPage';
+
+// Import system control pages
+import SystemHealthPage from '../../pages/super-admin/SystemHealthPage';
+import DatabaseAdminPage from '../../pages/super-admin/DatabaseAdminPage';
+import NetworkConfigPage from '../../pages/super-admin/NetworkConfigPage';
+import SecurityCenterPage from '../../pages/super-admin/SecurityCenterPage';
+import BackupRestorePage from '../../pages/super-admin/BackupRestorePage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
@@ -142,7 +156,7 @@ const EnhancedSuperAdminPortal = () => {
         { title: 'DevOps Agent', path: '/super-admin/engineering/devops', icon: Settings },
         { title: 'Database Optimizer', path: '/super-admin/engineering/database', icon: Database },
         { title: 'Security Scanner', path: '/super-admin/engineering/security', icon: ShieldCheck },
-        { title: 'Performance Monitor', path: '/super-admin/engineering/perf', icon: Activity }
+        { title: 'Performance Monitor', path: '/super-admin/engineering/performance', icon: Activity }
       ]
     },
     {
@@ -152,11 +166,11 @@ const EnhancedSuperAdminPortal = () => {
       path: '/super-admin/autonomous',
       description: 'AI agents and autonomous operations',
       subItems: [
-        { title: 'Agent Dashboard', path: '/super-admin/autonomous/agents', icon: Brain },
-        { title: 'Performance Monitor', path: '/super-admin/autonomous/performance', icon: Activity },
-        { title: 'Learning Models', path: '/super-admin/autonomous/models', icon: TrendingUp },
-        { title: 'Decision Logs', path: '/super-admin/autonomous/decisions', icon: FileText },
-        { title: 'Auto-Scaling', path: '/super-admin/autonomous/scaling', icon: Maximize2 }
+        { title: 'Agent Dashboard', path: '/super-admin/autonomous/agent-dashboard', icon: Brain },
+        { title: 'Performance Monitor', path: '/super-admin/autonomous/performance-monitor', icon: Activity },
+        { title: 'Learning Models', path: '/super-admin/autonomous/learning-models', icon: TrendingUp },
+        { title: 'Decision Logs', path: '/super-admin/autonomous/decision-logs', icon: FileText },
+        { title: 'Auto-Scaling', path: '/super-admin/autonomous/auto-scaling', icon: Maximize2 }
       ]
     },
     {
@@ -735,9 +749,19 @@ const EnhancedSuperAdminPortal = () => {
               >
                 <Routes>
                   <Route path="/" element={<DashboardPage />} />
-                  <Route path="/autonomous/*" element={<DashboardPage />} />
-                  <Route path="/users/*" element={<DashboardPage />} />
-                  <Route path="/system/*" element={<DashboardPage />} />
+                  <Route path="/autonomous/*" element={
+                    <AuthProvider>
+                      <AutonomousDashboardPage />
+                    </AuthProvider>
+                  } />
+                  <Route path="/users/*" element={<UserManagementPage />} />
+                  {/* System Control Pages */}
+                  <Route path="/system" element={<DashboardPage />} />
+                  <Route path="/system/health" element={<SystemHealthPage />} />
+                  <Route path="/system/database" element={<DatabaseAdminPage />} />
+                  <Route path="/system/network" element={<NetworkConfigPage />} />
+                  <Route path="/system/security" element={<SecurityCenterPage />} />
+                  <Route path="/system/backup" element={<BackupRestorePage />} />
                   <Route path="/portals" element={<DashboardPage />} />
                   <Route path="/analytics" element={<DashboardPage />} />
                   {/* Engineering Suite Pages */}

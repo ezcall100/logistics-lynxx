@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { LayoutDashboard, BarChart3, Package, Truck, Building2, DollarSign, Users, Settings, Brain, Activity, Globe, Bell, ChevronRight, Target, FileText, Shield, Calendar, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Package, Truck, Building2, DollarSign, Users, Settings, Brain, Activity, Globe, Bell, ChevronRight, Target, FileText, Shield, Calendar, MessageSquare, TrendingUp, Maximize2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 const ModernSidebar = () => {
   const collapsed = false; // Simplified for now
@@ -28,13 +28,29 @@ const ModernSidebar = () => {
     }];
     const roleSpecificItems = {
       super_admin: [{
-        title: 'System Health',
-        url: '/autonomous-system',
+        title: 'Autonomous System',
+        url: '/autonomous',
         icon: Activity
       }, {
-        title: 'Agent Control',
-        url: '/autonomous-agents',
+        title: 'Agent Dashboard',
+        url: '/autonomous/agent-dashboard',
         icon: Brain
+      }, {
+        title: 'Performance Monitor',
+        url: '/autonomous/performance-monitor',
+        icon: BarChart3
+      }, {
+        title: 'Learning Models',
+        url: '/autonomous/learning-models',
+        icon: TrendingUp
+      }, {
+        title: 'Decision Logs',
+        url: '/autonomous/decision-logs',
+        icon: FileText
+      }, {
+        title: 'Auto Scaling',
+        url: '/autonomous/auto-scaling',
+        icon: Maximize2
       }, {
         title: 'User Management',
         url: '/users',

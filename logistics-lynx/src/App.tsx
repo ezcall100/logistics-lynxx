@@ -33,11 +33,6 @@ import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashbo
 import LoginPage from './pages/auth/LoginPage';
 import { AutonomousPortalSelector } from './components/portal/AutonomousPortalSelector';
 
-// Autonomous System Components
-import { MasterAutonomousAgent } from './autonomous/MasterAutonomousAgent';
-import AutonomousDevelopmentSystem from './autonomous/AutonomousDevelopmentSystem';
-import AutonomousDashboardPage from './pages/AutonomousDashboardPage';
-
 // UI Components
 import { Button } from './components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
@@ -214,7 +209,6 @@ function AppContent() {
         <Route path="/edi/*" element={<SuperAdminPage />} />
         <Route path="/marketplace/*" element={<SuperAdminPage />} />
         <Route path="/analytics/*" element={<AnalyticsPage />} />
-        <Route path="/autonomous/*" element={<AutonomousDashboardPage />} />
         <Route path="/workers/*" element={<SystemHealthPage />} />
         <Route path="/rates/*" element={<SuperAdminPage />} />
         <Route path="/directory/*" element={<SuperAdminPage />} />

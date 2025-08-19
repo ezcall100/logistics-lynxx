@@ -89,7 +89,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
           },
           { id: 'users', label: 'Global Users', icon: UserCheck, path: '/settings' },
           { id: 'analytics', label: 'Platform Analytics', icon: BarChart3, path: '/analytics' },
-          { id: 'autonomous', label: 'AI Orchestration', icon: Brain, path: '/autonomous-system' },
+          { id: 'autonomous', label: 'Autonomous System', icon: Brain, path: '/autonomous' },
           { id: 'alerts', label: 'System Alerts', icon: Shield, path: '/alerts' },
           { id: 'api', label: 'API Management', icon: Cpu, 
             subItems: [

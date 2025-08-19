@@ -11,6 +11,7 @@ export default defineConfig({
   server: {
     port: 8084,
     host: true,
+    open: true,
     proxy: {
       "/functions/v1": "http://127.0.0.1:54321"
     }

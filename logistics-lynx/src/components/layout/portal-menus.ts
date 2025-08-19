@@ -51,35 +51,12 @@ export const portalMenus = {
   ],
   
   autonomous: [
-    { name: 'AI Dashboard', icon: '🤖', path: '/autonomous/dashboard' },
-    { 
-      name: 'Agent Management', 
-      icon: '👥', 
-      submenu: [
-        { name: 'Active Agents', path: '/autonomous/agents', icon: '🤖' },
-        { name: 'Agent Performance', path: '/autonomous/performance', icon: '📊' },
-        { name: 'Agent Logs', path: '/autonomous/logs', icon: '📋' }
-      ]
-    },
-    { 
-      name: 'System Monitoring', 
-      icon: '📊', 
-      submenu: [
-        { name: 'Real-time Metrics', path: '/autonomous/metrics', icon: '📊' },
-        { name: 'System Health', path: '/autonomous/health', icon: '❤️' },
-        { name: 'Alert Management', path: '/autonomous/alerts', icon: '🔔' }
-      ]
-    },
-    { 
-      name: 'Development', 
-      icon: '💻', 
-      submenu: [
-        { name: 'Code Changes', path: '/autonomous/code', icon: '💻' },
-        { name: 'Deployments', path: '/autonomous/deployments', icon: '🚀' },
-        { name: 'Testing', path: '/autonomous/testing', icon: '🧪' }
-      ]
-    },
-    { name: 'Configuration', icon: '⚙️', path: '/autonomous/config' }
+    { name: 'Autonomous System', icon: '🤖', path: '/autonomous' },
+    { name: 'Agent Dashboard', icon: '🤖', path: '/autonomous/agent-dashboard' },
+    { name: 'Performance Monitor', icon: '📊', path: '/autonomous/performance-monitor' },
+    { name: 'Learning Models', icon: '🧠', path: '/autonomous/learning-models' },
+    { name: 'Decision Logs', icon: '📝', path: '/autonomous/decision-logs' },
+    { name: 'Auto Scaling', icon: '⚡', path: '/autonomous/auto-scaling' }
   ],
   
   analytics: [
