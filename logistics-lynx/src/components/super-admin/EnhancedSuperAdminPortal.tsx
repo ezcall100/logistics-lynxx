@@ -79,11 +79,11 @@ import AutonomousDashboardPage from '../../pages/AutonomousDashboardPage';
 import UserManagementPage from '../../pages/super-admin/UserManagementPage';
 
 // Import system control pages
-import SystemHealthPage from '../../pages/super-admin/SystemHealthPage';
+import SystemHealthPage from '../../pages/SystemHealthPage';
 import DatabaseAdminPage from '../../pages/super-admin/DatabaseAdminPage';
 import NetworkConfigPage from '../../pages/super-admin/NetworkConfigPage';
-import SecurityCenterPage from '../../pages/super-admin/SecurityCenterPage';
-import BackupRestorePage from '../../pages/super-admin/BackupRestorePage';
+import SecurityCenterPage from './pages/SecurityCenterPage';
+import BackupRestorePage from './pages/system-admin/BackupRestorePage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
