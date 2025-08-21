@@ -34,6 +34,17 @@ import {
   ShieldCheck, Key, Fingerprint, Wifi, HardDrive, Cpu,
   HardDriveIcon, WifiOff, AlertCircle, Info,
   ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu,
+  Code, Bug, Palette, LayoutDashboard, Folder, Cog, Wrench, UserCheck, UserX, ShieldX, 
+  ArrowUpRight, ArrowDownRight, Minus, XCircle, 
+  Link, FileText2, Heart, TrendingDown, PieChart,
+  LineChart, BarChart4, ScatterChart, ActivitySquare,
+  CalendarDays, Target, Award, Trophy,
+  Share,
+  Unlock,
+  AlertTriangle, CheckCircle, Info,
+  Settings2, Network, HardDrive,
+  Cpu, Memory, HardDriveIcon, WifiOff, AlertCircle,
+  ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu,
   Code, Bug, Palette, LayoutDashboard
 } from 'lucide-react';
 
@@ -84,6 +95,8 @@ import DatabaseAdminPage from '../../pages/super-admin/DatabaseAdminPage';
 import NetworkConfigPage from '../../pages/super-admin/NetworkConfigPage';
 import SecurityCenterPage from './pages/SecurityCenterPage';
 import BackupRestorePage from './pages/system-admin/BackupRestorePage';
+import PortalManagementPage from './pages/PortalManagementPage';
+import AnalyticsReportsPage from './pages/AnalyticsReportsPage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
@@ -205,14 +218,38 @@ const EnhancedSuperAdminPortal = () => {
       title: 'Portal Management',
       icon: Building2,
       path: '/super-admin/portals',
-      description: 'Manage all system portals'
+      description: 'Manage all system portals',
+      subItems: [
+        { title: 'Portal Overview', path: '/super-admin/portals/overview', icon: LayoutDashboard },
+        { title: 'All Portals', path: '/super-admin/portals/all', icon: Globe },
+        { title: 'Portal Categories', path: '/super-admin/portals/categories', icon: Folder },
+        { title: 'Portal Monitoring', path: '/super-admin/portals/monitoring', icon: Activity },
+        { title: 'Portal Settings', path: '/super-admin/portals/settings', icon: Settings },
+        { title: 'Portal Analytics', path: '/super-admin/portals/analytics', icon: BarChart3 },
+        { title: 'Portal Security', path: '/super-admin/portals/security', icon: Shield },
+        { title: 'Portal Backup', path: '/super-admin/portals/backup', icon: Database },
+        { title: 'Portal Users', path: '/super-admin/portals/users', icon: Users },
+        { title: 'Portal Configurations', path: '/super-admin/portals/configurations', icon: Cog }
+      ]
     },
     {
       id: 'analytics',
       title: 'Analytics & Reports',
       icon: BarChart3,
       path: '/super-admin/analytics',
-      description: 'Comprehensive system analytics'
+      description: 'Comprehensive system analytics',
+      subItems: [
+        { title: 'Dashboard Analytics', path: '/super-admin/analytics/dashboard', icon: LayoutDashboard },
+        { title: 'System Reports', path: '/super-admin/analytics/system', icon: BarChart3 },
+        { title: 'User Reports', path: '/super-admin/analytics/users', icon: Users },
+        { title: 'Performance Reports', path: '/super-admin/analytics/performance', icon: TrendingUp },
+        { title: 'Security Reports', path: '/super-admin/analytics/security', icon: Shield },
+        { title: 'Financial Reports', path: '/super-admin/analytics/financial', icon: DollarSign },
+        { title: 'Operational Reports', path: '/super-admin/analytics/operational', icon: Activity },
+        { title: 'Custom Reports', path: '/super-admin/analytics/custom', icon: FileText },
+        { title: 'Data Export', path: '/super-admin/analytics/export', icon: Download },
+        { title: 'Report Scheduler', path: '/super-admin/analytics/scheduler', icon: Calendar }
+      ]
     }
   ];
 
@@ -755,6 +792,8 @@ const EnhancedSuperAdminPortal = () => {
                     </AuthProvider>
                   } />
                   <Route path="/users/*" element={<UserManagementPage />} />
+                  <Route path="/portals/*" element={<PortalManagementPage />} />
+                  <Route path="/analytics/*" element={<AnalyticsReportsPage />} />
                   {/* System Control Pages */}
                   <Route path="/system" element={<DashboardPage />} />
                   <Route path="/system/health" element={<SystemHealthPage />} />
@@ -762,8 +801,6 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/system/network" element={<NetworkConfigPage />} />
                   <Route path="/system/security" element={<SecurityCenterPage />} />
                   <Route path="/system/backup" element={<BackupRestorePage />} />
-                  <Route path="/portals" element={<DashboardPage />} />
-                  <Route path="/analytics" element={<DashboardPage />} />
                   {/* Engineering Suite Pages */}
                   <Route path="/engineering" element={<DashboardPage />} />
                   <Route path="/engineering/frontend" element={<FrontendDeveloperPage />} />
