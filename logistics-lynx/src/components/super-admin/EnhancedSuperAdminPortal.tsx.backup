@@ -33,13 +33,19 @@ import {
   Truck, Package, Car, Briefcase, Calculator, FileText,
   ShieldCheck, Key, Fingerprint, Wifi, HardDrive, Cpu,
   HardDriveIcon, WifiOff, AlertCircle, Info,
-  Folder, Cog, Wrench, UserCheck, UserX, ShieldX,
-  ArrowUpRight, ArrowDownRight, Minus, XCircle,
+  ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu,
+  Code, Bug, Palette, LayoutDashboard, Folder, Cog, Wrench, UserCheck, UserX, ShieldX, 
+  ArrowUpRight, ArrowDownRight, Minus, XCircle, 
   Link, FileText2, Heart, TrendingDown, PieChart,
   LineChart, BarChart4, ScatterChart, ActivitySquare,
   CalendarDays, Target, Award, Trophy,
-  Share, Unlock, Settings2, Memory,
-  LayoutDashboard, Code, Bug, Palette, Maximize2, Menu
+  TrendingUp, Download, Upload, Share, Filter,
+  Search, Eye, EyeOff, Lock, Unlock, Key,
+  ShieldCheck, AlertTriangle, CheckCircle, Info,
+  Settings2, Database, Server, Network, HardDrive,
+  Cpu, Memory, HardDriveIcon, WifiOff, AlertCircle,
+  ExternalLink, Copy, Share2, Maximize2, Minimize2, Menu,
+  Code, Bug, Palette, LayoutDashboard
 } from 'lucide-react';
 
 // Custom Logo Component
@@ -816,4 +822,3 @@ const EnhancedSuperAdminPortal = () => {
 };
 
 export default EnhancedSuperAdminPortal;
-
