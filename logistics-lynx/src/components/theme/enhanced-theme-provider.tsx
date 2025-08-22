@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ThemeProvider as RadixThemeProvider } from "@radix-ui/react-theme"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { useTheme } from "./use-theme"
 import { ThemeProviderContext, ThemeProviderState, Theme } from './theme-context'
 
@@ -95,14 +95,14 @@ export function EnhancedThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      <RadixThemeProvider
+      <NextThemesProvider
         attribute={attribute}
         defaultTheme={theme}
         enableSystem={enableSystem}
         disableTransitionOnChange={disableTransitionOnChange}
       >
         {children}
-      </RadixThemeProvider>
+      </NextThemesProvider>
     </ThemeProviderContext.Provider>
   )
 }
