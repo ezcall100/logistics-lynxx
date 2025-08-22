@@ -19,7 +19,7 @@ import {
   Share, Unlock, Settings2,
   LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
   CircuitBoard, BookOpen, HelpCircle, Rocket, Command,
-  Crown, Star, Sparkles, Zap, Atom, BrainCircuit,
+  Crown, Star, Sparkles, Atom, BrainCircuit,
   CpuIcon, DatabaseIcon, NetworkIcon, ServerIcon,
   ShieldIcon, UsersIcon, SettingsIcon, GlobeIcon,
   ActivityIcon, BarChartIcon, LockIcon, SearchIcon,
@@ -349,7 +349,7 @@ export const EnhancedIcons = {
     <EnhancedIcon icon={Sparkles} variant="gradient" glow {...props} />
   ),
   Lightning: (props: Omit<EnhancedIconProps, 'icon'>) => (
-    <EnhancedIcon icon={Lightning} variant="warning" glow {...props} />
+    <EnhancedIcon icon={Zap} variant="warning" glow {...props} />
   ),
   Atom: (props: Omit<EnhancedIconProps, 'icon'>) => (
     <EnhancedIcon icon={Atom} variant="gradient" glow {...props} />
