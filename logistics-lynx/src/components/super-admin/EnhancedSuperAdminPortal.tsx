@@ -1349,6 +1349,13 @@ const EnhancedSuperAdminPortal = () => {
                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
                 </Button>
 
+                {/* Super Administrator Badge */}
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white text-sm font-semibold shadow-lg border border-purple-400/30">
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <span className="hidden sm:inline">Super Admin</span>
+                  <span className="sm:hidden">SA</span>
+                </div>
+
                 {/* Enhanced User Menu with Radix DropdownMenu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
