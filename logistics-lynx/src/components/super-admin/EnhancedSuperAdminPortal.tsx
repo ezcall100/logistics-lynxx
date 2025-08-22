@@ -4,7 +4,7 @@ import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
 
 // Import MCP Design System
-import '../styles/mcp-design-system.css';
+import '../../styles/mcp-design-system.css';
 
 // UI Components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
