@@ -37,9 +37,9 @@ import {
   Minus,
   XCircle,
   Info,
-  Warning,
-  Error,
-  Success
+  AlertTriangle,
+  XCircle,
+  CheckCircle
 } from 'lucide-react';
 
 // Enhanced MCP Status Badge
@@ -399,17 +399,17 @@ export const MCPAlertCard: React.FC<MCPAlertCardProps> = ({
       iconColor: 'text-blue-400'
     },
     warning: {
-      icon: Warning,
+      icon: AlertTriangle,
       color: 'border-yellow-500/20 bg-yellow-500/5',
       iconColor: 'text-yellow-400'
     },
     error: {
-      icon: Error,
+      icon: XCircle,
       color: 'border-red-500/20 bg-red-500/5',
       iconColor: 'text-red-400'
     },
     success: {
-      icon: Success,
+      icon: CheckCircle,
       color: 'border-green-500/20 bg-green-500/5',
       iconColor: 'text-green-400'
     }
