@@ -1325,7 +1325,7 @@ const EnhancedSuperAdminPortal = () => {
           <Route path="/mcp/api-gateway" element={<MCPAPIGatewayPage />} />
           <Route path="/mcp/log-management" element={<MCPLogManagementPage />} />
           <Route path="/mcp/alert-center" element={<MCPAlertCenterPage />} />
-          <Route path="/mcp/deployment-manager" element={<MCPDeploymentManagerPage />} />
+          <Route path="/mcp/deployment" element={<MCPDeploymentManagerPage />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>
