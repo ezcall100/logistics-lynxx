@@ -36,10 +36,7 @@ import {
   ArrowDownRight,
   Minus,
   XCircle,
-  Info,
-  AlertTriangle,
-  XCircle,
-  CheckCircle
+  Info
 } from 'lucide-react';
 
 // Enhanced MCP Status Badge
