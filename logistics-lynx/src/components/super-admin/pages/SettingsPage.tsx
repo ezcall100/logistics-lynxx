@@ -18,7 +18,7 @@ import {
   Zap, Brain, Activity, Users, Lock, Unlock,
   CheckCircle, AlertTriangle, Info, Save, RefreshCw,
   Trash2, Download, Upload, Eye, EyeOff, Key,
-  Server, HardDrive, Wifi, Cpu, Memory, HardDriveIcon,
+  Server, HardDrive, Wifi, Cpu, HardDriveIcon,
   ShieldCheck, Fingerprint, Smartphone, Monitor, 
   Calendar, Clock, Target, Award, Trophy, Star,
   Cog, Wrench, Palette, Sun, Moon, Smartphone as Mobile,
@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 
 // Import MCP Design System
-import '../../styles/mcp-design-system.css';
+import '@/styles/mcp-design-system.css';
 
 const SettingsPage = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -233,7 +233,7 @@ const SettingsPage = () => {
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
                 <div className="p-3 rounded-xl bg-green-100 dark:bg-green-900/50">
-                  <MemoryIcon className="h-8 w-8 text-green-600 dark:text-green-400" />
+                  <HardDrive className="h-8 w-8 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-green-900 dark:text-green-100">{systemStats.memory}%</p>

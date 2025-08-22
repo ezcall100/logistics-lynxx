@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 
 // Import MCP Design System
-import '../../styles/mcp-design-system.css';
+import '@/styles/mcp-design-system.css';
 
 // Import all analytics pages
 import DashboardAnalyticsPage from './analytics/DashboardAnalyticsPage';

@@ -92,7 +92,18 @@ import {
 } from 'lucide-react';
 
 // Import MCP Design System
-import '../../styles/mcp-design-system.css';
+import '@/styles/mcp-design-system.css';
+import {
+  MCPStatusBadge,
+  MCPMetricCard,
+  MCPProgressCard,
+  MCPActionButton,
+  MCPSystemStatus,
+  MCPAlertCard,
+  MCPDataTable,
+  MCPLoadingSkeleton,
+  MCPEmptyState
+} from '@/components/ui/mcp-components';
 
 interface SecurityThreat {
   id: string;

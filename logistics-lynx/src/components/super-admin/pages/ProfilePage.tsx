@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 
 // Import MCP Design System
-import '../../styles/mcp-design-system.css';
+import '@/styles/mcp-design-system.css';
 
 const ProfilePage = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
