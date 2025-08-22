@@ -188,13 +188,7 @@ function AppContent() {
         <div className="App">
           <Routes>
             {/* Main Portal Selection */}
-        <Route path="/" element={
-          <div style={{ padding: '20px', color: 'white', backgroundColor: 'black' }}>
-            <h1>Trans Bot AI - Test Page</h1>
-            <p>If you can see this, React is working!</p>
-            <button onClick={() => alert('Button works!')}>Test Button</button>
-          </div>
-        } />
+        <Route path="/" element={<AutonomousPortalSelector />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<LoginPage />} />
