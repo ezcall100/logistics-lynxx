@@ -17,7 +17,7 @@ import {
   AlertTriangle, CheckCircle, XCircle, Search, Filter, Plus,
   MoreHorizontal, Eye, Edit, Trash2, Download, Upload,
   RefreshCw, Zap, Brain, Server, Database, Globe, Code,
-  Palette, Bug, TrendingUp, HardDrive, Wifi, Cpu, Memory
+  Palette, Bug, TrendingUp, HardDrive, Wifi, Cpu
 } from 'lucide-react';
 
 // Mock agent data
@@ -357,7 +357,7 @@ const MCPAgentRegistryPage = () => {
                           <span className="text-xs">{agent.cpu}%</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Memory className="w-3 h-3" />
+                          <HardDrive className="w-3 h-3" />
                           <span className="text-xs">{agent.memory}%</span>
                         </div>
                       </div>

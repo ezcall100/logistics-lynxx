@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { 
-  TrendingUp, TrendingDown, Activity, Cpu, Memory, HardDrive, 
+  TrendingUp, TrendingDown, Activity, Cpu, HardDrive, 
   Wifi, Clock, Zap, Target, BarChart3, LineChart, PieChart,
   AlertTriangle, CheckCircle, XCircle, RefreshCw, Settings,
   Download, Upload, Database, Server, Globe, Users
@@ -288,7 +288,7 @@ const MCPPerformanceAnalyticsPage = () => {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <Memory className="w-4 h-4" />
+                      <HardDrive className="w-4 h-4" />
                       <span className="text-sm">Memory Usage</span>
                     </div>
                     <span className="font-medium">45%</span>

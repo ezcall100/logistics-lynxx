@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { 
-  Activity, Cpu, Memory, HardDrive, Wifi, Server, 
+  Activity, Cpu, HardDrive, Wifi, Server, 
   AlertTriangle, CheckCircle, XCircle, RefreshCw, 
   TrendingUp, TrendingDown, Clock, Zap, Shield,
   Database, Globe, Code, Users, Settings
@@ -315,7 +315,7 @@ const MCPSystemMonitorPage = () => {
             <Card className="border-0 shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Memory className="w-5 h-5" />
+                  <HardDrive className="w-5 h-5" />
                   <span>Memory Information</span>
                 </CardTitle>
               </CardHeader>

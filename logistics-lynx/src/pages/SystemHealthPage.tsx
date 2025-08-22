@@ -18,7 +18,6 @@ import {
   Network,
   Cpu,
   HardDrive,
-  Memory,
   Wifi,
   Shield,
   Clock,

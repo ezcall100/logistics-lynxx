@@ -15,7 +15,6 @@ import {
   Database,
   Network,
   Cpu,
-  Memory,
   HardDrive
 } from 'lucide-react';
 
@@ -58,7 +57,7 @@ export default function MetricsBar() {
         unit: '%',
         trend: 'up',
         status: 'warning',
-        icon: Memory
+        icon: HardDrive
       },
       {
         name: 'Database Connections',
