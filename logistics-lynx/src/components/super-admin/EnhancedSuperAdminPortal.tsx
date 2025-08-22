@@ -88,6 +88,10 @@ import AutonomousDashboardPage from '../../pages/AutonomousDashboardPage';
 
 // Import user management page
 import UserManagementPage from '../../pages/super-admin/UserManagementPage';
+import AllUsersPage from './pages/user-management/AllUsersPage';
+
+// Import Floating Action Button
+import { FloatingActionButton } from '../admin/FloatingActionButton';
 
 // Import system control pages
 import SystemHealthPage from '../../pages/SystemHealthPage';
@@ -1283,6 +1287,7 @@ const EnhancedSuperAdminPortal = () => {
                     </AuthProvider>
                   } />
                   <Route path="/users/*" element={<UserManagementPage />} />
+                  <Route path="/users/all" element={<AllUsersPage />} />
                   <Route path="/portals/overview" element={<PortalOverviewPage />} />
                   <Route path="/portals/all" element={<AllPortalsPage />} />
                   <Route path="/portals/categories" element={<PortalCategoriesPage />} />
@@ -1338,6 +1343,13 @@ const EnhancedSuperAdminPortal = () => {
           </main>
         </div>
       </div>
+
+      {/* Floating Action Button */}
+      <FloatingActionButton 
+        userRole="super_admin"
+        userEntitlements={['super_admin.core', 'system.admin', 'user.admin', 'portal.admin', 'security.admin']}
+        isAdmin={true}
+      />
     </TooltipProvider>
   );
 };
