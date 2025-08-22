@@ -1320,46 +1320,34 @@ const EnhancedSuperAdminPortal = () => {
               
               <div className="flex items-center space-x-4">
                 {/* Settings Icon */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => navigate('/super-admin/settings')}
-                      className={`h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-105 ${
-                        isDark 
-                          ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
-                          : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
-                      }`}
-                    >
-                      <Settings className="w-5 h-5 text-orange-500" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>System Settings</p>
-                  </TooltipContent>
-                </Tooltip>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/super-admin/settings')}
+                  className={`h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-105 ${
+                    isDark 
+                      ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
+                      : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
+                  }`}
+                  title="System Settings"
+                >
+                  <Settings className="w-5 h-5 text-orange-500" />
+                </Button>
 
                 {/* Notifications Icon */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={`h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-105 relative ${
-                        isDark 
-                          ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
-                          : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
-                      }`}
-                    >
-                      <Bell className="w-5 h-5 text-blue-500" />
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Notifications</p>
-                  </TooltipContent>
-                </Tooltip>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={`h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-105 relative ${
+                    isDark 
+                      ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
+                      : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
+                  }`}
+                  title="Notifications"
+                >
+                  <Bell className="w-5 h-5 text-blue-500" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
+                </Button>
 
                 {/* Enhanced User Menu with Radix DropdownMenu */}
                 <DropdownMenu>
