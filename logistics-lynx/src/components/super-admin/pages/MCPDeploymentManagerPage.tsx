@@ -20,7 +20,7 @@ import {
   Cog, Zap, Eye, EyeOff, Trash2, Copy,
   Plus, Edit, Search, Filter, MoreHorizontal,
   HardDrive, Cloud, Archive, RotateCcw, ShieldCheck,
-  AlertTriangle, Info, Play, Pause, Stop,
+  AlertTriangle, Info, Play, Pause,
   Settings, BarChart3, Timer, Terminal,
   Bug, Network,
   GitBranch, GitCommit, GitPullRequest, GitMerge,
