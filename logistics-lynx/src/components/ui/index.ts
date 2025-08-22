@@ -3,7 +3,7 @@
 
 // Core UI Components
 export { Button } from './button';
-export { buttonVariants } from './button-variants';
+export { buttonVariants, buttonVariantsPresets } from './button-variants';
 export { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
 export { Input } from './input';
 export { Label } from './label';
@@ -37,7 +37,7 @@ export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, Comma
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 
 // Navigation Components
-export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuLabel, SidebarMenuSeparator, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarMenuSubTrigger, SidebarMenuTrigger, SidebarTrigger } from './sidebar';
+export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger } from './sidebar';
 
 // Calendar Components
 export { Calendar } from './calendar';
@@ -47,40 +47,9 @@ export { Toaster } from './toaster';
 export { useToast } from './use-toast';
 
 // Theme Components
-export { ThemeProvider, useTheme } from '../theme/theme-provider';
+export { default as ThemeProvider, useTheme } from '../theme/theme-provider';
 
 // Logo Component
 export { default as TransBotLogo } from './TransBotLogo';
 
-// Utility Types
-export type { ButtonProps } from './button';
-export type { CardProps } from './card';
-export type { InputProps } from './input';
-export type { LabelProps } from './label';
-export type { BadgeProps } from './badge';
-export type { TabsProps } from './tabs';
-export type { SelectProps } from './select';
-export type { CheckboxProps } from './checkbox';
-export type { RadioGroupProps } from './radio-group';
-export type { TextareaProps } from './textarea';
-export type { SwitchProps } from './switch';
-export type { AlertProps } from './alert';
-export type { SeparatorProps } from './separator';
-export type { PaginationProps } from './pagination';
-export type { DialogProps } from './dialog';
-export type { PopoverProps } from './popover';
-export type { AlertDialogProps } from './alert-dialog';
-export type { DropdownMenuProps } from './dropdown-menu';
-export type { CommandProps } from './command';
-export type { TooltipProps } from './tooltip';
-export type { SidebarProps } from './sidebar';
-export type { CalendarProps } from './calendar';
-export type { ToastProps } from './use-toast';
-export type { ThemeProviderProps } from '../theme/theme-provider';
-export type { TransBotLogoProps } from './TransBotLogo';
 
-// Enhanced Component Types
-export type { EnhancedDataTableProps } from './enhanced-data-table';
-export type { StatCardProps } from './enhanced-stat-card';
-export type { EnhancedSearchProps } from './enhanced-search';
-export type { EnhancedFormProps } from './enhanced-form';
