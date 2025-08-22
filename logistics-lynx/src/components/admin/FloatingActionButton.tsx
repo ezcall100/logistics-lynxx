@@ -413,9 +413,18 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       {/* Main FAB Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fab-button w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-white/20"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        className="fab-button w-16 h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 hover:from-blue-600 hover:via-purple-600 hover:to-indigo-700 text-white rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-white/30 backdrop-blur-sm"
+        whileHover={{ scale: 1.05, rotate: 5 }}
+        whileTap={{ scale: 0.95 }}
+        animate={{ 
+          y: [0, -5, 0],
+          rotate: [0, 2, -2, 0]
+        }}
+        transition={{ 
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -450,36 +459,42 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 30 }}
-            className="fab-menu absolute bottom-16 right-0 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-2xl border-2 border-gray-300 dark:border-slate-600 overflow-hidden"
+            className="fab-menu absolute bottom-20 right-0 w-96 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200/50 dark:border-slate-600/50 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
-              <h3 className="text-lg font-semibold">Quick Actions</h3>
-              <p className="text-sm opacity-90">Access tools and support instantly</p>
+            <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white p-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+              <div className="relative z-10">
+                <h3 className="text-xl font-bold mb-1">Quick Actions</h3>
+                <p className="text-sm opacity-90">Access tools and support instantly</p>
+              </div>
             </div>
 
             {/* Search Bar */}
-            <div className="p-4 border-b border-gray-200 dark:border-slate-700">
-              <input
-                type="text"
-                placeholder="Search actions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
-              />
+            <div className="p-4 border-b border-gray-200/50 dark:border-slate-700/50">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search actions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-3 pl-10 border border-gray-300/50 dark:border-slate-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white/80 dark:bg-slate-800/80 text-gray-900 dark:text-slate-100 backdrop-blur-sm"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              </div>
             </div>
 
             {/* Category Filters */}
-            <div className="p-4 border-b border-gray-200 dark:border-slate-700">
+            <div className="p-4 border-b border-gray-200/50 dark:border-slate-700/50">
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => setActiveCategory(category.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                       activeCategory === category.id
-                        ? `${category.color} text-white`
-                        : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                        ? `${category.color} text-white shadow-lg scale-105`
+                        : 'bg-gray-100/80 dark:bg-slate-700/80 text-gray-600 dark:text-slate-300 hover:bg-gray-200/80 dark:hover:bg-slate-600/80 hover:scale-105'
                     }`}
                   >
                     {category.label}
@@ -491,26 +506,26 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             {/* Actions List */}
             <div className="max-h-96 overflow-y-auto">
               {filteredActions.length > 0 ? (
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-3">
                   {filteredActions.map((action) => (
                     <motion.button
                       key={action.id}
                       onClick={action.action}
-                      className="w-full flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors group"
-                      whileHover={{ x: 5 }}
+                      className="w-full flex items-center p-4 rounded-xl hover:bg-gray-50/80 dark:hover:bg-slate-700/80 transition-all duration-200 group border border-transparent hover:border-gray-200/50 dark:hover:border-slate-600/50"
+                      whileHover={{ x: 5, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className={`w-10 h-10 rounded-lg ${action.color} flex items-center justify-center text-white mr-3 group-hover:scale-110 transition-transform`}>
+                      <div className={`w-12 h-12 rounded-xl ${action.color} flex items-center justify-center text-white mr-4 group-hover:scale-110 transition-transform shadow-lg`}>
                         {action.icon}
                       </div>
                       <div className="flex-1 text-left">
-                        <div className="font-medium text-gray-900 dark:text-slate-100">{action.label}</div>
-                        <div className="text-sm text-gray-500 dark:text-slate-400">{action.description}</div>
+                        <div className="font-semibold text-gray-900 dark:text-slate-100 text-base">{action.label}</div>
+                        <div className="text-sm text-gray-500 dark:text-slate-400 mt-1">{action.description}</div>
                       </div>
-                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        action.priority === 'high' ? 'bg-red-100 text-red-600' :
-                        action.priority === 'medium' ? 'bg-yellow-100 text-yellow-600' :
-                        'bg-green-100 text-green-600'
+                      <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        action.priority === 'high' ? 'bg-red-100/80 text-red-600 dark:bg-red-900/30 dark:text-red-400' :
+                        action.priority === 'medium' ? 'bg-yellow-100/80 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                        'bg-green-100/80 text-green-600 dark:bg-green-900/30 dark:text-green-400'
                       }`}>
                         {action.priority}
                       </div>
@@ -519,18 +534,20 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                 </div>
               ) : (
                 <div className="p-8 text-center text-gray-500 dark:text-slate-400">
-                  <MessageCircle size={48} className="mx-auto mb-4 opacity-50" />
-                  <p>No actions found</p>
-                  <p className="text-sm">Try adjusting your search or category filter</p>
+                  <div className="w-16 h-16 bg-gray-100/80 dark:bg-slate-700/80 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <MessageCircle size={32} className="opacity-50" />
+                  </div>
+                  <p className="font-medium text-lg mb-2">No actions found</p>
+                  <p className="text-sm opacity-75">Try adjusting your search or category filter</p>
                 </div>
               )}
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700">
-              <div className="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400">
-                <span>{filteredActions.length} actions available</span>
-                <span>Role: {userRole}</span>
+            <div className="p-4 bg-gradient-to-r from-gray-50/80 to-blue-50/30 dark:from-slate-900/80 dark:to-slate-800/30 border-t border-gray-200/50 dark:border-slate-700/50">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600 dark:text-slate-400 font-medium">{filteredActions.length} actions available</span>
+                <span className="px-3 py-1 bg-blue-100/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full font-medium">Role: {userRole}</span>
               </div>
             </div>
           </motion.div>

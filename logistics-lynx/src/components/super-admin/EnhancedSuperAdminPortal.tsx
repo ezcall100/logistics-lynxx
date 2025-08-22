@@ -1177,22 +1177,24 @@ const EnhancedSuperAdminPortal = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-                  className="lg:hidden"
+                  className="lg:hidden rounded-xl p-2 bg-white/80 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-600/50 shadow-lg"
                 >
                   <Menu className="w-5 h-5" />
                 </Button>
                 
-                                 <TransBotHeaderLogo showText={true} />
-                <h2 className={`text-xl font-semibold ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
-                }`}>
-                  {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
-                </h2>
-                <Badge variant="secondary" className={`${
-                  isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-800'
-                } font-medium`}>
-                  Enhanced UI
-                </Badge>
+                <TransBotHeaderLogo showText={true} />
+                <div className="flex items-center space-x-3">
+                  <h2 className={`text-xl font-bold bg-gradient-to-r ${
+                    isDarkMode ? 'from-white to-slate-300' : 'from-slate-900 to-slate-700'
+                  } bg-clip-text text-transparent`}>
+                    {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
+                  </h2>
+                  <Badge variant="secondary" className={`${
+                    isDarkMode ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30' : 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200'
+                  } font-bold px-3 py-1 rounded-full shadow-sm`}>
+                    ✨ Enhanced UI
+                  </Badge>
+                </div>
               </div>
               
               <div className="flex items-center space-x-4">
@@ -1201,10 +1203,10 @@ const EnhancedSuperAdminPortal = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => setIsDarkMode(!isDarkMode)}
-                  className={`header-theme-toggle transition-all duration-300 border ${
+                  className={`header-theme-toggle transition-all duration-300 rounded-xl p-2 ${
                         isDarkMode 
-                          ? 'text-slate-300 hover:bg-slate-700 border-slate-600' 
-                          : 'text-slate-600 hover:bg-slate-100 border-slate-300'
+                          ? 'text-amber-400 hover:bg-slate-700 hover:text-amber-300 bg-slate-800/50 border border-slate-600 shadow-lg' 
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 bg-white/80 border border-slate-300 shadow-lg'
                   }`}
                 >
                   {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -1213,13 +1215,13 @@ const EnhancedSuperAdminPortal = () => {
                 {/* Enhanced User Menu */}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" className={`header-user-menu relative h-10 w-10 rounded-full transition-all duration-300 border-2 ${
+                    <Button variant="ghost" className={`header-user-menu relative h-12 w-12 rounded-xl transition-all duration-300 border-2 shadow-lg hover:scale-105 ${
                       isDarkMode 
-                        ? 'hover:bg-slate-700 text-slate-100 border-slate-600' 
-                        : 'hover:bg-slate-100 text-slate-900 border-slate-300'
+                        ? 'hover:bg-slate-700 text-slate-100 border-slate-500 bg-slate-800/50' 
+                        : 'hover:bg-slate-100 text-slate-900 border-slate-400 bg-white/80'
                     }`}>
                       <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold">SA</AvatarFallback>
+                        <AvatarFallback className="bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 text-white font-bold text-lg shadow-inner">SA</AvatarFallback>
                       </Avatar>
                     </Button>
                   </PopoverTrigger>
