@@ -161,7 +161,7 @@ const AllUsersPage: React.FC = () => {
     setShowAddDialog(false);
   };
 
-  const handleEditUser = () => {
+  const handleSaveUserEdit = () => {
     if (!currentUser) return;
     
     setUsers(prev => prev.map(user => 
@@ -522,7 +522,7 @@ const AllUsersPage: React.FC = () => {
           )}
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setShowEditDialog(false)}>Cancel</Button>
-            <Button onClick={handleEditUser}>Save Changes</Button>
+            <Button onClick={handleSaveUserEdit}>Save Changes</Button>
           </div>
         </DialogContent>
       </Dialog>
