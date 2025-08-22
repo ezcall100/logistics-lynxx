@@ -471,25 +471,39 @@ const BackendAPIPage = () => {
   return (
     <TooltipProvider>
       <div className="p-4 md:p-6 space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              Backend API Agent
-            </h1>
-            <p className="text-sm md:text-base mt-2 text-slate-600">
-              API endpoint management, database operations, and performance monitoring
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-              <Server className="w-4 h-4 mr-1" />
-              API Active
-            </Badge>
-            <Button onClick={() => window.location.reload()}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </Button>
+        {/* Enhanced Header with Gradient Background */}
+        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-indigo-900 via-blue-800 to-indigo-900 p-6 md:p-8 text-white shadow-lg">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                                     <Database className="w-8 h-8 text-blue-300" />
+                </div>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-white">
+                    Backend API Agent
+                  </h1>
+                  <p className="text-sm md:text-base mt-2 text-blue-100">
+                    Monitor, test, and manage your API endpoints
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-400/30 backdrop-blur-sm">
+                  <Server className="w-4 h-4 mr-1" />
+                  API Active
+                </Badge>
+                <Button 
+                  onClick={() => window.location.reload()}
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -498,7 +512,7 @@ const BackendAPIPage = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Endpoints</CardTitle>
-              <Server className="h-4 w-4 text-muted-foreground" />
+                             <Server className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{endpoints.filter(e => e.status === 'active').length}</div>
@@ -511,7 +525,7 @@ const BackendAPIPage = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+                             <Activity className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -526,7 +540,7 @@ const BackendAPIPage = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Database Tables</CardTitle>
-              <Database className="h-4 w-4 text-muted-foreground" />
+                             <Database className="h-4 w-4 text-cyan-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{databaseTables.length}</div>
@@ -539,7 +553,7 @@ const BackendAPIPage = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                             <AlertTriangle className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">

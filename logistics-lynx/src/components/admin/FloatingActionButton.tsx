@@ -4,8 +4,9 @@ import {
   Phone, MessageCircle, Bot, Mail, Plus, X, Settings, 
   HelpCircle, FileText, Users, Calendar, Zap, Shield,
   Video, Headphones, MessageSquare, Send, Download,
-  Upload, Share2, Bookmark, Star, AlertTriangle
+  Upload, Share2, Bookmark, Star, AlertTriangle, Search
 } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface FABAction {
   id: string;
@@ -52,7 +53,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'call',
       label: 'Call Support',
-      icon: <Phone size={20} />,
+             icon: <Phone size={20} className="text-green-500" />,
       color: 'bg-green-500 hover:bg-green-600',
       description: 'Direct phone call to technical support team',
       action: () => handleCallSupport(),
@@ -62,7 +63,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'video-call',
       label: 'Video Call',
-      icon: <Video size={20} />,
+             icon: <Video size={20} className="text-blue-500" />,
       color: 'bg-blue-500 hover:bg-blue-600',
       description: 'Start a video conference with support team',
       action: () => handleVideoCall(),
@@ -72,7 +73,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'chat',
       label: 'Live Chat',
-      icon: <MessageCircle size={20} />,
+             icon: <MessageCircle size={20} className="text-purple-500" />,
       color: 'bg-purple-500 hover:bg-purple-600',
       description: 'Real-time chat with customer support',
       action: () => handleLiveChat(),
@@ -82,7 +83,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'email',
       label: 'Send Email',
-      icon: <Mail size={20} />,
+             icon: <Mail size={20} className="text-orange-500" />,
       color: 'bg-orange-500 hover:bg-orange-600',
       description: 'Compose and send support email',
       action: () => handleSendEmail(),
@@ -92,7 +93,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'ai-assistant',
       label: 'AI Assistant',
-      icon: <Bot size={20} />,
+             icon: <Bot size={20} className="text-indigo-500" />,
       color: 'bg-indigo-500 hover:bg-indigo-600',
       description: 'Get instant help from AI assistant',
       action: () => handleAIAssistant(),
@@ -102,7 +103,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'help-desk',
       label: 'Help Desk',
-      icon: <HelpCircle size={20} />,
+             icon: <HelpCircle size={20} className="text-teal-500" />,
       color: 'bg-teal-500 hover:bg-teal-600',
       description: 'Access help desk and knowledge base',
       action: () => handleHelpDesk(),
@@ -112,7 +113,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'documentation',
       label: 'Documentation',
-      icon: <FileText size={20} />,
+             icon: <FileText size={20} className="text-gray-500" />,
       color: 'bg-gray-500 hover:bg-gray-600',
       description: 'Access system documentation and guides',
       action: () => handleDocumentation(),
@@ -122,7 +123,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'team-collaboration',
       label: 'Team Chat',
-      icon: <Users size={20} />,
+             icon: <Users size={20} className="text-pink-500" />,
       color: 'bg-pink-500 hover:bg-pink-600',
       description: 'Collaborate with team members',
       action: () => handleTeamCollaboration(),
@@ -132,7 +133,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'schedule-meeting',
       label: 'Schedule Meeting',
-      icon: <Calendar size={20} />,
+             icon: <Calendar size={20} className="text-yellow-500" />,
       color: 'bg-yellow-500 hover:bg-yellow-600',
       description: 'Schedule a meeting with support team',
       action: () => handleScheduleMeeting(),
@@ -142,7 +143,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'quick-actions',
       label: 'Quick Actions',
-      icon: <Zap size={20} />,
+             icon: <Zap size={20} className="text-red-500" />,
       color: 'bg-red-500 hover:bg-red-600',
       description: 'Access frequently used actions',
       action: () => handleQuickActions(),
@@ -152,7 +153,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'security-support',
       label: 'Security Support',
-      icon: <Shield size={20} />,
+             icon: <Shield size={20} className="text-emerald-500" />,
       color: 'bg-emerald-500 hover:bg-emerald-600',
       description: 'Get security-related assistance',
       action: () => handleSecuritySupport(),
@@ -162,7 +163,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'voice-support',
       label: 'Voice Support',
-      icon: <Headphones size={20} />,
+             icon: <Headphones size={20} className="text-cyan-500" />,
       color: 'bg-cyan-500 hover:bg-cyan-600',
       description: 'Voice-activated support system',
       action: () => handleVoiceSupport(),
@@ -172,7 +173,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'feedback',
       label: 'Send Feedback',
-      icon: <MessageSquare size={20} />,
+             icon: <MessageSquare size={20} className="text-amber-500" />,
       color: 'bg-amber-500 hover:bg-amber-600',
       description: 'Submit feedback and suggestions',
       action: () => handleSendFeedback(),
@@ -182,7 +183,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'export-data',
       label: 'Export Data',
-      icon: <Download size={20} />,
+             icon: <Download size={20} className="text-lime-500" />,
       color: 'bg-lime-500 hover:bg-lime-600',
       description: 'Export system data and reports',
       action: () => handleExportData(),
@@ -192,7 +193,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     {
       id: 'import-data',
       label: 'Import Data',
-      icon: <Upload size={20} />,
+             icon: <Upload size={20} className="text-slate-500" />,
       color: 'bg-slate-500 hover:bg-slate-600',
       description: 'Import data from external sources',
       action: () => handleImportData(),
@@ -409,23 +410,27 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   ];
 
   return (
-    <div ref={fabRef} className="fixed bottom-6 right-6 z-[9999]">
-      {/* Main FAB Button */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fab-button w-16 h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 hover:from-blue-600 hover:via-purple-600 hover:to-indigo-700 text-white rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-white/30 backdrop-blur-sm"
-        whileHover={{ scale: 1.05, rotate: 5 }}
-        whileTap={{ scale: 0.95 }}
-        animate={{ 
-          y: [0, -5, 0],
-          rotate: [0, 2, -2, 0]
-        }}
-        transition={{ 
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
+    <TooltipProvider>
+      <div ref={fabRef} className="fixed bottom-6 right-6 z-[9999]">
+        {/* Main FAB Button with Tooltip */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Quick Actions Menu"
+              className="fab-button w-16 h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 hover:from-blue-600 hover:via-purple-600 hover:to-indigo-700 text-white rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-white/30 backdrop-blur-sm"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{ 
+                y: [0, -5, 0],
+                rotate: [0, 2, -2, 0]
+              }}
+              transition={{ 
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
         <AnimatePresence mode="wait">
           {isOpen ? (
             <motion.div
@@ -435,7 +440,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X size={24} />
+                             <X size={24} className="text-white" />
             </motion.div>
           ) : (
             <motion.div
@@ -445,11 +450,17 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Plus size={24} />
+                             <Plus size={24} className="text-white" />
             </motion.div>
           )}
         </AnimatePresence>
       </motion.button>
+        </TooltipTrigger>
+        <TooltipContent side="left" className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm shadow-lg border-0">
+          <p className="font-medium">Quick Actions</p>
+          <p className="text-xs opacity-75 mt-1">Access tools and support instantly</p>
+        </TooltipContent>
+      </Tooltip>
 
       {/* FAB Menu */}
       <AnimatePresence>
@@ -480,7 +491,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-4 py-3 pl-10 border border-gray-300/50 dark:border-slate-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 bg-white/80 dark:bg-slate-800/80 text-gray-900 dark:text-slate-100 backdrop-blur-sm"
                 />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-400" />
               </div>
             </div>
 
@@ -554,6 +565,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         )}
       </AnimatePresence>
     </div>
+    </TooltipProvider>
   );
 };
 
