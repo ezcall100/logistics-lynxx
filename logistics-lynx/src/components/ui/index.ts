@@ -2,54 +2,64 @@
 // Export all UI components for easy imports across the application
 
 // Core UI Components
-export { Button } from './button';
-export { buttonVariants, buttonVariantsPresets } from './button-variants';
-export { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
-export { Input } from './input';
-export { Label } from './label';
-export { Badge } from './badge';
-export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
-export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
-export { Checkbox } from './checkbox';
-export { RadioGroup, RadioGroupItem } from './radio-group';
-export { Textarea } from './textarea';
-export { Switch } from './switch';
-export { Alert, AlertDescription, AlertTitle } from './alert';
-export { Separator } from './separator';
-export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './pagination';
+export { Button, buttonVariants } from "./button"
+export { Input } from "./input"
+export { Label } from "./label"
+export { Textarea } from "./textarea"
+export { Switch, switchStyles } from "./switch"
+export { Checkbox } from "./checkbox"
+export { RadioGroup, RadioGroupItem } from "./radio-group"
+export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select"
+export { Badge } from "./badge"
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card"
+export { Separator } from "./separator"
+export { Avatar, AvatarFallback, AvatarImage } from "./avatar"
+export { Progress } from "./progress"
+export { Skeleton } from "./skeleton"
+export { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
+export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./dialog"
+export { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./alert-dialog"
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip"
+export { Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "./toast"
+export { useToast } from "./use-toast"
+export { Alert, AlertDescription, AlertTitle } from "./alert"
+export { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./table"
+export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination"
+export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "./command"
+export { Popover, PopoverContent, PopoverTrigger } from "./popover"
+export { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "./dropdown-menu"
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion"
+export { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
+export { ScrollArea } from "./scroll-area"
+export { Slider } from "./slider"
+export { Calendar } from "./calendar"
+export { DatePicker } from "./date-picker"
+export { Toggle } from "./toggle"
+export { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./breadcrumb"
+export { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, NavigationMenuViewport } from "./navigation-menu"
+export { Menubar, MenubarCheckboxItem, MenubarContent, MenubarItem, MenubarLabel, MenubarMenu, MenubarRadioGroup, MenubarRadioItem, MenubarSeparator, MenubarShortcut, MenubarSub, MenubarSubContent, MenubarSubTrigger, MenubarTrigger } from "./menubar"
+export { ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from "./context-menu"
+export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./resizable"
+export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./sheet"
+export { Drawer } from "./drawer"
+export { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./carousel"
+export { AspectRatio } from "./aspect-ratio"
+export { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card"
+export { ScrollBar } from "./scroll-area"
+export { Switch as ToggleSwitch } from "./switch"
+export { SettingsRow, SettingsSection, settingsRowStyles, settingsSectionStyles } from "./settings-row"
 
 // Enhanced Components
-export { EnhancedDataTable } from './enhanced-data-table';
-export { EnhancedStatCard, MetricCard, PerformanceCard } from './enhanced-stat-card';
-export { EnhancedSearch, SearchWithFilters, CommandSearch } from './enhanced-search';
-export { EnhancedForm, UserForm, SettingsForm } from './enhanced-form';
+export { EnhancedDataTable } from "./enhanced-data-table"
+export { EnhancedStatCard } from "./enhanced-stat-card"
+export { EnhancedSearch } from "./enhanced-search"
+export { EnhancedForm } from "./enhanced-form"
+export { EnhancedIcon, EnhancedIcons } from "./enhanced-icons"
 
-// Dialog & Popover Components
-export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './dialog';
-export { Popover, PopoverContent, PopoverTrigger } from './popover';
-export { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './alert-dialog';
+// Layout Components
+export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarTrigger } from "./sidebar"
 
-// Dropdown & Menu Components
-export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './dropdown-menu';
-export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from './command';
-
-// Tooltip Components
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
-
-// Navigation Components
-export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger } from './sidebar';
-
-// Calendar Components
-export { Calendar } from './calendar';
-
-// Toast Components
-export { Toaster } from './toaster';
-export { useToast } from './use-toast';
-
-// Theme Components
-export { default as ThemeProvider, useTheme } from '../theme/theme-provider';
-
-// Logo Component
-export { default as TransBotLogo } from './TransBotLogo';
+// Utility Components
+export { cn } from "@/lib/utils"
 
 

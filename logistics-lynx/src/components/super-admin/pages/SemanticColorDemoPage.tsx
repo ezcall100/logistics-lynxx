@@ -1,29 +1,38 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { SettingsRow, SettingsSection } from '@/components/ui/settings-row';
 import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Settings, Save, RefreshCw, Download, Upload, 
-  CheckCircle, AlertTriangle, Clock, Database, 
-  Server, Network, Shield, Users, Activity,
-  FileText, Code, Globe, Lock, Key, Wrench,
-  Cog, Zap, Eye, EyeOff, Trash2, Copy,
-  Plus, Edit, Search, Filter, MoreHorizontal,
-  Sun, Moon, Bell, User, LogOut, Info
+  Cog, 
+  Shield, 
+  Activity, 
+  AlertTriangle, 
+  CheckCircle, 
+  XCircle,
+  RefreshCw,
+  Zap,
+  Database,
+  Network,
+  Lock,
+  Unlock,
+  Settings,
+  Palette,
+  Eye,
+  EyeOff
 } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
-const SemanticColorDemoPage = () => {
+const SemanticColorDemoPage: React.FC = () => {
   const [switches, setSwitches] = useState({
-    mcpSystem: true,
-    autoRecovery: false,
-    monitoring: true,
-    security: true,
-    backup: false
+    mcpSystem: false,
+    autoRecovery: true,
+    securityMode: true,
+    notifications: false,
+    darkMode: true,
+    analytics: false,
   });
 
   const handleSwitchChange = (key: string, value: boolean) => {
@@ -31,225 +40,198 @@ const SemanticColorDemoPage = () => {
   };
 
   return (
-    <div className="p-6 md:p-8 space-y-8">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="space-y-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-            🎨 Semantic Color System Demo
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 mt-2">
-            Comprehensive demonstration of semantic color tokens and contrast-aware components
-          </p>
-        </motion.div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+            <Palette className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Semantic Color System Demo</h1>
+            <p className="text-gray-600 dark:text-gray-400">Showcasing hardened semantic color tokens and components</p>
+          </div>
+        </div>
+        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-700">
+          <Eye className="w-3 h-3 mr-1" />
+          Live Preview
+        </Badge>
       </div>
 
-      <Tabs defaultValue="buttons" className="space-y-6">
+      <Tabs defaultValue="switches" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="buttons">Buttons</TabsTrigger>
           <TabsTrigger value="switches">Switches</TabsTrigger>
-          <TabsTrigger value="cards">Cards</TabsTrigger>
+          <TabsTrigger value="buttons">Buttons</TabsTrigger>
+          <TabsTrigger value="settings">Settings Rows</TabsTrigger>
           <TabsTrigger value="mcp">MCP Demo</TabsTrigger>
         </TabsList>
 
-        {/* Buttons Demo */}
-        <TabsContent value="buttons" className="space-y-6">
-          <Card className="card-default">
+        {/* Switches Demo */}
+        <TabsContent value="switches" className="space-y-6">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5 text-blue-500" />
-                Semantic Button Variants
+                Enhanced Switch Components
               </CardTitle>
-              <CardDescription>
-                All buttons use semantic color tokens - no more white-on-white issues
-              </CardDescription>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Switches with semantic color variants and guaranteed contrast
+              </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Primary Buttons */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Primary Actions</h3>
-                <div className="flex flex-wrap gap-4">
-                  <Button variant="default" size="lg">
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Configuration
-                  </Button>
-                  <Button variant="success" size="lg">
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Enable System
-                  </Button>
-                  <Button variant="info" size="lg">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download Data
-                  </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Default Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <Label className="text-base font-medium">Default Switch</Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Standard semantic color variant
+                    </p>
+                  </div>
+                  <Switch
+                    variant="default"
+                    checked={switches.mcpSystem}
+                    onCheckedChange={(checked) => handleSwitchChange('mcpSystem', checked)}
+                  />
                 </div>
-              </div>
 
-              <Separator />
-
-              {/* Secondary Buttons */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Secondary Actions</h3>
-                <div className="flex flex-wrap gap-4">
-                  <Button variant="secondary" size="lg">
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Refresh
-                  </Button>
-                  <Button variant="outline" size="lg">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Settings
-                  </Button>
-                  <Button variant="ghost" size="lg">
-                    <Eye className="w-4 h-4 mr-2" />
-                    View Details
-                  </Button>
+                {/* Success Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <Label className="text-base font-medium">Success Switch</Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Green variant for positive states
+                    </p>
+                  </div>
+                  <Switch
+                    variant="success"
+                    checked={switches.autoRecovery}
+                    onCheckedChange={(checked) => handleSwitchChange('autoRecovery', checked)}
+                  />
                 </div>
-              </div>
 
-              <Separator />
-
-              {/* Warning & Danger Buttons */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Warning & Danger Actions</h3>
-                <div className="flex flex-wrap gap-4">
-                  <Button variant="warning" size="lg">
-                    <AlertTriangle className="w-4 h-4 mr-2" />
-                    Warning Action
-                  </Button>
-                  <Button variant="destructive" size="lg">
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Item
-                  </Button>
-                  <Button variant="danger" size="lg">
-                    <Shield className="w-4 h-4 mr-2" />
-                    Disable Security
-                  </Button>
+                {/* Warning Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <Label className="text-base font-medium">Warning Switch</Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Amber variant for caution states
+                    </p>
+                  </div>
+                  <Switch
+                    variant="warning"
+                    checked={switches.notifications}
+                    onCheckedChange={(checked) => handleSwitchChange('notifications', checked)}
+                  />
                 </div>
-              </div>
 
-              <Separator />
+                {/* Danger Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <Label className="text-base font-medium">Danger Switch</Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Red variant for critical states
+                    </p>
+                  </div>
+                  <Switch
+                    variant="danger"
+                    checked={switches.securityMode}
+                    onCheckedChange={(checked) => handleSwitchChange('securityMode', checked)}
+                  />
+                </div>
 
-              {/* Icon Buttons */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Icon Buttons</h3>
-                <div className="flex flex-wrap gap-4">
-                  <Button variant="default" size="icon">
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                  <Button variant="success" size="icon">
-                    <CheckCircle className="w-4 h-4" />
-                  </Button>
-                  <Button variant="warning" size="icon">
-                    <AlertTriangle className="w-4 h-4" />
-                  </Button>
-                  <Button variant="destructive" size="icon">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                  <Button variant="info" size="icon">
-                    <Info className="w-4 h-4" />
-                  </Button>
+                {/* Info Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <Label className="text-base font-medium">Info Switch</Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Blue variant for informational states
+                    </p>
+                  </div>
+                  <Switch
+                    variant="info"
+                    checked={switches.analytics}
+                    onCheckedChange={(checked) => handleSwitchChange('analytics', checked)}
+                  />
+                </div>
+
+                {/* Gradient Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <Label className="text-base font-medium">Gradient Switch</Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Gradient variant for premium features
+                    </p>
+                  </div>
+                  <Switch
+                    variant="gradient"
+                    checked={switches.darkMode}
+                    onCheckedChange={(checked) => handleSwitchChange('darkMode', checked)}
+                  />
                 </div>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* Switches Demo */}
-        <TabsContent value="switches" className="space-y-6">
-          <Card className="card-default">
+        {/* Buttons Demo */}
+        <TabsContent value="buttons" className="space-y-6">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-purple-500" />
-                Semantic Switch Variants
+                <Zap className="w-5 h-5 text-yellow-500" />
+                Enhanced Button Components
               </CardTitle>
-              <CardDescription>
-                Switches with proper contrast and semantic colors
-              </CardDescription>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Buttons with semantic color variants and loading states
+              </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* System Switches */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">System Controls</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Primary Buttons */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <div>
-                      <Label className="text-base font-medium">MCP System</Label>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        Master Control Program
-                      </p>
-                    </div>
-                    <Switch
-                      variant={switches.mcpSystem ? "success" : "danger"}
-                      checked={switches.mcpSystem}
-                      onCheckedChange={(checked) => handleSwitchChange('mcpSystem', checked)}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <div>
-                      <Label className="text-base font-medium">Auto Recovery</Label>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        Automatic system recovery
-                      </p>
-                    </div>
-                    <Switch
-                      variant={switches.autoRecovery ? "success" : "warning"}
-                      checked={switches.autoRecovery}
-                      onCheckedChange={(checked) => handleSwitchChange('autoRecovery', checked)}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <div>
-                      <Label className="text-base font-medium">System Monitoring</Label>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        Real-time monitoring
-                      </p>
-                    </div>
-                    <Switch
-                      variant={switches.monitoring ? "success" : "info"}
-                      checked={switches.monitoring}
-                      onCheckedChange={(checked) => handleSwitchChange('monitoring', checked)}
-                    />
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Primary Variants</h3>
+                  <div className="flex flex-wrap gap-3">
+                    <Button variant="default">Default</Button>
+                    <Button variant="success">Success</Button>
+                    <Button variant="warning">Warning</Button>
+                    <Button variant="danger">Danger</Button>
+                    <Button variant="info">Info</Button>
+                    <Button variant="gradient">Gradient</Button>
                   </div>
                 </div>
-              </div>
 
-              <Separator />
-
-              {/* Security Switches */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Security Controls</h3>
+                {/* Secondary Buttons */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <div>
-                      <Label className="text-base font-medium">Security Protocol</Label>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        Enhanced security measures
-                      </p>
-                    </div>
-                    <Switch
-                      variant={switches.security ? "success" : "danger"}
-                      checked={switches.security}
-                      onCheckedChange={(checked) => handleSwitchChange('security', checked)}
-                    />
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Secondary Variants</h3>
+                  <div className="flex flex-wrap gap-3">
+                    <Button variant="secondary">Secondary</Button>
+                    <Button variant="outline">Outline</Button>
+                    <Button variant="ghost">Ghost</Button>
+                    <Button variant="link">Link</Button>
                   </div>
+                </div>
 
-                  <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <div>
-                      <Label className="text-base font-medium">Auto Backup</Label>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        Automatic data backup
-                      </p>
-                    </div>
-                    <Switch
-                      variant={switches.backup ? "success" : "warning"}
-                      checked={switches.backup}
-                      onCheckedChange={(checked) => handleSwitchChange('backup', checked)}
-                    />
+                {/* Loading States */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Loading States</h3>
+                  <div className="flex flex-wrap gap-3">
+                    <Button loading>Loading</Button>
+                    <Button variant="success" loading>Processing</Button>
+                    <Button variant="outline" loading>Updating</Button>
+                  </div>
+                </div>
+
+                {/* Sizes */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Sizes</h3>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button size="sm">Small</Button>
+                    <Button size="default">Default</Button>
+                    <Button size="lg">Large</Button>
+                    <Button size="icon">
+                      <Settings className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -257,149 +239,196 @@ const SemanticColorDemoPage = () => {
           </Card>
         </TabsContent>
 
-        {/* Cards Demo */}
-        <TabsContent value="cards" className="space-y-6">
-          <Card className="card-default">
+        {/* Settings Rows Demo */}
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-green-500" />
-                Semantic Card System
+                <Cog className="w-5 h-5 text-green-500" />
+                Settings Row Components
               </CardTitle>
-              <CardDescription>
-                Cards with proper contrast and semantic backgrounds
-              </CardDescription>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Guaranteed contrast-safe settings panels with semantic variants
+              </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Success Card */}
-                <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-green-700 dark:text-green-300">System Online</CardTitle>
-                    <CardDescription className="text-green-600 dark:text-green-400">
-                      All systems operational
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                      <span className="text-green-700 dark:text-green-300">Status: Active</span>
-                    </div>
-                  </CardContent>
-                </Card>
+              <SettingsSection 
+                title="System Settings" 
+                subtitle="Configure core system parameters"
+                variant="card"
+              >
+                <SettingsRow
+                  title="Auto Recovery"
+                  description="Automatically recover from system failures"
+                  variant={switches.autoRecovery ? "success" : "warning"}
+                >
+                  <Switch
+                    variant={switches.autoRecovery ? "success" : "warning"}
+                    checked={switches.autoRecovery}
+                    onCheckedChange={(checked) => handleSwitchChange('autoRecovery', checked)}
+                  />
+                </SettingsRow>
 
-                {/* Warning Card */}
-                <Card className="bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-amber-700 dark:text-amber-300">High Load</CardTitle>
-                    <CardDescription className="text-amber-600 dark:text-amber-400">
-                      System under stress
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 text-amber-600" />
-                      <span className="text-amber-700 dark:text-amber-300">CPU: 85%</span>
-                    </div>
-                  </CardContent>
-                </Card>
+                <SettingsRow
+                  title="Security Mode"
+                  description="Enable enhanced security protocols"
+                  variant={switches.securityMode ? "success" : "danger"}
+                >
+                  <Switch
+                    variant={switches.securityMode ? "success" : "danger"}
+                    checked={switches.securityMode}
+                    onCheckedChange={(checked) => handleSwitchChange('securityMode', checked)}
+                  />
+                </SettingsRow>
 
-                {/* Danger Card */}
-                <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-red-700 dark:text-red-300">Security Alert</CardTitle>
-                    <CardDescription className="text-red-600 dark:text-red-400">
-                      Unauthorized access detected
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-red-600" />
-                      <span className="text-red-700 dark:text-red-300">Action Required</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                <SettingsRow
+                  title="Dark Mode"
+                  description="Switch between light and dark themes"
+                  variant="primary"
+                >
+                  <Switch
+                    variant="gradient"
+                    checked={switches.darkMode}
+                    onCheckedChange={(checked) => handleSwitchChange('darkMode', checked)}
+                  />
+                </SettingsRow>
+              </SettingsSection>
+
+              <SettingsSection 
+                title="Notification Settings" 
+                subtitle="Configure system notifications and alerts"
+                variant="muted"
+              >
+                <SettingsRow
+                  title="Push Notifications"
+                  description="Receive real-time system alerts"
+                  variant={switches.notifications ? "info" : "default"}
+                >
+                  <Switch
+                    variant={switches.notifications ? "info" : "default"}
+                    checked={switches.notifications}
+                    onCheckedChange={(checked) => handleSwitchChange('notifications', checked)}
+                  />
+                </SettingsRow>
+
+                <SettingsRow
+                  title="Analytics Collection"
+                  description="Allow system to collect usage analytics"
+                  variant={switches.analytics ? "success" : "warning"}
+                >
+                  <Switch
+                    variant={switches.analytics ? "success" : "warning"}
+                    checked={switches.analytics}
+                    onCheckedChange={(checked) => handleSwitchChange('analytics', checked)}
+                  />
+                </SettingsRow>
+              </SettingsSection>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* MCP Demo */}
         <TabsContent value="mcp" className="space-y-6">
-          <Card className="card-default">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Cog className="w-5 h-5 text-blue-500" />
+                <Shield className="w-5 h-5 text-purple-500" />
                 MCP Configuration Demo
               </CardTitle>
-              <CardDescription>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Real-world example of the MCP Configuration page with semantic colors
-              </CardDescription>
+              </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* MCP System Toggle */}
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                <div>
-                  <Label className="text-base font-medium">MCP System</Label>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    Enable or disable the Master Control Program
-                  </p>
+              {/* System Status */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-3">
+                    <Database className="w-5 h-5 text-blue-500" />
+                    <div>
+                      <p className="font-medium">Database</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Connected</p>
+                    </div>
+                  </div>
+                  <CheckCircle className="w-5 h-5 text-green-500" />
                 </div>
-                <Switch
+                
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-3">
+                    <Network className="w-5 h-5 text-green-500" />
+                    <div>
+                      <p className="font-medium">Network</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Stable</p>
+                    </div>
+                  </div>
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-purple-500" />
+                    <div>
+                      <p className="font-medium">Security</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Active</p>
+                    </div>
+                  </div>
+                  <Lock className="w-5 h-5 text-green-500" />
+                </div>
+              </div>
+
+              {/* MCP Configuration */}
+              <SettingsSection 
+                title="MCP Configuration" 
+                subtitle="Configure the Master Control Program settings and behavior"
+                variant="card"
+              >
+                <SettingsRow
+                  title="MCP System"
+                  description="Enable or disable the Master Control Program"
                   variant={switches.mcpSystem ? "success" : "danger"}
-                  checked={switches.mcpSystem}
-                  onCheckedChange={(checked) => handleSwitchChange('mcpSystem', checked)}
-                />
-              </div>
+                >
+                  <Switch
+                    variant={switches.mcpSystem ? "success" : "danger"}
+                    checked={switches.mcpSystem}
+                    onCheckedChange={(checked) => handleSwitchChange('mcpSystem', checked)}
+                  />
+                </SettingsRow>
 
-              <Separator />
-
-              {/* Auto Recovery Toggle */}
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                <div>
-                  <Label className="text-base font-medium">Auto Recovery</Label>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    Automatically recover from system failures
-                  </p>
-                </div>
-                <Switch
+                <SettingsRow
+                  title="Auto Recovery"
+                  description="Automatically recover from system failures"
                   variant={switches.autoRecovery ? "success" : "warning"}
-                  checked={switches.autoRecovery}
-                  onCheckedChange={(checked) => handleSwitchChange('autoRecovery', checked)}
-                />
-              </div>
+                >
+                  <Switch
+                    variant={switches.autoRecovery ? "success" : "warning"}
+                    checked={switches.autoRecovery}
+                    onCheckedChange={(checked) => handleSwitchChange('autoRecovery', checked)}
+                  />
+                </SettingsRow>
 
-              <Separator />
+                <SettingsRow
+                  title="Security Mode"
+                  description="Enable enhanced security protocols"
+                  variant={switches.securityMode ? "success" : "danger"}
+                >
+                  <Switch
+                    variant={switches.securityMode ? "success" : "danger"}
+                    checked={switches.securityMode}
+                    onCheckedChange={(checked) => handleSwitchChange('securityMode', checked)}
+                  />
+                </SettingsRow>
+              </SettingsSection>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
-                <Button variant="success" size="lg">
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Configuration
-                </Button>
-                <Button variant="secondary" size="lg">
+              <div className="flex gap-4 justify-end">
+                <Button variant="outline">
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Reset to Default
+                  Refresh Status
                 </Button>
-                <Button variant="destructive" size="lg">
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Clear All Settings
+                <Button variant="default">
+                  <Zap className="w-4 h-4 mr-2" />
+                  Apply Changes
                 </Button>
-              </div>
-
-              {/* Status Indicators */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-700 dark:text-green-300 font-medium">System Active</span>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="text-blue-700 dark:text-blue-300 font-medium">Monitoring</span>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  <span className="text-purple-700 dark:text-purple-300 font-medium">AI Active</span>
-                </div>
               </div>
             </CardContent>
           </Card>
