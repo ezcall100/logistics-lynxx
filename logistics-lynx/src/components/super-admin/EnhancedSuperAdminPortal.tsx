@@ -325,31 +325,31 @@ const EnhancedSuperAdminPortal = () => {
 
   // Main Dashboard Component
   const DashboardPage = () => (
-    <div className="p-4 md:p-6 space-y-8">
-             {/* Hero Section with Live Status */}
-       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 p-8 text-white">
-         <div className="absolute inset-0 opacity-20">
-           <div className="absolute inset-0" style={{
-             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-             backgroundSize: '60px 60px'
-           }}></div>
-         </div>
-        <div className="relative z-10">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                                 <div className="relative">
-                   <TransBotLogo size="lg" animated={true} />
-                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-white"></div>
-                 </div>
-        <div>
-                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                    Command Center
-          </h1>
-                  <p className="text-lg text-blue-100 mt-2">
-                    Autonomous TMS System Control & Monitoring Hub
-          </p>
+    <div className="p-6 md:p-8 space-y-8">
+      {/* Hero Section with Live Status */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 p-8 md:p-12 text-white shadow-2xl">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: '60px 60px'
+          }}></div>
         </div>
+        <div className="relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="space-y-6">
+              <div className="flex items-center space-x-6">
+                <div className="relative">
+                  <TransBotLogo size="lg" animated={true} />
+                  <div className="absolute -top-2 -right-2 w-5 h-5 bg-green-500 rounded-full animate-pulse border-3 border-white shadow-lg"></div>
+                </div>
+                <div>
+                  <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+                    Command Center
+                  </h1>
+                  <p className="text-xl text-blue-100 mt-3 font-medium">
+                    Autonomous TMS System Control & Monitoring Hub
+                  </p>
+                </div>
               </div>
               
               {/* Live Status Indicators */}
@@ -775,35 +775,35 @@ const EnhancedSuperAdminPortal = () => {
 
       {/* System Access Hub */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-blue-50'
-        }`} onClick={() => navigate('/super-admin/autonomous/agent-dashboard')}>
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-gradient-to-br from-slate-800/90 to-slate-700/90 hover:from-slate-700/90 hover:to-slate-600/90' : 'bg-gradient-to-br from-white/90 to-blue-50/50 hover:from-blue-50/90 hover:to-blue-100/50'
+        } backdrop-blur-sm`} onClick={() => navigate('/super-admin/autonomous/agent-dashboard')}>
           <CardHeader>
             <div className="flex items-center space-x-4">
-              <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
-              }`}>
-                <Brain className={`w-8 h-8 ${
+              <div className={`p-4 rounded-2xl ${
+                isDarkMode ? 'bg-gradient-to-br from-blue-900/40 to-purple-900/40' : 'bg-gradient-to-br from-blue-100 to-purple-100'
+              } shadow-lg`}>
+                <Brain className={`w-10 h-10 ${
                   isDarkMode ? 'text-blue-400' : 'text-blue-600'
                 }`} />
               </div>
               <div>
-                <CardTitle className={`text-xl ${
+                <CardTitle className={`text-2xl font-bold ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
                 }`}>Agent Management</CardTitle>
-                <CardDescription className={
+                <CardDescription className={`text-base ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-600'
-                }>Monitor and control AI agents</CardDescription>
+                }`}>Monitor and control AI agents</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              <span className={`text-sm font-medium ${
+                isDarkMode ? 'text-slate-300' : 'text-slate-600'
               }`}>Active Agents: 22/24</span>
-              <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              <ArrowUpRight className={`w-6 h-6 ${
+                isDarkMode ? 'text-blue-400' : 'text-blue-600'
               }`} />
             </div>
           </CardContent>
@@ -984,15 +984,18 @@ const EnhancedSuperAdminPortal = () => {
 
   return (
     <TooltipProvider>
-      <div className={`flex h-screen transition-all duration-500 ${
+      <div className={`flex h-screen transition-all duration-700 ${
         isDarkMode 
           ? 'dark bg-slate-900 text-slate-100' 
-          : 'bg-white text-slate-900'
+          : 'bg-slate-50 text-slate-900'
       }`}>
         {/* Mobile Sidebar Overlay */}
         {mobileSidebarOpen && !isDesktop && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setMobileSidebarOpen(false)}
           />
         )}
@@ -1000,87 +1003,109 @@ const EnhancedSuperAdminPortal = () => {
         {/* Enhanced Sidebar */}
         <motion.div
           id="mobile-sidebar"
-          initial={{ x: isDesktop ? 0 : -280 }}
+          initial={{ x: isDesktop ? 0 : -320 }}
           animate={{ 
-            x: isDesktop ? 0 : (mobileSidebarOpen ? 0 : -280),
-            width: sidebarCollapsed ? 80 : 280 
+            x: isDesktop ? 0 : (mobileSidebarOpen ? 0 : -320),
+            width: sidebarCollapsed ? 88 : 320 
           }}
           className={`${isDesktop ? 'relative' : 'fixed'} z-50 ${
             isDarkMode 
-              ? 'bg-slate-800 border-slate-700 text-slate-100' 
-              : 'bg-white border-slate-200 text-slate-900'
-          } shadow-2xl flex flex-col border-r transition-all duration-500 h-full`}
+              ? 'bg-gradient-to-b from-slate-800/95 via-slate-800/90 to-slate-900/95 border-slate-700/50 text-slate-100' 
+              : 'bg-gradient-to-b from-white/95 via-white/90 to-slate-50/95 border-slate-200/50 text-slate-900'
+          } shadow-2xl flex flex-col border-r backdrop-blur-xl transition-all duration-700 h-full`}
         >
-          {/* Header */}
-          <div className={`p-4 border-b ${
-            isDarkMode ? 'border-slate-700' : 'border-slate-200'
-          } flex-shrink-0`}>
+          {/* Enhanced Header */}
+          <div className={`p-6 border-b ${
+            isDarkMode ? 'border-slate-700/50' : 'border-slate-200/50'
+          } flex-shrink-0 bg-gradient-to-r ${
+            isDarkMode ? 'from-slate-800/50 to-slate-700/30' : 'from-white/50 to-slate-50/30'
+          }`}>
             <div className="flex items-center justify-between">
               <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: sidebarCollapsed ? 0 : 1 }}
-                className="flex items-center space-x-3"
+                className="flex items-center space-x-4"
               >
-                <TransBotLogo size="sm" animated={true} />
+                <div className="relative">
+                  <TransBotLogo size="sm" animated={true} />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse border-2 border-white shadow-lg"></div>
+                </div>
                 <div>
-                  <h1 className={`font-bold text-lg ${
+                  <h1 className={`font-bold text-xl ${
                     isDarkMode 
-                      ? 'bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'
-                      : 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
+                      ? 'bg-gradient-to-r from-blue-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent'
+                      : 'bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent'
                   }`}>
                      Trans Bot AI
                   </h1>
-                  <p className={`text-xs ${
-                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  <p className={`text-sm font-medium ${
+                    isDarkMode ? 'text-slate-300' : 'text-slate-600'
                    }`}>Super Admin Command Center</p>
                 </div>
               </motion.div>
               
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className={`transition-all duration-300 ${
-                      isDarkMode 
-                        ? 'text-slate-400 hover:text-white hover:bg-slate-700' 
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className={`transition-all duration-300 rounded-xl p-2 ${
+                  isDarkMode 
+                    ? 'text-slate-300 hover:text-white hover:bg-slate-700/50 border border-slate-600/50' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/50 border border-slate-300/50'
                 }`}
               >
                 {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-                  </Button>
+              </Button>
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
+          {/* Enhanced Navigation */}
+          <nav className="p-6 space-y-3 flex-1 overflow-y-auto">
             {navigationItems.map((item) => (
               <div key={item.id}>
                 {item.subItems ? (
                   <div>
-                        <button
-                          onClick={() => toggleGroup(item.id)}
-                          className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 ${
-                            expandedGroups.includes(item.id)
-                              ? isDarkMode 
-                                ? 'bg-blue-600 text-white shadow-lg' 
-                                : 'bg-blue-100 text-blue-900 shadow-lg'
-                              : isDarkMode
-                                ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                                : 'text-slate-700 hover:bg-slate-100'
-                          }`}
-                        >
-                          <div className="flex items-center space-x-3">
-                        <item.icon className="w-5 h-5" />
-                            {!sidebarCollapsed && (
-                              <span className="font-medium">{item.title}</span>
-                            )}
+                    <button
+                      onClick={() => toggleGroup(item.id)}
+                      className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300 group ${
+                        expandedGroups.includes(item.id)
+                          ? isDarkMode 
+                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-xl' 
+                            : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl'
+                          : isDarkMode
+                            ? 'text-slate-300 hover:bg-slate-700/50 hover:text-white border border-transparent hover:border-slate-600/50'
+                            : 'text-slate-700 hover:bg-slate-100/50 hover:text-slate-900 border border-transparent hover:border-slate-300/50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className={`p-2 rounded-xl transition-all duration-300 ${
+                          expandedGroups.includes(item.id)
+                            ? 'bg-white/20'
+                            : isDarkMode
+                              ? 'bg-slate-700/50 group-hover:bg-slate-600/50'
+                              : 'bg-slate-100/50 group-hover:bg-slate-200/50'
+                        }`}>
+                          <item.icon className="w-5 h-5" />
+                        </div>
+                        {!sidebarCollapsed && (
+                          <div className="text-left">
+                            <span className="font-semibold text-sm">{item.title}</span>
+                            <p className={`text-xs mt-1 ${
+                              expandedGroups.includes(item.id)
+                                ? 'text-white/80'
+                                : isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                            }`}>
+                              {item.description}
+                            </p>
                           </div>
-                          {!sidebarCollapsed && (
-                        <ChevronDown className={`w-4 h-4 transition-transform ${
+                        )}
+                      </div>
+                      {!sidebarCollapsed && (
+                        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${
                           expandedGroups.includes(item.id) ? 'rotate-180' : ''
                         }`} />
-                          )}
-                        </button>
+                      )}
+                    </button>
                     
                     <AnimatePresence>
                       {expandedGroups.includes(item.id) && !sidebarCollapsed && (
@@ -1088,56 +1113,80 @@ const EnhancedSuperAdminPortal = () => {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="ml-8 mt-2 space-y-1"
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="ml-12 mt-3 space-y-2"
                         >
                           {item.subItems.map((subItem) => (
-                                <button
+                            <button
                               key={subItem.path}
                               onClick={() => {
                                 console.log('Navigating to:', subItem.path);
                                 navigate(subItem.path);
                                 setMobileSidebarOpen(false);
                               }}
-                                  className={`w-full flex items-center space-x-3 p-2 rounded-lg text-sm transition-all duration-300 ${
-                                    location.pathname === subItem.path
-                                      ? isDarkMode 
-                                        ? 'bg-blue-600 text-white shadow-md'
-                                        : 'bg-blue-600 text-white shadow-md'
-                                                                              : isDarkMode
-                                          ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
-                                          : 'text-slate-600 hover:bg-slate-100'
-                                  }`}
-                                >
-                              <subItem.icon className="w-4 h-4" />
-                                  <span>{subItem.title}</span>
-                                </button>
+                              className={`w-full flex items-center space-x-3 p-3 rounded-xl text-sm transition-all duration-300 group ${
+                                location.pathname === subItem.path
+                                  ? isDarkMode 
+                                    ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border border-blue-500/30 shadow-lg'
+                                    : 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-300 shadow-lg'
+                                  : isDarkMode
+                                    ? 'text-slate-400 hover:bg-slate-700/50 hover:text-white border border-transparent hover:border-slate-600/30'
+                                    : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900 border border-transparent hover:border-slate-300/30'
+                              }`}
+                            >
+                              <div className={`p-1.5 rounded-lg transition-all duration-300 ${
+                                location.pathname === subItem.path
+                                  ? isDarkMode ? 'bg-blue-500/30' : 'bg-blue-200'
+                                  : isDarkMode ? 'bg-slate-700/50 group-hover:bg-slate-600/50' : 'bg-slate-100/50 group-hover:bg-slate-200/50'
+                              }`}>
+                                <subItem.icon className="w-4 h-4" />
+                              </div>
+                              <span className="font-medium">{subItem.title}</span>
+                            </button>
                           ))}
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
                 ) : (
-                      <button
+                  <button
                     onClick={() => {
                       console.log('Navigating to main item:', item.path);
                       navigate(item.path);
                       setMobileSidebarOpen(false);
                     }}
-                        className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 ${
+                    className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 group ${
+                      location.pathname === item.path
+                        ? isDarkMode 
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-xl' 
+                          : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl'
+                        : isDarkMode
+                          ? 'text-slate-300 hover:bg-slate-700/50 hover:text-white border border-transparent hover:border-slate-600/50'
+                          : 'text-slate-700 hover:bg-slate-100/50 hover:text-slate-900 border border-transparent hover:border-slate-300/50'
+                    }`}
+                  >
+                    <div className={`p-2 rounded-xl transition-all duration-300 ${
+                      location.pathname === item.path
+                        ? 'bg-white/20'
+                        : isDarkMode
+                          ? 'bg-slate-700/50 group-hover:bg-slate-600/50'
+                          : 'bg-slate-100/50 group-hover:bg-slate-200/50'
+                    }`}>
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    {!sidebarCollapsed && (
+                      <div className="text-left">
+                        <span className="font-semibold text-sm">{item.title}</span>
+                        <p className={`text-xs mt-1 ${
                           location.pathname === item.path
-                            ? isDarkMode 
-                              ? 'bg-blue-600 text-white shadow-lg' 
-                              : 'bg-blue-100 text-blue-900 shadow-lg'
-                            : isDarkMode
-                              ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                              : 'text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                    <item.icon className="w-5 h-5" />
-                        {!sidebarCollapsed && (
-                          <span className="font-medium">{item.title}</span>
-                        )}
-                      </button>
+                            ? 'text-white/80'
+                            : isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                        }`}>
+                          {item.description}
+                        </p>
+                      </div>
+                    )}
+                  </button>
                 )}
               </div>
             ))}
@@ -1164,34 +1213,41 @@ const EnhancedSuperAdminPortal = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Enhanced Header */}
-          <header className={`shadow-lg border-b transition-all duration-500 ${
+          <header className={`shadow-xl border-b transition-all duration-700 ${
             isDarkMode 
-              ? 'bg-slate-800 border-slate-700 text-slate-100' 
-              : 'bg-white border-slate-200 text-slate-900'
-          } flex-shrink-0`}>
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center space-x-4">
+              ? 'bg-gradient-to-r from-slate-800/95 via-slate-800/90 to-slate-900/95 border-slate-700/50 text-slate-100' 
+              : 'bg-gradient-to-r from-white/95 via-white/90 to-slate-50/95 border-slate-200/50 text-slate-900'
+          } flex-shrink-0 backdrop-blur-xl`}>
+            <div className="flex items-center justify-between p-6">
+              <div className="flex items-center space-x-6">
                 {/* Mobile Menu Button */}
                 <Button
                   id="mobile-toggle"
                   variant="ghost"
                   size="sm"
                   onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-                  className="lg:hidden rounded-xl p-2 bg-white/80 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-600/50 shadow-lg"
+                  className="lg:hidden rounded-2xl p-3 bg-white/80 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-600/50 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <Menu className="w-5 h-5" />
                 </Button>
                 
                 <TransBotHeaderLogo showText={true} />
-                <div className="flex items-center space-x-3">
-                  <h2 className={`text-xl font-bold bg-gradient-to-r ${
-                    isDarkMode ? 'from-white to-slate-300' : 'from-slate-900 to-slate-700'
-                  } bg-clip-text text-transparent`}>
-                    {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
-                  </h2>
+                <div className="flex items-center space-x-4">
+                  <div className="flex flex-col">
+                    <h2 className={`text-2xl font-bold bg-gradient-to-r ${
+                      isDarkMode ? 'from-white via-blue-200 to-purple-200' : 'from-slate-900 via-blue-700 to-purple-700'
+                    } bg-clip-text text-transparent`}>
+                      {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
+                    </h2>
+                    <p className={`text-sm ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                    }`}>
+                      {navigationItems.find(item => location.pathname.startsWith(item.path))?.description || 'System Administration & Control'}
+                    </p>
+                  </div>
                   <Badge variant="secondary" className={`${
                     isDarkMode ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30' : 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200'
-                  } font-bold px-3 py-1 rounded-full shadow-sm`}>
+                  } font-bold px-4 py-2 rounded-full shadow-lg`}>
                     ✨ Enhanced UI
                   </Badge>
                 </div>
@@ -1277,7 +1333,7 @@ const EnhancedSuperAdminPortal = () => {
 
           {/* Page Content */}
           <main className={`flex-1 overflow-auto ${
-            isDarkMode ? 'bg-slate-900' : 'bg-gray-50'
+            isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-slate-50 via-white to-blue-50/30'
           }`}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -1285,7 +1341,7 @@ const EnhancedSuperAdminPortal = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
                 className="h-full"
               >
                 <Routes>
