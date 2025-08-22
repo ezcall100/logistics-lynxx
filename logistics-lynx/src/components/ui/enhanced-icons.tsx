@@ -19,7 +19,7 @@ import {
   Share, Unlock, Settings2,
   LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
   CircuitBoard, BookOpen, HelpCircle, Rocket, Command,
-  Crown, Star, Sparkles, Lightning, Atom, BrainCircuit,
+  Crown, Star, Sparkles, Zap, Atom, BrainCircuit,
   CpuIcon, DatabaseIcon, NetworkIcon, ServerIcon,
   ShieldIcon, UsersIcon, SettingsIcon, GlobeIcon,
   ActivityIcon, BarChartIcon, LockIcon, SearchIcon,
