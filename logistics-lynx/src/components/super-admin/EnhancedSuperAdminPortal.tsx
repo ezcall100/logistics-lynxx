@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
+import { useTheme } from '@/components/theme-provider';
 
 // Import MCP Design System
 import '@/styles/mcp-design-system.css';
@@ -141,17 +142,8 @@ const EnhancedSuperAdminPortal = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['dashboard', 'autonomous']);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('super-admin-theme');
-    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  });
+  const { theme, setTheme, isDark } = useTheme();
   const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 1024px)').matches);
-
-  // Apply theme
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('super-admin-theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
 
   // Desktop persistent sidebar behavior
   useEffect(() => {
@@ -399,7 +391,7 @@ const EnhancedSuperAdminPortal = () => {
         {/* Main System Status */}
         <div className="xl:col-span-3">
           <Card className={`border-0 shadow-2xl ${
-        isDarkMode 
+        isDark 
               ? 'bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800' 
               : 'bg-gradient-to-br from-white via-blue-50 to-purple-50'
       }`}>
@@ -407,16 +399,16 @@ const EnhancedSuperAdminPortal = () => {
               <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
                                      <div className={`p-2 rounded-xl ${
-                     isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
+                     isDark ? 'bg-blue-900/30' : 'bg-blue-100'
                    }`}>
             <TransBotLogo size="md" animated={true} />
                    </div>
             <div>
                     <CardTitle className={`text-2xl ${
-                isDarkMode ? 'text-white' : 'text-slate-900'
+                isDark ? 'text-white' : 'text-slate-900'
               }`}>Autonomous System Status</CardTitle>
               <CardDescription className={
-                isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                isDark ? 'text-slate-300' : 'text-slate-600'
               }>Real-time AI agent monitoring and control</CardDescription>
             </div>
                 </div>
@@ -432,16 +424,16 @@ const EnhancedSuperAdminPortal = () => {
                 <div className="space-y-4">
               <div className="flex items-center justify-between">
                     <span className={`text-sm font-semibold ${
-                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Active Agents</span>
                 <Badge variant="outline" className={
-                  isDarkMode ? 'border-slate-600 text-slate-300' : ''
+                  isDark ? 'border-slate-600 text-slate-300' : ''
                 }>{AutonomousSystem.agents.active}/{AutonomousSystem.agents.total}</Badge>
               </div>
                   <div className="space-y-2">
                     <Progress value={(AutonomousSystem.agents.active / AutonomousSystem.agents.total) * 100} className="h-3" />
                     <p className={`text-xs ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                      isDark ? 'text-slate-400' : 'text-slate-500'
                     }`}>AI Agents Operational</p>
                   </div>
             </div>
@@ -450,16 +442,16 @@ const EnhancedSuperAdminPortal = () => {
                 <div className="space-y-4">
               <div className="flex items-center justify-between">
                     <span className={`text-sm font-semibold ${
-                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>CPU Usage</span>
                     <span className={`text-lg font-bold ${
-                  isDarkMode ? 'text-slate-200' : 'text-slate-800'
+                  isDark ? 'text-slate-200' : 'text-slate-800'
                 }`}>{AutonomousSystem.performance.cpu}%</span>
               </div>
                   <div className="space-y-2">
                     <Progress value={AutonomousSystem.performance.cpu} className="h-3" />
                     <p className={`text-xs ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                      isDark ? 'text-slate-400' : 'text-slate-500'
                     }`}>Optimal Performance</p>
                   </div>
             </div>
@@ -468,16 +460,16 @@ const EnhancedSuperAdminPortal = () => {
                 <div className="space-y-4">
               <div className="flex items-center justify-between">
                     <span className={`text-sm font-semibold ${
-                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  isDark ? 'text-slate-300' : 'text-slate-700'
                     }`}>Memory</span>
                     <span className={`text-lg font-bold ${
-                  isDarkMode ? 'text-slate-200' : 'text-slate-800'
+                  isDark ? 'text-slate-200' : 'text-slate-800'
                 }`}>{AutonomousSystem.performance.memory}%</span>
               </div>
                   <div className="space-y-2">
                     <Progress value={AutonomousSystem.performance.memory} className="h-3" />
                     <p className={`text-xs ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                      isDark ? 'text-slate-400' : 'text-slate-500'
                     }`}>Efficient Usage</p>
                   </div>
             </div>
@@ -486,16 +478,16 @@ const EnhancedSuperAdminPortal = () => {
                 <div className="space-y-4">
               <div className="flex items-center justify-between">
                     <span className={`text-sm font-semibold ${
-                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Network</span>
                     <span className={`text-lg font-bold ${
-                  isDarkMode ? 'text-slate-200' : 'text-slate-800'
+                  isDark ? 'text-slate-200' : 'text-slate-800'
                 }`}>{AutonomousSystem.performance.network}%</span>
               </div>
                   <div className="space-y-2">
                     <Progress value={AutonomousSystem.performance.network} className="h-3" />
                     <p className={`text-xs ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                      isDark ? 'text-slate-400' : 'text-slate-500'
                     }`}>High Bandwidth</p>
                   </div>
             </div>
@@ -506,17 +498,17 @@ const EnhancedSuperAdminPortal = () => {
 
         {/* Quick Actions Panel */}
         <Card className={`border-0 shadow-xl ${
-          isDarkMode ? 'bg-slate-800' : 'bg-white'
+          isDark ? 'bg-slate-800' : 'bg-white'
         }`}>
           <CardHeader className="pb-4">
             <CardTitle className={`flex items-center space-x-2 ${
-              isDarkMode ? 'text-white' : 'text-slate-900'
+              isDark ? 'text-white' : 'text-slate-900'
             }`}>
               <Zap className="w-6 h-6 text-yellow-500" />
               <span>Quick Actions</span>
             </CardTitle>
             <CardDescription className={
-              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+              isDark ? 'text-slate-300' : 'text-slate-600'
             }>Common system operations</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -571,19 +563,19 @@ const EnhancedSuperAdminPortal = () => {
       {/* Advanced Metrics Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-blue-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-blue-50'
         }`}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
+                isDark ? 'bg-blue-900/30' : 'bg-blue-100'
               }`}>
                 <BarChart3 className="h-8 w-8 text-blue-600" />
               </div>
               <div>
                 <p className="text-3xl font-bold">127</p>
                 <p className={`text-sm font-medium ${
-                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}>Active Reports</p>
                 <p className="text-xs text-green-600 font-medium">+12% from last week</p>
               </div>
@@ -592,19 +584,19 @@ const EnhancedSuperAdminPortal = () => {
         </Card>
         
         <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-green-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-green-50'
         }`}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-green-900/30' : 'bg-green-100'
+                isDark ? 'bg-green-900/30' : 'bg-green-100'
               }`}>
                 <Activity className="h-8 w-8 text-green-600" />
               </div>
               <div>
                 <p className="text-3xl font-bold">98.5%</p>
                 <p className={`text-sm font-medium ${
-                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}>System Uptime</p>
                 <p className="text-xs text-green-600 font-medium">+2.3% improvement</p>
               </div>
@@ -613,19 +605,19 @@ const EnhancedSuperAdminPortal = () => {
         </Card>
         
         <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-purple-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-purple-50'
         }`}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-purple-900/30' : 'bg-purple-100'
+                isDark ? 'bg-purple-900/30' : 'bg-purple-100'
               }`}>
                 <Calendar className="h-8 w-8 text-purple-600" />
               </div>
               <div>
                 <p className="text-3xl font-bold">12</p>
                 <p className={`text-sm font-medium ${
-                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}>Scheduled Tasks</p>
                 <p className="text-xs text-blue-600 font-medium">3 running now</p>
               </div>
@@ -634,19 +626,19 @@ const EnhancedSuperAdminPortal = () => {
         </Card>
         
         <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-orange-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-orange-50'
         }`}>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-orange-900/30' : 'bg-orange-100'
+                isDark ? 'bg-orange-900/30' : 'bg-orange-100'
               }`}>
                 <Download className="h-8 w-8 text-orange-600" />
               </div>
               <div>
                 <p className="text-3xl font-bold">256</p>
                 <p className={`text-sm font-medium ${
-                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}>Data Exports</p>
                 <p className="text-xs text-orange-600 font-medium">+8 today</p>
               </div>
@@ -659,46 +651,46 @@ const EnhancedSuperAdminPortal = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Enhanced System Alerts */}
         <Card className={`border-0 shadow-xl ${
-          isDarkMode ? 'bg-slate-800' : 'bg-white'
+          isDark ? 'bg-slate-800' : 'bg-white'
         }`}>
           <CardHeader className="pb-4">
             <CardTitle className={`flex items-center space-x-2 ${
-              isDarkMode ? 'text-white' : 'text-slate-900'
+              isDark ? 'text-white' : 'text-slate-900'
             }`}>
               <Bell className="w-6 h-6 text-orange-500" />
               <span>Live System Alerts</span>
             </CardTitle>
             <CardDescription className={
-              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+              isDark ? 'text-slate-300' : 'text-slate-600'
             }>Real-time system notifications and events</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {AutonomousSystem.alerts.map((alert) => (
                 <div key={alert.id} className={`flex items-center space-x-4 p-4 rounded-xl border ${
-                  isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-slate-200 bg-slate-50'
+                  isDark ? 'border-slate-600 bg-slate-700' : 'border-slate-200 bg-slate-50'
                 }`}>
                   <div className={`p-2 rounded-full ${
-                    alert.type === 'success' ? (isDarkMode ? 'bg-green-900/30' : 'bg-green-100') :
-                    alert.type === 'warning' ? (isDarkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
-                    (isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100')
+                    alert.type === 'success' ? (isDark ? 'bg-green-900/30' : 'bg-green-100') :
+                    alert.type === 'warning' ? (isDark ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                    (isDark ? 'bg-blue-900/30' : 'bg-blue-100')
                   }`}>
                     {alert.type === 'success' ? <CheckCircle className={`w-5 h-5 ${
-                      isDarkMode ? 'text-green-400' : 'text-green-600'
+                      isDark ? 'text-green-400' : 'text-green-600'
                     }`} /> :
                      alert.type === 'warning' ? <AlertTriangle className={`w-5 h-5 ${
-                       isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
+                       isDark ? 'text-yellow-400' : 'text-yellow-600'
                      }`} /> :
                      <Info className={`w-5 h-5 ${
-                       isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                       isDark ? 'text-blue-400' : 'text-blue-600'
                      }`} />}
                   </div>
                   <div className="flex-1">
                     <p className={`text-sm font-semibold ${
-                      isDarkMode ? 'text-slate-200' : 'text-slate-900'
+                      isDark ? 'text-slate-200' : 'text-slate-900'
                     }`}>{alert.message}</p>
                     <p className={`text-xs ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                      isDark ? 'text-slate-400' : 'text-slate-500'
                     }`}>{alert.time}</p>
                   </div>
                 </div>
@@ -709,17 +701,17 @@ const EnhancedSuperAdminPortal = () => {
 
         {/* Advanced Performance Metrics */}
         <Card className={`border-0 shadow-xl ${
-          isDarkMode ? 'bg-slate-800' : 'bg-white'
+          isDark ? 'bg-slate-800' : 'bg-white'
         }`}>
           <CardHeader className="pb-4">
             <CardTitle className={`flex items-center space-x-2 ${
-              isDarkMode ? 'text-white' : 'text-slate-900'
+              isDark ? 'text-white' : 'text-slate-900'
             }`}>
               <TrendingUp className="w-6 h-6 text-green-500" />
               <span>Performance Analytics</span>
             </CardTitle>
             <CardDescription className={
-              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+              isDark ? 'text-slate-300' : 'text-slate-600'
             }>Real-time system performance metrics</CardDescription>
           </CardHeader>
           <CardContent>
@@ -727,10 +719,10 @@ const EnhancedSuperAdminPortal = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className={`text-sm font-semibold ${
-                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                    isDark ? 'text-slate-300' : 'text-slate-700'
                   }`}>Response Time</span>
                   <span className={`text-lg font-bold ${
-                    isDarkMode ? 'text-green-400' : 'text-green-600'
+                    isDark ? 'text-green-400' : 'text-green-600'
                   }`}>45ms</span>
                 </div>
                 <Progress value={85} className="h-3" />
@@ -740,10 +732,10 @@ const EnhancedSuperAdminPortal = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className={`text-sm font-semibold ${
-                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                    isDark ? 'text-slate-300' : 'text-slate-700'
                   }`}>Throughput</span>
                   <span className={`text-lg font-bold ${
-                    isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                    isDark ? 'text-blue-400' : 'text-blue-600'
                   }`}>2.4k req/s</span>
                 </div>
                 <Progress value={92} className="h-3" />
@@ -753,10 +745,10 @@ const EnhancedSuperAdminPortal = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className={`text-sm font-semibold ${
-                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                    isDark ? 'text-slate-300' : 'text-slate-700'
                   }`}>Error Rate</span>
                   <span className={`text-lg font-bold ${
-                    isDarkMode ? 'text-red-400' : 'text-red-600'
+                    isDark ? 'text-red-400' : 'text-red-600'
                   }`}>0.02%</span>
                 </div>
                 <Progress value={98} className="h-3" />
@@ -770,23 +762,23 @@ const EnhancedSuperAdminPortal = () => {
       {/* System Access Hub */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className={`border shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-102 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-slate-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-slate-50'
         }`} onClick={() => navigate('/super-admin/autonomous/agent-dashboard')}>
           <CardHeader>
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-lg ${
-                isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
+                isDark ? 'bg-blue-900/30' : 'bg-blue-100'
               }`}>
                 <Brain className={`w-8 h-8 ${
-                  isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                  isDark ? 'text-blue-400' : 'text-blue-600'
                 }`} />
               </div>
               <div>
                 <CardTitle className={`text-xl font-semibold ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
+                  isDark ? 'text-white' : 'text-slate-900'
                 }`}>Agent Management</CardTitle>
                 <CardDescription className={
-                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 }>Monitor and control AI agents</CardDescription>
               </div>
             </div>
@@ -794,33 +786,33 @@ const EnhancedSuperAdminPortal = () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>Active Agents: 22/24</span>
               <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`} />
             </div>
           </CardContent>
         </Card>
 
         <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-green-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-green-50'
         }`} onClick={() => navigate('/super-admin/users/all')}>
           <CardHeader>
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-green-900/30' : 'bg-green-100'
+                isDark ? 'bg-green-900/30' : 'bg-green-100'
               }`}>
                 <Users className={`w-8 h-8 ${
-                  isDarkMode ? 'text-green-400' : 'text-green-600'
+                  isDark ? 'text-green-400' : 'text-green-600'
                 }`} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
+                  isDark ? 'text-white' : 'text-slate-900'
                 }`}>User Management</CardTitle>
                 <CardDescription className={
-                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 }>Manage users and permissions</CardDescription>
               </div>
             </div>
@@ -828,33 +820,33 @@ const EnhancedSuperAdminPortal = () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>Total Users: 1,247</span>
               <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`} />
             </div>
           </CardContent>
         </Card>
 
         <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-purple-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-purple-50'
         }`} onClick={() => navigate('/super-admin/system/health')}>
           <CardHeader>
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-purple-900/30' : 'bg-purple-100'
+                isDark ? 'bg-purple-900/30' : 'bg-purple-100'
               }`}>
                 <Activity className={`w-8 h-8 ${
-                  isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                  isDark ? 'text-purple-400' : 'text-purple-600'
                 }`} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
+                  isDark ? 'text-white' : 'text-slate-900'
                 }`}>System Health</CardTitle>
                 <CardDescription className={
-                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 }>Monitor system performance</CardDescription>
               </div>
             </div>
@@ -862,33 +854,33 @@ const EnhancedSuperAdminPortal = () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>Health Score: 98.5%</span>
               <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`} />
       </div>
           </CardContent>
         </Card>
 
         <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-orange-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-orange-50'
         }`} onClick={() => navigate('/super-admin/analytics')}>
         <CardHeader>
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-orange-900/30' : 'bg-orange-100'
+                isDark ? 'bg-orange-900/30' : 'bg-orange-100'
               }`}>
                 <BarChart3 className={`w-8 h-8 ${
-                  isDarkMode ? 'text-orange-400' : 'text-orange-600'
+                  isDark ? 'text-orange-400' : 'text-orange-600'
                 }`} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
+                  isDark ? 'text-white' : 'text-slate-900'
                 }`}>Analytics Hub</CardTitle>
                 <CardDescription className={
-                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 }>Comprehensive system analytics</CardDescription>
               </div>
             </div>
@@ -896,33 +888,33 @@ const EnhancedSuperAdminPortal = () => {
         <CardContent>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>Reports: 127 Active</span>
               <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`} />
             </div>
           </CardContent>
         </Card>
 
         <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-indigo-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-indigo-50'
         }`} onClick={() => navigate('/super-admin/engineering')}>
           <CardHeader>
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-indigo-900/30' : 'bg-indigo-100'
+                isDark ? 'bg-indigo-900/30' : 'bg-indigo-100'
               }`}>
                 <Code className={`w-8 h-8 ${
-                  isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
+                  isDark ? 'text-indigo-400' : 'text-indigo-600'
                 }`} />
                 </div>
               <div>
                 <CardTitle className={`text-xl ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
+                  isDark ? 'text-white' : 'text-slate-900'
                 }`}>Engineering Suite</CardTitle>
                 <CardDescription className={
-                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 }>Development and deployment tools</CardDescription>
               </div>
             </div>
@@ -930,33 +922,33 @@ const EnhancedSuperAdminPortal = () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${
-                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>Tools: 8 Available</span>
               <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`} />
                 </div>
           </CardContent>
         </Card>
 
         <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-pink-50'
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-pink-50'
         }`} onClick={() => navigate('/super-admin/portals')}>
           <CardHeader>
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-xl ${
-                isDarkMode ? 'bg-pink-900/30' : 'bg-pink-100'
+                isDark ? 'bg-pink-900/30' : 'bg-pink-100'
               }`}>
                 <Building2 className={`w-8 h-8 ${
-                  isDarkMode ? 'text-pink-400' : 'text-pink-600'
+                  isDark ? 'text-pink-400' : 'text-pink-600'
                 }`} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
-                  isDarkMode ? 'text-white' : 'text-slate-900'
+                  isDark ? 'text-white' : 'text-slate-900'
                 }`}>Portal Management</CardTitle>
                 <CardDescription className={
-                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 }>Manage all system portals</CardDescription>
               </div>
             </div>
@@ -964,10 +956,10 @@ const EnhancedSuperAdminPortal = () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>Portals: 15 Active</span>
               <ArrowUpRight className={`w-5 h-5 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                isDark ? 'text-slate-400' : 'text-slate-500'
               }`} />
           </div>
         </CardContent>
@@ -979,7 +971,7 @@ const EnhancedSuperAdminPortal = () => {
   return (
     <TooltipProvider>
       <div className={`flex h-screen transition-all duration-700 ${
-        isDarkMode 
+        isDark 
           ? 'dark bg-slate-900 text-slate-100' 
           : 'bg-slate-50 text-slate-900'
       }`}>
@@ -1003,14 +995,14 @@ const EnhancedSuperAdminPortal = () => {
             width: sidebarCollapsed ? 88 : 320 
           }}
           className={`${isDesktop ? 'relative' : 'fixed'} z-50 ${
-            isDarkMode 
+            isDark 
               ? 'bg-slate-800 border-slate-700 text-slate-100' 
               : 'bg-white border-slate-200 text-slate-900'
           } shadow-lg flex flex-col border-r transition-all duration-700 h-full`}
         >
           {/* Enhanced Header */}
           <div className={`p-6 border-b ${
-            isDarkMode ? 'border-slate-700' : 'border-slate-200'
+            isDark ? 'border-slate-700' : 'border-slate-200'
           } flex-shrink-0 bg-white dark:bg-slate-800`}>
             <div className="flex items-center justify-between">
               <motion.div
@@ -1024,12 +1016,12 @@ const EnhancedSuperAdminPortal = () => {
                 </div>
                 <div>
                   <h1 className={`font-bold text-lg ${
-                    isDarkMode ? 'text-slate-100' : 'text-slate-900'
+                    isDark ? 'text-slate-100' : 'text-slate-900'
                   }`}>
                      Trans Bot AI
                   </h1>
                   <p className={`text-xs ${
-                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    isDark ? 'text-slate-400' : 'text-slate-500'
                    }`}>Super Admin Portal</p>
                 </div>
               </motion.div>
@@ -1039,7 +1031,7 @@ const EnhancedSuperAdminPortal = () => {
                 size="sm"
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                 className={`transition-all duration-300 rounded-md p-2 ${
-                  isDarkMode 
+                  isDark 
                     ? 'text-slate-300 hover:text-white hover:bg-slate-700' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
@@ -1059,10 +1051,10 @@ const EnhancedSuperAdminPortal = () => {
                       onClick={() => toggleGroup(item.id)}
                       className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-300 group ${
                         expandedGroups.includes(item.id)
-                          ? isDarkMode 
+                          ? isDark 
                             ? 'bg-blue-600 text-white shadow-md' 
                             : 'bg-blue-600 text-white shadow-md'
-                          : isDarkMode
+                          : isDark
                             ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
                             : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                       }`}
@@ -1071,7 +1063,7 @@ const EnhancedSuperAdminPortal = () => {
                         <div className={`p-2 rounded-md transition-all duration-300 ${
                           expandedGroups.includes(item.id)
                             ? 'bg-white/20'
-                            : isDarkMode
+                            : isDark
                               ? 'bg-slate-700 group-hover:bg-slate-600'
                               : 'bg-slate-100 group-hover:bg-slate-200'
                         }`}>
@@ -1083,7 +1075,7 @@ const EnhancedSuperAdminPortal = () => {
                             <p className={`text-xs mt-1 ${
                               expandedGroups.includes(item.id)
                                 ? 'text-white/80'
-                                : isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                                : isDark ? 'text-slate-400' : 'text-slate-500'
                             }`}>
                               {item.description}
                             </p>
@@ -1116,18 +1108,18 @@ const EnhancedSuperAdminPortal = () => {
                               }}
                               className={`w-full flex items-center space-x-3 p-2 rounded-md text-sm transition-all duration-300 group ${
                                 location.pathname === subItem.path
-                                  ? isDarkMode 
+                                  ? isDark 
                                     ? 'bg-blue-600 text-white shadow-md'
                                     : 'bg-blue-600 text-white shadow-md'
-                                  : isDarkMode
+                                  : isDark
                                     ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
                                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                               }`}
                             >
                                                              <div className={`p-1.5 rounded-md transition-all duration-300 ${
                                  location.pathname === subItem.path
-                                   ? isDarkMode ? 'bg-blue-500/30' : 'bg-blue-200'
-                                   : isDarkMode ? 'bg-slate-700 group-hover:bg-slate-600' : 'bg-slate-100 group-hover:bg-slate-200'
+                                   ? isDark ? 'bg-blue-500/30' : 'bg-blue-200'
+                                   : isDark ? 'bg-slate-700 group-hover:bg-slate-600' : 'bg-slate-100 group-hover:bg-slate-200'
                                }`}>
                                 <subItem.icon className="w-4 h-4" />
                               </div>
@@ -1147,10 +1139,10 @@ const EnhancedSuperAdminPortal = () => {
                     }}
                     className={`w-full flex items-center space-x-4 p-3 rounded-lg transition-all duration-300 group ${
                       location.pathname === item.path
-                        ? isDarkMode 
+                        ? isDark 
                           ? 'bg-blue-600 text-white shadow-md' 
                           : 'bg-blue-600 text-white shadow-md'
-                        : isDarkMode
+                        : isDark
                           ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
                           : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                     }`}
@@ -1158,7 +1150,7 @@ const EnhancedSuperAdminPortal = () => {
                                          <div className={`p-2 rounded-md transition-all duration-300 ${
                        location.pathname === item.path
                          ? 'bg-white/20'
-                         : isDarkMode
+                         : isDark
                            ? 'bg-slate-700 group-hover:bg-slate-600'
                            : 'bg-slate-100 group-hover:bg-slate-200'
                      }`}>
@@ -1170,7 +1162,7 @@ const EnhancedSuperAdminPortal = () => {
                         <p className={`text-xs mt-1 ${
                           location.pathname === item.path
                             ? 'text-white/80'
-                            : isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                            : isDark ? 'text-slate-400' : 'text-slate-500'
                         }`}>
                           {item.description}
                         </p>
@@ -1185,11 +1177,11 @@ const EnhancedSuperAdminPortal = () => {
           {/* System Status Footer */}
           {!sidebarCollapsed && (
             <div className={`p-4 border-t ${
-              isDarkMode ? 'border-slate-700' : 'border-slate-200'
+              isDark ? 'border-slate-700' : 'border-slate-200'
             } flex-shrink-0`}>
               <div className="text-center">
                 <p className={`text-xs ${
-                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}>System Status</p>
                 <div className="flex items-center justify-center space-x-2 mt-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
@@ -1204,7 +1196,7 @@ const EnhancedSuperAdminPortal = () => {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Enhanced Header */}
           <header className={`shadow-md border-b transition-all duration-700 ${
-            isDarkMode 
+            isDark 
               ? 'bg-slate-800 border-slate-700 text-slate-100' 
               : 'bg-white border-slate-200 text-slate-900'
           } flex-shrink-0`}>
@@ -1225,18 +1217,18 @@ const EnhancedSuperAdminPortal = () => {
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col">
                     <h2 className={`text-xl font-semibold ${
-                      isDarkMode ? 'text-white' : 'text-slate-900'
+                      isDark ? 'text-white' : 'text-slate-900'
                     }`}>
                       {navigationItems.find(item => location.pathname.startsWith(item.path))?.title || 'Super Admin Portal'}
                     </h2>
                     <p className={`text-sm ${
-                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                      isDark ? 'text-slate-400' : 'text-slate-600'
                     }`}>
                       {navigationItems.find(item => location.pathname.startsWith(item.path))?.description || 'System Administration & Control'}
                     </p>
                   </div>
                   <Badge variant="secondary" className={`${
-                    isDarkMode ? 'bg-green-900/30 text-green-400 border border-green-500/30' : 'bg-green-100 text-green-800 border border-green-200'
+                    isDark ? 'bg-green-900/30 text-green-400 border border-green-500/30' : 'bg-green-100 text-green-800 border border-green-200'
                   } font-medium px-3 py-1 rounded-md shadow-sm`}>
                     Enhanced UI
                   </Badge>
@@ -1248,49 +1240,49 @@ const EnhancedSuperAdminPortal = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setIsDarkMode(!isDarkMode)}
-                  className={`header-theme-toggle transition-all duration-300 rounded-xl p-2 ${
-                        isDarkMode 
-                          ? 'text-amber-400 hover:bg-slate-700 hover:text-amber-300 bg-slate-800/50 border border-slate-600 shadow-lg' 
-                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 bg-white/80 border border-slate-300 shadow-lg'
+                      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+                  className={`header-theme-toggle transition-all duration-300 rounded-md p-2 ${
+                        isDark 
+                          ? 'text-slate-300 hover:bg-slate-700 hover:text-white bg-slate-800 border border-slate-600 shadow-sm' 
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 bg-white border border-slate-200 shadow-sm'
                   }`}
                 >
-                  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                     </Button>
 
                 {/* Enhanced User Menu */}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" className={`header-user-menu relative h-12 w-12 rounded-xl transition-all duration-300 border-2 shadow-lg hover:scale-105 ${
-                      isDarkMode 
-                        ? 'hover:bg-slate-700 text-slate-100 border-slate-500 bg-slate-800/50' 
-                        : 'hover:bg-slate-100 text-slate-900 border-slate-400 bg-white/80'
+                    <Button variant="ghost" className={`header-user-menu relative h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-102 ${
+                      isDark 
+                        ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
+                        : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
                     }`}>
-                      <Avatar className="h-10 w-10">
+                                              <Avatar className="h-8 w-8">
                         <AvatarFallback className="bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 text-white font-bold text-lg shadow-inner">SA</AvatarFallback>
                       </Avatar>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className={`w-80 ${isDarkMode ? 'bg-slate-800 border-slate-700' : ''}`} align="end">
+                  <PopoverContent className={`w-80 ${isDark ? 'bg-slate-800 border-slate-700' : ''}`} align="end">
                     <div className="flex items-center gap-3 p-3">
                       <Avatar className="h-12 w-12">
                         <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold">SA</AvatarFallback>
                       </Avatar>
                       <div>
                         <p className={`text-sm font-semibold ${
-                          isDarkMode ? 'text-white' : 'text-slate-900'
+                          isDark ? 'text-white' : 'text-slate-900'
                         }`}>Super Administrator</p>
                         <p className={`text-xs ${
-                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                          isDark ? 'text-slate-400' : 'text-slate-500'
                         }`}>system@transbot.ai</p>
                       </div>
                     </div>
-                    <Separator className={isDarkMode ? 'bg-slate-700' : ''} />
+                    <Separator className={isDark ? 'bg-slate-700' : ''} />
                     <div className="p-2 space-y-1">
                                              <Button 
                          variant="ghost" 
                          className={`w-full justify-start ${
-                        isDarkMode ? 'hover:bg-slate-700 text-slate-100' : 'hover:bg-slate-100 text-slate-900'
+                        isDark ? 'hover:bg-slate-700 text-slate-100' : 'hover:bg-slate-100 text-slate-900'
                          }`}
                          onClick={() => navigate('/super-admin/profile')}
                        >
@@ -1300,16 +1292,16 @@ const EnhancedSuperAdminPortal = () => {
                        <Button 
                          variant="ghost" 
                          className={`w-full justify-start ${
-                        isDarkMode ? 'hover:bg-slate-700 text-slate-100' : 'hover:bg-slate-100 text-slate-900'
+                        isDark ? 'hover:bg-slate-700 text-slate-100' : 'hover:bg-slate-100 text-slate-900'
                          }`}
                          onClick={() => navigate('/super-admin/settings')}
                        >
                         <Settings className="w-4 h-4 mr-2" />
                          System Settings
                       </Button>
-                      <Separator className={isDarkMode ? 'bg-slate-700' : ''} />
+                      <Separator className={isDark ? 'bg-slate-700' : ''} />
                       <Button variant="ghost" className={`w-full justify-start text-red-600 ${
-                        isDarkMode ? 'hover:bg-red-900/20' : 'hover:bg-red-50'
+                        isDark ? 'hover:bg-red-900/20' : 'hover:bg-red-50'
                       }`}>
                         <LogOut className="w-4 h-4 mr-2" />
                         Sign Out
@@ -1323,7 +1315,7 @@ const EnhancedSuperAdminPortal = () => {
 
           {/* Page Content */}
           <main className={`flex-1 overflow-auto ${
-            isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-slate-50 via-white to-blue-50/30'
+            isDark ? 'bg-slate-900' : 'bg-slate-50'
           }`}>
             <AnimatePresence mode="wait">
               <motion.div
