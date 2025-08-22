@@ -1301,7 +1301,7 @@ const EnhancedSuperAdminPortal = () => {
           <Route path="/mcp/system-monitor" element={<MCPSystemMonitorPage />} />
           <Route path="/mcp/security-hub" element={<MCPSecurityHubPage />} />
           <Route path="/mcp/performance-analytics" element={<MCPPerformanceAnalyticsPage />} />
-          <Route path="/mcp/configuration-manager" element={<MCPConfigurationManagerPage />} />
+          <Route path="/mcp/configuration" element={<MCPConfigurationManagerPage />} />
           <Route path="/mcp/backup-recovery" element={<MCPBackupRecoveryPage />} />
           <Route path="/mcp/api-gateway" element={<MCPAPIGatewayPage />} />
           <Route path="/mcp/log-management" element={<MCPLogManagementPage />} />
