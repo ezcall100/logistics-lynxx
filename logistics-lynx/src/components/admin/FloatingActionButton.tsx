@@ -409,11 +409,11 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   ];
 
   return (
-    <div ref={fabRef} className="fixed bottom-6 right-6 z-50">
+    <div ref={fabRef} className="fixed bottom-6 right-6 z-[9999]">
       {/* Main FAB Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+        className="fab-button w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-white/20"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
@@ -450,7 +450,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 30 }}
-            className="absolute bottom-16 right-0 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden"
+            className="fab-menu absolute bottom-16 right-0 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-2xl border-2 border-gray-300 dark:border-slate-600 overflow-hidden"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">

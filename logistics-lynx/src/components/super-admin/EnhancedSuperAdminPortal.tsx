@@ -354,15 +354,15 @@ const EnhancedSuperAdminPortal = () => {
               
               {/* Live Status Indicators */}
               <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                <div className="flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium">System Operational</span>
                 </div>
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                <div className="flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2">
                   <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                   <span className="text-sm font-medium">24/7 Monitoring</span>
                 </div>
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                <div className="flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2">
                   <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
                   <span className="text-sm font-medium">AI Agents Active</span>
                 </div>
@@ -373,7 +373,7 @@ const EnhancedSuperAdminPortal = () => {
           <Button 
                 variant="outline" 
                 size="lg"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
             onClick={() => window.location.reload()}
           >
                 <RefreshCw className="w-5 h-5 mr-2" />
@@ -382,7 +382,7 @@ const EnhancedSuperAdminPortal = () => {
               <Button 
                 variant="outline"
                 size="lg"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
                 onClick={() => navigate('/super-admin/mcp')}
               >
                 <CircuitBoard className="w-5 h-5 mr-2" />
@@ -1201,10 +1201,10 @@ const EnhancedSuperAdminPortal = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => setIsDarkMode(!isDarkMode)}
-                  className={`transition-all duration-300 ${
+                  className={`header-theme-toggle transition-all duration-300 border ${
                         isDarkMode 
-                          ? 'text-slate-300 hover:bg-slate-700' 
-                          : 'text-slate-600 hover:bg-slate-100'
+                          ? 'text-slate-300 hover:bg-slate-700 border-slate-600' 
+                          : 'text-slate-600 hover:bg-slate-100 border-slate-300'
                   }`}
                 >
                   {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -1213,10 +1213,10 @@ const EnhancedSuperAdminPortal = () => {
                 {/* Enhanced User Menu */}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" className={`relative h-10 w-10 rounded-full transition-all duration-300 ${
+                    <Button variant="ghost" className={`header-user-menu relative h-10 w-10 rounded-full transition-all duration-300 border-2 ${
                       isDarkMode 
-                        ? 'hover:bg-slate-700 text-slate-100' 
-                        : 'hover:bg-slate-100 text-slate-900'
+                        ? 'hover:bg-slate-700 text-slate-100 border-slate-600' 
+                        : 'hover:bg-slate-100 text-slate-900 border-slate-300'
                     }`}>
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold">SA</AvatarFallback>

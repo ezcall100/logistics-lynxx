@@ -343,3 +343,84 @@
   border-color: #1d4ed8;
   color: #93c5fd;
 }
+
+/* CRITICAL: Ensure header icons and FAB are always visible */
+/* Remove any glass/transparency effects that might hide elements */
+
+/* Header theme toggle button - ensure visibility */
+.header-theme-toggle {
+  background-color: #ffffff !important;
+  border: 2px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.dark .header-theme-toggle {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Header user menu button - ensure visibility */
+.header-user-menu {
+  background-color: #ffffff !important;
+  border: 2px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.dark .header-user-menu {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* FAB - ensure maximum visibility */
+.fab-button {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  border: 3px solid #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5) !important;
+  z-index: 9999 !important;
+}
+
+.fab-button:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.7) !important;
+}
+
+/* FAB menu - ensure visibility */
+.fab-menu {
+  background-color: #ffffff !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+}
+
+.dark .fab-menu {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Remove any backdrop-blur effects that might cause issues */
+* {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Ensure all buttons have proper contrast */
+button {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.dark button {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+/* Special handling for gradient buttons */
+button[class*="bg-gradient"] {
+  background-image: inherit !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
