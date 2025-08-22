@@ -5,6 +5,7 @@ import { AuthProvider } from '../../context/AuthContext';
 
 // Import MCP Design System
 import '@/styles/mcp-design-system.css';
+import '@/styles/super-admin-colors.css';
 
 // UI Components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -89,6 +90,7 @@ import AutonomousDashboardPage from '../../pages/AutonomousDashboardPage';
 // Import user management page
 import UserManagementPage from '../../pages/super-admin/UserManagementPage';
 import AllUsersPage from './pages/user-management/AllUsersPage';
+import ColorTestPage from './pages/ColorTestPage';
 
 // Import Floating Action Button
 import { FloatingActionButton } from '../admin/FloatingActionButton';
@@ -984,7 +986,7 @@ const EnhancedSuperAdminPortal = () => {
       <div className={`flex h-screen transition-all duration-500 ${
         isDarkMode 
           ? 'dark bg-slate-900 text-slate-100' 
-          : 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-slate-900'
+          : 'bg-white text-slate-900'
       }`}>
         {/* Mobile Sidebar Overlay */}
         {mobileSidebarOpen && !isDesktop && (
@@ -1059,11 +1061,11 @@ const EnhancedSuperAdminPortal = () => {
                           className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 ${
                             expandedGroups.includes(item.id)
                               ? isDarkMode 
-                                ? 'bg-slate-700 text-white shadow-lg' 
-                            : 'bg-blue-100 text-blue-900 shadow-lg'
+                                ? 'bg-blue-600 text-white shadow-lg' 
+                                : 'bg-blue-100 text-blue-900 shadow-lg'
                               : isDarkMode
                                 ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                            : 'hover:bg-slate-100'
+                                : 'text-slate-700 hover:bg-slate-100'
                           }`}
                         >
                           <div className="flex items-center space-x-3">
@@ -1097,10 +1099,12 @@ const EnhancedSuperAdminPortal = () => {
                               }}
                                   className={`w-full flex items-center space-x-3 p-2 rounded-lg text-sm transition-all duration-300 ${
                                     location.pathname === subItem.path
-                                      ? 'bg-blue-600 text-white shadow-md'
-                                      : isDarkMode
-                                        ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
-                                    : 'hover:bg-slate-100'
+                                      ? isDarkMode 
+                                        ? 'bg-blue-600 text-white shadow-md'
+                                        : 'bg-blue-600 text-white shadow-md'
+                                                                              : isDarkMode
+                                          ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                                          : 'text-slate-600 hover:bg-slate-100'
                                   }`}
                                 >
                               <subItem.icon className="w-4 h-4" />
@@ -1121,11 +1125,11 @@ const EnhancedSuperAdminPortal = () => {
                         className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 ${
                           location.pathname === item.path
                             ? isDarkMode 
-                              ? 'bg-slate-700 text-white shadow-lg' 
-                          : 'bg-blue-100 text-blue-900 shadow-lg'
+                              ? 'bg-blue-600 text-white shadow-lg' 
+                              : 'bg-blue-100 text-blue-900 shadow-lg'
                             : isDarkMode
                               ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                          : 'hover:bg-slate-100'
+                              : 'text-slate-700 hover:bg-slate-100'
                         }`}
                       >
                     <item.icon className="w-5 h-5" />
@@ -1269,7 +1273,9 @@ const EnhancedSuperAdminPortal = () => {
           </header>
 
           {/* Page Content */}
-          <main className="flex-1 overflow-auto">
+          <main className={`flex-1 overflow-auto ${
+            isDarkMode ? 'bg-slate-900' : 'bg-gray-50'
+          }`}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
@@ -1288,6 +1294,7 @@ const EnhancedSuperAdminPortal = () => {
                   } />
                   <Route path="/users/*" element={<UserManagementPage />} />
                   <Route path="/users/all" element={<AllUsersPage />} />
+                  <Route path="/color-test" element={<ColorTestPage />} />
                   <Route path="/portals/overview" element={<PortalOverviewPage />} />
                   <Route path="/portals/all" element={<AllPortalsPage />} />
                   <Route path="/portals/categories" element={<PortalCategoriesPage />} />

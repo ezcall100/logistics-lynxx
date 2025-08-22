@@ -198,7 +198,7 @@ const AllUsersPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white dark:bg-slate-900 p-6 rounded-lg">
       {/* Header Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -207,13 +207,13 @@ const AllUsersPage: React.FC = () => {
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 pl-10"
+              className="w-64 pl-10 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-slate-100"
             />
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
           </div>
           
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-32 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-slate-100">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -226,7 +226,7 @@ const AllUsersPage: React.FC = () => {
           </Select>
 
           <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-32 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-slate-100">
               <SelectValue placeholder="Role" />
             </SelectTrigger>
             <SelectContent>
@@ -311,32 +311,32 @@ const AllUsersPage: React.FC = () => {
       </div>
 
       {/* Users Table */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <CardHeader>
           <CardTitle>All Users ({filteredUsers.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
+              <TableRow className="bg-gray-50 dark:bg-slate-800">
+                <TableHead className="w-12 text-slate-900 dark:text-slate-100">
                   <Checkbox
                     checked={selectedUsers.length === filteredUsers.length && filteredUsers.length > 0}
                     onCheckedChange={handleSelectAll}
                   />
                 </TableHead>
-                <TableHead>User</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Last Login</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-slate-900 dark:text-slate-100">User</TableHead>
+                <TableHead className="text-slate-900 dark:text-slate-100">Role</TableHead>
+                <TableHead className="text-slate-900 dark:text-slate-100">Status</TableHead>
+                <TableHead className="text-slate-900 dark:text-slate-100">Department</TableHead>
+                <TableHead className="text-slate-900 dark:text-slate-100">Last Login</TableHead>
+                <TableHead className="text-slate-900 dark:text-slate-100">Created</TableHead>
+                <TableHead className="text-right text-slate-900 dark:text-slate-100">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredUsers.map((user) => (
-                <TableRow key={user.id}>
+                <TableRow key={user.id} className="hover:bg-gray-50 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700">
                   <TableCell>
                     <Checkbox
                       checked={selectedUsers.includes(user.id)}
@@ -345,23 +345,23 @@ const AllUsersPage: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-purple-600">
+                      <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-medium text-purple-600 dark:text-purple-300">
                           {user.name.split(' ').map(n => n[0]).join('')}
                         </span>
                       </div>
                       <div>
-                        <div className="font-medium">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="font-medium text-slate-900 dark:text-slate-100">{user.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{user.role}</Badge>
+                  <TableCell className="text-slate-900 dark:text-slate-100">
+                    <Badge variant="outline" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-slate-100">{user.role}</Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-slate-900 dark:text-slate-100">
                     <Select value={user.status} onValueChange={(value) => handleStatusChange(user.id, value)}>
-                      <SelectTrigger className="w-24">
+                      <SelectTrigger className="w-24 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-slate-100">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -372,9 +372,9 @@ const AllUsersPage: React.FC = () => {
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell>{user.department}</TableCell>
-                  <TableCell>{user.lastLogin}</TableCell>
-                  <TableCell>{user.createdAt}</TableCell>
+                  <TableCell className="text-slate-900 dark:text-slate-100">{user.department}</TableCell>
+                  <TableCell className="text-slate-900 dark:text-slate-100">{user.lastLogin}</TableCell>
+                  <TableCell className="text-slate-900 dark:text-slate-100">{user.createdAt}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
