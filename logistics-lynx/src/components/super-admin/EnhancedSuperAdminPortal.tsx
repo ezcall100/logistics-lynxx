@@ -91,6 +91,7 @@ import AutonomousDashboardPage from '../../pages/AutonomousDashboardPage';
 import UserManagementPage from '../../pages/super-admin/UserManagementPage';
 import AllUsersPage from './pages/user-management/AllUsersPage';
 import ColorTestPage from './pages/ColorTestPage';
+import FABTestPage from './pages/FABTestPage';
 
 // Import Floating Action Button
 import { FloatingActionButton } from '../admin/FloatingActionButton';
@@ -1214,8 +1215,8 @@ const EnhancedSuperAdminPortal = () => {
                   <PopoverTrigger asChild>
                     <Button variant="ghost" className={`relative h-10 w-10 rounded-full transition-all duration-300 ${
                       isDarkMode 
-                        ? 'hover:bg-slate-700' 
-                        : 'hover:bg-slate-100'
+                        ? 'hover:bg-slate-700 text-slate-100' 
+                        : 'hover:bg-slate-100 text-slate-900'
                     }`}>
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold">SA</AvatarFallback>
@@ -1241,7 +1242,7 @@ const EnhancedSuperAdminPortal = () => {
                                              <Button 
                          variant="ghost" 
                          className={`w-full justify-start ${
-                        isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-100'
+                        isDarkMode ? 'hover:bg-slate-700 text-slate-100' : 'hover:bg-slate-100 text-slate-900'
                          }`}
                          onClick={() => navigate('/super-admin/profile')}
                        >
@@ -1251,7 +1252,7 @@ const EnhancedSuperAdminPortal = () => {
                        <Button 
                          variant="ghost" 
                          className={`w-full justify-start ${
-                        isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-100'
+                        isDarkMode ? 'hover:bg-slate-700 text-slate-100' : 'hover:bg-slate-100 text-slate-900'
                          }`}
                          onClick={() => navigate('/super-admin/settings')}
                        >
@@ -1295,6 +1296,7 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/users/*" element={<UserManagementPage />} />
                   <Route path="/users/all" element={<AllUsersPage />} />
                   <Route path="/color-test" element={<ColorTestPage />} />
+                  <Route path="/fab-test" element={<FABTestPage />} />
                   <Route path="/portals/overview" element={<PortalOverviewPage />} />
                   <Route path="/portals/all" element={<AllPortalsPage />} />
                   <Route path="/portals/categories" element={<PortalCategoriesPage />} />

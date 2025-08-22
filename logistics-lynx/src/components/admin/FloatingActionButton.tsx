@@ -450,7 +450,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 30 }}
-            className="absolute bottom-16 right-0 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden"
+            className="absolute bottom-16 right-0 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
@@ -459,18 +459,18 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             </div>
 
             {/* Search Bar */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b border-gray-200 dark:border-slate-700">
               <input
                 type="text"
                 placeholder="Search actions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100"
               />
             </div>
 
             {/* Category Filters */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b border-gray-200 dark:border-slate-700">
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <button
@@ -479,7 +479,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                     className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                       activeCategory === category.id
                         ? `${category.color} text-white`
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-600'
                     }`}
                   >
                     {category.label}
@@ -496,7 +496,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                     <motion.button
                       key={action.id}
                       onClick={action.action}
-                      className="w-full flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                      className="w-full flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors group"
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -504,8 +504,8 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                         {action.icon}
                       </div>
                       <div className="flex-1 text-left">
-                        <div className="font-medium text-gray-900">{action.label}</div>
-                        <div className="text-sm text-gray-500">{action.description}</div>
+                        <div className="font-medium text-gray-900 dark:text-slate-100">{action.label}</div>
+                        <div className="text-sm text-gray-500 dark:text-slate-400">{action.description}</div>
                       </div>
                       <div className={`px-2 py-1 rounded-full text-xs font-medium ${
                         action.priority === 'high' ? 'bg-red-100 text-red-600' :
@@ -518,7 +518,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                   ))}
                 </div>
               ) : (
-                <div className="p-8 text-center text-gray-500">
+                <div className="p-8 text-center text-gray-500 dark:text-slate-400">
                   <MessageCircle size={48} className="mx-auto mb-4 opacity-50" />
                   <p>No actions found</p>
                   <p className="text-sm">Try adjusting your search or category filter</p>
@@ -527,8 +527,8 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-200">
-              <div className="flex justify-between items-center text-sm text-gray-600">
+            <div className="p-4 bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700">
+              <div className="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400">
                 <span>{filteredActions.length} actions available</span>
                 <span>Role: {userRole}</span>
               </div>
