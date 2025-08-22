@@ -92,7 +92,15 @@ import DatabaseAdminPage from '../../pages/super-admin/DatabaseAdminPage';
 import NetworkConfigPage from '../../pages/super-admin/NetworkConfigPage';
 import SecurityCenterPage from './pages/SecurityCenterPage';
 import BackupRestorePage from './pages/system-admin/BackupRestorePage';
-import PortalManagementPage from './pages/PortalManagementPage';
+import PortalOverviewPage from './pages/PortalOverviewPage';
+import AllPortalsPage from './pages/AllPortalsPage';
+import PortalCategoriesPage from './pages/PortalCategoriesPage';
+import PortalMonitoringPage from './pages/PortalMonitoringPage';
+import PortalSettingsPage from './pages/PortalSettingsPage';
+import PortalAnalyticsPage from './pages/PortalAnalyticsPage';
+import PortalSecurityPage from './pages/PortalSecurityPage';
+import PortalBackupPage from './pages/PortalBackupPage';
+import PortalUsersPage from './pages/PortalUsersPage';
 import AnalyticsReportsPage from './pages/AnalyticsReportsPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
@@ -1269,7 +1277,16 @@ const EnhancedSuperAdminPortal = () => {
                     </AuthProvider>
                   } />
                   <Route path="/users/*" element={<UserManagementPage />} />
-                  <Route path="/portals/*" element={<PortalManagementPage />} />
+                  <Route path="/portals/overview" element={<PortalOverviewPage />} />
+                  <Route path="/portals/all" element={<AllPortalsPage />} />
+                  <Route path="/portals/categories" element={<PortalCategoriesPage />} />
+                  <Route path="/portals/monitoring" element={<PortalMonitoringPage />} />
+                  <Route path="/portals/settings" element={<PortalSettingsPage />} />
+                  <Route path="/portals/analytics" element={<PortalAnalyticsPage />} />
+                  <Route path="/portals/security" element={<PortalSecurityPage />} />
+                  <Route path="/portals/backup" element={<PortalBackupPage />} />
+                  <Route path="/portals/users" element={<PortalUsersPage />} />
+                  <Route path="/portals" element={<PortalOverviewPage />} />
                   <Route path="/analytics/*" element={<AnalyticsReportsPage />} />
                   {/* System Control Pages */}
                   <Route path="/system" element={<DashboardPage />} />
