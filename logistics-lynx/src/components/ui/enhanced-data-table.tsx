@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronUp, ChevronDown, ChevronUpDown, Search, Filter, 
+import {
+  ChevronUp, ChevronDown, ArrowUpDown, Search, Filter,
   MoreHorizontal, Eye, Edit, Trash2, Download, RefreshCw,
-  ArrowUpDown, SortAsc, SortDesc
+  SortAsc, SortDesc
 } from 'lucide-react';
 
 // Radix UI Components
@@ -144,7 +144,7 @@ export const EnhancedDataTable: React.FC<EnhancedDataTableProps> = ({
 
   const getSortIcon = (columnKey: string) => {
     if (sortColumn !== columnKey) {
-      return <ChevronUpDown className="w-4 h-4 text-slate-400" />;
+              return <ArrowUpDown className="w-4 h-4 text-slate-400" />;
     }
     return sortDirection === 'asc' 
       ? <ChevronUp className="w-4 h-4 text-blue-500" />
