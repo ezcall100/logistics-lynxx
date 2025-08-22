@@ -22,7 +22,7 @@ import {
   HardDrive, Cloud, Archive, RotateCcw, ShieldCheck,
   AlertTriangle, Info, Play, Pause, Stop,
   Settings, BarChart3, Timer, Terminal,
-  Bug, Database, Network, Shield
+  Bug, Network
 } from 'lucide-react';
 
 const MCPLogManagementPage = () => {
