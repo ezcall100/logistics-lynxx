@@ -20,9 +20,9 @@ import {
   Cog, Zap, Eye, EyeOff, Trash2, Copy,
   Plus, Edit, Search, Filter, MoreHorizontal,
   HardDrive, Cloud, Archive, RotateCcw, ShieldCheck,
-  AlertTriangle, Info, Play, Pause, Stop,
+  AlertTriangle, Info, Play, Pause,
   Settings, BarChart3, Timer, Terminal,
-  Bug, Network
+  Bug, Network, Save, Bookmark
 } from 'lucide-react';
 
 const MCPLogManagementPage = () => {
@@ -103,6 +103,11 @@ const MCPLogManagementPage = () => {
   const handleLogClear = () => {
     // Simulate clearing logs
     console.log('Clearing logs...');
+  };
+
+  const handleSaveQuery = () => {
+    // Simulate saving query
+    console.log('Saving query...');
   };
 
   const getLevelColor = (level: string) => {
@@ -641,7 +646,7 @@ const MCPLogManagementPage = () => {
                     <Download className="w-4 h-4 mr-2" />
                     Export Results
                   </Button>
-                  <Button variant="outline">
+                  <Button variant="outline" onClick={handleSaveQuery}>
                     <Save className="w-4 h-4 mr-2" />
                     Save Query
                   </Button>
