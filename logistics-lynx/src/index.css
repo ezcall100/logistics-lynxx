@@ -1,6 +1,9 @@
 /* Import Modern Theme - must come before Tailwind */
 @import './styles/modern-theme.css';
 
+/* Import Design Tokens - Semantic Color System */
+@import './styles/design-tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

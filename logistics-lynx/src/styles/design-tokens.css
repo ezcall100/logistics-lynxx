@@ -1,0 +1,364 @@
+/* 🎨 DESIGN TOKENS - SEMANTIC COLOR SYSTEM */
+/* This file defines semantic color tokens to prevent white-on-white issues */
+
+:root {
+  /* 🎯 SEMANTIC COLOR TOKENS */
+  
+  /* Primary Colors */
+  --color-primary-50: hsl(222 90% 96%);
+  --color-primary-100: hsl(222 90% 90%);
+  --color-primary-200: hsl(222 90% 80%);
+  --color-primary-300: hsl(222 90% 70%);
+  --color-primary-400: hsl(222 90% 60%);
+  --color-primary-500: hsl(222 90% 50%);
+  --color-primary-600: hsl(222 90% 40%);
+  --color-primary-700: hsl(222 90% 30%);
+  --color-primary-800: hsl(222 90% 20%);
+  --color-primary-900: hsl(222 90% 10%);
+  
+  /* Success Colors */
+  --color-success-50: hsl(158 64% 96%);
+  --color-success-100: hsl(158 64% 90%);
+  --color-success-200: hsl(158 64% 80%);
+  --color-success-300: hsl(158 64% 70%);
+  --color-success-400: hsl(158 64% 60%);
+  --color-success-500: hsl(158 64% 50%);
+  --color-success-600: hsl(158 64% 40%);
+  --color-success-700: hsl(158 64% 30%);
+  --color-success-800: hsl(158 64% 20%);
+  --color-success-900: hsl(158 64% 10%);
+  
+  /* Warning Colors */
+  --color-warning-50: hsl(48 96% 96%);
+  --color-warning-100: hsl(48 96% 90%);
+  --color-warning-200: hsl(48 96% 80%);
+  --color-warning-300: hsl(48 96% 70%);
+  --color-warning-400: hsl(48 96% 60%);
+  --color-warning-500: hsl(48 96% 50%);
+  --color-warning-600: hsl(48 96% 40%);
+  --color-warning-700: hsl(48 96% 30%);
+  --color-warning-800: hsl(48 96% 20%);
+  --color-warning-900: hsl(48 96% 10%);
+  
+  /* Danger Colors */
+  --color-danger-50: hsl(0 84% 96%);
+  --color-danger-100: hsl(0 84% 90%);
+  --color-danger-200: hsl(0 84% 80%);
+  --color-danger-300: hsl(0 84% 70%);
+  --color-danger-400: hsl(0 84% 60%);
+  --color-danger-500: hsl(0 84% 50%);
+  --color-danger-600: hsl(0 84% 40%);
+  --color-danger-700: hsl(0 84% 30%);
+  --color-danger-800: hsl(0 84% 20%);
+  --color-danger-900: hsl(0 84% 10%);
+  
+  /* Info Colors */
+  --color-info-50: hsl(199 89% 96%);
+  --color-info-100: hsl(199 89% 90%);
+  --color-info-200: hsl(199 89% 80%);
+  --color-info-300: hsl(199 89% 70%);
+  --color-info-400: hsl(199 89% 60%);
+  --color-info-500: hsl(199 89% 50%);
+  --color-info-600: hsl(199 89% 40%);
+  --color-info-700: hsl(199 89% 30%);
+  --color-info-800: hsl(199 89% 20%);
+  --color-info-900: hsl(199 89% 10%);
+  
+  /* Neutral Colors */
+  --color-neutral-50: hsl(220 14% 96%);
+  --color-neutral-100: hsl(220 14% 90%);
+  --color-neutral-200: hsl(220 14% 80%);
+  --color-neutral-300: hsl(220 14% 70%);
+  --color-neutral-400: hsl(220 14% 60%);
+  --color-neutral-500: hsl(220 14% 50%);
+  --color-neutral-600: hsl(220 14% 40%);
+  --color-neutral-700: hsl(220 14% 30%);
+  --color-neutral-800: hsl(220 14% 20%);
+  --color-neutral-900: hsl(220 14% 10%);
+  
+  /* 🎯 BUTTON TOKENS */
+  --btn-primary-bg: var(--color-primary-600);
+  --btn-primary-bg-hover: var(--color-primary-700);
+  --btn-primary-text: hsl(0 0% 100%);
+  --btn-primary-border: var(--color-primary-600);
+  
+  --btn-success-bg: var(--color-success-600);
+  --btn-success-bg-hover: var(--color-success-700);
+  --btn-success-text: hsl(0 0% 100%);
+  --btn-success-border: var(--color-success-600);
+  
+  --btn-warning-bg: var(--color-warning-600);
+  --btn-warning-bg-hover: var(--color-warning-700);
+  --btn-warning-text: hsl(0 0% 100%);
+  --btn-warning-border: var(--color-warning-600);
+  
+  --btn-danger-bg: var(--color-danger-600);
+  --btn-danger-bg-hover: var(--color-danger-700);
+  --btn-danger-text: hsl(0 0% 100%);
+  --btn-danger-border: var(--color-danger-600);
+  
+  --btn-info-bg: var(--color-info-600);
+  --btn-info-bg-hover: var(--color-info-700);
+  --btn-info-text: hsl(0 0% 100%);
+  --btn-info-border: var(--color-info-600);
+  
+  --btn-neutral-bg: var(--color-neutral-100);
+  --btn-neutral-bg-hover: var(--color-neutral-200);
+  --btn-neutral-text: var(--color-neutral-900);
+  --btn-neutral-border: var(--color-neutral-300);
+  
+  /* 🎯 SWITCH TOKENS */
+  --switch-on-bg: var(--color-primary-600);
+  --switch-on-bg-hover: var(--color-primary-700);
+  --switch-off-bg: var(--color-neutral-300);
+  --switch-off-bg-hover: var(--color-neutral-400);
+  --switch-thumb-bg: hsl(0 0% 100%);
+  
+  --switch-success-on: var(--color-success-600);
+  --switch-success-off: var(--color-neutral-300);
+  --switch-warning-on: var(--color-warning-600);
+  --switch-warning-off: var(--color-neutral-300);
+  --switch-danger-on: var(--color-danger-600);
+  --switch-danger-off: var(--color-neutral-300);
+  --switch-info-on: var(--color-info-600);
+  --switch-info-off: var(--color-neutral-300);
+  
+  /* 🎯 CARD TOKENS */
+  --card-bg: hsl(0 0% 100%);
+  --card-bg-hover: var(--color-neutral-50);
+  --card-border: var(--color-neutral-200);
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --card-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  /* 🎯 BACKGROUND TOKENS */
+  --bg-primary: hsl(0 0% 100%);
+  --bg-secondary: var(--color-neutral-50);
+  --bg-tertiary: var(--color-neutral-100);
+  --bg-muted: var(--color-neutral-100);
+  --bg-accent: var(--color-primary-50);
+  
+  /* 🎯 TEXT TOKENS */
+  --text-primary: var(--color-neutral-900);
+  --text-secondary: var(--color-neutral-700);
+  --text-muted: var(--color-neutral-500);
+  --text-accent: var(--color-primary-600);
+  
+  /* 🎯 BORDER TOKENS */
+  --border-primary: var(--color-neutral-200);
+  --border-secondary: var(--color-neutral-300);
+  --border-accent: var(--color-primary-200);
+  
+  /* 🎯 SHADOW TOKENS */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* 🌙 DARK MODE TOKENS */
+[data-theme="dark"] {
+  /* Background Colors */
+  --bg-primary: hsl(222 84% 4%);
+  --bg-secondary: hsl(222 84% 6%);
+  --bg-tertiary: hsl(222 84% 8%);
+  --bg-muted: hsl(222 84% 6%);
+  --bg-accent: hsl(222 84% 8%);
+  
+  /* Card Colors */
+  --card-bg: hsl(222 84% 6%);
+  --card-bg-hover: hsl(222 84% 8%);
+  --card-border: hsl(222 84% 12%);
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --card-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  
+  /* Text Colors */
+  --text-primary: hsl(0 0% 98%);
+  --text-secondary: hsl(0 0% 90%);
+  --text-muted: hsl(0 0% 70%);
+  --text-accent: hsl(222 90% 70%);
+  
+  /* Border Colors */
+  --border-primary: hsl(222 84% 12%);
+  --border-secondary: hsl(222 84% 16%);
+  --border-accent: hsl(222 90% 30%);
+  
+  /* Neutral Colors (adjusted for dark mode) */
+  --color-neutral-50: hsl(222 84% 4%);
+  --color-neutral-100: hsl(222 84% 6%);
+  --color-neutral-200: hsl(222 84% 8%);
+  --color-neutral-300: hsl(222 84% 12%);
+  --color-neutral-400: hsl(222 84% 16%);
+  --color-neutral-500: hsl(222 84% 20%);
+  --color-neutral-600: hsl(222 84% 24%);
+  --color-neutral-700: hsl(222 84% 28%);
+  --color-neutral-800: hsl(222 84% 32%);
+  --color-neutral-900: hsl(222 84% 36%);
+  
+  /* Button Neutral (dark mode) */
+  --btn-neutral-bg: hsl(222 84% 8%);
+  --btn-neutral-bg-hover: hsl(222 84% 12%);
+  --btn-neutral-text: hsl(0 0% 98%);
+  --btn-neutral-border: hsl(222 84% 16%);
+  
+  /* Switch (dark mode) */
+  --switch-off-bg: hsl(222 84% 16%);
+  --switch-off-bg-hover: hsl(222 84% 20%);
+  --switch-thumb-bg: hsl(0 0% 98%);
+}
+
+/* 🎯 UTILITY CLASSES FOR SEMANTIC COLORS */
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-border);
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-bg-hover);
+}
+
+.btn-success {
+  background-color: var(--btn-success-bg);
+  color: var(--btn-success-text);
+  border-color: var(--btn-success-border);
+}
+
+.btn-success:hover {
+  background-color: var(--btn-success-bg-hover);
+}
+
+.btn-warning {
+  background-color: var(--btn-warning-bg);
+  color: var(--btn-warning-text);
+  border-color: var(--btn-warning-border);
+}
+
+.btn-warning:hover {
+  background-color: var(--btn-warning-bg-hover);
+}
+
+.btn-danger {
+  background-color: var(--btn-danger-bg);
+  color: var(--btn-danger-text);
+  border-color: var(--btn-danger-border);
+}
+
+.btn-danger:hover {
+  background-color: var(--btn-danger-bg-hover);
+}
+
+.btn-info {
+  background-color: var(--btn-info-bg);
+  color: var(--btn-info-text);
+  border-color: var(--btn-info-border);
+}
+
+.btn-info:hover {
+  background-color: var(--btn-info-bg-hover);
+}
+
+.btn-neutral {
+  background-color: var(--btn-neutral-bg);
+  color: var(--btn-neutral-text);
+  border-color: var(--btn-neutral-border);
+}
+
+.btn-neutral:hover {
+  background-color: var(--btn-neutral-bg-hover);
+}
+
+/* 🎯 SWITCH UTILITY CLASSES */
+.switch-success[data-state="checked"] {
+  background-color: var(--switch-success-on);
+}
+
+.switch-success[data-state="unchecked"] {
+  background-color: var(--switch-success-off);
+}
+
+.switch-warning[data-state="checked"] {
+  background-color: var(--switch-warning-on);
+}
+
+.switch-warning[data-state="unchecked"] {
+  background-color: var(--switch-warning-off);
+}
+
+.switch-danger[data-state="checked"] {
+  background-color: var(--switch-danger-on);
+}
+
+.switch-danger[data-state="unchecked"] {
+  background-color: var(--switch-danger-off);
+}
+
+.switch-info[data-state="checked"] {
+  background-color: var(--switch-info-on);
+}
+
+.switch-info[data-state="unchecked"] {
+  background-color: var(--switch-info-off);
+}
+
+/* 🎯 CARD UTILITY CLASSES */
+.card-default {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+.card-default:hover {
+  background-color: var(--card-bg-hover);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* 🎯 BACKGROUND UTILITY CLASSES */
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.bg-muted {
+  background-color: var(--bg-muted);
+}
+
+.bg-accent {
+  background-color: var(--bg-accent);
+}
+
+/* 🎯 TEXT UTILITY CLASSES */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-accent {
+  color: var(--text-accent);
+}
+
+/* 🎯 BORDER UTILITY CLASSES */
+.border-primary {
+  border-color: var(--border-primary);
+}
+
+.border-secondary {
+  border-color: var(--border-secondary);
+}
+
+.border-accent {
+  border-color: var(--border-accent);
+}

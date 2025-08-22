@@ -16,14 +16,14 @@ export const buttonVariants = tv({
   variants: {
     variant: {
       default: [
-        "bg-primary text-primary-foreground shadow-sm",
-        "hover:bg-primary/90 hover:shadow-md",
-        "active:bg-primary/95",
+        "bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] border-[var(--btn-primary-border)] shadow-sm",
+        "hover:bg-[var(--btn-primary-bg-hover)] hover:shadow-md",
+        "active:bg-[var(--btn-primary-bg-hover)]",
       ],
       destructive: [
-        "bg-destructive text-destructive-foreground shadow-sm",
-        "hover:bg-destructive/90 hover:shadow-md",
-        "active:bg-destructive/95",
+        "bg-[var(--btn-danger-bg)] text-[var(--btn-danger-text)] border-[var(--btn-danger-border)] shadow-sm",
+        "hover:bg-[var(--btn-danger-bg-hover)] hover:shadow-md",
+        "active:bg-[var(--btn-danger-bg-hover)]",
       ],
       outline: [
         "border border-input bg-background shadow-sm",
@@ -31,9 +31,9 @@ export const buttonVariants = tv({
         "active:bg-accent/80",
       ],
       secondary: [
-        "bg-secondary text-secondary-foreground shadow-sm",
-        "hover:bg-secondary/80 hover:shadow-md",
-        "active:bg-secondary/90",
+        "bg-[var(--btn-neutral-bg)] text-[var(--btn-neutral-text)] border-[var(--btn-neutral-border)] shadow-sm",
+        "hover:bg-[var(--btn-neutral-bg-hover)] hover:shadow-md",
+        "active:bg-[var(--btn-neutral-bg-hover)]",
       ],
       ghost: [
         "hover:bg-accent hover:text-accent-foreground",
@@ -46,19 +46,19 @@ export const buttonVariants = tv({
       ],
       // Enterprise-specific variants
       success: [
-        "bg-green-600 text-white shadow-sm",
-        "hover:bg-green-700 hover:shadow-md",
-        "active:bg-green-800",
+        "bg-[var(--btn-success-bg)] text-[var(--btn-success-text)] border-[var(--btn-success-border)] shadow-sm",
+        "hover:bg-[var(--btn-success-bg-hover)] hover:shadow-md",
+        "active:bg-[var(--btn-success-bg-hover)]",
       ],
       warning: [
-        "bg-amber-600 text-white shadow-sm",
-        "hover:bg-amber-700 hover:shadow-md",
-        "active:bg-amber-800",
+        "bg-[var(--btn-warning-bg)] text-[var(--btn-warning-text)] border-[var(--btn-warning-border)] shadow-sm",
+        "hover:bg-[var(--btn-warning-bg-hover)] hover:shadow-md",
+        "active:bg-[var(--btn-warning-bg-hover)]",
       ],
       info: [
-        "bg-blue-600 text-white shadow-sm",
-        "hover:bg-blue-700 hover:shadow-md",
-        "active:bg-blue-800",
+        "bg-[var(--btn-info-bg)] text-[var(--btn-info-text)] border-[var(--btn-info-border)] shadow-sm",
+        "hover:bg-[var(--btn-info-bg-hover)] hover:shadow-md",
+        "active:bg-[var(--btn-info-bg-hover)]",
       ],
       gradient: [
         "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm",

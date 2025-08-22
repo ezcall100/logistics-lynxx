@@ -29,7 +29,10 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 
-// Icons from lucide-react
+// Enhanced Icons System
+import EnhancedIcons from '@/components/ui/enhanced-icons';
+
+// Regular icons for fallback
 import { 
   Brain, Shield, Users, Settings, Database, Globe, Activity, 
   BarChart3, Lock, Search, AlertTriangle, CheckCircle, Clock,
@@ -47,8 +50,8 @@ import {
   LineChart, BarChart4, ScatterChart, ActivitySquare,
   CalendarDays, Target, Award, Trophy,
   Share, Unlock, Settings2,
-     LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
-   CircuitBoard, BookOpen, HelpCircle, Rocket, Command
+  LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
+  CircuitBoard, BookOpen, HelpCircle, Rocket, Command
 } from 'lucide-react';
 
 // Custom Logo Components
@@ -97,6 +100,7 @@ import ColorTestPage from './pages/ColorTestPage';
 import FABTestPage from './pages/FABTestPage';
 import UIComponentsDemoPage from './pages/UIComponentsDemoPage';
 import ComponentPlaygroundPage from './pages/ComponentPlaygroundPage';
+import SemanticColorDemoPage from './pages/SemanticColorDemoPage';
 
 // Import Floating Action Button
 import { FloatingActionButton } from '../admin/FloatingActionButton';
@@ -182,145 +186,152 @@ const EnhancedSuperAdminPortal = () => {
     {
       id: 'dashboard',
       title: 'Command Center',
-      icon: Brain,
+      icon: EnhancedIcons.Brain,
       path: '/super-admin',
       description: 'System overview and autonomous status'
     },
     {
       id: 'engineering',
       title: 'Engineering Suite',
-      icon: LayoutDashboard,
+      icon: EnhancedIcons.Dashboard,
       path: '/super-admin/engineering',
       description: 'End-to-end engineering operations',
       subItems: [
-        { title: 'Frontend Developer', path: '/super-admin/engineering/frontend', icon: Code },
-        { title: 'Backend API Agent', path: '/super-admin/engineering/backend', icon: Server },
-        { title: 'QA Testing Agent', path: '/super-admin/engineering/qa', icon: Bug },
-        { title: 'UI/UX Designer', path: '/super-admin/engineering/design', icon: Palette },
-        { title: 'DevOps Agent', path: '/super-admin/engineering/devops', icon: Settings },
-        { title: 'Database Optimizer', path: '/super-admin/engineering/database', icon: Database },
-        { title: 'Security Scanner', path: '/super-admin/engineering/security', icon: ShieldCheck },
-        { title: 'Performance Monitor', path: '/super-admin/engineering/performance', icon: Activity }
+        { title: 'Frontend Developer', path: '/super-admin/engineering/frontend', icon: EnhancedIcons.Code },
+        { title: 'Backend API Agent', path: '/super-admin/engineering/backend', icon: EnhancedIcons.Server },
+        { title: 'QA Testing Agent', path: '/super-admin/engineering/qa', icon: EnhancedIcons.Bug },
+        { title: 'UI/UX Designer', path: '/super-admin/engineering/design', icon: EnhancedIcons.Palette },
+        { title: 'DevOps Agent', path: '/super-admin/engineering/devops', icon: EnhancedIcons.Settings },
+        { title: 'Database Optimizer', path: '/super-admin/engineering/database', icon: EnhancedIcons.Database },
+        { title: 'Security Scanner', path: '/super-admin/engineering/security', icon: EnhancedIcons.Security },
+        { title: 'Performance Monitor', path: '/super-admin/engineering/performance', icon: EnhancedIcons.Activity }
       ]
     },
     {
       id: 'autonomous',
       title: 'Autonomous System',
-      icon: Zap,
+      icon: EnhancedIcons.Zap,
       path: '/super-admin/autonomous',
       description: 'AI agents and autonomous operations',
       subItems: [
-        { title: 'Agent Dashboard', path: '/super-admin/autonomous/agent-dashboard', icon: Brain },
-        { title: 'Performance Monitor', path: '/super-admin/autonomous/performance-monitor', icon: Activity },
-        { title: 'Learning Models', path: '/super-admin/autonomous/learning-models', icon: TrendingUp },
-        { title: 'Decision Logs', path: '/super-admin/autonomous/decision-logs', icon: FileText },
-        { title: 'Auto-Scaling', path: '/super-admin/autonomous/auto-scaling', icon: Maximize2 }
+        { title: 'Agent Dashboard', path: '/super-admin/autonomous/agent-dashboard', icon: EnhancedIcons.Brain },
+        { title: 'Performance Monitor', path: '/super-admin/autonomous/performance-monitor', icon: EnhancedIcons.Activity },
+        { title: 'Learning Models', path: '/super-admin/autonomous/learning-models', icon: EnhancedIcons.TrendingUp },
+        { title: 'Decision Logs', path: '/super-admin/autonomous/decision-logs', icon: EnhancedIcons.FileText },
+        { title: 'Auto-Scaling', path: '/super-admin/autonomous/auto-scaling', icon: EnhancedIcons.Menu }
       ]
     },
     {
       id: 'user-management',
       title: 'User Management',
-      icon: Users,
+      icon: EnhancedIcons.Users,
       path: '/super-admin/users',
       description: 'Manage users, roles, and permissions',
       subItems: [
-        { title: 'All Users', path: '/super-admin/users/all', icon: Users },
-        { title: 'Role Management', path: '/super-admin/users/roles', icon: Shield },
-        { title: 'Access Control', path: '/super-admin/users/access', icon: Lock },
-        { title: 'User Analytics', path: '/super-admin/users/analytics', icon: BarChart3 }
+        { title: 'All Users', path: '/super-admin/users/all', icon: EnhancedIcons.Users },
+        { title: 'Role Management', path: '/super-admin/users/roles', icon: EnhancedIcons.Shield },
+        { title: 'Access Control', path: '/super-admin/users/access', icon: EnhancedIcons.Lock },
+        { title: 'User Analytics', path: '/super-admin/users/analytics', icon: EnhancedIcons.Analytics }
       ]
     },
     {
       id: 'system',
       title: 'System Control',
-      icon: Settings,
+      icon: EnhancedIcons.Settings,
       path: '/super-admin/system',
       description: 'System configuration and monitoring',
       subItems: [
-        { title: 'System Health', path: '/super-admin/system/health', icon: Activity },
-        { title: 'Database Admin', path: '/super-admin/system/database', icon: Database },
-        { title: 'Network Config', path: '/super-admin/system/network', icon: Network },
-        { title: 'Security Center', path: '/super-admin/system/security', icon: ShieldCheck },
-        { title: 'Backup & Restore', path: '/super-admin/system/backup', icon: Save }
+        { title: 'System Health', path: '/super-admin/system/health', icon: EnhancedIcons.Activity },
+        { title: 'Database Admin', path: '/super-admin/system/database', icon: EnhancedIcons.Database },
+        { title: 'Network Config', path: '/super-admin/system/network', icon: EnhancedIcons.Network },
+        { title: 'Security Center', path: '/super-admin/system/security', icon: EnhancedIcons.Security },
+        { title: 'Backup & Restore', path: '/super-admin/system/backup', icon: EnhancedIcons.Save }
       ]
     },
     {
       id: 'portals',
       title: 'Portal Management',
-      icon: Building2,
+      icon: EnhancedIcons.Building,
       path: '/super-admin/portals',
       description: 'Manage all system portals',
       subItems: [
-        { title: 'Portal Overview', path: '/super-admin/portals/overview', icon: LayoutDashboard },
-        { title: 'All Portals', path: '/super-admin/portals/all', icon: Globe },
-        { title: 'Portal Categories', path: '/super-admin/portals/categories', icon: Folder },
-        { title: 'Portal Monitoring', path: '/super-admin/portals/monitoring', icon: Activity },
-        { title: 'Portal Settings', path: '/super-admin/portals/settings', icon: Settings },
-        { title: 'Portal Analytics', path: '/super-admin/portals/analytics', icon: BarChart3 },
-        { title: 'Portal Security', path: '/super-admin/portals/security', icon: Shield },
-        { title: 'Portal Backup', path: '/super-admin/portals/backup', icon: Database },
-        { title: 'Portal Users', path: '/super-admin/portals/users', icon: Users },
-        { title: 'Portal Configurations', path: '/super-admin/portals/configurations', icon: Cog }
+        { title: 'Portal Overview', path: '/super-admin/portals/overview', icon: EnhancedIcons.Dashboard },
+        { title: 'All Portals', path: '/super-admin/portals/all', icon: EnhancedIcons.Globe },
+        { title: 'Portal Categories', path: '/super-admin/portals/categories', icon: EnhancedIcons.Folder },
+        { title: 'Portal Monitoring', path: '/super-admin/portals/monitoring', icon: EnhancedIcons.Activity },
+        { title: 'Portal Settings', path: '/super-admin/portals/settings', icon: EnhancedIcons.Settings },
+        { title: 'Portal Analytics', path: '/super-admin/portals/analytics', icon: EnhancedIcons.Analytics },
+        { title: 'Portal Security', path: '/super-admin/portals/security', icon: EnhancedIcons.Shield },
+        { title: 'Portal Backup', path: '/super-admin/portals/backup', icon: EnhancedIcons.Database },
+        { title: 'Portal Users', path: '/super-admin/portals/users', icon: EnhancedIcons.Users },
+        { title: 'Portal Configurations', path: '/super-admin/portals/configurations', icon: EnhancedIcons.Settings }
       ]
     },
     {
       id: 'analytics',
       title: 'Analytics & Reports',
-      icon: BarChart3,
+      icon: EnhancedIcons.Analytics,
       path: '/super-admin/analytics',
       description: 'Comprehensive system analytics',
       subItems: [
-        { title: 'Dashboard Analytics', path: '/super-admin/analytics/dashboard', icon: LayoutDashboard },
-        { title: 'System Reports', path: '/super-admin/analytics/system-reports', icon: BarChart3 },
-        { title: 'User Reports', path: '/super-admin/analytics/user-reports', icon: Users },
-        { title: 'Performance Reports', path: '/super-admin/analytics/performance-reports', icon: TrendingUp },
-        { title: 'Security Reports', path: '/super-admin/analytics/security-reports', icon: Shield },
-        { title: 'Financial Reports', path: '/super-admin/analytics/financial-reports', icon: DollarSign },
-        { title: 'Operational Reports', path: '/super-admin/analytics/operational-reports', icon: Activity },
-        { title: 'Custom Reports', path: '/super-admin/analytics/custom-reports', icon: FileText },
-        { title: 'Data Export', path: '/super-admin/analytics/data-export', icon: Download },
-        { title: 'Report Scheduler', path: '/super-admin/analytics/report-scheduler', icon: Calendar }
+        { title: 'Dashboard Analytics', path: '/super-admin/analytics/dashboard', icon: EnhancedIcons.Dashboard },
+        { title: 'System Reports', path: '/super-admin/analytics/system-reports', icon: EnhancedIcons.Analytics },
+        { title: 'User Reports', path: '/super-admin/analytics/user-reports', icon: EnhancedIcons.Users },
+        { title: 'Performance Reports', path: '/super-admin/analytics/performance-reports', icon: EnhancedIcons.TrendingUp },
+        { title: 'Security Reports', path: '/super-admin/analytics/security-reports', icon: EnhancedIcons.Shield },
+        { title: 'Financial Reports', path: '/super-admin/analytics/financial-reports', icon: EnhancedIcons.DollarSign },
+        { title: 'Operational Reports', path: '/super-admin/analytics/operational-reports', icon: EnhancedIcons.Activity },
+        { title: 'Custom Reports', path: '/super-admin/analytics/custom-reports', icon: EnhancedIcons.FileText },
+        { title: 'Data Export', path: '/super-admin/analytics/data-export', icon: EnhancedIcons.Download },
+        { title: 'Report Scheduler', path: '/super-admin/analytics/report-scheduler', icon: EnhancedIcons.Calendar }
       ]
     },
     {
       id: 'mcp',
       title: 'MCP Control Center',
-      icon: CircuitBoard,
+      icon: EnhancedIcons.CircuitBoard,
       path: '/super-admin/mcp',
       description: 'Master Control Program - System Management',
       subItems: [
-        { title: 'Control Center', path: '/super-admin/mcp', icon: LayoutDashboard },
-        { title: 'Introduction', path: '/super-admin/mcp/introduction', icon: Info },
-        { title: 'Features', path: '/super-admin/mcp/features', icon: Zap },
-        { title: 'Integrations', path: '/super-admin/mcp/integrations', icon: Link },
-        { title: 'Documentation', path: '/super-admin/mcp/documentation', icon: BookOpen },
-        { title: 'Support', path: '/super-admin/mcp/support', icon: HelpCircle },
-        { title: 'Agent Registry', path: '/super-admin/mcp/agent-registry', icon: Users },
-        { title: 'System Monitor', path: '/super-admin/mcp/system-monitor', icon: Activity },
-        { title: 'Security Hub', path: '/super-admin/mcp/security-hub', icon: Shield },
-        { title: 'Performance Analytics', path: '/super-admin/mcp/performance-analytics', icon: TrendingUp },
-        { title: 'Configuration Manager', path: '/super-admin/mcp/configuration', icon: Settings },
-        { title: 'Backup & Recovery', path: '/super-admin/mcp/backup-recovery', icon: Save },
-        { title: 'API Gateway', path: '/super-admin/mcp/api-gateway', icon: Network },
-        { title: 'Log Management', path: '/super-admin/mcp/log-management', icon: FileText },
-        { title: 'Alert Center', path: '/super-admin/mcp/alert-center', icon: Bell },
-                 { title: 'Deployment Manager', path: '/super-admin/mcp/deployment', icon: Rocket },
-         { title: 'Commander', path: '/super-admin/mcp/commander', icon: Command }
+        { title: 'Control Center', path: '/super-admin/mcp', icon: EnhancedIcons.Dashboard },
+        { title: 'Introduction', path: '/super-admin/mcp/introduction', icon: EnhancedIcons.Info },
+        { title: 'Features', path: '/super-admin/mcp/features', icon: EnhancedIcons.Zap },
+        { title: 'Integrations', path: '/super-admin/mcp/integrations', icon: EnhancedIcons.Link },
+        { title: 'Documentation', path: '/super-admin/mcp/documentation', icon: EnhancedIcons.BookOpen },
+        { title: 'Support', path: '/super-admin/mcp/support', icon: EnhancedIcons.HelpCircle },
+        { title: 'Agent Registry', path: '/super-admin/mcp/agent-registry', icon: EnhancedIcons.Users },
+        { title: 'System Monitor', path: '/super-admin/mcp/system-monitor', icon: EnhancedIcons.Activity },
+        { title: 'Security Hub', path: '/super-admin/mcp/security-hub', icon: EnhancedIcons.Shield },
+        { title: 'Performance Analytics', path: '/super-admin/mcp/performance-analytics', icon: EnhancedIcons.TrendingUp },
+        { title: 'Configuration Manager', path: '/super-admin/mcp/configuration', icon: EnhancedIcons.Settings },
+        { title: 'Backup & Recovery', path: '/super-admin/mcp/backup-recovery', icon: EnhancedIcons.Save },
+        { title: 'API Gateway', path: '/super-admin/mcp/api-gateway', icon: EnhancedIcons.Network },
+        { title: 'Log Management', path: '/super-admin/mcp/log-management', icon: EnhancedIcons.FileText },
+        { title: 'Alert Center', path: '/super-admin/mcp/alert-center', icon: EnhancedIcons.Bell },
+        { title: 'Deployment Manager', path: '/super-admin/mcp/deployment', icon: EnhancedIcons.Rocket },
+        { title: 'Commander', path: '/super-admin/mcp/commander', icon: EnhancedIcons.Command }
       ]
     },
                       {
                     id: 'ui-demo',
                     title: 'UI Components Demo',
-                    icon: BarChart3,
+                    icon: EnhancedIcons.Analytics,
                     path: '/super-admin/ui-demo',
                     description: 'Showcase enhanced UI components and design patterns'
                   },
                   {
                     id: 'playground',
                     title: 'Component Playground',
-                    icon: Settings,
+                    icon: EnhancedIcons.Palette,
                     path: '/super-admin/playground',
                     description: 'Interactive playground for testing all UI components and variants'
+                  },
+                  {
+                    id: 'semantic-demo',
+                    title: 'Semantic Color Demo',
+                    icon: EnhancedIcons.Palette,
+                    path: '/super-admin/semantic-demo',
+                    description: 'Demonstration of semantic color tokens and contrast fixes'
                   }
   ];
 
@@ -374,14 +385,14 @@ const EnhancedSuperAdminPortal = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-          <Button 
+                          <Button 
                 variant="outline" 
                 size="lg"
                 className="bg-white/20 border-white/30 text-white hover:bg-white/30"
             onClick={() => window.location.reload()}
           >
-                <RefreshCw className="w-5 h-5 mr-2 text-blue-400" />
-            Refresh
+                <EnhancedIcons.Refresh size={20} animated={false} />
+                <span className="ml-2">Refresh</span>
           </Button>
               <Button 
                 variant="outline"
@@ -389,15 +400,15 @@ const EnhancedSuperAdminPortal = () => {
                 className="bg-white/20 border-white/30 text-white hover:bg-white/30"
                 onClick={() => navigate('/super-admin/mcp')}
               >
-                <CircuitBoard className="w-5 h-5 mr-2 text-yellow-400" />
-                MCP Control
+                <EnhancedIcons.CircuitBoard size={20} animated={false} />
+                <span className="ml-2">MCP Control</span>
               </Button>
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-xl"
               >
-                <Activity className="w-5 h-5 mr-2 text-green-400" />
-                Live View
+                <EnhancedIcons.Activity size={20} animated={false} />
+                <span className="ml-2">Live View</span>
           </Button>
             </div>
           </div>
@@ -787,9 +798,7 @@ const EnhancedSuperAdminPortal = () => {
               <div className={`p-3 rounded-lg ${
                 isDark ? 'bg-blue-900/30' : 'bg-blue-100'
               }`}>
-                                 <Brain className={`w-8 h-8 ${
-                   isDark ? 'text-purple-400' : 'text-purple-600'
-                 }`} />
+                                                 <EnhancedIcons.Brain size={32} animated={false} />
               </div>
               <div>
                 <CardTitle className={`text-xl font-semibold ${
@@ -821,9 +830,7 @@ const EnhancedSuperAdminPortal = () => {
               <div className={`p-3 rounded-xl ${
                 isDark ? 'bg-green-900/30' : 'bg-green-100'
               }`}>
-                                 <Users className={`w-8 h-8 ${
-                   isDark ? 'text-blue-400' : 'text-blue-600'
-                 }`} />
+                                 <EnhancedIcons.Users size={32} animated={false} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
@@ -855,9 +862,7 @@ const EnhancedSuperAdminPortal = () => {
               <div className={`p-3 rounded-xl ${
                 isDark ? 'bg-purple-900/30' : 'bg-purple-100'
               }`}>
-                                 <Activity className={`w-8 h-8 ${
-                   isDark ? 'text-green-400' : 'text-green-600'
-                 }`} />
+                                 <EnhancedIcons.Activity size={32} animated={false} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
@@ -889,9 +894,7 @@ const EnhancedSuperAdminPortal = () => {
               <div className={`p-3 rounded-xl ${
                 isDark ? 'bg-orange-900/30' : 'bg-orange-100'
               }`}>
-                                 <BarChart3 className={`w-8 h-8 ${
-                   isDark ? 'text-cyan-400' : 'text-cyan-600'
-                 }`} />
+                                 <EnhancedIcons.Analytics size={32} animated={false} />
               </div>
               <div>
                 <CardTitle className={`text-xl ${
@@ -1094,17 +1097,7 @@ const EnhancedSuperAdminPortal = () => {
                                 ? 'bg-slate-700 group-hover:bg-slate-600'
                                 : 'bg-slate-100 group-hover:bg-slate-200'
                           }`}>
-                        <item.icon className={`w-5 h-5 ${
-                          item.id === 'dashboard' ? 'text-blue-500' :
-                          item.id === 'engineering' ? 'text-indigo-500' :
-                          item.id === 'autonomous' ? 'text-purple-500' :
-                          item.id === 'user-management' ? 'text-green-500' :
-                          item.id === 'system' ? 'text-orange-500' :
-                          item.id === 'portals' ? 'text-pink-500' :
-                          item.id === 'analytics' ? 'text-cyan-500' :
-                          item.id === 'mcp' ? 'text-yellow-500' :
-                          'text-slate-600'
-                        }`} />
+                        <item.icon size={20} animated={false} />
                           </div>
                           {!sidebarCollapsed && (
                             <div className="text-left">
@@ -1144,53 +1137,7 @@ const EnhancedSuperAdminPortal = () => {
                                 ? isDark ? 'bg-blue-500/30' : 'bg-blue-200'
                                 : isDark ? 'bg-slate-700 group-hover:bg-slate-600' : 'bg-slate-100 group-hover:bg-slate-200'
                             }`}>
-                              <subItem.icon className={`w-4 h-4 ${
-                                subItem.title.includes('Frontend') ? 'text-blue-500' :
-                                subItem.title.includes('Backend') ? 'text-indigo-500' :
-                                subItem.title.includes('QA') ? 'text-green-500' :
-                                subItem.title.includes('UI/UX') ? 'text-purple-500' :
-                                subItem.title.includes('DevOps') ? 'text-orange-500' :
-                                subItem.title.includes('Database') ? 'text-cyan-500' :
-                                subItem.title.includes('Security') ? 'text-red-500' :
-                                subItem.title.includes('Performance') ? 'text-yellow-500' :
-                                subItem.title.includes('Agent') ? 'text-purple-500' :
-                                subItem.title.includes('Monitor') ? 'text-blue-500' :
-                                subItem.title.includes('Learning') ? 'text-green-500' :
-                                subItem.title.includes('Decision') ? 'text-orange-500' :
-                                subItem.title.includes('Auto-Scaling') ? 'text-pink-500' :
-                                subItem.title.includes('All Users') ? 'text-blue-500' :
-                                subItem.title.includes('Role') ? 'text-purple-500' :
-                                subItem.title.includes('Access') ? 'text-red-500' :
-                                subItem.title.includes('Analytics') ? 'text-cyan-500' :
-                                subItem.title.includes('Health') ? 'text-green-500' :
-                                subItem.title.includes('Network') ? 'text-blue-500' :
-                                subItem.title.includes('Backup') ? 'text-orange-500' :
-                                subItem.title.includes('Overview') ? 'text-blue-500' :
-                                subItem.title.includes('Categories') ? 'text-purple-500' :
-                                subItem.title.includes('Monitoring') ? 'text-green-500' :
-                                subItem.title.includes('Settings') ? 'text-orange-500' :
-                                subItem.title.includes('Security') ? 'text-red-500' :
-                                subItem.title.includes('Users') ? 'text-blue-500' :
-                                subItem.title.includes('Configurations') ? 'text-cyan-500' :
-                                subItem.title.includes('Dashboard') ? 'text-blue-500' :
-                                subItem.title.includes('Reports') ? 'text-green-500' :
-                                subItem.title.includes('Export') ? 'text-orange-500' :
-                                subItem.title.includes('Scheduler') ? 'text-purple-500' :
-                                subItem.title.includes('Introduction') ? 'text-blue-500' :
-                                subItem.title.includes('Features') ? 'text-green-500' :
-                                subItem.title.includes('Integrations') ? 'text-purple-500' :
-                                subItem.title.includes('Documentation') ? 'text-orange-500' :
-                                subItem.title.includes('Support') ? 'text-cyan-500' :
-                                subItem.title.includes('Registry') ? 'text-blue-500' :
-                                subItem.title.includes('Hub') ? 'text-red-500' :
-                                subItem.title.includes('Manager') ? 'text-purple-500' :
-                                subItem.title.includes('Gateway') ? 'text-blue-500' :
-                                subItem.title.includes('Log') ? 'text-orange-500' :
-                                subItem.title.includes('Alert') ? 'text-red-500' :
-                                subItem.title.includes('Deployment') ? 'text-green-500' :
-                                subItem.title.includes('Commander') ? 'text-yellow-500' :
-                                'text-slate-600'
-                              }`} />
+                              <subItem.icon size={16} animated={false} />
                             </div>
                             <span className="font-medium">{subItem.title}</span>
                                 </button>
@@ -1222,17 +1169,7 @@ const EnhancedSuperAdminPortal = () => {
                            ? 'bg-slate-700 group-hover:bg-slate-600'
                            : 'bg-slate-100 group-hover:bg-slate-200'
                      }`}>
-                    <item.icon className={`w-5 h-5 ${
-                      item.id === 'dashboard' ? 'text-blue-500' :
-                      item.id === 'engineering' ? 'text-indigo-500' :
-                      item.id === 'autonomous' ? 'text-purple-500' :
-                      item.id === 'user-management' ? 'text-green-500' :
-                      item.id === 'system' ? 'text-orange-500' :
-                      item.id === 'portals' ? 'text-pink-500' :
-                      item.id === 'analytics' ? 'text-cyan-500' :
-                      item.id === 'mcp' ? 'text-yellow-500' :
-                      'text-slate-600'
-                    }`} />
+                    <item.icon size={20} animated={false} />
                     </div>
                         {!sidebarCollapsed && (
                       <div className="text-left">
@@ -1319,41 +1256,42 @@ const EnhancedSuperAdminPortal = () => {
               </div>
               
               <div className="flex items-center space-x-4">
-                {/* Settings Icon */}
+                                {/* Settings Icon */}
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate('/super-admin/settings')}
-                  className={`h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-105 ${
-                    isDark 
-                      ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
+                  className={`h-12 w-12 rounded-xl transition-all duration-300 border shadow-lg hover:scale-110 ${
+                    isDark
+                      ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800'
                       : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
                   }`}
                   title="System Settings"
                 >
-                  <Settings className="w-5 h-5 text-orange-500" />
+                  <EnhancedIcons.Settings size={24} />
                 </Button>
 
                 {/* Notifications Icon */}
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={`h-10 w-10 rounded-md transition-all duration-300 border shadow-sm hover:scale-105 relative ${
-                    isDark 
-                      ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800' 
+                  className={`h-12 w-12 rounded-xl transition-all duration-300 border shadow-lg hover:scale-110 relative ${
+                    isDark
+                      ? 'hover:bg-slate-700 text-slate-100 border-slate-600 bg-slate-800'
                       : 'hover:bg-slate-100 text-slate-900 border-slate-200 bg-white'
                   }`}
                   title="Notifications"
                 >
-                  <Bell className="w-5 h-5 text-blue-500" />
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
+                  <EnhancedIcons.Bell size={24} />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></div>
                 </Button>
 
                 {/* Super Administrator Badge */}
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white text-sm font-semibold shadow-lg border border-purple-400/30 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                  <span className="hidden sm:inline">Super Admin</span>
-                  <span className="sm:hidden">SA</span>
+                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white text-sm font-bold shadow-xl border border-purple-400/30 hover:shadow-2xl transition-all duration-300 hover:scale-110 backdrop-blur-sm">
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse shadow-lg"></div>
+                  <span className="hidden sm:inline text-white font-bold">Super Admin</span>
+                  <span className="sm:hidden text-white font-bold">SA</span>
+                  <EnhancedIcons.Crown size={16} animated={false} className="text-yellow-300" />
                 </div>
 
                 {/* Enhanced User Menu with Radix DropdownMenu */}
@@ -1403,7 +1341,7 @@ const EnhancedSuperAdminPortal = () => {
                          }`}
                          onClick={() => navigate('/super-admin/profile')}
                        >
-                                                 <User className="w-4 h-4 mr-2 text-blue-500" />
+                                                 <EnhancedIcons.User size={16} animated={false} />
                         Profile Settings
                     </DropdownMenuItem>
                     <DropdownMenuItem 
@@ -1427,7 +1365,7 @@ const EnhancedSuperAdminPortal = () => {
                       }`}
                       onClick={() => setTheme(isDark ? 'light' : 'dark')}
                     >
-                                             {isDark ? <Sun className="w-4 h-4 mr-2 text-yellow-500" /> : <Moon className="w-4 h-4 mr-2 text-purple-500" />}
+                                             {isDark ? <EnhancedIcons.Sun size={16} animated={false} /> : <EnhancedIcons.Moon size={16} animated={false} />}
                       {isDark ? 'Light Mode' : 'Dark Mode'}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className={isDark ? 'bg-slate-700' : 'bg-slate-200'} />
@@ -1438,7 +1376,7 @@ const EnhancedSuperAdminPortal = () => {
                           : 'hover:bg-red-50'
                       }`}
                     >
-                                                 <LogOut className="w-4 h-4 mr-2 text-red-500" />
+                                                 <EnhancedIcons.LogOut size={16} animated={false} />
                         Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -1473,6 +1411,7 @@ const EnhancedSuperAdminPortal = () => {
                         <Route path="/fab-test" element={<FABTestPage />} />
                         <Route path="/ui-demo" element={<UIComponentsDemoPage />} />
                         <Route path="/playground" element={<ComponentPlaygroundPage />} />
+                        <Route path="/semantic-demo" element={<SemanticColorDemoPage />} />
                         <Route path="/portals/overview" element={<PortalOverviewPage />} />
                   <Route path="/portals/all" element={<AllPortalsPage />} />
                   <Route path="/portals/categories" element={<PortalCategoriesPage />} />

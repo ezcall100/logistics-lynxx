@@ -671,15 +671,16 @@ const MCPControlCenter: React.FC = () => {
                       <CardDescription>Configure Master Control Program settings</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                      <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                      <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                         <div>
                           <Label htmlFor="mcp-enabled" className="text-base font-medium">MCP System</Label>
-                          <p className="text-sm text-slate-600 mt-1">
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                             Enable or disable the Master Control Program
                           </p>
                         </div>
                         <Switch
                           id="mcp-enabled"
+                          variant={config.enabled ? "success" : "danger"}
                           checked={config.enabled}
                           onCheckedChange={(checked) => updateConfig({ enabled: checked })}
                           disabled={!isConnected}
@@ -688,15 +689,16 @@ const MCPControlCenter: React.FC = () => {
 
                       <Separator />
 
-                      <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                      <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                         <div>
                           <Label htmlFor="auto-recovery" className="text-base font-medium">Auto Recovery</Label>
-                          <p className="text-sm text-slate-600 mt-1">
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                             Automatically recover from system failures
                           </p>
                         </div>
                         <Switch
                           id="auto-recovery"
+                          variant={config.autoRecovery ? "success" : "warning"}
                           checked={config.autoRecovery}
                           onCheckedChange={(checked) => updateConfig({ autoRecovery: checked })}
                           disabled={!isConnected}
@@ -705,7 +707,7 @@ const MCPControlCenter: React.FC = () => {
 
                       <Separator />
 
-                      <div className="space-y-4 p-4 bg-slate-50 rounded-xl">
+                      <div className="space-y-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                         <Label className="text-base font-medium">System Priority</Label>
                         <Select 
                           value={config.systemPriority}
@@ -725,7 +727,7 @@ const MCPControlCenter: React.FC = () => {
 
                       <Separator />
 
-                      <div className="space-y-4 p-4 bg-slate-50 rounded-xl">
+                      <div className="space-y-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                         <Label className="text-base font-medium">Monitoring Interval</Label>
                         <Select 
                           value={config.monitoringInterval.toString()}
