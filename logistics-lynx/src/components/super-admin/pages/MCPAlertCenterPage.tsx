@@ -829,7 +829,7 @@ const MCPAlertCenterPage: React.FC = () => {
                 }}
               />
               <p className="text-xs text-slate-500">
-                Example: {"email": "admin@company.com"} or {"webhook": "https://hooks.slack.com/..."}
+                Example: {'{"email": "admin@company.com"}'} or {'{"webhook": "https://hooks.slack.com/..."}'}
               </p>
             </div>
           </div>
