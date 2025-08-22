@@ -22,7 +22,7 @@ import {
   HardDrive, Cloud, Archive, RotateCcw, ShieldCheck,
   AlertTriangle, Info, Play, Pause, Stop,
   Settings, BarChart3, Timer, Terminal,
-  Bug, Database, Network, Shield,
+  Bug, Network,
   Mail, MessageSquare, Smartphone, Volume2
 } from 'lucide-react';
 

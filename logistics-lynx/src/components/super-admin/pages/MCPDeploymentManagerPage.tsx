@@ -22,7 +22,7 @@ import {
   HardDrive, Cloud, Archive, RotateCcw, ShieldCheck,
   AlertTriangle, Info, Play, Pause, Stop,
   Settings, BarChart3, Timer, Terminal,
-  Bug, Database, Network, Shield,
+  Bug, Network,
   GitBranch, GitCommit, GitPullRequest, GitMerge,
   Package, Layers, Target, ArrowUpDown
 } from 'lucide-react';
