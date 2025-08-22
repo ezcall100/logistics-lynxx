@@ -2,7 +2,7 @@
 import React from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Book, BarChart3, Calculator, FileText } from 'lucide-react';
+import { BookOpen, BarChart3, Calculator, FileText } from 'lucide-react';
 
 const GeneralLedgerPage = () => {
   return (
@@ -19,7 +19,7 @@ const GeneralLedgerPage = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Accounts</CardTitle>
-              <Book className="h-4 w-4 text-muted-foreground" />
+              <BookOpen className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">156</div>

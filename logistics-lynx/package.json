@@ -26,6 +26,7 @@
     "monitor:start": "npm run build:ts && node dist/monitoring/start-monitoring.js",
     "agents:start": "npm run build:ts && node dist/agents/start-agents.js",
     "health:check": "npm run build:ts && node dist/monitoring/health-check.js",
+    "health:runner": "npx tsx scripts/run-health-check.ts",
     "test:workflows": "npm run build:ts && node dist/test/test-workflows.js",
     "test:agents": "npm run build:ts && node dist/test/test-agents.js",
     "n8n:deploy": "npm run build:ts && node dist/deploy/deploy-n8n-workflows.js",

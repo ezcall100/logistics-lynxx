@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 
 // Icons from lucide-react
 import { 
@@ -35,15 +36,17 @@ import {
   HardDriveIcon, WifiOff, AlertCircle, Info,
   Folder, Cog, Wrench, UserCheck, UserX, ShieldX,
   ArrowUpRight, ArrowDownRight, Minus, XCircle,
-  Link, FileText2, Heart, TrendingDown, PieChart,
+  Link, Heart, TrendingDown, PieChart,
   LineChart, BarChart4, ScatterChart, ActivitySquare,
   CalendarDays, Target, Award, Trophy,
-  Share, Unlock, Settings2, Memory,
-  LayoutDashboard, Code, Bug, Palette, Maximize2, Menu
+  Share, Unlock, Settings2,
+  LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
+  CircuitBoard, BookOpen, HelpCircle, Rocket
 } from 'lucide-react';
 
-// Custom Logo Component
+// Custom Logo Components
 import TransBotLogo from '../ui/TransBotLogo';
+import TransBotHeaderLogo from './ui/TransBotHeaderLogo';
 
 // Autonomous System Integration
 const AutonomousSystem = {
@@ -91,6 +94,24 @@ import SecurityCenterPage from './pages/SecurityCenterPage';
 import BackupRestorePage from './pages/system-admin/BackupRestorePage';
 import PortalManagementPage from './pages/PortalManagementPage';
 import AnalyticsReportsPage from './pages/AnalyticsReportsPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import MCPControlCenter from './pages/MCPControlCenter';
+import MCPIntroductionPage from './pages/MCPIntroductionPage';
+import MCPFeaturesPage from './pages/MCPFeaturesPage';
+import MCPIntegrationsPage from './pages/MCPIntegrationsPage';
+import MCPDocumentationPage from './pages/MCPDocumentationPage';
+import MCPSupportPage from './pages/MCPSupportPage';
+import MCPAgentRegistryPage from './pages/MCPAgentRegistryPage';
+import MCPSystemMonitorPage from './pages/MCPSystemMonitorPage';
+import MCPSecurityHubPage from './pages/MCPSecurityHubPage';
+import MCPPerformanceAnalyticsPage from './pages/MCPPerformanceAnalyticsPage';
+import MCPConfigurationManagerPage from './pages/MCPConfigurationManagerPage';
+import MCPBackupRecoveryPage from './pages/MCPBackupRecoveryPage';
+import MCPAPIGatewayPage from './pages/MCPAPIGatewayPage';
+import MCPLogManagementPage from './pages/MCPLogManagementPage';
+import MCPAlertCenterPage from './pages/MCPAlertCenterPage';
+import MCPDeploymentManagerPage from './pages/MCPDeploymentManagerPage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
@@ -234,20 +255,46 @@ const EnhancedSuperAdminPortal = () => {
       description: 'Comprehensive system analytics',
       subItems: [
         { title: 'Dashboard Analytics', path: '/super-admin/analytics/dashboard', icon: LayoutDashboard },
-        { title: 'System Reports', path: '/super-admin/analytics/system', icon: BarChart3 },
-        { title: 'User Reports', path: '/super-admin/analytics/users', icon: Users },
-        { title: 'Performance Reports', path: '/super-admin/analytics/performance', icon: TrendingUp },
-        { title: 'Security Reports', path: '/super-admin/analytics/security', icon: Shield },
-        { title: 'Financial Reports', path: '/super-admin/analytics/financial', icon: DollarSign },
-        { title: 'Operational Reports', path: '/super-admin/analytics/operational', icon: Activity },
-        { title: 'Custom Reports', path: '/super-admin/analytics/custom', icon: FileText },
-        { title: 'Data Export', path: '/super-admin/analytics/export', icon: Download },
-        { title: 'Report Scheduler', path: '/super-admin/analytics/scheduler', icon: Calendar }
+        { title: 'System Reports', path: '/super-admin/analytics/system-reports', icon: BarChart3 },
+        { title: 'User Reports', path: '/super-admin/analytics/user-reports', icon: Users },
+        { title: 'Performance Reports', path: '/super-admin/analytics/performance-reports', icon: TrendingUp },
+        { title: 'Security Reports', path: '/super-admin/analytics/security-reports', icon: Shield },
+        { title: 'Financial Reports', path: '/super-admin/analytics/financial-reports', icon: DollarSign },
+        { title: 'Operational Reports', path: '/super-admin/analytics/operational-reports', icon: Activity },
+        { title: 'Custom Reports', path: '/super-admin/analytics/custom-reports', icon: FileText },
+        { title: 'Data Export', path: '/super-admin/analytics/data-export', icon: Download },
+        { title: 'Report Scheduler', path: '/super-admin/analytics/report-scheduler', icon: Calendar }
+      ]
+    },
+    {
+      id: 'mcp',
+      title: 'MCP Control Center',
+      icon: CircuitBoard,
+      path: '/super-admin/mcp',
+      description: 'Master Control Program - System Management',
+      subItems: [
+        { title: 'Control Center', path: '/super-admin/mcp', icon: LayoutDashboard },
+        { title: 'Introduction', path: '/super-admin/mcp/introduction', icon: Info },
+        { title: 'Features', path: '/super-admin/mcp/features', icon: Zap },
+        { title: 'Integrations', path: '/super-admin/mcp/integrations', icon: Link },
+        { title: 'Documentation', path: '/super-admin/mcp/documentation', icon: BookOpen },
+        { title: 'Support', path: '/super-admin/mcp/support', icon: HelpCircle },
+        { title: 'Agent Registry', path: '/super-admin/mcp/agent-registry', icon: Users },
+        { title: 'System Monitor', path: '/super-admin/mcp/system-monitor', icon: Activity },
+        { title: 'Security Hub', path: '/super-admin/mcp/security-hub', icon: Shield },
+        { title: 'Performance Analytics', path: '/super-admin/mcp/performance-analytics', icon: TrendingUp },
+        { title: 'Configuration Manager', path: '/super-admin/mcp/configuration', icon: Settings },
+        { title: 'Backup & Recovery', path: '/super-admin/mcp/backup-recovery', icon: Save },
+        { title: 'API Gateway', path: '/super-admin/mcp/api-gateway', icon: Network },
+        { title: 'Log Management', path: '/super-admin/mcp/log-management', icon: FileText },
+        { title: 'Alert Center', path: '/super-admin/mcp/alert-center', icon: Bell },
+        { title: 'Deployment Manager', path: '/super-admin/mcp/deployment', icon: Rocket }
       ]
     }
   ];
 
   const toggleGroup = (groupId: string) => {
+    console.log('Toggling group:', groupId);
     setExpandedGroups(prev => 
       prev.includes(groupId) 
         ? prev.filter(id => id !== groupId)
@@ -257,132 +304,470 @@ const EnhancedSuperAdminPortal = () => {
 
   // Main Dashboard Component
   const DashboardPage = () => (
-    <div className="p-4 md:p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="p-4 md:p-6 space-y-8">
+             {/* Hero Section with Live Status */}
+       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 p-8 text-white">
+         <div className="absolute inset-0 opacity-20">
+           <div className="absolute inset-0" style={{
+             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+             backgroundSize: '60px 60px'
+           }}></div>
+         </div>
+        <div className="relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                                 <div className="relative">
+                   <TransBotLogo size="lg" animated={true} />
+                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-white"></div>
+                 </div>
         <div>
-          <h1 className={`text-2xl md:text-3xl font-bold ${
-            isDarkMode 
-              ? 'bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'
-              : 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
-          }`}>
-            Super Admin Command Center
+                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                    Command Center
           </h1>
-          <p className={`text-sm md:text-base mt-2 ${
-            isDarkMode ? 'text-slate-300' : 'text-slate-600'
-          }`}>
-            Autonomous TMS System Control & Monitoring
+                  <p className="text-lg text-blue-100 mt-2">
+                    Autonomous TMS System Control & Monitoring Hub
           </p>
         </div>
-        <div className="flex items-center space-x-4">
-          <Badge variant="secondary" className={`${
-            isDarkMode 
-              ? 'bg-green-900/30 text-green-400 border-green-700' 
-              : 'bg-green-100 text-green-800 border-green-200'
-          }`}>
-            <CheckCircle className="w-4 h-4 mr-1" />
-            System Operational
-          </Badge>
+              </div>
+              
+              {/* Live Status Indicators */}
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium">System Operational</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <span className="text-sm font-medium">24/7 Monitoring</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                  <span className="text-sm font-medium">AI Agents Active</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
           <Button 
+                variant="outline" 
+                size="lg"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
             onClick={() => window.location.reload()}
-            className={isDarkMode ? 'bg-slate-700 hover:bg-slate-600' : ''}
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw className="w-5 h-5 mr-2" />
             Refresh
           </Button>
+              <Button 
+                variant="outline"
+                size="lg"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+                onClick={() => navigate('/super-admin/mcp')}
+              >
+                <CircuitBoard className="w-5 h-5 mr-2" />
+                MCP Control
+              </Button>
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-xl"
+              >
+                <Activity className="w-5 h-5 mr-2" />
+                Live View
+          </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Autonomous System Status */}
-      <Card className={`border-2 transition-all duration-300 ${
+      {/* Real-time System Overview */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Main System Status */}
+        <div className="xl:col-span-3">
+          <Card className={`border-0 shadow-2xl ${
         isDarkMode 
-          ? 'border-blue-800 bg-gradient-to-r from-slate-800 to-slate-900' 
-          : 'border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50'
+              ? 'bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800' 
+              : 'bg-gradient-to-br from-white via-blue-50 to-purple-50'
       }`}>
-        <CardHeader>
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
+                                     <div className={`p-2 rounded-xl ${
+                     isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
+                   }`}>
             <TransBotLogo size="md" animated={true} />
+                   </div>
             <div>
-              <CardTitle className={`text-xl ${
+                    <CardTitle className={`text-2xl ${
                 isDarkMode ? 'text-white' : 'text-slate-900'
               }`}>Autonomous System Status</CardTitle>
               <CardDescription className={
                 isDarkMode ? 'text-slate-300' : 'text-slate-600'
               }>Real-time AI agent monitoring and control</CardDescription>
             </div>
+                </div>
+                <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 px-4 py-2">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  All Systems Green
+                </Badge>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Agent Status */}
-            <div className="space-y-3">
+                <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${
+                    <span className={`text-sm font-semibold ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
                 }`}>Active Agents</span>
                 <Badge variant="outline" className={
                   isDarkMode ? 'border-slate-600 text-slate-300' : ''
                 }>{AutonomousSystem.agents.active}/{AutonomousSystem.agents.total}</Badge>
               </div>
-              <Progress value={(AutonomousSystem.agents.active / AutonomousSystem.agents.total) * 100} />
+                  <div className="space-y-2">
+                    <Progress value={(AutonomousSystem.agents.active / AutonomousSystem.agents.total) * 100} className="h-3" />
+                    <p className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    }`}>AI Agents Operational</p>
+                  </div>
             </div>
 
-            {/* Performance Metrics */}
-            <div className="space-y-3">
+                {/* CPU Usage */}
+                <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${
+                    <span className={`text-sm font-semibold ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
                 }`}>CPU Usage</span>
-                <span className={`text-sm font-bold ${
+                    <span className={`text-lg font-bold ${
                   isDarkMode ? 'text-slate-200' : 'text-slate-800'
                 }`}>{AutonomousSystem.performance.cpu}%</span>
               </div>
-              <Progress value={AutonomousSystem.performance.cpu} className="h-2" />
+                  <div className="space-y-2">
+                    <Progress value={AutonomousSystem.performance.cpu} className="h-3" />
+                    <p className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    }`}>Optimal Performance</p>
+                  </div>
             </div>
 
-            <div className="space-y-3">
+                {/* Memory Usage */}
+                <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${
+                    <span className={`text-sm font-semibold ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
-                }`}>Memory Usage</span>
-                <span className={`text-sm font-bold ${
+                    }`}>Memory</span>
+                    <span className={`text-lg font-bold ${
                   isDarkMode ? 'text-slate-200' : 'text-slate-800'
                 }`}>{AutonomousSystem.performance.memory}%</span>
               </div>
-              <Progress value={AutonomousSystem.performance.memory} className="h-2" />
+                  <div className="space-y-2">
+                    <Progress value={AutonomousSystem.performance.memory} className="h-3" />
+                    <p className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    }`}>Efficient Usage</p>
+                  </div>
             </div>
 
-            <div className="space-y-3">
+                {/* Network */}
+                <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${
+                    <span className={`text-sm font-semibold ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
                 }`}>Network</span>
-                <span className={`text-sm font-bold ${
+                    <span className={`text-lg font-bold ${
                   isDarkMode ? 'text-slate-200' : 'text-slate-800'
                 }`}>{AutonomousSystem.performance.network}%</span>
               </div>
-              <Progress value={AutonomousSystem.performance.network} className="h-2" />
+                  <div className="space-y-2">
+                    <Progress value={AutonomousSystem.performance.network} className="h-3" />
+                    <p className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    }`}>High Bandwidth</p>
+                  </div>
             </div>
           </div>
         </CardContent>
       </Card>
+        </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <Card className={`hover:shadow-lg transition-all duration-300 cursor-pointer ${
-          isDarkMode ? 'bg-slate-800 border-slate-700 hover:bg-slate-700' : 'hover:bg-slate-50'
-        }`} onClick={() => navigate('/super-admin/autonomous/agents')}>
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <div className={`p-2 rounded-lg ${
+        {/* Quick Actions Panel */}
+        <Card className={`border-0 shadow-xl ${
+          isDarkMode ? 'bg-slate-800' : 'bg-white'
+        }`}>
+          <CardHeader className="pb-4">
+            <CardTitle className={`flex items-center space-x-2 ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`}>
+              <Zap className="w-6 h-6 text-yellow-500" />
+              <span>Quick Actions</span>
+            </CardTitle>
+            <CardDescription className={
+              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+            }>Common system operations</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button 
+              variant="outline" 
+              className="w-full justify-start h-12 text-left"
+              onClick={() => navigate('/super-admin/autonomous/agent-dashboard')}
+            >
+              <Brain className="w-5 h-5 mr-3" />
+              <div>
+                <div className="font-medium">Agent Dashboard</div>
+                <div className="text-xs text-muted-foreground">Monitor AI agents</div>
+              </div>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start h-12 text-left"
+              onClick={() => navigate('/super-admin/system/health')}
+            >
+              <Activity className="w-5 h-5 mr-3" />
+              <div>
+                <div className="font-medium">System Health</div>
+                <div className="text-xs text-muted-foreground">Check performance</div>
+              </div>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start h-12 text-left"
+              onClick={() => navigate('/super-admin/users/all')}
+            >
+              <Users className="w-5 h-5 mr-3" />
+              <div>
+                <div className="font-medium">User Management</div>
+                <div className="text-xs text-muted-foreground">Manage access</div>
+              </div>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start h-12 text-left"
+              onClick={() => navigate('/super-admin/analytics')}
+            >
+              <BarChart3 className="w-5 h-5 mr-3" />
+              <div>
+                <div className="font-medium">Analytics Hub</div>
+                <div className="text-xs text-muted-foreground">View reports</div>
+              </div>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Advanced Metrics Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-blue-50'
+        }`}>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
                 isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
               }`}>
-                <Brain className={`w-6 h-6 ${
+                <BarChart3 className="h-8 w-8 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold">127</p>
+                <p className={`text-sm font-medium ${
+                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                }`}>Active Reports</p>
+                <p className="text-xs text-green-600 font-medium">+12% from last week</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-green-50'
+        }`}>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-green-900/30' : 'bg-green-100'
+              }`}>
+                <Activity className="h-8 w-8 text-green-600" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold">98.5%</p>
+                <p className={`text-sm font-medium ${
+                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                }`}>System Uptime</p>
+                <p className="text-xs text-green-600 font-medium">+2.3% improvement</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-purple-50'
+        }`}>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-purple-900/30' : 'bg-purple-100'
+              }`}>
+                <Calendar className="h-8 w-8 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold">12</p>
+                <p className={`text-sm font-medium ${
+                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                }`}>Scheduled Tasks</p>
+                <p className="text-xs text-blue-600 font-medium">3 running now</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-orange-50'
+        }`}>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-orange-900/30' : 'bg-orange-100'
+              }`}>
+                <Download className="h-8 w-8 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold">256</p>
+                <p className={`text-sm font-medium ${
+                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                }`}>Data Exports</p>
+                <p className="text-xs text-orange-600 font-medium">+8 today</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Live Monitoring & Alerts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Enhanced System Alerts */}
+        <Card className={`border-0 shadow-xl ${
+          isDarkMode ? 'bg-slate-800' : 'bg-white'
+        }`}>
+          <CardHeader className="pb-4">
+            <CardTitle className={`flex items-center space-x-2 ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`}>
+              <Bell className="w-6 h-6 text-orange-500" />
+              <span>Live System Alerts</span>
+            </CardTitle>
+            <CardDescription className={
+              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+            }>Real-time system notifications and events</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {AutonomousSystem.alerts.map((alert) => (
+                <div key={alert.id} className={`flex items-center space-x-4 p-4 rounded-xl border ${
+                  isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-slate-200 bg-slate-50'
+                }`}>
+                  <div className={`p-2 rounded-full ${
+                    alert.type === 'success' ? (isDarkMode ? 'bg-green-900/30' : 'bg-green-100') :
+                    alert.type === 'warning' ? (isDarkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
+                    (isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100')
+                  }`}>
+                    {alert.type === 'success' ? <CheckCircle className={`w-5 h-5 ${
+                      isDarkMode ? 'text-green-400' : 'text-green-600'
+                    }`} /> :
+                     alert.type === 'warning' ? <AlertTriangle className={`w-5 h-5 ${
+                       isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
+                     }`} /> :
+                     <Info className={`w-5 h-5 ${
+                       isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                     }`} />}
+                  </div>
+                  <div className="flex-1">
+                    <p className={`text-sm font-semibold ${
+                      isDarkMode ? 'text-slate-200' : 'text-slate-900'
+                    }`}>{alert.message}</p>
+                    <p className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                    }`}>{alert.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Advanced Performance Metrics */}
+        <Card className={`border-0 shadow-xl ${
+          isDarkMode ? 'bg-slate-800' : 'bg-white'
+        }`}>
+          <CardHeader className="pb-4">
+            <CardTitle className={`flex items-center space-x-2 ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`}>
+              <TrendingUp className="w-6 h-6 text-green-500" />
+              <span>Performance Analytics</span>
+            </CardTitle>
+            <CardDescription className={
+              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+            }>Real-time system performance metrics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className={`text-sm font-semibold ${
+                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  }`}>Response Time</span>
+                  <span className={`text-lg font-bold ${
+                    isDarkMode ? 'text-green-400' : 'text-green-600'
+                  }`}>45ms</span>
+                </div>
+                <Progress value={85} className="h-3" />
+                <p className="text-xs text-green-600 font-medium">Excellent performance</p>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className={`text-sm font-semibold ${
+                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  }`}>Throughput</span>
+                  <span className={`text-lg font-bold ${
+                    isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                  }`}>2.4k req/s</span>
+                </div>
+                <Progress value={92} className="h-3" />
+                <p className="text-xs text-blue-600 font-medium">High capacity</p>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className={`text-sm font-semibold ${
+                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                  }`}>Error Rate</span>
+                  <span className={`text-lg font-bold ${
+                    isDarkMode ? 'text-red-400' : 'text-red-600'
+                  }`}>0.02%</span>
+                </div>
+                <Progress value={98} className="h-3" />
+                <p className="text-xs text-red-600 font-medium">Minimal errors</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* System Access Hub */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-blue-50'
+        }`} onClick={() => navigate('/super-admin/autonomous/agent-dashboard')}>
+          <CardHeader>
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100'
+              }`}>
+                <Brain className={`w-8 h-8 ${
                   isDarkMode ? 'text-blue-400' : 'text-blue-600'
                 }`} />
               </div>
               <div>
-                <CardTitle className={`text-lg ${
+                <CardTitle className={`text-xl ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
                 }`}>Agent Management</CardTitle>
                 <CardDescription className={
@@ -391,22 +776,32 @@ const EnhancedSuperAdminPortal = () => {
               </div>
             </div>
           </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>Active Agents: 22/24</span>
+              <ArrowUpRight className={`w-5 h-5 ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+            </div>
+          </CardContent>
         </Card>
 
-        <Card className={`hover:shadow-lg transition-all duration-300 cursor-pointer ${
-          isDarkMode ? 'bg-slate-800 border-slate-700 hover:bg-slate-700' : 'hover:bg-slate-50'
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-green-50'
         }`} onClick={() => navigate('/super-admin/users/all')}>
           <CardHeader>
-            <div className="flex items-center space-x-3">
-              <div className={`p-2 rounded-lg ${
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
                 isDarkMode ? 'bg-green-900/30' : 'bg-green-100'
               }`}>
-                <Users className={`w-6 h-6 ${
+                <Users className={`w-8 h-8 ${
                   isDarkMode ? 'text-green-400' : 'text-green-600'
                 }`} />
               </div>
               <div>
-                <CardTitle className={`text-lg ${
+                <CardTitle className={`text-xl ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
                 }`}>User Management</CardTitle>
                 <CardDescription className={
@@ -415,22 +810,32 @@ const EnhancedSuperAdminPortal = () => {
               </div>
             </div>
           </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>Total Users: 1,247</span>
+              <ArrowUpRight className={`w-5 h-5 ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+            </div>
+          </CardContent>
         </Card>
 
-        <Card className={`hover:shadow-lg transition-all duration-300 cursor-pointer ${
-          isDarkMode ? 'bg-slate-800 border-slate-700 hover:bg-slate-700' : 'hover:bg-slate-50'
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-purple-50'
         }`} onClick={() => navigate('/super-admin/system/health')}>
           <CardHeader>
-            <div className="flex items-center space-x-3">
-              <div className={`p-2 rounded-lg ${
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
                 isDarkMode ? 'bg-purple-900/30' : 'bg-purple-100'
               }`}>
-                <Activity className={`w-6 h-6 ${
+                <Activity className={`w-8 h-8 ${
                   isDarkMode ? 'text-purple-400' : 'text-purple-600'
                 }`} />
               </div>
               <div>
-                <CardTitle className={`text-lg ${
+                <CardTitle className={`text-xl ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
                 }`}>System Health</CardTitle>
                 <CardDescription className={
@@ -439,53 +844,120 @@ const EnhancedSuperAdminPortal = () => {
               </div>
             </div>
           </CardHeader>
-        </Card>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>Health Score: 98.5%</span>
+              <ArrowUpRight className={`w-5 h-5 ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`} />
       </div>
+          </CardContent>
+        </Card>
 
-      {/* Recent Alerts */}
-      <Card className={isDarkMode ? 'bg-slate-800 border-slate-700' : ''}>
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-orange-50'
+        }`} onClick={() => navigate('/super-admin/analytics')}>
         <CardHeader>
-          <CardTitle className={`flex items-center space-x-2 ${
-            isDarkMode ? 'text-white' : 'text-slate-900'
-          }`}>
-            <Bell className="w-5 h-5" />
-            <span>Recent System Alerts</span>
-          </CardTitle>
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-orange-900/30' : 'bg-orange-100'
+              }`}>
+                <BarChart3 className={`w-8 h-8 ${
+                  isDarkMode ? 'text-orange-400' : 'text-orange-600'
+                }`} />
+              </div>
+              <div>
+                <CardTitle className={`text-xl ${
+                  isDarkMode ? 'text-white' : 'text-slate-900'
+                }`}>Analytics Hub</CardTitle>
+                <CardDescription className={
+                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                }>Comprehensive system analytics</CardDescription>
+              </div>
+            </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {AutonomousSystem.alerts.map((alert) => (
-              <div key={alert.id} className={`flex items-center space-x-3 p-3 rounded-lg border ${
-                isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-slate-200'
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>Reports: 127 Active</span>
+              <ArrowUpRight className={`w-5 h-5 ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-indigo-50'
+        }`} onClick={() => navigate('/super-admin/engineering')}>
+          <CardHeader>
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-indigo-900/30' : 'bg-indigo-100'
               }`}>
-                <div className={`p-1 rounded-full ${
-                  alert.type === 'success' ? (isDarkMode ? 'bg-green-900/30' : 'bg-green-100') :
-                  alert.type === 'warning' ? (isDarkMode ? 'bg-yellow-900/30' : 'bg-yellow-100') :
-                  (isDarkMode ? 'bg-blue-900/30' : 'bg-blue-100')
-                }`}>
-                  {alert.type === 'success' ? <CheckCircle className={`w-4 h-4 ${
-                    isDarkMode ? 'text-green-400' : 'text-green-600'
-                  }`} /> :
-                   alert.type === 'warning' ? <AlertTriangle className={`w-4 h-4 ${
-                     isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
-                   }`} /> :
-                   <Info className={`w-4 h-4 ${
-                     isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                   }`} />}
+                <Code className={`w-8 h-8 ${
+                  isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
+                }`} />
                 </div>
-                <div className="flex-1">
-                  <p className={`text-sm font-medium ${
-                    isDarkMode ? 'text-slate-200' : 'text-slate-900'
-                  }`}>{alert.message}</p>
-                  <p className={`text-xs ${
-                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                  }`}>{alert.time}</p>
-                </div>
+              <div>
+                <CardTitle className={`text-xl ${
+                  isDarkMode ? 'text-white' : 'text-slate-900'
+                }`}>Engineering Suite</CardTitle>
+                <CardDescription className={
+                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                }>Development and deployment tools</CardDescription>
               </div>
-            ))}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${
+                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>Tools: 8 Available</span>
+              <ArrowUpRight className={`w-5 h-5 ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+                </div>
+          </CardContent>
+        </Card>
+
+        <Card className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+          isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:bg-pink-50'
+        }`} onClick={() => navigate('/super-admin/portals')}>
+          <CardHeader>
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-xl ${
+                isDarkMode ? 'bg-pink-900/30' : 'bg-pink-100'
+              }`}>
+                <Building2 className={`w-8 h-8 ${
+                  isDarkMode ? 'text-pink-400' : 'text-pink-600'
+                }`} />
+              </div>
+              <div>
+                <CardTitle className={`text-xl ${
+                  isDarkMode ? 'text-white' : 'text-slate-900'
+                }`}>Portal Management</CardTitle>
+                <CardDescription className={
+                  isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                }>Manage all system portals</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>Portals: 15 Active</span>
+              <ArrowUpRight className={`w-5 h-5 ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`} />
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 
@@ -535,11 +1007,11 @@ const EnhancedSuperAdminPortal = () => {
                       ? 'bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'
                       : 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
                   }`}>
-                    Super Admin
+                     Trans Bot AI
                   </h1>
                   <p className={`text-xs ${
                     isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                  }`}>Command Center</p>
+                   }`}>Super Admin Command Center</p>
                 </div>
               </motion.div>
               
@@ -601,6 +1073,7 @@ const EnhancedSuperAdminPortal = () => {
                                 <button
                               key={subItem.path}
                               onClick={() => {
+                                console.log('Navigating to:', subItem.path);
                                 navigate(subItem.path);
                                 setMobileSidebarOpen(false);
                               }}
@@ -623,6 +1096,7 @@ const EnhancedSuperAdminPortal = () => {
                 ) : (
                       <button
                     onClick={() => {
+                      console.log('Navigating to main item:', item.path);
                       navigate(item.path);
                       setMobileSidebarOpen(false);
                     }}
@@ -685,6 +1159,7 @@ const EnhancedSuperAdminPortal = () => {
                   <Menu className="w-5 h-5" />
                 </Button>
                 
+                                 <TransBotHeaderLogo showText={true} />
                 <h2 className={`text-xl font-semibold ${
                   isDarkMode ? 'text-white' : 'text-slate-900'
                 }`}>
@@ -741,17 +1216,25 @@ const EnhancedSuperAdminPortal = () => {
                     </div>
                     <Separator className={isDarkMode ? 'bg-slate-700' : ''} />
                     <div className="p-2 space-y-1">
-                      <Button variant="ghost" className={`w-full justify-start ${
+                                             <Button 
+                         variant="ghost" 
+                         className={`w-full justify-start ${
                         isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-100'
-                      }`}>
+                         }`}
+                         onClick={() => navigate('/super-admin/profile')}
+                       >
                         <User className="w-4 h-4 mr-2" />
                         Profile Settings
                       </Button>
-                      <Button variant="ghost" className={`w-full justify-start ${
+                       <Button 
+                         variant="ghost" 
+                         className={`w-full justify-start ${
                         isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-slate-100'
-                      }`}>
+                         }`}
+                         onClick={() => navigate('/super-admin/settings')}
+                       >
                         <Settings className="w-4 h-4 mr-2" />
-                        System Preferences
+                         System Settings
                       </Button>
                       <Separator className={isDarkMode ? 'bg-slate-700' : ''} />
                       <Button variant="ghost" className={`w-full justify-start text-red-600 ${
@@ -805,6 +1288,25 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/engineering/database" element={<DatabaseOptimizerPage />} />
                   <Route path="/engineering/security" element={<SecurityScannerPage />} />
                   <Route path="/engineering/performance" element={<PerformanceMonitorPage />} />
+                   {/* Profile and Settings Pages */}
+                           <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/mcp" element={<MCPControlCenter />} />
+        <Route path="/mcp/introduction" element={<MCPIntroductionPage />} />
+        <Route path="/mcp/features" element={<MCPFeaturesPage />} />
+        <Route path="/mcp/integrations" element={<MCPIntegrationsPage />} />
+        <Route path="/mcp/documentation" element={<MCPDocumentationPage />} />
+        <Route path="/mcp/support" element={<MCPSupportPage />} />
+                  <Route path="/mcp/agent-registry" element={<MCPAgentRegistryPage />} />
+          <Route path="/mcp/system-monitor" element={<MCPSystemMonitorPage />} />
+          <Route path="/mcp/security-hub" element={<MCPSecurityHubPage />} />
+          <Route path="/mcp/performance-analytics" element={<MCPPerformanceAnalyticsPage />} />
+          <Route path="/mcp/configuration-manager" element={<MCPConfigurationManagerPage />} />
+          <Route path="/mcp/backup-recovery" element={<MCPBackupRecoveryPage />} />
+          <Route path="/mcp/api-gateway" element={<MCPAPIGatewayPage />} />
+          <Route path="/mcp/log-management" element={<MCPLogManagementPage />} />
+          <Route path="/mcp/alert-center" element={<MCPAlertCenterPage />} />
+          <Route path="/mcp/deployment-manager" element={<MCPDeploymentManagerPage />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>
