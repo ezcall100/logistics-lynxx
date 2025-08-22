@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { 
   UserPlus, 
   Users, 
@@ -18,11 +20,18 @@ import {
   MoreHorizontal,
   RefreshCw,
   Star,
-  Building2
+  Building2,
+  Eye,
+  Edit,
+  Trash2
 } from 'lucide-react';
 
 const CRMLeads = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<any>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -82,6 +91,30 @@ const CRMLeads = () => {
       case 'Warm': return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'Cold': return 'bg-blue-100 text-blue-800 border-blue-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const handleViewLead = (lead: any) => {
+    setSelectedLead(lead);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditLead = (lead: any) => {
+    setSelectedLead(lead);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteLead = (lead: any) => {
+    setSelectedLead(lead);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteLead = () => {
+    if (selectedLead) {
+      console.log('Deleting lead:', selectedLead);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedLead(null);
     }
   };
 
@@ -194,9 +227,30 @@ const CRMLeads = () => {
                         <Button variant="outline" size="sm">
                           <Calendar className="h-3 w-3" />
                         </Button>
-                        <Button variant="outline" size="sm">
-                          <MoreHorizontal className="h-3 w-3" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm">
+                              <MoreHorizontal className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleViewLead(lead)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEditLead(lead)}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit Lead
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => handleDeleteLead(lead)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete Lead
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   </div>
@@ -269,6 +323,24 @@ const CRMLeads = () => {
           </Card>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Lead</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedLead?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteLead} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SuperAdminLayout>
   );
 };

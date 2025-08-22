@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -14,7 +16,7 @@ import {
   Calendar, Filter, Search, FileText, Users, DollarSign,
   Activity, Globe, Shield, Database, Server, Clock,
   Eye, Edit, Trash2, Plus, RefreshCw, Settings,
-  ArrowUpRight, ArrowDownRight, Minus, Target, Play
+  ArrowUpRight, ArrowDownRight, Minus, Target, Play, MoreHorizontal
 } from 'lucide-react';
 
 // Real data models
@@ -197,6 +199,10 @@ const mockAPI = {
 
 const ReportsPage = () => {
   const [reports, setReports] = useState<Report[]>([]);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [reportData, setReportData] = useState<ReportData[]>([]);
   const [templates, setTemplates] = useState<ReportTemplate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -266,11 +272,33 @@ const ReportsPage = () => {
   };
 
   const handleDeleteReport = (id: string) => {
-    setReports(prev => prev.filter(report => report.id !== id));
-    toast({
-      title: "Report Deleted",
-      description: "Report has been deleted successfully",
-    });
+    const report = reports.find(r => r.id === id);
+    if (report) {
+      setSelectedReport(report);
+      setIsDeleteDialogOpen(true);
+    }
+  };
+
+  const confirmDeleteReport = () => {
+    if (selectedReport) {
+      setReports(prev => prev.filter(report => report.id !== selectedReport.id));
+      toast({
+        title: "Report Deleted",
+        description: "Report has been deleted successfully",
+      });
+      setIsDeleteDialogOpen(false);
+      setSelectedReport(null);
+    }
+  };
+
+  const handleViewReport = (report: Report) => {
+    setSelectedReport(report);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditReport = (report: Report) => {
+    setSelectedReport(report);
+    setIsEditDialogOpen(true);
   };
 
   const handleCreateReport = () => {
@@ -480,15 +508,30 @@ const ReportsPage = () => {
                               <Play className="h-4 w-4" />
                             </Button>
                           )}
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" className="text-red-600" onClick={() => handleDeleteReport(report.id)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleViewReport(report)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditReport(report)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Report
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteReport(report.id)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Report
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -609,6 +652,24 @@ const ReportsPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Report</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedReport?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteReport} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

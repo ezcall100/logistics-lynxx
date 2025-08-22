@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Database, 
@@ -19,11 +21,19 @@ import {
   Trash2,
   Plus,
   Search,
-  Filter
+  Filter,
+  MoreHorizontal,
+  Eye,
+  Edit
 } from 'lucide-react';
 
 const DatabaseAdminPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTable, setSelectedTable] = useState<any>(null);
+  const [selectedQuery, setSelectedQuery] = useState<any>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [databaseStats, setDatabaseStats] = useState({
     totalTables: 156,
     activeConnections: 24,
@@ -64,6 +74,50 @@ const DatabaseAdminPage = () => {
   const handleOptimize = () => {
     // Optimization logic
     console.log('Starting database optimization...');
+  };
+
+  const handleViewTable = (table: any) => {
+    setSelectedTable(table);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditTable = (table: any) => {
+    setSelectedTable(table);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteTable = (table: any) => {
+    setSelectedTable(table);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleViewQuery = (query: any) => {
+    setSelectedQuery(query);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditQuery = (query: any) => {
+    setSelectedQuery(query);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteQuery = (query: any) => {
+    setSelectedQuery(query);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedTable) {
+      console.log('Deleting table:', selectedTable);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedTable(null);
+    } else if (selectedQuery) {
+      console.log('Deleting query:', selectedQuery);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedQuery(null);
+    }
   };
 
   return (
@@ -190,6 +244,30 @@ const DatabaseAdminPage = () => {
                           <Button size="sm" variant="outline">
                             <RotateCcw className="h-3 w-3" />
                           </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <MoreHorizontal className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleViewTable(table)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditTable(table)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Table
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteTable(table)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Table
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -223,9 +301,35 @@ const DatabaseAdminPage = () => {
                       <TableCell>{query.duration}</TableCell>
                       <TableCell>{query.user}</TableCell>
                       <TableCell>
-                        <Button size="sm" variant="destructive">
-                          <Pause className="h-3 w-3" />
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="destructive">
+                            <Pause className="h-3 w-3" />
+                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <MoreHorizontal className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleViewQuery(query)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditQuery(query)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Query
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteQuery(query)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Query
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -288,6 +392,24 @@ const DatabaseAdminPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedTable?.name || selectedQuery?.id}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

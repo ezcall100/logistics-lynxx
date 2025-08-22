@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,11 +26,17 @@ import {
   Trash2,
   Edit,
   Eye,
-  EyeOff
+  EyeOff,
+  MoreHorizontal
 } from 'lucide-react';
 
 const NetworkConfigPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedEndpoint, setSelectedEndpoint] = useState<any>(null);
+  const [selectedRule, setSelectedRule] = useState<any>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [networkStats, setNetworkStats] = useState({
     totalConnections: 1247,
     activeConnections: 892,
@@ -76,6 +84,50 @@ const NetworkConfigPage = () => {
   const handleAddFirewallRule = () => {
     // Add firewall rule logic
     console.log('Adding new firewall rule...');
+  };
+
+  const handleViewEndpoint = (endpoint: any) => {
+    setSelectedEndpoint(endpoint);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditEndpoint = (endpoint: any) => {
+    setSelectedEndpoint(endpoint);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteEndpoint = (endpoint: any) => {
+    setSelectedEndpoint(endpoint);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleViewRule = (rule: any) => {
+    setSelectedRule(rule);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditRule = (rule: any) => {
+    setSelectedRule(rule);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteRule = (rule: any) => {
+    setSelectedRule(rule);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedEndpoint) {
+      console.log('Deleting endpoint:', selectedEndpoint);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedEndpoint(null);
+    } else if (selectedRule) {
+      console.log('Deleting rule:', selectedRule);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedRule(null);
+    }
   };
 
   return (
@@ -197,9 +249,30 @@ const NetworkConfigPage = () => {
                           <Button size="sm" variant="outline">
                             <Activity className="h-3 w-3" />
                           </Button>
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-3 w-3" />
-                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <MoreHorizontal className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleViewEndpoint(endpoint)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditEndpoint(endpoint)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Endpoint
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteEndpoint(endpoint)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Endpoint
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -256,12 +329,30 @@ const NetworkConfigPage = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <MoreHorizontal className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleViewRule(rule)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditRule(rule)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Rule
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteRule(rule)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Rule
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -369,6 +460,24 @@ const NetworkConfigPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedEndpoint?.name || selectedRule?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

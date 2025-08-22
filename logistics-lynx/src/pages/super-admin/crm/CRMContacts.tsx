@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { 
   Search, 
   Plus, 
@@ -16,7 +18,8 @@ import {
   Edit,
   Trash2,
   Download,
-  Filter
+  Filter,
+  MoreHorizontal
 } from 'lucide-react';
 import { useCRMContacts } from '@/hooks/crm/useCRMContacts';
 import { useCRM } from '@/hooks/useCRM';
@@ -27,6 +30,10 @@ const CRMContactsPage: React.FC = () => {
   const { companies } = useCRM();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState('all');
+  const [selectedContact, setSelectedContact] = React.useState<any>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = React.useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   React.useEffect(() => {
     fetchContacts();
@@ -61,6 +68,30 @@ const CRMContactsPage: React.FC = () => {
       case 'inactive': return 'bg-gray-100 text-gray-800';
       case 'lead': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleViewContact = (contact: any) => {
+    setSelectedContact(contact);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditContact = (contact: any) => {
+    setSelectedContact(contact);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteContact = (contact: any) => {
+    setSelectedContact(contact);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteContact = () => {
+    if (selectedContact) {
+      console.log('Deleting contact:', selectedContact);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedContact(null);
     }
   };
 
@@ -204,9 +235,30 @@ const CRMContactsPage: React.FC = () => {
                       <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewContact(contact)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEditContact(contact)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit Contact
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteContact(contact)}
+                            className="text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete Contact
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </div>
@@ -229,6 +281,24 @@ const CRMContactsPage: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Contact</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedContact?.first_name} {selectedContact?.last_name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteContact} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </div>
     </SuperAdminLayout>
   );
