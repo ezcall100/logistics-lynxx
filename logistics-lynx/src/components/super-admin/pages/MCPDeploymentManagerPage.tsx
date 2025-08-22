@@ -269,7 +269,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-indigo-600/20"></div>
         <div className="relative z-10 p-8">
-          <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
                 <div className="relative">
@@ -278,14 +278,14 @@ const MCPDeploymentManagerPage: React.FC = () => {
                   </div>
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full animate-pulse border-4 border-white shadow-lg"></div>
                 </div>
-                <div>
+        <div>
                   <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                     Deployment Manager
-                  </h1>
+          </h1>
                   <p className="text-lg text-blue-100 mt-2">
                     MCP Deployment Management & CI/CD Pipeline Control
-                  </p>
-                </div>
+          </p>
+        </div>
               </div>
               
               {/* Live Status Indicators */}
@@ -301,7 +301,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
                 <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
                   <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
                   <span className="text-sm font-medium">Environments Healthy</span>
-                </div>
+            </div>
               </div>
             </div>
             
@@ -323,35 +323,35 @@ const MCPDeploymentManagerPage: React.FC = () => {
                 New Pipeline
               </Button>
             </div>
-          </div>
-        </div>
+              </div>
+            </div>
       </div>
 
       {/* Main Content */}
       <div className="p-8 space-y-8">
         <Tabs defaultValue="deployments" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="deployments">Deployments</TabsTrigger>
-            <TabsTrigger value="pipelines">Pipelines</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="deployments">Deployments</TabsTrigger>
+          <TabsTrigger value="pipelines">Pipelines</TabsTrigger>
             <TabsTrigger value="environments">Environments</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </TabsList>
 
           {/* Deployments Tab */}
-          <TabsContent value="deployments" className="space-y-6">
+        <TabsContent value="deployments" className="space-y-6">
             <Card className="border-0 shadow-lg">
-              <CardHeader>
+            <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Rocket className="w-5 h-5 text-blue-600" />
                   <span>Active Deployments</span>
-                </CardTitle>
+              </CardTitle>
                 <CardDescription>Monitor and manage system deployments</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {deployments.map((deployment) => (
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {deployments.map((deployment) => (
                     <div
-                      key={deployment.id}
+                    key={deployment.id}
                       className="p-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all duration-200"
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -366,19 +366,19 @@ const MCPDeploymentManagerPage: React.FC = () => {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-3">
-                          <Badge className={getStatusColor(deployment.status)}>
+                      <div className="flex items-center space-x-3">
+                        <Badge className={getStatusColor(deployment.status)}>
                             {deployment.status.toUpperCase()}
-                          </Badge>
+                        </Badge>
                           <div className="flex space-x-2">
-                            <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline">
                               <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="outline">
+                        </Button>
+                        <Button size="sm" variant="outline">
                               <RotateCcw className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
+                        </Button>
+                      </div>
+                    </div>
                       </div>
                       
                       {deployment.status === 'running' && (
@@ -388,12 +388,12 @@ const MCPDeploymentManagerPage: React.FC = () => {
                             <span>{deployment.progress}%</span>
                           </div>
                           <Progress value={deployment.progress} className="h-2" />
-                        </div>
+                    </div>
                       )}
                       
                       <div className="mt-4 pt-4 border-t border-slate-200">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
                             <span className="text-slate-500">Started:</span>
                             <p className="font-medium">{deployment.startTime}</p>
                           </div>
@@ -401,38 +401,38 @@ const MCPDeploymentManagerPage: React.FC = () => {
                             <div>
                               <span className="text-slate-500">Ended:</span>
                               <p className="font-medium">{deployment.endTime}</p>
-                            </div>
+                      </div>
                           )}
                           {deployment.duration && (
-                            <div>
+                      <div>
                               <span className="text-slate-500">Duration:</span>
                               <p className="font-medium">{deployment.duration}</p>
-                            </div>
+                      </div>
                           )}
-                          <div>
+                      <div>
                             <span className="text-slate-500">Triggered by:</span>
                             <p className="font-medium">{deployment.triggeredBy}</p>
                           </div>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
           </TabsContent>
 
           {/* Pipelines Tab */}
           <TabsContent value="pipelines" className="space-y-6">
             <Card className="border-0 shadow-lg">
-              <CardHeader>
+            <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <GitBranch className="w-5 h-5 text-green-600" />
                   <span>CI/CD Pipelines</span>
-                </CardTitle>
+              </CardTitle>
                 <CardDescription>Manage continuous integration and deployment pipelines</CardDescription>
-              </CardHeader>
-              <CardContent>
+            </CardHeader>
+            <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -448,10 +448,10 @@ const MCPDeploymentManagerPage: React.FC = () => {
                     {pipelines.map((pipeline) => (
                       <TableRow key={pipeline.id}>
                         <TableCell>
-                          <div>
+                <div>
                             <p className="font-medium">{pipeline.name}</p>
                             <p className="text-sm text-slate-500">{pipeline.stages.join(' → ')}</p>
-                          </div>
+                </div>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline">{pipeline.environment}</Badge>
@@ -466,7 +466,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
                           <div className="flex items-center space-x-2">
                             <Progress value={pipeline.successRate} className="w-20 h-2" />
                             <span className="text-sm">{pipeline.successRate}%</span>
-                          </div>
+                </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex space-x-2">
@@ -476,22 +476,22 @@ const MCPDeploymentManagerPage: React.FC = () => {
                             <Button size="sm" variant="outline">
                               <Settings className="h-4 w-4" />
                             </Button>
-                          </div>
+                </div>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
           {/* Environments Tab */}
           <TabsContent value="environments" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {environments.map((environment) => (
                 <Card key={environment.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <CardHeader>
+            <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className={`p-2 rounded-lg ${
@@ -508,7 +508,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
                         <div>
                           <CardTitle className="text-lg">{environment.name}</CardTitle>
                           <CardDescription>{environment.type}</CardDescription>
-                        </div>
+                      </div>
                       </div>
                       <Badge className={getEnvironmentStatusColor(environment.status)}>
                         {environment.status}
@@ -548,9 +548,9 @@ const MCPDeploymentManagerPage: React.FC = () => {
                       <Button size="sm" variant="outline">
                         <Eye className="h-4 w-4" />
                       </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+              </div>
+            </CardContent>
+          </Card>
               ))}
             </div>
           </TabsContent>
@@ -558,16 +558,16 @@ const MCPDeploymentManagerPage: React.FC = () => {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             <Card className="border-0 shadow-lg">
-              <CardHeader>
+            <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Settings className="w-5 h-5 text-slate-600" />
                   <span>Deployment Settings</span>
-                </CardTitle>
+              </CardTitle>
                 <CardDescription>Configure deployment strategies and preferences</CardDescription>
-              </CardHeader>
+            </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
+              <div className="space-y-4">
                     <Label className="text-base font-medium">Deployment Strategy</Label>
                     <Select defaultValue="blue-green">
                       <SelectTrigger>
@@ -604,10 +604,10 @@ const MCPDeploymentManagerPage: React.FC = () => {
                 <div className="flex justify-end space-x-4">
                   <Button variant="outline">Reset to Defaults</Button>
                   <Button>Save Settings</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         </Tabs>
       </div>
 
@@ -648,8 +648,8 @@ const MCPDeploymentManagerPage: React.FC = () => {
                     <SelectItem value="development">Development</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-            </div>
+                      </div>
+                    </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Branch</Label>
@@ -658,7 +658,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
                   onChange={(e) => setDeploymentConfig({...deploymentConfig, branch: e.target.value})}
                   placeholder="e.g., main"
                 />
-              </div>
+                          </div>
               <div className="space-y-2">
                 <Label>Commit Hash</Label>
                 <Input 
@@ -666,8 +666,8 @@ const MCPDeploymentManagerPage: React.FC = () => {
                   onChange={(e) => setDeploymentConfig({...deploymentConfig, commitHash: e.target.value})}
                   placeholder="e.g., a1b2c3d4"
                 />
-              </div>
-            </div>
+                      </div>
+                    </div>
             <div className="space-y-2">
               <Label>Description</Label>
               <Textarea 
@@ -677,7 +677,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
                 rows={3}
               />
             </div>
-          </div>
+                    </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setNewDeploymentDialog(false)}>
               Cancel
@@ -717,16 +717,16 @@ const MCPDeploymentManagerPage: React.FC = () => {
                   value={pipelineConfig.environment}
                   onValueChange={(value) => setPipelineConfig({...pipelineConfig, environment: value})}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select environment" />
-                  </SelectTrigger>
-                  <SelectContent>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select environment" />
+                      </SelectTrigger>
+                      <SelectContent>
                     <SelectItem value="production">Production</SelectItem>
                     <SelectItem value="staging">Staging</SelectItem>
-                    <SelectItem value="development">Development</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                        <SelectItem value="development">Development</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
             </div>
             <div className="space-y-2">
               <Label>Pipeline Stages</Label>
@@ -754,8 +754,8 @@ const MCPDeploymentManagerPage: React.FC = () => {
                     <Label htmlFor={stage}>{stage}</Label>
                   </div>
                 ))}
-              </div>
-            </div>
+                </div>
+                </div>
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Switch 
@@ -768,7 +768,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
               {pipelineConfig.autoDeploy && (
                 <div className="space-y-2">
                   <Label>Schedule (Cron Expression)</Label>
-                  <Input 
+                  <Input
                     value={pipelineConfig.schedule}
                     onChange={(e) => setPipelineConfig({...pipelineConfig, schedule: e.target.value})}
                     placeholder="e.g., 0 2 * * * (daily at 2 AM)"
@@ -815,7 +815,7 @@ const MCPDeploymentManagerPage: React.FC = () => {
               <div className="space-y-2">
                 <Label>Base URL</Label>
                 <Input value={selectedEnvironment.url} />
-              </div>
+                </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Health Check Interval (seconds)</Label>
@@ -832,16 +832,16 @@ const MCPDeploymentManagerPage: React.FC = () => {
                   placeholder="KEY1=value1&#10;KEY2=value2&#10;KEY3=value3"
                   rows={4}
                 />
-              </div>
-            </div>
+                      </div>
+                    </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEnvironmentConfigDialog(false)}>
               Cancel
-            </Button>
+                      </Button>
             <Button onClick={handleEnvironmentConfig}>
               Save Configuration
-            </Button>
+                      </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

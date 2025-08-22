@@ -8,126 +8,118 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Bell, Settings, AlertTriangle, CheckCircle, Clock, 
-  XCircle, Info, Zap, Eye, EyeOff, Plus, Edit, Trash2,
-  RefreshCw, Save, Filter, Search, Volume2, VolumeX,
-  Mail, MessageSquare, Smartphone, Globe, Shield,
-  TrendingUp, TrendingDown, Activity, Target, Award
+  Bell, Settings, Plus, Edit, Trash2, Eye, EyeOff, RefreshCw, Save, 
+  AlertTriangle, CheckCircle, Clock, Calendar, Server, Database, Globe, 
+  Code, Terminal, Activity, TrendingUp, Download, Upload, MoreHorizontal,
+  ArrowUpRight, ArrowDownRight, Minus, XCircle, Info, Shield, Zap, Target, Award, Trophy, Users, Globe2, Cpu,
+  HardDrive, Network, Wifi, ShieldCheck, Rocket, Brain, CircuitBoard,
+  Gauge, BarChart3, PieChart, Filter, Search, Mail, MessageSquare,
+  Phone, Smartphone, Tablet, Monitor, Laptop
 } from 'lucide-react';
 
-interface Alert {
-  id: string;
-  title: string;
-  message: string;
-  type: 'info' | 'warning' | 'error' | 'critical' | 'success';
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  status: 'active' | 'acknowledged' | 'resolved' | 'dismissed';
-  source: string;
-  timestamp: string;
-  acknowledgedBy?: string;
-  acknowledgedAt?: string;
-  tags: string[];
-  priority: number;
-}
+// Import MCP Design System
+import '../styles/mcp-design-system.css';
+import {
+  MCPStatusBadge,
+  MCPMetricCard,
+  MCPProgressCard,
+  MCPActionButton,
+  MCPLoadingSkeleton,
+  MCPEmptyState
+} from '@/components/ui/mcp-components';
 
 interface AlertRule {
   id: string;
   name: string;
   description: string;
-  condition: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   status: 'active' | 'inactive' | 'draft';
+  type: 'system' | 'performance' | 'security' | 'business';
+  conditions: string[];
   actions: string[];
-  createdBy: string;
   createdAt: string;
   lastTriggered?: string;
   triggerCount: number;
+  enabled: boolean;
 }
 
 interface NotificationChannel {
   id: string;
   name: string;
-  type: 'email' | 'sms' | 'webhook' | 'slack' | 'teams';
-  status: 'active' | 'inactive' | 'error';
+  type: 'email' | 'slack' | 'webhook' | 'sms' | 'pagerduty';
   config: Record<string, any>;
-  lastTest?: string;
+  status: 'active' | 'inactive' | 'error';
+  lastUsed?: string;
   successRate: number;
+  enabled: boolean;
+}
+
+interface Alert {
+  id: string;
+  ruleId: string;
+  ruleName: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  status: 'active' | 'acknowledged' | 'resolved' | 'suppressed';
+  message: string;
+  source: string;
+  timestamp: string;
+  acknowledgedBy?: string;
+  acknowledgedAt?: string;
+  resolvedBy?: string;
+  resolvedAt?: string;
+  tags: string[];
 }
 
 const MCPAlertCenterPage: React.FC = () => {
   const { toast } = useToast();
-  const [alerts, setAlerts] = useState<Alert[]>([
-    {
-      id: '1',
-      title: 'High CPU Usage Detected',
-      message: 'CPU usage has exceeded 90% for more than 5 minutes on server-web-01',
-      type: 'warning',
-      severity: 'high',
-      status: 'active',
-      source: 'System Monitor',
-      timestamp: '2024-01-15 14:30:00',
-      tags: ['performance', 'cpu', 'server-web-01'],
-      priority: 8
-    },
-    {
-      id: '2',
-      title: 'Database Connection Failed',
-      message: 'Unable to establish connection to primary database server',
-      type: 'error',
-      severity: 'critical',
-      status: 'active',
-      source: 'Database Monitor',
-      timestamp: '2024-01-15 14:25:00',
-      tags: ['database', 'connection', 'critical'],
-      priority: 10
-    },
-    {
-      id: '3',
-      title: 'Backup Completed Successfully',
-      message: 'Daily backup completed successfully. 2.5GB of data backed up.',
-      type: 'success',
-      severity: 'low',
-      status: 'acknowledged',
-      source: 'Backup Service',
-      timestamp: '2024-01-15 14:00:00',
-      acknowledgedBy: 'admin@company.com',
-      acknowledgedAt: '2024-01-15 14:05:00',
-      tags: ['backup', 'success'],
-      priority: 2
-    }
-  ]);
-
   const [alertRules, setAlertRules] = useState<AlertRule[]>([
     {
       id: '1',
       name: 'High CPU Usage',
-      description: 'Alert when CPU usage exceeds 90% for more than 5 minutes',
-      condition: 'cpu_usage > 90 AND duration > 300',
+      description: 'Alert when CPU usage exceeds 80% for more than 5 minutes',
       severity: 'high',
       status: 'active',
-      actions: ['email', 'slack'],
-      createdBy: 'admin@company.com',
-      createdAt: '2024-01-10 10:00:00',
+      type: 'performance',
+      conditions: ['CPU > 80%', 'Duration > 5min'],
+      actions: ['Send email', 'Create ticket'],
+      createdAt: '2024-01-15 10:00:00',
       lastTriggered: '2024-01-15 14:30:00',
-      triggerCount: 15
+      triggerCount: 12,
+      enabled: true
     },
     {
       id: '2',
       name: 'Database Connection Failure',
       description: 'Alert when database connection fails',
-      condition: 'db_connection_status == "failed"',
       severity: 'critical',
       status: 'active',
-      actions: ['email', 'sms', 'slack'],
-      createdBy: 'admin@company.com',
-      createdAt: '2024-01-08 09:00:00',
-      lastTriggered: '2024-01-15 14:25:00',
-      triggerCount: 3
+      type: 'system',
+      conditions: ['DB Connection = Failed'],
+      actions: ['Send SMS', 'Page on-call'],
+      createdAt: '2024-01-15 09:00:00',
+      lastTriggered: '2024-01-15 13:15:00',
+      triggerCount: 3,
+      enabled: true
+    },
+    {
+      id: '3',
+      name: 'Security Breach Attempt',
+      description: 'Alert on suspicious login attempts',
+      severity: 'critical',
+      status: 'active',
+      type: 'security',
+      conditions: ['Failed Logins > 10', 'Time Window < 5min'],
+      actions: ['Block IP', 'Send alert'],
+      createdAt: '2024-01-15 08:00:00',
+      triggerCount: 0,
+      enabled: true
     }
   ]);
 
@@ -136,48 +128,95 @@ const MCPAlertCenterPage: React.FC = () => {
       id: '1',
       name: 'Admin Email',
       type: 'email',
-      status: 'active',
       config: { email: 'admin@company.com' },
-      lastTest: '2024-01-15 10:00:00',
-      successRate: 98
+      status: 'active',
+      lastUsed: '2024-01-15 14:30:00',
+      successRate: 98.5,
+      enabled: true
     },
     {
       id: '2',
       name: 'Slack Alerts',
       type: 'slack',
+      config: { webhook: 'https://hooks.slack.com/...' },
       status: 'active',
-      config: { channel: '#alerts', webhook: 'https://hooks.slack.com/...' },
-      lastTest: '2024-01-15 09:30:00',
-      successRate: 95
+      lastUsed: '2024-01-15 13:15:00',
+      successRate: 99.2,
+      enabled: true
     },
     {
       id: '3',
-      name: 'SMS Notifications',
+      name: 'On-Call SMS',
       type: 'sms',
-      status: 'active',
       config: { phone: '+1234567890' },
-      lastTest: '2024-01-15 08:00:00',
-      successRate: 92
+      status: 'active',
+      lastUsed: '2024-01-15 13:15:00',
+      successRate: 95.8,
+      enabled: true
     }
   ]);
 
-  // Dialog states
-  const [newAlertRuleDialog, setNewAlertRuleDialog] = useState(false);
+  const [alerts, setAlerts] = useState<Alert[]>([
+    {
+      id: '1',
+      ruleId: '1',
+      ruleName: 'High CPU Usage',
+      severity: 'high',
+      status: 'active',
+      message: 'CPU usage is at 85% for the last 6 minutes',
+      source: 'server-01',
+      timestamp: '2024-01-15 14:30:00',
+      tags: ['performance', 'cpu', 'server-01']
+    },
+    {
+      id: '2',
+      ruleId: '2',
+      ruleName: 'Database Connection Failure',
+      severity: 'critical',
+      status: 'acknowledged',
+      message: 'Database connection failed on primary server',
+      source: 'db-primary',
+      timestamp: '2024-01-15 13:15:00',
+      acknowledgedBy: 'admin',
+      acknowledgedAt: '2024-01-15 13:20:00',
+      tags: ['database', 'connection', 'critical']
+    },
+    {
+      id: '3',
+      ruleId: '1',
+      ruleName: 'High CPU Usage',
+      severity: 'high',
+      status: 'resolved',
+      message: 'CPU usage returned to normal levels',
+      source: 'server-02',
+      timestamp: '2024-01-15 12:45:00',
+      resolvedBy: 'system',
+      resolvedAt: '2024-01-15 13:00:00',
+      tags: ['performance', 'cpu', 'server-02', 'resolved']
+    }
+  ]);
+
+  const [selectedAlerts, setSelectedAlerts] = useState<string[]>([]);
+  const [showBulkToolbar, setShowBulkToolbar] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('alerts');
+  const [newRuleDialog, setNewRuleDialog] = useState(false);
   const [newChannelDialog, setNewChannelDialog] = useState(false);
   const [alertDetailsDialog, setAlertDetailsDialog] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
-  const [alertRuleConfig, setAlertRuleConfig] = useState({
-    name: '',
-    description: '',
-    condition: '',
-    severity: 'medium' as const,
-    actions: [] as string[]
-  });
-  const [channelConfig, setChannelConfig] = useState({
-    name: '',
-    type: 'email' as const,
-    config: {} as Record<string, any>
-  });
+
+  // Calculate metrics
+  const metrics = {
+    totalAlerts: alerts.length,
+    activeAlerts: alerts.filter(a => a.status === 'active').length,
+    criticalAlerts: alerts.filter(a => a.severity === 'critical').length,
+    acknowledgedAlerts: alerts.filter(a => a.status === 'acknowledged').length,
+    resolvedAlerts: alerts.filter(a => a.status === 'resolved').length,
+    totalRules: alertRules.length,
+    activeRules: alertRules.filter(r => r.enabled).length,
+    totalChannels: notificationChannels.length,
+    activeChannels: notificationChannels.filter(c => c.enabled).length
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -189,762 +228,834 @@ const MCPAlertCenterPage: React.FC = () => {
     }
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'critical': return 'bg-red-100 text-red-800';
-      case 'error': return 'bg-red-100 text-red-800';
-      case 'warning': return 'bg-yellow-100 text-yellow-800';
-      case 'info': return 'bg-blue-100 text-blue-800';
-      case 'success': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-red-100 text-red-800';
-      case 'acknowledged': return 'bg-yellow-100 text-yellow-800';
-      case 'resolved': return 'bg-green-100 text-green-800';
-      case 'dismissed': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active': return 'bg-red-100 text-red-800 border-red-200';
+      case 'acknowledged': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'resolved': return 'bg-green-100 text-green-800 border-green-200';
+      case 'suppressed': return 'bg-gray-100 text-gray-800 border-gray-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const handleAcknowledgeAlert = (alertId: string) => {
-    setAlerts(prev => prev.map(alert => 
-      alert.id === alertId 
-        ? { 
-            ...alert, 
-            status: 'acknowledged', 
-            acknowledgedBy: 'current-user@company.com',
-            acknowledgedAt: new Date().toISOString()
-          }
-        : alert
-    ));
-    
-    toast({
-      title: "Alert Acknowledged",
-      description: "The alert has been marked as acknowledged.",
-    });
-  };
-
-  const handleResolveAlert = (alertId: string) => {
-    setAlerts(prev => prev.map(alert => 
-      alert.id === alertId 
-        ? { ...alert, status: 'resolved' }
-        : alert
-    ));
-    
-    toast({
-      title: "Alert Resolved",
-      description: "The alert has been marked as resolved.",
-    });
-  };
-
-  const handleNewAlertRule = () => {
-    if (!alertRuleConfig.name || !alertRuleConfig.condition) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
-      });
-      return;
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'system': return <Server className="w-4 h-4" />;
+      case 'performance': return <Activity className="w-4 h-4" />;
+      case 'security': return <Shield className="w-4 h-4" />;
+      case 'business': return <BarChart3 className="w-4 h-4" />;
+      default: return <Bell className="w-4 h-4" />;
     }
-
-    const newRule: AlertRule = {
-      id: Date.now().toString(),
-      name: alertRuleConfig.name,
-      description: alertRuleConfig.description,
-      condition: alertRuleConfig.condition,
-      severity: alertRuleConfig.severity,
-      status: 'active',
-      actions: alertRuleConfig.actions,
-      createdBy: 'current-user@company.com',
-      createdAt: new Date().toISOString(),
-      triggerCount: 0
-    };
-
-    setAlertRules([newRule, ...alertRules]);
-    setNewAlertRuleDialog(false);
-    setAlertRuleConfig({ name: '', description: '', condition: '', severity: 'medium', actions: [] });
-    
-    toast({
-      title: "Alert Rule Created",
-      description: `Alert rule "${alertRuleConfig.name}" has been created.`,
-    });
-  };
-
-  const handleNewChannel = () => {
-    if (!channelConfig.name || !channelConfig.type) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newChannel: NotificationChannel = {
-      id: Date.now().toString(),
-      name: channelConfig.name,
-      type: channelConfig.type,
-      status: 'active',
-      config: channelConfig.config,
-      successRate: 100
-    };
-
-    setNotificationChannels([newChannel, ...notificationChannels]);
-    setNewChannelDialog(false);
-    setChannelConfig({ name: '', type: 'email', config: {} });
-    
-    toast({
-      title: "Notification Channel Created",
-      description: `Channel "${channelConfig.name}" has been created.`,
-    });
   };
 
   const getChannelIcon = (type: string) => {
     switch (type) {
       case 'email': return <Mail className="w-4 h-4" />;
-      case 'sms': return <Smartphone className="w-4 h-4" />;
       case 'slack': return <MessageSquare className="w-4 h-4" />;
       case 'webhook': return <Globe className="w-4 h-4" />;
-      case 'teams': return <MessageSquare className="w-4 h-4" />;
+      case 'sms': return <Smartphone className="w-4 h-4" />;
+      case 'pagerduty': return <Bell className="w-4 h-4" />;
       default: return <Bell className="w-4 h-4" />;
     }
   };
 
+  const handleAlertSelection = (alertId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedAlerts([...selectedAlerts, alertId]);
+    } else {
+      setSelectedAlerts(selectedAlerts.filter(id => id !== alertId));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedAlerts(alerts.map(alert => alert.id));
+    } else {
+      setSelectedAlerts([]);
+    }
+  };
+
+  const handleBulkAction = (action: string, alertIds: string[]) => {
+    setLoading(true);
+    setTimeout(() => {
+      switch (action) {
+        case 'acknowledge':
+          setAlerts(prev => prev.map(alert => 
+            alertIds.includes(alert.id) && alert.status === 'active'
+              ? { ...alert, status: 'acknowledged', acknowledgedBy: 'admin', acknowledgedAt: new Date().toISOString() }
+              : alert
+          ));
+          toast({
+            title: "Alerts Acknowledged",
+            description: `${alertIds.length} alerts have been acknowledged.`,
+          });
+          break;
+        case 'resolve':
+          setAlerts(prev => prev.map(alert => 
+            alertIds.includes(alert.id)
+              ? { ...alert, status: 'resolved', resolvedBy: 'admin', resolvedAt: new Date().toISOString() }
+              : alert
+          ));
+          toast({
+            title: "Alerts Resolved",
+            description: `${alertIds.length} alerts have been resolved.`,
+          });
+          break;
+        case 'suppress':
+          setAlerts(prev => prev.map(alert => 
+            alertIds.includes(alert.id)
+              ? { ...alert, status: 'suppressed' }
+              : alert
+          ));
+          toast({
+            title: "Alerts Suppressed",
+            description: `${alertIds.length} alerts have been suppressed.`,
+          });
+          break;
+      }
+      setSelectedAlerts([]);
+      setLoading(false);
+    }, 1000);
+  };
+
+  const handleAlertAction = (action: string, alert: Alert) => {
+    switch (action) {
+      case 'view':
+        setSelectedAlert(alert);
+        setAlertDetailsDialog(true);
+        break;
+      case 'acknowledge':
+        setAlerts(prev => prev.map(a => 
+          a.id === alert.id 
+            ? { ...a, status: 'acknowledged', acknowledgedBy: 'admin', acknowledgedAt: new Date().toISOString() }
+            : a
+        ));
+        toast({
+          title: "Alert Acknowledged",
+          description: `Alert "${alert.ruleName}" has been acknowledged.`,
+        });
+        break;
+      case 'resolve':
+        setAlerts(prev => prev.map(a => 
+          a.id === alert.id 
+            ? { ...a, status: 'resolved', resolvedBy: 'admin', resolvedAt: new Date().toISOString() }
+            : a
+        ));
+        toast({
+          title: "Alert Resolved",
+          description: `Alert "${alert.ruleName}" has been resolved.`,
+        });
+        break;
+      case 'suppress':
+        setAlerts(prev => prev.map(a => 
+          a.id === alert.id 
+            ? { ...a, status: 'suppressed' }
+            : a
+        ));
+        toast({
+          title: "Alert Suppressed",
+          description: `Alert "${alert.ruleName}" has been suppressed.`,
+        });
+        break;
+    }
+  };
+
+  // Show bulk toolbar when alerts are selected
+  useEffect(() => {
+    setShowBulkToolbar(selectedAlerts.length > 0);
+  }, [selectedAlerts]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-indigo-600/20"></div>
-        <div className="relative z-10 p-8">
-          <div className="flex items-center justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl">
-                    <Bell className="w-10 h-10 text-white" />
+    <TooltipProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        {/* Enhanced Hero Header */}
+        <div className="mcp-hero relative overflow-hidden text-white">
+          <div className="relative z-10 p-8">
+            <div className="flex items-center justify-between">
+              <div className="space-y-6">
+                <div className="flex items-center space-x-6">
+                  <div className="relative">
+                    <div className="p-6 rounded-3xl bg-gradient-to-r from-red-500 to-orange-600 shadow-2xl">
+                      <Bell className="w-12 h-12 text-white" />
+                    </div>
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-red-500 rounded-full animate-pulse border-4 border-white shadow-lg"></div>
                   </div>
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full animate-pulse border-4 border-white shadow-lg"></div>
+                  <div>
+                    <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white to-red-200 bg-clip-text text-transparent">
+                      MCP Alert Center
+                    </h1>
+                    <p className="text-xl text-red-100 mt-3">
+                      Intelligent Alert Management & Response System
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                    Alert Center
-                  </h1>
-                  <p className="text-lg text-blue-100 mt-2">
-                    MCP Alert Management & Notification System
-                  </p>
+                
+                {/* Enhanced Live Status Indicators */}
+                <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+                    <div className="w-4 h-4 bg-red-400 rounded-full animate-pulse"></div>
+                    <span className="text-lg font-medium">Active Alerts: {metrics.activeAlerts}</span>
+                  </div>
+                  <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+                    <div className="w-4 h-4 bg-orange-400 rounded-full"></div>
+                    <span className="text-lg font-medium">Critical: {metrics.criticalAlerts}</span>
+                  </div>
+                  <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+                    <div className="w-4 h-4 bg-yellow-400 rounded-full"></div>
+                    <span className="text-lg font-medium">Acknowledged: {metrics.acknowledgedAlerts}</span>
+                  </div>
+                  <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+                    <div className="w-4 h-4 bg-green-400 rounded-full"></div>
+                    <span className="text-lg font-medium">Resolved: {metrics.resolvedAlerts}</span>
+                  </div>
                 </div>
               </div>
               
-              {/* Live Status Indicators */}
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-                  <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">Active Alerts: {alerts.filter(a => a.status === 'active').length}</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                  <span className="text-sm font-medium">Alert Rules: {alertRules.length}</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-                  <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
-                  <span className="text-sm font-medium">Notification Channels: {notificationChannels.length}</span>
-                </div>
+              <div className="flex items-center space-x-4">
+                <MCPActionButton
+                  variant="secondary"
+                  icon={Plus}
+                  onClick={() => setNewRuleDialog(true)}
+                >
+                  New Rule
+                </MCPActionButton>
+                <MCPActionButton
+                  variant="ghost"
+                  icon={RefreshCw}
+                  loading={loading}
+                  onClick={() => {
+                    setLoading(true);
+                    setTimeout(() => setLoading(false), 1000);
+                    toast({ title: "Refreshed", description: "Alert data updated." });
+                  }}
+                >
+                  Refresh
+                </MCPActionButton>
               </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                onClick={() => setNewAlertRuleDialog(true)}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Alert Rule
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setNewChannelDialog(true)}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
-              >
-                <Bell className="h-4 w-4 mr-2" />
-                New Channel
-              </Button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="p-8 space-y-8">
-        <Tabs defaultValue="alerts" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="alerts">Active Alerts</TabsTrigger>
-            <TabsTrigger value="rules">Alert Rules</TabsTrigger>
-            <TabsTrigger value="channels">Notification Channels</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
-
-          {/* Alerts Tab */}
-          <TabsContent value="alerts" className="space-y-6">
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <AlertTriangle className="w-5 h-5 text-red-600" />
-                  <span>Active Alerts</span>
-                </CardTitle>
-                <CardDescription>Monitor and manage system alerts</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {alerts.map((alert) => (
-                    <div
-                      key={alert.id}
-                      className="p-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all duration-200"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-4">
-                          <div className={`p-2 rounded-lg ${getTypeColor(alert.type)}`}>
-                            {alert.type === 'critical' && <AlertTriangle className="w-5 h-5" />}
-                            {alert.type === 'error' && <XCircle className="w-5 h-5" />}
-                            {alert.type === 'warning' && <AlertTriangle className="w-5 h-5" />}
-                            {alert.type === 'info' && <Info className="w-5 h-5" />}
-                            {alert.type === 'success' && <CheckCircle className="w-5 h-5" />}
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-lg">{alert.title}</h3>
-                            <p className="text-sm text-slate-500">
-                              {alert.source} • {alert.timestamp}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <Badge className={getSeverityColor(alert.severity)}>
-                            {alert.severity.toUpperCase()}
-                          </Badge>
-                          <Badge className={getStatusColor(alert.status)}>
-                            {alert.status.toUpperCase()}
-                          </Badge>
-                          <div className="flex space-x-2">
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedAlert(alert);
-                                setAlertDetailsDialog(true);
-                              }}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            {alert.status === 'active' && (
-                              <>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  onClick={() => handleAcknowledgeAlert(alert.id)}
-                                >
-                                  Acknowledge
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  onClick={() => handleResolveAlert(alert.id)}
-                                >
-                                  Resolve
-                                </Button>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <p className="text-slate-700 mb-4">{alert.message}</p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex space-x-2">
-                          {alert.tags.map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                        <div className="text-sm text-slate-500">
-                          Priority: {alert.priority}/10
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+        {/* Enhanced Bulk Actions Toolbar */}
+        {showBulkToolbar && (
+          <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200 shadow-lg">
+            <div className="px-8 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm font-medium text-slate-700">
+                    {selectedAlerts.length} alert{selectedAlerts.length !== 1 ? 's' : ''} selected
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedAlerts([])}
+                    className="text-slate-500 hover:text-slate-700"
+                  >
+                    Clear Selection
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Alert Rules Tab */}
-          <TabsContent value="rules" className="space-y-6">
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
-                  <span>Alert Rules</span>
-                </CardTitle>
-                <CardDescription>Manage alert rules and conditions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Rule Name</TableHead>
-                      <TableHead>Condition</TableHead>
-                      <TableHead>Severity</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Last Triggered</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {alertRules.map((rule) => (
-                      <TableRow key={rule.id}>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">{rule.name}</p>
-                            <p className="text-sm text-slate-500">{rule.description}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <code className="text-xs bg-slate-100 px-2 py-1 rounded">
-                            {rule.condition}
-                          </code>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getSeverityColor(rule.severity)}>
-                            {rule.severity}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={rule.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                            {rule.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <p className="text-sm">{rule.lastTriggered || 'Never'}</p>
-                            <p className="text-xs text-slate-500">Triggered {rule.triggerCount} times</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="outline">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="outline">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Notification Channels Tab */}
-          <TabsContent value="channels" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {notificationChannels.map((channel) => (
-                <Card key={channel.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg ${
-                          channel.status === 'active' ? 'bg-green-100' :
-                          channel.status === 'error' ? 'bg-red-100' :
-                          'bg-gray-100'
-                        }`}>
-                          {getChannelIcon(channel.type)}
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg">{channel.name}</CardTitle>
-                          <CardDescription>{channel.type}</CardDescription>
-                        </div>
-                      </div>
-                      <Badge className={channel.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                        {channel.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-500">Success Rate:</span>
-                        <span className="font-medium">{channel.successRate}%</span>
-                      </div>
-                      <Progress value={channel.successRate} className="h-2" />
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Last Test:</span>
-                      <span className="font-medium">{channel.lastTest || 'Never'}</span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" className="flex-1">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <RefreshCw className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Settings className="w-5 h-5 text-slate-600" />
-                  <span>Alert Settings</span>
-                </CardTitle>
-                <CardDescription>Configure alert system preferences</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium">Alert Aggregation</Label>
-                    <Select defaultValue="5min">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1min">1 minute</SelectItem>
-                        <SelectItem value="5min">5 minutes</SelectItem>
-                        <SelectItem value="15min">15 minutes</SelectItem>
-                        <SelectItem value="1hour">1 hour</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium">Auto-resolve Timeout</Label>
-                    <Input type="number" defaultValue={24} placeholder="Hours" />
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium">Escalation Delay</Label>
-                    <Input type="number" defaultValue={30} placeholder="Minutes" />
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium">Max Alerts per Hour</Label>
-                    <Input type="number" defaultValue={100} placeholder="Count" />
-                  </div>
+                <div className="flex items-center space-x-3">
+                  <MCPActionButton
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => handleBulkAction('acknowledge', selectedAlerts)}
+                    disabled={selectedAlerts.length === 0}
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Acknowledge</span>
+                  </MCPActionButton>
+                  <MCPActionButton
+                    variant="primary"
+                    size="sm"
+                    onClick={() => handleBulkAction('resolve', selectedAlerts)}
+                    disabled={selectedAlerts.length === 0}
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Resolve</span>
+                  </MCPActionButton>
+                  <MCPActionButton
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleBulkAction('suppress', selectedAlerts)}
+                    disabled={selectedAlerts.length === 0}
+                  >
+                    <EyeOff className="w-4 h-4" />
+                    <span>Suppress</span>
+                  </MCPActionButton>
                 </div>
-                
-                <div className="space-y-4">
-                  <Label className="text-base font-medium">Global Settings</Label>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
-                      <Switch id="enable-alerts" defaultChecked />
-                      <Label htmlFor="enable-alerts">Enable alert system</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Switch id="enable-escalation" defaultChecked />
-                      <Label htmlFor="enable-escalation">Enable alert escalation</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Switch id="enable-snooze" defaultChecked />
-                      <Label htmlFor="enable-snooze">Enable alert snoozing</Label>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-end space-x-4">
-                  <Button variant="outline">Reset to Defaults</Button>
-                  <Button>Save Settings</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* New Alert Rule Dialog */}
-      <Dialog open={newAlertRuleDialog} onOpenChange={setNewAlertRuleDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <Shield className="w-5 h-5" />
-              <span>Create New Alert Rule</span>
-            </DialogTitle>
-            <DialogDescription>
-              Define a new alert rule with conditions and actions
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Rule Name *</Label>
-                <Input 
-                  value={alertRuleConfig.name}
-                  onChange={(e) => setAlertRuleConfig({...alertRuleConfig, name: e.target.value})}
-                  placeholder="e.g., High CPU Usage"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Severity *</Label>
-                <Select 
-                  value={alertRuleConfig.severity}
-                  onValueChange={(value: any) => setAlertRuleConfig({...alertRuleConfig, severity: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="critical">Critical</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea 
-                value={alertRuleConfig.description}
-                onChange={(e) => setAlertRuleConfig({...alertRuleConfig, description: e.target.value})}
-                placeholder="Describe what this alert rule monitors..."
-                rows={3}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Condition *</Label>
-              <Input 
-                value={alertRuleConfig.condition}
-                onChange={(e) => setAlertRuleConfig({...alertRuleConfig, condition: e.target.value})}
-                placeholder="e.g., cpu_usage > 90 AND duration > 300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Actions</Label>
-              <div className="space-y-2">
-                {['email', 'sms', 'slack', 'webhook'].map((action) => (
-                  <div key={action} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id={action}
-                      checked={alertRuleConfig.actions.includes(action)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setAlertRuleConfig({
-                            ...alertRuleConfig,
-                            actions: [...alertRuleConfig.actions, action]
-                          });
-                        } else {
-                          setAlertRuleConfig({
-                            ...alertRuleConfig,
-                            actions: alertRuleConfig.actions.filter(a => a !== action)
-                          });
-                        }
-                      }}
+          </div>
+        )}
+
+        {/* Enhanced Main Content */}
+        <div className="p-8 space-y-8">
+          {/* Enhanced Metrics Dashboard */}
+          <div className="mcp-card-grid">
+            <MCPMetricCard
+              title="Total Alerts"
+              value={metrics.totalAlerts}
+              icon={Bell}
+              trend="up"
+              change={{ value: 8, type: 'increase', period: 'last hour' }}
+            />
+            <MCPMetricCard
+              title="Active Alerts"
+              value={metrics.activeAlerts}
+              icon={AlertTriangle}
+              status="error"
+              trend="up"
+            />
+            <MCPMetricCard
+              title="Critical Alerts"
+              value={metrics.criticalAlerts}
+              icon={XCircle}
+              status="error"
+              trend="down"
+            />
+            <MCPMetricCard
+              title="Resolution Rate"
+              value={`${((metrics.resolvedAlerts / metrics.totalAlerts) * 100).toFixed(1)}%`}
+              icon={CheckCircle}
+              status="success"
+              trend="up"
+              change={{ value: 2.5, type: 'increase', period: 'last week' }}
+            />
+          </div>
+
+          {/* Enhanced Alert Management */}
+          <Card className="mcp-glass-card">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-2xl font-bold flex items-center gap-3">
+                    <Bell className="w-6 h-6 text-primary" />
+                    Alert Management
+                  </CardTitle>
+                  <CardDescription className="text-lg">
+                    Monitor and manage system alerts and notifications
+                  </CardDescription>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MCPActionButton
+                    variant="primary"
+                    icon={Plus}
+                    onClick={() => setNewRuleDialog(true)}
+                  >
+                    New Rule
+                  </MCPActionButton>
+                  <MCPActionButton
+                    variant="secondary"
+                    icon={Plus}
+                    onClick={() => setNewChannelDialog(true)}
+                  >
+                    New Channel
+                  </MCPActionButton>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="alerts" className="flex items-center gap-2">
+                    <Bell className="w-4 h-4" />
+                    Alerts ({metrics.totalAlerts})
+                  </TabsTrigger>
+                  <TabsTrigger value="rules" className="flex items-center gap-2">
+                    <Settings className="w-4 h-4" />
+                    Rules ({metrics.totalRules})
+                  </TabsTrigger>
+                  <TabsTrigger value="channels" className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    Channels ({metrics.totalChannels})
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="alerts" className="space-y-4">
+                  {loading ? (
+                    <MCPLoadingSkeleton type="table" count={3} />
+                  ) : alerts.length === 0 ? (
+                    <MCPEmptyState
+                      icon={Bell}
+                      title="No Alerts Found"
+                      description="All systems are running smoothly with no active alerts."
                     />
-                    <Label htmlFor={action}>{action.toUpperCase()}</Label>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                                                     <TableHead className="w-12">
+                             <input
+                               type="checkbox"
+                               checked={selectedAlerts.length === alerts.length && alerts.length > 0}
+                               onChange={(e) => handleSelectAll(e.target.checked)}
+                               className="h-4 w-4 rounded border-gray-300"
+                             />
+                           </TableHead>
+                          <TableHead>Alert</TableHead>
+                          <TableHead>Severity</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Source</TableHead>
+                          <TableHead>Time</TableHead>
+                          <TableHead className="w-32">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {alerts.map((alert) => (
+                          <TableRow key={alert.id} className="group mcp-table-row">
+                                                         <TableCell>
+                               <input
+                                 type="checkbox"
+                                 checked={selectedAlerts.includes(alert.id)}
+                                 onChange={(e) => handleAlertSelection(alert.id, e.target.checked)}
+                                 className="h-4 w-4 rounded border-gray-300"
+                               />
+                             </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{alert.ruleName}</p>
+                                <p className="text-sm text-slate-500">{alert.message}</p>
+                                <div className="flex space-x-1 mt-1">
+                                  {alert.tags.map((tag) => (
+                                    <Badge key={tag} variant="outline" className="text-xs">
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={getSeverityColor(alert.severity)}>
+                                {alert.severity.toUpperCase()}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <MCPStatusBadge
+                                status={alert.status === 'active' ? 'critical' : 
+                                       alert.status === 'acknowledged' ? 'degraded' :
+                                       alert.status === 'resolved' ? 'operational' : 'offline'}
+                                size="sm"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm">{alert.source}</span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm">{alert.timestamp}</span>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleAlertAction('view', alert)}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Eye className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>View Details</TooltipContent>
+                                </Tooltip>
+                                
+                                {alert.status === 'active' && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => handleAlertAction('acknowledge', alert)}
+                                        className="h-8 w-8 p-0"
+                                      >
+                                        <CheckCircle className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Acknowledge</TooltipContent>
+                                  </Tooltip>
+                                )}
+                                
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    {alert.status === 'active' && (
+                                      <DropdownMenuItem onClick={() => handleAlertAction('acknowledge', alert)}>
+                                        <CheckCircle className="w-4 h-4 mr-2" />
+                                        Acknowledge
+                                      </DropdownMenuItem>
+                                    )}
+                                    <DropdownMenuItem onClick={() => handleAlertAction('resolve', alert)}>
+                                      <CheckCircle className="w-4 h-4 mr-2" />
+                                      Resolve
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleAlertAction('suppress', alert)}>
+                                      <EyeOff className="w-4 h-4 mr-2" />
+                                      Suppress
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="rules" className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {alertRules.map((rule) => (
+                      <Card key={rule.id} className="mcp-glass-card">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-2">
+                              {getTypeIcon(rule.type)}
+                              <CardTitle className="text-base">{rule.name}</CardTitle>
+                            </div>
+                            <Switch
+                              checked={rule.enabled}
+                              onCheckedChange={(checked) => {
+                                setAlertRules(prev => prev.map(r => 
+                                  r.id === rule.id ? { ...r, enabled: checked } : r
+                                ));
+                                toast({
+                                  title: rule.enabled ? "Rule Disabled" : "Rule Enabled",
+                                  description: `Rule "${rule.name}" has been ${rule.enabled ? 'disabled' : 'enabled'}.`,
+                                });
+                              }}
+                            />
+                          </div>
+                          <CardDescription className="text-sm">{rule.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Badge className={getSeverityColor(rule.severity)}>
+                              {rule.severity.toUpperCase()}
+                            </Badge>
+                            <MCPStatusBadge
+                              status={rule.enabled ? 'operational' : 'offline'}
+                              size="sm"
+                              showIcon={false}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <div className="text-xs text-muted-foreground">Conditions:</div>
+                            <div className="space-y-1">
+                              {rule.conditions.map((condition, index) => (
+                                <div key={index} className="text-xs bg-muted px-2 py-1 rounded">
+                                  {condition}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>Triggers: {rule.triggerCount}</span>
+                            <span>Created: {rule.createdAt}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNewAlertRuleDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleNewAlertRule}>
-              Create Alert Rule
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+                </TabsContent>
 
-      {/* New Notification Channel Dialog */}
-      <Dialog open={newChannelDialog} onOpenChange={setNewChannelDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <Bell className="w-5 h-5" />
-              <span>Create Notification Channel</span>
-            </DialogTitle>
-            <DialogDescription>
-              Set up a new notification channel for alerts
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Channel Name *</Label>
-                <Input 
-                  value={channelConfig.name}
-                  onChange={(e) => setChannelConfig({...channelConfig, name: e.target.value})}
-                  placeholder="e.g., Admin Email"
-                />
+                <TabsContent value="channels" className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {notificationChannels.map((channel) => (
+                      <Card key={channel.id} className="mcp-glass-card">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-2">
+                              {getChannelIcon(channel.type)}
+                              <CardTitle className="text-base">{channel.name}</CardTitle>
+                            </div>
+                            <Switch
+                              checked={channel.enabled}
+                              onCheckedChange={(checked) => {
+                                setNotificationChannels(prev => prev.map(c => 
+                                  c.id === channel.id ? { ...c, enabled: checked } : c
+                                ));
+                                toast({
+                                  title: channel.enabled ? "Channel Disabled" : "Channel Enabled",
+                                  description: `Channel "${channel.name}" has been ${channel.enabled ? 'disabled' : 'enabled'}.`,
+                                });
+                              }}
+                            />
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Badge variant="outline" className="capitalize">
+                              {channel.type}
+                            </Badge>
+                            <MCPStatusBadge
+                              status={channel.enabled ? 'operational' : 'offline'}
+                              size="sm"
+                              showIcon={false}
+                            />
+                          </div>
+                          <MCPProgressCard
+                            title="Success Rate"
+                            value={channel.successRate}
+                            max={100}
+                            unit="%"
+                            status={channel.successRate > 95 ? 'success' : channel.successRate > 80 ? 'warning' : 'error'}
+                            className="border-0 shadow-none bg-transparent"
+                          />
+                          {channel.lastUsed && (
+                            <div className="text-xs text-muted-foreground">
+                              Last used: {channel.lastUsed}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Alert Details Dialog */}
+        <Dialog open={alertDetailsDialog} onOpenChange={setAlertDetailsDialog}>
+          <DialogContent className="mcp-glass-card max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                <span>Alert Details - {selectedAlert?.ruleName}</span>
+              </DialogTitle>
+              <DialogDescription>
+                Detailed information about this alert
+              </DialogDescription>
+            </DialogHeader>
+            {selectedAlert && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Alert ID</Label>
+                    <Input value={selectedAlert.id} readOnly className="bg-slate-50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Rule Name</Label>
+                    <Input value={selectedAlert.ruleName} readOnly className="bg-slate-50" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Severity</Label>
+                    <Badge className={getSeverityColor(selectedAlert.severity)}>
+                      {selectedAlert.severity.toUpperCase()}
+                    </Badge>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Status</Label>
+                    <MCPStatusBadge
+                      status={selectedAlert.status === 'active' ? 'critical' : 
+                             selectedAlert.status === 'acknowledged' ? 'degraded' :
+                             selectedAlert.status === 'resolved' ? 'operational' : 'offline'}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Message</Label>
+                  <Textarea 
+                    value={selectedAlert.message}
+                    readOnly
+                    rows={3}
+                    className="bg-slate-50"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Source</Label>
+                    <Input value={selectedAlert.source} readOnly className="bg-slate-50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Timestamp</Label>
+                    <Input value={selectedAlert.timestamp} readOnly className="bg-slate-50" />
+                  </div>
+                </div>
+                {selectedAlert.acknowledgedBy && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Acknowledged By</Label>
+                      <Input value={selectedAlert.acknowledgedBy} readOnly className="bg-slate-50" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Acknowledged At</Label>
+                      <Input value={selectedAlert.acknowledgedAt} readOnly className="bg-slate-50" />
+                    </div>
+                  </div>
+                )}
+                {selectedAlert.resolvedBy && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Resolved By</Label>
+                      <Input value={selectedAlert.resolvedBy} readOnly className="bg-slate-50" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Resolved At</Label>
+                      <Input value={selectedAlert.resolvedAt} readOnly className="bg-slate-50" />
+                    </div>
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <Label>Tags</Label>
+                  <div className="flex space-x-2">
+                    {selectedAlert.tags.map((tag) => (
+                      <Badge key={tag} variant="outline">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Channel Type *</Label>
-                <Select 
-                  value={channelConfig.type}
-                  onValueChange={(value: any) => setChannelConfig({...channelConfig, type: value})}
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setAlertDetailsDialog(false)}>
+                Close
+              </Button>
+              {selectedAlert && selectedAlert.status === 'active' && (
+                <MCPActionButton
+                  onClick={() => {
+                    handleAlertAction('acknowledge', selectedAlert);
+                    setAlertDetailsDialog(false);
+                  }}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="sms">SMS</SelectItem>
-                    <SelectItem value="slack">Slack</SelectItem>
-                    <SelectItem value="webhook">Webhook</SelectItem>
-                    <SelectItem value="teams">Microsoft Teams</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Configuration</Label>
-              <Textarea 
-                placeholder="Enter channel configuration (JSON format)"
-                rows={4}
-                onChange={(e) => {
-                  try {
-                    const config = JSON.parse(e.target.value);
-                    setChannelConfig({...channelConfig, config});
-                  } catch (error) {
-                    // Handle invalid JSON
-                  }
-                }}
-              />
-              <p className="text-xs text-slate-500">
-                Example: {'{"email": "admin@company.com"}'} or {'{"webhook": "https://hooks.slack.com/..."}'}
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNewChannelDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleNewChannel}>
-              Create Channel
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+                  Acknowledge Alert
+                </MCPActionButton>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-      {/* Alert Details Dialog */}
-      <Dialog open={alertDetailsDialog} onOpenChange={setAlertDetailsDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <AlertTriangle className="w-5 h-5" />
-              <span>Alert Details - {selectedAlert?.title}</span>
-            </DialogTitle>
-            <DialogDescription>
-              Detailed information about this alert
-            </DialogDescription>
-          </DialogHeader>
-          {selectedAlert && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Alert ID</Label>
-                  <Input value={selectedAlert.id} readOnly className="bg-slate-50" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Type</Label>
-                  <Input value={selectedAlert.type} readOnly className="bg-slate-50" />
-                </div>
+        {/* New Rule Dialog */}
+        <Dialog open={newRuleDialog} onOpenChange={setNewRuleDialog}>
+          <DialogContent className="mcp-glass-card">
+            <DialogHeader>
+              <DialogTitle>Create New Alert Rule</DialogTitle>
+              <DialogDescription>
+                Configure a new alert rule to monitor system conditions
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Rule Name</Label>
+                <Input placeholder="Enter rule name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea placeholder="Describe what this rule monitors" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Severity</Label>
-                  <Input value={selectedAlert.severity} readOnly className="bg-slate-50" />
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select severity" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Status</Label>
-                  <Input value={selectedAlert.status} readOnly className="bg-slate-50" />
+                  <Label>Type</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="system">System</SelectItem>
+                      <SelectItem value="performance">Performance</SelectItem>
+                      <SelectItem value="security">Security</SelectItem>
+                      <SelectItem value="business">Business</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Message</Label>
-                <Textarea 
-                  value={selectedAlert.message}
-                  readOnly
-                  rows={3}
-                  className="bg-slate-50"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Tags</Label>
-                <div className="flex space-x-2">
-                  {selectedAlert.tags.map((tag) => (
-                    <Badge key={tag} variant="outline">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Source</Label>
-                  <Input value={selectedAlert.source} readOnly className="bg-slate-50" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Priority</Label>
-                  <Input value={`${selectedAlert.priority}/10`} readOnly className="bg-slate-50" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Created</Label>
-                  <Input value={selectedAlert.timestamp} readOnly className="bg-slate-50" />
-                </div>
-                {selectedAlert.acknowledgedAt && (
-                  <div className="space-y-2">
-                    <Label>Acknowledged</Label>
-                    <Input value={selectedAlert.acknowledgedAt} readOnly className="bg-slate-50" />
-                  </div>
-                )}
               </div>
             </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAlertDetailsDialog(false)}>
-              Close
-            </Button>
-            {selectedAlert?.status === 'active' && (
-              <>
-                <Button variant="outline" onClick={() => {
-                  handleAcknowledgeAlert(selectedAlert.id);
-                  setAlertDetailsDialog(false);
-                }}>
-                  Acknowledge
-                </Button>
-                <Button onClick={() => {
-                  handleResolveAlert(selectedAlert.id);
-                  setAlertDetailsDialog(false);
-                }}>
-                  Resolve
-                </Button>
-              </>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setNewRuleDialog(false)}>
+                Cancel
+              </Button>
+              <MCPActionButton onClick={() => {
+                setNewRuleDialog(false);
+                toast({ title: "Rule Created", description: "New alert rule has been created." });
+              }}>
+                Create Rule
+              </MCPActionButton>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* New Channel Dialog */}
+        <Dialog open={newChannelDialog} onOpenChange={setNewChannelDialog}>
+          <DialogContent className="mcp-glass-card">
+            <DialogHeader>
+              <DialogTitle>Create New Notification Channel</DialogTitle>
+              <DialogDescription>
+                Configure a new notification channel for alert delivery
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Channel Name</Label>
+                <Input placeholder="Enter channel name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select channel type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="slack">Slack</SelectItem>
+                    <SelectItem value="webhook">Webhook</SelectItem>
+                    <SelectItem value="sms">SMS</SelectItem>
+                    <SelectItem value="pagerduty">PagerDuty</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Configuration</Label>
+                <Textarea 
+                  placeholder="Enter configuration (JSON format)"
+                  rows={4}
+                />
+                <p className="text-xs text-slate-500">
+                  Example: {'{"email": "admin@company.com"}'} or {'{"webhook": "https://hooks.slack.com/..."}'}
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setNewChannelDialog(false)}>
+                Cancel
+              </Button>
+              <MCPActionButton onClick={() => {
+                setNewChannelDialog(false);
+                toast({ title: "Channel Created", description: "New notification channel has been created." });
+              }}>
+                Create Channel
+              </MCPActionButton>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </TooltipProvider>
   );
 };
 
