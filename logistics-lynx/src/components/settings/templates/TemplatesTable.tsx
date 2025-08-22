@@ -11,9 +11,51 @@ import { getStatusColor } from './utils';
 
 interface TemplatesTableProps {
   templates: Template[];
+  onPreview?: (template: Template) => void;
+  onEdit?: (template: Template) => void;
+  onDuplicate?: (template: Template) => void;
+  onDelete?: (templateId: string) => void;
 }
 
-const TemplatesTable: React.FC<TemplatesTableProps> = ({ templates }) => {
+const TemplatesTable: React.FC<TemplatesTableProps> = ({ 
+  templates, 
+  onPreview, 
+  onEdit, 
+  onDuplicate, 
+  onDelete 
+}) => {
+  const handlePreview = (template: Template) => {
+    if (onPreview) {
+      onPreview(template);
+    } else {
+      console.log('Preview template:', template);
+    }
+  };
+
+  const handleEdit = (template: Template) => {
+    if (onEdit) {
+      onEdit(template);
+    } else {
+      console.log('Edit template:', template);
+    }
+  };
+
+  const handleDuplicate = (template: Template) => {
+    if (onDuplicate) {
+      onDuplicate(template);
+    } else {
+      console.log('Duplicate template:', template);
+    }
+  };
+
+  const handleDelete = (templateId: string) => {
+    if (onDelete) {
+      onDelete(templateId);
+    } else {
+      console.log('Delete template:', templateId);
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -49,19 +91,22 @@ const TemplatesTable: React.FC<TemplatesTableProps> = ({ templates }) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handlePreview(template)}>
                       <Eye className="mr-2 h-4 w-4" />
                       Preview
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleEdit(template)}>
                       <Edit className="mr-2 h-4 w-4" />
                       Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDuplicate(template)}>
                       <Copy className="mr-2 h-4 w-4" />
                       Duplicate
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600">
+                    <DropdownMenuItem 
+                      onClick={() => handleDelete(template.id)}
+                      className="text-red-600"
+                    >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>

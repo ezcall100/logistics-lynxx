@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -11,9 +11,51 @@ import { getStatusColor } from './utils';
 
 interface DocumentsTableProps {
   documents: Document[];
+  onView?: (document: Document) => void;
+  onEdit?: (document: Document) => void;
+  onDelete?: (documentId: string) => void;
+  onDownload?: (document: Document) => void;
 }
 
-const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
+const DocumentsTable: React.FC<DocumentsTableProps> = ({ 
+  documents, 
+  onView, 
+  onEdit, 
+  onDelete, 
+  onDownload 
+}) => {
+  const handleView = (document: Document) => {
+    if (onView) {
+      onView(document);
+    } else {
+      console.log('View document:', document);
+    }
+  };
+
+  const handleEdit = (document: Document) => {
+    if (onEdit) {
+      onEdit(document);
+    } else {
+      console.log('Edit document:', document);
+    }
+  };
+
+  const handleDelete = (documentId: string) => {
+    if (onDelete) {
+      onDelete(documentId);
+    } else {
+      console.log('Delete document:', documentId);
+    }
+  };
+
+  const handleDownload = (document: Document) => {
+    if (onDownload) {
+      onDownload(document);
+    } else {
+      console.log('Download document:', document);
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -51,19 +93,22 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleView(document)}>
                       <Eye className="mr-2 h-4 w-4" />
                       View
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDownload(document)}>
                       <Download className="mr-2 h-4 w-4" />
                       Download
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleEdit(document)}>
                       <Edit className="mr-2 h-4 w-4" />
                       Edit Details
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600">
+                    <DropdownMenuItem 
+                      onClick={() => handleDelete(document.id)}
+                      className="text-red-600"
+                    >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>

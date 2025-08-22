@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,6 +28,7 @@ export default function TerminalsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const filteredTerminals = terminals.filter(terminal => {
     const matchesSearch = terminal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -71,6 +73,30 @@ export default function TerminalsPage() {
         {type.charAt(0).toUpperCase() + type.slice(1)}
       </Badge>
     );
+  };
+
+  const handleViewTerminal = (terminal: Terminal) => {
+    setSelectedTerminal(terminal);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditTerminal = (terminal: Terminal) => {
+    setSelectedTerminal(terminal);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteTerminal = (terminal: Terminal) => {
+    setSelectedTerminal(terminal);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteTerminal = () => {
+    if (selectedTerminal) {
+      console.log('Deleting terminal:', selectedTerminal);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedTerminal(null);
+    }
   };
 
   const TerminalForm = ({ terminal, onClose }: { terminal?: Terminal; onClose: () => void }) => {
@@ -527,22 +553,19 @@ export default function TerminalsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedTerminal(terminal);
-                            setIsViewDialogOpen(true);
-                          }}>
+                          <DropdownMenuItem onClick={() => handleViewTerminal(terminal)}>
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedTerminal(terminal);
-                            setIsEditDialogOpen(true);
-                          }}>
+                          <DropdownMenuItem onClick={() => handleEditTerminal(terminal)}>
                             <Edit className="h-4 w-4 mr-2" />
                             Edit Terminal
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteTerminal(terminal)}
+                            className="text-red-600"
+                          >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete Terminal
                           </DropdownMenuItem>
@@ -639,6 +662,24 @@ export default function TerminalsPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Terminal</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedTerminal?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteTerminal} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,6 +28,7 @@ export default function LocationsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const filteredLocations = locations.filter(location => {
     const matchesSearch = location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,6 +72,30 @@ export default function LocationsPage() {
         {type.charAt(0).toUpperCase() + type.slice(1)}
       </Badge>
     );
+  };
+
+  const handleViewLocation = (location: Location) => {
+    setSelectedLocation(location);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditLocation = (location: Location) => {
+    setSelectedLocation(location);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteLocation = (location: Location) => {
+    setSelectedLocation(location);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteLocation = () => {
+    if (selectedLocation) {
+      console.log('Deleting location:', selectedLocation);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedLocation(null);
+    }
   };
 
   const LocationForm = ({ location, onClose }: { location?: Location; onClose: () => void }) => {
@@ -521,22 +547,19 @@ export default function LocationsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedLocation(location);
-                            setIsViewDialogOpen(true);
-                          }}>
+                          <DropdownMenuItem onClick={() => handleViewLocation(location)}>
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedLocation(location);
-                            setIsEditDialogOpen(true);
-                          }}>
+                          <DropdownMenuItem onClick={() => handleEditLocation(location)}>
                             <Edit className="h-4 w-4 mr-2" />
                             Edit Location
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteLocation(location)}
+                            className="text-red-600"
+                          >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete Location
                           </DropdownMenuItem>
@@ -630,6 +653,24 @@ export default function LocationsPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Location</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedLocation?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteLocation} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

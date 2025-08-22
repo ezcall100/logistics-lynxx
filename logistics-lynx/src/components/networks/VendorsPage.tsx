@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,6 +28,7 @@ export default function VendorsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const filteredVendors = vendors.filter(vendor => {
     const matchesSearch = vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -71,6 +73,30 @@ export default function VendorsPage() {
         {type.charAt(0).toUpperCase() + type.slice(1)}
       </Badge>
     );
+  };
+
+  const handleViewVendor = (vendor: Vendor) => {
+    setSelectedVendor(vendor);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditVendor = (vendor: Vendor) => {
+    setSelectedVendor(vendor);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteVendor = (vendor: Vendor) => {
+    setSelectedVendor(vendor);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteVendor = () => {
+    if (selectedVendor) {
+      console.log('Deleting vendor:', selectedVendor);
+      // Implement actual delete logic here
+      setIsDeleteDialogOpen(false);
+      setSelectedVendor(null);
+    }
   };
 
   const VendorForm = ({ vendor, onClose }: { vendor?: Vendor; onClose: () => void }) => {
@@ -485,22 +511,19 @@ export default function VendorsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedVendor(vendor);
-                            setIsViewDialogOpen(true);
-                          }}>
+                          <DropdownMenuItem onClick={() => handleViewVendor(vendor)}>
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedVendor(vendor);
-                            setIsEditDialogOpen(true);
-                          }}>
+                          <DropdownMenuItem onClick={() => handleEditVendor(vendor)}>
                             <Edit className="h-4 w-4 mr-2" />
                             Edit Vendor
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem 
+                            onClick={() => handleDeleteVendor(vendor)}
+                            className="text-red-600"
+                          >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete Vendor
                           </DropdownMenuItem>
@@ -585,6 +608,24 @@ export default function VendorsPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Vendor</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedVendor?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteVendor} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
