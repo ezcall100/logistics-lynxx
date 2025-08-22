@@ -101,6 +101,7 @@ import PortalAnalyticsPage from './pages/PortalAnalyticsPage';
 import PortalSecurityPage from './pages/PortalSecurityPage';
 import PortalBackupPage from './pages/PortalBackupPage';
 import PortalUsersPage from './pages/PortalUsersPage';
+import PortalConfigurationsPage from './pages/PortalConfigurationsPage';
 import AnalyticsReportsPage from './pages/AnalyticsReportsPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
@@ -1286,6 +1287,7 @@ const EnhancedSuperAdminPortal = () => {
                   <Route path="/portals/security" element={<PortalSecurityPage />} />
                   <Route path="/portals/backup" element={<PortalBackupPage />} />
                   <Route path="/portals/users" element={<PortalUsersPage />} />
+                  <Route path="/portals/configurations" element={<PortalConfigurationsPage />} />
                   <Route path="/portals" element={<PortalOverviewPage />} />
                   <Route path="/analytics/*" element={<AnalyticsReportsPage />} />
                   {/* System Control Pages */}

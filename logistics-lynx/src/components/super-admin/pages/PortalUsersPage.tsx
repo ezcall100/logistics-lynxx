@@ -3,57 +3,56 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Users, UserPlus, UserMinus, UserCheck, UserX,
-  Search, Filter, Download, Upload, RefreshCw,
-  Mail, Phone, Calendar, Clock, Activity,
-  Shield, Lock, Unlock, Eye, EyeOff, MoreHorizontal,
-  TrendingUp, TrendingDown, Minus, Target
+  Users, UserPlus, UserX, Shield, Lock, Unlock, Eye, EyeOff,
+  Search, Filter, Download, Upload, RefreshCw, Edit, Trash2,
+  Mail, Phone, Calendar, MapPin, Building, Globe, Settings,
+  AlertTriangle, CheckCircle, Clock, MoreHorizontal
 } from 'lucide-react';
 
 interface PortalUser {
   id: string;
   portalId: string;
   portalName: string;
-  name: string;
   email: string;
-  role: 'admin' | 'user' | 'viewer' | 'manager';
-  status: 'active' | 'inactive' | 'suspended' | 'pending';
+  firstName: string;
+  lastName: string;
+  role: 'admin' | 'manager' | 'user' | 'viewer';
+  status: 'active' | 'inactive' | 'pending' | 'suspended';
   lastLogin: string;
   loginCount: number;
   permissions: string[];
-  createdAt: string;
-  department?: string;
+  department: string;
   phone?: string;
   location?: string;
-  avatar?: string;
+  createdAt: string;
+  lastModified: string;
 }
 
-interface UserAnalytics {
-  portalId: string;
-  portalName: string;
-  totalUsers: number;
-  activeUsers: number;
-  newUsers: number;
-  inactiveUsers: number;
-  suspendedUsers: number;
-  avgLoginFrequency: number;
-  userGrowth: number;
-  topRoles: { role: string; count: number }[];
+interface PortalRole {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  userCount: number;
+  isDefault: boolean;
 }
 
 const PortalUsersPage = () => {
   const [users, setUsers] = useState<PortalUser[]>([]);
-  const [analytics, setAnalytics] = useState<UserAnalytics[]>([]);
+  const [roles, setRoles] = useState<PortalRole[]>([]);
+  const [selectedPortal, setSelectedPortal] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterRole, setFilterRole] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [selectedPortal, setSelectedPortal] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('users');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -63,146 +62,119 @@ const PortalUsersPage = () => {
   const loadPortalUsers = async () => {
     setLoading(true);
     try {
-      // Mock users data
+      // Mock portal users data
       const mockUsers: PortalUser[] = [
         {
           id: 'user-001',
           portalId: 'portal-001',
           portalName: 'Carrier Portal',
-          name: 'John Smith',
-          email: 'john.smith@carrier.com',
+          email: 'john.doe@carrier.com',
+          firstName: 'John',
+          lastName: 'Doe',
           role: 'admin',
           status: 'active',
-          lastLogin: '2024-01-15T10:30:00Z',
-          loginCount: 45,
-          permissions: ['read', 'write', 'admin'],
-          createdAt: '2023-06-15T00:00:00Z',
+          lastLogin: '2024-01-15T14:30:00Z',
+          loginCount: 156,
+          permissions: ['read', 'write', 'delete', 'admin'],
           department: 'Operations',
           phone: '+1-555-0123',
-          location: 'New York, US'
+          location: 'New York, NY',
+          createdAt: '2023-06-15T10:00:00Z',
+          lastModified: '2024-01-15T14:30:00Z'
         },
         {
           id: 'user-002',
           portalId: 'portal-001',
           portalName: 'Carrier Portal',
-          name: 'Sarah Johnson',
-          email: 'sarah.johnson@carrier.com',
+          email: 'jane.smith@carrier.com',
+          firstName: 'Jane',
+          lastName: 'Smith',
           role: 'manager',
           status: 'active',
-          lastLogin: '2024-01-15T09:15:00Z',
-          loginCount: 32,
+          lastLogin: '2024-01-15T12:15:00Z',
+          loginCount: 89,
           permissions: ['read', 'write'],
-          createdAt: '2023-07-20T00:00:00Z',
-          department: 'Logistics',
+          department: 'Customer Service',
           phone: '+1-555-0124',
-          location: 'Chicago, US'
+          location: 'Chicago, IL',
+          createdAt: '2023-08-20T09:00:00Z',
+          lastModified: '2024-01-15T12:15:00Z'
         },
         {
           id: 'user-003',
           portalId: 'portal-002',
-          portalName: 'Broker Portal',
-          name: 'Mike Davis',
-          email: 'mike.davis@broker.com',
-          role: 'admin',
+          portalName: 'Shipper Portal',
+          email: 'mike.wilson@shipper.com',
+          firstName: 'Mike',
+          lastName: 'Wilson',
+          role: 'user',
           status: 'active',
-          lastLogin: '2024-01-15T08:45:00Z',
-          loginCount: 28,
-          permissions: ['read', 'write', 'admin'],
-          createdAt: '2023-08-10T00:00:00Z',
-          department: 'Sales',
+          lastLogin: '2024-01-15T11:45:00Z',
+          loginCount: 234,
+          permissions: ['read'],
+          department: 'Logistics',
           phone: '+1-555-0125',
-          location: 'Los Angeles, US'
+          location: 'Los Angeles, CA',
+          createdAt: '2023-09-10T14:00:00Z',
+          lastModified: '2024-01-15T11:45:00Z'
         },
         {
           id: 'user-004',
           portalId: 'portal-002',
-          portalName: 'Broker Portal',
-          name: 'Lisa Wilson',
-          email: 'lisa.wilson@broker.com',
-          role: 'user',
-          status: 'inactive',
-          lastLogin: '2024-01-10T14:20:00Z',
-          loginCount: 15,
-          permissions: ['read'],
-          createdAt: '2023-09-05T00:00:00Z',
-          department: 'Customer Service',
-          phone: '+1-555-0126',
-          location: 'Miami, US'
-        },
-        {
-          id: 'user-005',
-          portalId: 'portal-003',
           portalName: 'Shipper Portal',
-          name: 'David Brown',
-          email: 'david.brown@shipper.com',
-          role: 'manager',
-          status: 'active',
-          lastLogin: '2024-01-15T11:00:00Z',
-          loginCount: 67,
-          permissions: ['read', 'write'],
-          createdAt: '2023-05-12T00:00:00Z',
-          department: 'Supply Chain',
-          phone: '+1-555-0127',
-          location: 'Seattle, US'
+          email: 'sarah.jones@shipper.com',
+          firstName: 'Sarah',
+          lastName: 'Jones',
+          role: 'viewer',
+          status: 'pending',
+          lastLogin: '2024-01-14T16:20:00Z',
+          loginCount: 12,
+          permissions: ['read'],
+          department: 'Finance',
+          phone: '+1-555-0126',
+          location: 'Houston, TX',
+          createdAt: '2024-01-10T08:00:00Z',
+          lastModified: '2024-01-14T16:20:00Z'
         }
       ];
 
-      const mockAnalytics: UserAnalytics[] = [
+      const mockRoles: PortalRole[] = [
         {
-          portalId: 'portal-001',
-          portalName: 'Carrier Portal',
-          totalUsers: 1250,
-          activeUsers: 890,
-          newUsers: 45,
-          inactiveUsers: 280,
-          suspendedUsers: 35,
-          avgLoginFrequency: 3.2,
-          userGrowth: 12.5,
-          topRoles: [
-            { role: 'user', count: 800 },
-            { role: 'manager', count: 300 },
-            { role: 'admin', count: 150 }
-          ]
+          id: 'role-001',
+          name: 'Admin',
+          description: 'Full access to all portal features and user management',
+          permissions: ['read', 'write', 'delete', 'admin', 'user_management'],
+          userCount: 3,
+          isDefault: false
         },
         {
-          portalId: 'portal-002',
-          portalName: 'Broker Portal',
-          totalUsers: 890,
-          activeUsers: 650,
-          newUsers: 28,
-          inactiveUsers: 180,
-          suspendedUsers: 32,
-          avgLoginFrequency: 4.1,
-          userGrowth: 8.7,
-          topRoles: [
-            { role: 'user', count: 600 },
-            { role: 'manager', count: 200 },
-            { role: 'admin', count: 90 }
-          ]
+          id: 'role-002',
+          name: 'Manager',
+          description: 'Can manage operations and view reports',
+          permissions: ['read', 'write', 'reports'],
+          userCount: 8,
+          isDefault: false
         },
         {
-          portalId: 'portal-003',
-          portalName: 'Shipper Portal',
-          totalUsers: 2100,
-          activeUsers: 1650,
-          newUsers: 78,
-          inactiveUsers: 320,
-          suspendedUsers: 52,
-          avgLoginFrequency: 2.8,
-          userGrowth: 15.2,
-          topRoles: [
-            { role: 'user', count: 1400 },
-            { role: 'manager', count: 500 },
-            { role: 'admin', count: 200 }
-          ]
+          id: 'role-003',
+          name: 'User',
+          description: 'Standard user with basic access',
+          permissions: ['read', 'write'],
+          userCount: 45,
+          isDefault: true
+        },
+        {
+          id: 'role-004',
+          name: 'Viewer',
+          description: 'Read-only access to portal data',
+          permissions: ['read'],
+          userCount: 12,
+          isDefault: false
         }
       ];
 
       setUsers(mockUsers);
-      setAnalytics(mockAnalytics);
-      if (mockAnalytics.length > 0) {
-        setSelectedPortal(mockAnalytics[0].portalId);
-      }
+      setRoles(mockRoles);
     } catch (error) {
       toast({
         title: "Error",
@@ -212,6 +184,34 @@ const PortalUsersPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddUser = () => {
+    toast({
+      title: "Add User",
+      description: "Add user functionality would be implemented here"
+    });
+  };
+
+  const handleEditUser = (userId: string) => {
+    toast({
+      title: "Edit User",
+      description: `Edit user ${userId} functionality would be implemented here`
+    });
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    toast({
+      title: "Delete User",
+      description: `Delete user ${userId} functionality would be implemented here`
+    });
+  };
+
+  const handleExportUsers = () => {
+    toast({
+      title: "Export Users",
+      description: "User data export functionality would be implemented here"
+    });
   };
 
   const getRoleColor = (role: string) => {
@@ -228,22 +228,24 @@ const PortalUsersPage = () => {
     switch (status) {
       case 'active': return 'bg-green-500';
       case 'inactive': return 'bg-gray-500';
-      case 'suspended': return 'bg-red-500';
       case 'pending': return 'bg-yellow-500';
+      case 'suspended': return 'bg-red-500';
       default: return 'bg-gray-500';
     }
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = filterRole === 'all' || user.role === filterRole;
-    const matchesStatus = filterStatus === 'all' || user.status === filterStatus;
-    const matchesPortal = !selectedPortal || user.portalId === selectedPortal;
-    return matchesSearch && matchesRole && matchesStatus && matchesPortal;
+    const matchesSearch = user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPortal = selectedPortal === 'all' || user.portalId === selectedPortal;
+    const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
+    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+    
+    return matchesSearch && matchesPortal && matchesStatus && matchesRole;
   });
 
-  const selectedPortalAnalytics = analytics.find(a => a.portalId === selectedPortal);
+  const portals = Array.from(new Set(users.map(user => ({ id: user.portalId, name: user.portalName }))));
 
   if (loading) {
     return (
@@ -263,263 +265,248 @@ const PortalUsersPage = () => {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Portal Users</h1>
           <p className="text-muted-foreground">
-            User management and access control for all portals
+            Manage users, roles, and permissions across all portals
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleExportUsers}>
             <Download className="w-4 h-4 mr-2" />
             Export Users
           </Button>
-          <Button>
+          <Button onClick={handleAddUser}>
             <UserPlus className="w-4 h-4 mr-2" />
             Add User
-          </Button>
-          <Button onClick={loadPortalUsers}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
           </Button>
         </div>
       </div>
 
-      {/* Portal Selection */}
-      <div className="flex gap-2">
-        {analytics.map((portal) => (
-          <Button
-            key={portal.portalId}
-            variant={selectedPortal === portal.portalId ? "default" : "outline"}
-            onClick={() => setSelectedPortal(portal.portalId)}
-          >
-            {portal.portalName}
-          </Button>
-        ))}
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
+          <TabsTrigger value="roles">Roles ({roles.length})</TabsTrigger>
+        </TabsList>
 
-      {selectedPortalAnalytics && (
-        <>
-          {/* User Analytics */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{selectedPortalAnalytics.totalUsers.toLocaleString()}</div>
-                <div className="flex items-center text-xs text-muted-foreground">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +{selectedPortalAnalytics.userGrowth}% from last month
+        <TabsContent value="users" className="space-y-6">
+          {/* Filters */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Filters</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-4">
+                <div className="space-y-2">
+                  <Label htmlFor="search">Search Users</Label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="search"
+                      placeholder="Search by name or email..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-                <UserCheck className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{selectedPortalAnalytics.activeUsers.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  {((selectedPortalAnalytics.activeUsers / selectedPortalAnalytics.totalUsers) * 100).toFixed(1)}% of total
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">New Users</CardTitle>
-                <UserPlus className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">+{selectedPortalAnalytics.newUsers}</div>
-                <p className="text-xs text-muted-foreground">
-                  This month
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Login Frequency</CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{selectedPortalAnalytics.avgLoginFrequency}</div>
-                <p className="text-xs text-muted-foreground">
-                  Logins per week
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* User Management */}
-          <Tabs defaultValue="users" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="users">User List</TabsTrigger>
-              <TabsTrigger value="roles">Role Distribution</TabsTrigger>
-              <TabsTrigger value="activity">User Activity</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="users" className="space-y-4">
-              {/* Filters */}
-              <div className="flex gap-4 items-center">
-                <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    placeholder="Search users..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <Select value={filterRole} onValueChange={setFilterRole}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Filter by role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Roles</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="viewer">Viewer</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={filterStatus} onValueChange={setFilterStatus}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="suspended">Suspended</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Users Table */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Users</CardTitle>
-                  <CardDescription>
-                    {filteredUsers.length} users found
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>User</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Last Login</TableHead>
-                        <TableHead>Login Count</TableHead>
-                        <TableHead>Department</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredUsers.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell>
-                            <div>
-                              <div className="font-medium">{user.name}</div>
-                              <div className="text-sm text-muted-foreground">{user.email}</div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={`${getRoleColor(user.role)} text-white capitalize`}>
-                              {user.role}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={`${getStatusColor(user.status)} text-white`}>
-                              {user.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-sm">
-                              {new Date(user.lastLogin).toLocaleDateString()}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {new Date(user.lastLogin).toLocaleTimeString()}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-sm font-medium">{user.loginCount}</div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-sm">{user.department || 'N/A'}</div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Button variant="ghost" size="sm">
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
+                <div className="space-y-2">
+                  <Label htmlFor="portal">Portal</Label>
+                  <Select value={selectedPortal} onValueChange={setSelectedPortal}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select portal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Portals</SelectItem>
+                      {portals.map((portal) => (
+                        <SelectItem key={portal.id} value={portal.id}>
+                          {portal.name}
+                        </SelectItem>
                       ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="suspended">Suspended</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select value={roleFilter} onValueChange={setRoleFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Roles</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="viewer">Viewer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            <TabsContent value="roles" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Role Distribution</CardTitle>
-                  <CardDescription>
-                    User roles across {selectedPortalAnalytics.portalName}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {selectedPortalAnalytics.topRoles.map((roleData) => (
-                      <div key={roleData.role} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <Badge className={`${getRoleColor(roleData.role)} text-white capitalize`}>
-                            {roleData.role}
-                          </Badge>
-                          <span className="font-medium">{roleData.count} users</span>
+          {/* Users Table */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Users ({filteredUsers.length})</CardTitle>
+              <CardDescription>
+                Manage user access and permissions across portals
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>User</TableHead>
+                    <TableHead>Portal</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Last Login</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Users className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <div className="font-medium">{user.firstName} {user.lastName}</div>
+                            <div className="text-sm text-muted-foreground">{user.email}</div>
+                          </div>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {((roleData.count / selectedPortalAnalytics.totalUsers) * 100).toFixed(1)}%
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Globe className="h-4 w-4 text-muted-foreground" />
+                          <span>{user.portalName}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getRoleColor(user.role)}>
+                          {user.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={getStatusColor(user.status)}>
+                          {user.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div>{new Date(user.lastLogin).toLocaleDateString()}</div>
+                          <div className="text-muted-foreground">
+                            {new Date(user.lastLogin).toLocaleTimeString()}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Building className="h-4 w-4 text-muted-foreground" />
+                          <span>{user.department}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditUser(user.id)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteUser(user.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="roles" className="space-y-6">
+          {/* Roles Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Roles & Permissions</CardTitle>
+              <CardDescription>
+                Manage user roles and their associated permissions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {roles.map((role) => (
+                  <Card key={role.id}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{role.name}</CardTitle>
+                        <Badge variant={role.isDefault ? "default" : "outline"}>
+                          {role.isDefault ? 'Default' : 'Custom'}
+                        </Badge>
+                      </div>
+                      <CardDescription>{role.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between text-sm">
+                          <span>Users:</span>
+                          <Badge variant="outline">{role.userCount}</Badge>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm font-medium">Permissions:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {role.permissions.map((permission) => (
+                              <Badge key={permission} variant="secondary" className="text-xs">
+                                {permission}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex gap-2 pt-2">
+                          <Button variant="outline" size="sm" className="flex-1">
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          {!role.isDefault && (
+                            <Button variant="outline" size="sm" className="flex-1">
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              Delete
+                            </Button>
+                          )}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="activity" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>User Activity</CardTitle>
-                  <CardDescription>
-                    Recent user activity and login patterns
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-center justify-center bg-muted rounded">
-                    <div className="text-center">
-                      <Activity className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-muted-foreground">User Activity Chart</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </>
-      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
