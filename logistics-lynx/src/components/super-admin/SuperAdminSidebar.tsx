@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { 
   ChevronDown, 
   ChevronRight, 
@@ -53,13 +53,35 @@ import {
   BookOpen,
   Sun,
   Moon,
-  Brain
+  Brain,
+  Shield,
+  Database,
+  Globe,
+  Zap,
+  Palette,
+  Command,
+  Sparkles,
+  Crown,
+  Home,
+  Search,
+  Bell,
+  Plus,
+  ExternalLink,
+  ChevronLeft,
+  Menu,
+  X,
+  Map,
+  Radio
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface SuperAdminSidebarProps {
   isOpen: boolean;
@@ -71,138 +93,128 @@ interface MenuItem {
   icon: React.ComponentType<{ className?: string }>;
   path?: string;
   children?: MenuItem[];
+  badge?: string;
+  badgeVariant?: 'default' | 'secondary' | 'destructive' | 'outline';
+  description?: string;
+  external?: boolean;
 }
 
 const menuItems: MenuItem[] = [
   {
     title: 'Dashboard',
     icon: LayoutDashboard,
-    path: '/super-admin'
+    path: '/super-admin',
+    description: 'Overview and analytics'
   },
   {
-    title: 'CRM',
+    title: 'CRM Management',
     icon: Users2,
+    description: 'Customer relationship management',
     children: [
       { title: 'Overview', icon: LayoutDashboard, path: '/super-admin/crm/overview' },
-      { title: 'Email', icon: Mail, path: '/super-admin/crm/email' },
       { title: 'Leads', icon: UserPlus, path: '/super-admin/crm/leads' },
       { title: 'Contacts', icon: Contact, path: '/super-admin/crm/contacts' },
+      { title: 'Opportunities', icon: Target, path: '/super-admin/crm/opportunities' },
+      { title: 'Email Campaigns', icon: Mail, path: '/super-admin/crm/email' },
       { title: 'Projects', icon: FolderOpen, path: '/super-admin/crm/projects' },
-      { title: 'Calendar', icon: Calendar, path: '/super-admin/crm/calendar' },
-      { title: 'Opportunities', icon: Target, path: '/super-admin/crm/opportunities' }
+      { title: 'Calendar', icon: Calendar, path: '/super-admin/crm/calendar' }
     ]
   },
   {
-    title: 'Tickets',
+    title: 'User Management',
+    icon: Users,
+    description: 'Manage users and permissions',
+    children: [
+      { title: 'All Users', icon: Users2, path: '/super-admin/users' },
+      { title: 'Roles & Permissions', icon: Shield, path: '/super-admin/roles' },
+      { title: 'User Groups', icon: UserCheck, path: '/super-admin/groups' },
+      { title: 'Access Control', icon: Key, path: '/super-admin/access-control' }
+    ]
+  },
+  {
+    title: 'System Administration',
+    icon: Settings,
+    description: 'System configuration and settings',
+    children: [
+      { title: 'Database Admin', icon: Database, path: '/super-admin/database' },
+      { title: 'Network Config', icon: Network, path: '/super-admin/network' },
+      { title: 'Security Center', icon: Shield, path: '/super-admin/security' },
+      { title: 'System Health', icon: Activity, path: '/super-admin/health' },
+      { title: 'Backup & Recovery', icon: RotateCcw, path: '/super-admin/backup' }
+    ]
+  },
+  {
+    title: 'AI & Automation',
+    icon: Brain,
+    description: 'AI agents and automation',
+    children: [
+      { title: 'Agent Control', icon: Cpu, path: '/super-admin/ai-dashboard' },
+      { title: 'MCP Control', icon: Command, path: '/super-admin/mcp-control' },
+      { title: 'Autonomous Tasks', icon: Bot, path: '/super-admin/autonomous' },
+      { title: 'AI Analytics', icon: BarChart3, path: '/super-admin/ai-analytics' }
+    ]
+  },
+  {
+    title: 'Reports & Analytics',
+    icon: BarChart3,
+    description: 'Reports and data analytics',
+    children: [
+      { title: 'System Reports', icon: FileBarChart, path: '/super-admin/reports' },
+      { title: 'User Analytics', icon: TrendingUp, path: '/super-admin/analytics/users' },
+      { title: 'Performance Metrics', icon: Activity, path: '/super-admin/analytics/performance' },
+      { title: 'Custom Reports', icon: FileSpreadsheet, path: '/super-admin/reports/custom' }
+    ]
+  },
+  {
+    title: 'Support & Tickets',
     icon: Ticket,
+    description: 'Support tickets and help desk',
     children: [
-      { title: 'Dashboard', icon: LayoutDashboard, path: '/super-admin/tickets/dashboard' },
       { title: 'All Tickets', icon: List, path: '/super-admin/tickets/all' },
-      { title: 'Categories', icon: FolderOpen, path: '/super-admin/tickets/categories' },
-      { title: 'Templates', icon: FileText, path: '/super-admin/tickets/templates' },
-      { title: 'Analytics', icon: BarChart3, path: '/super-admin/tickets/analytics' }
+      { title: 'Ticket Dashboard', icon: LayoutDashboard, path: '/super-admin/tickets/dashboard' },
+      { title: 'Knowledge Base', icon: BookOpen, path: '/super-admin/knowledge-base' },
+      { title: 'Help Center', icon: HelpCircle, path: '/super-admin/help' }
     ]
   },
   {
-    title: 'Networks',
-    icon: Network,
-    children: [
-      { title: 'Customers', icon: Users, path: '/super-admin/networks/customers' },
-      { title: 'Vendors', icon: Truck, path: '/super-admin/networks/vendors' }
-    ]
-  },
-  {
-    title: 'Workers',
-    icon: Building2,
-    children: [
-      { title: 'Executive', icon: Briefcase, path: '/super-admin/workers/executive' },
-      { title: 'Employee', icon: User, path: '/super-admin/workers/employee' },
-      { title: 'Drivers', icon: Truck, path: '/super-admin/workers/drivers' },
-      { title: 'Agents', icon: Users, path: '/super-admin/workers/agents' }
-    ]
-  },
-  {
-    title: 'Documents',
-    icon: FileText,
-    children: [
-      { title: 'All Documents', icon: List, path: '/super-admin/documents/all' },
-      { title: 'Upload', icon: Upload, path: '/super-admin/documents/upload' },
-      { title: 'Setup', icon: Settings, path: '/super-admin/documents/setup' }
-    ]
-  },
-  {
-    title: 'Financials',
+    title: 'Financial Management',
     icon: DollarSign,
+    description: 'Financial operations and billing',
     children: [
-      { title: 'Invoices', icon: FileBarChart, path: '/super-admin/financials/invoices' },
-      { title: 'Recurring Invoices', icon: RotateCcw, path: '/super-admin/financials/recurring-invoices' },
-      { title: 'Customer Statements', icon: Receipt, path: '/super-admin/financials/statements' },
-      { title: 'Products & Services', icon: Package, path: '/super-admin/financials/products-services' },
-      { title: 'Bills', icon: ShoppingCart, path: '/super-admin/financials/bills' },
-      { title: 'Vendors', icon: Truck, path: '/super-admin/financials/vendors' },
-      { title: 'Transactions', icon: Calculator, path: '/super-admin/financials/transactions' },
-      { title: 'Reconciliation', icon: RotateCcw, path: '/super-admin/financials/reconciliation' },
-      { title: 'Chart of Accounts', icon: FileSpreadsheet, path: '/super-admin/financials/chart-accounts' },
-      { title: 'Run Payroll', icon: HandCoins, path: '/super-admin/financials/run-payroll' },
-      { title: 'Employees', icon: User, path: '/super-admin/financials/employees' },
-      { title: 'Timesheets', icon: Clock, path: '/super-admin/financials/timesheets' },
-      { title: 'Payroll Transactions', icon: Calculator, path: '/super-admin/financials/payroll-transactions' },
-      { title: 'Taxes', icon: Percent, path: '/super-admin/financials/taxes' },
-      { title: 'Tax Forms', icon: FileText, path: '/super-admin/financials/tax-forms' }
+      { title: 'Billing & Invoices', icon: Receipt, path: '/super-admin/billing' },
+      { title: 'Payment Processing', icon: CreditCard, path: '/super-admin/payments' },
+      { title: 'Financial Reports', icon: FileBarChart, path: '/super-admin/financial-reports' },
+      { title: 'Tax Management', icon: Calculator, path: '/super-admin/tax' }
     ]
   },
   {
-    title: 'AI Dashboard',
-    icon: Bot,
+    title: 'Portal Management',
+    icon: Globe,
+    description: 'Multi-portal administration',
     children: [
-      { title: 'Analytics', icon: BarChart3, path: '/super-admin/ai/analytics' },
-      { title: 'System Health', icon: Activity, path: '/super-admin/ai/health' },
-      { title: 'Agent Control', icon: Cpu, path: '/super-admin/ai/agents' },
-      { title: 'Autonomous System', icon: Settings, path: '/super-admin/ai/autonomous-system' },
-      { title: 'Autonomous Agents', icon: Bot, path: '/super-admin/ai/autonomous-agents' },
-      { title: 'Agent Monitoring', icon: TrendingUp, path: '/super-admin/ai/monitoring' },
-      { title: 'Design Engine', icon: Settings, path: '/super-admin/ai/design-engine' },
-      { title: 'Market Research', icon: BarChart3, path: '/super-admin/ai/market-research' }
+      { title: 'Portal Overview', icon: LayoutDashboard, path: '/super-admin/portals' },
+      { title: 'Portal Users', icon: Users, path: '/super-admin/portal-users' },
+      { title: 'Portal Config', icon: Settings, path: '/super-admin/portal-config' },
+      { title: 'Portal Analytics', icon: BarChart3, path: '/super-admin/portal-analytics' }
     ]
   },
   {
-    title: 'API Dashboard',
-    icon: Cpu,
+    title: 'Logistics & Operations',
+    icon: Truck,
+    description: 'Logistics and operational tools',
     children: [
-      { title: 'API Keys', icon: Settings, path: '/super-admin/api/keys' },
-      { title: 'API Logs', icon: FileText, path: '/super-admin/api/logs' },
-      { title: 'API Errors', icon: AlertCircle, path: '/super-admin/api/errors' }
+      { title: 'Load Management', icon: Package, path: '/super-admin/loads' },
+      { title: 'Fleet Management', icon: Truck, path: '/super-admin/fleet' },
+      { title: 'Route Optimization', icon: Map, path: '/super-admin/routes' },
+      { title: 'Dispatch Center', icon: Radio, path: '/super-admin/dispatch' }
     ]
-  },
-  {
-    title: 'Market Place',
-    icon: Store,
-    children: [
-      { title: 'All', icon: Boxes, path: '/super-admin/marketplace/all' },
-      { title: 'Accounting', icon: Calculator, path: '/super-admin/marketplace/accounting' },
-      { title: 'Carrier Compliance', icon: Truck, path: '/super-admin/marketplace/compliance' },
-      { title: 'API', icon: Cpu, path: '/super-admin/marketplace/api' },
-      { title: 'EDI', icon: Network, path: '/super-admin/marketplace/edi' },
-      { title: 'ELDs', icon: Activity, path: '/super-admin/marketplace/elds' },
-      { title: 'Factoring', icon: DollarSign, path: '/super-admin/marketplace/factoring' },
-      { title: 'Fuel Cards', icon: CreditCard, path: '/super-admin/marketplace/fuel-cards' },
-      { title: 'Load Board', icon: Package, path: '/super-admin/marketplace/load-board' },
-      { title: 'Mileage', icon: TrendingUp, path: '/super-admin/marketplace/mileage' },
-      { title: 'Payments', icon: DollarSign, path: '/super-admin/marketplace/payments' },
-      { title: 'Tolls', icon: Receipt, path: '/super-admin/marketplace/tolls' },
-      { title: 'Visibility', icon: Activity, path: '/super-admin/marketplace/visibility' }
-    ]
-  },
-  {
-    title: 'Reports',
-    icon: FileBarChart,
-    path: '/super-admin/reports'
   }
 ];
 
 const SuperAdminSidebar: React.FC<SuperAdminSidebarProps> = ({ isOpen, onToggle }) => {
-  const [openItems, setOpenItems] = useState<string[]>([]);
+  const [openItems, setOpenItems] = useState<string[]>(['Dashboard']);
   const { theme, setTheme } = useTheme();
+  const location = useLocation();
 
   const toggleItem = (title: string) => {
     setOpenItems(prev => 
@@ -212,127 +224,240 @@ const SuperAdminSidebar: React.FC<SuperAdminSidebarProps> = ({ isOpen, onToggle 
     );
   };
 
+  const isItemActive = (item: MenuItem) => {
+    if (item.path) {
+      return location.pathname === item.path;
+    }
+    if (item.children) {
+      return item.children.some(child => location.pathname === child.path);
+    }
+    return false;
+  };
+
   const renderMenuItem = (item: MenuItem, level = 0) => {
     const hasChildren = item.children && item.children.length > 0;
-    const isOpenItem = openItems.includes(item.title);
+    const isActive = isItemActive(item);
+    const isOpen = openItems.includes(item.title);
 
     if (hasChildren) {
       return (
-        <Collapsible key={item.title} open={isOpenItem} onOpenChange={() => toggleItem(item.title)}>
+        <Collapsible key={item.title} open={isOpen} onOpenChange={() => toggleItem(item.title)}>
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
               className={cn(
-                "w-full justify-start gap-2 text-left font-normal hover:bg-primary/10 hover:text-primary transition-all duration-200 group px-2 sm:px-3",
-                level > 0 && "ml-2 sm:ml-4"
+                "w-full justify-between px-3 py-2 text-sm transition-all duration-200 hover:bg-primary/10 hover:text-primary group",
+                level > 0 && "ml-2",
+                isActive && "bg-gradient-to-r from-primary/20 to-primary/10 text-primary font-medium shadow-sm border border-primary/20"
               )}
             >
-              <item.icon className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-              {isOpen && <span className="flex-1">{item.title}</span>}
-              {isOpen && (isOpenItem ? 
-                <ChevronDown className="h-4 w-4 group-hover:rotate-180 transition-transform duration-200" /> : 
-                <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              <div className="flex items-center gap-3">
+                <item.icon className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                {isOpen && (
+                  <div className="flex-1 text-left">
+                    <div className="flex items-center gap-2">
+                      <span>{item.title}</span>
+                      {item.badge && (
+                        <Badge variant={item.badgeVariant || 'secondary'} className="text-xs">
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </div>
+                    {item.description && (
+                      <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+              {isOpen && (
+                <ChevronDown className="h-4 w-4 transition-transform duration-200" />
               )}
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-1">
-            {item.children?.map(child => renderMenuItem(child, level + 1))}
+          <CollapsibleContent>
+            <div className="ml-2 space-y-1">
+              {item.children?.map((child) => renderMenuItem(child, level + 1))}
+            </div>
           </CollapsibleContent>
         </Collapsible>
       );
     }
 
     return (
-      <NavLink
-        key={item.title}
-        to={item.path || '#'}
-        className={({ isActive }) =>
-          cn(
-            "flex items-center gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm transition-all duration-200 hover:bg-primary/10 hover:text-primary hover:scale-105 group",
-            level > 0 && "ml-2 sm:ml-4",
-            isActive && "bg-gradient-to-r from-primary/20 to-primary/10 text-primary font-medium shadow-sm border border-primary/20"
-          )
-        }
-      >
-        <item.icon className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-        {isOpen && <span>{item.title}</span>}
-      </NavLink>
+      <TooltipProvider key={item.title}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <NavLink
+              to={item.path || '#'}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:bg-primary/10 hover:text-primary hover:scale-105 group relative",
+                  level > 0 && "ml-2",
+                  isActive && "bg-gradient-to-r from-primary/20 to-primary/10 text-primary font-medium shadow-sm border border-primary/20"
+                )
+              }
+            >
+              <item.icon className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+              {isOpen && (
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span>{item.title}</span>
+                    {item.badge && (
+                      <Badge variant={item.badgeVariant || 'secondary'} className="text-xs">
+                        {item.badge}
+                      </Badge>
+                    )}
+                    {item.external && (
+                      <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                    )}
+                  </div>
+                  {item.description && (
+                    <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
+                  )}
+                </div>
+              )}
+              {isActive && (
+                <div className="absolute right-2 w-2 h-2 bg-primary rounded-full" />
+              )}
+            </NavLink>
+          </TooltipTrigger>
+          {!isOpen && (
+            <TooltipContent side="right" className="bg-card/95 backdrop-blur-xl border-border/50">
+              <div>
+                <p className="font-medium">{item.title}</p>
+                {item.description && (
+                  <p className="text-xs text-muted-foreground">{item.description}</p>
+                )}
+              </div>
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
     );
   };
 
   return (
-    <div className={cn(
-      "flex flex-col border-r border-border/50 bg-card/80 backdrop-blur-xl transition-all duration-300 relative z-20",
-      isOpen ? "w-64 lg:w-72" : "w-16"
-    )}>
-      {/* Glassmorphism overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/90 backdrop-blur-sm" />
+    <motion.div 
+      initial={{ x: -20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      className={cn(
+        "flex flex-col border-r border-border/50 bg-gradient-to-b from-background/95 via-background/90 to-background/95 backdrop-blur-xl transition-all duration-300 relative z-20 shadow-lg",
+        isOpen ? "w-72" : "w-16"
+      )}
+    >
+      {/* Enhanced Glassmorphism overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-purple-500/5 backdrop-blur-sm" />
       
       {/* Enhanced Header */}
-      <div className="p-3 sm:p-4 border-b border-border/50 relative z-10">
+      <div className="p-4 border-b border-border/50 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary via-purple-500 to-blue-500 rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
-            <Brain className="h-5 w-5 text-white animate-pulse" />
+          <div className="w-10 h-10 bg-gradient-to-br from-primary via-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
+            <Crown className="h-5 w-5 text-white" />
           </div>
           {isOpen && (
-            <div className="animate-fade-in">
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex-1"
+            >
               <h2 className="font-bold text-lg bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                 Trans Bot AI
               </h2>
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <div className="flex items-center gap-2 mt-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                Super Admin
-              </p>
-            </div>
+                <p className="text-xs text-muted-foreground">Super Admin Portal</p>
+              </div>
+            </motion.div>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="p-1 hover:bg-primary/10 hover:scale-105 transition-all duration-200"
+          >
+            {isOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </Button>
         </div>
       </div>
 
       {/* Enhanced Navigation */}
       <ScrollArea className="flex-1 relative z-10">
-        <div className="p-2 sm:p-3 space-y-1">
-          {menuItems.map(item => renderMenuItem(item))}
+        <div className="p-2 space-y-1">
+          <AnimatePresence>
+            {menuItems.map((item) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                {renderMenuItem(item)}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </ScrollArea>
 
-      {/* Enhanced Bottom Icons */}
-      <div className="p-3 sm:p-4 border-t border-border/50 bg-gradient-to-r from-muted/10 to-transparent relative z-10">
-        <div className="flex flex-col gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="justify-start gap-2 hover:bg-primary/10 hover:text-primary transition-all duration-200 group"
-            onClick={() => {}}
+      {/* Enhanced Footer */}
+      <div className="p-4 border-t border-border/50 relative z-10">
+        {isOpen ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-3"
           >
-            <BookOpen className="h-4 w-4 text-blue-500 group-hover:scale-110 transition-transform duration-200" />
-            {isOpen && <span>Learn</span>}
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            className="justify-start gap-2 hover:bg-primary/10 hover:text-primary transition-all duration-200 group"
-            onClick={() => {}}
-          >
-            <HelpCircle className="h-4 w-4 text-green-500 group-hover:scale-110 transition-transform duration-200" />
-            {isOpen && <span>Help</span>}
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            className="justify-start gap-2 hover:bg-primary/10 hover:text-primary transition-all duration-200 group"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            {theme === 'dark' ? 
-              <Sun className="h-4 w-4 text-yellow-500 group-hover:scale-110 group-hover:rotate-180 transition-all duration-300" /> : 
-              <Moon className="h-4 w-4 text-purple-500 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-            }
-            {isOpen && <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>}
-          </Button>
-        </div>
+            {/* System Status */}
+            <div className="p-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg border border-green-500/20">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-xs font-medium text-green-700 dark:text-green-400">System Operational</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">All systems running smoothly</p>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="space-y-2">
+              <Button variant="outline" size="sm" className="w-full gap-2 hover:bg-primary/10">
+                <Plus className="h-4 w-4" />
+                Quick Add
+              </Button>
+              <Button variant="outline" size="sm" className="w-full gap-2 hover:bg-primary/10">
+                <Search className="h-4 w-4" />
+                Search
+              </Button>
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex items-center gap-2 p-2 bg-muted/30 rounded-lg">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="flex-1 gap-2 hover:bg-primary/10"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="text-xs">Theme</span>
+              </Button>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="flex flex-col items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 hover:bg-primary/10"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </Button>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          </div>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

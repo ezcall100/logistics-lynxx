@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import SuperAdminSidebar from './SuperAdminSidebar';
 import SuperAdminHeader from './SuperAdminHeader';
+import SuperAdminFAB from './SuperAdminFAB';
 
 interface EnhancedSuperAdminLayoutProps {
   children: React.ReactNode;
@@ -38,6 +39,9 @@ const EnhancedSuperAdminLayout: React.FC<EnhancedSuperAdminLayoutProps> = ({
           </div>
         </main>
       </div>
+
+      {/* Floating Action Button */}
+      <SuperAdminFAB />
     </div>
   );
 };
