@@ -96,6 +96,7 @@ import AllUsersPage from './pages/user-management/AllUsersPage';
 import ColorTestPage from './pages/ColorTestPage';
 import FABTestPage from './pages/FABTestPage';
 import UIComponentsDemoPage from './pages/UIComponentsDemoPage';
+import ComponentPlaygroundPage from './pages/ComponentPlaygroundPage';
 
 // Import Floating Action Button
 import { FloatingActionButton } from '../admin/FloatingActionButton';
@@ -307,13 +308,20 @@ const EnhancedSuperAdminPortal = () => {
          { title: 'Commander', path: '/super-admin/mcp/commander', icon: Command }
       ]
     },
-    {
-      id: 'ui-demo',
-      title: 'UI Components Demo',
-      icon: BarChart3,
-      path: '/super-admin/ui-demo',
-      description: 'Showcase enhanced UI components and design patterns'
-    }
+                      {
+                    id: 'ui-demo',
+                    title: 'UI Components Demo',
+                    icon: BarChart3,
+                    path: '/super-admin/ui-demo',
+                    description: 'Showcase enhanced UI components and design patterns'
+                  },
+                  {
+                    id: 'playground',
+                    title: 'Component Playground',
+                    icon: Settings,
+                    path: '/super-admin/playground',
+                    description: 'Interactive playground for testing all UI components and variants'
+                  }
   ];
 
   const toggleGroup = (groupId: string) => {
@@ -1424,10 +1432,11 @@ const EnhancedSuperAdminPortal = () => {
                   } />
                   <Route path="/users/*" element={<UserManagementPage />} />
                   <Route path="/users/all" element={<AllUsersPage />} />
-                  <Route path="/color-test" element={<ColorTestPage />} />
-                  <Route path="/fab-test" element={<FABTestPage />} />
-                  <Route path="/ui-demo" element={<UIComponentsDemoPage />} />
-                  <Route path="/portals/overview" element={<PortalOverviewPage />} />
+                                          <Route path="/color-test" element={<ColorTestPage />} />
+                        <Route path="/fab-test" element={<FABTestPage />} />
+                        <Route path="/ui-demo" element={<UIComponentsDemoPage />} />
+                        <Route path="/playground" element={<ComponentPlaygroundPage />} />
+                        <Route path="/portals/overview" element={<PortalOverviewPage />} />
                   <Route path="/portals/all" element={<AllPortalsPage />} />
                   <Route path="/portals/categories" element={<PortalCategoriesPage />} />
                   <Route path="/portals/monitoring" element={<PortalMonitoringPage />} />
