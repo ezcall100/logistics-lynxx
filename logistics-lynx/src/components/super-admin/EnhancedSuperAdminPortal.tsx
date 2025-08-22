@@ -40,8 +40,8 @@ import {
   LineChart, BarChart4, ScatterChart, ActivitySquare,
   CalendarDays, Target, Award, Trophy,
   Share, Unlock, Settings2,
-  LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
-  CircuitBoard, BookOpen, HelpCircle, Rocket
+     LayoutDashboard, Code, Bug, Palette, Maximize2, Menu,
+   CircuitBoard, BookOpen, HelpCircle, Rocket, Command
 } from 'lucide-react';
 
 // Custom Logo Components
@@ -121,6 +121,7 @@ import MCPAPIGatewayPage from './pages/MCPAPIGatewayPage';
 import MCPLogManagementPage from './pages/MCPLogManagementPage';
 import MCPAlertCenterPage from './pages/MCPAlertCenterPage';
 import MCPDeploymentManagerPage from './pages/MCPDeploymentManagerPage';
+import MCPCommanderPage from './pages/MCPCommanderPage';
 
 // Enhanced Super Admin Portal
 const EnhancedSuperAdminPortal = () => {
@@ -297,7 +298,8 @@ const EnhancedSuperAdminPortal = () => {
         { title: 'API Gateway', path: '/super-admin/mcp/api-gateway', icon: Network },
         { title: 'Log Management', path: '/super-admin/mcp/log-management', icon: FileText },
         { title: 'Alert Center', path: '/super-admin/mcp/alert-center', icon: Bell },
-        { title: 'Deployment Manager', path: '/super-admin/mcp/deployment', icon: Rocket }
+                 { title: 'Deployment Manager', path: '/super-admin/mcp/deployment', icon: Rocket },
+         { title: 'Commander', path: '/super-admin/mcp/commander', icon: Command }
       ]
     }
   ];
@@ -1325,7 +1327,8 @@ const EnhancedSuperAdminPortal = () => {
           <Route path="/mcp/api-gateway" element={<MCPAPIGatewayPage />} />
           <Route path="/mcp/log-management" element={<MCPLogManagementPage />} />
           <Route path="/mcp/alert-center" element={<MCPAlertCenterPage />} />
-          <Route path="/mcp/deployment" element={<MCPDeploymentManagerPage />} />
+                     <Route path="/mcp/deployment" element={<MCPDeploymentManagerPage />} />
+           <Route path="/mcp/commander" element={<MCPCommanderPage />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>
