@@ -82,31 +82,31 @@ const MCPControlCenter: React.FC = () => {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
             <Cog className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-          </div>
-          <div>
+                  </div>
+                  <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MCP Control Center</h1>
             <p className="text-gray-600 dark:text-gray-400">Master Control Program Configuration</p>
-          </div>
-        </div>
+                  </div>
+                </div>
         <div className="flex items-center gap-3">
           {getStatusIcon()}
           {getStatusBadge()}
-        </div>
-      </div>
-
+                </div>
+              </div>
+              
       {/* System Status Card */}
       <Card>
-        <CardHeader>
+                    <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="w-5 h-5 text-blue-500" />
             System Status
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
@@ -114,10 +114,10 @@ const MCPControlCenter: React.FC = () => {
                 <div>
                   <p className="font-medium">Database</p>
                   <p className="text-sm text-slate-600 dark:text-slate-400">Connected</p>
-                </div>
-              </div>
+                          </div>
+                        </div>
               <CheckCircle className="w-5 h-5 text-green-500" />
-            </div>
+                          </div>
             
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
@@ -125,10 +125,10 @@ const MCPControlCenter: React.FC = () => {
                 <div>
                   <p className="font-medium">Network</p>
                   <p className="text-sm text-slate-600 dark:text-slate-400">Stable</p>
-                </div>
-              </div>
+                          </div>
+                        </div>
               <CheckCircle className="w-5 h-5 text-green-500" />
-            </div>
+                          </div>
             
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
@@ -136,13 +136,13 @@ const MCPControlCenter: React.FC = () => {
                 <div>
                   <p className="font-medium">Security</p>
                   <p className="text-sm text-slate-600 dark:text-slate-400">Active</p>
-                </div>
-              </div>
+                          </div>
+                        </div>
               <Lock className="w-5 h-5 text-green-500" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
       {/* MCP Configuration */}
       <SettingsSection 
@@ -156,12 +156,12 @@ const MCPControlCenter: React.FC = () => {
           description="Enable or disable the Master Control Program"
           variant={config.enabled ? "success" : "danger"}
         >
-          <Switch
+                        <Switch
             variant={config.enabled ? "success" : "danger"}
-            checked={config.enabled}
-            onCheckedChange={(checked) => updateConfig({ enabled: checked })}
-            disabled={!isConnected}
-          />
+                          checked={config.enabled}
+                          onCheckedChange={(checked) => updateConfig({ enabled: checked })}
+                          disabled={!isConnected}
+                        />
         </SettingsRow>
 
         {/* Auto Recovery */}
@@ -170,12 +170,12 @@ const MCPControlCenter: React.FC = () => {
           description="Automatically recover from system failures"
           variant={config.autoRecovery ? "success" : "warning"}
         >
-          <Switch
+                        <Switch
             variant={config.autoRecovery ? "success" : "warning"}
-            checked={config.autoRecovery}
-            onCheckedChange={(checked) => updateConfig({ autoRecovery: checked })}
-            disabled={!isConnected}
-          />
+                          checked={config.autoRecovery}
+                          onCheckedChange={(checked) => updateConfig({ autoRecovery: checked })}
+                          disabled={!isConnected}
+                        />
         </SettingsRow>
 
         {/* Monitoring Level */}
@@ -206,21 +206,21 @@ const MCPControlCenter: React.FC = () => {
           title="Alert Threshold"
           description="Percentage threshold for system alerts"
         >
-          <Select
+                        <Select 
             value={config.alertThreshold.toString()}
             onValueChange={(value) => updateConfig({ alertThreshold: parseInt(value) })}
-            disabled={!isConnected}
-          >
+                          disabled={!isConnected}
+                        >
             <SelectTrigger className="w-48">
               <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
+                          </SelectTrigger>
+                          <SelectContent>
               <SelectItem value="50">50%</SelectItem>
               <SelectItem value="75">75%</SelectItem>
               <SelectItem value="90">90%</SelectItem>
               <SelectItem value="95">95%</SelectItem>
-            </SelectContent>
-          </Select>
+                          </SelectContent>
+                        </Select>
         </SettingsRow>
 
         {/* Backup Frequency */}
@@ -228,22 +228,22 @@ const MCPControlCenter: React.FC = () => {
           title="Backup Frequency"
           description="How often to create system backups"
         >
-          <Select
+                        <Select 
             value={config.backupFrequency}
             onValueChange={(value: 'hourly' | 'daily' | 'weekly') => 
               updateConfig({ backupFrequency: value })
             }
-            disabled={!isConnected}
-          >
+                          disabled={!isConnected}
+                        >
             <SelectTrigger className="w-48">
               <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
+                          </SelectTrigger>
+                          <SelectContent>
               <SelectItem value="hourly">Hourly</SelectItem>
               <SelectItem value="daily">Daily</SelectItem>
               <SelectItem value="weekly">Weekly</SelectItem>
-            </SelectContent>
-          </Select>
+                          </SelectContent>
+                        </Select>
         </SettingsRow>
 
         {/* Security Level */}
@@ -259,14 +259,14 @@ const MCPControlCenter: React.FC = () => {
             disabled={!isConnected}
           >
             <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="low">Low</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-            </SelectContent>
-          </Select>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
         </SettingsRow>
       </SettingsSection>
 
@@ -280,8 +280,8 @@ const MCPControlCenter: React.FC = () => {
           <Zap className="w-4 h-4 mr-2" />
           Apply Changes
         </Button>
-      </div>
-    </div>
+                </div>
+              </div>
   );
 };
 
