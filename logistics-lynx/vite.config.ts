@@ -8,6 +8,8 @@ export default defineConfig({
     jsxRuntime: 'automatic',
     jsxImportSource: 'react'
   })],
+  appType: "spa",            // ensure fallback to index.html
+  base: "/",                 // serve from root locally
   server: {
     port: 8084,
     strictPort: true,   // fail if taken, don't silently change ports
