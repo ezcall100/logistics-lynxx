@@ -1,0 +1,69 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Wifi } from 'lucide-react';
+
+interface NetworkMonitoringProps {}
+
+const NetworkMonitoring: React.FC<NetworkMonitoringProps> = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 1000);
+  }, []);
+
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="space-y-2">
+        <div className="flex items-center space-x-2">
+          <Wifi className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            Network Monitoring
+          </h1>
+        </div>
+        <p className="text-gray-600 dark:text-gray-400">
+          Bandwidth usage, latency tracking, connectivity monitoring
+        </p>
+      </div>
+
+      {/* Main Content */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Network Monitoring</CardTitle>
+          <CardDescription>Bandwidth usage, latency tracking, connectivity monitoring</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Wifi className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Network Monitoring
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                Bandwidth usage, latency tracking, connectivity monitoring
+              </p>
+              <div className="mt-4 space-y-2">
+                <Badge variant="outline">Bandwidth Monitoring</Badge>
+                <Badge variant="outline">Latency Tracking</Badge>
+                <Badge variant="outline">Connectivity Analysis</Badge>
+              </div>
+              <Button className="mt-6">
+                Configure Network Monitoring
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default NetworkMonitoring;
