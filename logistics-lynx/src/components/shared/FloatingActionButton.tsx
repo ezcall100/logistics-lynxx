@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { FLOATING_ACTION_MENU } from '@/lib/constants';
-import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { FLOATING_ACTION_MENU } from '../../lib/constants';
+import { cn } from '../../lib/utils';
 
 const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
