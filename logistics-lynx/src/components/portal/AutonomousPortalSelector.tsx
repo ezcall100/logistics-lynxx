@@ -45,6 +45,9 @@ import {
 // Custom Logo Component
 import TransBotLogo from '../ui/TransBotLogo';
 
+// Add debug logging
+console.log('AutonomousPortalSelector: Component loaded');
+
 // Portal Configuration with Professional Software Company Colors
 const PORTAL_CONFIG = {
   // Core Administrative Portals - Professional Software Blues

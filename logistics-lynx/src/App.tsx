@@ -4,6 +4,9 @@ import './App.css';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { AuthProvider, useAuth } from './context/auth/AuthProvider';
 
+// Add debug logging
+console.log('App.tsx: Starting application...');
+
 // 🚀 AUTONOMOUS PORTAL SYSTEM - BASED ON KNOWLEDGE BASE
 // This system follows the actual portal structure from the knowledge base
 
@@ -176,77 +179,37 @@ import {
 
 // 🎯 MAIN APP COMPONENT
 function AppContent() {
-  const { user } = useAuth();
-  const location = useLocation();
-
-  // Check if user is authenticated - Temporarily bypass for demo
-  if (!user) {
-    // For demo purposes, allow access without authentication
-    console.log('Demo mode: Bypassing authentication');
-  }
-
+  console.log('AppContent: Component rendering...');
+  
+  // Temporary simple component for testing
   return (
-        <div className="App">
-          <Routes>
-            {/* Main Portal Selection */}
-        <Route path="/" element={<AutonomousPortalSelector />} />
-
-        {/* Authentication Routes */}
-        <Route path="/login" element={<LoginPage />} />
-
-        {/* Portal Routes - Based on knowledge base registry */}
-        {/* Super Admin shell with nested pages */}
-        <Route path="/super-admin" element={<EnhancedSuperAdminPortal />}>
-          {/* default: send to MCP intro */}
-          <Route index element={<Navigate to="mcp/introduction" replace />} />
-
-          {/* MCP suite */}
-          <Route
-            path="mcp/*"
-            element={
-              <ErrorBoundary>
-                <MCPControlCenter />
-              </ErrorBoundary>
-            }
-          />
-
-          {/* fence anything unknown under /super-admin */}
-          <Route path="*" element={<Navigate to="mcp/introduction" replace />} />
-        </Route>
-
-        <Route path="/carrier/*" element={<CarriersPortal />} />
-        <Route path="/broker/*" element={<BrokersPortal />} />
-        <Route path="/shipper/*" element={<ShippersPortal />} />
-        <Route path="/driver/*" element={<DriverManagementPage />} />
-        <Route path="/owner-operator/*" element={<SuperAdminPage />} />
-        <Route path="/factoring/*" element={<BillingPage />} />
-        <Route path="/load-board/*" element={<LoadBoardPage />} />
-        <Route path="/crm/*" element={<SuperAdminPage />} />
-        <Route path="/financials/*" element={<BillingPage />} />
-        <Route path="/edi/*" element={<SuperAdminPage />} />
-        <Route path="/marketplace/*" element={<SuperAdminPage />} />
-        <Route path="/analytics/*" element={<AnalyticsPage />} />
-        <Route path="/workers/*" element={<SystemHealthPage />} />
-        <Route path="/rates/*" element={<SuperAdminPage />} />
-        <Route path="/directory/*" element={<SuperAdminPage />} />
-
-        <Route path="/software-company/*" element={<SoftwareAdminPortal />} />
-
-        {/* Legacy Routes for Compatibility */}
-        <Route path="/carrier-portal" element={<CarrierPortalPage />} />
-        <Route path="/broker-portal" element={<BrokerPortalPage />} />
-        <Route path="/shipper-portal" element={<ShipperPortalPage />} />
-        <Route path="/access-all" element={<AccessAllPortals />} />
-
-        {/* Global fallback → Super Admin */}
-        <Route path="*" element={<Navigate to="/super-admin" replace />} />
-          </Routes>
-        </div>
+    <div className="App" style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1>🚀 Trans Bot AI - Development Test</h1>
+      <p>If you can see this, React is working!</p>
+      <p>Current URL: {window.location.href}</p>
+      <p>Hash: {window.location.hash}</p>
+      
+      <div style={{ marginTop: '20px' }}>
+        <h2>Test Navigation:</h2>
+        <a href="#/" style={{ marginRight: '10px', color: 'blue' }}>Home</a>
+        <a href="#/super-admin" style={{ marginRight: '10px', color: 'blue' }}>Super Admin</a>
+        <a href="#/carrier" style={{ marginRight: '10px', color: 'blue' }}>Carrier</a>
+        <a href="#/broker" style={{ marginRight: '10px', color: 'blue' }}>Broker</a>
+      </div>
+      
+      <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>
+        <h3>Debug Info:</h3>
+        <p>User Agent: {navigator.userAgent}</p>
+        <p>Window Size: {window.innerWidth} x {window.innerHeight}</p>
+      </div>
+    </div>
   );
 }
 
 // 🎯 MAIN APP WRAPPER
 function App() {
+  console.log('App: Main App component rendering...');
+  
   return (
     <GlobalErrorBoundary>
       <AuthProvider>
