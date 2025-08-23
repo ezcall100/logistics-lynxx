@@ -34,7 +34,9 @@
     "ops:repair": "node scripts/self-heal.mjs",
     "ops:strict-on": "node -e \"console.log('READYZ=strict');\" && echo",
     "ops:strict-off": "node -e \"console.log('READYZ=lenient');\" && echo",
-    "test:access-control": "vitest run tests/access-control.spec.ts"
+    "test:access-control": "vitest run tests/access-control.spec.ts",
+    "test:rls": "node scripts/test-rls-policies.mjs",
+    "security:audit": "node scripts/test-rls-policies.mjs && npm run test:access-control"
   },
   "description": "Parent package for Trans Bot AI project",
   "engines": {

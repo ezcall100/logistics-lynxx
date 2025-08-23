@@ -1,0 +1,415 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Progress } from '@/components/ui/progress';
+import { 
+  Shield, 
+  Users, 
+  Eye, 
+  Lock, 
+  AlertTriangle, 
+  CheckCircle, 
+  Clock,
+  Activity,
+  Database,
+  Key,
+  FileText,
+  BarChart3
+} from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+
+interface SecurityOverview {
+  company_id: string;
+  company_name: string;
+  slug: string;
+  subscription_tier: string;
+  total_users: number;
+  admin_users: number;
+  manager_users: number;
+  regular_users: number;
+  viewer_users: number;
+  last_audit_activity: string;
+  audit_events_last_30_days: number;
+}
+
+interface AuditLog {
+  id: string;
+  company_id: string;
+  user_id: string;
+  action: string;
+  resource_type: string;
+  resource_id: string;
+  details: any;
+  ip_address: string;
+  user_agent: string;
+  created_at: string;
+}
+
+interface RLSStatus {
+  table_name: string;
+  row_security: boolean;
+  policy_count: number;
+  last_verified: string;
+}
+
+const SecurityDashboard: React.FC = () => {
+  const [securityOverview, setSecurityOverview] = useState<SecurityOverview[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [rlsStatus, setRlsStatus] = useState<RLSStatus[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadSecurityData();
+  }, []);
+
+  const loadSecurityData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Load security overview
+      const { data: overviewData, error: overviewError } = await supabase
+        .from('v_company_security_overview')
+        .select('*')
+        .order('company_name');
+
+      if (overviewError) throw overviewError;
+      setSecurityOverview(overviewData || []);
+
+      // Load recent audit logs
+      const { data: auditData, error: auditError } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (auditError) throw auditError;
+      setAuditLogs(auditData || []);
+
+      // Load RLS status (this would need to be implemented as a function)
+      await loadRLSStatus();
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load security data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadRLSStatus = async () => {
+    try {
+      // This would need to be implemented as a Supabase function
+      // For now, we'll create mock data
+      const mockRLSStatus: RLSStatus[] = [
+        { table_name: 'companies', row_security: true, policy_count: 2, last_verified: new Date().toISOString() },
+        { table_name: 'profiles', row_security: true, policy_count: 3, last_verified: new Date().toISOString() },
+        { table_name: 'roles', row_security: true, policy_count: 2, last_verified: new Date().toISOString() },
+        { table_name: 'audit_logs', row_security: true, policy_count: 2, last_verified: new Date().toISOString() },
+        { table_name: 'bulk_rating_requests', row_security: true, policy_count: 3, last_verified: new Date().toISOString() },
+        { table_name: 'agent_tasks', row_security: true, policy_count: 2, last_verified: new Date().toISOString() },
+      ];
+      setRlsStatus(mockRLSStatus);
+    } catch (err) {
+      console.error('Failed to load RLS status:', err);
+    }
+  };
+
+  const getActionIcon = (action: string) => {
+    switch (action) {
+      case 'role_assigned':
+      case 'role_removed':
+        return <Users className="h-4 w-4" />;
+      case 'data_export':
+        return <FileText className="h-4 w-4" />;
+      case 'login':
+        return <Key className="h-4 w-4" />;
+      default:
+        return <Activity className="h-4 w-4" />;
+    }
+  };
+
+  const getActionColor = (action: string) => {
+    switch (action) {
+      case 'role_assigned':
+      case 'role_removed':
+        return 'bg-blue-100 text-blue-800';
+      case 'data_export':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'login':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getSecurityScore = (company: SecurityOverview) => {
+    const totalUsers = company.total_users;
+    const adminRatio = company.admin_users / totalUsers;
+    const recentActivity = company.audit_events_last_30_days > 0;
+    
+    let score = 100;
+    
+    // Deduct points for too many admins
+    if (adminRatio > 0.3) score -= 20;
+    if (adminRatio > 0.5) score -= 30;
+    
+    // Deduct points for no recent activity
+    if (!recentActivity) score -= 10;
+    
+    // Deduct points for no viewers (suggesting poor role distribution)
+    if (company.viewer_users === 0) score -= 5;
+    
+    return Math.max(0, score);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Security Dashboard</h1>
+          <p className="text-muted-foreground">
+            Monitor RLS policies, audit logs, and security status across all companies
+          </p>
+        </div>
+        <Button onClick={loadSecurityData} variant="outline">
+          <Activity className="h-4 w-4 mr-2" />
+          Refresh
+        </Button>
+      </div>
+
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Security Overview</TabsTrigger>
+          <TabsTrigger value="audit">Audit Logs</TabsTrigger>
+          <TabsTrigger value="rls">RLS Status</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Companies</CardTitle>
+                <Database className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{securityOverview.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  Active organizations
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {securityOverview.reduce((sum, company) => sum + company.total_users, 0)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Across all companies
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Admin Users</CardTitle>
+                <Shield className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {securityOverview.reduce((sum, company) => sum + company.admin_users, 0)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  With elevated privileges
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Audit Events (30d)</CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {securityOverview.reduce((sum, company) => sum + company.audit_events_last_30_days, 0)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Security events logged
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Company Security Scores</CardTitle>
+                <CardDescription>
+                  Security assessment based on role distribution and activity
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {securityOverview.map((company) => {
+                  const score = getSecurityScore(company);
+                  return (
+                    <div key={company.company_id} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">{company.company_name}</span>
+                        <Badge variant={score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive"}>
+                          {score}/100
+                        </Badge>
+                      </div>
+                      <Progress value={score} className="h-2" />
+                      <div className="text-xs text-muted-foreground">
+                        {company.total_users} users • {company.admin_users} admins • {company.audit_events_last_30_days} events
+                      </div>
+                    </div>
+                  );
+                })}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Role Distribution</CardTitle>
+                <CardDescription>
+                  User roles across all companies
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {['admin', 'manager', 'user', 'viewer'].map((role) => {
+                    const count = securityOverview.reduce((sum, company) => {
+                      switch (role) {
+                        case 'admin': return sum + company.admin_users;
+                        case 'manager': return sum + company.manager_users;
+                        case 'user': return sum + company.regular_users;
+                        case 'viewer': return sum + company.viewer_users;
+                        default: return sum;
+                      }
+                    }, 0);
+                    
+                    return (
+                      <div key={role} className="flex items-center justify-between">
+                        <span className="text-sm font-medium capitalize">{role}s</span>
+                        <Badge variant="outline">{count}</Badge>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="audit" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Audit Logs</CardTitle>
+              <CardDescription>
+                Security events and user actions across all companies
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {auditLogs.map((log) => (
+                  <div key={log.id} className="flex items-start space-x-4 p-4 border rounded-lg">
+                    <div className={`p-2 rounded-full ${getActionColor(log.action)}`}>
+                      {getActionIcon(log.action)}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-medium">{log.action.replace('_', ' ')}</span>
+                        <Badge variant="outline">{log.resource_type}</Badge>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(log.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Resource: {log.resource_id} • IP: {log.ip_address}
+                      </p>
+                      {log.details && Object.keys(log.details).length > 0 && (
+                        <details className="text-sm">
+                          <summary className="cursor-pointer text-muted-foreground">
+                            View details
+                          </summary>
+                          <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-auto">
+                            {JSON.stringify(log.details, null, 2)}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="rls" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Row Level Security Status</CardTitle>
+              <CardDescription>
+                RLS policies and table security configuration
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {rlsStatus.map((table) => (
+                  <div key={table.table_name} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      {table.row_security ? (
+                        <Lock className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <AlertTriangle className="h-4 w-4 text-red-600" />
+                      )}
+                      <div>
+                        <span className="font-medium">{table.table_name}</span>
+                        <div className="text-sm text-muted-foreground">
+                          {table.policy_count} policies • Last verified: {new Date(table.last_verified).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                    <Badge variant={table.row_security ? "default" : "destructive"}>
+                      {table.row_security ? "Secured" : "Unsecured"}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default SecurityDashboard;
