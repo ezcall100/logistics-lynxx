@@ -29,8 +29,7 @@ import CompliancePage from './pages/CompliancePage';
 import SettingsPage from './pages/SettingsPage';
 import ReportsPage from './pages/ReportsPage';
 import SystemHealthPage from './pages/SystemHealthPage';
-import UserManagement from './components/admin/UserManagement';
-import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
+
 import LoginPage from './pages/auth/LoginPage';
 import { AutonomousPortalSelector } from './components/portal/AutonomousPortalSelector';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -214,8 +213,7 @@ function AppContent() {
           {/* fence anything unknown under /super-admin */}
           <Route path="*" element={<Navigate to="mcp/introduction" replace />} />
         </Route>
-        <Route path="/admin/*" element={<UserManagement />} />
-        <Route path="/tms-admin/*" element={<SuperAdminPage />} />
+
         <Route path="/carrier/*" element={<CarriersPortal />} />
         <Route path="/broker/*" element={<BrokersPortal />} />
         <Route path="/shipper/*" element={<ShippersPortal />} />
@@ -231,7 +229,7 @@ function AppContent() {
         <Route path="/workers/*" element={<SystemHealthPage />} />
         <Route path="/rates/*" element={<SuperAdminPage />} />
         <Route path="/directory/*" element={<SuperAdminPage />} />
-        <Route path="/onboarding/*" element={<OnboardingReviewDashboard />} />
+
         <Route path="/software-company/*" element={<SoftwareAdminPortal />} />
 
         {/* Legacy Routes for Compatibility */}

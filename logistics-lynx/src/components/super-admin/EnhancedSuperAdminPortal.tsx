@@ -1024,6 +1024,7 @@ const EnhancedSuperAdminPortal = () => {
         {/* Enhanced Sidebar */}
         <motion.div
           id="mobile-sidebar"
+          data-testid="sidebar"
           initial={{ x: isDesktop ? 0 : -320 }}
           animate={{ 
             x: isDesktop ? 0 : (mobileSidebarOpen ? 0 : -320),
