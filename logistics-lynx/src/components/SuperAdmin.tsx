@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import {
+  // Core Icons
   LayoutDashboard, Users, Settings, Shield, Activity, Globe,
   BarChart3, Brain, Briefcase, Code, Menu, X, Search,
   Bell, User, LogOut, Moon, Sun, ChevronRight, ChevronDown,
@@ -8,9 +9,55 @@ import {
   TrendingUp, DollarSign, AlertTriangle, Database, Server,
   Cpu, FileText, Network, Zap, Lock, CheckCircle, XCircle,
   AlertCircle, Info, HelpCircle, Settings as SettingsIcon,
+  
+  // Navigation Icons
   Home, Building2, Truck, Package, CreditCard, Calendar,
   MessageSquare, Phone, Mail, MapPin, Clock, Star,
-  ArrowUpRight, ArrowDownRight, Target, PieChart, LineChart
+  ArrowUpRight, ArrowDownRight, Target, PieChart, LineChart,
+  
+  // Business Icons
+  ShoppingCart, Receipt, Users2, UserCheck, UserX, UserPlus,
+  Building, Store, ShoppingBag, Tag, Percent, Award,
+  
+  // System Icons
+  HardDrive, Cloud, Wifi, Signal, Battery, Power,
+  Monitor, Smartphone, Tablet, Laptop,
+  
+  // Security Icons
+  Key, Fingerprint, EyeOff, ShieldCheck, ShieldX, ShieldAlert,
+  LockKeyhole, Unlock, KeyRound, BadgeCheck, BadgeX,
+  
+  // Analytics Icons
+  TrendingDown, Minus, Equal, BarChart, PieChart as PieChartIcon,
+  LineChart as LineChartIcon, ScatterChart, AreaChart,
+  
+  // Development Icons
+  GitBranch, GitCommit, GitPullRequest, GitMerge, GitCompare,
+  Terminal, Command, Code2, Brackets, Braces, Parentheses,
+  
+  // MCP Icons
+  Bot, Cpu as CpuIcon, HardDrive as HardDriveIcon,
+  Network as NetworkIcon, Zap as ZapIcon, Brain as BrainIcon,
+  
+  // Portal Icons
+  Globe as GlobeIcon, Map, Navigation, Compass,
+  Layers, Grid, Columns, Rows, Layout, Sidebar,
+  
+  // Support Icons
+  LifeBuoy, Headphones, MessageCircle, Mail as MailIcon,
+  Phone as PhoneIcon, Video, Camera, Mic, MicOff,
+  
+  // Finance Icons
+  Wallet, CreditCard as CreditCardIcon, Banknote, Coins,
+  PiggyBank, Calculator, TrendingUp as TrendingUpIcon,
+  
+  // Operations Icons
+  Clipboard, ClipboardCheck, ClipboardList, ClipboardX,
+  FileText as FileTextIcon, File, Folder, FolderOpen,
+  
+  // Monitoring Icons
+  Activity as ActivityIcon, Heart, Thermometer,
+  Gauge, Timer, Clock as ClockIcon, Calendar as CalendarIcon
 } from 'lucide-react';
 
 import { Button } from './ui/button';
@@ -25,7 +72,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-// Modern Super Admin Component with Shadcn/ui
+// Professional Super Admin Component with Complete MCP Integration
 const SuperAdmin: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -33,87 +80,169 @@ const SuperAdmin: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Navigation menu items
+  // Complete Navigation Menu Structure
   const menuItems = [
     {
-      label: 'Dashboard',
+      label: '📊 Dashboard',
       icon: <LayoutDashboard className="h-5 w-5" />,
       path: '/super-admin',
       items: [
-        { label: 'Overview', icon: <Home className="h-4 w-4" />, path: '/super-admin' },
-        { label: 'Analytics', icon: <BarChart3 className="h-4 w-4" />, path: '/super-admin/analytics' },
-        { label: 'Performance', icon: <TrendingUp className="h-4 w-4" />, path: '/super-admin/performance' },
+        { label: 'System Overview', icon: <Home className="h-4 w-4" />, path: '/super-admin' },
+        { label: 'Active Users', icon: <Users className="h-4 w-4" />, path: '/super-admin/dashboard/users' },
+        { label: 'Revenue Metrics', icon: <DollarSign className="h-4 w-4" />, path: '/super-admin/dashboard/revenue' },
+        { label: 'System Alerts', icon: <AlertTriangle className="h-4 w-4" />, path: '/super-admin/dashboard/alerts' },
       ]
     },
     {
-      label: 'User Management',
+      label: '👥 User Management',
       icon: <Users className="h-5 w-5" />,
       path: '/super-admin/users',
       items: [
         { label: 'All Users', icon: <Users className="h-4 w-4" />, path: '/super-admin/users' },
-        { label: 'Roles & Permissions', icon: <Shield className="h-4 w-4" />, path: '/super-admin/roles' },
-        { label: 'User Groups', icon: <Building2 className="h-4 w-4" />, path: '/super-admin/groups' },
-        { label: 'Access Control', icon: <Lock className="h-4 w-4" />, path: '/super-admin/access' },
+        { label: 'User Roles', icon: <Shield className="h-4 w-4" />, path: '/super-admin/users/roles' },
+        { label: 'User Groups', icon: <Building2 className="h-4 w-4" />, path: '/super-admin/users/groups' },
+        { label: 'Access Control', icon: <Lock className="h-4 w-4" />, path: '/super-admin/users/access' },
+        { label: 'User Analytics', icon: <BarChart3 className="h-4 w-4" />, path: '/super-admin/users/analytics' },
+        { label: 'Billing Management', icon: <CreditCard className="h-4 w-4" />, path: '/super-admin/users/billing' },
+        { label: 'Support Tickets', icon: <MessageSquare className="h-4 w-4" />, path: '/super-admin/users/support' },
+        { label: 'User Onboarding', icon: <UserPlus className="h-4 w-4" />, path: '/super-admin/users/onboarding' },
       ]
     },
     {
-      label: 'System Administration',
+      label: '⚙️ System Administration',
       icon: <Settings className="h-5 w-5" />,
       path: '/super-admin/system',
       items: [
-        { label: 'Database', icon: <Database className="h-4 w-4" />, path: '/super-admin/database' },
-        { label: 'API Management', icon: <Code className="h-4 w-4" />, path: '/super-admin/api' },
-        { label: 'Server Monitoring', icon: <Server className="h-4 w-4" />, path: '/super-admin/servers' },
-        { label: 'Deployment', icon: <Upload className="h-4 w-4" />, path: '/super-admin/deployment' },
+        { label: 'Database Management', icon: <Database className="h-4 w-4" />, path: '/super-admin/system/database' },
+        { label: 'API Management', icon: <Code className="h-4 w-4" />, path: '/super-admin/system/api' },
+        { label: 'Server Monitoring', icon: <Server className="h-4 w-4" />, path: '/super-admin/system/servers' },
+        { label: 'Deployment', icon: <Upload className="h-4 w-4" />, path: '/super-admin/system/deployment' },
+        { label: 'Configuration', icon: <Settings className="h-4 w-4" />, path: '/super-admin/system/config' },
+        { label: 'Backup & Recovery', icon: <Download className="h-4 w-4" />, path: '/super-admin/system/backup' },
+        { label: 'Security Settings', icon: <Shield className="h-4 w-4" />, path: '/super-admin/system/security' },
+        { label: 'Integration Hub', icon: <Network className="h-4 w-4" />, path: '/super-admin/system/integrations' },
+        { label: 'File Storage', icon: <HardDrive className="h-4 w-4" />, path: '/super-admin/system/storage' },
+        { label: 'Email Services', icon: <Mail className="h-4 w-4" />, path: '/super-admin/system/email' },
       ]
     },
     {
-      label: 'Security Center',
+      label: '🔒 Security Center',
       icon: <Shield className="h-5 w-5" />,
       path: '/super-admin/security',
       items: [
         { label: 'Security Audit', icon: <Shield className="h-4 w-4" />, path: '/super-admin/security/audit' },
         { label: 'Access Logs', icon: <FileText className="h-4 w-4" />, path: '/super-admin/security/logs' },
         { label: 'Data Protection', icon: <Lock className="h-4 w-4" />, path: '/super-admin/security/data' },
+        { label: 'API Security', icon: <Code className="h-4 w-4" />, path: '/super-admin/security/api' },
+        { label: 'User Permissions', icon: <Key className="h-4 w-4" />, path: '/super-admin/security/permissions' },
+        { label: 'Security Policies', icon: <ShieldCheck className="h-4 w-4" />, path: '/super-admin/security/policies' },
         { label: 'Incident Response', icon: <AlertTriangle className="h-4 w-4" />, path: '/super-admin/security/incidents' },
+        { label: 'Compliance', icon: <CheckCircle className="h-4 w-4" />, path: '/super-admin/security/compliance' },
       ]
     },
     {
-      label: 'Portal Management',
+      label: '👁️ System Monitoring',
+      icon: <Activity className="h-5 w-5" />,
+      path: '/super-admin/monitoring',
+      items: [
+        { label: 'Performance Monitoring', icon: <TrendingUp className="h-4 w-4" />, path: '/super-admin/monitoring/performance' },
+        { label: 'Error Tracking', icon: <AlertCircle className="h-4 w-4" />, path: '/super-admin/monitoring/errors' },
+        { label: 'Log Analysis', icon: <FileText className="h-4 w-4" />, path: '/super-admin/monitoring/logs' },
+        { label: 'Alert Management', icon: <Bell className="h-4 w-4" />, path: '/super-admin/monitoring/alerts' },
+        { label: 'Uptime Monitoring', icon: <CheckCircle className="h-4 w-4" />, path: '/super-admin/monitoring/uptime' },
+        { label: 'Resource Usage', icon: <Cpu className="h-4 w-4" />, path: '/super-admin/monitoring/resources' },
+        { label: 'Network Monitoring', icon: <Network className="h-4 w-4" />, path: '/super-admin/monitoring/network' },
+        { label: 'Health Checks', icon: <Heart className="h-4 w-4" />, path: '/super-admin/monitoring/health' },
+      ]
+    },
+    {
+      label: '🌐 Portal Management',
       icon: <Globe className="h-5 w-5" />,
       path: '/super-admin/portals',
       items: [
         { label: 'Portal Overview', icon: <Globe className="h-4 w-4" />, path: '/super-admin/portals' },
         { label: 'Portal Configuration', icon: <Settings className="h-4 w-4" />, path: '/super-admin/portals/config' },
         { label: 'User Access', icon: <Users className="h-4 w-4" />, path: '/super-admin/portals/users' },
+        { label: 'Feature Management', icon: <Zap className="h-4 w-4" />, path: '/super-admin/portals/features' },
         { label: 'Analytics', icon: <BarChart3 className="h-4 w-4" />, path: '/super-admin/portals/analytics' },
+        { label: 'Billing', icon: <CreditCard className="h-4 w-4" />, path: '/super-admin/portals/billing' },
+        { label: 'Support', icon: <MessageSquare className="h-4 w-4" />, path: '/super-admin/portals/support' },
+        { label: 'Integration', icon: <Network className="h-4 w-4" />, path: '/super-admin/portals/integrations' },
+        { label: 'Backup', icon: <Download className="h-4 w-4" />, path: '/super-admin/portals/backup' },
+        { label: 'Security', icon: <Shield className="h-4 w-4" />, path: '/super-admin/portals/security' },
+        { label: 'Compliance', icon: <CheckCircle className="h-4 w-4" />, path: '/super-admin/portals/compliance' },
+        { label: 'Deployment', icon: <Upload className="h-4 w-4" />, path: '/super-admin/portals/deployment' },
       ]
     },
     {
-      label: 'MCP Control Center',
+      label: '📋 Analytics & Reports',
+      icon: <BarChart3 className="h-5 w-5" />,
+      path: '/super-admin/analytics',
+      items: [
+        { label: 'Business Analytics', icon: <TrendingUp className="h-4 w-4" />, path: '/super-admin/analytics/business' },
+        { label: 'User Analytics', icon: <Users className="h-4 w-4" />, path: '/super-admin/analytics/users' },
+        { label: 'Performance Reports', icon: <Activity className="h-4 w-4" />, path: '/super-admin/analytics/performance' },
+        { label: 'Security Reports', icon: <Shield className="h-4 w-4" />, path: '/super-admin/analytics/security' },
+        { label: 'Financial Reports', icon: <DollarSign className="h-4 w-4" />, path: '/super-admin/analytics/financial' },
+        { label: 'Operational Reports', icon: <Clipboard className="h-4 w-4" />, path: '/super-admin/analytics/operational' },
+        { label: 'Custom Reports', icon: <FileText className="h-4 w-4" />, path: '/super-admin/analytics/custom' },
+        { label: 'Data Export', icon: <Download className="h-4 w-4" />, path: '/super-admin/analytics/export' },
+        { label: 'Dashboard Builder', icon: <LayoutDashboard className="h-4 w-4" />, path: '/super-admin/analytics/dashboard' },
+        { label: 'Scheduled Reports', icon: <Calendar className="h-4 w-4" />, path: '/super-admin/analytics/scheduled' },
+      ]
+    },
+    {
+      label: '🤖 MCP Control Center',
       icon: <Brain className="h-5 w-5" />,
       path: '/super-admin/mcp',
       items: [
         { label: 'System Overview', icon: <Brain className="h-4 w-4" />, path: '/super-admin/mcp' },
-        { label: 'Agent Management', icon: <Users className="h-4 w-4" />, path: '/super-admin/mcp/agents' },
+        { label: 'Agent Management', icon: <Bot className="h-4 w-4" />, path: '/super-admin/mcp/agents' },
         { label: 'AI Models', icon: <Cpu className="h-4 w-4" />, path: '/super-admin/mcp/models' },
+        { label: 'Data Pipeline', icon: <Database className="h-4 w-4" />, path: '/super-admin/mcp/pipeline' },
+        { label: 'Machine Learning', icon: <Brain className="h-4 w-4" />, path: '/super-admin/mcp/ml' },
+        { label: 'AI Analytics', icon: <BarChart3 className="h-4 w-4" />, path: '/super-admin/mcp/analytics' },
         { label: 'Automation Rules', icon: <Zap className="h-4 w-4" />, path: '/super-admin/mcp/automation' },
+        { label: 'Integration Hub', icon: <Network className="h-4 w-4" />, path: '/super-admin/mcp/integrations' },
+        { label: 'Monitoring', icon: <Activity className="h-4 w-4" />, path: '/super-admin/mcp/monitoring' },
+        { label: 'Compliance', icon: <Shield className="h-4 w-4" />, path: '/super-admin/mcp/compliance' },
+        { label: 'Documentation', icon: <FileText className="h-4 w-4" />, path: '/super-admin/mcp/docs' },
+        { label: 'Support', icon: <HelpCircle className="h-4 w-4" />, path: '/super-admin/mcp/support' },
       ]
     },
     {
-      label: 'Business Operations',
+      label: '💼 Business Operations',
       icon: <Briefcase className="h-5 w-5" />,
       path: '/super-admin/business',
       items: [
         { label: 'Customer Management', icon: <Users className="h-4 w-4" />, path: '/super-admin/business/customers' },
+        { label: 'Sales Pipeline', icon: <TrendingUp className="h-4 w-4" />, path: '/super-admin/business/sales' },
         { label: 'Billing & Invoicing', icon: <CreditCard className="h-4 w-4" />, path: '/super-admin/business/billing' },
         { label: 'Support Management', icon: <MessageSquare className="h-4 w-4" />, path: '/super-admin/business/support' },
+        { label: 'Documentation', icon: <FileText className="h-4 w-4" />, path: '/super-admin/business/docs' },
+        { label: 'Marketing Tools', icon: <BarChart3 className="h-4 w-4" />, path: '/super-admin/business/marketing' },
         { label: 'Partner Management', icon: <Building2 className="h-4 w-4" />, path: '/super-admin/business/partners' },
+        { label: 'Legal & Compliance', icon: <Shield className="h-4 w-4" />, path: '/super-admin/business/legal' },
+      ]
+    },
+    {
+      label: '🔧 Development & DevOps',
+      icon: <Code className="h-5 w-5" />,
+      path: '/super-admin/devops',
+      items: [
+        { label: 'Code Repository', icon: <GitBranch className="h-4 w-4" />, path: '/super-admin/devops/repo' },
+        { label: 'CI/CD Pipeline', icon: <Zap className="h-4 w-4" />, path: '/super-admin/devops/pipeline' },
+        { label: 'Testing', icon: <CheckCircle className="h-4 w-4" />, path: '/super-admin/devops/testing' },
+        { label: 'Environment Management', icon: <Settings className="h-4 w-4" />, path: '/super-admin/devops/environments' },
+        { label: 'Performance Testing', icon: <Activity className="h-4 w-4" />, path: '/super-admin/devops/performance' },
+        { label: 'Security Testing', icon: <Shield className="h-4 w-4" />, path: '/super-admin/devops/security' },
+        { label: 'Documentation', icon: <FileText className="h-4 w-4" />, path: '/super-admin/devops/docs' },
+        { label: 'Release Management', icon: <Upload className="h-4 w-4" />, path: '/super-admin/devops/releases' },
       ]
     },
   ];
 
-  // Dashboard data
+  // Enhanced Dashboard Data
   const statsData = [
     {
       title: 'Total Revenue',
@@ -121,7 +250,8 @@ const SuperAdmin: React.FC = () => {
       change: '+12.5%',
       trend: 'up',
       icon: <DollarSign className="h-8 w-8 text-green-600" />,
-      color: 'bg-gradient-to-br from-green-50 to-green-100 border-green-200'
+      color: 'bg-gradient-to-br from-green-50 to-green-100 border-green-200',
+      description: 'Monthly recurring revenue'
     },
     {
       title: 'Active Users',
@@ -129,7 +259,8 @@ const SuperAdmin: React.FC = () => {
       change: '+8.2%',
       trend: 'up',
       icon: <Users className="h-8 w-8 text-blue-600" />,
-      color: 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200'
+      color: 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200',
+      description: 'Concurrent active users'
     },
     {
       title: 'System Uptime',
@@ -137,7 +268,8 @@ const SuperAdmin: React.FC = () => {
       change: '+0.1%',
       trend: 'up',
       icon: <CheckCircle className="h-8 w-8 text-emerald-600" />,
-      color: 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
+      color: 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200',
+      description: 'Last 30 days uptime'
     },
     {
       title: 'Active Portals',
@@ -145,7 +277,26 @@ const SuperAdmin: React.FC = () => {
       change: '+3.2%',
       trend: 'up',
       icon: <Globe className="h-8 w-8 text-purple-600" />,
-      color: 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200'
+      color: 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200',
+      description: 'Customer portals'
+    },
+    {
+      title: 'MCP Agents',
+      value: '24',
+      change: '+2',
+      trend: 'up',
+      icon: <Bot className="h-8 w-8 text-orange-600" />,
+      color: 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200',
+      description: 'Active autonomous agents'
+    },
+    {
+      title: 'Security Score',
+      value: '98.5',
+      change: '+1.2%',
+      trend: 'up',
+      icon: <Shield className="h-8 w-8 text-indigo-600" />,
+      color: 'bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200',
+      description: 'Overall security rating'
     }
   ];
 
@@ -155,28 +306,40 @@ const SuperAdmin: React.FC = () => {
       user: 'John Smith',
       action: 'Updated portal configuration',
       status: 'success',
-      time: '2 minutes ago'
+      time: '2 minutes ago',
+      module: 'Portal Management'
     },
     {
       id: 2,
       user: 'Sarah Johnson',
       action: 'Created new user group',
       status: 'success',
-      time: '5 minutes ago'
+      time: '5 minutes ago',
+      module: 'User Management'
     },
     {
       id: 3,
-      user: 'Mike Wilson',
-      action: 'Deployed new version',
+      user: 'MCP Agent #7',
+      action: 'Automated security scan completed',
       status: 'info',
-      time: '10 minutes ago'
+      time: '10 minutes ago',
+      module: 'MCP Control Center'
     },
     {
       id: 4,
+      user: 'Mike Wilson',
+      action: 'Deployed new version',
+      status: 'success',
+      time: '15 minutes ago',
+      module: 'System Administration'
+    },
+    {
+      id: 5,
       user: 'Lisa Brown',
       action: 'Security audit completed',
       status: 'success',
-      time: '15 minutes ago'
+      time: '20 minutes ago',
+      module: 'Security Center'
     }
   ];
 
@@ -185,19 +348,29 @@ const SuperAdmin: React.FC = () => {
       id: 1,
       message: 'Database backup completed successfully',
       type: 'success',
-      time: '1 hour ago'
+      time: '1 hour ago',
+      priority: 'low'
     },
     {
       id: 2,
       message: 'New user registration spike detected',
       type: 'info',
-      time: '2 hours ago'
+      time: '2 hours ago',
+      priority: 'medium'
     },
     {
       id: 3,
       message: 'API rate limit approaching threshold',
       type: 'warning',
-      time: '3 hours ago'
+      time: '3 hours ago',
+      priority: 'high'
+    },
+    {
+      id: 4,
+      message: 'MCP Agent #12 performance optimization completed',
+      type: 'success',
+      time: '4 hours ago',
+      priority: 'low'
     }
   ];
 
@@ -221,14 +394,28 @@ const SuperAdmin: React.FC = () => {
       description: 'Run security audit',
       icon: <Shield className="h-6 w-6" />,
       color: 'bg-purple-500 hover:bg-purple-600',
-      path: '/super-admin/security/scan'
+      path: '/super-admin/security/audit'
+    },
+    {
+      title: 'MCP Agent Status',
+      description: 'Check autonomous agents',
+      icon: <Bot className="h-6 w-6" />,
+      color: 'bg-orange-500 hover:bg-orange-600',
+      path: '/super-admin/mcp/agents'
     },
     {
       title: 'View Analytics',
       description: 'Check system performance',
       icon: <BarChart3 className="h-6 w-6" />,
-      color: 'bg-orange-500 hover:bg-orange-600',
+      color: 'bg-indigo-500 hover:bg-indigo-600',
       path: '/super-admin/analytics'
+    },
+    {
+      title: 'Portal Management',
+      description: 'Manage customer portals',
+      icon: <Globe className="h-6 w-6" />,
+      color: 'bg-teal-500 hover:bg-teal-600',
+      path: '/super-admin/portals'
     }
   ];
 
@@ -252,13 +439,22 @@ const SuperAdmin: React.FC = () => {
     }
   };
 
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'high': return <Badge variant="destructive" className="text-xs">High</Badge>;
+      case 'medium': return <Badge variant="secondary" className="text-xs">Medium</Badge>;
+      case 'low': return <Badge variant="outline" className="text-xs">Low</Badge>;
+      default: return <Badge variant="outline" className="text-xs">Low</Badge>;
+    }
+  };
+
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
         {/* Sidebar */}
         <aside className={`bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${
-          sidebarOpen ? 'w-64' : 'w-16'
-        } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+          sidebarOpen ? 'w-72' : 'w-16'
+        } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 overflow-y-auto`}>
           
           {/* Sidebar Header */}
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -435,14 +631,14 @@ const SuperAdmin: React.FC = () => {
                 <div className="space-y-8">
                   {/* Page Header */}
                   <div className="space-y-3">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Enterprise Dashboard</h1>
                     <p className="text-lg text-gray-600 dark:text-gray-400">
-                      Welcome to the Enterprise Super Admin Dashboard. Monitor your system performance and manage your platform.
+                      Welcome to the Professional Super Admin Dashboard. Monitor your system performance, manage users, and control autonomous agents.
                     </p>
                   </div>
 
                   {/* Stats Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {statsData.map((stat, index) => (
                       <Card key={index} className={`${stat.color} border-2`}>
                         <CardContent className="p-6">
@@ -458,6 +654,7 @@ const SuperAdmin: React.FC = () => {
                                 )}
                                 <p className="text-sm font-semibold text-green-600">{stat.change} from last month</p>
                               </div>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{stat.description}</p>
                             </div>
                             <div className="p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                               {stat.icon}
@@ -485,7 +682,10 @@ const SuperAdmin: React.FC = () => {
                                   {getStatusIcon(activity.status)}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{activity.user}</p>
+                                  <div className="flex items-center space-x-2">
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{activity.user}</p>
+                                    <Badge variant="outline" className="text-xs">{activity.module}</Badge>
+                                  </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">{activity.action}</p>
                                 </div>
                                 <div className="flex-shrink-0">
@@ -513,8 +713,11 @@ const SuperAdmin: React.FC = () => {
                                   {getAlertIcon(alert.type)}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{alert.message}</p>
-                                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{alert.time}</p>
+                                  <div className="flex items-center space-x-2 mb-1">
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{alert.message}</p>
+                                    {getPriorityBadge(alert.priority)}
+                                  </div>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">{alert.time}</p>
                                 </div>
                               </div>
                             ))}
@@ -531,7 +734,7 @@ const SuperAdmin: React.FC = () => {
                       <CardDescription>Common administrative tasks</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         {quickActions.map((action, index) => (
                           <Button
                             key={index}
@@ -558,9 +761,9 @@ const SuperAdmin: React.FC = () => {
               <Route path="/*" element={
                 <div className="space-y-8">
                   <div className="space-y-3">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Page Under Development</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Module Under Development</h1>
                     <p className="text-lg text-gray-600 dark:text-gray-400">
-                      This page is currently being developed as part of the enterprise implementation.
+                      This module is currently being developed as part of the enterprise implementation.
                     </p>
                   </div>
                   
