@@ -63,120 +63,121 @@ export default function EnhancedSuperAdminPortal() {
             <Routes>
               <Route path="/" element={
                 <div className="container mx-auto px-4 py-8">
-                <div className="mb-8">
-                  <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
-                    Welcome to Super Admin Dashboard
-                  </h2>
-                  <p className="text-lg text-slate-600 dark:text-slate-300">
-                    Manage your entire TMS ecosystem from this central command center
-                  </p>
+                  <div className="mb-8">
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
+                      Welcome to Super Admin Dashboard
+                    </h2>
+                    <p className="text-lg text-slate-600 dark:text-slate-300">
+                      Manage your entire TMS ecosystem from this central command center
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <Shield className="w-5 h-5 text-blue-600" />
+                          <CardTitle>System Administration</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="mb-4">
+                          Manage system settings, configuration, and core infrastructure
+                        </CardDescription>
+                        <Button variant="outline" className="w-full">
+                          Access System Admin
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <Users className="w-5 h-5 text-green-600" />
+                          <CardTitle>User Management</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="mb-4">
+                          Manage users, roles, permissions, and access control
+                        </CardDescription>
+                        <Button variant="outline" className="w-full">
+                          Manage Users
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <Activity className="w-5 h-5 text-purple-600" />
+                          <CardTitle>System Analytics</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="mb-4">
+                          System-wide performance metrics and usage analytics
+                        </CardDescription>
+                        <Button variant="outline" className="w-full">
+                          View Analytics
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <Settings className="w-5 h-5 text-orange-600" />
+                          <CardTitle>Security & Compliance</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="mb-4">
+                          Security settings, compliance monitoring, and audit trails
+                        </CardDescription>
+                        <Button variant="outline" className="w-full">
+                          Security Center
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <Brain className="w-5 h-5 text-indigo-600" />
+                          <CardTitle>MCP Control Center</CardTitle>
+                          <Badge variant="secondary">New</Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="mb-4">
+                          Master Control Program - Advanced system management interface
+                        </CardDescription>
+                        <Button variant="outline" className="w-full">
+                          Launch MCP
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <Server className="w-5 h-5 text-red-600" />
+                          <CardTitle>System Health</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="mb-4">
+                          Monitor system health, performance, and operational status
+                        </CardDescription>
+                        <Button variant="outline" className="w-full">
+                          Health Dashboard
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <Card className="hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <div className="flex items-center space-x-2">
-                        <Shield className="w-5 h-5 text-blue-600" />
-                        <CardTitle>System Administration</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4">
-                        Manage system settings, configuration, and core infrastructure
-                      </CardDescription>
-                      <Button variant="outline" className="w-full">
-                        Access System Admin
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <div className="flex items-center space-x-2">
-                        <Users className="w-5 h-5 text-green-600" />
-                        <CardTitle>User Management</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4">
-                        Manage users, roles, permissions, and access control
-                      </CardDescription>
-                      <Button variant="outline" className="w-full">
-                        Manage Users
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <div className="flex items-center space-x-2">
-                        <Activity className="w-5 h-5 text-purple-600" />
-                        <CardTitle>System Analytics</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4">
-                        System-wide performance metrics and usage analytics
-                      </CardDescription>
-                      <Button variant="outline" className="w-full">
-                        View Analytics
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <div className="flex items-center space-x-2">
-                        <Settings className="w-5 h-5 text-orange-600" />
-                        <CardTitle>Security & Compliance</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4">
-                        Security settings, compliance monitoring, and audit trails
-                      </CardDescription>
-                      <Button variant="outline" className="w-full">
-                        Security Center
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <div className="flex items-center space-x-2">
-                        <Brain className="w-5 h-5 text-indigo-600" />
-                        <CardTitle>MCP Control Center</CardTitle>
-                        <Badge variant="secondary">New</Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4">
-                        Master Control Program - Advanced system management interface
-                      </CardDescription>
-                      <Button variant="outline" className="w-full">
-                        Launch MCP
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <div className="flex items-center space-x-2">
-                        <Server className="w-5 h-5 text-red-600" />
-                        <CardTitle>System Health</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4">
-                        Monitor system health, performance, and operational status
-                      </CardDescription>
-                      <Button variant="outline" className="w-full">
-                        Health Dashboard
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </Route>
+              } />
               <Route path="/*" element={<SuperAdminRoutes />} />
             </Routes>
           </main>
