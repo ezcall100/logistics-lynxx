@@ -114,7 +114,7 @@ import ComponentPlaygroundPage from './pages/ComponentPlaygroundPage';
 import SemanticColorDemoPage from './pages/SemanticColorDemoPage';
 
 // Import Floating Action Button
-import { FloatingActionButton } from '../admin/FloatingActionButton';
+import { FloatingActionButton } from '../shared/FloatingActionButton';
 
 // Import system control pages
 import SystemHealthPage from '../../pages/SystemHealthPage';

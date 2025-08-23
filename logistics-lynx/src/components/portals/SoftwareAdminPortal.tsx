@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import FloatingActionButton from '../admin/FloatingActionButton';
+import FloatingActionButton from '../shared/FloatingActionButton';
 
 // Type definitions
 interface NavigationChild {
