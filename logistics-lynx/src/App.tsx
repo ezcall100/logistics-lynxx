@@ -1,37 +1,30 @@
-import React from 'react';
-import './App.css';
+import React from "react";
 
-// Add debug logging
-console.log('App.tsx: Starting application...');
+export default function App() {
+  const href = typeof window !== "undefined" ? window.location.href : "";
+  const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
 
-// 🎯 MAIN APP COMPONENT - SIMPLIFIED FOR TESTING
-function App() {
-  console.log('App: Main App component rendering...');
-  
   return (
-    <div className="App" style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+    <main style={{ padding: 24, fontFamily: "Inter, system-ui, Arial" }}>
       <h1>🚀 Trans Bot AI - Fixed!</h1>
-      <p>✅ React is working correctly!</p>
-      <p>✅ Path aliases are working!</p>
-      <p>✅ Error boundaries are in place!</p>
-      
-      <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>
-        <h3>Debug Info:</h3>
-        <p>Current URL: {window.location.href}</p>
-        <p>Hash: {window.location.hash}</p>
-        <p>User Agent: {navigator.userAgent}</p>
-      </div>
-      
-      <div style={{ marginTop: '20px' }}>
-        <h3>Next Steps:</h3>
-        <p>1. ✅ Basic React setup - Working</p>
-        <p>2. ✅ Path aliases - Working</p>
-        <p>3. ✅ Error boundaries - Working</p>
-        <p>4. 🔄 Complex routing - To be restored</p>
-        <p>5. 🔄 Portal components - To be restored</p>
-      </div>
-    </div>
+      <p>React is working correctly!</p>
+
+      <section style={{ marginTop: 16 }}>
+        <h3>Debug</h3>
+        <pre style={{ whiteSpace: "pre-wrap", background: "#f5f5f5", padding: 12 }}>
+{`URL: ${href}
+UserAgent: ${ua}`}
+        </pre>
+      </section>
+
+      <section style={{ marginTop: 16 }}>
+        <h3>Next steps</h3>
+        <ol>
+          <li>Add <code>HashRouter</code> back once root loads.</li>
+          <li>Reintroduce <code>/super-admin</code> routes gradually.</li>
+          <li>Watch the console for any import/runtime errors.</li>
+        </ol>
+      </section>
+    </main>
   );
 }
-
-export default App;

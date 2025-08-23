@@ -1,16 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
 import App from "./App";
-import "./index.css";
-import { ErrorBoundary } from "./components/system/ErrorBoundary";
+import "./index.css"; // ok if missing; remove this line if you don't have it
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")!;
+createRoot(root).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </ErrorBoundary>
+    <App />
   </React.StrictMode>
 );
