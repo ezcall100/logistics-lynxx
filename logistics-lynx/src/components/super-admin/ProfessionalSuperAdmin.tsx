@@ -21,7 +21,7 @@ import {
   Home, Grid, PieChart, Target, Rocket, Star
 } from 'lucide-react';
 
-// Modern Enterprise Super Admin Portal
+// Professional Enterprise Super Admin Portal
 const ProfessionalSuperAdmin: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -33,7 +33,7 @@ const ProfessionalSuperAdmin: React.FC = () => {
   const toggleDarkMode = () => setDarkMode(!darkMode);
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
-  // Modern Menu Structure with Enhanced Icons
+  // Professional Menu Structure
   const menuItems = [
     {
       label: 'Dashboard',
@@ -180,7 +180,7 @@ const ProfessionalSuperAdmin: React.FC = () => {
     }
   ];
 
-  // Enhanced Dashboard Data with Modern Metrics
+  // Professional Dashboard Data
   const statsData = [
     { 
       title: 'Total Users', 
@@ -245,7 +245,7 @@ const ProfessionalSuperAdmin: React.FC = () => {
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <div className="flex h-screen bg-background">
-        {/* Modern Sidebar */}
+        {/* Professional Sidebar */}
         <aside className={`bg-card border-r border-border transition-all duration-300 ${
           sidebarOpen ? 'w-64' : 'w-16'
         } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
@@ -289,7 +289,7 @@ const ProfessionalSuperAdmin: React.FC = () => {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          {/* Modern Header */}
+          {/* Professional Header */}
           <header className="bg-card border-b border-border px-6 py-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -364,7 +364,7 @@ const ProfessionalSuperAdmin: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Enhanced Stats Grid */}
+                  {/* Professional Stats Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {statsData.map((stat, index) => (
                       <div key={index} className="group">
