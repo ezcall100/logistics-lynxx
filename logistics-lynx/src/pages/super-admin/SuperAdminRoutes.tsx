@@ -113,115 +113,115 @@ const SuperAdminRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Dashboard Routes */}
-      <Route path="/dashboard" element={<SystemOverview />} />
-      <Route path="/dashboard/users" element={<ActiveUsers />} />
-      <Route path="/dashboard/revenue" element={<RevenueMetrics />} />
-      <Route path="/dashboard/alerts" element={<SystemAlerts />} />
+      <Route path="/super-admin/dashboard" element={<SystemOverview />} />
+      <Route path="/super-admin/dashboard/users" element={<ActiveUsers />} />
+      <Route path="/super-admin/dashboard/revenue" element={<RevenueMetrics />} />
+      <Route path="/super-admin/dashboard/alerts" element={<SystemAlerts />} />
 
       {/* User Management Routes */}
-      <Route path="/users" element={<AllUsers />} />
-      <Route path="/users/roles" element={<UserRoles />} />
-      <Route path="/users/groups" element={<UserGroups />} />
-      <Route path="/users/access" element={<AccessControl />} />
-      <Route path="/users/analytics" element={<UserAnalytics />} />
-      <Route path="/users/billing" element={<BillingManagement />} />
-      <Route path="/users/support" element={<SupportTickets />} />
-      <Route path="/users/onboarding" element={<UserOnboarding />} />
+      <Route path="/super-admin/users" element={<AllUsers />} />
+      <Route path="/super-admin/users/roles" element={<UserRoles />} />
+      <Route path="/super-admin/users/groups" element={<UserGroups />} />
+      <Route path="/super-admin/users/access" element={<AccessControl />} />
+      <Route path="/super-admin/users/analytics" element={<UserAnalytics />} />
+      <Route path="/super-admin/users/billing" element={<BillingManagement />} />
+      <Route path="/super-admin/users/support" element={<SupportTickets />} />
+      <Route path="/super-admin/users/onboarding" element={<UserOnboarding />} />
 
       {/* System Administration Routes */}
-      <Route path="/system/database" element={<DatabaseManagement />} />
-      <Route path="/system/api" element={<APIManagement />} />
-      <Route path="/system/monitoring" element={<ServerMonitoring />} />
-      <Route path="/system/deployment" element={<DeploymentManagement />} />
-      <Route path="/system/config" element={<Configuration />} />
-      <Route path="/system/backup" element={<BackupRecovery />} />
-      <Route path="/system/security" element={<SecuritySettings />} />
-      <Route path="/system/integrations" element={<IntegrationHub />} />
-      <Route path="/system/storage" element={<FileStorage />} />
-      <Route path="/system/email" element={<EmailServices />} />
+      <Route path="/super-admin/system/database" element={<DatabaseManagement />} />
+      <Route path="/super-admin/system/api" element={<APIManagement />} />
+      <Route path="/super-admin/system/monitoring" element={<ServerMonitoring />} />
+      <Route path="/super-admin/system/deployment" element={<DeploymentManagement />} />
+      <Route path="/super-admin/system/config" element={<Configuration />} />
+      <Route path="/super-admin/system/backup" element={<BackupRecovery />} />
+      <Route path="/super-admin/system/security" element={<SecuritySettings />} />
+      <Route path="/super-admin/system/integrations" element={<IntegrationHub />} />
+      <Route path="/super-admin/system/storage" element={<FileStorage />} />
+      <Route path="/super-admin/system/email" element={<EmailServices />} />
 
       {/* Security Center Routes */}
-      <Route path="/security/audit" element={<SecurityAudit />} />
-      <Route path="/security/logs" element={<AccessLogs />} />
-      <Route path="/security/protection" element={<DataProtection />} />
-      <Route path="/security/api" element={<APISecurity />} />
-      <Route path="/security/permissions" element={<UserPermissions />} />
-      <Route path="/security/policies" element={<SecurityPolicies />} />
-      <Route path="/security/incidents" element={<IncidentResponse />} />
-      <Route path="/security/compliance" element={<ComplianceManagement />} />
+      <Route path="/super-admin/security/audit" element={<SecurityAudit />} />
+      <Route path="/super-admin/security/logs" element={<AccessLogs />} />
+      <Route path="/super-admin/security/protection" element={<DataProtection />} />
+      <Route path="/super-admin/security/api" element={<APISecurity />} />
+      <Route path="/super-admin/security/permissions" element={<UserPermissions />} />
+      <Route path="/super-admin/security/policies" element={<SecurityPolicies />} />
+      <Route path="/super-admin/security/incidents" element={<IncidentResponse />} />
+      <Route path="/super-admin/security/compliance" element={<ComplianceManagement />} />
 
       {/* System Monitoring Routes */}
-      <Route path="/monitoring/performance" element={<PerformanceMonitoring />} />
-      <Route path="/monitoring/errors" element={<ErrorTracking />} />
-      <Route path="/monitoring/logs" element={<LogAnalysis />} />
-      <Route path="/monitoring/alerts" element={<AlertManagement />} />
-      <Route path="/monitoring/uptime" element={<UptimeMonitoring />} />
-      <Route path="/monitoring/resources" element={<ResourceUsage />} />
-      <Route path="/monitoring/network" element={<NetworkMonitoring />} />
-      <Route path="/monitoring/health" element={<HealthChecks />} />
+      <Route path="/super-admin/monitoring/performance" element={<PerformanceMonitoring />} />
+      <Route path="/super-admin/monitoring/errors" element={<ErrorTracking />} />
+      <Route path="/super-admin/monitoring/logs" element={<LogAnalysis />} />
+      <Route path="/super-admin/monitoring/alerts" element={<AlertManagement />} />
+      <Route path="/super-admin/monitoring/uptime" element={<UptimeMonitoring />} />
+      <Route path="/super-admin/monitoring/resources" element={<ResourceUsage />} />
+      <Route path="/super-admin/monitoring/network" element={<NetworkMonitoring />} />
+      <Route path="/super-admin/monitoring/health" element={<HealthChecks />} />
 
       {/* Portal Management Routes */}
-      <Route path="/portals" element={<PortalOverview />} />
-      <Route path="/portals/config" element={<PortalConfiguration />} />
-      <Route path="/portals/users" element={<PortalUsers />} />
-      <Route path="/portals/features" element={<FeatureManagement />} />
-      <Route path="/portals/analytics" element={<PortalAnalytics />} />
-      <Route path="/portals/billing" element={<PortalBilling />} />
-      <Route path="/portals/support" element={<PortalSupport />} />
-      <Route path="/portals/integrations" element={<PortalIntegrations />} />
-      <Route path="/portals/backup" element={<PortalBackup />} />
-      <Route path="/portals/security" element={<PortalSecurity />} />
-      <Route path="/portals/compliance" element={<PortalCompliance />} />
-      <Route path="/portals/deployment" element={<PortalDeployment />} />
+      <Route path="/super-admin/portals" element={<PortalOverview />} />
+      <Route path="/super-admin/portals/config" element={<PortalConfiguration />} />
+      <Route path="/super-admin/portals/users" element={<PortalUsers />} />
+      <Route path="/super-admin/portals/features" element={<FeatureManagement />} />
+      <Route path="/super-admin/portals/analytics" element={<PortalAnalytics />} />
+      <Route path="/super-admin/portals/billing" element={<PortalBilling />} />
+      <Route path="/super-admin/portals/support" element={<PortalSupport />} />
+      <Route path="/super-admin/portals/integrations" element={<PortalIntegrations />} />
+      <Route path="/super-admin/portals/backup" element={<PortalBackup />} />
+      <Route path="/super-admin/portals/security" element={<PortalSecurity />} />
+      <Route path="/super-admin/portals/compliance" element={<PortalCompliance />} />
+      <Route path="/super-admin/portals/deployment" element={<PortalDeployment />} />
 
       {/* Analytics & Reports Routes */}
-      <Route path="/analytics/business" element={<BusinessAnalytics />} />
-      <Route path="/analytics/users" element={<UserAnalytics />} />
-      <Route path="/analytics/performance" element={<PerformanceReports />} />
-      <Route path="/analytics/security" element={<SecurityReports />} />
-      <Route path="/analytics/financial" element={<FinancialReports />} />
-      <Route path="/analytics/operational" element={<OperationalReports />} />
-      <Route path="/analytics/custom" element={<CustomReports />} />
-      <Route path="/analytics/export" element={<DataExport />} />
-      <Route path="/analytics/dashboards" element={<DashboardBuilder />} />
-      <Route path="/analytics/scheduled" element={<ScheduledReports />} />
+      <Route path="/super-admin/analytics/business" element={<BusinessAnalytics />} />
+      <Route path="/super-admin/analytics/users" element={<UserAnalytics />} />
+      <Route path="/super-admin/analytics/performance" element={<PerformanceReports />} />
+      <Route path="/super-admin/analytics/security" element={<SecurityReports />} />
+      <Route path="/super-admin/analytics/financial" element={<FinancialReports />} />
+      <Route path="/super-admin/analytics/operational" element={<OperationalReports />} />
+      <Route path="/super-admin/analytics/custom" element={<CustomReports />} />
+      <Route path="/super-admin/analytics/export" element={<DataExport />} />
+      <Route path="/super-admin/analytics/dashboards" element={<DashboardBuilder />} />
+      <Route path="/super-admin/analytics/scheduled" element={<ScheduledReports />} />
 
       {/* MCP Control Center Routes */}
-      <Route path="/mcp" element={<MCPOverview />} />
-      <Route path="/mcp/agents" element={<AgentManagement />} />
-      <Route path="/mcp/models" element={<AIModels />} />
-      <Route path="/mcp/pipeline" element={<DataPipeline />} />
-      <Route path="/mcp/learning" element={<MachineLearning />} />
-      <Route path="/mcp/analytics" element={<AIAnalytics />} />
-      <Route path="/mcp/automation" element={<AutomationRules />} />
-      <Route path="/mcp/integrations" element={<AIIntegrations />} />
-      <Route path="/mcp/monitoring" element={<AIMonitoring />} />
-      <Route path="/mcp/compliance" element={<AICompliance />} />
-      <Route path="/mcp/documentation" element={<AIDocumentation />} />
-      <Route path="/mcp/support" element={<AISupport />} />
+      <Route path="/super-admin/mcp" element={<MCPOverview />} />
+      <Route path="/super-admin/mcp/agents" element={<AgentManagement />} />
+      <Route path="/super-admin/mcp/models" element={<AIModels />} />
+      <Route path="/super-admin/mcp/pipeline" element={<DataPipeline />} />
+      <Route path="/super-admin/mcp/learning" element={<MachineLearning />} />
+      <Route path="/super-admin/mcp/analytics" element={<AIAnalytics />} />
+      <Route path="/super-admin/mcp/automation" element={<AutomationRules />} />
+      <Route path="/super-admin/mcp/integrations" element={<AIIntegrations />} />
+      <Route path="/super-admin/mcp/monitoring" element={<AIMonitoring />} />
+      <Route path="/super-admin/mcp/compliance" element={<AICompliance />} />
+      <Route path="/super-admin/mcp/documentation" element={<AIDocumentation />} />
+      <Route path="/super-admin/mcp/support" element={<AISupport />} />
 
       {/* Business Operations Routes */}
-      <Route path="/business/customers" element={<CustomerManagement />} />
-      <Route path="/business/sales" element={<SalesPipeline />} />
-      <Route path="/business/billing" element={<BillingInvoicing />} />
-      <Route path="/business/support" element={<SupportManagement />} />
-      <Route path="/business/docs" element={<Documentation />} />
-      <Route path="/business/marketing" element={<MarketingTools />} />
-      <Route path="/business/partners" element={<PartnerManagement />} />
-      <Route path="/business/legal" element={<LegalCompliance />} />
+      <Route path="/super-admin/business/customers" element={<CustomerManagement />} />
+      <Route path="/super-admin/business/sales" element={<SalesPipeline />} />
+      <Route path="/super-admin/business/billing" element={<BillingInvoicing />} />
+      <Route path="/super-admin/business/support" element={<SupportManagement />} />
+      <Route path="/super-admin/business/docs" element={<Documentation />} />
+      <Route path="/super-admin/business/marketing" element={<MarketingTools />} />
+      <Route path="/super-admin/business/partners" element={<PartnerManagement />} />
+      <Route path="/super-admin/business/legal" element={<LegalCompliance />} />
 
       {/* Development & DevOps Routes */}
-      <Route path="/dev/repository" element={<CodeRepository />} />
-      <Route path="/dev/pipeline" element={<CICDPipeline />} />
-      <Route path="/dev/testing" element={<TestingSuite />} />
-      <Route path="/dev/environments" element={<EnvironmentManagement />} />
-      <Route path="/dev/performance" element={<PerformanceTesting />} />
-      <Route path="/dev/security" element={<SecurityTesting />} />
-      <Route path="/dev/documentation" element={<DevDocumentation />} />
-      <Route path="/dev/releases" element={<ReleaseManagement />} />
+      <Route path="/super-admin/dev/repository" element={<CodeRepository />} />
+      <Route path="/super-admin/dev/pipeline" element={<CICDPipeline />} />
+      <Route path="/super-admin/dev/testing" element={<TestingSuite />} />
+      <Route path="/super-admin/dev/environments" element={<EnvironmentManagement />} />
+      <Route path="/super-admin/dev/performance" element={<PerformanceTesting />} />
+      <Route path="/super-admin/dev/security" element={<SecurityTesting />} />
+      <Route path="/super-admin/dev/documentation" element={<DevDocumentation />} />
+      <Route path="/super-admin/dev/releases" element={<ReleaseManagement />} />
 
       {/* Default route - redirect to dashboard */}
-      <Route path="/" element={<SystemOverview />} />
+      <Route path="/super-admin" element={<SystemOverview />} />
     </Routes>
   );
 };

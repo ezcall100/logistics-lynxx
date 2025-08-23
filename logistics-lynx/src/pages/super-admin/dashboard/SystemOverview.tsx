@@ -132,7 +132,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
         </p>
       </div>
 
-      {isLoading ? (
+          {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
             <Card key={i}>
@@ -144,9 +144,9 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      ) : (
+              ))}
+            </div>
+          ) : (
         <>
           {/* System Status */}
           <Card>
@@ -361,9 +361,9 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                     ></div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+        </CardContent>
+      </Card>
         </>
       )}
     </div>
