@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
@@ -1389,18 +1389,24 @@ const EnhancedSuperAdminPortal = () => {
           <main className={`flex-1 overflow-auto ${
             isDark ? 'bg-slate-900' : 'bg-slate-50'
           }`}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="h-full"
-              >
-                <Outlet />
-              </motion.div>
-            </AnimatePresence>
+            <Suspense
+              fallback={
+                <div className="p-6 text-sm opacity-70">Loading cockpit modules…</div>
+              }
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={location.pathname}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="h-full"
+                >
+                  <Outlet />
+                </motion.div>
+              </AnimatePresence>
+            </Suspense>
           </main>
         </div>
       </div>

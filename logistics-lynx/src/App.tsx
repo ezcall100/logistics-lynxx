@@ -33,6 +33,7 @@ import UserManagement from './components/admin/UserManagement';
 import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
 import LoginPage from './pages/auth/LoginPage';
 import { AutonomousPortalSelector } from './components/portal/AutonomousPortalSelector';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 // UI Components
 import { Button } from './components/ui/button';
@@ -195,12 +196,22 @@ function AppContent() {
         <Route path="/login" element={<LoginPage />} />
 
         {/* Portal Routes - Based on knowledge base registry */}
-        {/* Super Admin Portal with nested routes */}
+        {/* Super Admin shell with nested pages */}
         <Route path="/super-admin" element={<EnhancedSuperAdminPortal />}>
-          {/* Default -> MCP intro */}
+          {/* default: send to MCP intro */}
           <Route index element={<Navigate to="mcp/introduction" replace />} />
-          <Route path="mcp/*" element={<MCPControlCenter />} />
-          {/* Safety net */}
+
+          {/* MCP suite */}
+          <Route
+            path="mcp/*"
+            element={
+              <ErrorBoundary>
+                <MCPControlCenter />
+              </ErrorBoundary>
+            }
+          />
+
+          {/* fence anything unknown under /super-admin */}
           <Route path="*" element={<Navigate to="mcp/introduction" replace />} />
         </Route>
         <Route path="/admin/*" element={<UserManagement />} />
