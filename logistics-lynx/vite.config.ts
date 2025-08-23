@@ -7,7 +7,7 @@ export default defineConfig({
   server: { 
     port: 8084, 
     host: true,
-    strictPort: true
+    strictPort: false
   },
   resolve: {
     alias: {
