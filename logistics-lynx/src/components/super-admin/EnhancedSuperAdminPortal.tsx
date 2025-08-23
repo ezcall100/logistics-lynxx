@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation, NavLink } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
 import { useTheme } from '@/components/theme-provider';
 
@@ -57,6 +57,17 @@ import {
 // Custom Logo Components
 import TransBotLogo from '../ui/TransBotLogo';
 import TransBotHeaderLogo from './ui/TransBotHeaderLogo';
+
+// util to keep classes tidy
+function cx(...parts: Array<string | false | undefined>) {
+  return parts.filter(Boolean).join(" ");
+}
+
+// A small helper so we don't repeat styles
+const linkBase = "flex items-center gap-2 px-3 py-2 rounded-md transition outline-none";
+const linkRest = "hover:bg-slate-100 dark:hover:bg-slate-800/50";
+const linkActive = "bg-slate-200 text-slate-900 dark:bg-slate-800 dark:text-slate-100";
+const linkFocus = "focus-visible:ring-2 focus-visible:ring-slate-400 dark:focus-visible:ring-slate-600";
 
 // Autonomous System Integration
 const AutonomousSystem = {
@@ -147,6 +158,9 @@ const EnhancedSuperAdminPortal = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
+  // Group active state for highlighting
+  const mcpGroupActive = location.pathname.includes("/super-admin/mcp");
+  
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['dashboard', 'autonomous']);
@@ -230,7 +244,7 @@ const EnhancedSuperAdminPortal = () => {
       subItems: [
         { title: 'All Users', path: '/super-admin/users/all', icon: EnhancedIcons.Users },
         { title: 'Role Management', path: '/super-admin/users/roles', icon: EnhancedIcons.Shield },
-        { title: 'Access Control', path: '/super-admin/users/access', icon: EnhancedIcons.Lock },
+        { title: 'Access Control', path: '/super-admin/users/access', icon: EnhancedIcons.Shield },
         { title: 'User Analytics', path: '/super-admin/users/analytics', icon: EnhancedIcons.Analytics }
       ]
     },
@@ -1115,63 +1129,71 @@ const EnhancedSuperAdminPortal = () => {
                       </AccordionTrigger>
                       <AccordionContent className="ml-8 mt-2 space-y-1">
                           {item.subItems.map((subItem) => (
-                                <button
+                            <NavLink
                               key={subItem.path}
+                              to={subItem.path}
                               onClick={() => {
                                 console.log('Navigating to:', subItem.path);
-                                navigate(subItem.path);
                                 setMobileSidebarOpen(false);
                               }}
-                            className={`w-full flex items-center space-x-3 p-2 rounded-md text-sm transition-all duration-300 group ${
-                                    location.pathname === subItem.path
-                                ? isDark 
+                              className={({ isActive }) =>
+                                cx(
+                                  "w-full flex items-center space-x-3 p-2 rounded-md text-sm transition-all duration-300 group",
+                                  linkFocus,
+                                  isActive
+                                    ? isDark 
                                       ? 'bg-blue-600 text-white shadow-md'
-                                  : 'bg-blue-600 text-white shadow-md'
-                                : isDark
-                                        ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
-                                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                                  }`}
-                                >
-                            <div className={`p-1.5 rounded-md transition-all duration-300 ${
-                              location.pathname === subItem.path
-                                ? isDark ? 'bg-blue-500/30' : 'bg-blue-200'
-                                : isDark ? 'bg-slate-700 group-hover:bg-slate-600' : 'bg-slate-100 group-hover:bg-slate-200'
-                            }`}>
-                              <subItem.icon size={16} animated={false} />
-                            </div>
-                            <span className="font-medium">{subItem.title}</span>
-                                </button>
+                                      : 'bg-blue-600 text-white shadow-md'
+                                    : isDark
+                                      ? 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                                )
+                              }
+                            >
+                              <div className={`p-1.5 rounded-md transition-all duration-300 ${
+                                location.pathname === subItem.path
+                                  ? isDark ? 'bg-blue-500/30' : 'bg-blue-200'
+                                  : isDark ? 'bg-slate-700 group-hover:bg-slate-600' : 'bg-slate-100 group-hover:bg-slate-200'
+                              }`}>
+                                <subItem.icon size={16} animated={false} />
+                              </div>
+                              <span className="font-medium">{subItem.title}</span>
+                            </NavLink>
                           ))}
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
                 ) : (
-                      <button
+                  <NavLink
+                    to={item.path}
                     onClick={() => {
                       console.log('Navigating to main item:', item.path);
-                      navigate(item.path);
                       setMobileSidebarOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-4 p-3 rounded-lg transition-all duration-300 group ${
-                          location.pathname === item.path
-                        ? isDark 
-                          ? 'bg-blue-600 text-white shadow-md' 
-                          : 'bg-blue-600 text-white shadow-md'
-                        : isDark
-                              ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
+                    className={({ isActive }) =>
+                      cx(
+                        "w-full flex items-center space-x-4 p-3 rounded-lg transition-all duration-300 group",
+                        linkFocus,
+                        isActive
+                          ? isDark 
+                            ? 'bg-blue-600 text-white shadow-md' 
+                            : 'bg-blue-600 text-white shadow-md'
+                          : isDark
+                            ? 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                            : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      )
+                    }
                   >
-                                         <div className={`p-2 rounded-md transition-all duration-300 ${
-                       location.pathname === item.path
-                         ? 'bg-white/20'
-                         : isDark
-                           ? 'bg-slate-700 group-hover:bg-slate-600'
-                           : 'bg-slate-100 group-hover:bg-slate-200'
-                     }`}>
-                    <item.icon size={20} animated={false} />
+                    <div className={`p-2 rounded-md transition-all duration-300 ${
+                      location.pathname === item.path
+                        ? 'bg-white/20'
+                        : isDark
+                          ? 'bg-slate-700 group-hover:bg-slate-600'
+                          : 'bg-slate-100 group-hover:bg-slate-200'
+                    }`}>
+                      <item.icon size={20} animated={false} />
                     </div>
-                        {!sidebarCollapsed && (
+                    {!sidebarCollapsed && (
                       <div className="text-left">
                         <span className="font-semibold text-sm">{item.title}</span>
                         <p className={`text-xs mt-1 ${
@@ -1182,8 +1204,8 @@ const EnhancedSuperAdminPortal = () => {
                           {item.description}
                         </p>
                       </div>
-                        )}
-                      </button>
+                    )}
+                  </NavLink>
                 )}
               </div>
             ))}
