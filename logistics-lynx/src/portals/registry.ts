@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type PortalKey =
-  | "superAdmin" | "onboarding"
+  | "superAdmin" | "admin" | "tmsAdmin" | "onboarding"
   | "broker" | "shipper" | "carrier" | "driver" | "ownerOperator"
   | "factoring" | "loadBoard" | "crm" | "financials" | "edi"
   | "marketplace" | "analytics" | "autonomous" | "workers" | "rates" | "directory";
@@ -31,7 +31,30 @@ export const PORTALS: PortalDef[] = [
     color: "bg-purple-500",
     features: ["System Management", "User Administration", "Global Analytics", "Security Controls"]
   },
-
+  { 
+    key: "admin", 
+    title: "Admin", 
+    path: "/admin", 
+    featureFlag: "portal.admin.enabled", 
+    roles: ["owner", "admin"],
+    status: "active",
+    description: "System administration and user management",
+    icon: "Shield",
+    color: "bg-blue-600",
+    features: ["User Management", "System Configuration", "Access Control", "Audit Logs"]
+  },
+  { 
+    key: "tmsAdmin", 
+    title: "TMS Admin", 
+    path: "/tms-admin", 
+    featureFlag: "portal.tmsAdmin.enabled", 
+    roles: ["owner", "admin"],
+    status: "active",
+    description: "Transportation Management System administration",
+    icon: "Settings",
+    color: "bg-indigo-500",
+    features: ["TMS Configuration", "Workflow Management", "System Integration", "Performance Monitoring"]
+  },
   { 
     key: "onboarding", 
     title: "Onboarding", 

@@ -1,277 +1,261 @@
-import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { useAuth } from "./hooks/useAuth";
-import { ErrorBoundary } from "./components/system/ErrorBoundary";
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import './App.css';
+import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
+import { AuthProvider, useAuth } from './context/auth/AuthProvider';
 
-// Portal Components
-import SuperAdminPortal from "./components/super-admin/EnhancedSuperAdminPortal";
-import SoftwareAdminPortal from "./components/portals/SoftwareAdminPortal";
-import CarrierPortal from "./components/portals/CarrierPortal";
-import ShipperPortal from "./components/portals/ShipperPortal";
-import BrokerPortal from "./components/portals/BrokerPortal";
-import DriverPortal from "./components/portals/DriverPortal";
-import AnalyticsPortal from "./components/portals/AnalyticsPortal";
-import AutonomousPortal from "./components/portals/AutonomousPortal";
+// 🚀 AUTONOMOUS PORTAL SYSTEM - BASED ON KNOWLEDGE BASE
+// This system follows the actual portal structure from the knowledge base
 
-// Layout Components
-import DashboardLayout from "./components/layout/DashboardLayout";
-import LoadingSpinner from "./components/ui/LoadingSpinner";
+// Core Portal Components - Based on knowledge base registry
+import EnhancedSuperAdminPortal from './components/super-admin/EnhancedSuperAdminPortal';
+import MCPControlCenter from './components/super-admin/pages/MCPControlCenter';
+import SoftwareAdminPortal from './components/portals/SoftwareAdminPortal';
+import CarriersPortal from './components/portals/CarriersPortal';
+import BrokersPortal from './components/portals/BrokersPortal';
+import ShippersPortal from './components/portals/ShippersPortal';
+import AccessAllPortals from './components/portals/AccessAllPortals';
 
-export default function App() {
-  const { user, loading } = useAuth();
+// Existing Page Components
+import SuperAdminPage from './pages/SuperAdminPage';
+import CarrierPortalPage from './pages/CarrierPortalPage';
+import BrokerPortalPage from './pages/BrokerPortalPage';
+import ShipperPortalPage from './pages/ShipperPortalPage';
+import DriverManagementPage from './pages/DriverManagementPage';
+import LoadBoardPage from './pages/LoadBoardPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import BillingPage from './pages/BillingPage';
+import CompliancePage from './pages/CompliancePage';
+import SettingsPage from './pages/SettingsPage';
+import ReportsPage from './pages/ReportsPage';
+import SystemHealthPage from './pages/SystemHealthPage';
+import UserManagement from './components/admin/UserManagement';
+import OnboardingReviewDashboard from './components/admin/OnboardingReviewDashboard';
+import LoginPage from './pages/auth/LoginPage';
+import { AutonomousPortalSelector } from './components/portal/AutonomousPortalSelector';
+import ErrorBoundary from './components/common/ErrorBoundary';
+
+// UI Components
+import { Button } from './components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
+import { Badge } from './components/ui/badge';
+import { Input } from './components/ui/input';
+import { Label } from './components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './components/ui/select';
+
+// Icons
+import { 
+  Brain, 
+  Shield, 
+  Truck, 
+  Users, 
+  BarChart3, 
+  Settings, 
+  Zap, 
+  Globe,
+  Database,
+  Network,
+  Activity,
+  Target,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Wifi,
+  WifiOff,
+  Signal,
+  SignalHigh,
+  SignalMedium,
+  SignalLow,
+  Car,
+  Building2,
+  CreditCard,
+  Calculator,
+  Briefcase,
+  Phone,
+  Mail,
+  Calendar,
+  Eye,
+  DollarSign,
+  Receipt,
+  Banknote,
+  Building,
+  Star,
+  CheckCircle,
+  Clock,
+  AlertTriangle,
+  TrendingUp,
+  Search,
+  Filter,
+  Plus,
+  Home,
+  Grid,
+  List,
+  ChevronRight,
+  ChevronLeft,
+  Menu,
+  X,
+  User,
+  LogOut,
+  Bell,
+  Cog,
+  HelpCircle,
+  Info,
+  ExternalLink,
+  Download,
+  Upload,
+  RefreshCw,
+  Play,
+  Pause,
+  SkipForward,
+  SkipBack,
+  VolumeX,
+  Maximize2,
+  Minimize2,
+  RotateCcw,
+  RotateCw,
+  ZoomIn,
+  ZoomOut,
+  Move,
+  Copy,
+  Scissors,
+  FileText,
+  File,
+  Folder,
+  FolderOpen,
+  Save,
+  Edit,
+  Trash2,
+  Archive,
+  Inbox,
+  Send,
+  Heart,
+  ThumbsUp,
+  ThumbsDown,
+  MessageSquare,
+  MessageCircle,
+  Video,
+  Camera,
+  Image,
+  Music,
+  Headphones,
+  Mic,
+  MicOff,
+  Volume,
+  Volume1,
+  Lock,
+  Unlock,
+  Key,
+  EyeOff,
+  ShieldCheck,
+  AlertCircle,
+  XCircle,
+  MinusCircle,
+  PlusCircle,
+  Circle,
+  Square,
+  Triangle,
+  Hexagon,
+  Octagon,
+  Package,
+  ShoppingCart,
+  Wrench,
+  Fuel,
+  Sun,
+  Moon
+} from 'lucide-react';
+
+// Portal configuration moved to separate component file
+
+// Portal configuration moved to separate component file
+
+// 🎯 MAIN APP COMPONENT
+function AppContent() {
+  const { user } = useAuth();
   const location = useLocation();
 
-  if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontFamily: 'Inter, system-ui, Arial'
-      }}>
-        <LoadingSpinner />
-        <p style={{ marginLeft: 16 }}>Loading Trans Bot AI...</p>
-      </div>
-    );
+  // Check if user is authenticated - Temporarily bypass for demo
+  if (!user) {
+    // For demo purposes, allow access without authentication
+    console.log('Demo mode: Bypassing authentication');
   }
 
   return (
-    <ErrorBoundary>
-      <Routes>
-        {/* Super Admin Portal */}
-        <Route 
-          path="/super-admin/*" 
-          element={
-            <DashboardLayout>
-              <SuperAdminPortal />
-            </DashboardLayout>
-          } 
-        />
+        <div className="App">
+          <Routes>
+            {/* Main Portal Selection */}
+        <Route path="/" element={<AutonomousPortalSelector />} />
 
-        {/* Software Admin Portal */}
-        <Route 
-          path="/software-admin/*" 
-          element={
-            <DashboardLayout>
-              <SoftwareAdminPortal />
-            </DashboardLayout>
-          } 
-        />
+        {/* Authentication Routes */}
+        <Route path="/login" element={<LoginPage />} />
 
-        {/* Carrier Portal */}
-        <Route 
-          path="/carrier/*" 
-          element={
-            <DashboardLayout>
-              <CarrierPortal />
-            </DashboardLayout>
-          } 
-        />
+        {/* Portal Routes - Based on knowledge base registry */}
+        {/* Super Admin shell with nested pages */}
+        <Route path="/super-admin" element={<EnhancedSuperAdminPortal />}>
+          {/* default: send to MCP intro */}
+          <Route index element={<Navigate to="mcp/introduction" replace />} />
 
-        {/* Shipper Portal */}
-        <Route 
-          path="/shipper/*" 
-          element={
-            <DashboardLayout>
-              <ShipperPortal />
-            </DashboardLayout>
-          } 
-        />
+          {/* MCP suite */}
+          <Route
+            path="mcp/*"
+            element={
+              <ErrorBoundary>
+                <MCPControlCenter />
+              </ErrorBoundary>
+            }
+          />
 
-        {/* Broker Portal */}
-        <Route 
-          path="/broker/*" 
-          element={
-            <DashboardLayout>
-              <BrokerPortal />
-            </DashboardLayout>
-          } 
-        />
+          {/* fence anything unknown under /super-admin */}
+          <Route path="*" element={<Navigate to="mcp/introduction" replace />} />
+        </Route>
+        <Route path="/admin/*" element={<UserManagement />} />
+        <Route path="/tms-admin/*" element={<SuperAdminPage />} />
+        <Route path="/carrier/*" element={<CarriersPortal />} />
+        <Route path="/broker/*" element={<BrokersPortal />} />
+        <Route path="/shipper/*" element={<ShippersPortal />} />
+        <Route path="/driver/*" element={<DriverManagementPage />} />
+        <Route path="/owner-operator/*" element={<SuperAdminPage />} />
+        <Route path="/factoring/*" element={<BillingPage />} />
+        <Route path="/load-board/*" element={<LoadBoardPage />} />
+        <Route path="/crm/*" element={<SuperAdminPage />} />
+        <Route path="/financials/*" element={<BillingPage />} />
+        <Route path="/edi/*" element={<SuperAdminPage />} />
+        <Route path="/marketplace/*" element={<SuperAdminPage />} />
+        <Route path="/analytics/*" element={<AnalyticsPage />} />
+        <Route path="/workers/*" element={<SystemHealthPage />} />
+        <Route path="/rates/*" element={<SuperAdminPage />} />
+        <Route path="/directory/*" element={<SuperAdminPage />} />
+        <Route path="/onboarding/*" element={<OnboardingReviewDashboard />} />
+        <Route path="/software-company/*" element={<SoftwareAdminPortal />} />
 
-        {/* Driver Portal */}
-        <Route 
-          path="/driver/*" 
-          element={
-            <DashboardLayout>
-              <DriverPortal />
-            </DashboardLayout>
-          } 
-        />
+        {/* Legacy Routes for Compatibility */}
+        <Route path="/carrier-portal" element={<CarrierPortalPage />} />
+        <Route path="/broker-portal" element={<BrokerPortalPage />} />
+        <Route path="/shipper-portal" element={<ShipperPortalPage />} />
+        <Route path="/access-all" element={<AccessAllPortals />} />
 
-        {/* Analytics Portal */}
-        <Route 
-          path="/analytics/*" 
-          element={
-            <DashboardLayout>
-              <AnalyticsPortal />
-            </DashboardLayout>
-          } 
-        />
-
-        {/* Autonomous Portal */}
-        <Route 
-          path="/autonomous/*" 
-          element={
-            <DashboardLayout>
-              <AutonomousPortal />
-            </DashboardLayout>
-          } 
-        />
-
-        {/* Default Route - Show Portal Selection */}
-        <Route 
-          path="/" 
-          element={
-            <div style={{ 
-              padding: 24, 
-              fontFamily: "Inter, system-ui, Arial",
-              maxWidth: 1200,
-              margin: '0 auto'
-            }}>
-              <h1>🚀 Trans Bot AI</h1>
-              <p>Select your portal to get started:</p>
-              
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: 16,
-                marginTop: 24
-              }}>
-                <PortalCard 
-                  title="Super Admin" 
-                  description="System administration and configuration"
-                  href="#/super-admin"
-                  color="#dc2626"
-                />
-                <PortalCard 
-                  title="Software Admin" 
-                  description="Software management and deployment"
-                  href="#/software-admin"
-                  color="#2563eb"
-                />
-                <PortalCard 
-                  title="Carrier" 
-                  description="Carrier operations and fleet management"
-                  href="#/carrier"
-                  color="#059669"
-                />
-                <PortalCard 
-                  title="Shipper" 
-                  description="Shipping operations and logistics"
-                  href="#/shipper"
-                  color="#7c3aed"
-                />
-                <PortalCard 
-                  title="Broker" 
-                  description="Freight brokerage and matching"
-                  href="#/broker"
-                  color="#ea580c"
-                />
-                <PortalCard 
-                  title="Driver" 
-                  description="Driver interface and mobile app"
-                  href="#/driver"
-                  color="#0891b2"
-                />
-                <PortalCard 
-                  title="Analytics" 
-                  description="Business intelligence and reporting"
-                  href="#/analytics"
-                  color="#be185d"
-                />
-                <PortalCard 
-                  title="Autonomous" 
-                  description="AI-powered autonomous operations"
-                  href="#/autonomous"
-                  color="#65a30d"
-                />
-              </div>
-
-              <section style={{ marginTop: 32 }}>
-                <h3>Debug Info</h3>
-                <pre style={{ 
-                  whiteSpace: "pre-wrap", 
-                  background: "#f5f5f5", 
-                  padding: 12,
-                  borderRadius: 4
-                }}>
-{`Current Path: ${location.pathname}
-User: ${user ? user.email : 'Not authenticated'}
-Loading: ${loading}`}
-                </pre>
-              </section>
-            </div>
-          } 
-        />
-
-        {/* Catch-all route */}
-        <Route 
-          path="*" 
-          element={
-            <div style={{ 
-              padding: 24, 
-              fontFamily: "Inter, system-ui, Arial",
-              textAlign: 'center'
-            }}>
-              <h2>❓ Page Not Found</h2>
-              <p>The route <code>{location.pathname}</code> doesn't exist.</p>
-              <a href="#/" style={{ color: '#2563eb', textDecoration: 'none' }}>
-                ← Back to Portal Selection
-              </a>
-            </div>
-          } 
-        />
-      </Routes>
-    </ErrorBoundary>
+        {/* Global fallback → Super Admin */}
+        <Route path="*" element={<Navigate to="/super-admin" replace />} />
+          </Routes>
+        </div>
   );
 }
 
-// Portal Card Component
-function PortalCard({ title, description, href, color }: {
-  title: string;
-  description: string;
-  href: string;
-  color: string;
-}) {
+// 🎯 MAIN APP WRAPPER
+function App() {
   return (
-    <a 
-      href={href}
-      style={{
-        display: 'block',
-        padding: 24,
-        border: `2px solid ${color}`,
-        borderRadius: 8,
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: 'all 0.2s ease',
-        background: 'white'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
-    >
-      <h3 style={{ 
-        margin: '0 0 8px 0', 
-        color: color,
-        fontSize: '1.25rem',
-        fontWeight: 600
-      }}>
-        {title}
-      </h3>
-      <p style={{ 
-        margin: 0, 
-        color: '#6b7280',
-        fontSize: '0.875rem',
-        lineHeight: 1.5
-      }}>
-        {description}
-      </p>
-    </a>
+    <GlobalErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </GlobalErrorBoundary>
   );
 }
+
+export default App;
