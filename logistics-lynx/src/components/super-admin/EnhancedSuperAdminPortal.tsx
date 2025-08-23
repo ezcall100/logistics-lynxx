@@ -310,7 +310,7 @@ const EnhancedSuperAdminPortal = () => {
         { title: 'Control Center', path: '/super-admin/mcp', icon: EnhancedIcons.Dashboard },
         { title: 'Introduction', path: '/super-admin/mcp/introduction', icon: EnhancedIcons.Info },
         { title: 'Features', path: '/super-admin/mcp/features', icon: EnhancedIcons.Zap },
-        { title: 'Integrations', path: '/super-admin/mcp/integrations', icon: EnhancedIcons.Link },
+        { title: 'Integrations', path: '/super-admin/mcp/integrations', icon: EnhancedIcons.Network },
         { title: 'Documentation', path: '/super-admin/mcp/documentation', icon: EnhancedIcons.BookOpen },
         { title: 'Support', path: '/super-admin/mcp/support', icon: EnhancedIcons.HelpCircle },
         { title: 'Agent Registry', path: '/super-admin/mcp/agent-registry', icon: EnhancedIcons.Users },
