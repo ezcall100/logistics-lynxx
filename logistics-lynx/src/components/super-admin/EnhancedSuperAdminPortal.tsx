@@ -14,7 +14,9 @@ export default function EnhancedSuperAdminPortal() {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   // Check if we're on a specific route or the main dashboard
-  const isOnSpecificRoute = location.pathname !== '/super-admin' && !location.pathname.endsWith('/super-admin');
+  const isOnSpecificRoute = location.pathname !== '/super-admin' && 
+                           !location.pathname.endsWith('/super-admin') &&
+                           location.pathname !== '/super-admin/';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
