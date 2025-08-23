@@ -71,6 +71,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import SuperAdminRoutes from '../pages/super-admin/SuperAdminRoutes';
 
 // Professional Super Admin Component with Complete MCP Integration
 const SuperAdmin: React.FC = () => {
