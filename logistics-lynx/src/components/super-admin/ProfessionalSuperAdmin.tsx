@@ -3,6 +3,10 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
+import { DropdownMenu } from '../../components/ui/dropdown-menu';
+import { Accordion } from '../../components/ui/accordion';
+import { StatCard } from '../dashboard/StatCard';
+import { ActivityFeed } from '../dashboard/ActivityFeed';
 import {
   LayoutDashboard, Users, Settings, Shield, Activity, Globe,
   BarChart3, Brain, Briefcase, Code, Menu, TrendingUp,
@@ -26,186 +30,167 @@ const ProfessionalSuperAdmin: React.FC = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
-  // Enterprise Menu Structure
+  // Enterprise Menu Structure with Accordion Support
   const menuItems = [
     {
-      name: 'Dashboard',
-      icon: LayoutDashboard,
+      label: 'Dashboard',
       path: '/super-admin',
-      badge: null
+      icon: <LayoutDashboard className="h-4 w-4" />
     },
     {
-      name: 'User Management',
-      icon: Users,
-      path: '/super-admin/users',
-      badge: '12',
-      submenu: [
-        { name: 'All Users', path: '/super-admin/users/all', icon: Users },
-        { name: 'User Roles', path: '/super-admin/users/roles', icon: Shield },
-        { name: 'User Groups', path: '/super-admin/users/groups', icon: Building2 },
-        { name: 'Access Control', path: '/super-admin/users/access', icon: Lock },
-        { name: 'User Analytics', path: '/super-admin/users/analytics', icon: BarChart3 },
-        { name: 'Billing Management', path: '/super-admin/users/billing', icon: DollarSign },
-        { name: 'Support Tickets', path: '/super-admin/users/support', icon: FileText },
-        { name: 'User Onboarding', path: '/super-admin/users/onboarding', icon: UserCheck }
+      label: 'User Management',
+      icon: <Users className="h-4 w-4" />,
+      items: [
+        { label: 'All Users', path: '/super-admin/users/all', icon: <Users className="h-4 w-4" /> },
+        { label: 'User Roles', path: '/super-admin/users/roles', icon: <Shield className="h-4 w-4" /> },
+        { label: 'User Groups', path: '/super-admin/users/groups', icon: <Building2 className="h-4 w-4" /> },
+        { label: 'Access Control', path: '/super-admin/users/access', icon: <Lock className="h-4 w-4" /> },
+        { label: 'User Analytics', path: '/super-admin/users/analytics', icon: <BarChart3 className="h-4 w-4" /> },
+        { label: 'Billing Management', path: '/super-admin/users/billing', icon: <DollarSign className="h-4 w-4" /> },
+        { label: 'Support Tickets', path: '/super-admin/users/support', icon: <FileText className="h-4 w-4" /> },
+        { label: 'User Onboarding', path: '/super-admin/users/onboarding', icon: <UserCheck className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'System Administration',
-      icon: Settings,
-      path: '/super-admin/system',
-      badge: null,
-      submenu: [
-        { name: 'Database Management', path: '/super-admin/system/database', icon: Database },
-        { name: 'API Management', path: '/super-admin/system/api', icon: Server },
-        { name: 'Server Monitoring', path: '/super-admin/system/monitoring', icon: Cpu },
-        { name: 'Deployment', path: '/super-admin/system/deployment', icon: Zap },
-        { name: 'Configuration', path: '/super-admin/system/config', icon: Settings },
-        { name: 'Backup & Recovery', path: '/super-admin/system/backup', icon: Database },
-        { name: 'Security Settings', path: '/super-admin/system/security', icon: Shield },
-        { name: 'Integration Hub', path: '/super-admin/system/integrations', icon: Network },
-        { name: 'File Storage', path: '/super-admin/system/storage', icon: FileText },
-        { name: 'Email Services', path: '/super-admin/system/email', icon: FileText }
+      label: 'System Administration',
+      icon: <Settings className="h-4 w-4" />,
+      items: [
+        { label: 'Database Management', path: '/super-admin/system/database', icon: <Database className="h-4 w-4" /> },
+        { label: 'API Management', path: '/super-admin/system/api', icon: <Server className="h-4 w-4" /> },
+        { label: 'Server Monitoring', path: '/super-admin/system/monitoring', icon: <Cpu className="h-4 w-4" /> },
+        { label: 'Deployment', path: '/super-admin/system/deployment', icon: <Zap className="h-4 w-4" /> },
+        { label: 'Configuration', path: '/super-admin/system/config', icon: <Settings className="h-4 w-4" /> },
+        { label: 'Backup & Recovery', path: '/super-admin/system/backup', icon: <Database className="h-4 w-4" /> },
+        { label: 'Security Settings', path: '/super-admin/system/security', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Integration Hub', path: '/super-admin/system/integrations', icon: <Network className="h-4 w-4" /> },
+        { label: 'File Storage', path: '/super-admin/system/storage', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Email Services', path: '/super-admin/system/email', icon: <FileText className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'Security Center',
-      icon: Shield,
-      path: '/super-admin/security',
-      badge: '3',
-      submenu: [
-        { name: 'Security Audit', path: '/super-admin/security/audit', icon: Shield },
-        { name: 'Access Logs', path: '/super-admin/security/logs', icon: FileText },
-        { name: 'Data Protection', path: '/super-admin/security/data', icon: Lock },
-        { name: 'API Security', path: '/super-admin/security/api', icon: Server },
-        { name: 'User Permissions', path: '/super-admin/security/permissions', icon: Users },
-        { name: 'Security Policies', path: '/super-admin/security/policies', icon: Shield },
-        { name: 'Incident Response', path: '/super-admin/security/incidents', icon: AlertTriangle },
-        { name: 'Compliance', path: '/super-admin/security/compliance', icon: FileText }
+      label: 'Security Center',
+      icon: <Shield className="h-4 w-4" />,
+      items: [
+        { label: 'Security Audit', path: '/super-admin/security/audit', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Access Logs', path: '/super-admin/security/logs', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Data Protection', path: '/super-admin/security/data', icon: <Lock className="h-4 w-4" /> },
+        { label: 'API Security', path: '/super-admin/security/api', icon: <Server className="h-4 w-4" /> },
+        { label: 'User Permissions', path: '/super-admin/security/permissions', icon: <Users className="h-4 w-4" /> },
+        { label: 'Security Policies', path: '/super-admin/security/policies', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Incident Response', path: '/super-admin/security/incidents', icon: <AlertTriangle className="h-4 w-4" /> },
+        { label: 'Compliance', path: '/super-admin/security/compliance', icon: <FileText className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'System Monitoring',
-      icon: Activity,
-      path: '/super-admin/monitoring',
-      badge: null,
-      submenu: [
-        { name: 'Performance Monitoring', path: '/super-admin/monitoring/performance', icon: Activity },
-        { name: 'Error Tracking', path: '/super-admin/monitoring/errors', icon: AlertTriangle },
-        { name: 'Log Analysis', path: '/super-admin/monitoring/logs', icon: FileText },
-        { name: 'Alert Management', path: '/super-admin/monitoring/alerts', icon: Bell },
-        { name: 'Uptime Monitoring', path: '/super-admin/monitoring/uptime', icon: Activity },
-        { name: 'Resource Usage', path: '/super-admin/monitoring/resources', icon: Cpu },
-        { name: 'Network Monitoring', path: '/super-admin/monitoring/network', icon: Network },
-        { name: 'Health Checks', path: '/super-admin/monitoring/health', icon: Activity }
+      label: 'System Monitoring',
+      icon: <Activity className="h-4 w-4" />,
+      items: [
+        { label: 'Performance Monitoring', path: '/super-admin/monitoring/performance', icon: <Activity className="h-4 w-4" /> },
+        { label: 'Error Tracking', path: '/super-admin/monitoring/errors', icon: <AlertTriangle className="h-4 w-4" /> },
+        { label: 'Log Analysis', path: '/super-admin/monitoring/logs', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Alert Management', path: '/super-admin/monitoring/alerts', icon: <Bell className="h-4 w-4" /> },
+        { label: 'Uptime Monitoring', path: '/super-admin/monitoring/uptime', icon: <Activity className="h-4 w-4" /> },
+        { label: 'Resource Usage', path: '/super-admin/monitoring/resources', icon: <Cpu className="h-4 w-4" /> },
+        { label: 'Network Monitoring', path: '/super-admin/monitoring/network', icon: <Network className="h-4 w-4" /> },
+        { label: 'Health Checks', path: '/super-admin/monitoring/health', icon: <Activity className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'Portal Management',
-      icon: Globe,
-      path: '/super-admin/portals',
-      badge: null,
-      submenu: [
-        { name: 'Portal Overview', path: '/super-admin/portals/overview', icon: LayoutDashboard },
-        { name: 'Portal Configuration', path: '/super-admin/portals/config', icon: Settings },
-        { name: 'User Access', path: '/super-admin/portals/users', icon: Users },
-        { name: 'Feature Management', path: '/super-admin/portals/features', icon: Zap },
-        { name: 'Analytics', path: '/super-admin/portals/analytics', icon: BarChart3 },
-        { name: 'Billing', path: '/super-admin/portals/billing', icon: DollarSign },
-        { name: 'Support', path: '/super-admin/portals/support', icon: FileText },
-        { name: 'Integration', path: '/super-admin/portals/integrations', icon: Network },
-        { name: 'Backup', path: '/super-admin/portals/backup', icon: Database },
-        { name: 'Security', path: '/super-admin/portals/security', icon: Shield },
-        { name: 'Compliance', path: '/super-admin/portals/compliance', icon: FileText },
-        { name: 'Deployment', path: '/super-admin/portals/deployment', icon: Zap }
+      label: 'Portal Management',
+      icon: <Globe className="h-4 w-4" />,
+      items: [
+        { label: 'Portal Overview', path: '/super-admin/portals/overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+        { label: 'Portal Configuration', path: '/super-admin/portals/config', icon: <Settings className="h-4 w-4" /> },
+        { label: 'User Access', path: '/super-admin/portals/users', icon: <Users className="h-4 w-4" /> },
+        { label: 'Feature Management', path: '/super-admin/portals/features', icon: <Zap className="h-4 w-4" /> },
+        { label: 'Analytics', path: '/super-admin/portals/analytics', icon: <BarChart3 className="h-4 w-4" /> },
+        { label: 'Billing', path: '/super-admin/portals/billing', icon: <DollarSign className="h-4 w-4" /> },
+        { label: 'Support', path: '/super-admin/portals/support', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Integration', path: '/super-admin/portals/integrations', icon: <Network className="h-4 w-4" /> },
+        { label: 'Backup', path: '/super-admin/portals/backup', icon: <Database className="h-4 w-4" /> },
+        { label: 'Security', path: '/super-admin/portals/security', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Compliance', path: '/super-admin/portals/compliance', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Deployment', path: '/super-admin/portals/deployment', icon: <Zap className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'Analytics & Reports',
-      icon: BarChart3,
-      path: '/super-admin/analytics',
-      badge: null,
-      submenu: [
-        { name: 'Business Analytics', path: '/super-admin/analytics/business', icon: TrendingUp },
-        { name: 'User Analytics', path: '/super-admin/analytics/users', icon: Users },
-        { name: 'Performance Reports', path: '/super-admin/analytics/performance', icon: Activity },
-        { name: 'Security Reports', path: '/super-admin/analytics/security', icon: Shield },
-        { name: 'Financial Reports', path: '/super-admin/analytics/financial', icon: DollarSign },
-        { name: 'Operational Reports', path: '/super-admin/analytics/operational', icon: Settings },
-        { name: 'Custom Reports', path: '/super-admin/analytics/custom', icon: BarChart3 },
-        { name: 'Data Export', path: '/super-admin/analytics/export', icon: FileText },
-        { name: 'Dashboard Builder', path: '/super-admin/analytics/dashboard', icon: LayoutDashboard },
-        { name: 'Scheduled Reports', path: '/super-admin/analytics/scheduled', icon: Bell }
+      label: 'Analytics & Reports',
+      icon: <BarChart3 className="h-4 w-4" />,
+      items: [
+        { label: 'Business Analytics', path: '/super-admin/analytics/business', icon: <TrendingUp className="h-4 w-4" /> },
+        { label: 'User Analytics', path: '/super-admin/analytics/users', icon: <Users className="h-4 w-4" /> },
+        { label: 'Performance Reports', path: '/super-admin/analytics/performance', icon: <Activity className="h-4 w-4" /> },
+        { label: 'Security Reports', path: '/super-admin/analytics/security', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Financial Reports', path: '/super-admin/analytics/financial', icon: <DollarSign className="h-4 w-4" /> },
+        { label: 'Operational Reports', path: '/super-admin/analytics/operational', icon: <Settings className="h-4 w-4" /> },
+        { label: 'Custom Reports', path: '/super-admin/analytics/custom', icon: <BarChart3 className="h-4 w-4" /> },
+        { label: 'Data Export', path: '/super-admin/analytics/export', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Dashboard Builder', path: '/super-admin/analytics/dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
+        { label: 'Scheduled Reports', path: '/super-admin/analytics/scheduled', icon: <Bell className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'MCP Control Center',
-      icon: Brain,
-      path: '/super-admin/mcp',
-      badge: 'AI',
-      submenu: [
-        { name: 'System Overview', path: '/super-admin/mcp/overview', icon: LayoutDashboard },
-        { name: 'Agent Management', path: '/super-admin/mcp/agents', icon: Users },
-        { name: 'AI Models', path: '/super-admin/mcp/models', icon: Brain },
-        { name: 'Data Pipeline', path: '/super-admin/mcp/pipeline', icon: Database },
-        { name: 'Machine Learning', path: '/super-admin/mcp/ml', icon: Brain },
-        { name: 'AI Analytics', path: '/super-admin/mcp/analytics', icon: BarChart3 },
-        { name: 'Automation Rules', path: '/super-admin/mcp/rules', icon: Zap },
-        { name: 'Integration Hub', path: '/super-admin/mcp/integrations', icon: Network },
-        { name: 'Monitoring', path: '/super-admin/mcp/monitoring', icon: Activity },
-        { name: 'Compliance', path: '/super-admin/mcp/compliance', icon: Shield },
-        { name: 'Documentation', path: '/super-admin/mcp/docs', icon: FileText },
-        { name: 'Support', path: '/super-admin/mcp/support', icon: FileText }
+      label: 'MCP Control Center',
+      icon: <Brain className="h-4 w-4" />,
+      items: [
+        { label: 'System Overview', path: '/super-admin/mcp/overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+        { label: 'Agent Management', path: '/super-admin/mcp/agents', icon: <Users className="h-4 w-4" /> },
+        { label: 'AI Models', path: '/super-admin/mcp/models', icon: <Brain className="h-4 w-4" /> },
+        { label: 'Data Pipeline', path: '/super-admin/mcp/pipeline', icon: <Database className="h-4 w-4" /> },
+        { label: 'Machine Learning', path: '/super-admin/mcp/ml', icon: <Brain className="h-4 w-4" /> },
+        { label: 'AI Analytics', path: '/super-admin/mcp/analytics', icon: <BarChart3 className="h-4 w-4" /> },
+        { label: 'Automation Rules', path: '/super-admin/mcp/rules', icon: <Zap className="h-4 w-4" /> },
+        { label: 'Integration Hub', path: '/super-admin/mcp/integrations', icon: <Network className="h-4 w-4" /> },
+        { label: 'Monitoring', path: '/super-admin/mcp/monitoring', icon: <Activity className="h-4 w-4" /> },
+        { label: 'Compliance', path: '/super-admin/mcp/compliance', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Documentation', path: '/super-admin/mcp/docs', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Support', path: '/super-admin/mcp/support', icon: <FileText className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'Business Operations',
-      icon: Briefcase,
-      path: '/super-admin/business',
-      badge: null,
-      submenu: [
-        { name: 'Customer Management', path: '/super-admin/business/customers', icon: Users },
-        { name: 'Sales Pipeline', path: '/super-admin/business/sales', icon: TrendingUp },
-        { name: 'Billing & Invoicing', path: '/super-admin/business/billing', icon: DollarSign },
-        { name: 'Support Management', path: '/super-admin/business/support', icon: FileText },
-        { name: 'Documentation', path: '/super-admin/business/docs', icon: FileText },
-        { name: 'Marketing Tools', path: '/super-admin/business/marketing', icon: BarChart3 },
-        { name: 'Partner Management', path: '/super-admin/business/partners', icon: Building2 },
-        { name: 'Legal & Compliance', path: '/super-admin/business/legal', icon: Shield }
+      label: 'Business Operations',
+      icon: <Briefcase className="h-4 w-4" />,
+      items: [
+        { label: 'Customer Management', path: '/super-admin/business/customers', icon: <Users className="h-4 w-4" /> },
+        { label: 'Sales Pipeline', path: '/super-admin/business/sales', icon: <TrendingUp className="h-4 w-4" /> },
+        { label: 'Billing & Invoicing', path: '/super-admin/business/billing', icon: <DollarSign className="h-4 w-4" /> },
+        { label: 'Support Management', path: '/super-admin/business/support', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Documentation', path: '/super-admin/business/docs', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Marketing Tools', path: '/super-admin/business/marketing', icon: <BarChart3 className="h-4 w-4" /> },
+        { label: 'Partner Management', path: '/super-admin/business/partners', icon: <Building2 className="h-4 w-4" /> },
+        { label: 'Legal & Compliance', path: '/super-admin/business/legal', icon: <Shield className="h-4 w-4" /> }
       ]
     },
     {
-      name: 'Development & DevOps',
-      icon: Code,
-      path: '/super-admin/devops',
-      badge: null,
-      submenu: [
-        { name: 'Code Repository', path: '/super-admin/devops/repo', icon: Code },
-        { name: 'CI/CD Pipeline', path: '/super-admin/devops/pipeline', icon: Zap },
-        { name: 'Testing', path: '/super-admin/devops/testing', icon: Activity },
-        { name: 'Environment Management', path: '/super-admin/devops/environments', icon: Settings },
-        { name: 'Performance Testing', path: '/super-admin/devops/performance', icon: Activity },
-        { name: 'Security Testing', path: '/super-admin/devops/security', icon: Shield },
-        { name: 'Documentation', path: '/super-admin/devops/docs', icon: FileText },
-        { name: 'Release Management', path: '/super-admin/devops/releases', icon: Zap }
+      label: 'Development & DevOps',
+      icon: <Code className="h-4 w-4" />,
+      items: [
+        { label: 'Code Repository', path: '/super-admin/devops/repo', icon: <Code className="h-4 w-4" /> },
+        { label: 'CI/CD Pipeline', path: '/super-admin/devops/pipeline', icon: <Zap className="h-4 w-4" /> },
+        { label: 'Testing', path: '/super-admin/devops/testing', icon: <Activity className="h-4 w-4" /> },
+        { label: 'Environment Management', path: '/super-admin/devops/environments', icon: <Settings className="h-4 w-4" /> },
+        { label: 'Performance Testing', path: '/super-admin/devops/performance', icon: <Activity className="h-4 w-4" /> },
+        { label: 'Security Testing', path: '/super-admin/devops/security', icon: <Shield className="h-4 w-4" /> },
+        { label: 'Documentation', path: '/super-admin/devops/docs', icon: <FileText className="h-4 w-4" /> },
+        { label: 'Release Management', path: '/super-admin/devops/releases', icon: <Zap className="h-4 w-4" /> }
       ]
     }
   ];
 
   // Sample data for enterprise dashboard
   const statsData = [
-    { title: 'Total Users', value: '2,847', change: '+12%', icon: Users, color: 'text-blue-600' },
-    { title: 'System Uptime', value: '99.9%', change: '+0.1%', icon: Activity, color: 'text-green-600' },
-    { title: 'Monthly Revenue', value: '$847K', change: '+8%', icon: DollarSign, color: 'text-purple-600' },
-    { title: 'Active Portals', value: '156', change: '+3', icon: Globe, color: 'text-orange-600' }
+    { title: 'Total Users', value: '2,847', change: '+12%', changeType: 'positive' as const, icon: <Users className="h-6 w-6 text-blue-600" /> },
+    { title: 'System Uptime', value: '99.9%', change: '+0.1%', changeType: 'positive' as const, icon: <Activity className="h-6 w-6 text-green-600" /> },
+    { title: 'Monthly Revenue', value: '$847K', change: '+8%', changeType: 'positive' as const, icon: <DollarSign className="h-6 w-6 text-purple-600" /> },
+    { title: 'Active Portals', value: '156', change: '+3', changeType: 'positive' as const, icon: <Globe className="h-6 w-6 text-orange-600" /> }
   ];
 
   const recentActivity = [
-    { id: 1, user: 'John Smith', action: 'Created new portal', time: '2 minutes ago', status: 'success' },
-    { id: 2, user: 'Sarah Johnson', action: 'Updated user permissions', time: '5 minutes ago', status: 'info' },
-    { id: 3, user: 'Mike Wilson', action: 'Deployed new version', time: '10 minutes ago', status: 'success' },
-    { id: 4, user: 'Lisa Brown', action: 'Security alert resolved', time: '15 minutes ago', status: 'warning' },
-    { id: 5, user: 'David Lee', action: 'Database backup completed', time: '20 minutes ago', status: 'success' }
+    { id: 1, user: 'John Smith', action: 'Created new portal', time: '2 minutes ago', status: 'success' as const },
+    { id: 2, user: 'Sarah Johnson', action: 'Updated user permissions', time: '5 minutes ago', status: 'info' as const },
+    { id: 3, user: 'Mike Wilson', action: 'Deployed new version', time: '10 minutes ago', status: 'success' as const },
+    { id: 4, user: 'Lisa Brown', action: 'Security alert resolved', time: '15 minutes ago', status: 'warning' as const },
+    { id: 5, user: 'David Lee', action: 'Database backup completed', time: '20 minutes ago', status: 'success' as const }
   ];
 
   const systemAlerts = [
@@ -214,11 +199,19 @@ const ProfessionalSuperAdmin: React.FC = () => {
     { id: 3, type: 'success', message: 'Backup completed successfully', time: '2 hours ago' }
   ];
 
+  const userDropdownItems = [
+    { label: 'Profile Settings', icon: <User className="h-4 w-4" />, onClick: () => {} },
+    { label: 'Account Settings', icon: <Settings className="h-4 w-4" />, onClick: () => {} },
+    { label: '', separator: true },
+    { label: 'Help & Support', icon: <HelpCircle className="h-4 w-4" />, onClick: () => {} },
+    { label: 'Sign Out', icon: <LogOut className="h-4 w-4" />, onClick: () => {} }
+  ];
+
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <div className="flex h-screen bg-background">
         {/* Enterprise Sidebar */}
-        <div className={`layout-sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
+        <aside className={`bg-card border-r border-border transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -238,38 +231,19 @@ const ProfessionalSuperAdmin: React.FC = () => {
             </div>
           </div>
 
-          <nav className="p-4 space-y-1">
-            {menuItems.map((item) => (
-              <div key={item.name} className="space-y-1">
-                <Button
-                  variant={location.pathname === item.path ? "secondary" : "ghost"}
-                  className={`w-full justify-start h-10 text-sm ${
-                    location.pathname === item.path ? 'bg-secondary text-secondary-foreground' : ''
-                  }`}
-                  onClick={() => navigate(item.path)}
-                >
-                  <item.icon className="h-4 w-4 mr-3" />
-                  {sidebarOpen && (
-                    <div className="flex items-center justify-between w-full">
-                      <span>{item.name}</span>
-                      {item.badge && (
-                        <Badge variant="secondary" className="ml-auto text-xs">
-                          {item.badge}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                </Button>
-              </div>
-            ))}
+          <nav className="p-4">
+            <Accordion 
+              items={menuItems} 
+              onItemClick={(path) => navigate(path)}
+            />
           </nav>
-        </div>
+        </aside>
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
           {/* Enterprise Header */}
-          <header className="layout-header">
-            <div className="flex items-center justify-between w-full">
+          <header className="bg-card border-b border-border px-6 py-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Button
                   variant="ghost"
@@ -281,14 +255,10 @@ const ProfessionalSuperAdmin: React.FC = () => {
                 </Button>
                 
                 {/* Breadcrumbs */}
-                <nav className="breadcrumb">
-                  <div className="breadcrumb-item">
-                    <span className="breadcrumb-link">Super Admin</span>
-                  </div>
-                  <ChevronRight className="h-4 w-4 breadcrumb-separator" />
-                  <div className="breadcrumb-item">
-                    <span className="breadcrumb-current">Dashboard</span>
-                  </div>
+                <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  <span className="text-foreground font-medium">Super Admin</span>
+                  <ChevronRight className="h-4 w-4" />
+                  <span>Dashboard</span>
                 </nav>
               </div>
 
@@ -299,7 +269,7 @@ const ProfessionalSuperAdmin: React.FC = () => {
                   <input
                     type="text"
                     placeholder="Search..."
-                    className="pl-10 pr-4 py-2 input w-64"
+                    className="pl-10 pr-4 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent w-64"
                   />
                 </div>
 
@@ -315,21 +285,26 @@ const ProfessionalSuperAdmin: React.FC = () => {
                 </Button>
 
                 {/* User Menu */}
-                <div className="flex items-center space-x-3">
-                  <div className="text-right hidden md:block">
-                    <p className="text-sm font-medium text-foreground">Admin User</p>
-                    <p className="text-xs text-muted-foreground">admin@company.com</p>
-                  </div>
-                  <Button variant="ghost" size="sm" className="relative">
-                    <User className="h-5 w-5" />
-                  </Button>
-                </div>
+                <DropdownMenu
+                  trigger={
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                        <User className="h-4 w-4" />
+                      </div>
+                      <div className="hidden md:block text-left">
+                        <p className="text-sm font-medium text-foreground">Admin User</p>
+                        <p className="text-xs text-muted-foreground">admin@company.com</p>
+                      </div>
+                    </div>
+                  }
+                  items={userDropdownItems}
+                />
               </div>
             </div>
           </header>
 
           {/* Main Content */}
-          <main className="layout-content p-6">
+          <main className="flex-1 overflow-auto bg-background p-6">
             <Routes>
               <Route path="/" element={
                 <div className="space-y-6">
@@ -344,60 +319,31 @@ const ProfessionalSuperAdmin: React.FC = () => {
                   {/* Stats Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {statsData.map((stat, index) => (
-                      <Card key={index}>
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                              <p className="text-xs text-green-600 mt-1">{stat.change} from last month</p>
-                            </div>
-                            <div className={`p-3 rounded-lg bg-secondary ${stat.color}`}>
-                              <stat.icon className="h-6 w-6" />
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <StatCard
+                        key={index}
+                        title={stat.title}
+                        value={stat.value}
+                        change={stat.change}
+                        changeType={stat.changeType}
+                        icon={stat.icon}
+                      />
                     ))}
                   </div>
 
                   {/* Main Content Grid */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Recent Activity */}
-                    <Card className="lg:col-span-2">
-                      <CardHeader>
-                        <CardTitle>Recent Activity</CardTitle>
-                        <CardDescription>Latest system activities and user actions</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          {recentActivity.map((activity) => (
-                            <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-secondary">
-                              <div className="flex-shrink-0">
-                                {activity.status === 'success' && <CheckCircle className="h-5 w-5 text-green-600" />}
-                                {activity.status === 'warning' && <AlertCircle className="h-5 w-5 text-yellow-600" />}
-                                {activity.status === 'info' && <Info className="h-5 w-5 text-blue-600" />}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-foreground">{activity.user}</p>
-                                <p className="text-sm text-muted-foreground">{activity.action}</p>
-                              </div>
-                              <div className="flex-shrink-0">
-                                <p className="text-xs text-muted-foreground">{activity.time}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <div className="lg:col-span-2">
+                      <ActivityFeed items={recentActivity} />
+                    </div>
 
                     {/* System Alerts */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>System Alerts</CardTitle>
-                        <CardDescription>Active system notifications</CardDescription>
-                      </CardHeader>
-                      <CardContent>
+                    <div className="bg-card border border-border rounded-lg">
+                      <div className="p-6 border-b border-border">
+                        <h3 className="text-lg font-semibold text-foreground">System Alerts</h3>
+                        <p className="text-sm text-muted-foreground mt-1">Active system notifications</p>
+                      </div>
+                      <div className="p-6">
                         <div className="space-y-4">
                           {systemAlerts.map((alert) => (
                             <div key={alert.id} className="flex items-start space-x-3 p-3 rounded-lg border">
@@ -413,17 +359,17 @@ const ProfessionalSuperAdmin: React.FC = () => {
                             </div>
                           ))}
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Quick Actions */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Quick Actions</CardTitle>
-                      <CardDescription>Common administrative tasks</CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                  <div className="bg-card border border-border rounded-lg">
+                    <div className="p-6 border-b border-border">
+                      <h3 className="text-lg font-semibold text-foreground">Quick Actions</h3>
+                      <p className="text-sm text-muted-foreground mt-1">Common administrative tasks</p>
+                    </div>
+                    <div className="p-6">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <Button variant="outline" className="h-20 flex-col space-y-2" onClick={() => navigate('/super-admin/users/all')}>
                           <Users className="h-6 w-6" />
@@ -442,8 +388,8 @@ const ProfessionalSuperAdmin: React.FC = () => {
                           <span className="text-sm">View Analytics</span>
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </div>
               } />
 
@@ -457,10 +403,10 @@ const ProfessionalSuperAdmin: React.FC = () => {
                     </p>
                   </div>
                   
-                  <Card>
-                    <CardContent className="p-6">
+                  <div className="bg-card border border-border rounded-lg">
+                    <div className="p-6">
                       <div className="text-center space-y-4">
-                        <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mx-auto">
+                        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mx-auto">
                           <Code className="h-8 w-8 text-muted-foreground" />
                         </div>
                         <div>
@@ -473,8 +419,8 @@ const ProfessionalSuperAdmin: React.FC = () => {
                           Back to Dashboard
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </div>
               } />
             </Routes>
