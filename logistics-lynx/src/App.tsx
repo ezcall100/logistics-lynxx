@@ -198,8 +198,8 @@ function AppContent() {
         {/* Portal Routes - Based on knowledge base registry */}
         {/* Super Admin shell with nested pages */}
         <Route path="/super-admin" element={<EnhancedSuperAdminPortal />}>
-          {/* Main Super Admin Dashboard */}
-          <Route index element={<Navigate to="/super-admin" replace />} />
+          {/* Show main dashboard by default instead of redirecting to MCP */}
+          <Route index element={<div />} />
 
           {/* MCP suite */}
           <Route
@@ -211,20 +211,8 @@ function AppContent() {
             }
           />
 
-          {/* Super Admin specific routes */}
-          <Route path="crm/*" element={<SuperAdminPage />} />
-          <Route path="tickets/*" element={<SuperAdminPage />} />
-          <Route path="networks/*" element={<SuperAdminPage />} />
-          <Route path="workers/*" element={<SuperAdminPage />} />
-          <Route path="documents/*" element={<SuperAdminPage />} />
-          <Route path="financials/*" element={<SuperAdminPage />} />
-          <Route path="ai/*" element={<SuperAdminPage />} />
-          <Route path="api/*" element={<SuperAdminPage />} />
-          <Route path="marketplace/*" element={<SuperAdminPage />} />
-          <Route path="reports" element={<SuperAdminPage />} />
-
           {/* fence anything unknown under /super-admin */}
-          <Route path="*" element={<Navigate to="/super-admin" replace />} />
+          <Route path="*" element={<div />} />
         </Route>
         <Route path="/admin/*" element={<UserManagement />} />
         <Route path="/tms-admin/*" element={<SuperAdminPage />} />

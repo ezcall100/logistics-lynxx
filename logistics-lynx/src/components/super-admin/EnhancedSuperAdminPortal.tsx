@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, Routes, Route } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Users, Activity, Settings, Brain, Server, Menu, Plus, Zap, AlertTriangle, Settings2, Users2, BarChart3 } from 'lucide-react';
 import SuperAdminSidebar from './SuperAdminSidebar';
 import SuperAdminFAB from './SuperAdminFAB';
+import SuperAdminRoutes from '@/pages/super-admin/SuperAdminRoutes';
 
 export default function EnhancedSuperAdminPortal() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -59,12 +60,9 @@ export default function EnhancedSuperAdminPortal() {
 
           {/* Content */}
           <main className="flex-1 overflow-auto">
-            {isOnSpecificRoute ? (
-              // Render nested routes
-              <Outlet />
-            ) : (
-              // Render main dashboard
-              <div className="container mx-auto px-4 py-8">
+            <Routes>
+              <Route path="/" element={
+                <div className="container mx-auto px-4 py-8">
                 <div className="mb-8">
                   <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
                     Welcome to Super Admin Dashboard
@@ -178,8 +176,9 @@ export default function EnhancedSuperAdminPortal() {
                     </CardContent>
                   </Card>
                 </div>
-              </div>
-            )}
+              </Route>
+              <Route path="/*" element={<SuperAdminRoutes />} />
+            </Routes>
           </main>
         </div>
       </div>
