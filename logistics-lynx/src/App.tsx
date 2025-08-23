@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { AuthProvider, useAuth } from './context/auth/AuthProvider';
@@ -187,8 +187,8 @@ function AppContent() {
   return (
         <div className="App">
           <Routes>
-            {/* Main Portal Selection */}
-        <Route path="/" element={<AutonomousPortalSelector />} />
+            {/* Main Portal Selection - Redirect to Super Admin */}
+        <Route path="/" element={<Navigate to="/super-admin" replace />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<LoginPage />} />
@@ -221,8 +221,8 @@ function AppContent() {
         <Route path="/shipper-portal" element={<ShipperPortalPage />} />
         <Route path="/access-all" element={<AccessAllPortals />} />
 
-        {/* Catch-all route */}
-        <Route path="*" element={<AutonomousPortalSelector />} />
+        {/* Catch-all route - Redirect to Super Admin */}
+        <Route path="*" element={<Navigate to="/super-admin" replace />} />
           </Routes>
         </div>
   );
