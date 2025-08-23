@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { AuthProvider, useAuth } from './context/auth/AuthProvider';
@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from './context/auth/AuthProvider';
 
 // Core Portal Components - Based on knowledge base registry
 import EnhancedSuperAdminPortal from './components/super-admin/EnhancedSuperAdminPortal';
+import MCPControlCenter from './components/super-admin/pages/MCPControlCenter';
 import SoftwareAdminPortal from './components/portals/SoftwareAdminPortal';
 import CarriersPortal from './components/portals/CarriersPortal';
 import BrokersPortal from './components/portals/BrokersPortal';
@@ -194,7 +195,14 @@ function AppContent() {
         <Route path="/login" element={<LoginPage />} />
 
         {/* Portal Routes - Based on knowledge base registry */}
-        <Route path="/super-admin/*" element={<EnhancedSuperAdminPortal />} />
+        {/* Super Admin Portal with nested routes */}
+        <Route path="/super-admin" element={<EnhancedSuperAdminPortal />}>
+          {/* Default -> MCP intro */}
+          <Route index element={<Navigate to="mcp/introduction" replace />} />
+          <Route path="mcp/*" element={<MCPControlCenter />} />
+          {/* Safety net */}
+          <Route path="*" element={<Navigate to="mcp/introduction" replace />} />
+        </Route>
         <Route path="/admin/*" element={<UserManagement />} />
         <Route path="/tms-admin/*" element={<SuperAdminPage />} />
         <Route path="/carrier/*" element={<CarriersPortal />} />
@@ -221,8 +229,8 @@ function AppContent() {
         <Route path="/shipper-portal" element={<ShipperPortalPage />} />
         <Route path="/access-all" element={<AccessAllPortals />} />
 
-        {/* Catch-all route */}
-        <Route path="*" element={<AutonomousPortalSelector />} />
+        {/* Global fallback → Super Admin */}
+        <Route path="*" element={<Navigate to="/super-admin" replace />} />
           </Routes>
         </div>
   );

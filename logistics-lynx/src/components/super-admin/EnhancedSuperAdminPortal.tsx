@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
 import { useTheme } from '@/components/theme-provider';
 
@@ -1398,70 +1398,7 @@ const EnhancedSuperAdminPortal = () => {
                 transition={{ duration: 0.6, ease: "easeInOut" }}
                 className="h-full"
               >
-                <Routes>
-                  <Route path="/" element={<DashboardPage />} />
-                  <Route path="/autonomous/*" element={
-                    <AuthProvider>
-                      <AutonomousDashboardPage />
-                    </AuthProvider>
-                  } />
-                  <Route path="/users/*" element={<UserManagementPage />} />
-                  <Route path="/users/all" element={<AllUsersPage />} />
-                                          <Route path="/color-test" element={<ColorTestPage />} />
-                        <Route path="/fab-test" element={<FABTestPage />} />
-                        <Route path="/ui-demo" element={<UIComponentsDemoPage />} />
-                        <Route path="/playground" element={<ComponentPlaygroundPage />} />
-                        <Route path="/semantic-demo" element={<SemanticColorDemoPage />} />
-                        <Route path="/portals/overview" element={<PortalOverviewPage />} />
-                  <Route path="/portals/all" element={<AllPortalsPage />} />
-                  <Route path="/portals/categories" element={<PortalCategoriesPage />} />
-                  <Route path="/portals/monitoring" element={<PortalMonitoringPage />} />
-                  <Route path="/portals/settings" element={<PortalSettingsPage />} />
-                  <Route path="/portals/analytics" element={<PortalAnalyticsPage />} />
-                  <Route path="/portals/security" element={<PortalSecurityPage />} />
-                  <Route path="/portals/backup" element={<PortalBackupPage />} />
-                  <Route path="/portals/users" element={<PortalUsersPage />} />
-                  <Route path="/portals/configurations" element={<PortalConfigurationsPage />} />
-                  <Route path="/portals" element={<PortalOverviewPage />} />
-                  <Route path="/analytics/*" element={<AnalyticsReportsPage />} />
-                  {/* System Control Pages */}
-                  <Route path="/system" element={<DashboardPage />} />
-                  <Route path="/system/health" element={<SystemHealthPage />} />
-                  <Route path="/system/database" element={<DatabaseAdminPage />} />
-                  <Route path="/system/network" element={<NetworkConfigPage />} />
-                  <Route path="/system/security" element={<SecurityCenterPage />} />
-                  <Route path="/system/backup" element={<BackupRestorePage />} />
-                  {/* Engineering Suite Pages */}
-                  <Route path="/engineering" element={<DashboardPage />} />
-                  <Route path="/engineering/frontend" element={<FrontendDeveloperPage />} />
-                  <Route path="/engineering/backend" element={<BackendAPIPage />} />
-                  <Route path="/engineering/qa" element={<QATestingPage />} />
-                  <Route path="/engineering/design" element={<UIUXDesignerPage />} />
-                  <Route path="/engineering/devops" element={<DevOpsPage />} />
-                  <Route path="/engineering/database" element={<DatabaseOptimizerPage />} />
-                  <Route path="/engineering/security" element={<SecurityScannerPage />} />
-                  <Route path="/engineering/performance" element={<PerformanceMonitorPage />} />
-                   {/* Profile and Settings Pages */}
-                           <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/mcp" element={<MCPControlCenter />} />
-        <Route path="/mcp/introduction" element={<MCPIntroductionPage />} />
-        <Route path="/mcp/features" element={<MCPFeaturesPage />} />
-        <Route path="/mcp/integrations" element={<MCPIntegrationsPage />} />
-        <Route path="/mcp/documentation" element={<MCPDocumentationPage />} />
-        <Route path="/mcp/support" element={<MCPSupportPage />} />
-                  <Route path="/mcp/agent-registry" element={<MCPAgentRegistryPage />} />
-          <Route path="/mcp/system-monitor" element={<MCPSystemMonitorPage />} />
-          <Route path="/mcp/security-hub" element={<MCPSecurityHubPage />} />
-          <Route path="/mcp/performance-analytics" element={<MCPPerformanceAnalyticsPage />} />
-          <Route path="/mcp/configuration" element={<MCPConfigurationManagerPage />} />
-          <Route path="/mcp/backup-recovery" element={<MCPBackupRecoveryPage />} />
-          <Route path="/mcp/api-gateway" element={<MCPAPIGatewayPage />} />
-          <Route path="/mcp/log-management" element={<MCPLogManagementPage />} />
-          <Route path="/mcp/alert-center" element={<MCPAlertCenterPage />} />
-                     <Route path="/mcp/deployment" element={<MCPDeploymentManagerPage />} />
-           <Route path="/mcp/commander" element={<MCPCommanderPage />} />
-                </Routes>
+                <Outlet />
               </motion.div>
             </AnimatePresence>
           </main>
