@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import SuperAdmin from './components/SuperAdmin';
+import SuperAdmin from './components/SuperAdminNew';
 
 // Landing page component
 const LandingPage = () => (
