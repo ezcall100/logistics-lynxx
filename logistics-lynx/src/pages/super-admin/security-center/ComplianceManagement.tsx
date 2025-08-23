@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
-import { Certificate } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 interface ComplianceManagementProps {}
 
@@ -18,7 +18,7 @@ const ComplianceManagement: React.FC<ComplianceManagementProps> = () => {
       {/* Page Header */}
       <div className="space-y-2">
         <div className="flex items-center space-x-2">
-          <Certificate className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Compliance Management
           </h1>
@@ -43,7 +43,7 @@ const ComplianceManagement: React.FC<ComplianceManagementProps> = () => {
             </div>
           ) : (
             <div className="text-center py-8">
-              <Certificate className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Compliance Management
               </h3>
