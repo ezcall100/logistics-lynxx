@@ -52,6 +52,10 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
+    "stress:cpu-spike": "node scripts/stress-test-cpu.mjs",
+    "stress:memory-flood": "node scripts/stress-test-memory.mjs",
+    "stress:full": "node scripts/stress-test-runner.mjs",
+    "stress:continuous": "node scripts/stress-test-runner.mjs --continuous",
     "prepare": "husky"
   },
   "dependencies": {
