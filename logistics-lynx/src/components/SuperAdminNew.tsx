@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard, Users, Settings, Shield, Activity, Globe,
   BarChart3, Brain, Briefcase, Code, Menu, X, Search,
@@ -58,6 +59,7 @@ const SuperAdminNew: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   // Responsive detection
   useEffect(() => {
@@ -477,7 +479,9 @@ const SuperAdminNew: React.FC = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
                 <User className="h-4 w-4 text-white" />
               </div>
-              <span className="hidden sm:block text-sm font-medium">Admin</span>
+              <span className="hidden sm:block text-sm font-medium">
+                {user?.name || user?.email || 'Admin'}
+              </span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
@@ -492,9 +496,9 @@ const SuperAdminNew: React.FC = () => {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
