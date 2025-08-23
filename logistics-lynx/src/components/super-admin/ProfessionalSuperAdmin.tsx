@@ -17,20 +17,23 @@ import {
   ChevronDown, MoreHorizontal, Plus, Edit, Trash2, Eye,
   Calendar, Clock, User, Mail, Phone, MapPin, CheckCircle,
   XCircle, AlertCircle, Info, Settings as SettingsIcon,
-  LogOut, Moon, Sun, Bell as BellIcon, HelpCircle
+  LogOut, Moon, Sun, Bell as BellIcon, HelpCircle,
+  Home, Grid, PieChart, Target, Rocket, Star
 } from 'lucide-react';
 
-// Enterprise Super Admin Portal
+// Modern Enterprise Super Admin Portal
 const ProfessionalSuperAdmin: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const toggleDarkMode = () => setDarkMode(!darkMode);
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
-  // Enterprise Menu Structure with Accordion Support
+  // Modern Menu Structure with Enhanced Icons
   const menuItems = [
     {
       label: 'Dashboard',
@@ -177,12 +180,44 @@ const ProfessionalSuperAdmin: React.FC = () => {
     }
   ];
 
-  // Sample data for enterprise dashboard
+  // Enhanced Dashboard Data with Modern Metrics
   const statsData = [
-    { title: 'Total Users', value: '2,847', change: '+12%', changeType: 'positive' as const, icon: <Users className="h-6 w-6 text-blue-600" /> },
-    { title: 'System Uptime', value: '99.9%', change: '+0.1%', changeType: 'positive' as const, icon: <Activity className="h-6 w-6 text-green-600" /> },
-    { title: 'Monthly Revenue', value: '$847K', change: '+8%', changeType: 'positive' as const, icon: <DollarSign className="h-6 w-6 text-purple-600" /> },
-    { title: 'Active Portals', value: '156', change: '+3', changeType: 'positive' as const, icon: <Globe className="h-6 w-6 text-orange-600" /> }
+    { 
+      title: 'Total Users', 
+      value: '2,847', 
+      change: '+12%', 
+      changeType: 'positive' as const, 
+      icon: <Users className="h-6 w-6" />,
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20'
+    },
+    { 
+      title: 'System Uptime', 
+      value: '99.9%', 
+      change: '+0.1%', 
+      changeType: 'positive' as const, 
+      icon: <Activity className="h-6 w-6" />,
+      color: 'from-green-500 to-green-600',
+      bgColor: 'bg-green-50 dark:bg-green-900/20'
+    },
+    { 
+      title: 'Monthly Revenue', 
+      value: '$847K', 
+      change: '+8%', 
+      changeType: 'positive' as const, 
+      icon: <DollarSign className="h-6 w-6" />,
+      color: 'from-purple-500 to-purple-600',
+      bgColor: 'bg-purple-50 dark:bg-purple-900/20'
+    },
+    { 
+      title: 'Active Portals', 
+      value: '156', 
+      change: '+3', 
+      changeType: 'positive' as const, 
+      icon: <Globe className="h-6 w-6" />,
+      color: 'from-orange-500 to-orange-600',
+      bgColor: 'bg-orange-50 dark:bg-orange-900/20'
+    }
   ];
 
   const recentActivity = [
@@ -210,22 +245,24 @@ const ProfessionalSuperAdmin: React.FC = () => {
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <div className="flex h-screen bg-background">
-        {/* Enterprise Sidebar */}
-        <aside className={`bg-card border-r border-border transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
+        {/* Modern Sidebar */}
+        <aside className={`bg-card border-r border-border transition-all duration-300 ${
+          sidebarOpen ? 'w-64' : 'w-16'
+        } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <LayoutDashboard className="h-5 w-5 text-primary-foreground" />
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <LayoutDashboard className="h-6 w-6 text-white" />
                 </div>
                 {sidebarOpen && (
                   <div>
-                    <h2 className="text-lg font-semibold text-foreground">Super Admin</h2>
-                    <p className="text-xs text-muted-foreground">Enterprise Platform</p>
+                    <h2 className="text-lg font-bold text-text">Super Admin</h2>
+                    <p className="text-xs text-text-muted">Enterprise Platform</p>
                   </div>
                 )}
               </div>
-              <Button variant="ghost" size="sm" onClick={toggleSidebar} className="p-1">
+              <Button variant="ghost" size="sm" onClick={toggleSidebar} className="p-1 lg:block hidden">
                 <Menu className="h-4 w-4" />
               </Button>
             </div>
@@ -234,29 +271,40 @@ const ProfessionalSuperAdmin: React.FC = () => {
           <nav className="p-4">
             <Accordion 
               items={menuItems} 
-              onItemClick={(path) => navigate(path)}
+              onItemClick={(path) => {
+                navigate(path);
+                setMobileMenuOpen(false);
+              }}
             />
           </nav>
         </aside>
 
+        {/* Mobile Overlay */}
+        {mobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          {/* Enterprise Header */}
-          <header className="bg-card border-b border-border px-6 py-4">
+          {/* Modern Header */}
+          <header className="bg-card border-b border-border px-6 py-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={toggleSidebar}
+                  onClick={toggleMobileMenu}
                   className="lg:hidden"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
                 
                 {/* Breadcrumbs */}
-                <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <span className="text-foreground font-medium">Super Admin</span>
+                <nav className="flex items-center space-x-2 text-sm text-text-muted">
+                  <span className="text-text font-medium">Super Admin</span>
                   <ChevronRight className="h-4 w-4" />
                   <span>Dashboard</span>
                 </nav>
@@ -265,18 +313,18 @@ const ProfessionalSuperAdmin: React.FC = () => {
               <div className="flex items-center space-x-4">
                 {/* Search */}
                 <div className="relative hidden md:block">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-muted" />
                   <input
                     type="text"
                     placeholder="Search..."
-                    className="pl-10 pr-4 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent w-64"
+                    className="pl-10 pr-4 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-64 transition-all"
                   />
                 </div>
 
                 {/* Notifications */}
                 <Button variant="ghost" size="sm" className="relative">
                   <BellIcon className="h-5 w-5" />
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">3</Badge>
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-red-500">3</Badge>
                 </Button>
 
                 {/* Theme Toggle */}
@@ -287,13 +335,13 @@ const ProfessionalSuperAdmin: React.FC = () => {
                 {/* User Menu */}
                 <DropdownMenu
                   trigger={
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                        <User className="h-4 w-4" />
+                    <div className="flex items-center space-x-2 cursor-pointer">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                        <User className="h-4 w-4 text-white" />
                       </div>
                       <div className="hidden md:block text-left">
-                        <p className="text-sm font-medium text-foreground">Admin User</p>
-                        <p className="text-xs text-muted-foreground">admin@company.com</p>
+                        <p className="text-sm font-medium text-text">Admin User</p>
+                        <p className="text-xs text-text-muted">admin@company.com</p>
                       </div>
                     </div>
                   }
@@ -307,54 +355,65 @@ const ProfessionalSuperAdmin: React.FC = () => {
           <main className="flex-1 overflow-auto bg-background p-6">
             <Routes>
               <Route path="/" element={
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {/* Page Header */}
-                  <div>
-                    <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-                    <p className="text-muted-foreground mt-2">
+                  <div className="space-y-2">
+                    <h1 className="text-4xl font-bold text-text">Dashboard</h1>
+                    <p className="text-text-muted text-lg">
                       Welcome to the Enterprise Super Admin Dashboard. Monitor your system performance and manage your platform.
                     </p>
                   </div>
 
-                  {/* Stats Grid */}
+                  {/* Enhanced Stats Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {statsData.map((stat, index) => (
-                      <StatCard
-                        key={index}
-                        title={stat.title}
-                        value={stat.value}
-                        change={stat.change}
-                        changeType={stat.changeType}
-                        icon={stat.icon}
-                      />
+                      <div key={index} className="group">
+                        <div className={`${stat.bgColor} p-6 rounded-2xl border border-border hover:shadow-lg transition-all duration-300 group-hover:scale-105`}>
+                          <div className="flex items-center justify-between">
+                            <div className="space-y-2">
+                              <p className="text-sm font-medium text-text-muted">{stat.title}</p>
+                              <p className="text-3xl font-bold text-text">{stat.value}</p>
+                              <p className={`text-xs font-medium ${
+                                stat.changeType === 'positive' ? 'text-success' : 
+                                stat.changeType === 'negative' ? 'text-error' : 'text-text-muted'
+                              }`}>
+                                {stat.change} from last month
+                              </p>
+                            </div>
+                            <div className={`p-3 bg-gradient-to-br ${stat.color} rounded-xl shadow-lg`}>
+                              {stat.icon}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     ))}
                   </div>
 
                   {/* Main Content Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Recent Activity */}
                     <div className="lg:col-span-2">
                       <ActivityFeed items={recentActivity} />
                     </div>
 
                     {/* System Alerts */}
-                    <div className="bg-card border border-border rounded-lg">
+                    <div className="bg-card border border-border rounded-2xl shadow-sm">
                       <div className="p-6 border-b border-border">
-                        <h3 className="text-lg font-semibold text-foreground">System Alerts</h3>
-                        <p className="text-sm text-muted-foreground mt-1">Active system notifications</p>
+                        <h3 className="text-lg font-semibold text-text">System Alerts</h3>
+                        <p className="text-sm text-text-muted mt-1">Active system notifications</p>
                       </div>
                       <div className="p-6">
                         <div className="space-y-4">
                           {systemAlerts.map((alert) => (
-                            <div key={alert.id} className="flex items-start space-x-3 p-3 rounded-lg border">
+                            <div key={alert.id} className="flex items-start space-x-3 p-4 rounded-xl border border-border hover:bg-surface transition-colors">
                               <div className="flex-shrink-0 mt-0.5">
-                                {alert.type === 'warning' && <AlertCircle className="h-4 w-4 text-yellow-600" />}
-                                {alert.type === 'info' && <Info className="h-4 w-4 text-blue-600" />}
-                                {alert.type === 'success' && <CheckCircle className="h-4 w-4 text-green-600" />}
+                                {alert.type === 'warning' && <AlertCircle className="h-4 w-4 text-warning" />}
+                                {alert.type === 'info' && <Info className="h-4 w-4 text-info" />}
+                                {alert.type === 'success' && <CheckCircle className="h-4 w-4 text-success" />}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm text-foreground">{alert.message}</p>
-                                <p className="text-xs text-muted-foreground mt-1">{alert.time}</p>
+                                <p className="text-sm text-text font-medium">{alert.message}</p>
+                                <p className="text-xs text-text-muted mt-1">{alert.time}</p>
                               </div>
                             </div>
                           ))}
@@ -364,28 +423,44 @@ const ProfessionalSuperAdmin: React.FC = () => {
                   </div>
 
                   {/* Quick Actions */}
-                  <div className="bg-card border border-border rounded-lg">
+                  <div className="bg-card border border-border rounded-2xl shadow-sm">
                     <div className="p-6 border-b border-border">
-                      <h3 className="text-lg font-semibold text-foreground">Quick Actions</h3>
-                      <p className="text-sm text-muted-foreground mt-1">Common administrative tasks</p>
+                      <h3 className="text-lg font-semibold text-text">Quick Actions</h3>
+                      <p className="text-sm text-text-muted mt-1">Common administrative tasks</p>
                     </div>
                     <div className="p-6">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <Button variant="outline" className="h-20 flex-col space-y-2" onClick={() => navigate('/super-admin/users/all')}>
-                          <Users className="h-6 w-6" />
-                          <span className="text-sm">Manage Users</span>
+                        <Button 
+                          variant="outline" 
+                          className="h-24 flex-col space-y-3 hover:bg-blue-50 hover:border-blue-200 transition-all" 
+                          onClick={() => navigate('/super-admin/users/all')}
+                        >
+                          <Users className="h-8 w-8 text-blue-600" />
+                          <span className="text-sm font-medium">Manage Users</span>
                         </Button>
-                        <Button variant="outline" className="h-20 flex-col space-y-2" onClick={() => navigate('/super-admin/security/audit')}>
-                          <Shield className="h-6 w-6" />
-                          <span className="text-sm">Security Audit</span>
+                        <Button 
+                          variant="outline" 
+                          className="h-24 flex-col space-y-3 hover:bg-green-50 hover:border-green-200 transition-all" 
+                          onClick={() => navigate('/super-admin/security/audit')}
+                        >
+                          <Shield className="h-8 w-8 text-green-600" />
+                          <span className="text-sm font-medium">Security Audit</span>
                         </Button>
-                        <Button variant="outline" className="h-20 flex-col space-y-2" onClick={() => navigate('/super-admin/monitoring/health')}>
-                          <Activity className="h-6 w-6" />
-                          <span className="text-sm">System Health</span>
+                        <Button 
+                          variant="outline" 
+                          className="h-24 flex-col space-y-3 hover:bg-purple-50 hover:border-purple-200 transition-all" 
+                          onClick={() => navigate('/super-admin/monitoring/health')}
+                        >
+                          <Activity className="h-8 w-8 text-purple-600" />
+                          <span className="text-sm font-medium">System Health</span>
                         </Button>
-                        <Button variant="outline" className="h-20 flex-col space-y-2" onClick={() => navigate('/super-admin/analytics/business')}>
-                          <BarChart3 className="h-6 w-6" />
-                          <span className="text-sm">View Analytics</span>
+                        <Button 
+                          variant="outline" 
+                          className="h-24 flex-col space-y-3 hover:bg-orange-50 hover:border-orange-200 transition-all" 
+                          onClick={() => navigate('/super-admin/analytics/business')}
+                        >
+                          <BarChart3 className="h-8 w-8 text-orange-600" />
+                          <span className="text-sm font-medium">View Analytics</span>
                         </Button>
                       </div>
                     </div>
@@ -395,27 +470,30 @@ const ProfessionalSuperAdmin: React.FC = () => {
 
               {/* Other Routes */}
               <Route path="/*" element={
-                <div className="space-y-6">
-                  <div>
-                    <h1 className="text-3xl font-bold text-foreground">Page Under Development</h1>
-                    <p className="text-muted-foreground mt-2">
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <h1 className="text-4xl font-bold text-text">Page Under Development</h1>
+                    <p className="text-text-muted text-lg">
                       This page is currently being developed as part of the enterprise implementation.
                     </p>
                   </div>
                   
-                  <div className="bg-card border border-border rounded-lg">
-                    <div className="p-6">
-                      <div className="text-center space-y-4">
-                        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mx-auto">
-                          <Code className="h-8 w-8 text-muted-foreground" />
+                  <div className="bg-card border border-border rounded-2xl shadow-sm">
+                    <div className="p-12">
+                      <div className="text-center space-y-6">
+                        <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                          <Code className="h-10 w-10 text-white" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-foreground">Development in Progress</h3>
-                          <p className="text-muted-foreground">
+                          <h3 className="text-2xl font-semibold text-text">Development in Progress</h3>
+                          <p className="text-text-muted mt-2 max-w-md mx-auto">
                             This feature is being built with enterprise-grade standards and will be available soon.
                           </p>
                         </div>
-                        <Button onClick={() => navigate('/super-admin')}>
+                        <Button 
+                          onClick={() => navigate('/super-admin')}
+                          className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                        >
                           Back to Dashboard
                         </Button>
                       </div>

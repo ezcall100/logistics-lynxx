@@ -8,6 +8,8 @@ interface StatCardProps {
   changeType?: 'positive' | 'negative' | 'neutral';
   icon?: React.ReactNode;
   className?: string;
+  color?: string;
+  bgColor?: string;
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -16,39 +18,43 @@ export const StatCard: React.FC<StatCardProps> = ({
   change,
   changeType = 'neutral',
   icon,
-  className
+  className,
+  color = 'from-blue-500 to-blue-600',
+  bgColor = 'bg-blue-50 dark:bg-blue-900/20'
 }) => {
   const getChangeColor = () => {
     switch (changeType) {
       case 'positive':
-        return 'text-green-600';
+        return 'text-success';
       case 'negative':
-        return 'text-red-600';
+        return 'text-error';
       default:
-        return 'text-muted-foreground';
+        return 'text-text-muted';
     }
   };
 
   return (
-    <div className={cn(
-      "bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow",
-      className
-    )}>
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="text-2xl font-bold text-foreground">{value}</p>
-          {change && (
-            <p className={cn("text-xs font-medium", getChangeColor())}>
-              {change} from last month
-            </p>
+    <div className={cn("group", className)}>
+      <div className={cn(
+        bgColor,
+        "p-6 rounded-2xl border border-border hover:shadow-lg transition-all duration-300 group-hover:scale-105"
+      )}>
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-text-muted">{title}</p>
+            <p className="text-3xl font-bold text-text">{value}</p>
+            {change && (
+              <p className={cn("text-xs font-medium", getChangeColor())}>
+                {change} from last month
+              </p>
+            )}
+          </div>
+          {icon && (
+            <div className={cn("p-3 bg-gradient-to-br", color, "rounded-xl shadow-lg")}>
+              {icon}
+            </div>
           )}
         </div>
-        {icon && (
-          <div className="p-3 bg-muted rounded-lg">
-            {icon}
-          </div>
-        )}
       </div>
     </div>
   );
