@@ -19,6 +19,10 @@ import AllUsers from './user-management/AllUsers';
 import UserRoles from './user-management/UserRoles';
 import UserGroups from './user-management/UserGroups';
 
+// System Administration Pages
+import DatabaseManagement from '../system-administration/DatabaseManagement';
+import APIManagement from '../system-administration/APIManagement';
+
 // Simple placeholder components for other pages
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="min-h-screen bg-gray-50 p-8">
@@ -69,8 +73,8 @@ const SuperAdminRoutes: React.FC = () => {
       <Route path="/users/onboarding" element={<PlaceholderPage title="User Onboarding" />} />
 
       {/* System Administration Routes */}
-      <Route path="/system/database" element={<PlaceholderPage title="Database Management" />} />
-      <Route path="/system/api" element={<PlaceholderPage title="API Management" />} />
+      <Route path="/system/database" element={<DatabaseManagement />} />
+      <Route path="/system/api" element={<APIManagement />} />
       <Route path="/system/monitoring" element={<PlaceholderPage title="Server Monitoring" />} />
       <Route path="/system/deployment" element={<PlaceholderPage title="Deployment Management" />} />
       <Route path="/system/config" element={<PlaceholderPage title="Configuration" />} />
