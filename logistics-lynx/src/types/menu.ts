@@ -1,12 +1,11 @@
-import { ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 export interface MenuItem {
   id: string;
-  label: string;
+  title: string;
   path: string;
-  icon?: string;
+  icon?: LucideIcon;
   children?: MenuItem[];
-  disabled?: boolean;
   badge?: string;
   badgeColor?: string;
 }

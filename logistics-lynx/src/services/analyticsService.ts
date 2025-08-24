@@ -1,237 +1,120 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { supabase } from '@/integrations/supabase/client';
-
-export interface UserEvent {
-  event_type: 'click' | 'navigation' | 'feature_usage' | 'page_view';
-  event_data: Record<string, unknown>;
+interface UserEvent {
+  event_type: 'page_view' | 'click' | 'navigation' | 'feature_usage';
+  event_data: Record<string, any>;
   page_path?: string;
   feature_name?: string;
-  duration_ms?: number;
+  duration_ms: number;
   user_role?: string;
 }
 
-export interface AIMetric {
-  metric_type: 'prediction_accuracy' | 'learning_progress' | 'adaptation_speed';
+interface PerformanceMetric {
+  metric_type: 'learning_progress' | 'prediction_accuracy' | 'adaptation_speed';
   metric_value: number;
-  confidence_score?: number;
-  decision_context: Record<string, unknown>;
+  confidence_score: number;
+  decision_context: Record<string, any>;
   user_role?: string;
   feature_area?: string;
 }
 
-export interface SystemHealthMetric {
-  metric_name: 'cpu_usage' | 'memory_usage' | 'response_time' | 'error_rate';
-  metric_value: number;
-  unit: 'percentage' | 'milliseconds' | 'count';
-  server_instance?: string;
-}
-
-class AnalyticsService {
+export class AnalyticsService {
+  private userRole: string = 'unknown';
   private sessionId: string;
-  private userId: string | null = null;
-  private userRole: string | null = null;
+  private events: UserEvent[] = [];
+  private metrics: PerformanceMetric[] = [];
 
   constructor() {
     this.sessionId = this.generateSessionId();
-    this.initializeSession();
   }
 
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  private async initializeSession() {
+  async initialize(user: any): Promise<void> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        this.userId = user.id;
-        this.userRole = user.user_metadata?.role || 'unknown';
-        
-        // Create or update session
-        await supabase
-          .from('user_sessions')
-          .upsert({
-            session_id: this.sessionId,
-            user_id: this.userId,
-            user_role: this.userRole,
-            start_time: new Date().toISOString()
-          });
+      if (user?.user_metadata) {
+        this.userRole = user.user_metadata['role'] || 'unknown';
       }
     } catch (error) {
-      console.error('Failed to initialize analytics session:', error);
+      console.error('Error initializing analytics:', error);
     }
   }
 
-  async trackUserEvent(event: UserEvent) {
+  async trackUserEvent(event: UserEvent): Promise<void> {
     try {
-      if (!this.userId) return;
-
-      // Convert event_data to JSON-compatible format
-      await supabase
-        .from('user_analytics')
-        .insert({
-          user_id: this.userId,
-          session_id: this.sessionId,
-          event_type: event.event_type,
-          event_data: event.event_data as never, // Cast to never to bypass type checking
-          page_path: event.page_path,
-          feature_name: event.feature_name,
-          duration_ms: event.duration_ms,
-          user_role: this.userRole
-        });
-
-      // Update session interaction count
-      const { data: currentSession } = await supabase
-        .from('user_sessions')
-        .select('interactions_count')
-        .eq('session_id', this.sessionId)
-        .single();
-
-      if (currentSession) {
-        await supabase
-          .from('user_sessions')
-          .update({ 
-            interactions_count: (currentSession.interactions_count || 0) + 1,
-            updated_at: new Date().toISOString()
-          })
-          .eq('session_id', this.sessionId);
-      }
-
+      // Store event in memory instead of Supabase
+      this.events.push({
+        ...event,
+        user_role: event.user_role || this.userRole
+      });
+      console.log('Event tracked:', event);
     } catch (error) {
-      console.error('Failed to track user event:', error);
+      console.error('Error tracking user event:', error);
     }
   }
 
-  async trackPageView(pagePath: string, duration?: number) {
+  async trackPageView(path: string, duration?: number): Promise<void> {
     await this.trackUserEvent({
       event_type: 'page_view',
-      event_data: { path: pagePath },
-      page_path: pagePath,
-      duration_ms: duration
+      event_data: { path },
+      page_path: path,
+      duration_ms: duration || 0
     });
-
-    // Update session page views
-    try {
-      const { data: currentSession } = await supabase
-        .from('user_sessions')
-        .select('page_views')
-        .eq('session_id', this.sessionId)
-        .single();
-
-      if (currentSession) {
-        await supabase
-          .from('user_sessions')
-          .update({ 
-            page_views: (currentSession.page_views || 0) + 1,
-            updated_at: new Date().toISOString()
-          })
-          .eq('session_id', this.sessionId);
-      }
-    } catch (error) {
-      console.error('Failed to update page views:', error);
-    }
   }
 
-  async trackFeatureUsage(featureName: string, additionalData: Record<string, unknown> = {}) {
+  async trackFeatureUsage(featureName: string, data?: Record<string, any>): Promise<void> {
     await this.trackUserEvent({
       event_type: 'feature_usage',
-      event_data: additionalData,
-      feature_name: featureName
+      event_data: data || {},
+      feature_name: featureName,
+      duration_ms: 0
     });
   }
 
-  async trackClick(element: string, additionalData: Record<string, unknown> = {}) {
+  async trackClick(elementId: string, pagePath?: string): Promise<void> {
     await this.trackUserEvent({
       event_type: 'click',
-      event_data: { element, ...additionalData }
+      event_data: { elementId },
+      page_path: pagePath || '',
+      duration_ms: 0
     });
   }
 
-  async logAIMetric(metric: AIMetric) {
+  async trackNavigation(fromPath: string, toPath: string): Promise<void> {
+    await this.trackUserEvent({
+      event_type: 'navigation',
+      event_data: { fromPath, toPath },
+      page_path: toPath,
+      duration_ms: 0
+    });
+  }
+
+  async trackPerformanceMetric(metric: PerformanceMetric): Promise<void> {
     try {
-      // Convert decision_context to JSON-compatible format
-      await supabase
-        .from('ai_performance_metrics')
-        .insert({
-          metric_type: metric.metric_type,
-          metric_value: metric.metric_value,
-          confidence_score: metric.confidence_score,
-          decision_context: metric.decision_context as never, // Cast to never to bypass type checking
-          user_role: metric.user_role || this.userRole,
-          feature_area: metric.feature_area
-        });
+      // Store metric in memory instead of Supabase
+      this.metrics.push({
+        ...metric,
+        user_role: metric.user_role || this.userRole
+      });
+      console.log('Performance metric tracked:', metric);
     } catch (error) {
-      console.error('Failed to log AI metric:', error);
+      console.error('Error tracking performance metric:', error);
     }
   }
 
-  async logSystemHealth(metric: SystemHealthMetric) {
+  async getAnalyticsSummary(): Promise<any> {
     try {
-      await supabase
-        .from('system_health_metrics')
-        .insert({
-          metric_name: metric.metric_name,
-          metric_value: metric.metric_value,
-          unit: metric.unit,
-          server_instance: metric.server_instance || 'default'
-        });
+      return {
+        totalEvents: this.events.length,
+        totalMetrics: this.metrics.length,
+        sessionId: this.sessionId,
+        userRole: this.userRole
+      };
     } catch (error) {
-      console.error('Failed to log system health metric:', error);
+      console.error('Error getting analytics summary:', error);
+      return { totalEvents: 0, totalMetrics: 0, sessionId: this.sessionId, userRole: this.userRole };
     }
   }
-
-  async endSession() {
-    try {
-      if (!this.userId) return;
-
-      const { data: session } = await supabase
-        .from('user_sessions')
-        .select('start_time')
-        .eq('session_id', this.sessionId)
-        .single();
-
-      if (session) {
-        const startTime = new Date(session.start_time);
-        const endTime = new Date();
-        const durationMinutes = Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60));
-
-        await supabase
-          .from('user_sessions')
-          .update({
-            end_time: endTime.toISOString(),
-            duration_minutes: durationMinutes,
-            updated_at: endTime.toISOString()
-          })
-          .eq('session_id', this.sessionId);
-      }
-    } catch (error) {
-      console.error('Failed to end session:', error);
-    }
-  }
-}
-
-export const analyticsService = new AnalyticsService();
-
-// Auto-track page navigation
-let currentPath = '';
-const trackPageChange = () => {
-  const newPath = window.location.pathname;
-  if (newPath !== currentPath) {
-    analyticsService.trackPageView(newPath);
-    currentPath = newPath;
-  }
-};
-
-// Set up page tracking
-if (typeof window !== 'undefined') {
-  window.addEventListener('popstate', trackPageChange);
-  trackPageChange(); // Track initial page
-}
-
-// End session when page unloads
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeunload', () => {
-    analyticsService.endSession();
-  });
 }

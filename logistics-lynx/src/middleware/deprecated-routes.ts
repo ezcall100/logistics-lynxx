@@ -1,23 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Middleware for deprecated routes
-export const handleDeprecatedRoute = (req, res) => {
-  const deprecatedRoutes = {
-    '/carrier-admin': '/carrier',
-    '/broker-admin': '/broker',
-    '/shipper-admin': '/shipper',
-    '/carrier-dispatch': '/load-board'
-  };
+interface Request {
+  path: string;
+}
 
+interface Response {
+  redirect: (path: string) => void;
+}
+
+const deprecatedRoutes: Record<string, string> = {
+  '/carrier-admin': '/admin/carrier',
+  '/broker-admin': '/admin/broker', 
+  '/shipper-admin': '/admin/shipper',
+  '/carrier-dispatch': '/dispatch/carrier'
+};
+
+export const handleDeprecatedRoute = (req: Request, res: Response) => {
   const canonicalPath = deprecatedRoutes[req.path];
   
   if (canonicalPath) {
-    return res.status(410).json({
-      error: 'Route decommissioned',
-      canonicalPath,
-      message: 'This route has been moved. Please use the canonical path.',
-      timestamp: new Date().toISOString()
-    });
+    res.redirect(canonicalPath);
+    return true;
   }
-
-  return null;
+  
+  return false;
 };

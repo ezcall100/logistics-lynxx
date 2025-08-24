@@ -1,185 +1,66 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { MenuSection } from '@/lib/types/menu';
 import {
-  LayoutDashboard,
+  Home,
   Truck,
   MapPin,
-  Route,
   Package,
   Clock,
-  Fuel,
-  FileText,
-  DollarSign,
-  Shield,
-  Activity,
-  Calendar,
-  Phone,
-  MessageSquare,
-  AlertTriangle,
-  CheckCircle,
-  Camera,
-  Upload,
-  Download,
-  Navigation,
-  Gauge,
-  Wrench,
-  Heart,
-  Target,
-  Award,
-  TrendingUp,
-  BarChart3,
   Settings,
   Bell,
-  UserCheck,
-  ClipboardList,
-  CreditCard,
-  Receipt,
-  Calculator,
-  BookOpen,
-  Star,
-  Mail,
-  Users,
-  Building2,
-  Coffee,
-  Home,
-  Smartphone
-} from "lucide-react";
+  User,
+  FileText,
+  CheckCircle,
+  AlertTriangle,
+  Calendar,
+  Upload,
+  Download,
+  Mail
+} from 'lucide-react';
 
-export const DRIVERS_MENU: MenuSection = {
-  items: [
-    {
-      title: "Driver Dashboard",
-      icon: LayoutDashboard,
-      path: "/drivers/dashboard",
-    },
-    {
-      title: "Current Trip",
-      icon: Route,
-      subMenu: [
-        { title: "Trip Overview", icon: Route, path: "/drivers/trip/overview" },
-        { title: "Navigation", icon: Navigation, path: "/drivers/trip/navigation" },
-        { title: "Load Details", icon: Package, path: "/drivers/trip/load" },
-        { title: "Delivery Instructions", icon: FileText, path: "/drivers/trip/instructions" },
-        { title: "Trip Status Updates", icon: Activity, path: "/drivers/trip/status" },
-        { title: "Emergency Contacts", icon: Phone, path: "/drivers/trip/emergency" },
-      ],
-    },
-    {
-      title: "Vehicle Management",
-      icon: Truck,
-      subMenu: [
-        { title: "Vehicle Status", icon: Truck, path: "/drivers/vehicle/status" },
-        { title: "Pre-Trip Inspection", icon: CheckCircle, path: "/drivers/vehicle/inspection" },
-        { title: "Maintenance Alerts", icon: Wrench, path: "/drivers/vehicle/maintenance" },
-        { title: "Fuel Management", icon: Fuel, path: "/drivers/vehicle/fuel" },
-        { title: "Vehicle Documents", icon: FileText, path: "/drivers/vehicle/documents" },
-        { title: "Breakdown Assistance", icon: AlertTriangle, path: "/drivers/vehicle/breakdown" },
-      ],
-    },
-    {
-      title: "Hours of Service",
-      icon: Clock,
-      subMenu: [
-        { title: "HOS Dashboard", icon: Clock, path: "/drivers/hos/dashboard" },
-        { title: "Duty Status", icon: Activity, path: "/drivers/hos/status" },
-        { title: "Logbook", icon: FileText, path: "/drivers/hos/logbook" },
-        { title: "Break Reminders", icon: Coffee, path: "/drivers/hos/breaks" },
-        { title: "Violation Alerts", icon: AlertTriangle, path: "/drivers/hos/violations" },
-        { title: "Rest Area Finder", icon: Home, path: "/drivers/hos/rest-areas" },
-      ],
-    },
-    {
-      title: "Load Management",
-      icon: Package,
-      subMenu: [
-        { title: "Active Loads", icon: Package, path: "/drivers/loads/active" },
-        { title: "Load History", icon: ClipboardList, path: "/drivers/loads/history" },
-        { title: "Pickup & Delivery", icon: MapPin, path: "/drivers/loads/pickup-delivery" },
-        { title: "Load Documentation", icon: FileText, path: "/drivers/loads/documents" },
-        { title: "Photo Capture", icon: Camera, path: "/drivers/loads/photos" },
-        { title: "Electronic Signatures", icon: CheckCircle, path: "/drivers/loads/signatures" },
-      ],
-    },
-    {
-      title: "Communication",
-      icon: MessageSquare,
-      subMenu: [
-        { title: "Dispatch Messages", icon: MessageSquare, path: "/drivers/comm/dispatch" },
-        { title: "Driver Chat", icon: Users, path: "/drivers/comm/chat" },
-        { title: "Customer Contact", icon: Phone, path: "/drivers/comm/customer" },
-        { title: "Company Updates", icon: Bell, path: "/drivers/comm/updates" },
-        { title: "Emergency Support", icon: AlertTriangle, path: "/drivers/comm/emergency" },
-      ],
-    },
-    {
-      title: "Safety & Compliance",
-      icon: Shield,
-      subMenu: [
-        { title: "Safety Dashboard", icon: Shield, path: "/drivers/safety/dashboard" },
-        { title: "Compliance Status", icon: CheckCircle, path: "/drivers/safety/compliance" },
-        { title: "Drug & Alcohol Testing", icon: Heart, path: "/drivers/safety/testing" },
-        { title: "Safety Training", icon: BookOpen, path: "/drivers/safety/training" },
-        { title: "Incident Reporting", icon: AlertTriangle, path: "/drivers/safety/incidents" },
-        { title: "Safety Scores", icon: Star, path: "/drivers/safety/scores" },
-      ],
-    },
-    {
-      title: "Performance & Earnings",
-      icon: TrendingUp,
-      subMenu: [
-        { title: "Performance Dashboard", icon: BarChart3, path: "/drivers/performance/dashboard" },
-        { title: "Earnings Overview", icon: DollarSign, path: "/drivers/performance/earnings" },
-        { title: "Mileage Tracking", icon: Gauge, path: "/drivers/performance/mileage" },
-        { title: "Fuel Efficiency", icon: Fuel, path: "/drivers/performance/efficiency" },
-        { title: "Safety Metrics", icon: Shield, path: "/drivers/performance/safety" },
-        { title: "Performance Goals", icon: Target, path: "/drivers/performance/goals" },
-      ],
-    },
-    {
-      title: "Financial Services",
-      icon: DollarSign,
-      subMenu: [
-        { title: "Pay Statements", icon: Receipt, path: "/drivers/finance/pay" },
-        { title: "Expense Tracking", icon: Calculator, path: "/drivers/finance/expenses" },
-        { title: "Fuel Card Management", icon: CreditCard, path: "/drivers/finance/fuel-card" },
-        { title: "Tax Documents", icon: FileText, path: "/drivers/finance/taxes" },
-        { title: "Payroll Advances", icon: DollarSign, path: "/drivers/finance/advances" },
-        { title: "Benefits Information", icon: Heart, path: "/drivers/finance/benefits" },
-      ],
-    },
-    {
-      title: "Training & Development",
-      icon: BookOpen,
-      subMenu: [
-        { title: "Training Modules", icon: BookOpen, path: "/drivers/training/modules" },
-        { title: "Certification Status", icon: Award, path: "/drivers/training/certifications" },
-        { title: "Safety Training", icon: Shield, path: "/drivers/training/safety" },
-        { title: "Skills Development", icon: TrendingUp, path: "/drivers/training/skills" },
-        { title: "Career Advancement", icon: Target, path: "/drivers/training/career" },
-      ],
-    },
-    {
-      title: "Driver Tools",
-      icon: Smartphone,
-      subMenu: [
-        { title: "Weather Information", icon: Activity, path: "/drivers/tools/weather" },
-        { title: "Truck Stops", icon: Building2, path: "/drivers/tools/truck-stops" },
-        { title: "Weigh Stations", icon: Gauge, path: "/drivers/tools/weigh-stations" },
-        { title: "Parking Finder", icon: MapPin, path: "/drivers/tools/parking" },
-        { title: "Route Planning", icon: Route, path: "/drivers/tools/route-planning" },
-        { title: "Document Scanner", icon: Camera, path: "/drivers/tools/scanner" },
-      ],
-    },
-    {
-      title: "Driver Settings",
-      icon: Settings,
-      subMenu: [
-        { title: "Profile Settings", icon: UserCheck, path: "/drivers/settings/profile" },
-        { title: "Vehicle Preferences", icon: Truck, path: "/drivers/settings/vehicle" },
-        { title: "Notification Settings", icon: Bell, path: "/drivers/settings/notifications" },
-        { title: "Communication Preferences", icon: MessageSquare, path: "/drivers/settings/communication" },
-        { title: "Privacy Settings", icon: Shield, path: "/drivers/settings/privacy" },
-      ],
-    },
-  ],
-};
+import type { MenuItem } from '@/types/menu';
+
+export const driversMenu: MenuItem[] = [
+  {
+    id: 'dashboard',
+    title: 'Dashboard',
+    path: '/driver/dashboard',
+    icon: Home
+  },
+  {
+    id: 'loads',
+    title: 'My Loads',
+    path: '/driver/loads',
+    icon: Package,
+    children: [
+      {
+        id: 'assigned',
+        title: 'Assigned Loads',
+        path: '/driver/loads/assigned',
+        icon: CheckCircle
+      },
+      {
+        id: 'completed',
+        title: 'Completed Loads',
+        path: '/driver/loads/completed',
+        icon: CheckCircle
+      }
+    ]
+  },
+  {
+    id: 'tracking',
+    title: 'Tracking',
+    path: '/driver/tracking',
+    icon: MapPin
+  },
+  {
+    id: 'documents',
+    title: 'Documents',
+    path: '/driver/documents',
+    icon: FileText
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    path: '/driver/settings',
+    icon: Settings
+  }
+];
