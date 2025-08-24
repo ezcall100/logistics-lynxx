@@ -73,6 +73,7 @@ const portalConfigs = {
       { label: 'Dashboard', href: '/super-admin', icon: Home },
       { label: 'User Management', href: '/super-admin/users', icon: Users },
       { label: 'Company Settings', href: '/super-admin/settings', icon: Settings },
+      { label: 'Security Dashboard', href: '/super-admin/security/dashboard', icon: Shield },
       { label: 'Subscriptions', href: '/super-admin/subscriptions', icon: DollarSign },
       { label: 'Feature Flags', href: '/super-admin/features', icon: Shield },
       { label: 'Analytics', href: '/super-admin/analytics', icon: BarChart3 },

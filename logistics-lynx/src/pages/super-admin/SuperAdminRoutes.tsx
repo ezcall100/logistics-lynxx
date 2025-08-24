@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 // Dashboard Pages
 import SystemOverview from './dashboard/SystemOverview';
@@ -105,6 +106,9 @@ import ProfileSettings from './settings/ProfileSettings';
 import SystemSettings from './settings/SystemSettings';
 import UserPreferences from './settings/UserPreferences';
 
+// Security Dashboard
+import SecurityDashboard from '@/components/SecurityDashboard';
+
 // Development & DevOps Pages
 import CodeRepository from './development-devops/CodeRepository';
 import CICDPipeline from './development-devops/CICDPipeline';
@@ -119,10 +123,26 @@ const SuperAdminRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Dashboard Routes */}
-      <Route path="/super-admin/dashboard" element={<SystemOverview />} />
-      <Route path="/super-admin/dashboard/users" element={<ActiveUsers />} />
-      <Route path="/super-admin/dashboard/revenue" element={<RevenueMetrics />} />
-      <Route path="/super-admin/dashboard/alerts" element={<SystemAlerts />} />
+      <Route path="/super-admin/dashboard" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <SystemOverview />
+        </ProtectedRoute>
+      } />
+      <Route path="/super-admin/dashboard/users" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <ActiveUsers />
+        </ProtectedRoute>
+      } />
+      <Route path="/super-admin/dashboard/revenue" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <RevenueMetrics />
+        </ProtectedRoute>
+      } />
+      <Route path="/super-admin/dashboard/alerts" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <SystemAlerts />
+        </ProtectedRoute>
+      } />
 
       {/* User Management Routes */}
       <Route path="/super-admin/users" element={<AllUsers />} />
@@ -227,10 +247,33 @@ const SuperAdminRoutes: React.FC = () => {
       <Route path="/super-admin/dev/releases" element={<ReleaseManagement />} />
 
       {/* Settings Routes */}
-      <Route path="/super-admin/settings" element={<SettingsOverview />} />
-      <Route path="/super-admin/settings/profile" element={<ProfileSettings />} />
-      <Route path="/super-admin/settings/system" element={<SystemSettings />} />
-      <Route path="/super-admin/settings/preferences" element={<UserPreferences />} />
+      <Route path="/super-admin/settings" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <SettingsOverview />
+        </ProtectedRoute>
+      } />
+      <Route path="/super-admin/settings/profile" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin', 'manager', 'user']}>
+          <ProfileSettings />
+        </ProtectedRoute>
+      } />
+      <Route path="/super-admin/settings/system" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <SystemSettings />
+        </ProtectedRoute>
+      } />
+      <Route path="/super-admin/settings/preferences" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin', 'manager', 'user']}>
+          <UserPreferences />
+        </ProtectedRoute>
+      } />
+
+      {/* Security Dashboard Routes */}
+      <Route path="/super-admin/security/dashboard" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
+          <SecurityDashboard />
+        </ProtectedRoute>
+      } />
 
       {/* Default route - redirect to dashboard */}
       <Route path="/super-admin" element={<SystemOverview />} />

@@ -36,7 +36,9 @@
     "ops:strict-off": "node -e \"console.log('READYZ=lenient');\" && echo",
     "test:access-control": "vitest run tests/access-control.spec.ts",
     "test:rls": "node scripts/test-rls-policies.mjs",
-    "security:audit": "node scripts/test-rls-policies.mjs && npm run test:access-control"
+    "security:audit": "node scripts/test-rls-policies.mjs && npm run test:access-control",
+    "verify:routing": "node scripts/verify-routing-sync.mjs",
+    "sync:all": "npm run verify:routing && npm run test:rls && npm run security:audit"
   },
   "description": "Parent package for Trans Bot AI project",
   "engines": {

@@ -290,6 +290,58 @@ class RLSTester {
     }
   }
 
+  async testPageAccessControl() {
+    this.log('Testing page access control...');
+
+    // Test admin access to security dashboard
+    await supabase.auth.signInWithPassword({
+      email: 'admin@testa.com',
+      password: 'testpassword123'
+    });
+
+    // Test user access to profile settings (should be allowed)
+    await supabase.auth.signInWithPassword({
+      email: 'user@testa.com',
+      password: 'testpassword123'
+    });
+
+    // Test that viewer cannot access admin pages
+    const { data: viewerUser } = await supabase.auth.admin.createUser({
+      email: 'viewer@testa.com',
+      password: 'testpassword123',
+      email_confirm: true
+    });
+
+    const companyA = this.testCompanies.get('test-company-a');
+
+    // Create viewer profile and role
+    await supabase
+      .from('profiles')
+      .insert({
+        id: viewerUser.user.id,
+        email: 'viewer@testa.com',
+        full_name: 'Viewer User',
+        company_id: companyA.id
+      });
+
+    await supabase
+      .from('roles')
+      .insert({
+        user_id: viewerUser.user.id,
+        company_id: companyA.id,
+        role: 'viewer'
+      });
+
+    // Test viewer access (should be restricted)
+    await supabase.auth.signInWithPassword({
+      email: 'viewer@testa.com',
+      password: 'testpassword123'
+    });
+
+    // Clean up test viewer user
+    await supabase.auth.admin.deleteUser(viewerUser.user.id);
+  }
+
   async testSelfSuperAdminPrevention() {
     this.log('Testing self super_admin prevention...');
 
@@ -363,6 +415,7 @@ class RLSTester {
       await this.runTest('Audit Logging', () => this.testAuditLogging());
       await this.runTest('Security Functions', () => this.testSecurityFunctions());
       await this.runTest('Security Views', () => this.testSecurityViews());
+      await this.runTest('Page Access Control', () => this.testPageAccessControl());
       await this.runTest('Self Super Admin Prevention', () => this.testSelfSuperAdminPrevention());
 
     } finally {
