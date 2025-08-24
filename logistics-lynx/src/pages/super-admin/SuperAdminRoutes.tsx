@@ -109,6 +109,9 @@ import UserPreferences from './settings/UserPreferences';
 // Security Dashboard
 import SecurityDashboard from '@/components/SecurityDashboard';
 
+// Invite Management
+import InviteManagement from './invites/InviteManagement';
+
 // Development & DevOps Pages
 import CodeRepository from './development-devops/CodeRepository';
 import CICDPipeline from './development-devops/CICDPipeline';
@@ -272,6 +275,13 @@ const SuperAdminRoutes: React.FC = () => {
       <Route path="/super-admin/security/dashboard" element={
         <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
           <SecurityDashboard />
+        </ProtectedRoute>
+      } />
+
+      {/* Invite Management Routes */}
+      <Route path="/super-admin/invites" element={
+        <ProtectedRoute requiredRoles={['super_admin', 'admin', 'owner']}>
+          <InviteManagement />
         </ProtectedRoute>
       } />
 

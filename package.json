@@ -39,6 +39,7 @@
     "security:audit": "node scripts/test-rls-policies.mjs && npm run test:access-control",
     "verify:routing": "node scripts/verify-routing-sync.mjs",
     "sync:all": "npm run verify:routing && npm run test:rls && npm run security:audit",
+    "test:invites": "node scripts/test-invite-system.mjs",
     "n8n:start": "docker-compose -f docker-compose.n8n.yml up -d",
     "n8n:stop": "docker-compose -f docker-compose.n8n.yml down",
     "n8n:restart": "docker-compose -f docker-compose.n8n.yml restart",
