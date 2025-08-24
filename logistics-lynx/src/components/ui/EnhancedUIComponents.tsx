@@ -1060,6 +1060,7 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
   );
 };
 
+// Default export for backward compatibility
 export default {
   EnhancedButton,
   EnhancedCard,

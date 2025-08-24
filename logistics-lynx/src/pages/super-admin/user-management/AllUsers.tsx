@@ -468,7 +468,7 @@ const AllUsers: React.FC = () => {
       key: 'name',
       title: 'Name',
       sortable: true,
-      render: (value: string, row: User) => (
+      render: (_value: string, row: User) => (
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
             {row.name.charAt(0).toUpperCase()}
@@ -500,7 +500,7 @@ const AllUsers: React.FC = () => {
       key: 'company',
       title: 'Company',
       sortable: true,
-      render: (value: string, row: User) => (
+      render: (_value: string, row: User) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.company}
@@ -521,7 +521,7 @@ const AllUsers: React.FC = () => {
       key: 'lastLogin',
       title: 'Last Login',
       sortable: true,
-      render: (value: string, row: User) => (
+      render: (_value: string, row: User) => (
         <div>
           <div className={`text-sm ${stableStyles.textPrimary[mode]}`}>
             {row.lastLogin ? new Date(row.lastLogin).toLocaleDateString() : 'Never'}
@@ -535,7 +535,7 @@ const AllUsers: React.FC = () => {
     {
       key: 'actions',
       title: 'Actions',
-      render: (value: any, row: User) => (
+      render: (_value: any, row: User) => (
         <div className="flex items-center space-x-2">
           <EnhancedButton
             variant="ghost"
@@ -555,7 +555,9 @@ const AllUsers: React.FC = () => {
               setEditingUser(row);
               setShowEditModal(true);
             }}
-          />
+          >
+            Edit
+          </EnhancedButton>
           <EnhancedButton
             variant="ghost"
             size="sm"
@@ -565,7 +567,9 @@ const AllUsers: React.FC = () => {
               setDeletingUser(row);
               setShowDeleteModal(true);
             }}
-          />
+          >
+            Delete
+          </EnhancedButton>
         </div>
       )
     }
@@ -683,7 +687,7 @@ const AllUsers: React.FC = () => {
                   Activate
                 </EnhancedButton>
                 <EnhancedButton
-                  variant="warning"
+                  variant="secondary"
                   size="sm"
                   onClick={() => handleBulkAction('deactivate')}
                   mode={mode}

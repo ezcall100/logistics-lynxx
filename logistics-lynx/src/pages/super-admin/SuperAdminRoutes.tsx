@@ -3,6 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 
 // Dashboard Pages
 import SystemOverview from './dashboard/SystemOverview';
+import ActiveUsers from './dashboard/ActiveUsers';
+import RevenueMetrics from './dashboard/RevenueMetrics';
+import SystemAlerts from './dashboard/SystemAlerts';
 
 // Settings Pages
 import ProfileSettings from './settings/ProfileSettings';
@@ -13,6 +16,8 @@ import MCPOverview from './mcp-control-center/MCPOverview';
 
 // User Management Pages
 import AllUsers from './user-management/AllUsers';
+import UserRoles from './user-management/UserRoles';
+import UserGroups from './user-management/UserGroups';
 
 // Simple placeholder components for other pages
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -49,14 +54,14 @@ const SuperAdminRoutes: React.FC = () => {
     <Routes>
       {/* Dashboard Routes */}
       <Route path="/dashboard" element={<SystemOverview />} />
-      <Route path="/dashboard/users" element={<PlaceholderPage title="Active Users" />} />
-      <Route path="/dashboard/revenue" element={<PlaceholderPage title="Revenue Metrics" />} />
-      <Route path="/dashboard/alerts" element={<PlaceholderPage title="System Alerts" />} />
+      <Route path="/dashboard/users" element={<ActiveUsers />} />
+      <Route path="/dashboard/revenue" element={<RevenueMetrics />} />
+      <Route path="/dashboard/alerts" element={<SystemAlerts />} />
 
       {/* User Management Routes */}
       <Route path="/users" element={<AllUsers />} />
-      <Route path="/users/roles" element={<PlaceholderPage title="User Roles" />} />
-      <Route path="/users/groups" element={<PlaceholderPage title="User Groups" />} />
+      <Route path="/users/roles" element={<UserRoles />} />
+      <Route path="/users/groups" element={<UserGroups />} />
       <Route path="/users/access" element={<PlaceholderPage title="Access Control" />} />
       <Route path="/users/analytics" element={<PlaceholderPage title="User Analytics" />} />
       <Route path="/users/billing" element={<PlaceholderPage title="Billing Management" />} />
