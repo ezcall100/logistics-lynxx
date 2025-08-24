@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "cd logistics-lynx && vite --port 3000",
     "dev:web": "cd logistics-lynx && vite --port 3000",
     "dev:autonomous": "cd logistics-lynx && node scripts/autonomous-agent-continuous.mjs",
     "start:autonomous": "cd logistics-lynx && node --enable-source-maps dist/autonomous-orchestrator.mjs",
