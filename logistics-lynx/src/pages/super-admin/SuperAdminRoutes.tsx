@@ -65,7 +65,7 @@ import PortalDeployment from './portal-management/PortalDeployment';
 
 // Analytics & Reports Pages
 import BusinessAnalytics from './analytics-reports/BusinessAnalytics';
-import UserAnalytics from './analytics-reports/UserAnalytics';
+import UserAnalyticsReports from './analytics-reports/UserAnalytics';
 import PerformanceReports from './analytics-reports/PerformanceReports';
 import SecurityReports from './analytics-reports/SecurityReports';
 import FinancialReports from './analytics-reports/FinancialReports';
@@ -176,7 +176,7 @@ const SuperAdminRoutes: React.FC = () => {
 
       {/* Analytics & Reports Routes */}
       <Route path="/super-admin/analytics/business" element={<BusinessAnalytics />} />
-      <Route path="/super-admin/analytics/users" element={<UserAnalytics />} />
+      <Route path="/super-admin/analytics/users" element={<UserAnalyticsReports />} />
       <Route path="/super-admin/analytics/performance" element={<PerformanceReports />} />
       <Route path="/super-admin/analytics/security" element={<SecurityReports />} />
       <Route path="/super-admin/analytics/financial" element={<FinancialReports />} />
