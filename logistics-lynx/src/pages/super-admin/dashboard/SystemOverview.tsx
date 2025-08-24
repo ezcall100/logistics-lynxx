@@ -19,15 +19,15 @@ import {
   Wifi,
   RefreshCw
 } from 'lucide-react';
+import { getSystemHealth } from '../../../api/system';
 import { 
   getSystemMetrics, 
-  getUserAnalytics, 
-  getSystemHealth,
+  getUserAnalytics,
   formatCurrency,
   formatNumber,
   formatPercentage,
   formatUptime
-} from '../../../api';
+} from '../../../api/dashboard';
 
 interface SystemOverviewProps {}
 
