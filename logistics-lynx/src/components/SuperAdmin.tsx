@@ -373,10 +373,10 @@ const SuperAdmin: React.FC = () => {
       badge: 'Live',
       description: 'System overview and analytics',
       submenu: [
-        { title: 'System Overview', path: '/dashboard', icon: '🏠' },
-        { title: 'Active Users', path: '/dashboard/users', icon: '👥' },
-        { title: 'Revenue Metrics', path: '/dashboard/revenue', icon: '💰' },
-        { title: 'System Alerts', path: '/dashboard/alerts', icon: '🚨' }
+        { title: 'System Overview', path: '/super-admin/dashboard', icon: '🏠' },
+        { title: 'Active Users', path: '/super-admin/dashboard/users', icon: '👥' },
+        { title: 'Revenue Metrics', path: '/super-admin/dashboard/revenue', icon: '💰' },
+        { title: 'System Alerts', path: '/super-admin/dashboard/alerts', icon: '🚨' }
       ]
     },
     {
@@ -386,14 +386,14 @@ const SuperAdmin: React.FC = () => {
       badge: '8',
       description: 'Manage all users across the platform',
       submenu: [
-        { title: 'All Users', path: '/users', icon: '👥' },
-        { title: 'User Roles', path: '/users/roles', icon: '🔑' },
-        { title: 'User Groups', path: '/users/groups', icon: '👥' },
-        { title: 'Access Control', path: '/users/access', icon: '🔒' },
-        { title: 'User Analytics', path: '/users/analytics', icon: '📈' },
-        { title: 'Billing Management', path: '/users/billing', icon: '💳' },
-        { title: 'Support Tickets', path: '/users/support', icon: '🎫' },
-        { title: 'User Onboarding', path: '/users/onboarding', icon: '🚀' }
+        { title: 'All Users', path: '/super-admin/users', icon: '👥' },
+        { title: 'User Roles', path: '/super-admin/users/roles', icon: '🔑' },
+        { title: 'User Groups', path: '/super-admin/users/groups', icon: '👥' },
+        { title: 'Access Control', path: '/super-admin/users/access', icon: '🔒' },
+        { title: 'User Analytics', path: '/super-admin/users/analytics', icon: '📈' },
+        { title: 'Billing Management', path: '/super-admin/users/billing', icon: '💳' },
+        { title: 'Support Tickets', path: '/super-admin/users/support', icon: '🎫' },
+        { title: 'User Onboarding', path: '/super-admin/users/onboarding', icon: '🚀' }
       ]
     },
     {
