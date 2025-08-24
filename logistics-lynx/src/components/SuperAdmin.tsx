@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import SuperAdminRoutes from '../pages/super-admin/SuperAdminRoutes';
 
 // 🎨 STABLE DESIGN SYSTEM - No Flashing, Eye-Friendly, KPI-Focused
@@ -343,6 +343,7 @@ const StableProgress = ({ value, max = 100, className = "", premium = false, mod
 );
 
 const SuperAdmin: React.FC = () => {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedMenus, setExpandedMenus] = useState<{[key: string]: boolean}>({});
@@ -599,6 +600,10 @@ const SuperAdmin: React.FC = () => {
                     setActiveMenu(item.key);
                     if (item.submenu) {
                       toggleMenu(item.key);
+                      // Navigate to the first submenu item if available
+                      if (item.submenu.length > 0) {
+                        navigate(item.submenu[0].path);
+                      }
                     }
                   }}
                   active={activeMenu === item.key}
@@ -628,7 +633,11 @@ const SuperAdmin: React.FC = () => {
                     {item.submenu.map((subItem, index) => (
                       <StableNavItem
                         key={index}
-                        onClick={() => setActiveMenu(`${item.key}-${index}`)}
+                        onClick={() => {
+                          setActiveMenu(`${item.key}-${index}`);
+                          console.log(`🚀 Navigating to: ${subItem.path}`);
+                          navigate(subItem.path);
+                        }}
                         active={activeMenu === `${item.key}-${index}`}
                         premium={false}
                         mode={mode}
