@@ -103,7 +103,19 @@ export const getAllUsers = async (): Promise<{ data: User[] | null; error: any }
       return { data: mockUsers, error: null };
     }
 
-    return { data, error: null };
+    // Convert database data to User type
+    const users: User[] = data?.map((dbUser: any) => ({
+      id: dbUser.id || dbUser.user_id,
+      email: dbUser.email,
+      name: dbUser.name || dbUser.full_name,
+      role: dbUser.role || 'user',
+      status: (dbUser.status as 'active' | 'inactive' | 'suspended') || 'active',
+      created_at: dbUser.created_at,
+      last_login: dbUser.last_login,
+      avatar_url: dbUser.avatar_url
+    })) || [];
+    
+    return { data: users, error: null };
   } catch (error) {
     return { data: null, error };
   }
