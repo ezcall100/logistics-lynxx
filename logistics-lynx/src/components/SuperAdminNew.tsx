@@ -33,7 +33,8 @@ import {
   Clipboard, ClipboardCheck, ClipboardList, ClipboardX,
   FileText as FileTextIcon, File, Folder, FolderOpen,
   Activity as ActivityIcon, Heart, Thermometer,
-  Gauge, Timer, Clock as ClockIcon, Calendar as CalendarIcon
+  Gauge, Timer, Clock as ClockIcon, Calendar as CalendarIcon,
+  Flag, Megaphone, Handshake, Scale, TestTube, FileCode
 } from 'lucide-react';
 
 import { Button } from './ui/button';
