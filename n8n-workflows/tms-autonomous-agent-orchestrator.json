@@ -1,0 +1,297 @@
+{
+  "name": "TMS Autonomous Agent Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "hour": "*",
+          "minute": "*/10"
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Agent Orchestration Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/functions/v1/agent-runner",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "action",
+              "value": "orchestrate"
+            },
+            {
+              "name": "batch_size",
+              "value": "5"
+            },
+            {
+              "name": "priority",
+              "value": "high"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "agent-orchestrator",
+      "name": "Call Agent Orchestrator",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "success-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "success-check",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process successful agent orchestration\nconst result = $json;\nconst agents = result.agents || [];\nconst tasks = result.tasks || [];\n\n// Log successful orchestration\nconsole.log(`✅ Agent orchestration successful: ${agents.length} agents, ${tasks.length} tasks`);\n\n// Prepare metrics for dashboard\nconst metrics = {\n  timestamp: new Date().toISOString(),\n  agents_active: agents.length,\n  tasks_processed: tasks.length,\n  success_rate: result.success_rate || 0,\n  avg_confidence: result.avg_confidence || 0,\n  errors: result.errors || []\n};\n\n// Send to analytics endpoint\nreturn {\n  metrics,\n  agents,\n  tasks,\n  status: 'success'\n};"
+      },
+      "id": "process-success",
+      "name": "Process Success",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle orchestration failure\nconst error = $json;\nconsole.error('❌ Agent orchestration failed:', error);\n\n// Prepare alert data\nconst alert = {\n  timestamp: new Date().toISOString(),\n  type: 'agent_orchestration_failure',\n  severity: 'high',\n  message: error.message || 'Agent orchestration failed',\n  details: error\n};\n\n// Send to alerting system\nreturn {\n  alert,\n  status: 'error'\n};"
+      },
+      "id": "process-error",
+      "name": "Process Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/functions/v1/analytics",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "agent_orchestration_metrics"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json.metrics }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-metrics",
+      "name": "Send Metrics to Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#tms-alerts",
+        "text": "={{ $json.alert.message }}",
+        "otherOptions": {
+          "username": "TMS Agent Orchestrator",
+          "icon_emoji": ":robot_face:",
+          "attachments": [
+            {
+              "color": "danger",
+              "fields": [
+                {
+                  "title": "Severity",
+                  "value": "={{ $json.alert.severity }}",
+                  "short": true
+                },
+                {
+                  "title": "Timestamp",
+                  "value": "={{ $json.alert.timestamp }}",
+                  "short": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "id": "send-slack-alert",
+      "name": "Send Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/functions/v1/health",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "health-check",
+      "name": "Health Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 200]
+    }
+  ],
+  "connections": {
+    "Agent Orchestration Cron": {
+      "main": [
+        [
+          {
+            "node": "Call Agent Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Agent Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Process Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Success": {
+      "main": [
+        [
+          {
+            "node": "Send Metrics to Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Error": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Metrics to Analytics": {
+      "main": [
+        [
+          {
+            "node": "Health Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "tms-autonomous-agent-orchestrator",
+  "tags": [
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "tms-autonomous",
+      "name": "TMS Autonomous"
+    }
+  ]
+}

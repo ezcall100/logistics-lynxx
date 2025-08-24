@@ -1,0 +1,349 @@
+{
+  "name": "TMS RLS Security Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "hour": "*",
+          "minute": "*/15"
+        }
+      },
+      "id": "security-cron",
+      "name": "Security Monitor Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/rest/v1/v_company_security_overview",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "apikey",
+              "value": "{{ $env.SUPABASE_ANON_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fetch-security-overview",
+      "name": "Fetch Security Overview",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/rest/v1/audit_logs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "apikey",
+              "value": "{{ $env.SUPABASE_ANON_KEY }}"
+            }
+          ]
+        },
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "created_at",
+                "value": "gte.{{ $('now').minus({hours: 1}).toISOString() }}"
+              },
+              {
+                "name": "order",
+                "value": "created_at.desc"
+              },
+              {
+                "name": "limit",
+                "value": "100"
+              }
+            ]
+          }
+        }
+      },
+      "id": "fetch-recent-audit-logs",
+      "name": "Fetch Recent Audit Logs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Analyze security posture\nconst securityOverview = $('Fetch Security Overview').all();\nconst auditLogs = $('Fetch Recent Audit Logs').all();\n\n// Calculate security metrics\nlet totalCompanies = securityOverview.length;\nlet highRiskCompanies = 0;\nlet mediumRiskCompanies = 0;\nlet lowRiskCompanies = 0;\nlet totalUsers = 0;\nlet totalRoles = 0;\n\nsecurityOverview.forEach(company => {\n  totalUsers += company.total_users || 0;\n  totalRoles += company.total_roles || 0;\n  \n  // Risk assessment based on security score\n  if (company.security_score < 50) {\n    highRiskCompanies++;\n  } else if (company.security_score < 80) {\n    mediumRiskCompanies++;\n  } else {\n    lowRiskCompanies++;\n  }\n});\n\n// Analyze audit logs for suspicious activity\nconst suspiciousEvents = auditLogs.filter(log => {\n  return log.operation_type === 'role_assigned' || \n         log.operation_type === 'role_removed' ||\n         log.operation_type === 'sensitive_data_access';\n});\n\n// Detect potential security issues\nconst securityIssues = [];\n\n// Check for multiple role changes in short time\nconst roleChanges = auditLogs.filter(log => \n  log.operation_type === 'role_assigned' || log.operation_type === 'role_removed'\n);\n\nif (roleChanges.length > 10) {\n  securityIssues.push({\n    type: 'high_role_changes',\n    severity: 'medium',\n    message: `High number of role changes detected: ${roleChanges.length} in the last hour`\n  });\n}\n\n// Check for companies with low security scores\nsecurityOverview.forEach(company => {\n  if (company.security_score < 30) {\n    securityIssues.push({\n      type: 'low_security_score',\n      severity: 'high',\n      message: `Company ${company.company_name} has very low security score: ${company.security_score}%`,\n      company_id: company.company_id\n    });\n  }\n});\n\n// Prepare security report\nconst securityReport = {\n  timestamp: new Date().toISOString(),\n  metrics: {\n    total_companies: totalCompanies,\n    total_users: totalUsers,\n    total_roles: totalRoles,\n    high_risk_companies: highRiskCompanies,\n    medium_risk_companies: mediumRiskCompanies,\n    low_risk_companies: lowRiskCompanies,\n    avg_security_score: totalCompanies > 0 ? \n      securityOverview.reduce((sum, c) => sum + (c.security_score || 0), 0) / totalCompanies : 0\n  },\n  audit_summary: {\n    total_events: auditLogs.length,\n    suspicious_events: suspiciousEvents.length,\n    role_changes: roleChanges.length\n  },\n  security_issues: securityIssues,\n  overall_risk_level: securityIssues.some(issue => issue.severity === 'high') ? 'high' :\n                     securityIssues.some(issue => issue.severity === 'medium') ? 'medium' : 'low'\n};\n\nreturn securityReport;"
+      },
+      "id": "analyze-security",
+      "name": "Analyze Security Posture",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "high-risk",
+              "leftValue": "={{ $json.overall_risk_level }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "risk-check",
+      "name": "High Risk Detected?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#tms-security",
+        "text": "🚨 *TMS Security Alert - High Risk Detected*",
+        "otherOptions": {
+          "username": "TMS Security Monitor",
+          "icon_emoji": ":warning:",
+          "attachments": [
+            {
+              "color": "danger",
+              "fields": [
+                {
+                  "title": "Risk Level",
+                  "value": "={{ $json.overall_risk_level.toUpperCase() }}",
+                  "short": true
+                },
+                {
+                  "title": "Issues Found",
+                  "value": "={{ $json.security_issues.length }}",
+                  "short": true
+                },
+                {
+                  "title": "Security Issues",
+                  "value": "={{ $json.security_issues.map(issue => `• ${issue.message}`).join('\\n') }}",
+                  "short": false
+                }
+              ],
+              "footer": "TMS Security Monitor",
+              "ts": "={{ Math.floor(Date.now() / 1000) }}"
+            }
+          ]
+        }
+      },
+      "id": "send-security-alert",
+      "name": "Send Security Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://your-project.supabase.co/functions/v1/analytics",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "security_monitor_report"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-security-report",
+      "name": "Send Security Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#tms-security",
+        "text": "📊 *TMS Security Status Report*",
+        "otherOptions": {
+          "username": "TMS Security Monitor",
+          "icon_emoji": ":shield:",
+          "attachments": [
+            {
+              "color": "good",
+              "fields": [
+                {
+                  "title": "Total Companies",
+                  "value": "={{ $json.metrics.total_companies }}",
+                  "short": true
+                },
+                {
+                  "title": "Total Users",
+                  "value": "={{ $json.metrics.total_users }}",
+                  "short": true
+                },
+                {
+                  "title": "Avg Security Score",
+                  "value": "={{ Math.round($json.metrics.avg_security_score) }}%",
+                  "short": true
+                },
+                {
+                  "title": "Risk Distribution",
+                  "value": "High: {{ $json.metrics.high_risk_companies }}, Medium: {{ $json.metrics.medium_risk_companies }}, Low: {{ $json.metrics.low_risk_companies }}",
+                  "short": true
+                },
+                {
+                  "title": "Recent Audit Events",
+                  "value": "={{ $json.audit_summary.total_events }} total, {{ $json.audit_summary.suspicious_events }} suspicious",
+                  "short": false
+                }
+              ],
+              "footer": "TMS Security Monitor",
+              "ts": "={{ Math.floor(Date.now() / 1000) }}"
+            }
+          ]
+        }
+      },
+      "id": "send-status-report",
+      "name": "Send Status Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1560, 400]
+    }
+  ],
+  "connections": {
+    "Security Monitor Cron": {
+      "main": [
+        [
+          {
+            "node": "Fetch Security Overview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Security Overview": {
+      "main": [
+        [
+          {
+            "node": "Fetch Recent Audit Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Recent Audit Logs": {
+      "main": [
+        [
+          {
+            "node": "Analyze Security Posture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Security Posture": {
+      "main": [
+        [
+          {
+            "node": "High Risk Detected?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Risk Detected?": {
+      "main": [
+        [
+          {
+            "node": "Send Security Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Security Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Security Report": {
+      "main": [
+        [
+          {
+            "node": "Send Status Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "tms-rls-security-monitor",
+  "tags": [
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "tms-security",
+      "name": "TMS Security"
+    }
+  ]
+}
