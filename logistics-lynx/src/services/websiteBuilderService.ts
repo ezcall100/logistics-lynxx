@@ -33,12 +33,7 @@ interface BuildRequest {
 interface BuildEvent {
   type: string;
   timestamp: string;
-  message?: string;
-  pageType?: string;
-  priority?: number;
-  seed?: string;
-  pagesBuilt?: number;
-  pagesInProgress?: number;
+  data?: any;
 }
 
 interface BuildQueueItem {
@@ -110,7 +105,7 @@ class MockWebsiteBuilderService {
     this.emitEvent({
       type: 'service_started',
       timestamp: new Date().toISOString(),
-      message: 'Autonomous website builder service started'
+      data: { message: 'Autonomous website builder service started' }
     });
 
     console.log('✅ Autonomous agents are now running!');
@@ -138,8 +133,7 @@ class MockWebsiteBuilderService {
       this.emitEvent({
         type: 'progress_update',
         timestamp: new Date().toISOString(),
-        pagesBuilt: this.pagesBuilt,
-        pagesInProgress: this.pagesInProgress
+        data: { pagesBuilt: this.pagesBuilt, pagesInProgress: this.pagesInProgress }
       });
     }
   }
@@ -189,7 +183,7 @@ class MockWebsiteBuilderService {
     this.emitEvent({
       type: 'builder_paused',
       timestamp: new Date().toISOString(),
-      message: 'Website builder paused by user'
+      data: { message: 'Website builder paused by user' }
     });
     return { success: true, message: 'Website builder paused successfully' };
   }
@@ -199,7 +193,7 @@ class MockWebsiteBuilderService {
     this.emitEvent({
       type: 'builder_resumed',
       timestamp: new Date().toISOString(),
-      message: 'Website builder resumed by user'
+      data: { message: 'Website builder resumed by user' }
     });
     return { success: true, message: 'Website builder resumed successfully' };
   }
@@ -215,10 +209,7 @@ class MockWebsiteBuilderService {
     this.emitEvent({
       type: 'page_build_started',
       timestamp: new Date().toISOString(),
-      pageId,
-      pageType: request.type,
-      priority: request.priority,
-      seed: request.seed
+      data: { pageId, pageType: request.type, priority: request.priority, seed: request.seed }
     });
 
     // Simulate build process
@@ -229,11 +220,13 @@ class MockWebsiteBuilderService {
       this.emitEvent({
         type: 'page_build_completed',
         timestamp: new Date().toISOString(),
-        pageId,
-        pageType: request.type,
-        seoScore: Math.floor(Math.random() * 20) + 80,
-        wordCount: Math.floor(Math.random() * 200) + 100,
-        buildMs: Math.floor(Math.random() * 3000) + 1000
+        data: {
+          pageId,
+          pageType: request.type,
+          seoScore: Math.floor(Math.random() * 20) + 80,
+          wordCount: Math.floor(Math.random() * 200) + 100,
+          buildMs: Math.floor(Math.random() * 3000) + 1000
+        }
       });
     }, Math.random() * 3000 + 2000); // 2-5 seconds
 
@@ -252,10 +245,12 @@ class MockWebsiteBuilderService {
       listener({
         type: 'service_status',
         timestamp: new Date().toISOString(),
-        operational: true,
-        paused: this.isPaused,
-        pagesBuilt: this.pagesBuilt,
-        pagesInProgress: this.pagesInProgress
+        data: {
+          operational: true,
+          paused: this.isPaused,
+          pagesBuilt: this.pagesBuilt,
+          pagesInProgress: this.pagesInProgress
+        }
       });
     }, 100);
     
@@ -292,3 +287,51 @@ export type { WebsiteBuilderStatus, WebsiteBuilderMetrics, BuildRequest };
 
 // Auto-start when module is imported
 console.log('🚀 Trans Bot AI Website Builder Service loaded and ready!');
+
+export const triggerBuildEvent = (event: BuildEvent) => {
+  try {
+    const buildEvent: BuildEvent = {
+      type: event.type,
+      timestamp: new Date().toISOString(),
+      data: event.data
+    };
+    
+    console.log('Build event triggered:', buildEvent);
+    return { success: true, data: buildEvent };
+  } catch (error) {
+    console.error('Error triggering build event:', error);
+    return { success: false, error };
+  }
+};
+
+export const updateBuildStatus = (status: string) => {
+  try {
+    const buildEvent: BuildEvent = {
+      type: 'status_update',
+      timestamp: new Date().toISOString(),
+      data: { status }
+    };
+    
+    console.log('Build status updated:', buildEvent);
+    return { success: true, data: buildEvent };
+  } catch (error) {
+    console.error('Error updating build status:', error);
+    return { success: false, error };
+  }
+};
+
+export const setOperationalMode = (mode: boolean) => {
+  try {
+    const buildEvent: BuildEvent = {
+      type: 'operational_mode',
+      timestamp: new Date().toISOString(),
+      data: { mode }
+    };
+    
+    console.log('Operational mode set:', buildEvent);
+    return { success: true, data: buildEvent };
+  } catch (error) {
+    console.error('Error setting operational mode:', error);
+    return { success: false, error };
+  }
+};

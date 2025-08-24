@@ -739,9 +739,9 @@ const SuperAdmin: React.FC = () => {
                     </div>
                   }
                 >
-                  <StableMenuItem icon="👤" description="View your profile" premium={true} mode={mode}>Profile</StableMenuItem>
-                  <StableMenuItem icon="⚙️" description="Manage settings" premium={true} mode={mode}>Settings</StableMenuItem>
-                  <StableMenuItem icon="🔒" description="Security options" premium={true} mode={mode}>Security</StableMenuItem>
+                  <StableMenuItem icon="👤" description="View your profile" premium={true} mode={mode} onClick={() => navigate('/super-admin/settings/profile')}>Profile</StableMenuItem>
+                  <StableMenuItem icon="⚙️" description="Manage settings" premium={true} mode={mode} onClick={() => navigate('/super-admin/settings')}>Settings</StableMenuItem>
+                  <StableMenuItem icon="🔒" description="Security options" premium={true} mode={mode} onClick={() => navigate('/super-admin/security')}>Security</StableMenuItem>
                   <div className={`border-t ${mode === "light" ? 'border-slate-200' : 'border-slate-700'} my-1`}></div>
                   <StableMenuItem icon="🚪" description="Sign out" premium={true} mode={mode}>Logout</StableMenuItem>
                 </StableDropdown>

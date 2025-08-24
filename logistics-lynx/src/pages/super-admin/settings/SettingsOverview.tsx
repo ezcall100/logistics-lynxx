@@ -1,346 +1,495 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import React, { useState } from 'react';
 import { 
   Settings, 
   User, 
   Shield, 
-  Palette, 
   Bell, 
+  Palette, 
   Globe, 
   Database, 
-  Mail, 
-  Lock, 
-  Eye, 
-  Keyboard,
-  Monitor,
-  Zap,
-  ArrowRight,
-  CheckCircle,
-  AlertTriangle,
-  Info
+  Key,
+  Eye,
+  EyeOff,
+  Save,
+  RefreshCw,
+  Download,
+  Upload,
+  Trash2,
+  Plus,
+  Edit3
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-interface SettingsOverviewProps {}
-
-const SettingsOverview: React.FC<SettingsOverviewProps> = () => {
-  const settingsCategories = [
-    {
-      id: 'profile',
-      title: 'Profile Settings',
-      description: 'Manage your personal information, security settings, and preferences.',
-      icon: User,
-      path: '/super-admin/settings/profile',
-      features: [
-        'Personal Information',
-        'Password Management',
-        'Profile Picture',
-        'Account Status',
-        'Notification Preferences'
-      ],
-      status: 'active',
-      lastUpdated: '2 hours ago'
+const SettingsOverview: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('general');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const [settings, setSettings] = useState({
+    general: {
+      siteName: 'TMS Enterprise Platform',
+      siteDescription: 'Advanced Transportation Management System',
+      timezone: 'America/New_York',
+      dateFormat: 'MM/DD/YYYY',
+      timeFormat: '12-hour',
+      language: 'en'
     },
-    {
-      id: 'system',
-      title: 'System Settings',
-      description: 'Configure system-wide settings, security policies, and application preferences.',
-      icon: Settings,
-      path: '/super-admin/settings/system',
-      features: [
-        'General Configuration',
-        'Security Policies',
-        'Email Settings',
-        'Performance Options',
-        'Appearance Settings'
-      ],
-      status: 'active',
-      lastUpdated: '1 day ago'
+    security: {
+      sessionTimeout: 30,
+      maxLoginAttempts: 5,
+      requireTwoFactor: false,
+      passwordMinLength: 8,
+      passwordRequireSpecial: true,
+      passwordRequireNumbers: true,
+      passwordRequireUppercase: true
     },
-    {
-      id: 'preferences',
-      title: 'User Preferences',
-      description: 'Customize your personal settings, appearance, and preferences.',
-      icon: Palette,
-      path: '/super-admin/settings/preferences',
-      features: [
-        'Theme & Appearance',
-        'Notification Settings',
-        'Privacy Controls',
-        'Accessibility Options',
-        'Language & Region'
-      ],
-      status: 'active',
-      lastUpdated: '3 hours ago'
+    notifications: {
+      emailNotifications: true,
+      pushNotifications: true,
+      smsNotifications: false,
+      systemAlerts: true,
+      userActivity: false,
+      securityEvents: true
+    },
+    appearance: {
+      theme: 'light',
+      primaryColor: '#3B82F6',
+      sidebarCollapsed: false,
+      showAnimations: true,
+      compactMode: false
     }
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  const tabs = [
+    { id: 'general', label: 'General', icon: Settings },
+    { id: 'security', label: 'Security', icon: Shield },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'appearance', label: 'Appearance', icon: Palette },
+    { id: 'users', label: 'Users', icon: User },
+    { id: 'system', label: 'System', icon: Database }
   ];
 
-  const quickActions = [
-    {
-      title: 'Change Password',
-      description: 'Update your account password',
-      icon: Lock,
-      action: () => window.location.href = '/super-admin/settings/profile'
-    },
-    {
-      title: 'Update Profile',
-      description: 'Edit your personal information',
-      icon: User,
-      action: () => window.location.href = '/super-admin/settings/profile'
-    },
-    {
-      title: 'Notification Settings',
-      description: 'Configure notification preferences',
-      icon: Bell,
-      action: () => window.location.href = '/super-admin/settings/preferences'
-    },
-    {
-      title: 'Theme Settings',
-      description: 'Customize appearance and theme',
-      icon: Palette,
-      action: () => window.location.href = '/super-admin/settings/preferences'
-    }
-  ];
+  const handleSave = (section: string) => {
+    console.log(`Saving ${section} settings:`, settings[section as keyof typeof settings]);
+    // Here you would typically save to API
+  };
 
-  const recentChanges = [
-    {
-      setting: 'Password Policy',
-      category: 'System Settings',
-      change: 'Updated minimum password length to 12 characters',
-      timestamp: '2 hours ago',
-      user: 'Super Admin'
-    },
-    {
-      setting: 'Email Notifications',
-      category: 'User Preferences',
-      change: 'Enabled push notifications for security alerts',
-      timestamp: '4 hours ago',
-      user: 'Super Admin'
-    },
-    {
-      setting: 'Theme',
-      category: 'User Preferences',
-      change: 'Switched to dark mode',
-      timestamp: '1 day ago',
-      user: 'Super Admin'
-    },
-    {
-      setting: 'Session Timeout',
-      category: 'System Settings',
-      change: 'Increased session timeout to 60 minutes',
-      timestamp: '2 days ago',
-      user: 'Super Admin'
+  const handlePasswordChange = () => {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      alert('Passwords do not match');
+      return;
     }
-  ];
+    console.log('Password changed successfully');
+    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'warning':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'error':
-        return 'bg-red-100 text-red-800';
+  const renderGeneralSettings = () => (
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Site Configuration</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Site Name</label>
+            <input
+              type="text"
+              value={settings.general.siteName}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                general: { ...prev.general, siteName: e.target.value }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Site Description</label>
+            <input
+              type="text"
+              value={settings.general.siteDescription}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                general: { ...prev.general, siteDescription: e.target.value }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Timezone</label>
+            <select
+              value={settings.general.timezone}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                general: { ...prev.general, timezone: e.target.value }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="America/New_York">Eastern Time</option>
+              <option value="America/Chicago">Central Time</option>
+              <option value="America/Denver">Mountain Time</option>
+              <option value="America/Los_Angeles">Pacific Time</option>
+              <option value="UTC">UTC</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+            <select
+              value={settings.general.language}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                general: { ...prev.general, language: e.target.value }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSecuritySettings = () => (
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Password Policy</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Minimum Length</label>
+            <input
+              type="number"
+              value={settings.security.passwordMinLength}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                security: { ...prev.security, passwordMinLength: parseInt(e.target.value) }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Session Timeout (minutes)</label>
+            <input
+              type="number"
+              value={settings.security.sessionTimeout}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                security: { ...prev.security, sessionTimeout: parseInt(e.target.value) }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+        <div className="mt-4 space-y-3">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={settings.security.passwordRequireSpecial}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                security: { ...prev.security, passwordRequireSpecial: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">Require special characters</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={settings.security.passwordRequireNumbers}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                security: { ...prev.security, passwordRequireNumbers: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">Require numbers</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={settings.security.passwordRequireUppercase}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                security: { ...prev.security, passwordRequireUppercase: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">Require uppercase letters</span>
+          </label>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Change Admin Password</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={passwordForm.currentPassword}
+                onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Key className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={passwordForm.newPassword}
+                onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Key className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={passwordForm.confirmPassword}
+                onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Key className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              >
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <button
+            onClick={handlePasswordChange}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Save className="h-4 w-4" />
+            <span>Change Password</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderNotificationSettings = () => (
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Notification Preferences</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium text-gray-900">Email Notifications</h4>
+              <p className="text-sm text-gray-600">Receive notifications via email</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.notifications.emailNotifications}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                notifications: { ...prev.notifications, emailNotifications: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium text-gray-900">Push Notifications</h4>
+              <p className="text-sm text-gray-600">Receive browser push notifications</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.notifications.pushNotifications}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                notifications: { ...prev.notifications, pushNotifications: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium text-gray-900">SMS Notifications</h4>
+              <p className="text-sm text-gray-600">Receive notifications via SMS</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.notifications.smsNotifications}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                notifications: { ...prev.notifications, smsNotifications: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium text-gray-900">System Alerts</h4>
+              <p className="text-sm text-gray-600">Critical system alerts and warnings</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.notifications.systemAlerts}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                notifications: { ...prev.notifications, systemAlerts: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAppearanceSettings = () => (
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Theme & Appearance</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Theme</label>
+            <select
+              value={settings.appearance.theme}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                appearance: { ...prev.appearance, theme: e.target.value }
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="auto">Auto</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Primary Color</label>
+            <input
+              type="color"
+              value={settings.appearance.primaryColor}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                appearance: { ...prev.appearance, primaryColor: e.target.value }
+              }))}
+              className="w-full h-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+        <div className="mt-4 space-y-3">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={settings.appearance.showAnimations}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                appearance: { ...prev.appearance, showAnimations: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">Show animations and transitions</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={settings.appearance.compactMode}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                appearance: { ...prev.appearance, compactMode: e.target.checked }
+              }))}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm text-gray-700">Compact mode (reduced spacing)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'general':
+        return renderGeneralSettings();
+      case 'security':
+        return renderSecuritySettings();
+      case 'notifications':
+        return renderNotificationSettings();
+      case 'appearance':
+        return renderAppearanceSettings();
       default:
-        return 'bg-gray-100 text-gray-800';
+        return (
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Coming Soon</h3>
+            <p className="text-gray-600">This section is under development.</p>
+          </div>
+        );
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="space-y-2">
-        <div className="flex items-center space-x-2">
-          <Settings className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Settings Overview
-          </h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">System Settings</h1>
+          <p className="text-gray-600">Configure system-wide settings and preferences</p>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
-          Manage all your settings and preferences in one place.
-        </p>
+        <button
+          onClick={() => handleSave(activeTab)}
+          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Save className="h-4 w-4" />
+          <span>Save Changes</span>
+        </button>
       </div>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Zap className="h-5 w-5" />
-            <span>Quick Actions</span>
-          </CardTitle>
-          <CardDescription>
-            Common settings you might want to access quickly.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {quickActions.map((action, index) => {
-              const Icon = action.icon;
-              return (
-                <button
-                  key={index}
-                  onClick={action.action}
-                  className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
-                >
-                  <div className="flex items-center space-x-3">
-                    <Icon className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <h3 className="font-medium text-gray-900 dark:text-white">
-                        {action.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {action.description}
-                      </p>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <nav className="space-y-2">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      activeTab === tab.id
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Settings Categories */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {settingsCategories.map((category) => {
-          const Icon = category.icon;
-          return (
-            <Card key={category.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Icon className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-lg">{category.title}</CardTitle>
-                  </div>
-                  <Badge className={getStatusColor(category.status)}>
-                    {category.status}
-                  </Badge>
-                </div>
-                <CardDescription>
-                  {category.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Features:
-                  </h4>
-                  <ul className="space-y-1">
-                    {category.features.map((feature, index) => (
-                      <li key={index} className="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-2">
-                        <CheckCircle className="h-3 w-3 text-green-500" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="flex items-center justify-between pt-2 border-t">
-                  <span className="text-xs text-gray-500">
-                    Last updated: {category.lastUpdated}
-                  </span>
-                  <Link to={category.path}>
-                    <Button size="sm" className="flex items-center space-x-1">
-                      <span>Configure</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Recent Changes */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Info className="h-5 w-5" />
-            <span>Recent Changes</span>
-          </CardTitle>
-          <CardDescription>
-            Track recent modifications to settings and configurations.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recentChanges.map((change, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {change.setting}
-                    </span>
-                    <Badge variant="outline" className="text-xs">
-                      {change.category}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {change.change}
-                  </p>
-                  <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                    <span>By {change.user}</span>
-                    <span>{change.timestamp}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Settings Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Settings className="h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Settings</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">156</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Configured</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">142</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Pending</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">14</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Monitor className="h-5 w-5 text-purple-600" />
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Last Backup</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">2h</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Main Content */}
+        <div className="lg:col-span-3">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ function App() {
         {/* Landing Page */}
         <Route path="/" element={<LandingPage />} />
         
-        {/* Super Admin Portal */}
+        {/* Super Admin Portal - All routes under /super-admin/* */}
         <Route path="/super-admin/*" element={<SuperAdmin />} />
         
         {/* Fallback */}
