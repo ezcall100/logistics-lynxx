@@ -402,16 +402,16 @@ const SuperAdmin: React.FC = () => {
       icon: '⚙️',
       description: 'Core system administration tools',
       submenu: [
-        { title: 'Database Management', path: '/system/database', icon: '🗄️' },
-        { title: 'API Management', path: '/system/api', icon: '🔌' },
-        { title: 'Server Monitoring', path: '/system/monitoring', icon: '🖥️' },
-        { title: 'Deployment Management', path: '/system/deployment', icon: '🚀' },
-        { title: 'Configuration', path: '/system/config', icon: '⚙️' },
-        { title: 'Backup & Recovery', path: '/system/backup', icon: '💾' },
-        { title: 'Security Settings', path: '/system/security', icon: '🔒' },
-        { title: 'Integration Hub', path: '/system/integrations', icon: '🔗' },
-        { title: 'File Storage', path: '/system/storage', icon: '📁' },
-        { title: 'Email Services', path: '/system/email', icon: '📧' }
+        { title: 'Database Management', path: '/super-admin/system/database', icon: '🗄️' },
+        { title: 'API Management', path: '/super-admin/system/api', icon: '🔌' },
+        { title: 'Server Monitoring', path: '/super-admin/system/monitoring', icon: '🖥️' },
+        { title: 'Deployment Management', path: '/super-admin/system/deployment', icon: '🚀' },
+        { title: 'Configuration', path: '/super-admin/system/config', icon: '⚙️' },
+        { title: 'Backup & Recovery', path: '/super-admin/system/backup', icon: '💾' },
+        { title: 'Security Settings', path: '/super-admin/system/security', icon: '🔒' },
+        { title: 'Integration Hub', path: '/super-admin/system/integrations', icon: '🔗' },
+        { title: 'File Storage', path: '/super-admin/system/storage', icon: '📁' },
+        { title: 'Email Services', path: '/super-admin/system/email', icon: '📧' }
       ]
     },
     {
@@ -421,14 +421,14 @@ const SuperAdmin: React.FC = () => {
       badge: 'Live',
       description: 'Security monitoring and management',
       submenu: [
-        { title: 'Security Audit', path: '/security/audit', icon: '🔍' },
-        { title: 'Access Logs', path: '/security/logs', icon: '📋' },
-        { title: 'Data Protection', path: '/security/protection', icon: '🔐' },
-        { title: 'API Security', path: '/security/api', icon: '🔌' },
-        { title: 'User Permissions', path: '/security/permissions', icon: '🔑' },
-        { title: 'Security Policies', path: '/security/policies', icon: '📜' },
-        { title: 'Incident Response', path: '/security/incidents', icon: '🚨' },
-        { title: 'Compliance Management', path: '/security/compliance', icon: '✅' }
+        { title: 'Security Audit', path: '/super-admin/security/audit', icon: '🔍' },
+        { title: 'Access Logs', path: '/super-admin/security/logs', icon: '📋' },
+        { title: 'Data Protection', path: '/super-admin/security/protection', icon: '🔐' },
+        { title: 'API Security', path: '/super-admin/security/api', icon: '🔌' },
+        { title: 'User Permissions', path: '/super-admin/security/permissions', icon: '🔑' },
+        { title: 'Security Policies', path: '/super-admin/security/policies', icon: '📜' },
+        { title: 'Incident Response', path: '/super-admin/security/incidents', icon: '🚨' },
+        { title: 'Compliance Management', path: '/super-admin/security/compliance', icon: '✅' }
       ]
     },
     {
@@ -437,14 +437,14 @@ const SuperAdmin: React.FC = () => {
       icon: '📊',
       description: 'Real-time system monitoring',
       submenu: [
-        { title: 'Performance Monitoring', path: '/monitoring/performance', icon: '⚡' },
-        { title: 'Error Tracking', path: '/monitoring/errors', icon: '🐛' },
-        { title: 'Log Analysis', path: '/monitoring/logs', icon: '📝' },
-        { title: 'Alert Management', path: '/monitoring/alerts', icon: '🔔' },
-        { title: 'Uptime Monitoring', path: '/monitoring/uptime', icon: '⏱️' },
-        { title: 'Resource Usage', path: '/monitoring/resources', icon: '💻' },
-        { title: 'Network Monitoring', path: '/monitoring/network', icon: '🌐' },
-        { title: 'Health Checks', path: '/monitoring/health', icon: '❤️' }
+        { title: 'Performance Monitoring', path: '/super-admin/monitoring/performance', icon: '⚡' },
+        { title: 'Error Tracking', path: '/super-admin/monitoring/errors', icon: '🐛' },
+        { title: 'Log Analysis', path: '/super-admin/monitoring/logs', icon: '📝' },
+        { title: 'Alert Management', path: '/super-admin/monitoring/alerts', icon: '🔔' },
+        { title: 'Uptime Monitoring', path: '/super-admin/monitoring/uptime', icon: '⏱️' },
+        { title: 'Resource Usage', path: '/super-admin/monitoring/resources', icon: '💻' },
+        { title: 'Network Monitoring', path: '/super-admin/monitoring/network', icon: '🌐' },
+        { title: 'Health Checks', path: '/super-admin/monitoring/health', icon: '❤️' }
       ]
     },
     {
@@ -453,18 +453,18 @@ const SuperAdmin: React.FC = () => {
       icon: '🌐',
       description: 'Multi-portal management system',
       submenu: [
-        { title: 'Portal Overview', path: '/portals', icon: '👁️' },
-        { title: 'Portal Configuration', path: '/portals/config', icon: '⚙️' },
-        { title: 'Portal Users', path: '/portals/users', icon: '👥' },
-        { title: 'Feature Management', path: '/portals/features', icon: '✨' },
-        { title: 'Portal Analytics', path: '/portals/analytics', icon: '📊' },
-        { title: 'Portal Billing', path: '/portals/billing', icon: '💳' },
-        { title: 'Portal Support', path: '/portals/support', icon: '🎫' },
-        { title: 'Portal Integrations', path: '/portals/integrations', icon: '🔗' },
-        { title: 'Portal Backup', path: '/portals/backup', icon: '💾' },
-        { title: 'Portal Security', path: '/portals/security', icon: '🔒' },
-        { title: 'Portal Compliance', path: '/portals/compliance', icon: '✅' },
-        { title: 'Portal Deployment', path: '/portals/deployment', icon: '🚀' }
+        { title: 'Portal Overview', path: '/super-admin/portals', icon: '👁️' },
+        { title: 'Portal Configuration', path: '/super-admin/portals/config', icon: '⚙️' },
+        { title: 'Portal Users', path: '/super-admin/portals/users', icon: '👥' },
+        { title: 'Feature Management', path: '/super-admin/portals/features', icon: '✨' },
+        { title: 'Portal Analytics', path: '/super-admin/portals/analytics', icon: '📊' },
+        { title: 'Portal Billing', path: '/super-admin/portals/billing', icon: '💳' },
+        { title: 'Portal Support', path: '/super-admin/portals/support', icon: '🎫' },
+        { title: 'Portal Integrations', path: '/super-admin/portals/integrations', icon: '🔗' },
+        { title: 'Portal Backup', path: '/super-admin/portals/backup', icon: '💾' },
+        { title: 'Portal Security', path: '/super-admin/portals/security', icon: '🔒' },
+        { title: 'Portal Compliance', path: '/super-admin/portals/compliance', icon: '✅' },
+        { title: 'Portal Deployment', path: '/super-admin/portals/deployment', icon: '🚀' }
       ]
     },
     {
@@ -473,16 +473,16 @@ const SuperAdmin: React.FC = () => {
       icon: '📈',
       description: 'Advanced analytics and reporting',
       submenu: [
-        { title: 'Business Analytics', path: '/analytics/business', icon: '📊' },
-        { title: 'User Analytics', path: '/analytics/users', icon: '👥' },
-        { title: 'Performance Reports', path: '/analytics/performance', icon: '⚡' },
-        { title: 'Security Reports', path: '/analytics/security', icon: '🛡️' },
-        { title: 'Financial Reports', path: '/analytics/financial', icon: '💰' },
-        { title: 'Operational Reports', path: '/analytics/operational', icon: '⚙️' },
-        { title: 'Custom Reports', path: '/analytics/custom', icon: '📋' },
-        { title: 'Data Export', path: '/analytics/export', icon: '📤' },
-        { title: 'Dashboard Builder', path: '/analytics/dashboard', icon: '🏗️' },
-        { title: 'Scheduled Reports', path: '/analytics/scheduled', icon: '⏰' }
+        { title: 'Business Analytics', path: '/super-admin/analytics/business', icon: '📊' },
+        { title: 'User Analytics', path: '/super-admin/analytics/users', icon: '👥' },
+        { title: 'Performance Reports', path: '/super-admin/analytics/performance', icon: '⚡' },
+        { title: 'Security Reports', path: '/super-admin/analytics/security', icon: '🛡️' },
+        { title: 'Financial Reports', path: '/super-admin/analytics/financial', icon: '💰' },
+        { title: 'Operational Reports', path: '/super-admin/analytics/operational', icon: '⚙️' },
+        { title: 'Custom Reports', path: '/super-admin/analytics/custom', icon: '📋' },
+        { title: 'Data Export', path: '/super-admin/analytics/export', icon: '📤' },
+        { title: 'Dashboard Builder', path: '/super-admin/analytics/dashboards', icon: '🏗️' },
+        { title: 'Scheduled Reports', path: '/super-admin/analytics/scheduled', icon: '⏰' }
       ]
     },
     {
@@ -492,18 +492,18 @@ const SuperAdmin: React.FC = () => {
       badge: 'AI',
       description: 'AI and autonomous system control',
       submenu: [
-        { title: 'MCP Overview', path: '/mcp/overview', icon: '👁️' },
-        { title: 'Agent Management', path: '/mcp/agents', icon: '🤖' },
-        { title: 'AI Models', path: '/mcp/models', icon: '🧠' },
-        { title: 'Data Pipeline', path: '/mcp/pipeline', icon: '🔗' },
-        { title: 'Machine Learning', path: '/mcp/ml', icon: '🎯' },
-        { title: 'AI Analytics', path: '/mcp/analytics', icon: '📊' },
-        { title: 'Automation Rules', path: '/mcp/automation', icon: '⚡' },
-        { title: 'AI Integrations', path: '/mcp/integrations', icon: '🔗' },
-        { title: 'AI Monitoring', path: '/mcp/monitoring', icon: '👁️' },
-        { title: 'AI Compliance', path: '/mcp/compliance', icon: '✅' },
-        { title: 'AI Documentation', path: '/mcp/documentation', icon: '📚' },
-        { title: 'AI Support', path: '/mcp/support', icon: '🎫' }
+        { title: 'MCP Overview', path: '/super-admin/mcp', icon: '👁️' },
+        { title: 'Agent Management', path: '/super-admin/mcp/agents', icon: '🤖' },
+        { title: 'AI Models', path: '/super-admin/mcp/models', icon: '🧠' },
+        { title: 'Data Pipeline', path: '/super-admin/mcp/pipeline', icon: '🔗' },
+        { title: 'Machine Learning', path: '/super-admin/mcp/learning', icon: '🎯' },
+        { title: 'AI Analytics', path: '/super-admin/mcp/analytics', icon: '📊' },
+        { title: 'Automation Rules', path: '/super-admin/mcp/automation', icon: '⚡' },
+        { title: 'AI Integrations', path: '/super-admin/mcp/integrations', icon: '🔗' },
+        { title: 'AI Monitoring', path: '/super-admin/mcp/monitoring', icon: '👁️' },
+        { title: 'AI Compliance', path: '/super-admin/mcp/compliance', icon: '✅' },
+        { title: 'AI Documentation', path: '/super-admin/mcp/documentation', icon: '📚' },
+        { title: 'AI Support', path: '/super-admin/mcp/support', icon: '🎫' }
       ]
     },
     {
@@ -512,14 +512,14 @@ const SuperAdmin: React.FC = () => {
       icon: '💼',
       description: 'Business operations management',
       submenu: [
-        { title: 'Customer Management', path: '/business/customers', icon: '👥' },
-        { title: 'Sales Pipeline', path: '/business/sales', icon: '📈' },
-        { title: 'Billing & Invoicing', path: '/business/billing', icon: '💳' },
-        { title: 'Support Management', path: '/business/support', icon: '🎫' },
-        { title: 'Documentation', path: '/business/documentation', icon: '📚' },
-        { title: 'Marketing Tools', path: '/business/marketing', icon: '📢' },
-        { title: 'Partner Management', path: '/business/partners', icon: '🤝' },
-        { title: 'Legal & Compliance', path: '/business/legal', icon: '⚖️' }
+        { title: 'Customer Management', path: '/super-admin/business/customers', icon: '👥' },
+        { title: 'Sales Pipeline', path: '/super-admin/business/sales', icon: '📈' },
+        { title: 'Billing & Invoicing', path: '/super-admin/business/billing', icon: '💳' },
+        { title: 'Support Management', path: '/super-admin/business/support', icon: '🎫' },
+        { title: 'Documentation', path: '/super-admin/business/docs', icon: '📚' },
+        { title: 'Marketing Tools', path: '/super-admin/business/marketing', icon: '📢' },
+        { title: 'Partner Management', path: '/super-admin/business/partners', icon: '🤝' },
+        { title: 'Legal & Compliance', path: '/super-admin/business/legal', icon: '⚖️' }
       ]
     },
     {
@@ -528,14 +528,14 @@ const SuperAdmin: React.FC = () => {
       icon: '🛠️',
       description: 'Development and DevOps tools',
       submenu: [
-        { title: 'Code Repository', path: '/devops/repository', icon: '📁' },
-        { title: 'CI/CD Pipeline', path: '/devops/pipeline', icon: '🔗' },
-        { title: 'Testing Suite', path: '/devops/testing', icon: '🧪' },
-        { title: 'Environment Management', path: '/devops/environments', icon: '🌍' },
-        { title: 'Performance Testing', path: '/devops/performance', icon: '⚡' },
-        { title: 'Security Testing', path: '/devops/security', icon: '🔒' },
-        { title: 'Dev Documentation', path: '/devops/documentation', icon: '📚' },
-        { title: 'Release Management', path: '/devops/releases', icon: '🚀' }
+        { title: 'Code Repository', path: '/super-admin/dev/repository', icon: '📁' },
+        { title: 'CI/CD Pipeline', path: '/super-admin/dev/pipeline', icon: '🔗' },
+        { title: 'Testing Suite', path: '/super-admin/dev/testing', icon: '🧪' },
+        { title: 'Environment Management', path: '/super-admin/dev/environments', icon: '🌍' },
+        { title: 'Performance Testing', path: '/super-admin/dev/performance', icon: '⚡' },
+        { title: 'Security Testing', path: '/super-admin/dev/security', icon: '🔒' },
+        { title: 'Dev Documentation', path: '/super-admin/dev/documentation', icon: '📚' },
+        { title: 'Release Management', path: '/super-admin/dev/releases', icon: '🚀' }
       ]
     }
   ];
