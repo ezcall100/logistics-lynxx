@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LucideIcon } from 'lucide-react';
-import { MenuSection } from '@/lib/types/menu';
 import {
   Phone,
   MessageSquare,
@@ -215,3 +214,6 @@ export const FLOATING_ACTION_MENU = [
   { title: "Navigation", icon: Share2, path: "/driver/navigation", priority: "high" },
   { title: "Customer Email", icon: Mail, path: "/driver/customer-email", priority: "medium" },
 ];
+
+export const APP_NAME = 'Logistics Lynx';
+export const APP_VERSION = '1.0.0';

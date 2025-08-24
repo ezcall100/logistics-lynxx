@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MenuSection } from '@/lib/types/menu';
 import {
   UserCog,
   Wrench,
@@ -18,6 +17,11 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
+
+export const MENU_ANIMATION_DURATION = 200;
+export const MENU_TRANSITION_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+export const MENU_BACKDROP_BLUR = 'blur(8px)';
+export const MENU_SHADOW = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
 
 export const TOP_BAR_SETTINGS = [
   { title: "User Management", icon: UserCog, path: "/settings/user-management" },

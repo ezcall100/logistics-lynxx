@@ -1,726 +1,1250 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Badge } from '../../../components/ui/badge';
 import { 
   Settings, 
+  Database, 
+  Server, 
   Globe, 
   Shield, 
-  Database, 
-  Mail, 
+  Key, 
+  Lock, 
+  Unlock, 
   Bell, 
+  Mail, 
+  Clock, 
+  Calendar, 
   Save, 
-  RefreshCw,
-  CheckCircle,
-  AlertTriangle,
-  Info,
-  Lock,
-  Users,
-  Server,
+  RefreshCw, 
+  Download, 
+  Upload, 
+  Eye, 
+  EyeOff, 
+  Edit, 
+  Trash2, 
+  Plus, 
+  Search, 
+  Filter, 
+  AlertTriangle, 
+  CheckCircle, 
+  XCircle, 
+  Info, 
+  HelpCircle, 
+  ExternalLink, 
+  Copy, 
+  Share, 
+  Archive, 
+  RotateCcw, 
+  Send, 
+  MessageSquare, 
+  Phone, 
+  Video, 
+  Camera, 
+  Image, 
+  File, 
+  Folder, 
+  FolderOpen, 
+  Grid, 
+  List, 
+  Columns, 
+  Maximize, 
+  Minimize, 
+  Move, 
+  RotateCw, 
+  ZoomIn, 
+  ZoomOut, 
+  Type, 
+  Bold, 
+  Italic, 
+  Underline, 
+  Link, 
+  Unlink, 
+  Code, 
+  Quote, 
+  Hash, 
+  AtSign, 
+  Percent, 
+  Minus, 
+  Divide, 
+  Plus as PlusIcon, 
+  Equal, 
+  Infinity, 
+  Pi, 
+  Sigma, 
+  Square, 
+  Circle, 
+  Triangle, 
+  Hexagon, 
+  Octagon, 
+  Star, 
+  Heart, 
+  Zap, 
+  Droplets, 
+  Cloud, 
+  CloudRain, 
+  CloudSnow, 
+  CloudLightning, 
+  Sun, 
+  Moon, 
+  Sunrise, 
+  Sunset, 
+  Wind, 
+  Thermometer, 
+  Gauge, 
+  Timer, 
+  Navigation, 
+  Compass, 
+  Map, 
+  Layers, 
+  Grid3X3, 
+  Rows, 
+  Sidebar, 
+  SidebarClose, 
+  SidebarOpen, 
+  PanelLeft, 
+  PanelRight, 
+  PanelTop, 
+  PanelBottom, 
+  Layout, 
+  LayoutGrid, 
+  LayoutList, 
+  LayoutTemplate, 
+  LayoutDashboard,
   Network,
-  Zap,
-  Palette,
-  Monitor,
-  Smartphone,
-  Tablet
+  HardDrive,
+  Building,
+  CreditCard,
+  Star as StarIcon,
+  Heart as HeartIcon,
+  Zap as ZapIcon
 } from 'lucide-react';
+import { 
+  EnhancedCard, 
+  EnhancedButton, 
+  EnhancedBadge, 
+  EnhancedInput, 
+  EnhancedModal, 
+  stableStyles 
+} from '../../../components/ui/EnhancedUIComponents';
 
-interface SystemSettingsProps {}
+interface SystemConfig {
+  general: {
+    systemName: string;
+    systemVersion: string;
+    environment: 'development' | 'staging' | 'production';
+    timezone: string;
+    dateFormat: string;
+    timeFormat: '12h' | '24h';
+    language: string;
+    maintenanceMode: boolean;
+    debugMode: boolean;
+  };
+  database: {
+    host: string;
+    port: number;
+    name: string;
+    username: string;
+    password: string;
+    connectionPool: number;
+    sslEnabled: boolean;
+    backupEnabled: boolean;
+    backupFrequency: 'daily' | 'weekly' | 'monthly';
+    retentionDays: number;
+  };
+  api: {
+    baseUrl: string;
+    version: string;
+    rateLimit: number;
+    timeout: number;
+    corsEnabled: boolean;
+    corsOrigins: string[];
+    authentication: {
+      jwtSecret: string;
+      jwtExpiry: number;
+      refreshTokenExpiry: number;
+      passwordPolicy: {
+        minLength: number;
+        requireUppercase: boolean;
+        requireLowercase: boolean;
+        requireNumbers: boolean;
+        requireSpecialChars: boolean;
+      };
+    };
+  };
+  email: {
+    provider: 'smtp' | 'sendgrid' | 'mailgun' | 'ses';
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+    encryption: 'none' | 'ssl' | 'tls';
+    fromEmail: string;
+    fromName: string;
+    replyTo: string;
+  };
+  security: {
+    twoFactorEnabled: boolean;
+    sessionTimeout: number;
+    maxLoginAttempts: number;
+    lockoutDuration: number;
+    passwordHistory: number;
+    ipWhitelist: string[];
+    ipBlacklist: string[];
+    sslEnabled: boolean;
+    sslCertificate: string;
+    sslKey: string;
+  };
+  notifications: {
+    emailNotifications: boolean;
+    smsNotifications: boolean;
+    pushNotifications: boolean;
+    webhookUrl: string;
+    slackWebhook: string;
+    teamsWebhook: string;
+  };
+  storage: {
+    provider: 'local' | 's3' | 'gcs' | 'azure';
+    bucket: string;
+    region: string;
+    accessKey: string;
+    secretKey: string;
+    maxFileSize: number;
+    allowedFileTypes: string[];
+    cdnEnabled: boolean;
+    cdnUrl: string;
+  };
+}
 
-const SystemSettings: React.FC<SystemSettingsProps> = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const SystemSettings: React.FC = () => {
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
-  
-  const [settings, setSettings] = useState({
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showBackupModal, setShowBackupModal] = useState(false);
+  const [config, setConfig] = useState<SystemConfig>({
     general: {
-      siteName: 'Logistics Lynx',
-      siteDescription: 'Enterprise Transportation Management System',
-      timezone: 'America/New_York',
+      systemName: 'Logistics Lynx',
+      systemVersion: '2.1.0',
+      environment: 'production',
+      timezone: 'America/Los_Angeles',
       dateFormat: 'MM/DD/YYYY',
-      timeFormat: '12-hour',
-      language: 'English',
-      currency: 'USD',
-      maintenanceMode: false
+      timeFormat: '12h',
+      language: 'en',
+      maintenanceMode: false,
+      debugMode: false
     },
-    security: {
-      sessionTimeout: 30,
-      maxLoginAttempts: 5,
-      passwordMinLength: 8,
-      requireTwoFactor: false,
-      enableAuditLog: true,
-      ipWhitelist: '',
-      sslRequired: true,
-      dataEncryption: true
+    database: {
+      host: 'localhost',
+      port: 5432,
+      name: 'logistics_lynx',
+      username: 'admin',
+      password: '********',
+      connectionPool: 10,
+      sslEnabled: true,
+      backupEnabled: true,
+      backupFrequency: 'daily',
+      retentionDays: 30
+    },
+    api: {
+      baseUrl: 'https://api.logisticslynx.com',
+      version: 'v1',
+      rateLimit: 1000,
+      timeout: 30000,
+      corsEnabled: true,
+      corsOrigins: ['https://app.logisticslynx.com', 'https://admin.logisticslynx.com'],
+      authentication: {
+        jwtSecret: '********',
+        jwtExpiry: 3600,
+        refreshTokenExpiry: 604800,
+        passwordPolicy: {
+          minLength: 8,
+          requireUppercase: true,
+          requireLowercase: true,
+          requireNumbers: true,
+          requireSpecialChars: true
+        }
+      }
     },
     email: {
-      smtpHost: 'smtp.company.com',
-      smtpPort: 587,
-      smtpUsername: 'noreply@company.com',
-      smtpPassword: '********',
-      fromEmail: 'noreply@company.com',
+      provider: 'smtp',
+      host: 'smtp.gmail.com',
+      port: 587,
+      username: 'noreply@logisticslynx.com',
+      password: '********',
+      encryption: 'tls',
+      fromEmail: 'noreply@logisticslynx.com',
       fromName: 'Logistics Lynx',
-      enableNotifications: true,
-      emailVerification: true
+      replyTo: 'support@logisticslynx.com'
+    },
+    security: {
+      twoFactorEnabled: true,
+      sessionTimeout: 3600,
+      maxLoginAttempts: 5,
+      lockoutDuration: 900,
+      passwordHistory: 5,
+      ipWhitelist: [],
+      ipBlacklist: [],
+      sslEnabled: true,
+      sslCertificate: '',
+      sslKey: ''
     },
     notifications: {
-      systemAlerts: true,
-      userActivity: false,
-      securityEvents: true,
-      performanceWarnings: true,
-      backupNotifications: true,
-      updateNotifications: false,
-      emailDigest: true,
-      pushNotifications: true
+      emailNotifications: true,
+      smsNotifications: false,
+      pushNotifications: true,
+      webhookUrl: '',
+      slackWebhook: '',
+      teamsWebhook: ''
     },
-    appearance: {
-      theme: 'light',
-      primaryColor: '#3B82F6',
-      sidebarCollapsed: false,
-      compactMode: false,
-      showAnimations: true,
-      fontSize: 'medium',
-      dashboardLayout: 'grid'
-    },
-    performance: {
-      cacheEnabled: true,
-      cacheDuration: 3600,
-      compressionEnabled: true,
-      imageOptimization: true,
-      cdnEnabled: false,
-      databaseOptimization: true,
-      backgroundJobs: true
+    storage: {
+      provider: 's3',
+      bucket: 'logistics-lynx-storage',
+      region: 'us-west-2',
+      accessKey: '********',
+      secretKey: '********',
+      maxFileSize: 10485760,
+      allowedFileTypes: ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'],
+      cdnEnabled: true,
+      cdnUrl: 'https://cdn.logisticslynx.com'
     }
   });
 
-  const [originalSettings, setOriginalSettings] = useState(settings);
+  const [formData, setFormData] = useState(config);
 
-  const handleSettingChange = (category: string, key: string, value: any) => {
-    setSettings(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category as keyof typeof prev],
-        [key]: value
-      }
-    }));
+  useEffect(() => {
+    setFormData(config);
+  }, [config]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setConfig(formData);
+    setSaving(false);
   };
 
-  const handleSaveSettings = async (category: string) => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setOriginalSettings(prev => ({
-        ...prev,
-        [category]: settings[category as keyof typeof settings]
-      }));
-      console.log(`${category} settings saved:`, settings[category as keyof typeof settings]);
-    } catch (error) {
-      console.error('Failed to save settings:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResetSettings = (category: string) => {
-    setSettings(prev => ({
-      ...prev,
-      [category]: originalSettings[category as keyof typeof originalSettings]
-    }));
-  };
-
-  const hasChanges = (category: string) => {
-    return JSON.stringify(settings[category as keyof typeof settings]) !== 
-           JSON.stringify(originalSettings[category as keyof typeof originalSettings]);
+  const handleTestConnection = async (type: string) => {
+    setLoading(true);
+    // Simulate connection test
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setLoading(false);
+    alert(`${type} connection test successful!`);
   };
 
   const tabs = [
-    { id: 'general', name: 'General', icon: Settings },
-    { id: 'security', name: 'Security', icon: Shield },
-    { id: 'email', name: 'Email', icon: Mail },
-    { id: 'notifications', name: 'Notifications', icon: Bell },
-    { id: 'appearance', name: 'Appearance', icon: Palette },
-    { id: 'performance', name: 'Performance', icon: Zap }
+    { id: 'general', label: 'General', icon: Settings },
+    { id: 'database', label: 'Database', icon: Database },
+    { id: 'api', label: 'API', icon: Server },
+    { id: 'email', label: 'Email', icon: Mail },
+    { id: 'security', label: 'Security', icon: Shield },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'storage', label: 'Storage', icon: HardDrive }
   ];
 
-  const renderGeneralSettings = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Site Name
-          </label>
-          <Input
-            value={settings.general.siteName}
-            onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Site Description
-          </label>
-          <Input
-            value={settings.general.siteDescription}
-            onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Timezone
-          </label>
-          <select
-            value={settings.general.timezone}
-            onChange={(e) => handleSettingChange('general', 'timezone', e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          >
-            <option value="America/New_York">Eastern Time (ET)</option>
-            <option value="America/Chicago">Central Time (CT)</option>
-            <option value="America/Denver">Mountain Time (MT)</option>
-            <option value="America/Los_Angeles">Pacific Time (PT)</option>
-            <option value="UTC">UTC</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Language
-          </label>
-          <select
-            value={settings.general.language}
-            onChange={(e) => handleSettingChange('general', 'language', e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          >
-            <option value="English">English</option>
-            <option value="Spanish">Spanish</option>
-            <option value="French">French</option>
-            <option value="German">German</option>
-          </select>
-        </div>
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="maintenanceMode"
-          checked={settings.general.maintenanceMode}
-          onChange={(e) => handleSettingChange('general', 'maintenanceMode', e.target.checked)}
-          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-        />
-        <label htmlFor="maintenanceMode" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Enable Maintenance Mode
-        </label>
-      </div>
-    </div>
-  );
+  const timezones = [
+    'America/Los_Angeles',
+    'America/New_York',
+    'America/Chicago',
+    'America/Denver',
+    'Europe/London',
+    'Europe/Paris',
+    'Asia/Tokyo',
+    'Asia/Shanghai',
+    'Australia/Sydney'
+  ];
 
-  const renderSecuritySettings = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Session Timeout (minutes)
-          </label>
-          <Input
-            type="number"
-            value={settings.security.sessionTimeout}
-            onChange={(e) => handleSettingChange('security', 'sessionTimeout', parseInt(e.target.value))}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Max Login Attempts
-          </label>
-          <Input
-            type="number"
-            value={settings.security.maxLoginAttempts}
-            onChange={(e) => handleSettingChange('security', 'maxLoginAttempts', parseInt(e.target.value))}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Minimum Password Length
-          </label>
-          <Input
-            type="number"
-            value={settings.security.passwordMinLength}
-            onChange={(e) => handleSettingChange('security', 'passwordMinLength', parseInt(e.target.value))}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            IP Whitelist (comma-separated)
-          </label>
-          <Input
-            value={settings.security.ipWhitelist}
-            onChange={(e) => handleSettingChange('security', 'ipWhitelist', e.target.value)}
-            placeholder="192.168.1.1, 10.0.0.1"
-            className="mt-1"
-          />
-        </div>
-      </div>
-      
-      <div className="space-y-3">
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="requireTwoFactor"
-            checked={settings.security.requireTwoFactor}
-            onChange={(e) => handleSettingChange('security', 'requireTwoFactor', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="requireTwoFactor" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Require Two-Factor Authentication
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="enableAuditLog"
-            checked={settings.security.enableAuditLog}
-            onChange={(e) => handleSettingChange('security', 'enableAuditLog', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="enableAuditLog" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Enable Audit Logging
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="sslRequired"
-            checked={settings.security.sslRequired}
-            onChange={(e) => handleSettingChange('security', 'sslRequired', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="sslRequired" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Require SSL/TLS
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="dataEncryption"
-            checked={settings.security.dataEncryption}
-            onChange={(e) => handleSettingChange('security', 'dataEncryption', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="dataEncryption" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Enable Data Encryption
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderEmailSettings = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            SMTP Host
-          </label>
-          <Input
-            value={settings.email.smtpHost}
-            onChange={(e) => handleSettingChange('email', 'smtpHost', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            SMTP Port
-          </label>
-          <Input
-            type="number"
-            value={settings.email.smtpPort}
-            onChange={(e) => handleSettingChange('email', 'smtpPort', parseInt(e.target.value))}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            SMTP Username
-          </label>
-          <Input
-            value={settings.email.smtpUsername}
-            onChange={(e) => handleSettingChange('email', 'smtpUsername', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            SMTP Password
-          </label>
-          <Input
-            type="password"
-            value={settings.email.smtpPassword}
-            onChange={(e) => handleSettingChange('email', 'smtpPassword', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            From Email
-          </label>
-          <Input
-            type="email"
-            value={settings.email.fromEmail}
-            onChange={(e) => handleSettingChange('email', 'fromEmail', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            From Name
-          </label>
-          <Input
-            value={settings.email.fromName}
-            onChange={(e) => handleSettingChange('email', 'fromName', e.target.value)}
-            className="mt-1"
-          />
-        </div>
-      </div>
-      
-      <div className="space-y-3">
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="enableNotifications"
-            checked={settings.email.enableNotifications}
-            onChange={(e) => handleSettingChange('email', 'enableNotifications', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="enableNotifications" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Enable Email Notifications
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="emailVerification"
-            checked={settings.email.emailVerification}
-            onChange={(e) => handleSettingChange('email', 'emailVerification', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="emailVerification" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Require Email Verification
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderNotificationSettings = () => (
-    <div className="space-y-4">
-      {Object.entries(settings.notifications).map(([key, value]) => (
-        <div key={key} className="flex items-center justify-between p-3 border rounded-lg">
-          <div>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
-              {key.replace(/([A-Z])/g, ' $1').trim()}
-            </span>
-            <p className="text-xs text-gray-500 mt-1">
-              Receive notifications for {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-            </p>
-          </div>
-          <input
-            type="checkbox"
-            checked={value}
-            onChange={(e) => handleSettingChange('notifications', key, e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderAppearanceSettings = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Theme
-          </label>
-          <select
-            value={settings.appearance.theme}
-            onChange={(e) => handleSettingChange('appearance', 'theme', e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="auto">Auto</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Primary Color
-          </label>
-          <Input
-            type="color"
-            value={settings.appearance.primaryColor}
-            onChange={(e) => handleSettingChange('appearance', 'primaryColor', e.target.value)}
-            className="mt-1 h-10"
-          />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Font Size
-          </label>
-          <select
-            value={settings.appearance.fontSize}
-            onChange={(e) => handleSettingChange('appearance', 'fontSize', e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          >
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Dashboard Layout
-          </label>
-          <select
-            value={settings.appearance.dashboardLayout}
-            onChange={(e) => handleSettingChange('appearance', 'dashboardLayout', e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          >
-            <option value="grid">Grid</option>
-            <option value="list">List</option>
-            <option value="compact">Compact</option>
-          </select>
-        </div>
-      </div>
-      
-      <div className="space-y-3">
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="sidebarCollapsed"
-            checked={settings.appearance.sidebarCollapsed}
-            onChange={(e) => handleSettingChange('appearance', 'sidebarCollapsed', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="sidebarCollapsed" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Collapse Sidebar by Default
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="compactMode"
-            checked={settings.appearance.compactMode}
-            onChange={(e) => handleSettingChange('appearance', 'compactMode', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="compactMode" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Compact Mode
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="showAnimations"
-            checked={settings.appearance.showAnimations}
-            onChange={(e) => handleSettingChange('appearance', 'showAnimations', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="showAnimations" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Show Animations
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderPerformanceSettings = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Cache Duration (seconds)
-          </label>
-          <Input
-            type="number"
-            value={settings.performance.cacheDuration}
-            onChange={(e) => handleSettingChange('performance', 'cacheDuration', parseInt(e.target.value))}
-            className="mt-1"
-          />
-        </div>
-      </div>
-      
-      <div className="space-y-3">
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="cacheEnabled"
-            checked={settings.performance.cacheEnabled}
-            onChange={(e) => handleSettingChange('performance', 'cacheEnabled', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="cacheEnabled" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Enable Caching
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="compressionEnabled"
-            checked={settings.performance.compressionEnabled}
-            onChange={(e) => handleSettingChange('performance', 'compressionEnabled', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="compressionEnabled" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Enable Compression
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="imageOptimization"
-            checked={settings.performance.imageOptimization}
-            onChange={(e) => handleSettingChange('performance', 'imageOptimization', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="imageOptimization" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Image Optimization
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="cdnEnabled"
-            checked={settings.performance.cdnEnabled}
-            onChange={(e) => handleSettingChange('performance', 'cdnEnabled', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="cdnEnabled" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Enable CDN
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="databaseOptimization"
-            checked={settings.performance.databaseOptimization}
-            onChange={(e) => handleSettingChange('performance', 'databaseOptimization', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="databaseOptimization" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Database Optimization
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="backgroundJobs"
-            checked={settings.performance.backgroundJobs}
-            onChange={(e) => handleSettingChange('performance', 'backgroundJobs', e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <label htmlFor="backgroundJobs" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Background Jobs
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'general':
-        return renderGeneralSettings();
-      case 'security':
-        return renderSecuritySettings();
-      case 'email':
-        return renderEmailSettings();
-      case 'notifications':
-        return renderNotificationSettings();
-      case 'appearance':
-        return renderAppearanceSettings();
-      case 'performance':
-        return renderPerformanceSettings();
-      default:
-        return renderGeneralSettings();
-    }
-  };
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'fr', name: 'French' },
+    { code: 'de', name: 'German' },
+    { code: 'it', name: 'Italian' },
+    { code: 'pt', name: 'Portuguese' },
+    { code: 'ru', name: 'Russian' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'zh', name: 'Chinese' }
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="space-y-2">
-        <div className="flex items-center space-x-2">
-          <Settings className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            System Settings
-          </h1>
+    <div className={`min-h-screen ${stableStyles.primary[mode]} p-6`}>
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
+              System Settings
+            </h1>
+            <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
+              Configure system-wide settings and preferences
+            </p>
+          </div>
+          <div className="flex space-x-3">
+            <EnhancedButton
+              variant="secondary"
+              size="sm"
+              icon={<RefreshCw className="w-4 h-4" />}
+              mode={mode}
+              onClick={() => setFormData(config)}
+            >
+              Reset
+            </EnhancedButton>
+            <EnhancedButton
+              variant="primary"
+              size="sm"
+              icon={<Save className="w-4 h-4" />}
+              mode={mode}
+              onClick={handleSave}
+              loading={saving}
+            >
+              Save Changes
+            </EnhancedButton>
+          </div>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
-          Configure system-wide settings, security policies, and application preferences.
-        </p>
-      </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                <span>{tab.name}</span>
-                {hasChanges(tab.id) && (
-                  <Badge variant="secondary" className="ml-1">
-                    Modified
-                  </Badge>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* Tab Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="capitalize">{activeTab} Settings</span>
-            <div className="flex space-x-2">
-              {hasChanges(activeTab) && (
-                <Button
-                  variant="outline"
-                  onClick={() => handleResetSettings(activeTab)}
-                  disabled={isLoading}
+        {/* Tabs */}
+        <EnhancedCard mode={mode}>
+          <div className="flex space-x-1 border-b">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-t-lg transition-colors ${
+                    activeTab === tab.id
+                      ? `${stableStyles.textPrimary[mode]} border-b-2 border-blue-500`
+                      : `${stableStyles.textSecondary[mode]} hover:${stableStyles.textPrimary[mode]}`
+                  }`}
                 >
-                  Reset
-                </Button>
-              )}
-              <Button
-                onClick={() => handleSaveSettings(activeTab)}
-                disabled={isLoading || !hasChanges(activeTab)}
-              >
-                {isLoading ? 'Saving...' : 'Save Changes'}
-              </Button>
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </EnhancedCard>
+
+        {/* General Settings */}
+        {activeTab === 'general' && (
+          <EnhancedCard mode={mode} elevated>
+            <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
+              General System Settings
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  System Name
+                </label>
+                <EnhancedInput
+                  value={formData.general.systemName}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, systemName: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  System Version
+                </label>
+                <EnhancedInput
+                  value={formData.general.systemVersion}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, systemVersion: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Environment
+                </label>
+                <select
+                  value={formData.general.environment}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, environment: e.target.value as any }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  <option value="development">Development</option>
+                  <option value="staging">Staging</option>
+                  <option value="production">Production</option>
+                </select>
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Timezone
+                </label>
+                <select
+                  value={formData.general.timezone}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, timezone: e.target.value }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  {timezones.map((tz) => (
+                    <option key={tz} value={tz}>
+                      {tz}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Date Format
+                </label>
+                <EnhancedInput
+                  value={formData.general.dateFormat}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, dateFormat: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Time Format
+                </label>
+                <select
+                  value={formData.general.timeFormat}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, timeFormat: e.target.value as any }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  <option value="12h">12 Hour</option>
+                  <option value="24h">24 Hour</option>
+                </select>
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Language
+                </label>
+                <select
+                  value={formData.general.language}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, language: e.target.value }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  {languages.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </CardTitle>
-          <CardDescription>
-            Configure {activeTab} settings for the system.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {renderTabContent()}
-        </CardContent>
-      </Card>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Maintenance Mode</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Enable maintenance mode to restrict access
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.general.maintenanceMode}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, maintenanceMode: e.target.checked }
+                  })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Debug Mode</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Enable debug mode for development
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.general.debugMode}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    general: { ...formData.general, debugMode: e.target.checked }
+                  })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+
+        {/* Database Settings */}
+        {activeTab === 'database' && (
+          <EnhancedCard mode={mode} elevated>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
+                Database Configuration
+              </h3>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<RefreshCw className="w-4 h-4" />}
+                mode={mode}
+                onClick={() => handleTestConnection('Database')}
+                loading={loading}
+              >
+                Test Connection
+              </EnhancedButton>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Host
+                </label>
+                <EnhancedInput
+                  value={formData.database.host}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, host: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Port
+                </label>
+                <EnhancedInput
+                  type="number"
+                  value={formData.database.port}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, port: parseInt(e.target.value) }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Database Name
+                </label>
+                <EnhancedInput
+                  value={formData.database.name}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, name: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Username
+                </label>
+                <EnhancedInput
+                  value={formData.database.username}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, username: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Password
+                </label>
+                <EnhancedInput
+                  type="password"
+                  value={formData.database.password}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, password: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Connection Pool
+                </label>
+                <EnhancedInput
+                  type="number"
+                  value={formData.database.connectionPool}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, connectionPool: parseInt(e.target.value) }
+                  })}
+                  mode={mode}
+                />
+              </div>
+            </div>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>SSL Enabled</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Enable SSL connection to database
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.database.sslEnabled}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, sslEnabled: e.target.checked }
+                  })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Backup Enabled</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Enable automatic database backups
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.database.backupEnabled}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    database: { ...formData.database, backupEnabled: e.target.checked }
+                  })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+
+        {/* API Settings */}
+        {activeTab === 'api' && (
+          <EnhancedCard mode={mode} elevated>
+            <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
+              API Configuration
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Base URL
+                </label>
+                <EnhancedInput
+                  value={formData.api.baseUrl}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    api: { ...formData.api, baseUrl: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  API Version
+                </label>
+                <EnhancedInput
+                  value={formData.api.version}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    api: { ...formData.api, version: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Rate Limit (requests/min)
+                </label>
+                <EnhancedInput
+                  type="number"
+                  value={formData.api.rateLimit}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    api: { ...formData.api, rateLimit: parseInt(e.target.value) }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Timeout (ms)
+                </label>
+                <EnhancedInput
+                  type="number"
+                  value={formData.api.timeout}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    api: { ...formData.api, timeout: parseInt(e.target.value) }
+                  })}
+                  mode={mode}
+                />
+              </div>
+            </div>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>CORS Enabled</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Enable Cross-Origin Resource Sharing
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.api.corsEnabled}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    api: { ...formData.api, corsEnabled: e.target.checked }
+                  })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+
+        {/* Email Settings */}
+        {activeTab === 'email' && (
+          <EnhancedCard mode={mode} elevated>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
+                Email Configuration
+              </h3>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Mail className="w-4 h-4" />}
+                mode={mode}
+                onClick={() => handleTestConnection('Email')}
+                loading={loading}
+              >
+                Test Connection
+              </EnhancedButton>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Provider
+                </label>
+                <select
+                  value={formData.email.provider}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    email: { ...formData.email, provider: e.target.value as any }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  <option value="smtp">SMTP</option>
+                  <option value="sendgrid">SendGrid</option>
+                  <option value="mailgun">Mailgun</option>
+                  <option value="ses">AWS SES</option>
+                </select>
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Host
+                </label>
+                <EnhancedInput
+                  value={formData.email.host}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    email: { ...formData.email, host: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Port
+                </label>
+                <EnhancedInput
+                  type="number"
+                  value={formData.email.port}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    email: { ...formData.email, port: parseInt(e.target.value) }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Username
+                </label>
+                <EnhancedInput
+                  value={formData.email.username}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    email: { ...formData.email, username: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Password
+                </label>
+                <EnhancedInput
+                  type="password"
+                  value={formData.email.password}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    email: { ...formData.email, password: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Encryption
+                </label>
+                <select
+                  value={formData.email.encryption}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    email: { ...formData.email, encryption: e.target.value as any }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  <option value="none">None</option>
+                  <option value="ssl">SSL</option>
+                  <option value="tls">TLS</option>
+                </select>
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+
+        {/* Security Settings */}
+        {activeTab === 'security' && (
+          <EnhancedCard mode={mode} elevated>
+            <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
+              Security Configuration
+            </h3>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Session Timeout (seconds)
+                  </label>
+                  <EnhancedInput
+                    type="number"
+                    value={formData.security.sessionTimeout}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      security: { ...formData.security, sessionTimeout: parseInt(e.target.value) }
+                    })}
+                    mode={mode}
+                  />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Max Login Attempts
+                  </label>
+                  <EnhancedInput
+                    type="number"
+                    value={formData.security.maxLoginAttempts}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      security: { ...formData.security, maxLoginAttempts: parseInt(e.target.value) }
+                    })}
+                    mode={mode}
+                  />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Lockout Duration (seconds)
+                  </label>
+                  <EnhancedInput
+                    type="number"
+                    value={formData.security.lockoutDuration}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      security: { ...formData.security, lockoutDuration: parseInt(e.target.value) }
+                    })}
+                    mode={mode}
+                  />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Password History
+                  </label>
+                  <EnhancedInput
+                    type="number"
+                    value={formData.security.passwordHistory}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      security: { ...formData.security, passwordHistory: parseInt(e.target.value) }
+                    })}
+                    mode={mode}
+                  />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Two-Factor Authentication</h4>
+                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                      Require 2FA for all users
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.security.twoFactorEnabled}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      security: { ...formData.security, twoFactorEnabled: e.target.checked }
+                    })}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>SSL Enabled</h4>
+                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                      Enable SSL/TLS encryption
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.security.sslEnabled}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      security: { ...formData.security, sslEnabled: e.target.checked }
+                    })}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+
+        {/* Notifications Settings */}
+        {activeTab === 'notifications' && (
+          <EnhancedCard mode={mode} elevated>
+            <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
+              Notification Configuration
+            </h3>
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Email Notifications</h4>
+                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                      Send notifications via email
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.notifications.emailNotifications}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      notifications: { ...formData.notifications, emailNotifications: e.target.checked }
+                    })}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>SMS Notifications</h4>
+                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                      Send notifications via SMS
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.notifications.smsNotifications}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      notifications: { ...formData.notifications, smsNotifications: e.target.checked }
+                    })}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Push Notifications</h4>
+                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                      Send push notifications
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.notifications.pushNotifications}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      notifications: { ...formData.notifications, pushNotifications: e.target.checked }
+                    })}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Webhook URL
+                  </label>
+                  <EnhancedInput
+                    value={formData.notifications.webhookUrl}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      notifications: { ...formData.notifications, webhookUrl: e.target.value }
+                    })}
+                    mode={mode}
+                    placeholder="https://your-webhook-url.com"
+                  />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Slack Webhook
+                  </label>
+                  <EnhancedInput
+                    value={formData.notifications.slackWebhook}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      notifications: { ...formData.notifications, slackWebhook: e.target.value }
+                    })}
+                    mode={mode}
+                    placeholder="https://hooks.slack.com/services/..."
+                  />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                    Teams Webhook
+                  </label>
+                  <EnhancedInput
+                    value={formData.notifications.teamsWebhook}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      notifications: { ...formData.notifications, teamsWebhook: e.target.value }
+                    })}
+                    mode={mode}
+                    placeholder="https://your-org.webhook.office.com/..."
+                  />
+                </div>
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+
+        {/* Storage Settings */}
+        {activeTab === 'storage' && (
+          <EnhancedCard mode={mode} elevated>
+            <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
+              Storage Configuration
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Provider
+                </label>
+                <select
+                  value={formData.storage.provider}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, provider: e.target.value as any }
+                  })}
+                  className={`w-full px-3 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
+                >
+                  <option value="local">Local Storage</option>
+                  <option value="s3">Amazon S3</option>
+                  <option value="gcs">Google Cloud Storage</option>
+                  <option value="azure">Azure Blob Storage</option>
+                </select>
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Bucket/Container
+                </label>
+                <EnhancedInput
+                  value={formData.storage.bucket}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, bucket: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Region
+                </label>
+                <EnhancedInput
+                  value={formData.storage.region}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, region: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Access Key
+                </label>
+                <EnhancedInput
+                  value={formData.storage.accessKey}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, accessKey: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Secret Key
+                </label>
+                <EnhancedInput
+                  type="password"
+                  value={formData.storage.secretKey}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, secretKey: e.target.value }
+                  })}
+                  mode={mode}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
+                  Max File Size (bytes)
+                </label>
+                <EnhancedInput
+                  type="number"
+                  value={formData.storage.maxFileSize}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, maxFileSize: parseInt(e.target.value) }
+                  })}
+                  mode={mode}
+                />
+              </div>
+            </div>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>CDN Enabled</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Enable Content Delivery Network
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.storage.cdnEnabled}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    storage: { ...formData.storage, cdnEnabled: e.target.checked }
+                  })}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </EnhancedCard>
+        )}
+      </div>
     </div>
   );
 };

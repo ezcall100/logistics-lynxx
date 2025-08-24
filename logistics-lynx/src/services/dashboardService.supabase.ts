@@ -1,170 +1,103 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabase } from '../lib/supabase';
-import { 
-  DashboardMetrics, 
-  UserAnalytics, 
-  KPIMetrics 
-} from '../types/dashboard';
-
-export const getSystemMetrics = async (): Promise<{ data: DashboardMetrics | null; error: any }> => {
-  try {
-    // Mock data for now
-    const data: DashboardMetrics = {
-      totalUsers: 1247,
-      activeUsers: 892,
-      totalRevenue: 125000,
-      monthlyGrowth: 12.5,
-      systemLoad: 45,
-      memoryUsage: 68,
-      diskUsage: 34,
-      networkTraffic: 2.4
-    };
-    
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error };
-  }
-};
-
-export const getUserAnalytics = async (): Promise<{ data: UserAnalytics | null; error: any }> => {
-  try {
-    // Mock data for now
-    const data: UserAnalytics = {
-      totalUsers: 1247,
-      activeUsers: 892,
-      newUsers: 45,
-      userGrowth: 12.5,
-      topUsers: [
-        { id: '1', name: 'John Doe', email: 'john@example.com', activity: 95 },
-        { id: '2', name: 'Jane Smith', email: 'jane@example.com', activity: 87 },
-        { id: '3', name: 'Mike Johnson', email: 'mike@example.com', activity: 76 }
-      ]
-    };
-    
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error };
-  }
-};
-
-export const getKPIMetrics = async (): Promise<{ data: KPIMetrics[] | null; error: any }> => {
-  try {
-    // Mock data for now
-    const data: KPIMetrics[] = [
-      { id: '1', name: 'User Growth', value: 12.5, change: 2.3, trend: 'up', timestamp: new Date().toISOString() },
-      { id: '2', name: 'Revenue', value: 125000, change: 5.7, trend: 'up', timestamp: new Date().toISOString() },
-      { id: '3', name: 'System Load', value: 45, change: -3.2, trend: 'down', timestamp: new Date().toISOString() }
-    ];
-    
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error };
-  }
-};
-
-export const subscribeToKPIMetrics = (callback: (data: any) => void) => {
-  try {
-    // Temporarily commented out due to database schema issues
-    /*
-    return supabase
-      .channel('kpis')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'kpis_view' }, callback)
-      .subscribe();
-    */
-    
-    console.log('KPI metrics subscription set up (mock)');
-    return { data: null, error: null };
-  } catch (error) {
-    console.error('Error setting up KPI subscription:', error);
-    return { data: null, error };
-  }
-};
-
-export const getKpis = async (role: string) => {
+// Mock dashboard service functions
+export const getSystemMetrics = async () => {
   return {
-    totalUsers: 1250,
-    activeUsers: 890,
-    totalRevenue: 1250000,
-    monthlyGrowth: 12.5,
-    systemLoad: 65,
-    memoryUsage: 78,
-    diskUsage: 45,
-    networkTraffic: 234
+    data: {
+      cpuUsage: 45,
+      memoryUsage: 62,
+      activeConnections: 1234,
+      responseTime: 125
+    },
+    error: null
   };
 };
 
-export const getPerformanceData = async (range: string, metric: string) => {
+export const getUserAnalytics = async () => {
   return {
-    id: '1',
-    metric: metric,
-    value: 85,
-    unit: 'percentage',
-    timestamp: new Date().toISOString(),
-    threshold: 90,
-    status: 'normal' as const
+    data: {
+      activeUsers: 156,
+      totalSessions: 89,
+      avgSessionDuration: 25
+    },
+    error: null
   };
 };
 
-export const getActivityData = async (limit: number) => {
-  return [
-    {
-      id: '1',
-      type: 'user_login',
-      description: 'User logged in',
-      timestamp: new Date().toISOString(),
-      user: 'john.doe@example.com',
-      status: 'completed' as const
-    }
-  ];
+export const getKPIMetrics = async () => {
+  return {
+    data: {
+      revenue: 125000,
+      orders: 456,
+      conversionRate: 3.2
+    },
+    error: null
+  };
+};
+
+export const subscribeToKPIMetrics = (_callback: (data: any) => void) => {
+  console.log('Subscribing to KPI metrics');
+  return () => console.log('Unsubscribed from KPI metrics');
+};
+
+export const getKpis = async (_role: string) => {
+  return {
+    data: [
+      { name: 'Revenue', value: 125000, change: '+12%' },
+      { name: 'Orders', value: 456, change: '+8%' },
+      { name: 'Conversion', value: 3.2, change: '+0.5%' }
+    ],
+    error: null
+  };
+};
+
+export const getPerformanceData = async (_range: string, _metric: string) => {
+  return {
+    data: [
+      { date: '2024-01-01', value: 100 },
+      { date: '2024-01-02', value: 120 },
+      { date: '2024-01-03', value: 110 }
+    ],
+    error: null
+  };
+};
+
+export const getActivityData = async (_limit: number) => {
+  return {
+    data: [
+      { id: 1, type: 'login', user: 'john@example.com', timestamp: '2024-01-01T10:00:00Z' },
+      { id: 2, type: 'order', user: 'jane@example.com', timestamp: '2024-01-01T11:00:00Z' }
+    ],
+    error: null
+  };
 };
 
 export const getSystemHealth = async () => {
   return {
-    cpu: 65,
-    memory: 78,
-    disk: 45,
-    network: 23,
-    status: 'healthy' as const,
-    lastUpdated: new Date().toISOString()
+    data: {
+      status: 'healthy',
+      uptime: 99.8,
+      lastCheck: new Date().toISOString()
+    },
+    error: null
   };
 };
 
 export const getPortals = async () => {
-  return [
-    {
-      id: '1',
-      name: 'Main Portal',
-      status: 'active' as const,
-      users: 1250,
-      lastActivity: new Date().toISOString()
-    }
-  ];
+  return {
+    data: [
+      { id: 'portal1', name: 'Main Portal', status: 'active' },
+      { id: 'portal2', name: 'Admin Portal', status: 'active' }
+    ],
+    error: null
+  };
 };
 
-export const subscribeToKpis = (callback: (data: any) => void) => {
-  // Mock subscription
-  const interval = setInterval(() => {
-    callback({
-      totalUsers: 1250 + Math.floor(Math.random() * 10),
-      activeUsers: 890 + Math.floor(Math.random() * 5)
-    });
-  }, 5000);
-  
-  return () => clearInterval(interval);
+export const subscribeToKpis = () => {
+  console.log('Subscribing to KPIs');
+  return () => console.log('Unsubscribed from KPIs');
 };
 
-export const subscribeToActivities = (callback: (data: any) => void) => {
-  // Mock subscription
-  const interval = setInterval(() => {
-    callback({
-      id: Date.now().toString(),
-      type: 'system_event',
-      description: 'System health check',
-      timestamp: new Date().toISOString(),
-      user: 'system',
-      status: 'completed'
-    });
-  }, 10000);
-  
-  return () => clearInterval(interval);
+export const subscribeToActivities = () => {
+  console.log('Subscribing to activities');
+  return () => console.log('Unsubscribed from activities');
 };

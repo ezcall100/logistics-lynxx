@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabase } from '@/integrations/supabase/client';
-
 // Mock feature flags to avoid RPC issues
 const mockFeatureFlags = {
   'activate_full_autonomous_control': true,
@@ -12,7 +10,7 @@ const mockFeatureFlags = {
   'resolve_feature_flag': true
 };
 
-export const getFeatureFlag = async (companyId: string, env: string, key: string, def: boolean = false): Promise<boolean> => {
+export const getFeatureFlag = async (_companyId: string, _env: string, key: string, def: boolean = false): Promise<boolean> => {
   try {
     // Use mock data instead of RPC
     return mockFeatureFlags[key as keyof typeof mockFeatureFlags] ?? def;
@@ -22,7 +20,7 @@ export const getFeatureFlag = async (companyId: string, env: string, key: string
   }
 };
 
-export const resolveFeatureFlag = async (companyId: string, env: string, key: string) => {
+export const resolveFeatureFlag = async (_companyId: string, _env: string, key: string) => {
   try {
     // Use mock data instead of RPC
     return mockFeatureFlags[key as keyof typeof mockFeatureFlags] ?? false;

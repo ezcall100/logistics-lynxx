@@ -282,7 +282,7 @@ export const fallbackAPI = {
 // Check if Supabase is available
 export async function checkSupabaseConnection() {
   try {
-    const { data, error } = await supabase.from('autonomous_updates').select('count').limit(1);
+    const { error } = await supabase.from('autonomous_updates').select('count').limit(1);
     return !error;
   } catch (error) {
     console.log('Supabase not available, using fallback API');
