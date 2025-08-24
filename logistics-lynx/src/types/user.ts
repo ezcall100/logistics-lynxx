@@ -1,5 +1,3 @@
-import type { UserRole } from './auth';
-
 export interface User {
   id: string;
   email: string;
@@ -27,6 +25,7 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
+  last_sign_in_at?: string;
 }
 
 export interface SupabaseUser {

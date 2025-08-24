@@ -456,7 +456,7 @@ export const useAssetManagement = () => {
 
   const handleUpdateUnit = (id: string, data: unknown) => {
     setUnits(prev => prev.map(unit => 
-      unit.id === id ? { ...unit, ...data } : unit
+      unit.id === id ? { ...unit, ...(data as any) } : unit
     ));
     toast({
       title: 'Unit Updated',
@@ -490,7 +490,7 @@ export const useAssetManagement = () => {
 
   const handleUpdateTruck = (id: string, data: unknown) => {
     setTrucks(prev => prev.map(truck => 
-      truck.id === id ? { ...truck, ...data } : truck
+      truck.id === id ? { ...truck, ...(data as any) } : truck
     ));
     toast({
       title: 'Truck Updated',
@@ -524,7 +524,7 @@ export const useAssetManagement = () => {
 
   const handleUpdateTrailer = (id: string, data: unknown) => {
     setTrailers(prev => prev.map(trailer => 
-      trailer.id === id ? { ...trailer, ...data } : trailer
+      trailer.id === id ? { ...trailer, ...(data as any) } : trailer
     ));
     toast({
       title: 'Trailer Updated',
@@ -562,7 +562,7 @@ export const useAssetManagement = () => {
     setCompliance(prev => ({
       ...prev,
       items: prev.items.map(item => 
-        item.id === id ? { ...item, ...data } : item
+        item.id === id ? { ...item, ...(data as any) } : item
       ),
     }));
     toast({

@@ -29,6 +29,14 @@ export const Toast: React.FC<ToastProps> = ({
   );
 };
 
+export const ToastActionElement: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="flex gap-2 mt-2">
+    {children}
+  </div>
+);
+
+export { ToastProps };
+
 export const useToast = () => {
   const toast = (message: string, variant: 'default' | 'success' | 'error' | 'warning' = 'default') => {
     console.log(`Toast: ${message} (${variant})`);

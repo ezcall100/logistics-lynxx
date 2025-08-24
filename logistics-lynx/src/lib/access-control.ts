@@ -313,7 +313,7 @@ export class AccessControl {
   /**
    * Check access without middleware (for programmatic use)
    */
-  async checkAccess(orgId: string, userId?: string, apiKeyId?: string, config: AccessControlConfig): Promise<AccessDecision> {
+  async checkAccess(orgId: string, config: AccessControlConfig, userId?: string, apiKeyId?: string): Promise<AccessDecision> {
     try {
       // Check entitlement
       if (config.entitlement) {
@@ -587,5 +587,5 @@ export const accessControl = new AccessControl();
 
 // Export convenience functions
 export const requireAccess = (config: AccessControlConfig) => accessControl.requireAccess(config);
-export const checkAccess = (orgId: string, userId?: string, apiKeyId?: string, config: AccessControlConfig) => 
-  accessControl.checkAccess(orgId, userId, apiKeyId, config);
+export const checkAccess = (orgId: string, config: AccessControlConfig, userId?: string, apiKeyId?: string) =>
+  new AccessControl().checkAccess(orgId, config, userId, apiKeyId);
