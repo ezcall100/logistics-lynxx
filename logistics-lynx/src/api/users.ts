@@ -1,163 +1,248 @@
 import { supabase } from '../lib/supabaseClient';
-import { UserRole } from '../types/auth';
 
 // User Management API Service
-export interface CreateUserData {
+export interface User {
+  id: string;
   email: string;
-  password: string;
   name?: string;
-  role: UserRole;
-}
-
-export interface UpdateUserData {
-  name?: string;
-  role?: UserRole;
+  role: string;
+  status: 'active' | 'inactive' | 'suspended';
+  created_at: string;
+  last_login?: string;
   avatar_url?: string;
 }
 
-export interface UserFilters {
-  role?: UserRole;
-  search?: string;
-  limit?: number;
-  offset?: number;
+export interface UserRole {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  created_at: string;
 }
 
-// Get all users with filtering and pagination
-export const getUsers = async (filters: UserFilters = {}) => {
-  let query = supabase
-    .from('profiles')
-    .select('*')
-    .order('created_at', { ascending: false });
+export interface UserGroup {
+  id: string;
+  name: string;
+  description: string;
+  member_count: number;
+  created_at: string;
+}
 
-  // Apply filters
-  if (filters.role) {
-    query = query.eq('role', filters.role);
+export interface SupportTicket {
+  id: string;
+  user_id: string;
+  subject: string;
+  description: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  created_at: string;
+  updated_at: string;
+}
+
+// Get all users
+export const getAllUsers = async (): Promise<{ data: User[] | null; error: any }> => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
   }
-
-  if (filters.search) {
-    query = query.or(`name.ilike.%${filters.search}%,email.ilike.%${filters.search}%`);
-  }
-
-  if (filters.limit) {
-    query = query.limit(filters.limit);
-  }
-
-  if (filters.offset) {
-    query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
-  }
-
-  const { data, error, count } = await query;
-
-  return { data, error, count };
 };
 
-// Get single user by ID
-export const getUserById = async (id: string) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', id)
-    .single();
+// Get user by ID
+export const getUserById = async (id: string): Promise<{ data: User | null; error: any }> => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  return { data, error };
+    if (error) throw error;
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 };
 
 // Create new user
-export const createUser = async (userData: CreateUserData) => {
-  // First create the auth user
-  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-    email: userData.email,
-    password: userData.password,
-    email_confirm: true,
-  });
+export const createUser = async (userData: Partial<User>): Promise<{ data: User | null; error: any }> => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert([userData])
+      .select()
+      .single();
 
-  if (authError) {
-    return { data: null, error: authError };
+    if (error) throw error;
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
   }
-
-  // Then create the profile
-  const { data: profileData, error: profileError } = await supabase
-    .from('profiles')
-    .insert({
-      id: authData.user.id,
-      email: userData.email,
-      name: userData.name,
-      role: userData.role,
-    })
-    .select()
-    .single();
-
-  return { data: profileData, error: profileError };
 };
 
-// Update user profile
-export const updateUser = async (id: string, updates: UpdateUserData) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single();
+// Update user
+export const updateUser = async (id: string, updates: Partial<User>): Promise<{ data: User | null; error: any }> => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
 
-  return { data, error };
+    if (error) throw error;
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 };
 
 // Delete user
-export const deleteUser = async (id: string) => {
-  // First delete the profile
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .delete()
-    .eq('id', id);
+export const deleteUser = async (id: string): Promise<{ error: any }> => {
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', id);
 
-  if (profileError) {
-    return { error: profileError };
+    if (error) throw error;
+
+    return { error: null };
+  } catch (error) {
+    return { error };
   }
-
-  // Then delete the auth user
-  const { error: authError } = await supabase.auth.admin.deleteUser(id);
-
-  return { error: authError };
 };
 
-// Get user statistics
-export const getUserStats = async () => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('role');
+// Get user roles
+export const getUserRoles = async (): Promise<{ data: UserRole[] | null; error: any }> => {
+  try {
+    // Mock data for now - in real app, this would come from roles table
+    const data: UserRole[] = [
+      {
+        id: '1',
+        name: 'Super Admin',
+        description: 'Full system access',
+        permissions: ['*'],
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        name: 'Admin',
+        description: 'Administrative access',
+        permissions: ['users.read', 'users.write', 'system.read'],
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: '3',
+        name: 'User',
+        description: 'Standard user access',
+        permissions: ['profile.read', 'profile.write'],
+        created_at: new Date().toISOString(),
+      },
+    ];
 
-  if (error) {
+    return { data, error: null };
+  } catch (error) {
     return { data: null, error };
   }
-
-  const stats = {
-    total: data.length,
-    super_admin: data.filter(u => u.role === 'super_admin').length,
-    admin: data.filter(u => u.role === 'admin').length,
-    analyst: data.filter(u => u.role === 'analyst').length,
-    viewer: data.filter(u => u.role === 'viewer').length,
-  };
-
-  return { data: stats, error: null };
 };
 
-// Get recent user activity
-export const getRecentUsers = async (limit = 10) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(limit);
+// Get user groups
+export const getUserGroups = async (): Promise<{ data: UserGroup[] | null; error: any }> => {
+  try {
+    // Mock data for now - in real app, this would come from groups table
+    const data: UserGroup[] = [
+      {
+        id: '1',
+        name: 'Developers',
+        description: 'Development team members',
+        member_count: 12,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        name: 'Operations',
+        description: 'Operations team members',
+        member_count: 8,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: '3',
+        name: 'Sales',
+        description: 'Sales team members',
+        member_count: 15,
+        created_at: new Date().toISOString(),
+      },
+    ];
 
-  return { data, error };
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 };
 
-// Bulk update user roles
-export const bulkUpdateUserRoles = async (updates: { id: string; role: UserRole }[]) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .upsert(updates.map(u => ({ id: u.id, role: u.role })))
-    .select();
+// Get support tickets
+export const getSupportTickets = async (): Promise<{ data: SupportTicket[] | null; error: any }> => {
+  try {
+    // Mock data for now - in real app, this would come from tickets table
+    const data: SupportTicket[] = [
+      {
+        id: '1',
+        user_id: 'user1',
+        subject: 'Login issue',
+        description: 'Unable to login to the system',
+        status: 'open',
+        priority: 'high',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        user_id: 'user2',
+        subject: 'Feature request',
+        description: 'Need new reporting feature',
+        status: 'in_progress',
+        priority: 'medium',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ];
 
-  return { data, error };
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+};
+
+// Get billing information
+export const getBillingInfo = async (userId: string): Promise<{ data: any | null; error: any }> => {
+  try {
+    // Mock billing data
+    const data = {
+      userId,
+      plan: 'Enterprise',
+      status: 'active',
+      nextBilling: '2024-02-15',
+      amount: 299.99,
+      usage: {
+        users: 45,
+        storage: '2.4 GB',
+        apiCalls: 2400000,
+      },
+    };
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 };

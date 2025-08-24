@@ -16,7 +16,8 @@ import {
   Zap,
   Cpu,
   HardDrive,
-  Wifi
+  Wifi,
+  RefreshCw
 } from 'lucide-react';
 import { 
   getSystemMetrics, 
@@ -38,34 +39,34 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        // Fetch all dashboard data in parallel
-        const [metricsRes, analyticsRes, healthRes] = await Promise.all([
-          getSystemMetrics(),
-          getUserAnalytics(),
-          getSystemHealth()
-        ]);
-
-        if (metricsRes.error) throw new Error(metricsRes.error);
-        if (analyticsRes.error) throw new Error(analyticsRes.error);
-        if (healthRes.error) throw new Error(healthRes.error);
-
-        setSystemMetrics(metricsRes.data);
-        setUserAnalytics(analyticsRes.data);
-        setSystemHealth(healthRes.data);
-      } catch (err: any) {
-        setError(err.message || 'Failed to load system data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Fetch all dashboard data in parallel
+      const [metricsRes, analyticsRes, healthRes] = await Promise.all([
+        getSystemMetrics(),
+        getUserAnalytics(),
+        getSystemHealth()
+      ]);
+
+      if (metricsRes.error) throw new Error(metricsRes.error);
+      if (analyticsRes.error) throw new Error(analyticsRes.error);
+      if (healthRes.error) throw new Error(healthRes.error);
+
+      setSystemMetrics(metricsRes.data);
+      setUserAnalytics(analyticsRes.data);
+      setSystemHealth(healthRes.data);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load system data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -100,15 +101,17 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center py-8">
-              <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <div className="text-red-500 mb-4">
+                <AlertTriangle className="h-12 w-12 mx-auto" />
+              </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Error Loading System Data
+                Error Loading Dashboard
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {error}
               </p>
-              <Button onClick={() => window.location.reload()}>
-                Retry
+              <Button onClick={fetchData}>
+                Try Again
               </Button>
             </div>
           </CardContent>
@@ -121,251 +124,234 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="space-y-2">
-        <div className="flex items-center space-x-2">
-          <LayoutDashboard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            System Overview
-          </h1>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center space-x-2">
+              <LayoutDashboard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                System Overview
+              </h1>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400">
+              Real-time system metrics and performance monitoring
+            </p>
+          </div>
+          <Button variant="outline" onClick={fetchData} disabled={isLoading}>
+            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
-          Real-time system health, uptime, performance metrics
-        </p>
       </div>
 
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? '...' : systemMetrics ? formatCurrency(systemMetrics.revenue) : '$0'}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +12.5% from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+            <Users className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? '...' : systemMetrics ? formatNumber(systemMetrics.activeUsers) : '0'}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +8.2% from last week
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
+            <Activity className="h-4 w-4 text-purple-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? '...' : systemHealth ? formatUptime(systemHealth.uptime) : '0%'}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Last 30 days
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Security Score</CardTitle>
+            <Shield className="h-4 w-4 text-indigo-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? '...' : systemMetrics ? systemMetrics.securityScore : '0'}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +2.1 points this week
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* System Health Status */}
+      <Card>
+        <CardHeader>
+          <CardTitle>System Health</CardTitle>
+          <CardDescription>
+            Current system performance and resource utilization
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i}>
-              <CardContent className="pt-6">
-                <div className="space-y-3">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            <div className="space-y-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              ))}
+            </div>
+          ) : systemHealth ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Cpu className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-medium">CPU Usage</span>
+                  </div>
+                  <span className="text-sm font-medium">{systemHealth.cpuUsage}%</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${systemHealth.cpuUsage}%` }}
+                  ></div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <HardDrive className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium">Memory Usage</span>
+                  </div>
+                  <span className="text-sm font-medium">{systemHealth.memoryUsage}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${systemHealth.memoryUsage}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Network className="h-4 w-4 text-purple-600" />
+                    <span className="text-sm font-medium">Active Connections</span>
+                  </div>
+                  <span className="text-sm font-medium">{formatNumber(systemHealth.activeConnections)}</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Zap className="h-4 w-4 text-yellow-600" />
+                    <span className="text-sm font-medium">Response Time</span>
+                  </div>
+                  <span className="text-sm font-medium">{systemHealth.responseTime}ms</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Wifi className="h-4 w-4 text-indigo-600" />
+                    <span className="text-sm font-medium">Network Status</span>
+                  </div>
+                  <Badge variant="default" className={getStatusColor(systemHealth.status)}>
+                    {getStatusIcon(systemHealth.status)}
+                    {systemHealth.status}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                No System Data Available
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                System health metrics are not currently available
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+          <CardDescription>
+            Latest system events and user activities
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               ))}
             </div>
           ) : (
-        <>
-          {/* System Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="h-5 w-5" />
-                <span>System Status</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4">
-                <div className={`flex items-center space-x-2 ${getStatusColor(systemHealth?.status)}`}>
-                  {getStatusIcon(systemHealth?.status)}
-                  <span className="font-semibold capitalize">{systemHealth?.status || 'Unknown'}</span>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">System backup completed successfully</p>
+                  <p className="text-xs text-gray-500">2 minutes ago</p>
                 </div>
-                <Badge variant="outline">
-                  Uptime: {formatUptime(systemHealth?.uptime || 0)}
-                </Badge>
-                <Badge variant="outline">
-                  Response: {systemHealth?.responseTime || 0}ms
-                </Badge>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Key Metrics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Total Revenue */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Total Revenue
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatCurrency(systemMetrics?.revenue || 0)}
-                    </p>
-                    <p className="text-xs text-green-600 dark:text-green-400 flex items-center mt-1">
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                      +12.5% from last month
-                    </p>
-                  </div>
-                  <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                    <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
-                  </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">New user registration: john.doe@example.com</p>
+                  <p className="text-xs text-gray-500">5 minutes ago</p>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Active Users */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Active Users
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatNumber(systemMetrics?.activeUsers || 0)}
-                    </p>
-                    <p className="text-xs text-blue-600 dark:text-blue-400 flex items-center mt-1">
-                      <Users className="h-3 w-3 mr-1" />
-                      {formatNumber(systemMetrics?.totalUsers || 0)} total users
-                    </p>
-                  </div>
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                    <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                  </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">API rate limit warning triggered</p>
+                  <p className="text-xs text-gray-500">10 minutes ago</p>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* System Uptime */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      System Uptime
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatUptime(systemHealth?.uptime || 0)}
-                    </p>
-                    <p className="text-xs text-purple-600 dark:text-purple-400 flex items-center mt-1">
-                      <Activity className="h-3 w-3 mr-1" />
-                      Last 30 days
-                    </p>
-                  </div>
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                    <Activity className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                  </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Security scan completed - no vulnerabilities found</p>
+                  <p className="text-xs text-gray-500">15 minutes ago</p>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* API Calls */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      API Calls
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatNumber(systemMetrics?.apiCalls || 0)}
-                    </p>
-                    <p className="text-xs text-teal-600 dark:text-teal-400 flex items-center mt-1">
-                      <Network className="h-3 w-3 mr-1" />
-                      Daily requests
-                    </p>
-                  </div>
-                  <div className="p-3 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
-                    <Network className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                  </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Database optimization completed</p>
+                  <p className="text-xs text-gray-500">30 minutes ago</p>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Security Score */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      Security Score
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {systemMetrics?.securityScore || 0}
-                    </p>
-                    <p className="text-xs text-indigo-600 dark:text-indigo-400 flex items-center mt-1">
-                      <Shield className="h-3 w-3 mr-1" />
-                      Overall rating
-                    </p>
-                  </div>
-                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/20 rounded-lg">
-                    <Shield className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* CPU Usage */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                      CPU Usage
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatPercentage(systemHealth?.cpuUsage || 0)}
-                    </p>
-                    <p className="text-xs text-orange-600 dark:text-orange-400 flex items-center mt-1">
-                      <Cpu className="h-3 w-3 mr-1" />
-                      Current load
-                    </p>
-                  </div>
-                  <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
-                    <Cpu className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* System Resources */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Zap className="h-5 w-5" />
-                <span>System Resources</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Memory Usage</span>
-                    <span className="font-medium">{formatPercentage(systemHealth?.memoryUsage || 0)}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${systemHealth?.memoryUsage || 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Disk Usage</span>
-                    <span className="font-medium">{formatPercentage(systemHealth?.diskUsage || 0)}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${systemHealth?.diskUsage || 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Active Connections</span>
-                    <span className="font-medium">{formatNumber(systemHealth?.activeConnections || 0)}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min((systemHealth?.activeConnections || 0) / 100, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
+              </div>
             </div>
+          )}
         </CardContent>
       </Card>
-        </>
-      )}
     </div>
   );
 };
