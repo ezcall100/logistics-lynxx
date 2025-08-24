@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import SuperAdmin from './components/SuperAdminNew';
+import { AuthProvider } from './context/AuthContext';
 
 // Landing page component
 const LandingPage = () => (
@@ -33,18 +34,20 @@ const LandingPage = () => (
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        {/* Landing Page */}
-        <Route path="/" element={<LandingPage />} />
-        
-        {/* Super Admin Portal */}
-        <Route path="/super-admin/*" element={<SuperAdmin />} />
-        
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <Routes>
+          {/* Landing Page */}
+          <Route path="/" element={<LandingPage />} />
+          
+          {/* Super Admin Portal */}
+          <Route path="/super-admin/*" element={<SuperAdmin />} />
+          
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </AuthProvider>
   );
 }
 
