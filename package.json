@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:web": "cd logistics-lynx && vite --port 8084",
+    "dev:web": "cd logistics-lynx && vite --port 3000",
     "dev:autonomous": "cd logistics-lynx && node scripts/autonomous-agent-continuous.mjs",
     "start:autonomous": "cd logistics-lynx && node --enable-source-maps dist/autonomous-orchestrator.mjs",
     "start:autonomous:full": "cd logistics-lynx && concurrently -n WEB,AGENTS,CTRL -c auto \"npm run dev\" \"node scripts/admin-portal-autonomous-agent.mjs --continuous\" \"npx tsx scripts/health-check.mts\"",

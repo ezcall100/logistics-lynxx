@@ -1,7 +1,4 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import React, { useState } from 'react';
 import { 
   LayoutDashboard, 
   Users, 
@@ -20,9 +17,77 @@ import {
   RefreshCw
 } from 'lucide-react';
 
+// 🌟 Innovative Design System Components
+const InnovativeCard = ({ children, className = "", hover = true, glass = false, elevated = false, premium = false, animated = false, mode = "light", ...props }: any) => {
+  const styles = {
+    glass: mode === "light" ? "bg-white/20 backdrop-blur-2xl border border-white/30 shadow-2xl" : "bg-slate-800/20 backdrop-blur-2xl border border-slate-700/30 shadow-2xl",
+    elevated: mode === "light" ? "bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 backdrop-blur-2xl border border-slate-200/80 shadow-2xl" : "bg-gradient-to-br from-slate-800 via-blue-900/30 to-indigo-900/30 backdrop-blur-2xl border border-slate-700/80 shadow-2xl",
+    surface: mode === "light" ? "bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-xl" : "bg-slate-800/95 backdrop-blur-xl border border-slate-700/60 shadow-xl"
+  };
+  
+  return (
+    <div 
+      className={`${glass ? styles.glass : elevated ? styles.elevated : styles.surface} rounded-2xl p-6 transition-all duration-300 cubic-bezier(0.68, -0.55, 0.265, 1.55) ${hover ? 'hover:scale-[1.02]' : ''} ${animated ? 'animate-pulse' : ''} ${className}`} 
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+const InnovativeButton = ({ children, onClick, variant = "primary", size = "md", className = "", icon, loading = false, premium = false, mode = "light", ...props }: any) => {
+  const variants = {
+    primary: mode === "light" ? "bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 hover:from-cyan-600 hover:via-blue-600 hover:to-indigo-700 text-white shadow-xl shadow-cyan-500/25 hover:shadow-2xl hover:shadow-cyan-500/35 hover:scale-105" : "bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-500 hover:from-cyan-500 hover:via-blue-500 hover:to-indigo-600 text-white shadow-xl shadow-cyan-400/25 hover:shadow-2xl hover:shadow-cyan-400/35 hover:scale-105",
+    secondary: mode === "light" ? "bg-white/90 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:border-slate-300 shadow-lg hover:shadow-xl hover:scale-105" : "bg-slate-800/90 backdrop-blur-sm border border-slate-700/60 text-slate-300 hover:bg-slate-800 hover:border-slate-600 shadow-lg hover:shadow-xl hover:scale-105",
+    outline: mode === "light" ? "bg-transparent border border-slate-200/60 text-slate-700 hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow-md" : "bg-transparent border border-slate-700/60 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600 shadow-sm hover:shadow-md"
+  };
+  
+  const sizes = {
+    sm: "px-4 py-2.5 text-sm font-medium",
+    md: "px-6 py-3 text-sm font-semibold",
+    lg: "px-8 py-4 text-base font-bold"
+  };
+  
+  return (
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className={`${variants[variant]} ${sizes[size]} transition-all duration-300 cubic-bezier(0.68, -0.55, 0.265, 1.55) rounded-xl font-medium ${loading ? 'opacity-75 cursor-not-allowed' : ''} ${premium ? 'animate-pulse' : ''} ${className}`}
+      {...props}
+    >
+      <div className="flex items-center justify-center space-x-2">
+        {loading && (
+          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        )}
+        {icon && !loading && <span className="text-lg">{icon}</span>}
+        <span>{children}</span>
+      </div>
+    </button>
+  );
+};
+
+const InnovativeBadge = ({ children, variant = "default", className = "", pulse = false, premium = false, mode = "light" }: any) => {
+  const variants = {
+    default: mode === "light" ? "bg-gradient-to-r from-cyan-100 to-indigo-100 text-cyan-800 border border-cyan-200/60" : "bg-gradient-to-r from-cyan-900 to-indigo-900 text-cyan-200 border border-cyan-700/60",
+    success: mode === "light" ? "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-200/60" : "bg-gradient-to-r from-emerald-900 to-green-900 text-emerald-200 border border-emerald-700/60",
+    warning: mode === "light" ? "bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border border-amber-200/60" : "bg-gradient-to-r from-amber-900 to-yellow-900 text-amber-200 border border-amber-700/60",
+    danger: mode === "light" ? "bg-gradient-to-r from-red-100 to-pink-100 text-red-800 border border-red-200/60" : "bg-gradient-to-r from-red-900 to-pink-900 text-red-200 border border-red-700/60",
+    live: mode === "light" ? "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-200/60 animate-pulse" : "bg-gradient-to-r from-emerald-900 to-green-900 text-emerald-200 border border-emerald-700/60 animate-pulse"
+  };
+  
+  return (
+    <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${variants[variant]} shadow-xl ${mode === "light" ? 'shadow-slate-900/8' : 'shadow-black/20'} ${pulse ? 'animate-pulse' : ''} ${premium ? 'animate-pulse' : ''} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
 interface SystemOverviewProps {}
 
 const SystemOverview: React.FC<SystemOverviewProps> = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const mode = darkMode ? "dark" : "light";
+
   // Mock data for now
   const systemMetrics = {
     revenue: 125000,
@@ -41,10 +106,10 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'healthy': return 'text-green-600 dark:text-green-400';
-      case 'warning': return 'text-yellow-600 dark:text-yellow-400';
-      case 'critical': return 'text-red-600 dark:text-red-400';
-      default: return 'text-gray-600 dark:text-gray-400';
+      case 'healthy': return mode === "light" ? 'text-emerald-600' : 'text-emerald-400';
+      case 'warning': return mode === "light" ? 'text-amber-600' : 'text-amber-400';
+      case 'critical': return mode === "light" ? 'text-red-600' : 'text-red-400';
+      default: return mode === "light" ? 'text-slate-600' : 'text-slate-400';
     }
   };
 
@@ -79,205 +144,216 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center space-x-2">
-              <LayoutDashboard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+              <LayoutDashboard className={`h-6 w-6 ${mode === "light" ? 'text-cyan-600' : 'text-cyan-400'}`} />
+              <h1 className={`text-2xl sm:text-3xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>
                 System Overview
               </h1>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className={mode === "light" ? 'text-slate-600' : 'text-slate-300'}>
               Real-time system metrics and performance monitoring
             </p>
           </div>
-          <Button variant="outline">
+          <InnovativeButton variant="outline" mode={mode}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
-          </Button>
+          </InnovativeButton>
         </div>
       </div>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(systemMetrics.revenue)}
+        <InnovativeCard mode={mode} hover={true}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Total Revenue</p>
+              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{formatCurrency(systemMetrics.revenue)}</p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              +12.5% from last month
-            </p>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-gradient-to-r from-emerald-100 to-green-100 rounded-xl">
+              <DollarSign className="h-6 w-6 text-emerald-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center text-sm">
+            <TrendingUp className="h-4 w-4 text-emerald-600 mr-1" />
+            <span className="text-emerald-600">+12.5%</span>
+            <span className={`ml-1 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>from last month</span>
+          </div>
+        </InnovativeCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-            <Users className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatNumber(systemMetrics.activeUsers)}
+        <InnovativeCard mode={mode} hover={true}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Active Users</p>
+              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{formatNumber(systemMetrics.activeUsers)}</p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              +8.2% from last week
-            </p>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl">
+              <Users className="h-6 w-6 text-blue-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center text-sm">
+            <TrendingUp className="h-4 w-4 text-blue-600 mr-1" />
+            <span className="text-blue-600">+8.2%</span>
+            <span className={`ml-1 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>from last week</span>
+          </div>
+        </InnovativeCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
-            <Activity className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatUptime(systemHealth.uptime)}
+        <InnovativeCard mode={mode} hover={true}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Security Score</p>
+              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{systemMetrics.securityScore}/100</p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Last 30 days
-            </p>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-gradient-to-r from-cyan-100 to-indigo-100 rounded-xl">
+              <Shield className="h-6 w-6 text-cyan-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center text-sm">
+            <CheckCircle className="h-4 w-4 text-cyan-600 mr-1" />
+            <span className="text-cyan-600">Excellent</span>
+            <span className={`ml-1 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>security status</span>
+          </div>
+        </InnovativeCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Security Score</CardTitle>
-            <Shield className="h-4 w-4 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {systemMetrics.securityScore}
+        <InnovativeCard mode={mode} hover={true}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>System Status</p>
+              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Healthy</p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              +2.1 points this week
-            </p>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-gradient-to-r from-emerald-100 to-green-100 rounded-xl">
+              <CheckCircle className="h-6 w-6 text-emerald-600" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-center text-sm">
+            <Activity className="h-4 w-4 text-emerald-600 mr-1" />
+            <span className="text-emerald-600">All systems operational</span>
+          </div>
+        </InnovativeCard>
       </div>
 
-      {/* System Health Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle>System Health</CardTitle>
-          <CardDescription>
-            Current system performance and resource utilization
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Cpu className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-medium">CPU Usage</span>
-                </div>
-                <span className="text-sm font-medium">{systemHealth.cpuUsage}%</span>
+      {/* System Health */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <InnovativeCard mode={mode} elevated={true}>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className={`text-lg font-semibold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>System Health</h3>
+            <InnovativeBadge variant="live" mode={mode}>Live</InnovativeBadge>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Cpu className={`h-4 w-4 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`} />
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>CPU Usage</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${systemHealth.cpuUsage}%` }}
-                ></div>
+              <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{systemHealth.cpuUsage}%</span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <HardDrive className={`h-4 w-4 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`} />
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Memory Usage</span>
               </div>
+              <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{systemHealth.memoryUsage}%</span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Wifi className={`h-4 w-4 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`} />
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Active Connections</span>
+              </div>
+              <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{formatNumber(systemHealth.activeConnections)}</span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Zap className={`h-4 w-4 ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`} />
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Response Time</span>
+              </div>
+              <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{systemHealth.responseTime}ms</span>
+            </div>
+          </div>
+        </InnovativeCard>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <HardDrive className="h-4 w-4 text-green-600" />
-                  <span className="text-sm font-medium">Memory Usage</span>
-                </div>
-                <span className="text-sm font-medium">{systemHealth.memoryUsage}%</span>
+        <InnovativeCard mode={mode} elevated={true}>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className={`text-lg font-semibold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Uptime & Performance</h3>
+            <InnovativeBadge variant="success" mode={mode}>99.8%</InnovativeBadge>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>System Uptime</span>
+                <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{formatUptime(systemHealth.uptime)}</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${systemHealth.memoryUsage}%` }}
-                ></div>
+              <div className={`w-full ${mode === "light" ? 'bg-slate-200' : 'bg-slate-700'} rounded-full h-2`}>
+                <div className="bg-gradient-to-r from-emerald-500 to-green-500 h-2 rounded-full" style={{ width: `${systemHealth.uptime}%` }}></div>
               </div>
             </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Network className="h-4 w-4 text-purple-600" />
-                  <span className="text-sm font-medium">Active Connections</span>
-                </div>
-                <span className="text-sm font-medium">{formatNumber(systemHealth.activeConnections)}</span>
+            
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Performance Score</span>
+                <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>A+</span>
               </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4 text-yellow-600" />
-                  <span className="text-sm font-medium">Response Time</span>
-                </div>
-                <span className="text-sm font-medium">{systemHealth.responseTime}ms</span>
+              <div className={`w-full ${mode === "light" ? 'bg-slate-200' : 'bg-slate-700'} rounded-full h-2`}>
+                <div className="bg-gradient-to-r from-cyan-500 to-indigo-500 h-2 rounded-full" style={{ width: '95%' }}></div>
               </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Wifi className="h-4 w-4 text-indigo-600" />
-                  <span className="text-sm font-medium">Network Status</span>
-                </div>
-                <Badge variant="default" className={getStatusColor(systemHealth.status)}>
-                  {getStatusIcon(systemHealth.status)}
-                  {systemHealth.status}
-                </Badge>
+            </div>
+            
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Security Rating</span>
+                <span className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Excellent</span>
+              </div>
+              <div className={`w-full ${mode === "light" ? 'bg-slate-200' : 'bg-slate-700'} rounded-full h-2`}>
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full" style={{ width: '94%' }}></div>
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </InnovativeCard>
+      </div>
 
       {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>
-            Latest system events and user activities
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">System backup completed successfully</p>
-                <p className="text-xs text-gray-500">2 minutes ago</p>
-              </div>
+      <InnovativeCard mode={mode} glass={true}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className={`text-lg font-semibold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Recent Activity</h3>
+          <InnovativeButton variant="outline" className="text-sm" mode={mode}>
+            View All
+          </InnovativeButton>
+        </div>
+        
+        <div className="space-y-3">
+          <div className={`flex items-center space-x-3 p-3 ${mode === "light" ? 'bg-slate-50/50' : 'bg-slate-700/50'} rounded-lg`}>
+            <div className="p-2 bg-emerald-100 rounded-lg">
+              <CheckCircle className="h-4 w-4 text-emerald-600" />
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">New user registration: john.doe@example.com</p>
-                <p className="text-xs text-gray-500">5 minutes ago</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">API rate limit warning triggered</p>
-                <p className="text-xs text-gray-500">10 minutes ago</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Security scan completed - no vulnerabilities found</p>
-                <p className="text-xs text-gray-500">15 minutes ago</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Database optimization completed</p>
-                <p className="text-xs text-gray-500">30 minutes ago</p>
-              </div>
+            <div className="flex-1">
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>System backup completed successfully</p>
+              <p className={`text-xs ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>2 minutes ago</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          
+          <div className={`flex items-center space-x-3 p-3 ${mode === "light" ? 'bg-slate-50/50' : 'bg-slate-700/50'} rounded-lg`}>
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Users className="h-4 w-4 text-blue-600" />
+            </div>
+            <div className="flex-1">
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>New user registration: john.doe@company.com</p>
+              <p className={`text-xs ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>5 minutes ago</p>
+            </div>
+          </div>
+          
+          <div className={`flex items-center space-x-3 p-3 ${mode === "light" ? 'bg-slate-50/50' : 'bg-slate-700/50'} rounded-lg`}>
+            <div className="p-2 bg-cyan-100 rounded-lg">
+              <Shield className="h-4 w-4 text-cyan-600" />
+            </div>
+            <div className="flex-1">
+              <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Security scan completed - No threats detected</p>
+              <p className={`text-xs ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>10 minutes ago</p>
+            </div>
+          </div>
+        </div>
+      </InnovativeCard>
     </div>
   );
 };

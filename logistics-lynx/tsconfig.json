@@ -1,4 +1,5 @@
 {
+  // Force TypeScript language server reload
   "compilerOptions": {
     "target": "ES2021",
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
