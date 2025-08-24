@@ -20,8 +20,14 @@ import UserRoles from './user-management/UserRoles';
 import UserGroups from './user-management/UserGroups';
 
 // System Administration Pages
-import DatabaseManagement from '../system-administration/DatabaseManagement';
-import APIManagement from '../system-administration/APIManagement';
+import DatabaseManagement from './system-administration/DatabaseManagement';
+import APIManagement from './system-administration/APIManagement';
+
+// Security Center Pages
+import SecurityAudit from './security-center/SecurityAudit';
+
+// Portal Management Pages
+import PortalOverview from './portal-management/PortalOverview';
 
 // Simple placeholder components for other pages
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -85,7 +91,7 @@ const SuperAdminRoutes: React.FC = () => {
       <Route path="/system/email" element={<PlaceholderPage title="Email Services" />} />
 
       {/* Security Center Routes */}
-      <Route path="/security/audit" element={<PlaceholderPage title="Security Audit" />} />
+      <Route path="/security/audit" element={<SecurityAudit />} />
       <Route path="/security/logs" element={<PlaceholderPage title="Access Logs" />} />
       <Route path="/security/protection" element={<PlaceholderPage title="Data Protection" />} />
       <Route path="/security/api" element={<PlaceholderPage title="API Security" />} />
@@ -105,7 +111,7 @@ const SuperAdminRoutes: React.FC = () => {
       <Route path="/monitoring/health" element={<PlaceholderPage title="Health Checks" />} />
 
       {/* Portal Management Routes */}
-      <Route path="/portals" element={<PlaceholderPage title="Portal Overview" />} />
+      <Route path="/portals" element={<PortalOverview />} />
       <Route path="/portals/config" element={<PlaceholderPage title="Portal Configuration" />} />
       <Route path="/portals/users" element={<PlaceholderPage title="Portal Users" />} />
       <Route path="/portals/features" element={<PlaceholderPage title="Feature Management" />} />

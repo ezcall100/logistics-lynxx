@@ -8,142 +8,16 @@ import {
   Clock,
   RefreshCw,
   Download,
-  Filter,
-  Search,
   Eye,
   Settings,
   HelpCircle,
-  ExternalLink,
-  Copy,
-  Share,
   Archive,
-  RotateCcw,
-  Save,
-  Send,
-  MessageSquare,
-  Phone,
-  Video,
-  Camera,
-  Image,
-  File,
-  Folder,
-  Grid,
-  List,
-  Columns,
-  Maximize,
-  Minimize,
-  Move,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-  Type,
-  Bold,
-  Italic,
-  Underline,
-  Link,
-  Unlink,
-  Code,
-  Quote,
-  Hash,
-  AtSign,
-  Percent,
-  Minus,
-  Divide,
-  Plus,
-  Equal,
-  Infinity,
-  Pi,
-  Sigma,
-  Square,
-  Circle,
-  Triangle,
-  Hexagon,
-  Octagon,
-  Star,
-  Heart,
-  Zap,
-  Droplets,
-  Cloud,
-  CloudRain,
-  CloudSnow,
-  CloudLightning,
-  Sun,
-  Moon,
-  Sunrise,
-  Sunset,
-  Wind,
-  Thermometer,
-  Gauge,
-  Timer,
-  Navigation,
-  Compass,
-  Map,
-  Layers,
-  Grid3X3,
-  Rows,
-  Sidebar,
-  SidebarClose,
-  SidebarOpen,
-  PanelLeft,
-  PanelRight,
-  PanelTop,
-  PanelBottom,
-  Layout,
-  LayoutGrid,
-  LayoutList,
-  LayoutTemplate,
-  LayoutDashboard,
-  Database,
   Server,
-  Network,
-  HardDrive,
-  Shield,
-  Lock,
-  Unlock,
-  Key,
-  Building,
-  CreditCard,
-  Truck,
-  Package,
-  Calendar,
-  Clock as ClockIcon,
-  Users,
-  User,
-  Activity,
-  Globe,
-  MapPin,
+  Gauge,
   AlertCircle,
   AlertOctagon,
-  Shield as ShieldIcon,
-  Cpu,
-  HardDrive as HardDriveIcon,
-  Wifi,
-  WifiOff,
-  Signal,
-  SignalHigh,
-  SignalMedium,
-  SignalLow,
-  Battery,
-  BatteryCharging,
-  BatteryFull,
-  BatteryLow,
-  BatteryMedium,
-  Power,
   PowerOff,
-  Zap as ZapIcon,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  PieChart,
-  LineChart,
-  Target,
-  Edit,
-  Trash2,
-  Plus as PlusIcon,
-  Minus as MinusIcon,
-  X,
-  Check,
-  Info as InfoIcon
+  Plus
 } from 'lucide-react';
 import {
   EnhancedCard,
@@ -202,14 +76,13 @@ interface IncidentReport {
 
 const SystemAlerts: React.FC = () => {
   console.log('🚨 SystemAlerts component is rendering!');
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
   const [alerts, setAlerts] = useState<SystemAlert[]>([]);
   const [systemHealth, setSystemHealth] = useState<SystemHealth[]>([]);
   const [incidents, setIncidents] = useState<IncidentReport[]>([]);
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Mock data
@@ -467,9 +340,9 @@ const SystemAlerts: React.FC = () => {
   const alertColumns = [
     {
       key: 'title',
-      title: 'Alert',
+      title: 'Title',
       sortable: true,
-      render: (value: string, row: SystemAlert) => (
+      render: (_: string, row: SystemAlert) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.title}
@@ -503,9 +376,9 @@ const SystemAlerts: React.FC = () => {
       key: 'category',
       title: 'Category',
       sortable: true,
-      render: (value: string) => (
+      render: (_: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {value}
+          Performance
         </div>
       )
     },
@@ -513,26 +386,36 @@ const SystemAlerts: React.FC = () => {
       key: 'source',
       title: 'Source',
       sortable: true,
-      render: (value: string) => (
+      render: (_: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {value}
+          web-server-01
         </div>
       )
     },
     {
       key: 'timestamp',
-      title: 'Time',
+      title: 'Timestamp',
       sortable: true,
-      render: (value: string) => (
+      render: (_: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {new Date(value).toLocaleTimeString()}
+          2024-01-15 14:30:00
+        </div>
+      )
+    },
+    {
+      key: 'assignedTo',
+      title: 'Assigned To',
+      sortable: true,
+      render: (_: any, row: SystemAlert) => (
+        <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+          {row.assignedTo || 'Unassigned'}
         </div>
       )
     },
     {
       key: 'actions',
       title: 'Actions',
-      render: (value: any, row: SystemAlert) => (
+      render: (_: any, __: SystemAlert) => (
         <div className="flex items-center space-x-2">
           <EnhancedButton
             variant="ghost"
@@ -560,7 +443,7 @@ const SystemAlerts: React.FC = () => {
       key: 'title',
       title: 'Incident',
       sortable: true,
-      render: (value: string, row: IncidentReport) => (
+      render: (_: string, row: IncidentReport) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.title}
@@ -587,9 +470,9 @@ const SystemAlerts: React.FC = () => {
       key: 'startTime',
       title: 'Start Time',
       sortable: true,
-      render: (value: string) => (
+      render: (_: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {new Date(value).toLocaleString()}
+          2024-01-15 14:25:00
         </div>
       )
     },
@@ -597,7 +480,7 @@ const SystemAlerts: React.FC = () => {
       key: 'duration',
       title: 'Duration',
       sortable: true,
-      render: (value: any, row: IncidentReport) => (
+      render: (_: any, row: IncidentReport) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
           {row.duration ? `${row.duration} min` : 'Ongoing'}
         </div>
@@ -607,9 +490,9 @@ const SystemAlerts: React.FC = () => {
       key: 'assignee',
       title: 'Assignee',
       sortable: true,
-      render: (value: string) => (
+      render: (_: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {value || 'Unassigned'}
+          Unassigned
         </div>
       )
     }
@@ -782,7 +665,7 @@ const SystemAlerts: React.FC = () => {
             <EnhancedButton
               variant="secondary"
               size="sm"
-              icon={<BarChart3 className="w-4 h-4" />}
+              icon={<Gauge className="w-4 h-4" />}
               mode={mode}
             >
               View Details
@@ -927,7 +810,7 @@ const SystemAlerts: React.FC = () => {
             <EnhancedButton
               variant="secondary"
               size="sm"
-              icon={<PlusIcon className="w-4 h-4" />}
+              icon={<Plus className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >

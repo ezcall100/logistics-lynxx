@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   CheckCircle, 
   Users, 
@@ -9,126 +9,20 @@ import {
   Cpu, 
   HardDrive, 
   Network, 
-  Server, 
   Database, 
-  Globe, 
-  Shield, 
   AlertTriangle, 
-  Clock, 
-  DollarSign, 
   BarChart3, 
-  PieChart, 
-  LineChart, 
-  Target, 
   RefreshCw, 
   Settings, 
   Bell, 
-  Eye, 
   Download,
   Upload,
   FileText,
   Mail,
-  Calendar,
-  MapPin,
-  Truck,
-  Package,
-  Building,
-  CreditCard,
-  Lock,
-  Unlock,
-  Key,
-  Star,
-  Heart,
-  ThumbsUp,
-  ThumbsDown,
-  AlertCircle,
-  Info,
-  HelpCircle,
-  ExternalLink,
-  Copy,
-  Share,
   Archive,
   RotateCcw,
-  Save,
-  Send,
-  MessageSquare,
-  Phone,
-  Video,
-  Camera,
-  Image,
-  File,
-  Folder,
-  FolderOpen,
-  Grid,
-  List,
-  Columns,
-  Maximize,
-  Minimize,
-  Move,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-  Type,
-  Bold,
-  Italic,
-  Underline,
-  Link,
-  Unlink,
-  Code,
-  Quote,
-  Hash,
-  AtSign,
-  Percent,
-  Minus,
-  Divide,
-  Plus,
-  Equal,
-  Infinity,
-  Pi,
-  Sigma,
-  Square,
-  Circle,
-  Triangle,
-  Hexagon,
-  Octagon,
-  Droplets,
-  Cloud,
-  CloudRain,
-  CloudSnow,
-  CloudLightning,
-  Sun,
-  Moon,
-  Sunrise,
-  Sunset,
-  Wind,
-  Thermometer,
-  Gauge,
-  Timer,
-  Stopwatch,
-  Navigation,
-  Compass,
-  Map,
-  Layers,
-  Grid3X3,
-  Rows,
-  Sidebar,
-  SidebarClose,
-  SidebarOpen,
-  PanelLeft,
-  PanelRight,
-  PanelTop,
-  PanelBottom,
-  Layout,
-  LayoutGrid,
-  LayoutList,
-  LayoutTemplate,
-  LayoutDashboard,
-  LayoutKanban,
-  LayoutSidebar,
-  LayoutSidebarReverse,
-  LayoutSplit,
-  LayoutSplitVertical,
-  LayoutSplitHorizontal
+  Info,
+  AlertCircle
 } from 'lucide-react';
 import { 
   EnhancedCard, 
@@ -169,9 +63,9 @@ interface SystemAlert {
 }
 
 const SystemOverview: React.FC = () => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [refreshing, setRefreshing] = useState(false);
-  const [systemMetrics, setSystemMetrics] = useState<SystemMetric[]>([
+  const [systemMetrics] = useState<SystemMetric[]>([
     {
       id: 'system-status',
       title: 'System Status',
@@ -248,45 +142,81 @@ const SystemOverview: React.FC = () => {
       change: -3.4,
       changeType: 'decrease',
       icon: <Database className="w-8 h-8" />,
-      color: 'text-teal-500',
+      color: 'text-pink-500',
       trend: 'down'
     }
   ]);
 
-  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetric[]>([
-    { name: 'Page Load Time', value: 1.2, target: 2.0, unit: 's', status: 'excellent' },
-    { name: 'API Response Time', value: 245, target: 500, unit: 'ms', status: 'excellent' },
-    { name: 'Database Query Time', value: 45, target: 100, unit: 'ms', status: 'excellent' },
-    { name: 'Cache Hit Rate', value: 92, target: 85, unit: '%', status: 'excellent' },
-    { name: 'Error Rate', value: 0.02, target: 0.1, unit: '%', status: 'excellent' },
-    { name: 'Throughput', value: 1250, target: 1000, unit: 'req/s', status: 'excellent' }
+  const [performanceMetrics] = useState<PerformanceMetric[]>([
+    {
+      name: 'Response Time',
+      value: 245,
+      target: 200,
+      unit: 'ms',
+      status: 'good'
+    },
+    {
+      name: 'Throughput',
+      value: 1250,
+      target: 1000,
+      unit: 'req/s',
+      status: 'excellent'
+    },
+    {
+      name: 'Error Rate',
+      value: 0.5,
+      target: 1.0,
+      unit: '%',
+      status: 'excellent'
+    },
+    {
+      name: 'CPU Usage',
+      value: 67,
+      target: 80,
+      unit: '%',
+      status: 'good'
+    },
+    {
+      name: 'Memory Usage',
+      value: 78,
+      target: 85,
+      unit: '%',
+      status: 'warning'
+    },
+    {
+      name: 'Disk I/O',
+      value: 45,
+      target: 60,
+      unit: 'MB/s',
+      status: 'excellent'
+    }
   ]);
 
-  const [systemAlerts, setSystemAlerts] = useState<SystemAlert[]>([
+  const [systemAlerts] = useState<SystemAlert[]>([
     {
       id: '1',
       type: 'info',
-      title: 'System Maintenance',
-      message: 'Scheduled maintenance completed successfully',
-      timestamp: '2024-01-15 14:30:00',
+      title: 'System Update Available',
+      message: 'A new system update is ready for installation',
+      timestamp: '2 hours ago',
       priority: 'low',
-      resolved: true
+      resolved: false
     },
     {
       id: '2',
       type: 'warning',
-      title: 'High CPU Usage',
-      message: 'CPU usage exceeded 80% threshold',
-      timestamp: '2024-01-15 13:45:00',
+      title: 'High CPU Usage Detected',
+      message: 'CPU usage has exceeded 80% for the last 10 minutes',
+      timestamp: '1 hour ago',
       priority: 'medium',
       resolved: false
     },
     {
       id: '3',
       type: 'success',
-      title: 'Backup Completed',
-      message: 'Daily backup completed successfully',
-      timestamp: '2024-01-15 12:00:00',
+      title: 'Backup Completed Successfully',
+      message: 'Daily backup completed without errors',
+      timestamp: '30 minutes ago',
       priority: 'low',
       resolved: true
     }

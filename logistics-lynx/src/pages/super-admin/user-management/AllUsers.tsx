@@ -106,7 +106,7 @@ import {
   EnhancedInput,
   stableStyles
 } from '../../../components/ui/EnhancedUIComponents';
-import { UserManagementFAB } from '../../../components/ui/FloatingActionButton';
+// Removed duplicate FAB import - using SuperAdmin's built-in FAB instead
 
 interface User {
   id: string;
@@ -830,8 +830,7 @@ const AllUsers: React.FC = () => {
                       </div>
                     </EnhancedModal>
 
-                    {/* Floating Action Button */}
-                    <UserManagementFAB mode={mode} />
+                    {/* Floating Action Button - Removed duplicate, using SuperAdmin's built-in FAB */}
                   </div>
                 </div>
               );

@@ -12,8 +12,8 @@ The Floating Action Button (FAB) system provides instant access to 20+ communica
 - **Category System**: Organized into 4 main categories with priority levels
 
 ### Technical Implementation
-- **Location**: `src/components/admin/FloatingActionButton.tsx`
-- **Integration**: Embedded in `SoftwareAdminPortal.tsx`
+- **Location**: `src/components/ui/FloatingActionButton.tsx` (unified FAB system)
+- **Integration**: Embedded in `SuperAdmin.tsx` component
 - **Dependencies**: Framer Motion, Lucide React icons, Tailwind CSS
 - **State Management**: React hooks for menu state, search, and category filtering
 

@@ -422,7 +422,7 @@ const DatabaseManagement: React.FC = () => {
                       <span className="font-semibold text-green-600">45ms</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Slow Queries (>1s)</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Slow Queries (&gt;1s)</span>
                       <span className="font-semibold text-yellow-600">12</span>
                     </div>
                     <div className="flex items-center justify-between">
