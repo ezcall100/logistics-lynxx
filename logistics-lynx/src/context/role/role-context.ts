@@ -60,6 +60,14 @@ export const ROLES: Record<UserRole, RoleInfo> = {
     icon: '👨‍💼',
     permissions: ['view_loads', 'update_status', 'check_in', 'upload_docs']
   },
+  carrier_driver: {
+    id: 'carrier_driver',
+    name: 'Carrier Driver',
+    description: 'Carrier driver operations',
+    color: 'yellow',
+    icon: '🚛',
+    permissions: ['view_assignments', 'update_status', 'check_in']
+  },
   owner_operator: {
     id: 'owner_operator',
     name: 'Owner Operator',
@@ -83,6 +91,14 @@ export const ROLES: Record<UserRole, RoleInfo> = {
     color: 'teal',
     icon: '📊',
     permissions: ['view_analytics', 'generate_reports', 'export_data', 'view_insights']
+  },
+  viewer: {
+    id: 'viewer',
+    name: 'Viewer',
+    description: 'Read-only access to assigned areas',
+    color: 'gray',
+    icon: '👁️',
+    permissions: ['view_content', 'view_reports']
   }
 };
 

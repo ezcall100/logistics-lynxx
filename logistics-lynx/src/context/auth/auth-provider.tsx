@@ -22,7 +22,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     updateSelectedRole
   } = useAuthContext();
 
-  const { getMenuForRole } = useMenuData();
+  const menuItems = useMenuData(user?.role || 'viewer');
 
   const contextValue: AuthContextType = {
     user,
@@ -39,7 +39,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     setSelectedRole: updateSelectedRole,
     switchRole: updateSelectedRole,
     availableRoles,
-    getMenuForRole: (role?: UserRole) => getMenuForRole(role || selectedRole),
+    getMenuForRole: (role?: UserRole) => useMenuData(role || selectedRole),
   };
 
   return (

@@ -1,34 +1,32 @@
 export interface Alert {
   id: string;
-  type: 'info' | 'warning' | 'error' | 'success';
   title: string;
-  message: string;
+  description: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  status: 'active' | 'acknowledged' | 'resolved';
+  status: 'active' | 'resolved' | 'acknowledged';
+  category: string;
   created_at: string;
   updated_at: string;
-  acknowledged_at?: string;
-  resolved_at?: string;
-  acknowledged_by?: string;
-  resolved_by?: string;
   source: string;
   metadata?: Record<string, any>;
 }
 
 export interface AlertFilters {
-  type?: string;
-  severity?: string;
-  status?: string;
-  source?: string;
-  date_from?: string;
-  date_to?: string;
+  severity?: string[];
+  status?: string[];
+  category?: string[];
+  dateRange?: {
+    start: string;
+    end: string;
+  };
+  source?: string[];
 }
 
 export interface AlertStats {
   total: number;
   active: number;
-  acknowledged: number;
   resolved: number;
-  by_type: Record<string, number>;
-  by_severity: Record<string, number>;
+  acknowledged: number;
+  bySeverity: Record<string, number>;
+  byCategory: Record<string, number>;
 }

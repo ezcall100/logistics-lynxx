@@ -79,3 +79,92 @@ export const subscribeToKPIMetrics = (callback: (data: any) => void) => {
     return { data: null, error };
   }
 };
+
+export const getKpis = async (role: string) => {
+  return {
+    totalUsers: 1250,
+    activeUsers: 890,
+    totalRevenue: 1250000,
+    monthlyGrowth: 12.5,
+    systemLoad: 65,
+    memoryUsage: 78,
+    diskUsage: 45,
+    networkTraffic: 234
+  };
+};
+
+export const getPerformanceData = async (range: string, metric: string) => {
+  return {
+    id: '1',
+    metric: metric,
+    value: 85,
+    unit: 'percentage',
+    timestamp: new Date().toISOString(),
+    threshold: 90,
+    status: 'normal' as const
+  };
+};
+
+export const getActivityData = async (limit: number) => {
+  return [
+    {
+      id: '1',
+      type: 'user_login',
+      description: 'User logged in',
+      timestamp: new Date().toISOString(),
+      user: 'john.doe@example.com',
+      status: 'completed' as const
+    }
+  ];
+};
+
+export const getSystemHealth = async () => {
+  return {
+    cpu: 65,
+    memory: 78,
+    disk: 45,
+    network: 23,
+    status: 'healthy' as const,
+    lastUpdated: new Date().toISOString()
+  };
+};
+
+export const getPortals = async () => {
+  return [
+    {
+      id: '1',
+      name: 'Main Portal',
+      status: 'active' as const,
+      users: 1250,
+      lastActivity: new Date().toISOString()
+    }
+  ];
+};
+
+export const subscribeToKpis = (callback: (data: any) => void) => {
+  // Mock subscription
+  const interval = setInterval(() => {
+    callback({
+      totalUsers: 1250 + Math.floor(Math.random() * 10),
+      activeUsers: 890 + Math.floor(Math.random() * 5)
+    });
+  }, 5000);
+  
+  return () => clearInterval(interval);
+};
+
+export const subscribeToActivities = (callback: (data: any) => void) => {
+  // Mock subscription
+  const interval = setInterval(() => {
+    callback({
+      id: Date.now().toString(),
+      type: 'system_event',
+      description: 'System health check',
+      timestamp: new Date().toISOString(),
+      user: 'system',
+      status: 'completed'
+    });
+  }, 10000);
+  
+  return () => clearInterval(interval);
+};

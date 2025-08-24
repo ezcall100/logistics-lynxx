@@ -39,34 +39,18 @@ export default function RoleProvider({
     }>> = {
       super_admin: [
         {
-          id: 'create-user',
-          label: 'Create User',
-          icon: '👤',
-          action: 'create_user',
-          description: 'Create new user account'
-        },
-        {
           id: 'system-overview',
           label: 'System Overview',
           icon: '📊',
-          action: 'system_overview',
-          description: 'View system overview'
+          action: 'view_system_overview',
+          description: 'View system-wide metrics and status'
         },
         {
-          id: 'security-settings',
-          label: 'Security Settings',
-          icon: '🔒',
-          action: 'security_settings',
-          description: 'Configure security'
-        }
-      ],
-      admin: [
-        {
-          id: 'manage-users',
-          label: 'Manage Users',
+          id: 'user-management',
+          label: 'User Management',
           icon: '👥',
           action: 'manage_users',
-          description: 'Manage system users'
+          description: 'Manage all system users'
         },
         {
           id: 'system-settings',
@@ -74,68 +58,84 @@ export default function RoleProvider({
           icon: '⚙️',
           action: 'system_settings',
           description: 'Configure system settings'
+        }
+      ],
+      admin: [
+        {
+          id: 'user-management',
+          label: 'User Management',
+          icon: '👥',
+          action: 'manage_users',
+          description: 'Manage system users'
         },
         {
-          id: 'view-logs',
-          label: 'View Logs',
+          id: 'system-logs',
+          label: 'System Logs',
           icon: '📋',
           action: 'view_logs',
-          description: 'Access system logs'
+          description: 'View system activity logs'
+        },
+        {
+          id: 'portal-management',
+          label: 'Portal Management',
+          icon: '🌐',
+          action: 'manage_portals',
+          description: 'Manage system portals'
         }
       ],
       freight_broker_admin: [
         {
-          id: 'create-load',
-          label: 'Create Load',
-          icon: '➕',
-          action: 'create_load',
-          description: 'Create a new freight load'
+          id: 'load-management',
+          label: 'Load Management',
+          icon: '📦',
+          action: 'manage_loads',
+          description: 'Manage freight loads'
         },
         {
-          id: 'find-carriers',
-          label: 'Find Carriers',
-          icon: '🔍',
-          action: 'find_carriers',
-          description: 'Search available carriers'
+          id: 'carrier-management',
+          label: 'Carrier Management',
+          icon: '🚛',
+          action: 'manage_carriers',
+          description: 'Manage carrier relationships'
         },
         {
-          id: 'view-reports',
-          label: 'View Reports',
-          icon: '📊',
-          action: 'view_reports',
-          description: 'Access brokerage reports'
+          id: 'quote-creation',
+          label: 'Create Quotes',
+          icon: '💰',
+          action: 'create_quotes',
+          description: 'Create shipping quotes'
         }
       ],
       carrier_admin: [
         {
-          id: 'manage-fleet',
-          label: 'Manage Fleet',
+          id: 'fleet-management',
+          label: 'Fleet Management',
           icon: '🚛',
           action: 'manage_fleet',
-          description: 'Manage vehicle fleet'
-        },
-        {
-          id: 'dispatch-loads',
-          label: 'Dispatch Loads',
-          icon: '📦',
-          action: 'dispatch_loads',
-          description: 'Dispatch loads to drivers'
+          description: 'Manage fleet operations'
         },
         {
           id: 'driver-management',
           label: 'Driver Management',
           icon: '👨‍💼',
-          action: 'driver_management',
-          description: 'Manage driver accounts'
+          action: 'manage_drivers',
+          description: 'Manage driver assignments'
+        },
+        {
+          id: 'dispatch-loads',
+          label: 'Dispatch Loads',
+          icon: '📋',
+          action: 'dispatch_loads',
+          description: 'Dispatch loads to drivers'
         }
       ],
       shipper_admin: [
         {
-          id: 'create-shipment',
-          label: 'Create Shipment',
+          id: 'create-shipments',
+          label: 'Create Shipments',
           icon: '📦',
-          action: 'create_shipment',
-          description: 'Create new shipment'
+          action: 'create_shipments',
+          description: 'Create new shipments'
         },
         {
           id: 'track-shipments',
@@ -150,6 +150,29 @@ export default function RoleProvider({
           icon: '💰',
           action: 'manage_quotes',
           description: 'Manage shipping quotes'
+        }
+      ],
+      carrier_driver: [
+        {
+          id: 'view-assignments',
+          label: 'View Assignments',
+          icon: '📋',
+          action: 'view_assignments',
+          description: 'View assigned loads'
+        },
+        {
+          id: 'update-status',
+          label: 'Update Status',
+          icon: '✅',
+          action: 'update_status',
+          description: 'Update load status'
+        },
+        {
+          id: 'check-in',
+          label: 'Check In',
+          icon: '📍',
+          action: 'check_in',
+          description: 'Check in at location'
         }
       ],
       driver: [
@@ -242,6 +265,22 @@ export default function RoleProvider({
           icon: '📤',
           action: 'export_data',
           description: 'Export analytics data'
+        }
+      ],
+      viewer: [
+        {
+          id: 'view-content',
+          label: 'View Content',
+          icon: '👁️',
+          action: 'view_content',
+          description: 'View assigned content'
+        },
+        {
+          id: 'view-reports',
+          label: 'View Reports',
+          icon: '📊',
+          action: 'view_reports',
+          description: 'View available reports'
         }
       ]
     };

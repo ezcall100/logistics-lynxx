@@ -7,7 +7,9 @@ export type UserRole =
   | 'freight_broker_admin'
   | 'shipper_admin'
   | 'carrier_driver'
-  | 'owner_operator';
+  | 'owner_operator'
+  | 'driver'
+  | 'factoring_admin';
 
 export interface ExtendedUser {
   id: string;
@@ -16,6 +18,17 @@ export interface ExtendedUser {
   role: UserRole;
   avatar_url?: string;
   created_at: string;
+  updated_at?: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  company?: string;
+  location?: {
+    city: string;
+    state: string;
+    country: string;
+  };
+  status?: 'active' | 'inactive' | 'pending' | 'suspended';
   last_sign_in_at?: string;
 }
 

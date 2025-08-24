@@ -1,27 +1,46 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useState, useEffect } from 'react';
+import { TestingTask } from '@/types/testing';
 import { useTestingTasks } from './testing/useTestingTasks';
-import { useTestingSession } from './testing/useTestingSession';
-import { useTaskCompletion } from './testing/useTaskCompletion';
-import { useFeedbackSubmission } from './testing/useFeedbackSubmission';
-import { usePerformanceMetrics } from './testing/usePerformanceMetrics';
 
 export const useUserTesting = () => {
-  const { testingTasks } = useTestingTasks();
-  const { currentSession, isRecording, startTestingSession, endTestingSession, setCurrentSession } = useTestingSession();
-  const { completeTask } = useTaskCompletion(currentSession, setCurrentSession);
-  const { submitFeedback } = useFeedbackSubmission(currentSession, setCurrentSession);
-  const { recordPerformanceMetric } = usePerformanceMetrics(currentSession, setCurrentSession);
+  const { tasks } = useTestingTasks();
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [isTesting, setIsTesting] = useState(false);
+
+  const startTesting = () => {
+    setIsTesting(true);
+    setCurrentTaskIndex(0);
+  };
+
+  const completeCurrentTask = () => {
+    if (currentTaskIndex < tasks.length - 1) {
+      setCurrentTaskIndex(prev => prev + 1);
+    } else {
+      setIsTesting(false);
+    }
+  };
+
+  const getCurrentTask = (): TestingTask | null => {
+    return tasks[currentTaskIndex] || null;
+  };
+
+  const getProgress = () => {
+    return {
+      current: currentTaskIndex + 1,
+      total: tasks.length,
+      percentage: ((currentTaskIndex + 1) / tasks.length) * 100
+    };
+  };
 
   return {
-    currentSession,
-    isRecording,
-    testingTasks,
-    startTestingSession,
-    endTestingSession,
-    completeTask,
-    submitFeedback,
-    recordPerformanceMetric
+    tasks,
+    currentTask: getCurrentTask(),
+    isTesting,
+    progress: getProgress(),
+    startTesting,
+    completeCurrentTask
   };
 };
 

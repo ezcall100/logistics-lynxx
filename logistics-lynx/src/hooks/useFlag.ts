@@ -1,12 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useQuery } from "@tanstack/react-query";
-import { resolveFlag } from "@/lib/flags";
+import { useState, useEffect } from 'react';
+import { getFeatureFlag } from "@/lib/flags";
 
-export function useFlag(companyId: string, env: string, key: string, def = false) {
-  const { data, isLoading } = useQuery({
-    queryKey: ["flag", companyId, env, key],
-    queryFn: () => resolveFlag(companyId, env, key),
-    staleTime: 10_000,
-  });
-  return { value: data?.value ?? def, loading: isLoading, resolved: data };
-}
+export const useFlag = (companyId: string, env: string, key: string, defaultValue: boolean = false) => {
+  const [value, setValue] = useState<boolean>(defaultValue);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFlag = async () => {
+      try {
+        const flagValue = await getFeatureFlag(companyId, env, key, defaultValue);
+        setValue(flagValue);
+      } catch (error) {
+        console.error('Error fetching feature flag:', error);
+        setValue(defaultValue);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFlag();
+  }, [companyId, env, key, defaultValue]);
+
+  return { value, loading };
+};

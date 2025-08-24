@@ -30,3 +30,48 @@ export interface KPIMetrics {
   trend: 'up' | 'down' | 'stable';
   timestamp: string;
 }
+
+export interface KpiData {
+  id: string;
+  name: string;
+  value: number;
+  change: number;
+  trend: 'up' | 'down' | 'stable';
+  timestamp: string;
+}
+
+export interface PerformanceData {
+  id: string;
+  metric: string;
+  value: number;
+  unit: string;
+  timestamp: string;
+  threshold: number;
+  status: 'normal' | 'warning' | 'critical';
+}
+
+export interface ActivityItem {
+  id: string;
+  type: string;
+  description: string;
+  timestamp: string;
+  user: string;
+  status: 'completed' | 'pending' | 'failed';
+}
+
+export interface SystemHealth {
+  cpu: number;
+  memory: number;
+  disk: number;
+  network: number;
+  status: 'healthy' | 'warning' | 'critical';
+  lastUpdated: string;
+}
+
+export interface PortalData {
+  id: string;
+  name: string;
+  status: 'active' | 'inactive' | 'maintenance';
+  users: number;
+  lastActivity: string;
+}

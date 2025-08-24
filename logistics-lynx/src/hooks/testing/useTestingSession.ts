@@ -8,28 +8,42 @@ export const useTestingSession = () => {
   const [currentSession, setCurrentSession] = useState<TestingSession | null>(null);
   const [isRecording, setIsRecording] = useState(false);
 
-  const startTestingSession = async (userId: string, userRole: string) => {
+  const createSession = async (userId: string, userRole: string) => {
     const session: TestingSession = {
-      id: `session-${Date.now()}`,
+      id: Date.now().toString(),
+      user_id: userId,
       userId,
       userRole,
       sessionStart: new Date().toISOString(),
       completedTasks: [],
       feedback: [],
-      performanceMetrics: []
+      performanceMetrics: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      status: 'active'
     };
 
     setCurrentSession(session);
-    setIsRecording(true);
+    return session;
+  };
 
-    // Log session start
-    await supabase.from('user_analytics').insert({
+  const startTestingSession = async (userId: string, userRole: string) => {
+    const session: TestingSession = {
+      id: Date.now().toString(),
       user_id: userId,
-      session_id: session.id,
-      event_type: 'testing_session_start',
-      event_data: { testing_framework: true },
-      user_role: userRole
-    });
+      userId,
+      userRole,
+      sessionStart: new Date().toISOString(),
+      completedTasks: [],
+      feedback: [],
+      performanceMetrics: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      status: 'active'
+    };
+
+    setCurrentSession(session);
+    return session;
   };
 
   const endTestingSession = async () => {

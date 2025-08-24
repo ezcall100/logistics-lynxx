@@ -50,7 +50,16 @@ export const useAuthContext = () => {
               id: currentSession.user.id,
               name: currentSession.user.email?.split('@')[0] || 'User',
               email: currentSession.user.email || '',
-              role: 'super_admin'
+              role: 'super_admin',
+              created_at: currentSession.user.created_at || new Date().toISOString(),
+              updated_at: currentSession.user.updated_at || new Date().toISOString(),
+              first_name: currentSession.user.user_metadata?.first_name || 'User',
+              last_name: currentSession.user.user_metadata?.last_name || 'User',
+              avatar_url: currentSession.user.user_metadata?.avatar_url,
+              phone: currentSession.user.user_metadata?.phone,
+              company: currentSession.user.user_metadata?.company,
+              location: currentSession.user.user_metadata?.location,
+              status: 'active'
             };
             setUser(extendedUser);
           }
@@ -78,7 +87,16 @@ export const useAuthContext = () => {
               id: newSession.user.id,
               name: newSession.user.email?.split('@')[0] || 'User',
               email: newSession.user.email || '',
-              role: 'super_admin'
+              role: 'super_admin',
+              created_at: newSession.user.created_at || new Date().toISOString(),
+              updated_at: newSession.user.updated_at || new Date().toISOString(),
+              first_name: newSession.user.user_metadata?.first_name || 'User',
+              last_name: newSession.user.user_metadata?.last_name || 'User',
+              avatar_url: newSession.user.user_metadata?.avatar_url,
+              phone: newSession.user.user_metadata?.phone,
+              company: newSession.user.user_metadata?.company,
+              location: newSession.user.user_metadata?.location,
+              status: 'active'
             };
             setUser(extendedUser);
           } else {

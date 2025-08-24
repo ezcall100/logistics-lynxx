@@ -1,10 +1,12 @@
 import { ReactNode } from 'react';
 
 export interface MenuItem {
+  id: string;
   label: string;
-  icon?: ReactNode;
-  path?: string;
-  submenus?: MenuItem[];
+  path: string;
+  icon?: string;
+  children?: MenuItem[];
   disabled?: boolean;
-  badge?: string | number;
+  badge?: string;
+  badgeColor?: string;
 }
