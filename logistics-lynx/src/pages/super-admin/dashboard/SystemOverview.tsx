@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   Users, 
@@ -16,6 +16,7 @@ import {
   Wifi,
   RefreshCw
 } from 'lucide-react';
+import { getSystemMetrics, getUserAnalytics } from '../../../api/dashboard';
 
 // 🌟 Innovative Design System Components
 const InnovativeCard = ({ children, className = "", hover = true, glass = false, elevated = false, premium = false, animated = false, mode = "light", ...props }: any) => {
@@ -86,10 +87,43 @@ interface SystemOverviewProps {}
 
 const SystemOverview: React.FC<SystemOverviewProps> = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [systemMetrics, setSystemMetrics] = useState<any>(null);
+  const [userAnalytics, setUserAnalytics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const mode = darkMode ? "dark" : "light";
 
-  // Mock data for now
-  const systemMetrics = {
+  const fetchData = async () => {
+    setLoading(true);
+    console.log('🔄 Fetching API data...');
+    try {
+      const [metricsResult, analyticsResult] = await Promise.all([
+        getSystemMetrics(),
+        getUserAnalytics()
+      ]);
+      
+      console.log('📊 API Response - Metrics:', metricsResult);
+      console.log('📈 API Response - Analytics:', analyticsResult);
+      
+      if (metricsResult.data) {
+        setSystemMetrics(metricsResult.data);
+      }
+      
+      if (analyticsResult.data) {
+        setUserAnalytics(analyticsResult.data);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Fallback data if API fails
+  const fallbackMetrics = {
     revenue: 125000,
     activeUsers: 156,
     securityScore: 94
@@ -153,7 +187,12 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
               Real-time system metrics and performance monitoring
             </p>
           </div>
-          <InnovativeButton variant="outline" mode={mode}>
+          <InnovativeButton 
+            variant="outline" 
+            mode={mode}
+            onClick={fetchData}
+            loading={loading}
+          >
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </InnovativeButton>
@@ -166,7 +205,9 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Total Revenue</p>
-              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{formatCurrency(systemMetrics.revenue)}</p>
+                              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>
+                  {loading ? 'Loading...' : formatCurrency(systemMetrics?.totalRevenue || fallbackMetrics.revenue)}
+                </p>
             </div>
             <div className="p-3 bg-gradient-to-r from-emerald-100 to-green-100 rounded-xl">
               <DollarSign className="h-6 w-6 text-emerald-600" />
@@ -183,7 +224,9 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Active Users</p>
-              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{formatNumber(systemMetrics.activeUsers)}</p>
+                              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>
+                  {loading ? 'Loading...' : formatNumber(systemMetrics?.activeUsers || fallbackMetrics.activeUsers)}
+                </p>
             </div>
             <div className="p-3 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl">
               <Users className="h-6 w-6 text-blue-600" />
@@ -200,7 +243,9 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Security Score</p>
-              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>{systemMetrics.securityScore}/100</p>
+                              <p className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>
+                  {loading ? 'Loading...' : (systemMetrics?.securityScore || fallbackMetrics.securityScore)}/100
+                </p>
             </div>
             <div className="p-3 bg-gradient-to-r from-cyan-100 to-indigo-100 rounded-xl">
               <Shield className="h-6 w-6 text-cyan-600" />
