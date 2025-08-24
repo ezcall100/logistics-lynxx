@@ -809,36 +809,8 @@ const SuperAdmin: React.FC = () => {
                 </div>
               } />
 
-              {/* Other Routes */}
-              <Route path="/*" element={
-                <div className="space-y-8">
-                  <div className="space-y-3">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Module Under Development</h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400">
-                      This module is currently being developed as part of the enterprise implementation.
-                    </p>
-                  </div>
-                  
-                  <Card>
-                    <CardContent className="p-12">
-                      <div className="text-center space-y-6">
-                        <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-                          <Code className="h-10 w-10 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Development in Progress</h3>
-                          <p className="text-gray-600 dark:text-gray-400 mt-2 max-w-md mx-auto">
-                            This feature is being built with enterprise-grade standards and will be available soon.
-                          </p>
-                        </div>
-                        <Button onClick={() => navigate('/super-admin')}>
-                          Back to Dashboard
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              } />
+              {/* All Other Routes - Use SuperAdminRoutes */}
+              <Route path="/*" element={<SuperAdminRoutes />} />
             </Routes>
           </main>
         </div>
