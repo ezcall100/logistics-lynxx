@@ -1,289 +1,161 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 // Dashboard Pages
 import SystemOverview from './dashboard/SystemOverview';
-import ActiveUsers from './dashboard/ActiveUsers';
-import RevenueMetrics from './dashboard/RevenueMetrics';
-import SystemAlerts from './dashboard/SystemAlerts';
 
-// User Management Pages
-import AllUsers from './user-management/AllUsers';
-import UserRoles from './user-management/UserRoles';
-import UserGroups from './user-management/UserGroups';
-import AccessControl from './user-management/AccessControl';
-import UserAnalytics from './user-management/UserAnalytics';
-import BillingManagement from './user-management/BillingManagement';
-import SupportTickets from './user-management/SupportTickets';
-import UserOnboarding from './user-management/UserOnboarding';
-
-// System Administration Pages
-import DatabaseManagement from './system-administration/DatabaseManagement';
-import APIManagement from './system-administration/APIManagement';
-import ServerMonitoring from './system-administration/ServerMonitoring';
-import DeploymentManagement from './system-administration/DeploymentManagement';
-import Configuration from './system-administration/Configuration';
-import BackupRecovery from './system-administration/BackupRecovery';
-import SecuritySettings from './system-administration/SecuritySettings';
-import IntegrationHub from './system-administration/IntegrationHub';
-import FileStorage from './system-administration/FileStorage';
-import EmailServices from './system-administration/EmailServices';
-
-// Security Center Pages
-import SecurityAudit from './security-center/SecurityAudit';
-import AccessLogs from './security-center/AccessLogs';
-import DataProtection from './security-center/DataProtection';
-import APISecurity from './security-center/APISecurity';
-import UserPermissions from './security-center/UserPermissions';
-import SecurityPolicies from './security-center/SecurityPolicies';
-import IncidentResponse from './security-center/IncidentResponse';
-import ComplianceManagement from './security-center/ComplianceManagement';
-
-// System Monitoring Pages
-import PerformanceMonitoring from './system-monitoring/PerformanceMonitoring';
-import ErrorTracking from './system-monitoring/ErrorTracking';
-import LogAnalysis from './system-monitoring/LogAnalysis';
-import AlertManagement from './system-monitoring/AlertManagement';
-import UptimeMonitoring from './system-monitoring/UptimeMonitoring';
-import ResourceUsage from './system-monitoring/ResourceUsage';
-import NetworkMonitoring from './system-monitoring/NetworkMonitoring';
-import HealthChecks from './system-monitoring/HealthChecks';
-
-// Portal Management Pages
-import PortalOverview from './portal-management/PortalOverview';
-import PortalConfiguration from './portal-management/PortalConfiguration';
-import PortalUsers from './portal-management/PortalUsers';
-import FeatureManagement from './portal-management/FeatureManagement';
-import PortalAnalytics from './portal-management/PortalAnalytics';
-import PortalBilling from './portal-management/PortalBilling';
-import PortalSupport from './portal-management/PortalSupport';
-import PortalIntegrations from './portal-management/PortalIntegrations';
-import PortalBackup from './portal-management/PortalBackup';
-import PortalSecurity from './portal-management/PortalSecurity';
-import PortalCompliance from './portal-management/PortalCompliance';
-import PortalDeployment from './portal-management/PortalDeployment';
-
-// Analytics & Reports Pages
-import BusinessAnalytics from './analytics-reports/BusinessAnalytics';
-import UserAnalyticsReports from './analytics-reports/UserAnalytics';
-import PerformanceReports from './analytics-reports/PerformanceReports';
-import SecurityReports from './analytics-reports/SecurityReports';
-import FinancialReports from './analytics-reports/FinancialReports';
-import OperationalReports from './analytics-reports/OperationalReports';
-import CustomReports from './analytics-reports/CustomReports';
-import DataExport from './analytics-reports/DataExport';
-import DashboardBuilder from './analytics-reports/DashboardBuilder';
-import ScheduledReports from './analytics-reports/ScheduledReports';
-
-// MCP Control Center Pages
-import MCPOverview from './mcp-control-center/MCPOverview';
-import AgentManagement from './mcp-control-center/AgentManagement';
-import AIModels from './mcp-control-center/AIModels';
-import DataPipeline from './mcp-control-center/DataPipeline';
-import MachineLearning from './mcp-control-center/MachineLearning';
-import AIAnalytics from './mcp-control-center/AIAnalytics';
-import AutomationRules from './mcp-control-center/AutomationRules';
-import AIIntegrations from './mcp-control-center/AIIntegrations';
-import AIMonitoring from './mcp-control-center/AIMonitoring';
-import AICompliance from './mcp-control-center/AICompliance';
-import AIDocumentation from './mcp-control-center/AIDocumentation';
-import AISupport from './mcp-control-center/AISupport';
-
-// Business Operations Pages
-import CustomerManagement from './business-operations/CustomerManagement';
-import SalesPipeline from './business-operations/SalesPipeline';
-import BillingInvoicing from './business-operations/BillingInvoicing';
-import SupportManagement from './business-operations/SupportManagement';
-import Documentation from './business-operations/Documentation';
-import MarketingTools from './business-operations/MarketingTools';
-import PartnerManagement from './business-operations/PartnerManagement';
-import LegalCompliance from './business-operations/LegalCompliance';
-
-// Settings Pages
-import SettingsOverview from './settings/SettingsOverview';
-import ProfileSettings from './settings/ProfileSettings';
-import SystemSettings from './settings/SystemSettings';
-import UserPreferences from './settings/UserPreferences';
-
-// Security Dashboard
-import SecurityDashboard from '@/components/SecurityDashboard';
-
-// Invite Management
-import InviteManagement from './invites/InviteManagement';
-
-// Development & DevOps Pages
-import CodeRepository from './development-devops/CodeRepository';
-import CICDPipeline from './development-devops/CICDPipeline';
-import TestingSuite from './development-devops/TestingSuite';
-import EnvironmentManagement from './development-devops/EnvironmentManagement';
-import PerformanceTesting from './development-devops/PerformanceTesting';
-import SecurityTesting from './development-devops/SecurityTesting';
-import DevDocumentation from './development-devops/DevDocumentation';
-import ReleaseManagement from './development-devops/ReleaseManagement';
+// Simple placeholder components for other pages
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div className="min-h-screen bg-gray-50 p-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="bg-white rounded-lg shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+          {title}
+        </h1>
+        <p className="text-lg text-gray-600 mb-4">
+          This page is under development. Coming soon!
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <h3 className="text-lg font-semibold text-blue-900 mb-2">Feature 1</h3>
+            <p className="text-blue-700">Advanced functionality coming soon</p>
+          </div>
+          <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+            <h3 className="text-lg font-semibold text-green-900 mb-2">Feature 2</h3>
+            <p className="text-green-700">Enhanced capabilities in development</p>
+          </div>
+          <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+            <h3 className="text-lg font-semibold text-purple-900 mb-2">Feature 3</h3>
+            <p className="text-purple-700">AI-powered features coming soon</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const SuperAdminRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Dashboard Routes */}
-      <Route path="/super-admin/dashboard" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <SystemOverview />
-        </ProtectedRoute>
-      } />
-      <Route path="/super-admin/dashboard/users" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <ActiveUsers />
-        </ProtectedRoute>
-      } />
-      <Route path="/super-admin/dashboard/revenue" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <RevenueMetrics />
-        </ProtectedRoute>
-      } />
-      <Route path="/super-admin/dashboard/alerts" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <SystemAlerts />
-        </ProtectedRoute>
-      } />
+      <Route path="/super-admin/dashboard" element={<SystemOverview />} />
+      <Route path="/super-admin/dashboard/users" element={<PlaceholderPage title="Active Users" />} />
+      <Route path="/super-admin/dashboard/revenue" element={<PlaceholderPage title="Revenue Metrics" />} />
+      <Route path="/super-admin/dashboard/alerts" element={<PlaceholderPage title="System Alerts" />} />
 
       {/* User Management Routes */}
-      <Route path="/super-admin/users" element={<AllUsers />} />
-      <Route path="/super-admin/users/roles" element={<UserRoles />} />
-      <Route path="/super-admin/users/groups" element={<UserGroups />} />
-      <Route path="/super-admin/users/access" element={<AccessControl />} />
-      <Route path="/super-admin/users/analytics" element={<UserAnalytics />} />
-      <Route path="/super-admin/users/billing" element={<BillingManagement />} />
-      <Route path="/super-admin/users/support" element={<SupportTickets />} />
-      <Route path="/super-admin/users/onboarding" element={<UserOnboarding />} />
+      <Route path="/super-admin/users" element={<PlaceholderPage title="All Users" />} />
+      <Route path="/super-admin/users/roles" element={<PlaceholderPage title="User Roles" />} />
+      <Route path="/super-admin/users/groups" element={<PlaceholderPage title="User Groups" />} />
+      <Route path="/super-admin/users/access" element={<PlaceholderPage title="Access Control" />} />
+      <Route path="/super-admin/users/analytics" element={<PlaceholderPage title="User Analytics" />} />
+      <Route path="/super-admin/users/billing" element={<PlaceholderPage title="Billing Management" />} />
+      <Route path="/super-admin/users/support" element={<PlaceholderPage title="Support Tickets" />} />
+      <Route path="/super-admin/users/onboarding" element={<PlaceholderPage title="User Onboarding" />} />
 
       {/* System Administration Routes */}
-      <Route path="/super-admin/system/database" element={<DatabaseManagement />} />
-      <Route path="/super-admin/system/api" element={<APIManagement />} />
-      <Route path="/super-admin/system/monitoring" element={<ServerMonitoring />} />
-      <Route path="/super-admin/system/deployment" element={<DeploymentManagement />} />
-      <Route path="/super-admin/system/config" element={<Configuration />} />
-      <Route path="/super-admin/system/backup" element={<BackupRecovery />} />
-      <Route path="/super-admin/system/security" element={<SecuritySettings />} />
-      <Route path="/super-admin/system/integrations" element={<IntegrationHub />} />
-      <Route path="/super-admin/system/storage" element={<FileStorage />} />
-      <Route path="/super-admin/system/email" element={<EmailServices />} />
+      <Route path="/super-admin/system/database" element={<PlaceholderPage title="Database Management" />} />
+      <Route path="/super-admin/system/api" element={<PlaceholderPage title="API Management" />} />
+      <Route path="/super-admin/system/monitoring" element={<PlaceholderPage title="Server Monitoring" />} />
+      <Route path="/super-admin/system/deployment" element={<PlaceholderPage title="Deployment Management" />} />
+      <Route path="/super-admin/system/config" element={<PlaceholderPage title="Configuration" />} />
+      <Route path="/super-admin/system/backup" element={<PlaceholderPage title="Backup Recovery" />} />
+      <Route path="/super-admin/system/security" element={<PlaceholderPage title="Security Settings" />} />
+      <Route path="/super-admin/system/integrations" element={<PlaceholderPage title="Integration Hub" />} />
+      <Route path="/super-admin/system/storage" element={<PlaceholderPage title="File Storage" />} />
+      <Route path="/super-admin/system/email" element={<PlaceholderPage title="Email Services" />} />
 
       {/* Security Center Routes */}
-      <Route path="/super-admin/security/audit" element={<SecurityAudit />} />
-      <Route path="/super-admin/security/logs" element={<AccessLogs />} />
-      <Route path="/super-admin/security/protection" element={<DataProtection />} />
-      <Route path="/super-admin/security/api" element={<APISecurity />} />
-      <Route path="/super-admin/security/permissions" element={<UserPermissions />} />
-      <Route path="/super-admin/security/policies" element={<SecurityPolicies />} />
-      <Route path="/super-admin/security/incidents" element={<IncidentResponse />} />
-      <Route path="/super-admin/security/compliance" element={<ComplianceManagement />} />
+      <Route path="/super-admin/security/audit" element={<PlaceholderPage title="Security Audit" />} />
+      <Route path="/super-admin/security/logs" element={<PlaceholderPage title="Access Logs" />} />
+      <Route path="/super-admin/security/protection" element={<PlaceholderPage title="Data Protection" />} />
+      <Route path="/super-admin/security/api" element={<PlaceholderPage title="API Security" />} />
+      <Route path="/super-admin/security/permissions" element={<PlaceholderPage title="User Permissions" />} />
+      <Route path="/super-admin/security/policies" element={<PlaceholderPage title="Security Policies" />} />
+      <Route path="/super-admin/security/incidents" element={<PlaceholderPage title="Incident Response" />} />
+      <Route path="/super-admin/security/compliance" element={<PlaceholderPage title="Compliance Management" />} />
 
       {/* System Monitoring Routes */}
-      <Route path="/super-admin/monitoring/performance" element={<PerformanceMonitoring />} />
-      <Route path="/super-admin/monitoring/errors" element={<ErrorTracking />} />
-      <Route path="/super-admin/monitoring/logs" element={<LogAnalysis />} />
-      <Route path="/super-admin/monitoring/alerts" element={<AlertManagement />} />
-      <Route path="/super-admin/monitoring/uptime" element={<UptimeMonitoring />} />
-      <Route path="/super-admin/monitoring/resources" element={<ResourceUsage />} />
-      <Route path="/super-admin/monitoring/network" element={<NetworkMonitoring />} />
-      <Route path="/super-admin/monitoring/health" element={<HealthChecks />} />
+      <Route path="/super-admin/monitoring/performance" element={<PlaceholderPage title="Performance Monitoring" />} />
+      <Route path="/super-admin/monitoring/errors" element={<PlaceholderPage title="Error Tracking" />} />
+      <Route path="/super-admin/monitoring/logs" element={<PlaceholderPage title="Log Analysis" />} />
+      <Route path="/super-admin/monitoring/alerts" element={<PlaceholderPage title="Alert Management" />} />
+      <Route path="/super-admin/monitoring/uptime" element={<PlaceholderPage title="Uptime Monitoring" />} />
+      <Route path="/super-admin/monitoring/resources" element={<PlaceholderPage title="Resource Usage" />} />
+      <Route path="/super-admin/monitoring/network" element={<PlaceholderPage title="Network Monitoring" />} />
+      <Route path="/super-admin/monitoring/health" element={<PlaceholderPage title="Health Checks" />} />
 
       {/* Portal Management Routes */}
-      <Route path="/super-admin/portals" element={<PortalOverview />} />
-      <Route path="/super-admin/portals/config" element={<PortalConfiguration />} />
-      <Route path="/super-admin/portals/users" element={<PortalUsers />} />
-      <Route path="/super-admin/portals/features" element={<FeatureManagement />} />
-      <Route path="/super-admin/portals/analytics" element={<PortalAnalytics />} />
-      <Route path="/super-admin/portals/billing" element={<PortalBilling />} />
-      <Route path="/super-admin/portals/support" element={<PortalSupport />} />
-      <Route path="/super-admin/portals/integrations" element={<PortalIntegrations />} />
-      <Route path="/super-admin/portals/backup" element={<PortalBackup />} />
-      <Route path="/super-admin/portals/security" element={<PortalSecurity />} />
-      <Route path="/super-admin/portals/compliance" element={<PortalCompliance />} />
-      <Route path="/super-admin/portals/deployment" element={<PortalDeployment />} />
+      <Route path="/super-admin/portals" element={<PlaceholderPage title="Portal Overview" />} />
+      <Route path="/super-admin/portals/config" element={<PlaceholderPage title="Portal Configuration" />} />
+      <Route path="/super-admin/portals/users" element={<PlaceholderPage title="Portal Users" />} />
+      <Route path="/super-admin/portals/features" element={<PlaceholderPage title="Feature Management" />} />
+      <Route path="/super-admin/portals/analytics" element={<PlaceholderPage title="Portal Analytics" />} />
+      <Route path="/super-admin/portals/billing" element={<PlaceholderPage title="Portal Billing" />} />
+      <Route path="/super-admin/portals/support" element={<PlaceholderPage title="Portal Support" />} />
+      <Route path="/super-admin/portals/integrations" element={<PlaceholderPage title="Portal Integrations" />} />
+      <Route path="/super-admin/portals/backup" element={<PlaceholderPage title="Portal Backup" />} />
+      <Route path="/super-admin/portals/security" element={<PlaceholderPage title="Portal Security" />} />
+      <Route path="/super-admin/portals/compliance" element={<PlaceholderPage title="Portal Compliance" />} />
+      <Route path="/super-admin/portals/deployment" element={<PlaceholderPage title="Portal Deployment" />} />
 
       {/* Analytics & Reports Routes */}
-      <Route path="/super-admin/analytics/business" element={<BusinessAnalytics />} />
-      <Route path="/super-admin/analytics/users" element={<UserAnalyticsReports />} />
-      <Route path="/super-admin/analytics/performance" element={<PerformanceReports />} />
-      <Route path="/super-admin/analytics/security" element={<SecurityReports />} />
-      <Route path="/super-admin/analytics/financial" element={<FinancialReports />} />
-      <Route path="/super-admin/analytics/operational" element={<OperationalReports />} />
-      <Route path="/super-admin/analytics/custom" element={<CustomReports />} />
-      <Route path="/super-admin/analytics/export" element={<DataExport />} />
-      <Route path="/super-admin/analytics/dashboards" element={<DashboardBuilder />} />
-      <Route path="/super-admin/analytics/scheduled" element={<ScheduledReports />} />
+      <Route path="/super-admin/analytics/business" element={<PlaceholderPage title="Business Analytics" />} />
+      <Route path="/super-admin/analytics/users" element={<PlaceholderPage title="User Analytics" />} />
+      <Route path="/super-admin/analytics/performance" element={<PlaceholderPage title="Performance Reports" />} />
+      <Route path="/super-admin/analytics/security" element={<PlaceholderPage title="Security Reports" />} />
+      <Route path="/super-admin/analytics/financial" element={<PlaceholderPage title="Financial Reports" />} />
+      <Route path="/super-admin/analytics/operational" element={<PlaceholderPage title="Operational Reports" />} />
+      <Route path="/super-admin/analytics/custom" element={<PlaceholderPage title="Custom Reports" />} />
+      <Route path="/super-admin/analytics/export" element={<PlaceholderPage title="Data Export" />} />
+      <Route path="/super-admin/analytics/dashboards" element={<PlaceholderPage title="Dashboard Builder" />} />
+      <Route path="/super-admin/analytics/scheduled" element={<PlaceholderPage title="Scheduled Reports" />} />
 
       {/* MCP Control Center Routes */}
-      <Route path="/super-admin/mcp" element={<MCPOverview />} />
-      <Route path="/super-admin/mcp/agents" element={<AgentManagement />} />
-      <Route path="/super-admin/mcp/models" element={<AIModels />} />
-      <Route path="/super-admin/mcp/pipeline" element={<DataPipeline />} />
-      <Route path="/super-admin/mcp/learning" element={<MachineLearning />} />
-      <Route path="/super-admin/mcp/analytics" element={<AIAnalytics />} />
-      <Route path="/super-admin/mcp/automation" element={<AutomationRules />} />
-      <Route path="/super-admin/mcp/integrations" element={<AIIntegrations />} />
-      <Route path="/super-admin/mcp/monitoring" element={<AIMonitoring />} />
-      <Route path="/super-admin/mcp/compliance" element={<AICompliance />} />
-      <Route path="/super-admin/mcp/documentation" element={<AIDocumentation />} />
-      <Route path="/super-admin/mcp/support" element={<AISupport />} />
+      <Route path="/super-admin/mcp" element={<PlaceholderPage title="MCP Overview" />} />
+      <Route path="/super-admin/mcp/agents" element={<PlaceholderPage title="Agent Management" />} />
+      <Route path="/super-admin/mcp/models" element={<PlaceholderPage title="AI Models" />} />
+      <Route path="/super-admin/mcp/pipeline" element={<PlaceholderPage title="Data Pipeline" />} />
+      <Route path="/super-admin/mcp/learning" element={<PlaceholderPage title="Machine Learning" />} />
+      <Route path="/super-admin/mcp/analytics" element={<PlaceholderPage title="AI Analytics" />} />
+      <Route path="/super-admin/mcp/automation" element={<PlaceholderPage title="Automation Rules" />} />
+      <Route path="/super-admin/mcp/integrations" element={<PlaceholderPage title="AI Integrations" />} />
+      <Route path="/super-admin/mcp/monitoring" element={<PlaceholderPage title="AI Monitoring" />} />
+      <Route path="/super-admin/mcp/compliance" element={<PlaceholderPage title="AI Compliance" />} />
+      <Route path="/super-admin/mcp/documentation" element={<PlaceholderPage title="AI Documentation" />} />
+      <Route path="/super-admin/mcp/support" element={<PlaceholderPage title="AI Support" />} />
 
       {/* Business Operations Routes */}
-      <Route path="/super-admin/business/customers" element={<CustomerManagement />} />
-      <Route path="/super-admin/business/sales" element={<SalesPipeline />} />
-      <Route path="/super-admin/business/billing" element={<BillingInvoicing />} />
-      <Route path="/super-admin/business/support" element={<SupportManagement />} />
-      <Route path="/super-admin/business/docs" element={<Documentation />} />
-      <Route path="/super-admin/business/marketing" element={<MarketingTools />} />
-      <Route path="/super-admin/business/partners" element={<PartnerManagement />} />
-      <Route path="/super-admin/business/legal" element={<LegalCompliance />} />
+      <Route path="/super-admin/business/customers" element={<PlaceholderPage title="Customer Management" />} />
+      <Route path="/super-admin/business/sales" element={<PlaceholderPage title="Sales Pipeline" />} />
+      <Route path="/super-admin/business/billing" element={<PlaceholderPage title="Billing Invoicing" />} />
+      <Route path="/super-admin/business/support" element={<PlaceholderPage title="Support Management" />} />
+      <Route path="/super-admin/business/docs" element={<PlaceholderPage title="Documentation" />} />
+      <Route path="/super-admin/business/marketing" element={<PlaceholderPage title="Marketing Tools" />} />
+      <Route path="/super-admin/business/partners" element={<PlaceholderPage title="Partner Management" />} />
+      <Route path="/super-admin/business/legal" element={<PlaceholderPage title="Legal Compliance" />} />
 
       {/* Development & DevOps Routes */}
-      <Route path="/super-admin/dev/repository" element={<CodeRepository />} />
-      <Route path="/super-admin/dev/pipeline" element={<CICDPipeline />} />
-      <Route path="/super-admin/dev/testing" element={<TestingSuite />} />
-      <Route path="/super-admin/dev/environments" element={<EnvironmentManagement />} />
-      <Route path="/super-admin/dev/performance" element={<PerformanceTesting />} />
-      <Route path="/super-admin/dev/security" element={<SecurityTesting />} />
-      <Route path="/super-admin/dev/documentation" element={<DevDocumentation />} />
-      <Route path="/super-admin/dev/releases" element={<ReleaseManagement />} />
+      <Route path="/super-admin/dev/repository" element={<PlaceholderPage title="Code Repository" />} />
+      <Route path="/super-admin/dev/pipeline" element={<PlaceholderPage title="CI/CD Pipeline" />} />
+      <Route path="/super-admin/dev/testing" element={<PlaceholderPage title="Testing Suite" />} />
+      <Route path="/super-admin/dev/environments" element={<PlaceholderPage title="Environment Management" />} />
+      <Route path="/super-admin/dev/performance" element={<PlaceholderPage title="Performance Testing" />} />
+      <Route path="/super-admin/dev/security" element={<PlaceholderPage title="Security Testing" />} />
+      <Route path="/super-admin/dev/documentation" element={<PlaceholderPage title="Dev Documentation" />} />
+      <Route path="/super-admin/dev/releases" element={<PlaceholderPage title="Release Management" />} />
 
       {/* Settings Routes */}
-      <Route path="/super-admin/settings" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <SettingsOverview />
-        </ProtectedRoute>
-      } />
-      <Route path="/super-admin/settings/profile" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin', 'manager', 'user']}>
-          <ProfileSettings />
-        </ProtectedRoute>
-      } />
-      <Route path="/super-admin/settings/system" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <SystemSettings />
-        </ProtectedRoute>
-      } />
-      <Route path="/super-admin/settings/preferences" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin', 'manager', 'user']}>
-          <UserPreferences />
-        </ProtectedRoute>
-      } />
+      <Route path="/super-admin/settings" element={<PlaceholderPage title="Settings Overview" />} />
+      <Route path="/super-admin/settings/profile" element={<PlaceholderPage title="Profile Settings" />} />
+      <Route path="/super-admin/settings/system" element={<PlaceholderPage title="System Settings" />} />
+      <Route path="/super-admin/settings/preferences" element={<PlaceholderPage title="User Preferences" />} />
 
       {/* Security Dashboard Routes */}
-      <Route path="/super-admin/security/dashboard" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin']}>
-          <SecurityDashboard />
-        </ProtectedRoute>
-      } />
+      <Route path="/super-admin/security/dashboard" element={<PlaceholderPage title="Security Dashboard" />} />
 
       {/* Invite Management Routes */}
-      <Route path="/super-admin/invites" element={
-        <ProtectedRoute requiredRoles={['super_admin', 'admin', 'owner']}>
-          <InviteManagement />
-        </ProtectedRoute>
-      } />
+      <Route path="/super-admin/invites" element={<PlaceholderPage title="Invite Management" />} />
 
       {/* Default route - redirect to dashboard */}
       <Route path="/super-admin" element={<SystemOverview />} />
