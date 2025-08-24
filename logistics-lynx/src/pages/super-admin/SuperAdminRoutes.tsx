@@ -99,6 +99,12 @@ import MarketingTools from './business-operations/MarketingTools';
 import PartnerManagement from './business-operations/PartnerManagement';
 import LegalCompliance from './business-operations/LegalCompliance';
 
+// Settings Pages
+import SettingsOverview from './settings/SettingsOverview';
+import ProfileSettings from './settings/ProfileSettings';
+import SystemSettings from './settings/SystemSettings';
+import UserPreferences from './settings/UserPreferences';
+
 // Development & DevOps Pages
 import CodeRepository from './development-devops/CodeRepository';
 import CICDPipeline from './development-devops/CICDPipeline';
@@ -219,6 +225,12 @@ const SuperAdminRoutes: React.FC = () => {
       <Route path="/super-admin/dev/security" element={<SecurityTesting />} />
       <Route path="/super-admin/dev/documentation" element={<DevDocumentation />} />
       <Route path="/super-admin/dev/releases" element={<ReleaseManagement />} />
+
+      {/* Settings Routes */}
+      <Route path="/super-admin/settings" element={<SettingsOverview />} />
+      <Route path="/super-admin/settings/profile" element={<ProfileSettings />} />
+      <Route path="/super-admin/settings/system" element={<SystemSettings />} />
+      <Route path="/super-admin/settings/preferences" element={<UserPreferences />} />
 
       {/* Default route - redirect to dashboard */}
       <Route path="/super-admin" element={<SystemOverview />} />
