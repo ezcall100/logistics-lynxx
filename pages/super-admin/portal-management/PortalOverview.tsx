@@ -1,0 +1,69 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Globe } from 'lucide-react';
+
+interface PortalOverviewProps {}
+
+const PortalOverview: React.FC<PortalOverviewProps> = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 1000);
+  }, []);
+
+  return (
+    <div className="space-y-6 p-6">
+      {/* Page Header */}
+      <div className="space-y-2">
+        <div className="flex items-center space-x-2">
+          <Globe className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Portal Overview
+          </h1>
+        </div>
+        <p className="text-gray-600">
+          All customer portals dashboard, status monitoring
+        </p>
+      </div>
+
+      {/* Main Content */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Portal Overview</CardTitle>
+          <CardDescription>All customer portals dashboard, status monitoring</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 rounded animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Globe className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900">
+                Portal Overview
+              </h3>
+              <p className="text-gray-600 mt-2">
+                All customer portals dashboard, status monitoring
+              </p>
+              <div className="mt-4 space-y-2 flex flex-wrap justify-center gap-2">
+                <Badge variant="outline">Portal Dashboard</Badge>
+                <Badge variant="outline">Status Monitoring</Badge>
+                <Badge variant="outline">Portal Metrics</Badge>
+              </div>
+              <Button className="mt-6" variant="default">
+                Configure Portal Overview
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default PortalOverview;

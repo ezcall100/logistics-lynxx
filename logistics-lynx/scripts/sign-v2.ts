@@ -12,7 +12,7 @@ const args: Args = {
   m: getArg("-m","POST"),
   u: getArg("-u"),
   k: getArg("-k","ops-n8n"),
-  s: getArg("-s", process.env.TRANSBOT_HMAC_SECRET || ""),
+  s: getArg("-s", process.env['TRANSBOT_HMAC_SECRET'] || ""),
   d: getArg("-d",""),
 };
 if (!args.u || !args.s) {

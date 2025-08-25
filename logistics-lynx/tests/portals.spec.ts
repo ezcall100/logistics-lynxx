@@ -10,8 +10,8 @@ const paths = [
 test.describe("Portals behind auth", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/login");
-    await page.getByLabel("Email").fill(process.env.E2E_EMAIL || "demo@example.com");
-    await page.getByLabel("Password").fill(process.env.E2E_PASSWORD || "password123");
+    await page.getByLabel("Email").fill(process.env['E2E_EMAIL'] || "demo@example.com");
+    await page.getByLabel("Password").fill(process.env['E2E_PASSWORD'] || "password123");
     await page.getByRole("button", { name: "Sign In" }).click();
     await page.waitForURL("**/portal-selection");
   });
@@ -31,8 +31,8 @@ test("deprecated routes return UI 410 page (dev) or HTTP 410 via middleware", as
 
 test("portal selection shows correct portals for user role", async ({ page }) => {
   await page.goto("/login");
-  await page.getByLabel("Email").fill(process.env.E2E_EMAIL || "demo@example.com");
-  await page.getByLabel("Password").fill(process.env.E2E_PASSWORD || "password123");
+  await page.getByLabel("Email").fill(process.env['E2E_EMAIL'] || "demo@example.com");
+  await page.getByLabel("Password").fill(process.env['E2E_PASSWORD'] || "password123");
   await page.getByRole("button", { name: "Sign In" }).click();
   await page.waitForURL("**/portal-selection");
   

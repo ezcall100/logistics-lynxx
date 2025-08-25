@@ -1,0 +1,69 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Brain } from 'lucide-react';
+
+interface AIModelsProps {}
+
+const AIModels: React.FC<AIModelsProps> = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 1000);
+  }, []);
+
+  return (
+    <div className="space-y-6 p-6">
+      {/* Page Header */}
+      <div className="space-y-2">
+        <div className="flex items-center space-x-2">
+          <Brain className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            AI Models
+          </h1>
+        </div>
+        <p className="text-gray-600">
+          Model training, deployment, performance monitoring
+        </p>
+      </div>
+
+      {/* Main Content */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>AI Models</CardTitle>
+          <CardDescription>Model training, deployment, performance monitoring</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 rounded animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900">
+                AI Models
+              </h3>
+              <p className="text-gray-600 mt-2">
+                Model training, deployment, performance monitoring
+              </p>
+              <div className="mt-4 space-y-2 flex flex-wrap justify-center gap-2">
+                <Badge variant="outline">Model Training</Badge>
+                <Badge variant="outline">Model Deployment</Badge>
+                <Badge variant="outline">Performance Monitoring</Badge>
+              </div>
+              <Button className="mt-6" variant="default">
+                Configure AI Models
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default AIModels;

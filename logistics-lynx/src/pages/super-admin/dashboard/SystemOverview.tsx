@@ -1,592 +1,444 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { MCP, MCPMetrics, MCPUtils } from '@/services/mcp';
+import { executeFabAction } from '@/components/FabActions';
 import { 
-  CheckCircle, 
-  Users, 
-  TrendingUp, 
-  TrendingDown, 
   Activity, 
-  Zap, 
-  Cpu, 
-  HardDrive, 
-  Network, 
-  Database, 
+  Users, 
+  Server, 
   AlertTriangle, 
-  BarChart3, 
-  RefreshCw, 
-  Settings, 
-  Bell, 
-  Download,
-  Upload,
-  FileText,
-  Mail,
-  Archive,
+  CheckCircle, 
+  Clock, 
+  TrendingUp, 
+  TrendingDown,
+  RefreshCw,
+  Play,
+  Pause,
   RotateCcw,
-  Info,
-  AlertCircle
+  Database,
+  Zap
 } from 'lucide-react';
-import { 
-  EnhancedCard, 
-  EnhancedButton, 
-  EnhancedBadge, 
-  EnhancedProgress, 
-  stableStyles 
-} from '../../../components/ui/EnhancedUIComponents';
-
-interface SystemMetric {
-  id: string;
-  title: string;
-  value: string | number;
-  change?: number;
-  changeType?: 'increase' | 'decrease';
-  icon: React.ReactNode;
-  color: string;
-  status?: 'operational' | 'warning' | 'critical';
-  trend?: 'up' | 'down' | 'stable';
-}
-
-interface PerformanceMetric {
-  name: string;
-  value: number;
-  target: number;
-  unit: string;
-  status: 'excellent' | 'good' | 'warning' | 'critical';
-}
-
-interface SystemAlert {
-  id: string;
-  type: 'info' | 'warning' | 'critical' | 'success';
-  title: string;
-  message: string;
-  timestamp: string;
-  priority: 'low' | 'medium' | 'high';
-  resolved: boolean;
-}
 
 const SystemOverview: React.FC = () => {
-  const [mode] = useState<'light' | 'dark'>('light');
-  const [refreshing, setRefreshing] = useState(false);
-  const [systemMetrics] = useState<SystemMetric[]>([
-    {
-      id: 'system-status',
-      title: 'System Status',
-      value: 'Operational',
-      icon: <CheckCircle className="w-8 h-8" />,
-      color: 'text-green-500',
-      status: 'operational',
-      trend: 'stable'
-    },
-    {
-      id: 'active-users',
-      title: 'Active Users',
-      value: '1,247',
-      change: 12.5,
-      changeType: 'increase',
-      icon: <Users className="w-8 h-8" />,
-      color: 'text-blue-500',
-      trend: 'up'
-    },
-    {
-      id: 'response-time',
-      title: 'Avg Response Time',
-      value: '245ms',
-      change: -8.2,
-      changeType: 'decrease',
-      icon: <Activity className="w-8 h-8" />,
-      color: 'text-emerald-500',
-      trend: 'up'
-    },
-    {
-      id: 'uptime',
-      title: 'System Uptime',
-      value: '99.9%',
-      change: 0.1,
-      changeType: 'increase',
-      icon: <Zap className="w-8 h-8" />,
-      color: 'text-purple-500',
-      trend: 'stable'
-    },
-    {
-      id: 'cpu-usage',
-      title: 'CPU Usage',
-      value: '67%',
-      change: 5.3,
-      changeType: 'increase',
-      icon: <Cpu className="w-8 h-8" />,
-      color: 'text-orange-500',
-      trend: 'up'
-    },
-    {
-      id: 'memory-usage',
-      title: 'Memory Usage',
-      value: '78%',
-      change: -2.1,
-      changeType: 'decrease',
-      icon: <HardDrive className="w-8 h-8" />,
-      color: 'text-indigo-500',
-      trend: 'down'
-    },
-    {
-      id: 'network-traffic',
-      title: 'Network Traffic',
-      value: '2.4 GB/s',
-      change: 15.7,
-      changeType: 'increase',
-      icon: <Network className="w-8 h-8" />,
-      color: 'text-cyan-500',
-      trend: 'up'
-    },
-    {
-      id: 'database-connections',
-      title: 'DB Connections',
-      value: '1,892',
-      change: -3.4,
-      changeType: 'decrease',
-      icon: <Database className="w-8 h-8" />,
-      color: 'text-pink-500',
-      trend: 'down'
-    }
-  ]);
+  const [metrics, setMetrics] = useState<MCPMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [systemHealth, setSystemHealth] = useState<'healthy' | 'degraded' | 'unhealthy'>('healthy');
+  const [isUsingMockData, setIsUsingMockData] = useState(false);
 
-  const [performanceMetrics] = useState<PerformanceMetric[]>([
-    {
-      name: 'Response Time',
-      value: 245,
-      target: 200,
-      unit: 'ms',
-      status: 'good'
-    },
-    {
-      name: 'Throughput',
-      value: 1250,
-      target: 1000,
-      unit: 'req/s',
-      status: 'excellent'
-    },
-    {
-      name: 'Error Rate',
-      value: 0.5,
-      target: 1.0,
-      unit: '%',
-      status: 'excellent'
-    },
-    {
-      name: 'CPU Usage',
-      value: 67,
-      target: 80,
-      unit: '%',
-      status: 'good'
-    },
-    {
-      name: 'Memory Usage',
-      value: 78,
-      target: 85,
-      unit: '%',
-      status: 'warning'
-    },
-    {
-      name: 'Disk I/O',
-      value: 45,
-      target: 60,
-      unit: 'MB/s',
-      status: 'excellent'
-    }
-  ]);
-
-  const [systemAlerts] = useState<SystemAlert[]>([
-    {
-      id: '1',
-      type: 'info',
-      title: 'System Update Available',
-      message: 'A new system update is ready for installation',
-      timestamp: '2 hours ago',
-      priority: 'low',
-      resolved: false
-    },
-    {
-      id: '2',
-      type: 'warning',
-      title: 'High CPU Usage Detected',
-      message: 'CPU usage has exceeded 80% for the last 10 minutes',
-      timestamp: '1 hour ago',
-      priority: 'medium',
-      resolved: false
-    },
-    {
-      id: '3',
-      type: 'success',
-      title: 'Backup Completed Successfully',
-      message: 'Daily backup completed without errors',
-      timestamp: '30 minutes ago',
-      priority: 'low',
-      resolved: true
-    }
-  ]);
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setRefreshing(false);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'operational':
-      case 'excellent':
-        return 'text-green-500';
-      case 'warning':
-      case 'good':
-        return 'text-yellow-500';
-      case 'critical':
-        return 'text-red-500';
-      default:
-        return 'text-gray-500';
+  // Fetch metrics from MCP
+  const fetchMetrics = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await MCP.metrics.overview();
+      setMetrics(response.data);
+      setIsUsingMockData(response.isMock);
+      setLastUpdated(new Date());
+      
+      // Determine system health based on metrics
+      const errorRate = response.data.system.error_rate;
+      const successRate = response.data.jobs.success_rate;
+      
+      if (errorRate > 0.1 || successRate < 0.9) {
+        setSystemHealth('degraded');
+      } else if (errorRate > 0.2 || successRate < 0.8) {
+        setSystemHealth('unhealthy');
+      } else {
+        setSystemHealth('healthy');
+      }
+      
+    } catch (err: any) {
+      console.error('Failed to fetch metrics:', err);
+      setError(err?.response?.data?.message || 'Failed to fetch system metrics');
+      setIsUsingMockData(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'operational':
-      case 'excellent':
-        return <EnhancedBadge variant="success" mode={mode}>Operational</EnhancedBadge>;
-      case 'warning':
-      case 'good':
-        return <EnhancedBadge variant="warning" mode={mode}>Warning</EnhancedBadge>;
-      case 'critical':
-        return <EnhancedBadge variant="danger" mode={mode}>Critical</EnhancedBadge>;
-      default:
-        return <EnhancedBadge variant="default" mode={mode}>Unknown</EnhancedBadge>;
+  // System operations
+  const performSystemOperation = async (operation: string) => {
+    try {
+      await executeFabAction('systemOperation', operation);
+      // Refresh metrics after operation
+      setTimeout(fetchMetrics, 2000);
+    } catch (error) {
+      console.error(`System operation ${operation} failed:`, error);
     }
   };
 
-  const getAlertIcon = (type: string) => {
-    switch (type) {
-      case 'info':
-        return <Info className="w-5 h-5 text-blue-500" />;
-      case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
-      case 'critical':
-        return <AlertCircle className="w-5 h-5 text-red-500" />;
-      case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      default:
-        return <Info className="w-5 h-5 text-gray-500" />;
-    }
-  };
+  // Auto-refresh metrics every 30 seconds
+  useEffect(() => {
+    fetchMetrics();
+    
+    const interval = setInterval(fetchMetrics, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading && !metrics) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+            <div className="flex items-center">
+              <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400 mr-3" />
+              <div>
+                <h3 className="text-lg font-semibold text-red-800 dark:text-red-200">
+                  Failed to Load System Metrics
+                </h3>
+                <p className="text-red-600 dark:text-red-400 mt-1">{error}</p>
+                <button
+                  onClick={fetchMetrics}
+                  className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen ${stableStyles.primary[mode]} p-6`}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               System Overview
             </h1>
-            <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
-              Real-time monitoring and analytics dashboard
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
+              Real-time system metrics and operational status
             </p>
+            {isUsingMockData && (
+              <div className="mt-2 flex items-center">
+                <div className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-full">
+                  <span className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+                    📊 Using Demo Data
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 ml-3">
+                  MCP API unavailable - showing sample metrics
+                </p>
+              </div>
+            )}
           </div>
-          <div className="flex space-x-3">
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />}
-              onClick={handleRefresh}
-              loading={refreshing}
-              mode={mode}
+          <div className="flex items-center space-x-3">
+            {lastUpdated && (
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </div>
+            )}
+            <button
+              onClick={fetchMetrics}
+              disabled={loading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center"
             >
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh
-            </EnhancedButton>
-            <EnhancedButton
-              variant="primary"
-              size="sm"
-              icon={<Settings className="w-4 h-4" />}
-              mode={mode}
-            >
-              Settings
-            </EnhancedButton>
+            </button>
           </div>
         </div>
 
-        {/* System Status Cards */}
+        {/* System Health Status */}
+        <div className={`
+          rounded-lg p-4 border-l-4
+          ${systemHealth === 'healthy' 
+            ? 'bg-green-50 dark:bg-green-900/20 border-green-500' 
+            : systemHealth === 'degraded'
+            ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500'
+            : 'bg-red-50 dark:bg-red-900/20 border-red-500'
+          }
+        `}>
+          <div className="flex items-center">
+            {systemHealth === 'healthy' ? (
+              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-3" />
+            ) : systemHealth === 'degraded' ? (
+              <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400 mr-3" />
+            ) : (
+              <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400 mr-3" />
+            )}
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                System Status: {systemHealth.charAt(0).toUpperCase() + systemHealth.slice(1)}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {systemHealth === 'healthy' 
+                  ? 'All systems operating normally'
+                  : systemHealth === 'degraded'
+                  ? 'Some systems experiencing issues'
+                  : 'Critical system issues detected'
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {systemMetrics.map((metric) => (
-            <EnhancedCard
-              key={metric.id}
-              className="relative overflow-hidden"
-              mode={mode}
-              elevated
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className={metric.color}>
-                      {metric.icon}
-                    </div>
-                    <div>
-                      <p className={`text-sm font-medium ${stableStyles.textSecondary[mode]}`}>
-                        {metric.title}
-                      </p>
-                      <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                        {metric.value}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {metric.change !== undefined && (
-                    <div className="flex items-center space-x-2">
-                      {metric.changeType === 'increase' ? (
-                        <TrendingUp className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <TrendingDown className="w-4 h-4 text-red-500" />
-                      )}
-                      <span className={`text-sm font-medium ${
-                        metric.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {metric.change > 0 ? '+' : ''}{metric.change}%
-                      </span>
-                      <span className={`text-xs ${stableStyles.textMuted[mode]}`}>
-                        from yesterday
-                      </span>
-                    </div>
+          {/* Agents Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Agents</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {metrics?.agents.online || 0}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  of {metrics?.agents.total || 0} total
+                </p>
+              </div>
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center text-sm">
+              {metrics?.agents.online && metrics?.agents.total && (
+                <span className={`flex items-center ${
+                  (metrics.agents.online / metrics.agents.total) > 0.8 
+                    ? 'text-green-600 dark:text-green-400' 
+                    : 'text-yellow-600 dark:text-yellow-400'
+                }`}>
+                  {metrics.agents.online / metrics.agents.total > 0.8 ? (
+                    <TrendingUp className="w-4 h-4 mr-1" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4 mr-1" />
                   )}
-                </div>
-                
-                {metric.status && (
-                  <div className="absolute top-4 right-4">
-                    {getStatusBadge(metric.status)}
-                  </div>
+                  {Math.round((metrics.agents.online / metrics.agents.total) * 100)}% online
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Jobs Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Jobs</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {metrics?.jobs.running || 0}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {metrics?.jobs.queued || 0} queued
+                </p>
+              </div>
+              <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
+                <Activity className="w-6 h-6 text-green-600 dark:text-green-400" />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center text-sm">
+              <span className={`flex items-center ${
+                (metrics?.jobs.success_rate || 0) > 0.9 
+                  ? 'text-green-600 dark:text-green-400' 
+                  : 'text-yellow-600 dark:text-yellow-400'
+              }`}>
+                {metrics?.jobs.success_rate && (
+                  <>
+                    {metrics.jobs.success_rate > 0.9 ? (
+                      <TrendingUp className="w-4 h-4 mr-1" />
+                    ) : (
+                      <TrendingDown className="w-4 h-4 mr-1" />
+                    )}
+                    {Math.round(metrics.jobs.success_rate * 100)}% success rate
+                  </>
                 )}
+              </span>
+            </div>
+          </div>
+
+          {/* System Uptime Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">System Uptime</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {metrics?.system.uptime ? Math.floor(metrics.system.uptime / 3600) : 0}h
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Version {metrics?.system.version || 'Unknown'}
+                </p>
               </div>
-            </EnhancedCard>
-          ))}
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                <Server className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center text-sm">
+              <span className="text-gray-600 dark:text-gray-400 flex items-center">
+                <Clock className="w-4 h-4 mr-1" />
+                Last deployment: {metrics?.system.last_deployment ? 
+                  new Date(metrics.system.last_deployment).toLocaleDateString() : 'Unknown'
+                }
+              </span>
+            </div>
+          </div>
+
+          {/* Error Rate Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Error Rate</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {metrics?.system.error_rate ? (metrics.system.error_rate * 100).toFixed(2) : 0}%
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Response time: {metrics?.system.response_time ? metrics.system.response_time.toFixed(0) : 0}ms
+                </p>
+              </div>
+              <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center text-sm">
+              <span className={`flex items-center ${
+                (metrics?.system.error_rate || 0) < 0.01 
+                  ? 'text-green-600 dark:text-green-400' 
+                  : 'text-red-600 dark:text-red-400'
+              }`}>
+                {(metrics?.system.error_rate || 0) < 0.01 ? (
+                  <TrendingDown className="w-4 h-4 mr-1" />
+                ) : (
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                )}
+                {(metrics?.system.error_rate || 0) < 0.01 ? 'Low' : 'High'} error rate
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Performance Metrics */}
-        <EnhancedCard mode={mode} elevated>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
-              Performance Metrics
-            </h2>
-            <EnhancedButton
-              variant="ghost"
-              size="sm"
-              icon={<BarChart3 className="w-4 h-4" />}
-              mode={mode}
+        {/* System Operations */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            System Operations
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button
+              onClick={() => performSystemOperation('restart')}
+              className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              View Details
-            </EnhancedButton>
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Restart
+            </button>
+            <button
+              onClick={() => performSystemOperation('drain')}
+              className="flex items-center justify-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              <Pause className="w-4 h-4 mr-2" />
+              Drain Queue
+            </button>
+            <button
+              onClick={() => performSystemOperation('reindex')}
+              className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <Database className="w-4 h-4 mr-2" />
+              Reindex
+            </button>
+            <button
+              onClick={() => performSystemOperation('refresh_caches')}
+              className="flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              Refresh Caches
+            </button>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {performanceMetrics.map((metric) => (
-              <div key={metric.name} className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm font-medium ${stableStyles.textSecondary[mode]}`}>
-                    {metric.name}
-                  </span>
-                  <span className={`text-sm font-semibold ${getStatusColor(metric.status)}`}>
-                    {metric.value} {metric.unit}
-                  </span>
-                </div>
-                <EnhancedProgress
-                  value={(metric.value / metric.target) * 100}
-                  max={100}
-                  mode={mode}
-                  variant={metric.status === 'excellent' ? 'success' : metric.status === 'good' ? 'default' : metric.status === 'warning' ? 'warning' : 'danger'}
-                />
-                <div className="flex justify-between text-xs">
-                  <span className={stableStyles.textMuted[mode]}>Target: {metric.target} {metric.unit}</span>
-                  <span className={stableStyles.textMuted[mode]}>
-                    {Math.round((metric.value / metric.target) * 100)}%
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </EnhancedCard>
+        </div>
 
-        {/* System Health & Alerts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* System Health */}
-          <EnhancedCard mode={mode} elevated>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
-                System Health
-              </h2>
-              <EnhancedBadge variant="success" pulse mode={mode}>
-                All Systems Normal
-              </EnhancedBadge>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                  <span className="font-medium text-green-700 dark:text-green-300">Web </span>
-                </div>
-                <span className="text-sm text-green-600 dark:text-green-400">Healthy</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                <div className="flex items-center space-x-3">
-                  <Database className="w-5 h-5 text-green-500" />
-                  <span className="font-medium text-green-700 dark:text-green-300">Database</span>
-                </div>
-                <span className="text-sm text-green-600 dark:text-green-400">Healthy</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
-                <div className="flex items-center space-x-3">
-                  <Cpu className="w-5 h-5 text-yellow-500" />
-                  <span className="font-medium text-yellow-700 dark:text-yellow-300">CPU Usage</span>
-                </div>
-                <span className="text-sm text-yellow-600 dark:text-yellow-400">High</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                <div className="flex items-center space-x-3">
-                  <Network className="w-5 h-5 text-green-500" />
-                  <span className="font-medium text-green-700 dark:text-green-300">Network</span>
-                </div>
-                <span className="text-sm text-green-600 dark:text-green-400">Healthy</span>
-              </div>
-            </div>
-          </EnhancedCard>
-
-          {/* Recent Alerts */}
-          <EnhancedCard mode={mode} elevated>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
-                Recent Alerts
-              </h2>
-              <EnhancedButton
-                variant="ghost"
-                size="sm"
-                icon={<Bell className="w-4 h-4" />}
-                mode={mode}
-              >
-                View All
-              </EnhancedButton>
-            </div>
-            
-            <div className="space-y-4">
-              {systemAlerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  className={`flex items-start space-x-3 p-3 rounded-lg ${
-                    alert.type === 'info' ? 'bg-blue-50 dark:bg-blue-900/20' :
-                    alert.type === 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/20' :
-                    alert.type === 'critical' ? 'bg-red-50 dark:bg-red-900/20' :
-                    'bg-green-50 dark:bg-green-900/20'
-                  }`}
-                >
-                  {getAlertIcon(alert.type)}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`text-sm font-medium ${
-                        alert.type === 'info' ? 'text-blue-700 dark:text-blue-300' :
-                        alert.type === 'warning' ? 'text-yellow-700 dark:text-yellow-300' :
-                        alert.type === 'critical' ? 'text-red-700 dark:text-red-300' :
-                        'text-green-700 dark:text-green-300'
-                      }`}>
-                        {alert.title}
-                      </h4>
-                      <span className={`text-xs ${
-                        alert.priority === 'high' ? 'text-red-600' :
-                        alert.priority === 'medium' ? 'text-yellow-600' :
-                        'text-green-600'
-                      }`}>
-                        {alert.priority.toUpperCase()}
-                      </span>
-                    </div>
-                    <p className={`text-sm mt-1 ${
-                      alert.type === 'info' ? 'text-blue-600 dark:text-blue-400' :
-                      alert.type === 'warning' ? 'text-yellow-600 dark:text-yellow-400' :
-                      alert.type === 'critical' ? 'text-red-600 dark:text-red-400' :
-                      'text-green-600 dark:text-green-400'
-                    }`}>
-                      {alert.message}
-                    </p>
-                    <p className={`text-xs mt-2 ${stableStyles.textMuted[mode]}`}>
-                      {alert.timestamp}
-                    </p>
+        {/* Resource Usage */}
+        {metrics?.resources && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Resource Usage
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-600 dark:text-gray-400">CPU</span>
+                    <span className="text-gray-900 dark:text-white">
+                      {Math.round(metrics.resources.cpu_usage * 100)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.round(metrics.resources.cpu_usage * 100)}%` }}
+                    ></div>
                   </div>
                 </div>
-              ))}
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-600 dark:text-gray-400">Memory</span>
+                    <span className="text-gray-900 dark:text-white">
+                      {Math.round(metrics.resources.memory_usage * 100)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.round(metrics.resources.memory_usage * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-600 dark:text-gray-400">Disk</span>
+                    <span className="text-gray-900 dark:text-white">
+                      {Math.round(metrics.resources.disk_usage * 100)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-yellow-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.round(metrics.resources.disk_usage * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </EnhancedCard>
-        </div>
 
-        {/* Quick Actions */}
-        <EnhancedCard mode={mode} elevated>
-          <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]} mb-6`}>
-            Quick Actions
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Export Data</span>
-            </EnhancedButton>
-            
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Upload className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Import Data</span>
-            </EnhancedButton>
-            
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<FileText className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Generate Report</span>
-            </EnhancedButton>
-            
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Mail className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Alert</span>
-            </EnhancedButton>
-            
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Archive className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Backup System</span>
-            </EnhancedButton>
-            
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<RotateCcw className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Restart Services</span>
-            </EnhancedButton>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Network Throughput
+              </h3>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                  {metrics.resources.network_throughput ? 
+                    (metrics.resources.network_throughput / 1024 / 1024).toFixed(2) : 0
+                  } MB/s
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Current network throughput
+                </p>
+              </div>
+            </div>
           </div>
-        </EnhancedCard>
+        )}
       </div>
     </div>
   );

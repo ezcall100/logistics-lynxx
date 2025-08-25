@@ -31,8 +31,8 @@ export class SystemHealthMonitor {
 
   constructor() {
     this.supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_ANON_KEY!
+      process.env['SUPABASE_URL']!,
+      process.env['SUPABASE_ANON_KEY']!
     );
   }
 
@@ -403,8 +403,8 @@ class DatabaseHealthCheck {
     
     try {
       const supabase = createClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_ANON_KEY!
+        process.env['SUPABASE_URL']!,
+        process.env['SUPABASE_ANON_KEY']!
       );
 
       const { data, error } = await supabase
@@ -446,7 +446,7 @@ class APIHealthCheck {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
       
-      const response = await fetch(`${process.env.API_BASE_URL}/health`, {
+      const response = await fetch(`${process.env['API_BASE_URL']}/health`, {
         method: 'GET',
         signal: controller.signal
       });
@@ -487,10 +487,10 @@ class WorkflowHealthCheck {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
       
-      const response = await fetch(`${process.env.N8N_BASE_URL}/api/v1/executions`, {
+      const response = await fetch(`${process.env['N8N_BASE_URL']}/api/v1/executions`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${process.env.N8N_API_KEY}`
+          'Authorization': `Bearer ${process.env['N8N_API_KEY']}`
         },
         signal: controller.signal
       });

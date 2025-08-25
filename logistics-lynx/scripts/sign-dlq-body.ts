@@ -173,7 +173,7 @@ function parseArgs(): SignOptions {
   }
 
   if (!options.secret) {
-    options.secret = process.env.TRANSBOT_HMAC_SECRET;
+    options.secret = process.env['TRANSBOT_HMAC_SECRET'];
     if (!options.secret) {
       console.error('❌ Error: --secret or TRANSBOT_HMAC_SECRET environment variable is required');
       showHelp();

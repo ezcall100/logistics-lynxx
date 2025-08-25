@@ -3,7 +3,7 @@ async function deployN8NWorkflows() {
     console.log('📋 Deploying N8N Workflows...');
     
     // Check if N8N is enabled
-    const n8nEnabled = process.env.N8N_ENABLED === 'true';
+    const n8nEnabled = process.env['N8N_ENABLED'] === 'true';
     
     if (!n8nEnabled) {
       console.log('⏭️ N8N integration is disabled, skipping workflow deployment');

@@ -2,6 +2,8 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EnhancedHeader } from './EnhancedHeader';
 import { EnhancedSidebar } from './EnhancedSidebar';
+import Breadcrumbs from '../ui/Breadcrumbs';
+import { executeFabAction } from '../FabActions';
 
 // Theme Context
 interface ThemeContextType {
@@ -136,6 +138,10 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
           {/* Page Content */}
           <main className="p-4 lg:p-6">
             <div className="max-w-7xl mx-auto">
+              {/* Breadcrumbs */}
+              <div className="mb-6">
+                <Breadcrumbs />
+              </div>
               {children}
             </div>
           </main>
@@ -158,9 +164,9 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                     }
                   `}
                   title="AI Agent Assistant"
-                  onClick={() => {
+                  onClick={async () => {
                     console.log('AI Agent clicked');
-                    navigate('mcp');
+                    await executeFabAction('assistant', 'Hello, I need assistance with the TMS system.');
                     setFabOpen(false);
                   }}
                 >
@@ -190,9 +196,9 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                     }
                   `}
                   title="Phone Call"
-                  onClick={() => {
+                  onClick={async () => {
                     console.log('Phone Call clicked');
-                    window.open('tel:+1234567890', '_self');
+                    await executeFabAction('phoneCall', '+1234567890');
                     setFabOpen(false);
                   }}
                 >
@@ -212,9 +218,9 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                     }
                   `}
                   title="Send Message"
-                  onClick={() => {
+                  onClick={async () => {
                     console.log('Message clicked');
-                    navigate('business/support');
+                    await executeFabAction('message', 'support@company.com', 'Need assistance with TMS system', 'email');
                     setFabOpen(false);
                   }}
                 >
@@ -256,9 +262,9 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                     }
                   `}
                   title="Quick Actions"
-                  onClick={() => {
+                  onClick={async () => {
                     console.log('Quick Actions clicked');
-                    navigate('dashboard');
+                    await executeFabAction('quickAction', 'status_check', { check_all: true });
                     setFabOpen(false);
                   }}
                 >
@@ -278,9 +284,9 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                     }
                   `}
                   title="Emergency Support"
-                  onClick={() => {
+                  onClick={async () => {
                     console.log('Emergency Support clicked');
-                    navigate('business/support');
+                    await executeFabAction('emergencySupport', 'System issue requiring immediate attention', 'high');
                     setFabOpen(false);
                   }}
                 >

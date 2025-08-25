@@ -15,7 +15,7 @@ export interface LogEntry {
 export class LogManager {
   private logs: LogEntry[] = [];
   private maxLogs: number = 1000;
-  private isDebugMode: boolean = process.env.NODE_ENV === 'development';
+  private isDebugMode: boolean = process.env['NODE_ENV'] === 'development';
 
   constructor() {
     this.log('📝 Log Manager initialized', 'info');

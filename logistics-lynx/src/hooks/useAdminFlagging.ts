@@ -31,8 +31,8 @@ export const useAdminFlagging = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env['NEXT_PUBLIC_SUPABASE_URL']!,
+process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!
   );
 
   const flagForReview = async (formData: FormData, reason: string): Promise<string> => {

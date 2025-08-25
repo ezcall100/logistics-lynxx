@@ -28,7 +28,7 @@ export class NotificationManager {
     
     try {
       // Load notification configuration
-      this.isEnabled = process.env.NOTIFICATIONS_ENABLED !== 'false';
+      this.isEnabled = process.env['NOTIFICATIONS_ENABLED'] !== 'false';
       
       this.logManager.log('✅ Notification Manager initialized', 'success');
       
@@ -72,17 +72,17 @@ export class NotificationManager {
   async sendToExternalServices(notification: Notification): Promise<void> {
     try {
       // Send to Slack if configured
-      if (process.env.SLACK_WEBHOOK_URL) {
+      if (process.env['SLACK_WEBHOOK_URL']) {
         await this.sendToSlack(notification);
       }
 
       // Send to email if configured
-      if (process.env.EMAIL_SERVICE_ENABLED === 'true') {
+      if (process.env['EMAIL_SERVICE_ENABLED'] === 'true') {
         await this.sendToEmail(notification);
       }
 
       // Send to webhook if configured
-      if (process.env.WEBHOOK_URL) {
+      if (process.env['WEBHOOK_URL']) {
         await this.sendToWebhook(notification);
       }
 
@@ -93,7 +93,7 @@ export class NotificationManager {
 
   private async sendToSlack(notification: Notification): Promise<void> {
     try {
-      const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+      const webhookUrl = process.env['SLACK_WEBHOOK_URL'];
       if (!webhookUrl) return;
 
       const payload = {
@@ -140,7 +140,7 @@ export class NotificationManager {
 
   private async sendToWebhook(notification: Notification): Promise<void> {
     try {
-      const webhookUrl = process.env.WEBHOOK_URL;
+      const webhookUrl = process.env['WEBHOOK_URL'];
       if (!webhookUrl) return;
 
       // Simulate webhook call

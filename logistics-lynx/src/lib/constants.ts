@@ -215,5 +215,5 @@ export const FLOATING_ACTION_MENU = [
   { title: "Customer Email", icon: Mail, path: "/driver/customer-email", priority: "medium" },
 ];
 
-export const APP_NAME = 'Logistics Lynx';
+export const APP_NAME = 'Trans Bot AI';
 export const APP_VERSION = '1.0.0';

@@ -108,7 +108,7 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
                     : 'text-slate-900 group-hover:text-indigo-600'
                   }
                 `}>
-                  Logistics Lynx
+                  Trans Bot AI
                 </span>
                 <div className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                   TMS Platform

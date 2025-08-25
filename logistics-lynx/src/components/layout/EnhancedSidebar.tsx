@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { 
   ChevronRight, 
   ChevronDown, 
@@ -298,7 +298,53 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
         { id: 'user-preferences', title: 'User Preferences', icon: 'UserCheck', path: 'settings/preferences' },
         { id: 'security-settings', title: 'Security Settings', icon: 'Shield', path: 'settings/security' }
       ],
-      priority: 'high'
+      priority: 'medium'
+    },
+    {
+      id: 'profile',
+      title: 'Profile',
+      icon: 'User',
+      description: 'Personal profile management',
+      children: [
+        { id: 'profile-overview', title: 'Profile Overview', icon: 'User', path: 'profile' },
+        { id: 'personal-information', title: 'Personal Information', icon: 'UserCheck', path: 'profile/personal' },
+        { id: 'avatar-media', title: 'Avatar & Media', icon: 'Image', path: 'profile/avatar' },
+        { id: 'user-preferences', title: 'User Preferences', icon: 'Settings', path: 'profile/preferences' },
+        { id: 'activity-history', title: 'Activity History', icon: 'Activity', path: 'profile/activity' },
+        { id: 'active-sessions', title: 'Active Sessions', icon: 'Monitor', path: 'profile/sessions' },
+        { id: 'account-verification', title: 'Account Verification', icon: 'CheckCircle', path: 'profile/verification' },
+        { id: 'account-deletion', title: 'Account Deletion', icon: 'Trash2', path: 'profile/delete' }
+      ],
+      priority: 'medium'
+    },
+    {
+      id: 'fab',
+      title: 'FAB Actions',
+      icon: 'Plus',
+      badge: 'New',
+      description: 'Floating Action Button management',
+      children: [
+        { id: 'fab-overview', title: 'FAB Overview', icon: 'Plus', path: 'fab' },
+        { id: 'fab-actions', title: 'FAB Actions', icon: 'Zap', path: 'fab/actions' },
+        { id: 'fab-customization', title: 'FAB Customization', icon: 'Palette', path: 'fab/customization' },
+        { id: 'fab-templates', title: 'FAB Templates', icon: 'Copy', path: 'fab/templates' },
+        { id: 'fab-analytics', title: 'FAB Analytics', icon: 'BarChart3', path: 'fab/analytics' },
+        { id: 'fab-integrations', title: 'FAB Integrations', icon: 'Plug', path: 'fab/integrations' }
+      ],
+      priority: 'medium'
+    },
+    {
+      id: 'mobile',
+      title: 'Mobile',
+      icon: 'Smartphone',
+      description: 'Mobile app management',
+      children: [
+        { id: 'mobile-overview', title: 'Mobile Overview', icon: 'Smartphone', path: 'mobile' },
+        { id: 'mobile-settings', title: 'Mobile Settings', icon: 'Settings', path: 'mobile/settings' },
+        { id: 'mobile-sync', title: 'Mobile Sync', icon: 'RefreshCw', path: 'mobile/sync' },
+        { id: 'mobile-devices', title: 'Mobile Devices', icon: 'Devices', path: 'mobile/devices' }
+      ],
+            priority: 'low'
     }
   ];
 
@@ -336,16 +382,95 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   );
 
   const renderMenuItem = (item: MenuItem, level: number = 0) => {
-    const isExpanded = expandedMenus[item.id];
-    const isActive = activeMenu === item.id || location.pathname === item.path;
+    const isExpanded = expandedMenus[item.id] || false;
     const hasChildren = item.children && item.children.length > 0;
 
+    // For items with children, use button (expandable)
+    if (hasChildren) {
+      return (
+        <div key={item.id}>
+          <button
+            onClick={() => level === 0 ? handleMenuClick(item) : handleSubMenuClick(item)}
+            className={`
+              w-full flex items-center justify-between py-3 rounded-lg cursor-pointer transition-all duration-200 group
+              ${isOpen ? 'px-4' : 'px-2 justify-center'}
+              ${level > 0 && isOpen ? 'ml-4' : ''}
+              ${isDarkMode
+                ? 'text-slate-300 hover:bg-slate-700/50'
+                : 'text-slate-700 hover:bg-slate-50'
+              }
+            `}
+          >
+                      <div className="flex items-center space-x-3">
+              <EnhancedIcon
+                name={item.icon}
+                size={20}
+                className={`
+                  ${isDarkMode 
+                    ? 'text-slate-400 group-hover:text-slate-300' 
+                    : 'text-slate-500 group-hover:text-slate-700'
+                  }
+                `}
+              />
+            {isOpen && (
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium text-sm">{item.title}</span>
+                  {item.badge && (
+                    <span className={`
+                      px-2 py-0.5 text-xs rounded-full font-medium
+                      ${item.badge === 'Live' 
+                        ? isDarkMode 
+                          ? 'bg-emerald-900/30 text-emerald-400' 
+                          : 'bg-emerald-100 text-emerald-800'
+                        : item.badge === 'AI'
+                        ? isDarkMode 
+                          ? 'bg-purple-900/30 text-purple-400' 
+                          : 'bg-purple-100 text-purple-800'
+                        : isDarkMode 
+                          ? 'bg-indigo-900/30 text-indigo-400' 
+                          : 'bg-indigo-100 text-indigo-800'
+                      }
+                    `}>
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+                {item.description && (
+                  <p className={`text-xs mt-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          {hasChildren && isOpen && (
+            <ChevronRight 
+              className={`
+                h-4 w-4 transition-transform duration-200
+                ${isExpanded ? 'rotate-90' : ''}
+                ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}
+              `}
+            />
+          )}
+        </button>
+        
+        {hasChildren && isExpanded && isOpen && (
+          <div className="mt-1 space-y-1">
+            {item.children!.map(child => renderMenuItem(child, level + 1))}
+          </div>
+        )}
+      </div>
+    );
+    }
+
+    // For items without children, use NavLink (navigable)
     return (
       <div key={item.id}>
-        <div
-          onClick={() => level === 0 ? handleMenuClick(item) : handleSubMenuClick(item)}
-          className={`
-            flex items-center justify-between py-3 rounded-lg cursor-pointer transition-all duration-200 group
+        <NavLink
+          to={item.path}
+          className={({ isActive }) => `
+            w-full flex items-center justify-between py-3 rounded-lg cursor-pointer transition-all duration-200 group
             ${isOpen ? 'px-4' : 'px-2 justify-center'}
             ${level > 0 && isOpen ? 'ml-4' : ''}
             ${isActive 
@@ -362,7 +487,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
             <EnhancedIcon
               name={item.icon}
               size={20}
-              className={`
+              className={({ isActive }) => `
                 ${isActive 
                   ? isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
                   : isDarkMode 
@@ -403,25 +528,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
               </div>
             )}
           </div>
-          {hasChildren && isOpen && (
-            <ChevronRight 
-              className={`
-                h-4 w-4 transition-transform duration-200
-                ${isExpanded ? 'rotate-90' : ''}
-                ${isActive 
-                  ? isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
-                  : isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                }
-              `}
-            />
-          )}
-        </div>
-        
-        {hasChildren && isExpanded && isOpen && (
-          <div className="mt-1 space-y-1">
-            {item.children!.map(child => renderMenuItem(child, level + 1))}
-          </div>
-        )}
+        </NavLink>
       </div>
     );
   };

@@ -123,6 +123,37 @@ import SecurityTesting from './pages/super-admin/development-devops/SecurityTest
 import DevDocumentation from './pages/super-admin/development-devops/DevDocumentation';
 import ReleaseManagement from './pages/super-admin/development-devops/ReleaseManagement';
 
+
+import SettingsOverview from './pages/super-admin/settings/SettingsOverview';
+import ProfileSettings from './pages/super-admin/settings/ProfileSettings';
+import SecuritySettings from './pages/super-admin/settings/SecuritySettings';
+import NotificationSettings from './pages/super-admin/settings/NotificationSettings';
+import AppearanceSettings from './pages/super-admin/settings/AppearanceSettings';
+import LanguageSettings from './pages/super-admin/settings/LanguageSettings';
+import AccessibilitySettings from './pages/super-admin/settings/AccessibilitySettings';
+import PrivacySettings from './pages/super-admin/settings/PrivacySettings';
+import IntegrationSettings from './pages/super-admin/settings/IntegrationSettings';
+import BackupSettings from './pages/super-admin/settings/BackupSettings';
+import AdvancedSettings from './pages/super-admin/settings/AdvancedSettings';
+import AboutSettings from './pages/super-admin/settings/AboutSettings';
+import ProfileOverview from './pages/super-admin/profile/ProfileOverview';
+import PersonalInformation from './pages/super-admin/profile/PersonalInformation';
+import AvatarMedia from './pages/super-admin/profile/AvatarMedia';
+import UserPreferences from './pages/super-admin/profile/UserPreferences';
+import ActivityHistory from './pages/super-admin/profile/ActivityHistory';
+import ActiveSessions from './pages/super-admin/profile/ActiveSessions';
+import AccountVerification from './pages/super-admin/profile/AccountVerification';
+import AccountDeletion from './pages/super-admin/profile/AccountDeletion';
+import FABOverview from './pages/super-admin/fab/FABOverview';
+import FABActions from './pages/super-admin/fab/FABActions';
+import FABCustomization from './pages/super-admin/fab/FABCustomization';
+import FABTemplates from './pages/super-admin/fab/FABTemplates';
+import FABAnalytics from './pages/super-admin/fab/FABAnalytics';
+import FABIntegrations from './pages/super-admin/fab/FABIntegrations';
+import MobileOverview from './pages/super-admin/mobile/MobileOverview';
+import MobileSettings from './pages/super-admin/mobile/MobileSettings';
+import MobileSync from './pages/super-admin/mobile/MobileSync';
+import MobileDevices from './pages/super-admin/mobile/MobileDevices';
 // Landing page component
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -316,7 +347,33 @@ function App() {
                 <Route path="settings/system" element={<SystemSettings />} />
                 <Route path="settings/preferences" element={<UserPreferences />} />
                 <Route path="settings/security" element={<SecuritySettings />} />
-
+                <Route path="settings/notifications" element={<NotificationSettings />} />
+                <Route path="settings/appearance" element={<AppearanceSettings />} />
+                <Route path="settings/language" element={<LanguageSettings />} />
+                <Route path="settings/accessibility" element={<AccessibilitySettings />} />
+                <Route path="settings/privacy" element={<PrivacySettings />} />
+                <Route path="settings/integrations" element={<IntegrationSettings />} />
+                <Route path="settings/backup" element={<BackupSettings />} />
+                <Route path="settings/advanced" element={<AdvancedSettings />} />
+                <Route path="settings/about" element={<AboutSettings />} />
+                <Route path="profile" element={<ProfileOverview />} />
+                <Route path="profile/personal" element={<PersonalInformation />} />
+                <Route path="profile/avatar" element={<AvatarMedia />} />
+                <Route path="profile/preferences" element={<UserPreferences />} />
+                <Route path="profile/activity" element={<ActivityHistory />} />
+                <Route path="profile/sessions" element={<ActiveSessions />} />
+                <Route path="profile/verification" element={<AccountVerification />} />
+                <Route path="profile/delete" element={<AccountDeletion />} />
+                <Route path="fab" element={<FABOverview />} />
+                <Route path="fab/actions" element={<FABActions />} />
+                <Route path="fab/customization" element={<FABCustomization />} />
+                <Route path="fab/templates" element={<FABTemplates />} />
+                <Route path="fab/analytics" element={<FABAnalytics />} />
+                <Route path="fab/integrations" element={<FABIntegrations />} />
+                <Route path="mobile" element={<MobileOverview />} />
+                <Route path="mobile/settings" element={<MobileSettings />} />
+                <Route path="mobile/sync" element={<MobileSync />} />
+                <Route path="mobile/devices" element={<MobileDevices />} />
                 {/* Security Dashboard Routes */}
                 <Route path="security/dashboard" element={<PlaceholderPage title="Security Dashboard" />} />
 

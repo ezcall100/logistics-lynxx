@@ -101,7 +101,7 @@ const ENVIRONMENT_OVERRIDES: Record<string, Partial<FeatureFlags>> = {
  * Get current environment
  */
 function getEnvironment(): string {
-  return process.env.NODE_ENV || 'development';
+  return process.env['NODE_ENV'] || 'development';
 }
 
 /**

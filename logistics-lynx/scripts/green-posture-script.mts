@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 import { supabase } from "../src/lib/supabaseClient.js";
-import { acquire, isLocked, getLockPid } from "./util/lockfile.js";
+import { isLocked, getLockPid } from "./util/lockfile.js";
 
 interface GreenPosture {
   timestamp: string;
@@ -45,7 +45,7 @@ async function checkFlags(): Promise<GreenPosture['checks']['flags']> {
 
     if (error) throw error;
 
-    const flags = data?.reduce((acc, flag) => {
+    const flags = data?.reduce((acc: Record<string, string>, flag: { key: string; value: string }) => {
       acc[flag.key] = flag.value;
       return acc;
     }, {} as Record<string, string>) || {};
@@ -70,7 +70,7 @@ async function checkFlags(): Promise<GreenPosture['checks']['flags']> {
 async function checkDatabase(): Promise<GreenPosture['checks']['database']> {
   try {
     // Check connection
-    const { data: testData, error: testError } = await supabase
+    const { error: testError } = await supabase
       .from('feature_flags_v2')
       .select('key')
       .limit(1);
@@ -191,7 +191,7 @@ async function main(): Promise<void> {
       flags,
       agents: {
         running: locked,
-        lockPid: lockPid || undefined
+        lockPid: lockPid ?? undefined
       },
       database,
       metrics

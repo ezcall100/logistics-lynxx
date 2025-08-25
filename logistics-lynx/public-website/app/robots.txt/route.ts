@@ -59,7 +59,7 @@ Disallow: /_next/
 Disallow: /static/
 
 # Sitemap
-Sitemap: ${process.env.NEXT_PUBLIC_BASE_URL || 'https://transbot.ai'}/sitemap.xml
+Sitemap: ${process.env['NEXT_PUBLIC_BASE_URL'] || 'https://transbot.ai'}/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1`;

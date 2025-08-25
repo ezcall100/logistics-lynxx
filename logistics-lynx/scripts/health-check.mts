@@ -104,7 +104,7 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(503, { "content-type": "application/json" });
         res.end(JSON.stringify({ 
           ready: false, 
-          mode: process.env.READYZ_MODE || "strict",
+          mode: process.env['READYZ_MODE'] || "strict",
           reason: getAgentsError() ?? "agents not initialized",
           timestamp: new Date().toISOString()
         }));
@@ -112,7 +112,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       // Determine mode: strict in prod, lenient in dev
-      const mode = process.env.READYZ_MODE === 'strict' ? 'strict' : 'lenient';
+      const mode = process.env['READYZ_MODE'] === 'strict' ? 'strict' : 'lenient';
       
       // Check agents status
       const agentsOk = getAgentsReady();
@@ -147,7 +147,7 @@ const server = http.createServer(async (req, res) => {
           db.reason
         ) : undefined,
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || "development"
+        environment: process.env['NODE_ENV'] || "development"
       }));
       return;
     }
@@ -167,7 +167,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const PORT = parseInt(process.env.HEALTH_PORT || '8089', 10);
+const PORT = parseInt(process.env['HEALTH_PORT'] || '8089', 10);
 
 // Function to find an available port
 async function findAvailablePort(startPort: number): Promise<number> {
@@ -200,8 +200,8 @@ async function startServer() {
       console.log(`🏥 Health server listening on port ${availablePort}`);
       console.log(`   Health check: http://localhost:${availablePort}/healthz`);
       console.log(`   Readiness check: http://localhost:${availablePort}/readyz`);
-      console.log(`   Mode: ${process.env.READYZ_MODE || 'strict'}`);
-      console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`   Mode: ${process.env['READYZ_MODE'] || 'strict'}`);
+      console.log(`   Environment: ${process.env['NODE_ENV'] || 'development'}`);
       
       // Log credential status
       const credCheck = validateSupabaseCredentials();

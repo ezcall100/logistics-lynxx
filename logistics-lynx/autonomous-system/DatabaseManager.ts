@@ -27,10 +27,10 @@ export class DatabaseManager {
     try {
       // Load configuration from environment variables
       this.config = {
-        url: process.env.SUPABASE_URL || 'https://placeholder.supabase.co',
-        apiKey: process.env.SUPABASE_ANON_KEY || 'placeholder-key',
-        projectId: process.env.SUPABASE_PROJECT_ID || 'placeholder-project',
-        region: process.env.SUPABASE_REGION || 'us-east-1'
+        url: process.env['SUPABASE_URL'] || 'https://placeholder.supabase.co',
+apiKey: process.env['SUPABASE_ANON_KEY'] || 'placeholder-key',
+projectId: process.env['SUPABASE_PROJECT_ID'] || 'placeholder-project',
+region: process.env['SUPABASE_REGION'] || 'us-east-1'
       };
 
       this.logManager.log('✅ Database configuration loaded', 'success');

@@ -19,7 +19,7 @@ async function callGoogleMapsApi(
 ): Promise<MapsApiResponse> {
   return tracer.startActiveSpan(spanName, async (span) => {
     try {
-      const key = process.env.GOOGLE_MAPS_API_KEY;
+      const key = process.env['GOOGLE_MAPS_API_KEY'];
       if (!key) {
         span.setStatus({ code: 1, message: 'Server key missing' });
         span.end();
@@ -287,7 +287,7 @@ export async function placesSearch(req: Request, res: Response) {
 
 // Health check endpoint
 export async function mapsHealth(req: Request, res: Response) {
-  const key = process.env.GOOGLE_MAPS_API_KEY;
+  const key = process.env['GOOGLE_MAPS_API_KEY'];
   
   if (!key) {
     return res.status(503).json({
