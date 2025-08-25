@@ -308,8 +308,8 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   const handleMenuClick = (item: MenuItem) => {
     if (item.path) {
       console.log('🔍 Navigating to:', item.path);
-      // Use relative navigation within the super-admin context
-      navigate(item.path, { relative: 'route' });
+      // Use absolute navigation to ensure proper routing
+      navigate(item.path);
       setActiveMenu(item.id);
     } else if (item.children) {
       toggleMenu(item.id);
@@ -319,8 +319,8 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   const handleSubMenuClick = (item: MenuItem) => {
     if (item.path) {
       console.log('🔍 Navigating to sub-menu:', item.path);
-      // Use relative navigation within the super-admin context
-      navigate(item.path, { relative: 'route' });
+      // Use absolute navigation to ensure proper routing
+      navigate(item.path);
       setActiveMenu(item.id);
     }
   };

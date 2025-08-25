@@ -149,6 +149,13 @@ const PlaceholderPage = ({ title }: { title: string }) => (
 const SuperAdminRoutes: React.FC = () => {
   console.log('🔍 SuperAdminRoutes rendering...');
   
+  // Get current location for debugging
+  const location = window.location.pathname;
+  console.log('🔍 Current location:', location);
+  console.log('🔍 Expected routes:', [
+    '/users', '/users/roles', '/settings', '/mcp', '/dashboard'
+  ]);
+  
   return (
     <Routes>
       {/* Dashboard Routes */}
@@ -278,8 +285,32 @@ const SuperAdminRoutes: React.FC = () => {
       {/* Dashboard default route */}
       <Route path="/dashboard" element={<SystemOverview />} />
       
-      {/* Catch-all route for unmatched paths */}
-      <Route path="*" element={<SystemOverview />} />
+      {/* Catch-all route for unmatched paths - with debugging */}
+      <Route path="*" element={
+        <div className="min-h-screen bg-red-50 p-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h1 className="text-3xl font-bold text-red-900 mb-6">
+                🚨 Route Not Found
+              </h1>
+              <p className="text-lg text-red-700 mb-4">
+                The requested page could not be found. This might be due to:
+              </p>
+              <ul className="list-disc list-inside text-red-600 space-y-2 mb-6">
+                <li>Incorrect navigation path</li>
+                <li>Missing route definition</li>
+                <li>Route configuration issue</li>
+              </ul>
+              <button
+                onClick={() => window.history.back()}
+                className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      } />
     </Routes>
   );
 };
