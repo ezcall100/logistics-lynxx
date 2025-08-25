@@ -99,6 +99,9 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   const [activeMenu, setActiveMenu] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Debug current location
+  console.log('🔍 Current location:', location.pathname);
 
   // Enhanced navigation items with better icons and organization
   const navigationItems: MenuItem[] = [
@@ -304,7 +307,9 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
 
   const handleMenuClick = (item: MenuItem) => {
     if (item.path) {
-      navigate(item.path);
+      console.log('🔍 Navigating to:', item.path);
+      // Use relative navigation within the super-admin context
+      navigate(item.path, { relative: 'route' });
       setActiveMenu(item.id);
     } else if (item.children) {
       toggleMenu(item.id);
@@ -313,7 +318,9 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
 
   const handleSubMenuClick = (item: MenuItem) => {
     if (item.path) {
-      navigate(item.path);
+      console.log('🔍 Navigating to sub-menu:', item.path);
+      // Use relative navigation within the super-admin context
+      navigate(item.path, { relative: 'route' });
       setActiveMenu(item.id);
     }
   };
@@ -364,46 +371,46 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
                   <span className="font-medium text-sm">{item.title}</span>
-                                     {item.badge && (
-                     <span className={`
-                       px-2 py-0.5 text-xs rounded-full font-medium
-                       ${item.badge === 'Live' 
-                         ? isDarkMode 
-                           ? 'bg-emerald-900/30 text-emerald-400' 
-                           : 'bg-emerald-100 text-emerald-800'
-                         : item.badge === 'AI'
-                         ? isDarkMode 
-                           ? 'bg-purple-900/30 text-purple-400' 
-                           : 'bg-purple-100 text-purple-800'
-                         : isDarkMode 
-                           ? 'bg-indigo-900/30 text-indigo-400' 
-                           : 'bg-indigo-100 text-indigo-800'
-                       }
-                     `}>
-                       {item.badge}
-                     </span>
-                   )}
+                  {item.badge && (
+                    <span className={`
+                      px-2 py-0.5 text-xs rounded-full font-medium
+                      ${item.badge === 'Live' 
+                        ? isDarkMode 
+                          ? 'bg-emerald-900/30 text-emerald-400' 
+                          : 'bg-emerald-100 text-emerald-800'
+                        : item.badge === 'AI'
+                        ? isDarkMode 
+                          ? 'bg-purple-900/30 text-purple-400' 
+                          : 'bg-purple-100 text-purple-800'
+                        : isDarkMode 
+                          ? 'bg-indigo-900/30 text-indigo-400' 
+                          : 'bg-indigo-100 text-indigo-800'
+                      }
+                    `}>
+                      {item.badge}
+                    </span>
+                  )}
                 </div>
-                                 {item.description && (
-                   <p className={`text-xs mt-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                     {item.description}
-                   </p>
-                 )}
+                {item.description && (
+                  <p className={`text-xs mt-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {item.description}
+                  </p>
+                )}
               </div>
             )}
           </div>
-                     {hasChildren && isOpen && (
-             <ChevronRight 
-               className={`
-                 h-4 w-4 transition-transform duration-200
-                 ${isExpanded ? 'rotate-90' : ''}
-                 ${isActive 
-                   ? isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
-                   : isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                 }
-               `}
-             />
-           )}
+          {hasChildren && isOpen && (
+            <ChevronRight 
+              className={`
+                h-4 w-4 transition-transform duration-200
+                ${isExpanded ? 'rotate-90' : ''}
+                ${isActive 
+                  ? isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
+                  : isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                }
+              `}
+            />
+          )}
         </div>
         
         {hasChildren && isExpanded && isOpen && (

@@ -147,6 +147,8 @@ const PlaceholderPage = ({ title }: { title: string }) => (
 );
 
 const SuperAdminRoutes: React.FC = () => {
+  console.log('🔍 SuperAdminRoutes rendering...');
+  
   return (
     <Routes>
       {/* Dashboard Routes */}
