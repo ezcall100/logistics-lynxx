@@ -930,126 +930,44 @@ const SuperAdmin: React.FC = () => {
           </main>
         </div>
 
-        {/* 🚀 Fully Functional Floating Action Button */}
+        {/* 🚀 Simple Working FAB */}
         <div className="fixed bottom-8 right-8 z-50">
-          {/* FAB Actions with Enhanced UI */}
+          {/* FAB Actions */}
           {fabOpen && (
-            <>
-              {/* Backdrop */}
-              <div 
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
-                onClick={() => setFabOpen(false)}
-              />
-              
-              {/* Actions Container */}
-              <div className="absolute bottom-24 right-0 space-y-3 z-50 max-h-96 overflow-y-auto">
-                {fabActions.map((action, index) => (
-                  <div
-                    key={index}
-                    className={`
-                      w-72 cursor-pointer transform transition-all duration-300 ease-out
-                      ${fabOpen ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-4 opacity-0 scale-95'}
-                    `}
-                    style={{ transitionDelay: `${index * 50}ms` }}
-                    onClick={() => {
-                      action.action();
-                      setFabOpen(false);
-                    }}
-                  >
-                    <div className={`
-                      ${stableStyles.surface[mode]} 
-                      hover:${stableStyles.surfaceHover[mode]} 
-                      ${stableStyles.transitionSmooth}
-                      rounded-2xl p-4 border ${stableStyles.border[mode]}
-                      shadow-lg hover:shadow-xl transform hover:scale-105
-                    `}>
-                      <div className="flex items-center space-x-4">
-                        {/* Action Icon with Gradient */}
-                        <div className={`
-                          w-12 h-12 bg-gradient-to-br ${action.color} 
-                          rounded-xl flex items-center justify-center text-white text-xl
-                          shadow-lg transform hover:scale-110 transition-transform duration-200
-                        `}>
-                          {action.icon}
-                        </div>
-                        
-                        {/* Action Content */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h3 className={`font-semibold text-sm ${stableStyles.textPrimary[mode]} truncate`}>
-                              {action.title}
-                            </h3>
-                            {/* Priority Badge */}
-                            {action.priority === 'high' && (
-                              <span className="px-2 py-1 text-xs bg-red-500 text-white rounded-full">High</span>
-                            )}
-                            {action.priority === 'medium' && (
-                              <span className="px-2 py-1 text-xs bg-yellow-500 text-white rounded-full">Medium</span>
-                            )}
-                            {action.priority === 'low' && (
-                              <span className="px-2 py-1 text-xs bg-green-500 text-white rounded-full">Low</span>
-                            )}
-                          </div>
-                          <p className={`text-xs ${stableStyles.textSecondary[mode]} line-clamp-2`}>
-                            {action.description}
-                          </p>
-                          {/* Category Tag */}
-                          <div className="mt-2">
-                            <span className={`
-                              px-2 py-1 text-xs rounded-full
-                              ${action.category === 'users' ? 'bg-blue-100 text-blue-700' : ''}
-                              ${action.category === 'system' ? 'bg-purple-100 text-purple-700' : ''}
-                              ${action.category === 'security' ? 'bg-red-100 text-red-700' : ''}
-                              ${action.category === 'analytics' ? 'bg-green-100 text-green-700' : ''}
-                              ${action.category === 'communication' ? 'bg-cyan-100 text-cyan-700' : ''}
-                              ${action.category === 'support' ? 'bg-orange-100 text-orange-700' : ''}
-                              ${action.category === 'ai' ? 'bg-pink-100 text-pink-700' : ''}
-                              ${action.category === 'settings' ? 'bg-gray-100 text-gray-700' : ''}
-                              ${action.category === 'tools' ? 'bg-lime-100 text-lime-700' : ''}
-                              ${action.category === 'monitoring' ? 'bg-amber-100 text-amber-700' : ''}
-                            `}>
-                              {action.category}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        {/* Action Arrow */}
-                        <div className={`
-                          text-lg ${stableStyles.textMuted[mode]} 
-                          transform transition-transform duration-200 group-hover:translate-x-1
-                        `}>
-                          →
-                        </div>
-                      </div>
+            <div className="absolute bottom-20 right-0 space-y-2">
+              {fabActions.slice(0, 5).map((action, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                  onClick={() => {
+                    action.action();
+                    setFabOpen(false);
+                  }}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white text-sm">
+                      {action.icon}
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm text-gray-900">{action.title}</div>
+                      <div className="text-xs text-gray-500">{action.description}</div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </>
+                </div>
+              ))}
+            </div>
           )}
           
           {/* Main FAB Button */}
-          <div className="relative z-50">
-            <button
-              onClick={() => setFabOpen(!fabOpen)}
-              className={`
-                w-16 h-16 rounded-2xl p-0 text-2xl shadow-2xl hover:shadow-3xl
-                ${stableStyles.accent[mode]} hover:${stableStyles.accentHover[mode]}
-                ${stableStyles.transitionSmooth} transform hover:scale-110
-                flex items-center justify-center text-white font-bold
-                focus:outline-none focus:ring-4 focus:ring-blue-300/50
-              `}
-            >
-              <span className={`transform transition-transform duration-300 ${fabOpen ? 'rotate-45' : 'rotate-0'}`}>
-                {fabOpen ? '✕' : '⚡'}
-              </span>
-            </button>
-            
-            {/* FAB Pulse Effect */}
-            {!fabOpen && (
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-teal-400 to-indigo-400 animate-ping opacity-20"></div>
-            )}
-          </div>
+          <button
+            onClick={() => {
+              console.log('FAB clicked, current state:', fabOpen);
+              setFabOpen(!fabOpen);
+            }}
+            className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center text-xl font-bold"
+          >
+            {fabOpen ? '✕' : '⚡'}
+          </button>
         </div>
       </div>
     </div>
