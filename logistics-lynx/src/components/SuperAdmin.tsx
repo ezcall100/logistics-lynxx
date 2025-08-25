@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import SuperAdminRoutes from '../pages/super-admin/SuperAdminRoutes';
+import { EnhancedLayout } from './layout/EnhancedLayout';
+import { EnhancedIcon } from './ui/EnhancedIcon';
 
 // 🎨 STABLE DESIGN SYSTEM - No Flashing, Eye-Friendly, KPI-Focused
 const stableStyles = {
@@ -96,262 +98,196 @@ const stableStyles = {
   transitionSlow: "transition-all duration-500 ease-out",
   transitionSmooth: "transition-all duration-400 cubic-bezier(0.4, 0, 0.2, 1)",
   
-  // 🌊 Stable Gradients - Subtle
+  // 🌟 Stable Gradients - No Flashing
   gradientPrimary: {
-    light: "bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/20",
-    dark: "bg-gradient-to-br from-slate-900 via-blue-900/15 to-indigo-900/15"
+    light: "bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30",
+    dark: "bg-gradient-to-br from-slate-900 via-blue-900/20 to-indigo-900/20"
   },
   gradientAccent: {
     light: "bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-600",
     dark: "bg-gradient-to-r from-teal-400 via-blue-400 to-indigo-500"
   },
   gradientSurface: {
-    light: "bg-gradient-to-br from-white via-blue-50/10 to-indigo-50/10",
-    dark: "bg-gradient-to-br from-slate-800 via-blue-900/10 to-indigo-900/10"
-  },
-  gradientGlass: {
-    light: "bg-gradient-to-br from-white/15 via-teal-50/5 to-transparent",
-    dark: "bg-gradient-to-br from-slate-800/15 via-teal-900/5 to-transparent"
-  },
-  
-  // 🎭 Stable Animations - No Flashing
-  animateFloat: "animate-pulse",
-  animateGlow: "animate-pulse",
-  animateSlide: "animate-in slide-in-from-top-2 duration-300",
-  animateFade: "animate-in fade-in duration-300",
-  animateScale: "animate-in zoom-in-95 duration-300",
-  animateRotate: "animate-spin",
-  animatePulse: "animate-pulse"
+    light: "bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/20",
+    dark: "bg-gradient-to-br from-slate-800 via-blue-900/20 to-indigo-900/20"
+  }
 };
 
-// 🌟 Stable Button Component - No Flashing
+// 🎨 STABLE UI COMPONENTS - No Flashing, Eye-Friendly
 const StableButton = ({ children, onClick, variant = "primary", size = "md", className = "", icon, loading = false, premium = false, mode = "light", ...props }: any) => {
-  const variants = {
-    primary: {
-      light: "bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-600 hover:from-teal-600 hover:via-blue-600 hover:to-indigo-700 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/25 hover:scale-[1.02]",
-      dark: "bg-gradient-to-r from-teal-400 via-blue-400 to-indigo-500 hover:from-teal-500 hover:via-blue-500 hover:to-indigo-600 text-white shadow-lg shadow-teal-400/20 hover:shadow-xl hover:shadow-teal-400/25 hover:scale-[1.02]"
-    },
-    secondary: {
-      light: "bg-white/90 backdrop-blur-sm border border-slate-200/50 text-slate-700 hover:bg-white hover:border-slate-300 shadow-md hover:shadow-lg hover:scale-[1.02]",
-      dark: "bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-800 hover:border-slate-600 shadow-md hover:shadow-lg hover:scale-[1.02]"
-    },
-    ghost: {
-      light: "bg-transparent text-slate-600 hover:bg-slate-100/50 hover:text-slate-800 hover:scale-[1.02]",
-      dark: "bg-transparent text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 hover:scale-[1.02]"
-    },
-    danger: {
-      light: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg shadow-red-500/20 hover:shadow-xl hover:scale-[1.02]",
-      dark: "bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white shadow-lg shadow-red-400/20 hover:shadow-xl hover:scale-[1.02]"
-    },
-    success: {
-      light: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:scale-[1.02]",
-      dark: "bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white shadow-lg shadow-emerald-400/20 hover:shadow-xl hover:scale-[1.02]"
-    },
-    premium: {
-      light: "bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-600 hover:from-teal-600 hover:via-blue-600 hover:to-indigo-700 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30 hover:scale-[1.02]",
-      dark: "bg-gradient-to-r from-teal-400 via-blue-400 to-indigo-500 hover:from-teal-500 hover:via-blue-500 hover:to-indigo-600 text-white shadow-lg shadow-teal-400/25 hover:shadow-xl hover:shadow-teal-400/30 hover:scale-[1.02]"
-    }
+  const baseClasses = "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
+  
+  const variantClasses = {
+    primary: premium 
+      ? `${stableStyles.gradientAccent[mode as keyof typeof stableStyles.gradientAccent]} text-white hover:shadow-lg hover:scale-105`
+      : `${stableStyles.accent[mode as keyof typeof stableStyles.accent]} text-white hover:${stableStyles.accentHover[mode as keyof typeof stableStyles.accentHover]}`,
+    secondary: `${stableStyles.surface[mode as keyof typeof stableStyles.surface]} ${stableStyles.textPrimary[mode as keyof typeof stableStyles.textPrimary]} hover:${stableStyles.surfaceHover[mode as keyof typeof stableStyles.surfaceHover]}`,
+    ghost: `${stableStyles.glass[mode as keyof typeof stableStyles.glass]} ${stableStyles.textPrimary[mode as keyof typeof stableStyles.textPrimary]} hover:${stableStyles.glassHover[mode as keyof typeof stableStyles.glassHover]}`,
+    danger: "bg-red-500 text-white hover:bg-red-600",
+    success: "bg-green-500 text-white hover:bg-green-600",
+    neutral: `${stableStyles.surface[mode as keyof typeof stableStyles.surface]} ${stableStyles.textSecondary[mode as keyof typeof stableStyles.textSecondary]} hover:${stableStyles.surfaceHover[mode as keyof typeof stableStyles.surfaceHover]}`,
+    outline: `${stableStyles.border[mode as keyof typeof stableStyles.border]} ${stableStyles.textPrimary[mode as keyof typeof stableStyles.textPrimary]} hover:${stableStyles.surface[mode as keyof typeof stableStyles.surface]}`
   };
   
-  const sizes = {
-    sm: "px-4 py-2.5 text-sm font-medium",
-    md: "px-6 py-3 text-sm font-semibold",
-    lg: "px-8 py-4 text-base font-bold"
+  const sizeClasses = {
+    sm: "px-3 py-1.5 text-sm",
+    md: "px-4 py-2 text-sm",
+    lg: "px-6 py-3 text-base"
   };
   
   return (
     <button
+      className={`${baseClasses} ${variantClasses[variant as keyof typeof variantClasses]} ${sizeClasses[size as keyof typeof sizeClasses]} ${className}`}
       onClick={onClick}
       disabled={loading}
-      className={`${variants[variant][mode]} ${sizes[size]} ${stableStyles.transitionSmooth} rounded-xl font-medium ${loading ? 'opacity-75 cursor-not-allowed' : ''} ${premium ? 'animate-pulse' : ''} ${className}`}
       {...props}
     >
-      <div className="flex items-center justify-center space-x-2">
-        {loading && (
-          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-        )}
-        {icon && !loading && <span className="text-lg">{icon}</span>}
-        <span>{children}</span>
-      </div>
+      {loading && <div className="animate-spin mr-2">⚡</div>}
+      {icon && <span className="mr-2">{icon}</span>}
+      {children}
     </button>
   );
 };
 
-// 🎨 Stable Card Component - No Flashing
-const StableCard = ({ children, className = "", hover = true, glass = false, elevated = false, premium = false, animated = false, mode = "light", ...props }: any) => (
-  <div 
-    className={`${glass ? stableStyles.glass[mode] : elevated ? stableStyles.surfaceElevated[mode] : stableStyles.surface[mode]} rounded-2xl p-6 ${hover ? stableStyles.transitionSmooth + ' hover:' + (glass ? stableStyles.glassHover[mode] : stableStyles.surfaceHover[mode]) + ' hover:scale-[1.01]' : ''} ${animated ? 'animate-pulse' : ''} ${className}`} 
-    {...props}
-  >
-    {children}
-  </div>
-);
-
-// 👤 Stable Avatar Component - Enhanced
-const StableAvatar = ({ src, alt, fallback, size = "md", status, ring = false, premium = false, mode = "light" }: any) => {
-  const sizes = {
-    sm: "w-8 h-8 text-sm",
-    md: "w-12 h-12 text-sm",
-    lg: "w-16 h-16 text-base"
-  };
-  
-  const statusColors = {
-    online: "bg-emerald-400",
-    offline: "bg-slate-400",
-    busy: "bg-amber-400",
-    away: "bg-blue-400",
-    premium: mode === "light" ? "bg-gradient-to-r from-teal-400 to-indigo-400" : "bg-gradient-to-r from-teal-500 to-indigo-500"
-  };
-  
+const StableInput = ({ placeholder, value, onChange, icon, premium = false, mode = "light", ...props }: any) => {
   return (
     <div className="relative">
-      <div className={`${sizes[size]} rounded-full bg-gradient-to-br from-teal-500 via-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold border-4 border-white shadow-lg ${ring ? 'ring-4 ring-teal-500/20' : ''}`}>
-        {src ? (
-          <img src={src} alt={alt} className="w-full h-full rounded-full object-cover" />
-        ) : (
-          <span>{fallback}</span>
-        )}
-      </div>
-      {status && (
-        <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${statusColors[status]} rounded-full border-2 border-white shadow-md`}></div>
+      {icon && (
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
+          {icon}
+        </div>
       )}
+      <input
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={`w-full px-4 py-2 ${icon ? 'pl-10' : ''} ${stableStyles.surface[mode as keyof typeof stableStyles.surface]} ${stableStyles.border[mode as keyof typeof stableStyles.border]} rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/50 ${stableStyles.transition}`}
+        {...props}
+      />
     </div>
   );
 };
 
-// 🏷️ Stable Badge Component - No Flashing
-const StableBadge = ({ children, variant = "default", className = "", pulse = false, premium = false, mode = "light" }: any) => {
-  const variants = {
-    default: {
-      light: "bg-gradient-to-r from-teal-100 to-indigo-100 text-teal-800 border border-teal-200/50",
-      dark: "bg-gradient-to-r from-teal-900 to-indigo-900 text-teal-200 border border-teal-700/50"
-    },
-    success: {
-      light: "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-200/50",
-      dark: "bg-gradient-to-r from-emerald-900 to-green-900 text-emerald-200 border border-emerald-700/50"
-    },
-    warning: {
-      light: "bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border border-amber-200/50",
-      dark: "bg-gradient-to-r from-amber-900 to-yellow-900 text-amber-200 border border-amber-700/50"
-    },
-    danger: {
-      light: "bg-gradient-to-r from-red-100 to-pink-100 text-red-800 border border-red-200/50",
-      dark: "bg-gradient-to-r from-red-900 to-pink-900 text-red-200 border border-red-700/50"
-    },
-    info: {
-      light: "bg-gradient-to-r from-slate-100 to-gray-100 text-slate-800 border border-slate-200/50",
-      dark: "bg-gradient-to-r from-slate-900 to-gray-900 text-slate-200 border border-slate-700/50"
-    },
-    premium: {
-      light: "bg-gradient-to-r from-teal-100 to-indigo-100 text-teal-800 border border-teal-200/50",
-      dark: "bg-gradient-to-r from-teal-900 to-indigo-900 text-teal-200 border border-teal-700/50"
-    },
-    live: {
-      light: "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-200/50",
-      dark: "bg-gradient-to-r from-emerald-900 to-green-900 text-emerald-200 border border-emerald-700/50"
-    }
-  };
+const StableNavItem = ({ children, onClick, active = false, premium = false, mode = "light", ...props }: any) => {
+  const baseClasses = "flex items-center justify-between w-full p-3 rounded-xl transition-all duration-200 cursor-pointer";
+  const activeClasses = active 
+    ? `${stableStyles.surfaceElevated[mode as keyof typeof stableStyles.surfaceElevated]} ${stableStyles.shadowGlow[mode as keyof typeof stableStyles.shadowGlow]}`
+    : `${stableStyles.glass[mode as keyof typeof stableStyles.glass]} hover:${stableStyles.glassHover[mode as keyof typeof stableStyles.glassHover]}`;
   
   return (
-    <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${variants[variant][mode]} ${stableStyles.shadow[mode]} ${pulse ? 'animate-pulse' : ''} ${premium ? 'animate-pulse' : ''} ${className}`}>
+    <div className={`${baseClasses} ${activeClasses}`} onClick={onClick} {...props}>
+      {children}
+    </div>
+  );
+};
+
+const StableBadge = ({ children, variant = "default", premium = false, mode = "light", className = "", pulse = false, ...props }: any) => {
+  const baseClasses = "inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium";
+  const variantClasses = {
+    default: `${stableStyles.surface[mode as keyof typeof stableStyles.surface]} ${stableStyles.textSecondary[mode as keyof typeof stableStyles.textSecondary]}`,
+    live: "bg-green-500 text-white",
+    premium: `${stableStyles.gradientAccent[mode as keyof typeof stableStyles.gradientAccent]} text-white`,
+    danger: "bg-red-500 text-white"
+  };
+  const pulseClasses = pulse ? "animate-pulse" : "";
+  
+  return (
+    <span className={`${baseClasses} ${variantClasses[variant as keyof typeof variantClasses]} ${pulseClasses} ${className}`} {...props}>
       {children}
     </span>
   );
 };
 
-// 📝 Stable Input Component - Enhanced
-const StableInput = ({ placeholder, value, onChange, className = "", icon, error, success, premium = false, mode = "light", ...props }: any) => (
-  <div className="relative">
-    {icon && (
-      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg">
-        {icon}
-      </span>
-    )}
-    <input
-      type="text"
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className={`w-full px-4 py-3 ${icon ? 'pl-12' : ''} ${mode === "light" ? 'bg-white/80' : 'bg-slate-800/80'} backdrop-blur-sm border ${error ? 'border-red-300' : success ? 'border-emerald-300' : mode === "light" ? 'border-slate-200/50' : 'border-slate-700/50'} rounded-xl focus:outline-none focus:ring-2 ${error ? 'focus:ring-red-500/30' : success ? 'focus:ring-emerald-500/30' : 'focus:ring-teal-500/30'} focus:border-teal-500 ${stableStyles.transitionSmooth} ${mode === "light" ? 'text-slate-700 placeholder-slate-400' : 'text-white placeholder-slate-500'} ${premium ? 'animate-pulse' : ''} ${className}`}
-      {...props}
-    />
-    {error && (
-      <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-red-500 text-sm">⚠️</span>
-    )}
-    {success && (
-      <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-emerald-500 text-sm">✅</span>
-    )}
-  </div>
-);
-
-// 🎯 Stable Dropdown Component - Enhanced
-const StableDropdown = ({ isOpen, onToggle, trigger, children, premium = false, mode = "light" }: any) => (
-  <div className="relative">
-    <div onClick={onToggle} className="cursor-pointer">
-      {trigger}
-    </div>
-    {isOpen && (
-      <div className={`absolute right-0 mt-3 w-72 ${mode === "light" ? 'bg-white/95' : 'bg-slate-800/95'} backdrop-blur-xl rounded-2xl shadow-xl ${mode === "light" ? 'border border-white/20' : 'border border-slate-700/20'} z-50 overflow-hidden ${stableStyles.animateSlide}`}>
-        {children}
-          </div>
-    )}
-          </div>
-);
-
-// 🎨 Stable Menu Item Component - Enhanced
-const StableMenuItem = ({ children, onClick, className = "", icon, badge, description, premium = false, mode = "light" }: any) => (
-  <div
-    onClick={onClick}
-    className={`flex items-center justify-between px-4 py-3 ${mode === "light" ? 'hover:bg-slate-50/80' : 'hover:bg-slate-700/80'} cursor-pointer ${stableStyles.transitionFast} ${premium ? 'animate-pulse' : ''} ${className}`}
-  >
-    <div className="flex items-center space-x-3">
-      {icon && <span className="text-slate-400 text-lg">{icon}</span>}
-      <div>
-        <span className={`font-medium ${mode === "light" ? 'text-slate-700' : 'text-slate-300'}`}>{children}</span>
-        {description && <p className={`text-xs ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>{description}</p>}
-          </div>
+const StableDropdown = ({ children, isOpen, onToggle, trigger, premium = false, mode = "light", ...props }: any) => {
+  return (
+    <div className="relative">
+      <div onClick={onToggle}>
+        {trigger}
+      </div>
+      {isOpen && (
+        <div className={`absolute right-0 mt-2 w-56 ${stableStyles.surface[mode as keyof typeof stableStyles.surface]} ${stableStyles.border[mode as keyof typeof stableStyles.border]} rounded-xl shadow-xl z-50`}>
+          {children}
         </div>
-    {badge && <StableBadge variant="default" className="text-xs" mode={mode}>{badge}</StableBadge>}
-  </div>
-);
+      )}
+    </div>
+  );
+};
 
-// 🧭 Stable Nav Item Component - Enhanced
-const StableNavItem = ({ children, onClick, className = "", icon, badge, description, active = false, premium = false, mode = "light" }: any) => (
-  <div
-    onClick={onClick}
-    className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer ${active ? (mode === "light" ? 'bg-white/10 text-slate-800' : 'bg-slate-700/10 text-white') : (mode === "light" ? 'text-slate-600 hover:bg-white/5 hover:text-slate-800' : 'text-slate-300 hover:bg-slate-700/5 hover:text-white')} ${stableStyles.transitionFast} ${premium ? 'animate-pulse' : ''} ${className}`}
-  >
-    <div className="flex items-center space-x-3">
+const StableMenuItem = ({ children, icon, description, premium = false, mode = "light", onClick, ...props }: any) => {
+  return (
+    <div 
+      className={`flex items-center space-x-3 p-3 cursor-pointer hover:${stableStyles.surfaceHover[mode as keyof typeof stableStyles.surfaceHover]} transition-all duration-200`}
+      onClick={onClick}
+      {...props}
+    >
       {icon && <span className="text-lg">{icon}</span>}
-      <div>
-        <span className="font-medium">{children}</span>
-        {description && <p className={`text-xs ${mode === "light" ? 'text-slate-400' : 'text-slate-500'}`}>{description}</p>}
+      <div className="flex-1">
+        <div className={`font-medium ${stableStyles.textPrimary[mode as keyof typeof stableStyles.textPrimary]}`}>{children}</div>
+        {description && <div className={`text-xs ${stableStyles.textMuted[mode as keyof typeof stableStyles.textMuted]}`}>{description}</div>}
       </div>
     </div>
-    {badge && <StableBadge variant="default" className="text-xs" mode={mode}>{badge}</StableBadge>}
-  </div>
-);
+  );
+};
 
-// 📊 Stable Progress Component - Enhanced
-const StableProgress = ({ value, max = 100, className = "", premium = false, mode = "light" }: any) => (
-  <div className={`w-full ${mode === "light" ? 'bg-slate-200/30' : 'bg-slate-700/30'} rounded-full h-2 ${premium ? 'animate-pulse' : ''} ${className}`}>
-    <div 
-      className={`h-2 rounded-full transition-all duration-500 ease-out ${mode === "light" ? 'bg-gradient-to-r from-teal-500 to-indigo-500' : 'bg-gradient-to-r from-teal-400 to-indigo-400'}`}
-      style={{ width: `${(value / max) * 100}%` }}
-    ></div>
-  </div>
-);
+const StableAvatar = ({ src, alt, fallback, size = "md", status, ring = false, premium = false, mode = "light" }: any) => {
+  const sizeClasses = {
+    sm: "w-8 h-8",
+    md: "w-10 h-10",
+    lg: "w-12 h-12"
+  };
+  
+  const statusColors = {
+    online: "bg-green-500",
+    offline: "bg-gray-400",
+    premium: "bg-gradient-to-r from-teal-500 to-indigo-500"
+  };
+  
+  return (
+    <div className="relative">
+      <div className={`${sizeClasses[size as keyof typeof sizeClasses]} rounded-full ${stableStyles.surface[mode as keyof typeof stableStyles.surface]} flex items-center justify-center ${stableStyles.textPrimary[mode as keyof typeof stableStyles.textPrimary]} ${ring ? stableStyles.shadowGlow[mode as keyof typeof stableStyles.shadowGlow] : ''}`}>
+        {src ? (
+          <img src={src} alt={alt} className="w-full h-full rounded-full object-cover" />
+        ) : (
+          <span className="font-semibold">{fallback}</span>
+        )}
+      </div>
+      {status && (
+        <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full ${statusColors[status as keyof typeof statusColors]} border-2 border-white`}></div>
+      )}
+    </div>
+  );
+};
+
+const StableProgress = ({ value, premium = false, mode = "light", ...props }: any) => {
+  return (
+    <div className={`w-full bg-slate-200 rounded-full h-2 ${mode === "dark" ? "bg-slate-700" : ""}`}>
+      <div 
+        className={`h-2 rounded-full ${premium ? stableStyles.gradientAccent[mode as keyof typeof stableStyles.gradientAccent] : "bg-blue-500"}`}
+        style={{ width: `${value}%` }}
+      ></div>
+    </div>
+  );
+};
 
 const SuperAdmin: React.FC = () => {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedMenus, setExpandedMenus] = useState<{[key: string]: boolean}>({});
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [fabOpen, setFabOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState('dashboard');
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+  const [fabOpen, setFabOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  // Mock user data
+  const user = {
+    name: 'Admin User',
+    email: 'admin@logisticslynx.com',
+    role: 'Super Admin',
+    avatar: undefined
+  };
 
   const toggleMenu = (menuKey: string) => {
     setExpandedMenus(prev => ({
@@ -433,318 +369,110 @@ const SuperAdmin: React.FC = () => {
       ]
     },
     {
-      key: 'monitoring',
-      title: 'System Monitoring',
-      icon: '📊',
-      description: 'Real-time system monitoring',
-      submenu: [
-        { title: 'Performance Monitoring', path: '/super-admin/monitoring/performance', icon: '⚡' },
-        { title: 'Error Tracking', path: '/super-admin/monitoring/errors', icon: '🐛' },
-        { title: 'Log Analysis', path: '/super-admin/monitoring/logs', icon: '📝' },
-        { title: 'Alert Management', path: '/super-admin/monitoring/alerts', icon: '🔔' },
-        { title: 'Uptime Monitoring', path: '/super-admin/monitoring/uptime', icon: '⏱️' },
-        { title: 'Resource Usage', path: '/super-admin/monitoring/resources', icon: '💻' },
-        { title: 'Network Monitoring', path: '/super-admin/monitoring/network', icon: '🌐' },
-        { title: 'Health Checks', path: '/super-admin/monitoring/health', icon: '❤️' }
-      ]
-    },
-    {
-      key: 'portals',
-      title: 'Portal Management',
-      icon: '🌐',
-      description: 'Multi-portal management system',
-      submenu: [
-        { title: 'Portal Overview', path: '/super-admin/portals', icon: '👁️' },
-        { title: 'Portal Configuration', path: '/super-admin/portals/config', icon: '⚙️' },
-        { title: 'Portal Users', path: '/super-admin/portals/users', icon: '👥' },
-        { title: 'Feature Management', path: '/super-admin/portals/features', icon: '✨' },
-        { title: 'Portal Analytics', path: '/super-admin/portals/analytics', icon: '📊' },
-        { title: 'Portal Billing', path: '/super-admin/portals/billing', icon: '💳' },
-        { title: 'Portal Support', path: '/super-admin/portals/support', icon: '🎫' },
-        { title: 'Portal Integrations', path: '/super-admin/portals/integrations', icon: '🔗' },
-        { title: 'Portal Backup', path: '/super-admin/portals/backup', icon: '💾' },
-        { title: 'Portal Security', path: '/super-admin/portals/security', icon: '🔒' },
-        { title: 'Portal Compliance', path: '/super-admin/portals/compliance', icon: '✅' },
-        { title: 'Portal Deployment', path: '/super-admin/portals/deployment', icon: '🚀' }
-      ]
-    },
-    {
       key: 'analytics',
       title: 'Analytics & Reports',
       icon: '📈',
-      description: 'Advanced analytics and reporting',
+      description: 'Comprehensive analytics and reporting',
       submenu: [
-        { title: 'Business Analytics', path: '/super-admin/analytics/business', icon: '📊' },
-        { title: 'User Analytics', path: '/super-admin/analytics/users', icon: '👥' },
-        { title: 'Performance Reports', path: '/super-admin/analytics/performance', icon: '⚡' },
-        { title: 'Security Reports', path: '/super-admin/analytics/security', icon: '🛡️' },
-        { title: 'Financial Reports', path: '/super-admin/analytics/financial', icon: '💰' },
-        { title: 'Operational Reports', path: '/super-admin/analytics/operational', icon: '⚙️' },
-        { title: 'Custom Reports', path: '/super-admin/analytics/custom', icon: '📋' },
+        { title: 'Business Intelligence', path: '/super-admin/analytics/bi', icon: '📊' },
+        { title: 'Performance Metrics', path: '/super-admin/analytics/performance', icon: '⚡' },
+        { title: 'User Behavior', path: '/super-admin/analytics/behavior', icon: '👤' },
+        { title: 'Revenue Analytics', path: '/super-admin/analytics/revenue', icon: '💰' },
+        { title: 'Custom Reports', path: '/super-admin/analytics/reports', icon: '📋' },
         { title: 'Data Export', path: '/super-admin/analytics/export', icon: '📤' },
-        { title: 'Dashboard Builder', path: '/super-admin/analytics/dashboards', icon: '🏗️' },
-        { title: 'Scheduled Reports', path: '/super-admin/analytics/scheduled', icon: '⏰' }
+        { title: 'Real-time Monitoring', path: '/super-admin/analytics/monitoring', icon: '🔄' },
+        { title: 'Predictive Analytics', path: '/super-admin/analytics/predictive', icon: '🔮' }
       ]
     },
     {
-      key: 'mcp',
-      title: 'MCP Control Center',
-      icon: '🤖',
-      badge: 'AI',
-      description: 'AI and autonomous system control',
+      key: 'integrations',
+      title: 'Integrations',
+      icon: '🔗',
+      description: 'Third-party integrations and APIs',
       submenu: [
-        { title: 'MCP Overview', path: '/super-admin/mcp', icon: '👁️' },
-        { title: 'Agent Management', path: '/super-admin/mcp/agents', icon: '🤖' },
-        { title: 'AI Models', path: '/super-admin/mcp/models', icon: '🧠' },
-        { title: 'Data Pipeline', path: '/super-admin/mcp/pipeline', icon: '🔗' },
-        { title: 'Machine Learning', path: '/super-admin/mcp/learning', icon: '🎯' },
-        { title: 'AI Analytics', path: '/super-admin/mcp/analytics', icon: '📊' },
-        { title: 'Automation Rules', path: '/super-admin/mcp/automation', icon: '⚡' },
-        { title: 'AI Integrations', path: '/super-admin/mcp/integrations', icon: '🔗' },
-        { title: 'AI Monitoring', path: '/super-admin/mcp/monitoring', icon: '👁️' },
-        { title: 'AI Compliance', path: '/super-admin/mcp/compliance', icon: '✅' },
-        { title: 'AI Documentation', path: '/super-admin/mcp/documentation', icon: '📚' },
-        { title: 'AI Support', path: '/super-admin/mcp/support', icon: '🎫' }
+        { title: 'API Management', path: '/super-admin/integrations/api', icon: '🔌' },
+        { title: 'Webhook Configuration', path: '/super-admin/integrations/webhooks', icon: '🎣' },
+        { title: 'OAuth Providers', path: '/super-admin/integrations/oauth', icon: '🔐' },
+        { title: 'Payment Gateways', path: '/super-admin/integrations/payments', icon: '💳' },
+        { title: 'Email Services', path: '/super-admin/integrations/email', icon: '📧' },
+        { title: 'SMS Services', path: '/super-admin/integrations/sms', icon: '📱' },
+        { title: 'File Storage', path: '/super-admin/integrations/storage', icon: '📁' },
+        { title: 'CRM Integration', path: '/super-admin/integrations/crm', icon: '👥' }
       ]
     },
     {
-      key: 'business',
-      title: 'Business Operations',
-      icon: '💼',
-      description: 'Business operations management',
+      key: 'settings',
+      title: 'Settings',
+      icon: '⚙️',
+      description: 'System configuration and preferences',
       submenu: [
-        { title: 'Customer Management', path: '/super-admin/business/customers', icon: '👥' },
-        { title: 'Sales Pipeline', path: '/super-admin/business/sales', icon: '📈' },
-        { title: 'Billing & Invoicing', path: '/super-admin/business/billing', icon: '💳' },
-        { title: 'Support Management', path: '/super-admin/business/support', icon: '🎫' },
-        { title: 'Documentation', path: '/super-admin/business/docs', icon: '📚' },
-        { title: 'Marketing Tools', path: '/super-admin/business/marketing', icon: '📢' },
-        { title: 'Partner Management', path: '/super-admin/business/partners', icon: '🤝' },
-        { title: 'Legal & Compliance', path: '/super-admin/business/legal', icon: '⚖️' }
-      ]
-    },
-    {
-      key: 'devops',
-      title: 'Development & DevOps',
-      icon: '🛠️',
-      description: 'Development and DevOps tools',
-      submenu: [
-        { title: 'Code Repository', path: '/super-admin/dev/repository', icon: '📁' },
-        { title: 'CI/CD Pipeline', path: '/super-admin/dev/pipeline', icon: '🔗' },
-        { title: 'Testing Suite', path: '/super-admin/dev/testing', icon: '🧪' },
-        { title: 'Environment Management', path: '/super-admin/dev/environments', icon: '🌍' },
-        { title: 'Performance Testing', path: '/super-admin/dev/performance', icon: '⚡' },
-        { title: 'Security Testing', path: '/super-admin/dev/security', icon: '🔒' },
-        { title: 'Dev Documentation', path: '/super-admin/dev/documentation', icon: '📚' },
-        { title: 'Release Management', path: '/super-admin/dev/releases', icon: '🚀' }
+        { title: 'General Settings', path: '/super-admin/settings/general', icon: '⚙️' },
+        { title: 'Appearance', path: '/super-admin/settings/appearance', icon: '🎨' },
+        { title: 'Notifications', path: '/super-admin/settings/notifications', icon: '🔔' },
+        { title: 'Language & Region', path: '/super-admin/settings/language', icon: '🌍' },
+        { title: 'Privacy & Security', path: '/super-admin/settings/privacy', icon: '🔒' },
+        { title: 'Backup & Sync', path: '/super-admin/settings/backup', icon: '💾' },
+        { title: 'Advanced Options', path: '/super-admin/settings/advanced', icon: '🔧' },
+        { title: 'About & Support', path: '/super-admin/settings/about', icon: 'ℹ️' }
       ]
     }
   ];
 
-  // 🚀 Fully Functional FAB Actions with Real Implementation
   const fabActions = [
-    // User Management Actions
-    { 
-      title: 'Add User', 
-      icon: '👤', 
-      action: () => {
-        console.log('🚀 Adding new user...');
-        navigate('/super-admin/users');
-        setFabOpen(false);
-      }, 
-      color: 'from-teal-500 to-indigo-500', 
-      description: 'Create new user account',
-      category: 'users',
-      priority: 'high'
+    {
+      title: 'Quick User',
+      description: 'Add new user',
+      icon: '👤',
+      action: () => navigate('/super-admin/users/new')
     },
-    { 
-      title: 'User Analytics', 
-      icon: '📊', 
-      action: () => {
-        console.log('📊 Opening user analytics...');
-        navigate('/super-admin/users/analytics');
-        setFabOpen(false);
-      }, 
-      color: 'from-emerald-500 to-green-500', 
-      description: 'View user statistics and reports',
-      category: 'analytics',
-      priority: 'medium'
+    {
+      title: 'System Alert',
+      description: 'Create alert',
+      icon: '🚨',
+      action: () => navigate('/super-admin/alerts/new')
     },
-    
-    // System Management Actions
-    { 
-      title: 'System Backup', 
-      icon: '💾', 
-      action: () => {
-        console.log('💾 Initiating system backup...');
-        // Simulate backup process
-        setTimeout(() => {
-          alert('✅ System backup completed successfully!');
-        }, 2000);
-        setFabOpen(false);
-      }, 
-      color: 'from-indigo-500 to-purple-500', 
-      description: 'Backup system data and configurations',
-      category: 'system',
-      priority: 'high'
+    {
+      title: 'Quick Report',
+      description: 'Generate report',
+      icon: '📊',
+      action: () => navigate('/super-admin/analytics/quick-report')
     },
-    { 
-      title: 'Security Scan', 
-      icon: '🔒', 
-      action: () => {
-        console.log('🔒 Running security audit...');
-        navigate('/super-admin/security/audit');
-        setFabOpen(false);
-      }, 
-      color: 'from-red-500 to-pink-500', 
-      description: 'Run comprehensive security audit',
-      category: 'security',
-      priority: 'high'
+    {
+      title: 'Backup Now',
+      description: 'Manual backup',
+      icon: '💾',
+      action: () => console.log('Backup initiated')
     },
-    { 
-      title: 'Performance Check', 
-      icon: '⚡', 
-      action: () => {
-        console.log('⚡ Checking system performance...');
-        navigate('/super-admin/system/monitoring');
-        setFabOpen(false);
-      }, 
-      color: 'from-amber-500 to-orange-500', 
-      description: 'Monitor system performance metrics',
-      category: 'monitoring',
-      priority: 'medium'
-    },
-    { 
-      title: 'Deploy Update', 
-      icon: '🚀', 
-      action: () => {
-        console.log('🚀 Deploying system update...');
-        navigate('/super-admin/system/deployment');
-        setFabOpen(false);
-      }, 
-      color: 'from-indigo-500 to-purple-500', 
-      description: 'Deploy system updates and patches',
-      category: 'system',
-      priority: 'high'
-    },
-    
-    // Communication Actions
-    { 
-      title: 'Live Chat', 
-      icon: '💬', 
-      action: () => {
-        console.log('💬 Opening live chat...');
-        window.open('/admin/chat', '_blank');
-        setFabOpen(false);
-      }, 
-      color: 'from-blue-500 to-cyan-500', 
-      description: 'Start live chat with support team',
-      category: 'communication',
-      priority: 'medium'
-    },
-    { 
-      title: 'Emergency Support', 
-      icon: '🚨', 
-      action: () => {
-        console.log('🚨 Initiating emergency support...');
-        if (confirm('🚨 Are you sure you want to initiate emergency support? This will create a high-priority ticket.')) {
-          window.open('tel:+1-800-EMERGENCY', '_blank');
-        }
-        setFabOpen(false);
-      }, 
-      color: 'from-red-600 to-rose-600', 
-      description: 'Contact emergency support immediately',
-      category: 'support',
-      priority: 'high'
-    },
-    
-    // AI & Automation Actions
-    { 
-      title: 'AI Assistant', 
-      icon: '🤖', 
-      action: () => {
-        console.log('🤖 Launching AI assistant...');
-        window.open('/admin/ai-assistant', '_blank');
-        setFabOpen(false);
-      }, 
-      color: 'from-purple-500 to-pink-500', 
-      description: 'Launch AI-powered assistant',
-      category: 'ai',
-      priority: 'medium'
-    },
-    { 
-      title: 'Auto Deploy', 
-      icon: '🤖', 
-      action: () => {
-        console.log('🤖 Starting autonomous deployment...');
-        if (confirm('🤖 Start autonomous deployment process? This will automatically deploy updates based on AI analysis.')) {
-          // Simulate autonomous deployment
-          setTimeout(() => {
-            alert('✅ Autonomous deployment completed! All systems updated successfully.');
-          }, 3000);
-        }
-        setFabOpen(false);
-      }, 
-      color: 'from-green-500 to-emerald-500', 
-      description: 'Start autonomous deployment process',
-      category: 'ai',
-      priority: 'high'
-    },
-    
-    // Quick Actions
-    { 
-      title: 'Quick Settings', 
-      icon: '⚙️', 
-      action: () => {
-        console.log('⚙️ Opening quick settings...');
-        navigate('/super-admin/settings');
-        setFabOpen(false);
-      }, 
-      color: 'from-gray-500 to-slate-500', 
-      description: 'Access system settings quickly',
-      category: 'settings',
-      priority: 'low'
-    },
-    { 
-      title: 'Export Data', 
-      icon: '📤', 
-      action: () => {
-        console.log('📤 Exporting system data...');
-        // Simulate data export
-        setTimeout(() => {
-          alert('📤 Data export completed! Check your downloads folder.');
-        }, 1500);
-        setFabOpen(false);
-      }, 
-      color: 'from-lime-500 to-green-500', 
-      description: 'Export system data and reports',
-      category: 'tools',
-      priority: 'medium'
+    {
+      title: 'System Check',
+      description: 'Health check',
+      icon: '🔍',
+      action: () => console.log('System check initiated')
     }
   ];
 
   return (
-    <div className={`min-h-screen ${stableStyles.primary[mode]} relative overflow-hidden transition-all duration-500`}>
-      {/* 🌊 Animated Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute -top-40 -right-40 w-80 h-80 ${mode === "light" ? 'bg-gradient-to-br from-cyan-500/10 to-indigo-500/10' : 'bg-gradient-to-br from-cyan-400/10 to-indigo-400/10'} rounded-full blur-3xl animate-pulse`}></div>
-        <div className={`absolute -bottom-40 -left-40 w-80 h-80 ${mode === "light" ? 'bg-gradient-to-br from-blue-500/10 to-cyan-500/10' : 'bg-gradient-to-br from-blue-400/10 to-cyan-400/10'} rounded-full blur-3xl animate-pulse`} style={{ animationDelay: '1s' }}></div>
-        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 ${mode === "light" ? 'bg-gradient-to-br from-indigo-500/5 to-blue-500/5' : 'bg-gradient-to-br from-indigo-400/5 to-blue-400/5'} rounded-full blur-3xl animate-pulse`} style={{ animationDelay: '2s' }}></div>
-      </div>
-
-      <div className="relative z-10 flex h-screen">
+    <div className={`min-h-screen ${stableStyles.gradientPrimary[mode]} ${stableStyles.transitionSmooth}`}>
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <div className="flex h-screen">
         {/* 🌟 Innovative Sidebar */}
-        <aside className={`${stableStyles.gradientPrimary[mode]} ${sidebarOpen ? 'w-80' : 'w-20'} ${stableStyles.transitionSmooth} flex flex-col shadow-3xl border-r ${mode === "light" ? 'border-slate-200/50' : 'border-slate-700/50'}`}>
+        <aside className={`${stableStyles.gradientPrimary[mode]} ${sidebarOpen ? 'w-80 lg:w-80 md:w-64' : 'w-20 lg:w-20 md:w-16'} ${stableStyles.transitionSmooth} flex flex-col shadow-3xl border-r ${mode === "light" ? 'border-slate-200/50' : 'border-slate-700/50'} fixed lg:relative z-40 h-full`}>
           {/* 🌟 Innovative Logo */}
-          <div className={`p-6 border-b ${mode === "light" ? 'border-slate-200/50' : 'border-slate-700/50'}`}>
+          <div className={`p-4 sm:p-6 border-b ${mode === "light" ? 'border-slate-200/50' : 'border-slate-700/50'}`}>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-xl hover:scale-110 transition-transform duration-300">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-sm sm:text-lg shadow-xl hover:scale-110 transition-transform duration-300">
                 MCP
               </div>
               {sidebarOpen && (
-                <div>
-                  <h1 className={`font-bold text-xl ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Super Admin</h1>
-                  <p className={`text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Innovative World-Class Portal</p>
+                <div className="hidden sm:block">
+                  <h1 className={`font-bold text-lg sm:text-xl ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Super Admin</h1>
+                  <p className={`text-xs sm:text-sm ${mode === "light" ? 'text-slate-600' : 'text-slate-300'}`}>Innovative World-Class Portal</p>
                 </div>
               )}
             </div>
@@ -765,7 +493,7 @@ const SuperAdmin: React.FC = () => {
           )}
 
           {/* 🌟 Innovative Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+          <nav className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-1 sm:space-y-2">
             {navigationItems.map((item) => (
               <div key={item.key} className="space-y-1">
                 <StableNavItem
@@ -783,11 +511,11 @@ const SuperAdmin: React.FC = () => {
                   premium={item.badge === 'Live' || item.badge === 'AI'}
                   mode={mode}
                 >
-                  <div className="flex items-center space-x-3">
-                    <span className="text-xl">{item.icon}</span>
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <span className="text-lg sm:text-xl">{item.icon}</span>
                     {sidebarOpen && (
-                      <div>
-                        <span className="font-medium">{item.title}</span>
+                      <div className="hidden sm:block">
+                        <span className="font-medium text-sm sm:text-base">{item.title}</span>
                         {item.description && <p className={`text-xs ${mode === "light" ? 'text-slate-400' : 'text-slate-500'}`}>{item.description}</p>}
                       </div>
                     )}
@@ -795,14 +523,25 @@ const SuperAdmin: React.FC = () => {
                   {sidebarOpen && (
                     <div className="flex items-center space-x-2">
                       {item.badge && <StableBadge variant={item.badge === 'Live' ? 'live' : item.badge === 'AI' ? 'premium' : 'default'} premium={item.badge === 'Live' || item.badge === 'AI'} mode={mode}>{item.badge}</StableBadge>}
-                      {item.submenu && <span className={`text-sm ${mode === "light" ? 'text-slate-400' : 'text-slate-500'}`}>{expandedMenus[item.key] ? '▼' : '▶'}</span>}
+                      {item.submenu && (
+                        <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-lg transition-all duration-200 ${expandedMenus[item.key] || false ? 'bg-teal-500/10 text-teal-600' : 'bg-slate-100/50 text-slate-400'} ${mode === "dark" ? (expandedMenus[item.key] || false ? 'bg-teal-400/20 text-teal-400' : 'bg-slate-700/50 text-slate-500') : ''}`}>
+                          <svg 
+                            className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 ${expandedMenus[item.key] || false ? 'rotate-180' : ''}`} 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
                   )}
                 </StableNavItem>
                 
-                {/* �� Innovative Submenu */}
-                {item.submenu && expandedMenus[item.key] && sidebarOpen && (
-                  <div className="ml-8 space-y-1">
+                {/* 🌟 Innovative Submenu */}
+                {item.submenu && (expandedMenus[item.key] || false) && sidebarOpen && (
+                  <div className="ml-4 sm:ml-8 space-y-1">
                     {item.submenu.map((subItem, index) => (
                       <StableNavItem
                         key={index}
@@ -815,9 +554,9 @@ const SuperAdmin: React.FC = () => {
                         premium={false}
                         mode={mode}
                       >
-                        <div className="flex items-center space-x-3">
-                          <span className="text-lg">{subItem.icon}</span>
-                          <span className="font-medium">{subItem.title}</span>
+                        <div className="flex items-center space-x-2 sm:space-x-3">
+                          <span className="text-base sm:text-lg">{subItem.icon}</span>
+                          <span className="font-medium text-sm sm:text-base">{subItem.title}</span>
                         </div>
                       </StableNavItem>
                     ))}
@@ -833,15 +572,12 @@ const SuperAdmin: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className={mode === "light" ? 'text-slate-600' : 'text-slate-300'}>System Status</span>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span className="text-emerald-400">Online</span>
-                  </div>
+                  <StableBadge variant="live" mode={mode}>Online</StableBadge>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className={mode === "light" ? 'text-slate-600' : 'text-slate-300'}>88 pages operational</span>
-                    <span className="text-emerald-400 text-xs font-medium">75%</span>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className={mode === "light" ? 'text-slate-500' : 'text-slate-400'}>Performance</span>
+                    <span className={mode === "light" ? 'text-slate-600' : 'text-slate-300'}>75%</span>
                   </div>
                   <StableProgress value={75} premium={true} mode={mode} />
                 </div>
@@ -851,30 +587,35 @@ const SuperAdmin: React.FC = () => {
         </aside>
 
         {/* 🌟 Innovative Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className={`flex-1 flex flex-col ${sidebarOpen ? 'lg:ml-0' : 'lg:ml-20'} transition-all duration-300`}>
           {/* 🌟 Innovative Header */}
-          <header className={`${stableStyles.surface[mode]} border-b ${mode === "light" ? 'border-slate-200/60' : 'border-slate-700/60'} shadow-lg`}>
-            <div className="flex items-center justify-between px-8 py-6">
-              <div className="flex items-center space-x-6">
+          <header className={`${stableStyles.surface[mode]} ${stableStyles.border[mode]} border-b px-4 sm:px-6 py-3 sm:py-4`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 sm:space-x-4">
                 <StableButton
                   onClick={() => setSidebarOpen(!sidebarOpen)}
                   variant="ghost"
                   size="sm"
-                  className="p-3"
-                  premium={true}
+                  className="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-700/50"
                   mode={mode}
                 >
-                  {sidebarOpen ? '◀' : '▶'}
+                  <svg 
+                    className={`w-5 h-5 transition-transform duration-200 ${sidebarOpen ? 'rotate-0' : 'rotate-180'}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
                 </StableButton>
-                
-                <div className="hidden md:block">
-                  <h1 className={`text-2xl font-bold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>MCP Super Admin Portal</h1>
-                  <p className={mode === "light" ? 'text-slate-600' : 'text-slate-300'}>Innovative World-Class Enterprise Management Dashboard</p>
+                <div className="hidden sm:block">
+                  <h2 className={`text-base sm:text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>Super Admin Portal</h2>
+                  <p className={`text-xs sm:text-sm ${stableStyles.textSecondary[mode]}`}>Manage your entire system</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
-                {/* 🌟 Dark Mode Toggle */}
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                {/* 🌟 Innovative Dark Mode Toggle */}
                 <StableButton
                   onClick={toggleDarkMode}
                   variant="ghost"
@@ -903,11 +644,21 @@ const SuperAdmin: React.FC = () => {
                   premium={true}
                   mode={mode}
                   trigger={
-                    <div className={`flex items-center space-x-4 cursor-pointer p-3 rounded-xl ${mode === "light" ? 'hover:bg-slate-50/80' : 'hover:bg-slate-700/80'} transition-all duration-200 hover:scale-105`}>
+                    <div className={`flex items-center space-x-2 sm:space-x-4 cursor-pointer p-2 sm:p-3 rounded-xl ${mode === "light" ? 'hover:bg-slate-50/80' : 'hover:bg-slate-700/80'} transition-all duration-200 hover:scale-105`}>
                       <StableAvatar fallback="SA" status="premium" ring premium={true} mode={mode} />
-                      <div className="hidden md:block">
-                        <p className={`font-semibold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Super Admin</p>
-                        <p className={mode === "light" ? 'text-slate-500' : 'text-slate-400'}>admin@tms.com</p>
+                      <div className="hidden sm:block">
+                        <p className={`text-sm sm:text-base font-semibold ${mode === "light" ? 'text-slate-900' : 'text-white'}`}>Super Admin</p>
+                        <p className={`text-xs sm:text-sm ${mode === "light" ? 'text-slate-500' : 'text-slate-400'}`}>admin@tms.com</p>
+                      </div>
+                      <div className={`flex items-center justify-center w-5 h-5 transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`}>
+                        <svg 
+                          className="w-4 h-4 text-slate-400" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
                       </div>
                     </div>
                   }
@@ -923,34 +674,34 @@ const SuperAdmin: React.FC = () => {
           </header>
 
           {/* 🌟 Innovative Content Area */}
-          <main className="flex-1 overflow-auto p-8">
-    <Routes>
+          <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+            <Routes>
               <Route path="/*" element={<SuperAdminRoutes />} />
-    </Routes>
+            </Routes>
           </main>
         </div>
 
-        {/* 🚀 Simple Working FAB */}
-        <div className="fixed bottom-8 right-8 z-50">
+        {/* 🚀 Responsive FAB */}
+        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
           {/* FAB Actions */}
           {fabOpen && (
-            <div className="absolute bottom-20 right-0 space-y-2">
+            <div className="absolute bottom-16 sm:bottom-20 right-0 space-y-2 w-64 sm:w-auto">
               {fabActions.slice(0, 5).map((action, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-lg shadow-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="bg-white rounded-lg shadow-lg p-2 sm:p-3 cursor-pointer hover:bg-gray-50 transition-colors"
                   onClick={() => {
                     action.action();
                     setFabOpen(false);
                   }}
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white text-sm">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xs sm:text-sm">
                       {action.icon}
                     </div>
-                    <div>
-                      <div className="font-medium text-sm text-gray-900">{action.title}</div>
-                      <div className="text-xs text-gray-500">{action.description}</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm text-gray-900 truncate">{action.title}</div>
+                      <div className="text-xs text-gray-500 truncate">{action.description}</div>
                     </div>
                   </div>
                 </div>
@@ -964,7 +715,7 @@ const SuperAdmin: React.FC = () => {
               console.log('FAB clicked, current state:', fabOpen);
               setFabOpen(!fabOpen);
             }}
-            className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center text-xl font-bold"
+            className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center text-lg sm:text-xl font-bold"
           >
             {fabOpen ? '✕' : '⚡'}
           </button>
