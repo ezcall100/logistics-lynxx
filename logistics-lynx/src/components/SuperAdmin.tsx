@@ -13,9 +13,9 @@ const SuperAdmin: React.FC = () => {
 
   return (
     <EnhancedLayout user={user}>
-      <Routes>
-        <Route path="/*" element={<SuperAdminRoutes />} />
-      </Routes>
+            <Routes>
+              <Route path="/*" element={<SuperAdminRoutes />} />
+            </Routes>
     </EnhancedLayout>
   );
 };

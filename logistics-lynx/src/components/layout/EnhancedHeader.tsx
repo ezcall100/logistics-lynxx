@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Menu, 
   X, 
@@ -29,7 +29,7 @@ interface HeaderProps {
     email: string;
     avatar?: string;
     role: string;
-  };
+  } | undefined;
 }
 
 export const EnhancedHeader: React.FC<HeaderProps> = ({
@@ -39,6 +39,7 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   onThemeToggle,
   user
 }) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -53,10 +54,10 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   };
 
   const quickActions = [
-    { name: 'New Load', icon: 'Truck', action: () => console.log('New Load') },
-    { name: 'Analytics', icon: 'BarChart3', action: () => console.log('Analytics') },
-    { name: 'Settings', icon: 'Settings', action: () => console.log('Settings') },
-    { name: 'Support', icon: 'HelpCircle', action: () => console.log('Support') }
+    { name: 'New Load', icon: 'Truck', action: () => navigate('/super-admin/dashboard') },
+    { name: 'Analytics', icon: 'BarChart3', action: () => navigate('/super-admin/analytics/business') },
+    { name: 'Settings', icon: 'Settings', action: () => navigate('/super-admin/settings') },
+    { name: 'Support', icon: 'HelpCircle', action: () => navigate('/super-admin/business/support') }
   ];
 
   return (
@@ -91,8 +92,8 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
               `} />
             </button>
 
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group">
+                         {/* Logo */}
+             <Link to="/super-admin/dashboard" className="flex items-center space-x-3 group">
               <div className="relative">
                 <Truck className={`
                   h-8 w-8 transition-colors duration-200
@@ -218,36 +219,7 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
               </button>
             </div>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={onThemeToggle}
-              className={`
-                p-2 rounded-lg transition-all duration-200 group
-                ${isDarkMode 
-                  ? 'bg-slate-700 hover:bg-slate-600' 
-                  : 'bg-slate-100 hover:bg-slate-200'
-                }
-              `}
-              title="Toggle theme"
-            >
-              {isDarkMode ? (
-                <Sun className={`
-                  h-5 w-5 transition-colors duration-200
-                  ${isDarkMode 
-                    ? 'text-slate-400 group-hover:text-amber-400' 
-                    : 'text-slate-600 group-hover:text-amber-500'
-                  }
-                `} />
-              ) : (
-                <Moon className={`
-                  h-5 w-5 transition-colors duration-200
-                  ${isDarkMode 
-                    ? 'text-slate-400 group-hover:text-indigo-400' 
-                    : 'text-slate-600 group-hover:text-indigo-500'
-                  }
-                `} />
-              )}
-            </button>
+            {/* Theme Toggle - Removed duplicate, using layout-level toggle */}
 
             {/* User Menu */}
             <div className="relative">
@@ -306,36 +278,51 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
                   </div>
                   
                   <div className="py-2">
-                    <button className={`
-                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
-                      ${isDarkMode 
-                        ? 'text-slate-300 hover:bg-slate-700' 
-                        : 'text-slate-700 hover:bg-slate-100'
-                      }
-                    `}>
-                      <User className="h-4 w-4" />
-                      <span>Profile</span>
-                    </button>
-                    <button className={`
-                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
-                      ${isDarkMode 
-                        ? 'text-slate-300 hover:bg-slate-700' 
-                        : 'text-slate-700 hover:bg-slate-100'
-                      }
-                    `}>
-                      <Settings className="h-4 w-4" />
-                      <span>Settings</span>
-                    </button>
-                    <button className={`
-                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
-                      ${isDarkMode 
-                        ? 'text-slate-300 hover:bg-slate-700' 
-                        : 'text-slate-700 hover:bg-slate-100'
-                      }
-                    `}>
-                      <Shield className="h-4 w-4" />
-                      <span>Security</span>
-                    </button>
+                                         <button 
+                       onClick={() => {
+                         navigate('/super-admin/settings/profile');
+                         setIsUserDropdownOpen(false);
+                       }}
+                       className={`
+                         w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                         ${isDarkMode 
+                           ? 'text-slate-300 hover:bg-slate-700' 
+                           : 'text-slate-700 hover:bg-slate-100'
+                         }
+                       `}>
+                       <User className="h-4 w-4" />
+                       <span>Profile</span>
+                     </button>
+                                         <button 
+                       onClick={() => {
+                         navigate('/super-admin/settings');
+                         setIsUserDropdownOpen(false);
+                       }}
+                       className={`
+                         w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                         ${isDarkMode 
+                           ? 'text-slate-300 hover:bg-slate-700' 
+                           : 'text-slate-700 hover:bg-slate-100'
+                         }
+                       `}>
+                       <Settings className="h-4 w-4" />
+                       <span>Settings</span>
+                     </button>
+                                         <button 
+                       onClick={() => {
+                         navigate('/super-admin/settings/security');
+                         setIsUserDropdownOpen(false);
+                       }}
+                       className={`
+                         w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                         ${isDarkMode 
+                           ? 'text-slate-300 hover:bg-slate-700' 
+                           : 'text-slate-700 hover:bg-slate-100'
+                         }
+                       `}>
+                       <Shield className="h-4 w-4" />
+                       <span>Security</span>
+                     </button>
                   </div>
                   
                   <div className={`
