@@ -123,10 +123,6 @@ import SecurityTesting from './pages/super-admin/development-devops/SecurityTest
 import DevDocumentation from './pages/super-admin/development-devops/DevDocumentation';
 import ReleaseManagement from './pages/super-admin/development-devops/ReleaseManagement';
 
-
-import SettingsOverview from './pages/super-admin/settings/SettingsOverview';
-import ProfileSettings from './pages/super-admin/settings/ProfileSettings';
-import SecuritySettings from './pages/super-admin/settings/SecuritySettings';
 import NotificationSettings from './pages/super-admin/settings/NotificationSettings';
 import AppearanceSettings from './pages/super-admin/settings/AppearanceSettings';
 import LanguageSettings from './pages/super-admin/settings/LanguageSettings';
@@ -139,7 +135,7 @@ import AboutSettings from './pages/super-admin/settings/AboutSettings';
 import ProfileOverview from './pages/super-admin/profile/ProfileOverview';
 import PersonalInformation from './pages/super-admin/profile/PersonalInformation';
 import AvatarMedia from './pages/super-admin/profile/AvatarMedia';
-import UserPreferences from './pages/super-admin/profile/UserPreferences';
+import ProfileUserPreferences from './pages/super-admin/profile/UserPreferences';
 import ActivityHistory from './pages/super-admin/profile/ActivityHistory';
 import ActiveSessions from './pages/super-admin/profile/ActiveSessions';
 import AccountVerification from './pages/super-admin/profile/AccountVerification';
@@ -359,7 +355,7 @@ function App() {
                 <Route path="profile" element={<ProfileOverview />} />
                 <Route path="profile/personal" element={<PersonalInformation />} />
                 <Route path="profile/avatar" element={<AvatarMedia />} />
-                <Route path="profile/preferences" element={<UserPreferences />} />
+                <Route path="profile/preferences" element={<ProfileUserPreferences />} />
                 <Route path="profile/activity" element={<ActivityHistory />} />
                 <Route path="profile/sessions" element={<ActiveSessions />} />
                 <Route path="profile/verification" element={<AccountVerification />} />
