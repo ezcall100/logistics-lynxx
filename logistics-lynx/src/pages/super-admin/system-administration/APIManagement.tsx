@@ -3,39 +3,19 @@ import {
   Code,
   Key,
   Activity,
-  Clock,
   AlertTriangle,
   CheckCircle,
   RefreshCw,
   Plus,
-  Settings,
-  Shield,
-  BarChart3,
   TrendingUp,
   TrendingDown,
   Zap,
   Server,
-  Network,
-  FileText,
-  Archive,
-  RotateCcw,
-  Save,
-  Trash2,
   Search,
-  Filter,
   MoreVertical,
-  Eye,
-  Edit,
   Copy,
-  ExternalLink,
   Globe,
-  Lock,
-  Unlock,
-  Users,
-  Database,
-  Cpu,
-  HardDrive
-} from 'lucide-react';
+  } from 'lucide-react';
 
 interface APIKey {
   id: string;
@@ -377,7 +357,7 @@ const APIManagement: React.FC = () => {
                       <span className="font-semibold text-green-600">45%</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Network I/O</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">I/O</span>
                       <span className="font-semibold text-purple-600">12%</span>
                     </div>
                   </div>
@@ -468,7 +448,7 @@ const APIManagement: React.FC = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <button className="text-blue-600 hover:text-blue-700 text-sm">View Details</button>
-                        <button className="text-gray-600 hover:text-gray-700 text-sm">Edit</button>
+                        <button className="text-gray-600 hover:text-gray-700 text-sm"></button>
                         <button className="text-red-600 hover:text-red-700 text-sm">Revoke</button>
                       </div>
                     </div>
@@ -596,7 +576,7 @@ const APIManagement: React.FC = () => {
 
           {activeTab === 'security' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Security Settings</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Security </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Rate Limiting</h4>

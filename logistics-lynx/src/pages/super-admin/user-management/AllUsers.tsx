@@ -2,99 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { 
   // Users, 
   Plus, 
-  // Search, 
-  // Filter, 
-  Download,
+  // // Download,
   Upload, 
   Edit, 
   Trash2, 
   Eye, 
   // MoreHorizontal,
   // RefreshCw,
-  // Settings,
-  // User,
-  // Shield,
-  // Building,
-  // Mail,
-  // Phone,
-  // Calendar,
-  // MapPin,
-  // CheckCircle,
-  // XCircle,
-  // AlertCircle,
-  // Clock,
-  // Star,
-  // Heart,
-  // ThumbsUp,
+  // // User,
+  // // // // // // // // // // // // // ThumbsUp,
   // ThumbsDown,
-  // ExternalLink,
-  // Copy,
-  // Share,
-  // Archive,
-  // RotateCcw,
-  // Save,
-  // Send,
-  // MessageSquare,
-  // Key,
-  // Lock,
-  // Unlock,
-  // Bell,
-  // Star as StarIcon,
-  // Heart as HeartIcon,
-  // Zap as ZapIcon,
-  // Droplets,
-  // Cloud,
-  // CloudRain,
-  // CloudSnow,
-  // CloudLightning,
-  // Sun,
-  // Moon,
-  // Sunrise,
-  // Sunset,
-  // Wind,
-  // Thermometer,
-  // Gauge,
-  // Timer,
-  // Navigation,
-  // Compass,
-  // Map,
-  // Layers,
-  // Grid3X3,
-  // Grid,
-  // List,
-  // Columns,
-  // Maximize,
-  // Minimize,
-  // Move,
-  // RotateCw,
-  // ZoomIn,
-  // ZoomOut,
-  // Type,
-  // Bold,
-  // Italic,
-  // Underline,
-  // Link,
-  // Unlink,
-  // Code,
-  // Quote,
-  // Hash,
-  // AtSign,
-  // Percent,
-  // Minus,
-  // Divide,
-  // Plus as PlusIcon,
-  // Equal,
-  // Infinity,
-  // Pi,
-  // Sigma,
-  // Square,
-  // Circle,
-  // Triangle,
-  // Hexagon,
-  // Octagon,
-  // Star as StarIcon2,
-  // Heart as HeartIcon2,
-  // Zap as ZapIcon2
+  // // // // // // // // // // // // // as // as // as // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // Plus as PlusIcon,
+  // // // // // // // // // // as StarIcon2,
+  // as HeartIcon2,
+  // as ZapIcon2
 } from 'lucide-react';
 import {
   EnhancedCard,
@@ -154,7 +75,8 @@ const AllUsers: React.FC = () => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10);
+  const pageSize = 10;
+  // const [pageSize] = useState(10);
   const [sortColumn, setSortColumn] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [filters, setFilters] = useState({
@@ -279,7 +201,7 @@ const AllUsers: React.FC = () => {
   const filterUsers = () => {
     let filtered = [...users];
 
-    // Search filter
+    // filter
     if (searchQuery) {
       filtered = filtered.filter(user =>
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -539,7 +461,7 @@ const AllUsers: React.FC = () => {
         <div className="flex items-center space-x-2">
           <EnhancedButton
             variant="ghost"
-            size="sm"
+            
             icon={<Eye className="w-4 h-4" />}
             mode={mode}
             onClick={() => console.log('View user:', row.id)}
@@ -548,7 +470,7 @@ const AllUsers: React.FC = () => {
           </EnhancedButton>
           <EnhancedButton
             variant="ghost"
-            size="sm"
+            
             icon={<Edit className="w-4 h-4" />}
             mode={mode}
             onClick={() => {
@@ -560,7 +482,7 @@ const AllUsers: React.FC = () => {
           </EnhancedButton>
           <EnhancedButton
             variant="ghost"
-            size="sm"
+            
             icon={<Trash2 className="w-4 h-4" />}
             mode={mode}
             onClick={() => {
@@ -596,7 +518,7 @@ const AllUsers: React.FC = () => {
           <div className="flex space-x-3">
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<Download className="w-4 h-4" />}
               mode={mode}
             >
@@ -604,7 +526,7 @@ const AllUsers: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<Upload className="w-4 h-4" />}
               mode={mode}
             >
@@ -612,7 +534,7 @@ const AllUsers: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="primary"
-              size="sm"
+              
               icon={<Plus className="w-4 h-4" />}
               onClick={() => setShowCreateModal(true)}
               mode={mode}
@@ -622,12 +544,12 @@ const AllUsers: React.FC = () => {
           </div>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters and */}
         <EnhancedCard mode={mode}>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
               <EnhancedSearch
-                placeholder="Search users by name, email, company..."
+                placeholder="users by name, email, company..."
                 value={searchQuery}
                 onChange={setSearchQuery}
                 mode={mode}
@@ -680,7 +602,7 @@ const AllUsers: React.FC = () => {
               <div className="flex space-x-2">
                 <EnhancedButton
                   variant="success"
-                  size="sm"
+                  
                   onClick={() => handleBulkAction('activate')}
                   mode={mode}
                 >
@@ -688,7 +610,7 @@ const AllUsers: React.FC = () => {
                 </EnhancedButton>
                 <EnhancedButton
                   variant="secondary"
-                  size="sm"
+                  
                   onClick={() => handleBulkAction('deactivate')}
                   mode={mode}
                 >
@@ -696,7 +618,7 @@ const AllUsers: React.FC = () => {
                 </EnhancedButton>
                 <EnhancedButton
                   variant="danger"
-                  size="sm"
+                  
                   onClick={() => handleBulkAction('delete')}
                   mode={mode}
                 >
@@ -732,7 +654,7 @@ const AllUsers: React.FC = () => {
               <div className="flex space-x-2">
                 <EnhancedButton
                   variant="secondary"
-                  size="sm"
+                  
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
                   mode={mode}
@@ -744,7 +666,7 @@ const AllUsers: React.FC = () => {
                 </span>
                 <EnhancedButton
                   variant="secondary"
-                  size="sm"
+                  
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   mode={mode}
@@ -928,8 +850,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSubmit, onCancel, mode }) =
         </div>
         <div>
           <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-            Phone
-          </label>
+            </label>
           <EnhancedInput
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}

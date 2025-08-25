@@ -4,33 +4,19 @@ import {
   HardDrive, 
   Activity, 
   Clock, 
-  AlertTriangle, 
   CheckCircle, 
   RefreshCw, 
   Download, 
-  Upload, 
   Settings, 
   Shield, 
   BarChart3, 
   TrendingUp, 
-  TrendingDown, 
   Zap, 
-  Server, 
   Network, 
-  FileText, 
   Archive, 
-  RotateCcw,
-  Save,
   Trash2,
   Plus,
-  Search,
-  Filter,
-  MoreVertical,
-  Eye,
-  Edit,
-  Copy,
-  ExternalLink
-} from 'lucide-react';
+  } from 'lucide-react';
 
 interface DatabaseStatus {
   id: string;
@@ -60,7 +46,7 @@ interface BackupJob {
 const DatabaseManagement: React.FC = () => {
   const [databases, setDatabases] = useState<DatabaseStatus[]>([]);
   const [backups, setBackups] = useState<BackupJob[]>([]);
-  const [selectedDatabase, setSelectedDatabase] = useState<string | null>(null);
+  const [selectedDatabase] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [showBackupModal, setShowBackupModal] = useState(false);

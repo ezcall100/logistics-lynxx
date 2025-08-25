@@ -9,22 +9,17 @@ import {
   Users, 
   Activity, 
   Settings, 
-  Shield, 
-  Database,
-  BarChart3,
   AlertTriangle,
   CheckCircle,
   XCircle,
   RefreshCw,
   Play,
   Pause,
-  Trash2,
   Edit,
   Eye,
   Plus,
   Search,
-  Filter
-} from 'lucide-react';
+  } from 'lucide-react';
 
 interface Portal {
   id: string;
@@ -96,7 +91,7 @@ const PortalOverview: React.FC = () => {
           lastActivity: new Date().toISOString(),
           version: '2.1.4',
           environment: 'production',
-          features: ['Load Management', 'Carrier Assignment', 'Quote Generation'],
+          features: ['Load Management', 'Carrier Assignment', 'Generation'],
           alerts: 2,
           errors: 0
         },
@@ -147,7 +142,7 @@ const PortalOverview: React.FC = () => {
           lastActivity: new Date(Date.now() - 120000).toISOString(),
           version: '2.1.4',
           environment: 'production',
-          features: ['Mobile App', 'Status Updates', 'Document Upload'],
+          features: ['Mobile App', 'Status Updates', 'Document '],
           alerts: 0,
           errors: 0
         },
@@ -368,7 +363,7 @@ const PortalOverview: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Portals List */}
+      {/* Portals */}
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>

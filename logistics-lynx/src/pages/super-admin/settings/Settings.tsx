@@ -5,18 +5,15 @@ import {
   Bell,
   Database,
   Server,
-  Globe,
   Lock,
   Unlock,
   Key,
   Users,
   Building,
-  CreditCard,
   Star,
   Heart,
   Zap,
   RefreshCw,
-  Plus,
   Trash2,
   Archive,
   RotateCcw,
@@ -25,11 +22,6 @@ import {
   ExternalLink,
   MessageSquare,
   Phone,
-  Video,
-  Camera,
-  Image,
-  File,
-  Folder,
   Grid,
   List,
   Columns,
@@ -59,77 +51,19 @@ import {
   Square,
   Circle,
   Triangle,
-  Hexagon,
-  Octagon,
-  Star as StarIcon,
-  Heart as HeartIcon,
-  Zap as ZapIcon,
-  Droplets,
-  Cloud,
-  CloudRain,
-  CloudSnow,
-  CloudLightning,
-  Sun,
-  Moon,
-  Sunrise,
-  Sunset,
-  Wind,
-  Thermometer,
-  Gauge,
-  Timer,
-  Navigation,
-  Compass,
-  Map,
-  Layers,
-  Grid3X3,
-  Rows,
-  Sidebar,
-  SidebarClose,
-  SidebarOpen,
-  PanelLeft,
-  PanelRight,
-  PanelTop,
-  PanelBottom,
-  Layout,
-  LayoutGrid,
-  LayoutList,
-  LayoutTemplate,
-  LayoutDashboard,
+  Star,
+  Heart,
+  Zap,
   Save,
   Edit,
-  Eye,
-  EyeOff,
-  CheckCircle,
-  AlertTriangle,
-  Info,
-  HelpCircle,
-  Download,
-  Upload,
-  Search,
-  Filter,
-  Activity,
-  Clock,
-  Calendar,
-  MapPin,
-  Truck,
-  Package,
-  DollarSign,
-  BarChart3,
-  PieChart,
-  LineChart,
-  Target,
-  Cpu,
-  Brain,
-  HardDrive,
-  Network
-} from 'lucide-react';
+  Download
+  } from 'lucide-react';
 import {
   EnhancedCard,
   EnhancedButton,
   EnhancedBadge,
   EnhancedInput,
   EnhancedModal,
-  EnhancedProgress,
   stableStyles
 } from '../../../components/ui/EnhancedUIComponents';
 
@@ -500,7 +434,7 @@ const Settings: React.FC = () => {
           <div className="flex space-x-3">
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<Download className="w-4 h-4" />}
               onClick={() => setShowBackupModal(true)}
               mode={mode}
@@ -509,7 +443,7 @@ const Settings: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<RotateCcw className="w-4 h-4" />}
               onClick={() => setShowResetModal(true)}
               mode={mode}
@@ -518,7 +452,7 @@ const Settings: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="primary"
-              size="sm"
+              
               icon={editing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
               onClick={() => editing ? setShowSaveModal(true) : setEditing(true)}
               mode={mode}
@@ -724,7 +658,7 @@ const Settings: React.FC = () => {
                         </label>
                         <EnhancedInput
                           type="number"
-                          value={settings.security.passwordPolicy.maxAge}
+                          value={settings.security.passwordPolicy.maxAge.toString()}
                           onChange={(e) => setSettings({
                             ...settings,
                             security: {
@@ -784,7 +718,7 @@ const Settings: React.FC = () => {
                         </label>
                         <EnhancedInput
                           type="number"
-                          value={settings.security.sessionPolicy.sessionTimeout}
+                          value={settings.security.sessionPolicy.sessionTimeout.toString()}
                           onChange={(e) => setSettings({
                             ...settings,
                             security: {
@@ -805,7 +739,7 @@ const Settings: React.FC = () => {
                         </label>
                         <EnhancedInput
                           type="number"
-                          value={settings.security.sessionPolicy.maxConcurrentSessions}
+                          value={settings.security.sessionPolicy.maxConcurrentSessions.toString()}
                           onChange={(e) => setSettings({
                             ...settings,
                             security: {
@@ -940,7 +874,7 @@ const Settings: React.FC = () => {
                           </label>
                           <EnhancedInput
                             type="number"
-                            value={settings.notifications.email.smtpPort}
+                            value={settings.notifications.email.smtpPort.toString()}
                             onChange={(e) => setSettings({
                               ...settings,
                               notifications: {
@@ -1215,8 +1149,7 @@ const Settings: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>
-                        Content Delivery Network
-                      </h4>
+                        Content Delivery </h4>
                       {getStatusBadge(settings.performance.cdn.enabled)}
                     </div>
                     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg space-y-4">

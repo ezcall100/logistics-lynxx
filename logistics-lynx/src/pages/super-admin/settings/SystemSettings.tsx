@@ -1,127 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Settings, 
-  Database, 
-  Server, 
-  Globe, 
-  Shield, 
-  Key, 
-  Lock, 
-  Unlock, 
-  Bell, 
   Mail, 
-  Clock, 
-  Calendar, 
   Save, 
   RefreshCw, 
-  Download, 
-  Upload, 
-  Eye, 
-  EyeOff, 
-  Edit, 
-  Trash2, 
   Plus, 
-  Search, 
-  Filter, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Info, 
-  HelpCircle, 
-  ExternalLink, 
-  Copy, 
-  Share, 
-  Archive, 
-  RotateCcw, 
-  Send, 
-  MessageSquare, 
-  Phone, 
-  Video, 
-  Camera, 
-  Image, 
   File, 
-  Folder, 
-  FolderOpen, 
-  Grid, 
-  List, 
-  Columns, 
-  Maximize, 
-  Minimize, 
-  Move, 
-  RotateCw, 
-  ZoomIn, 
-  ZoomOut, 
-  Type, 
-  Bold, 
-  Italic, 
-  Underline, 
-  Link, 
-  Unlink, 
-  Code, 
-  Quote, 
-  Hash, 
-  AtSign, 
-  Percent, 
-  Minus, 
-  Divide, 
   Plus as PlusIcon, 
-  Equal, 
-  Infinity, 
-  Pi, 
-  Sigma, 
-  Square, 
-  Circle, 
-  Triangle, 
-  Hexagon, 
-  Octagon, 
-  Star, 
-  Heart, 
-  Zap, 
-  Droplets, 
-  Cloud, 
-  CloudRain, 
-  CloudSnow, 
-  CloudLightning, 
-  Sun, 
-  Moon, 
-  Sunrise, 
-  Sunset, 
-  Wind, 
-  Thermometer, 
-  Gauge, 
-  Timer, 
-  Navigation, 
-  Compass, 
-  Map, 
-  Layers, 
-  Grid3X3, 
-  Rows, 
-  Sidebar, 
-  SidebarClose, 
-  SidebarOpen, 
-  PanelLeft, 
-  PanelRight, 
-  PanelTop, 
-  PanelBottom, 
-  Layout, 
-  LayoutGrid, 
-  LayoutList, 
-  LayoutTemplate, 
-  LayoutDashboard,
-  Network,
-  HardDrive,
-  Building,
-  CreditCard,
-  Star as StarIcon,
-  Heart as HeartIcon,
-  Zap as ZapIcon
+  Star,
+  Heart,
+  Zap,
+  Settings,
+  Database,
+  Code,
+  Shield,
+  Bell,
+  HardDrive
 } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
-  EnhancedBadge, 
   EnhancedInput, 
-  EnhancedModal, 
   stableStyles 
 } from '../../../components/ui/EnhancedUIComponents';
 
@@ -333,7 +231,7 @@ const SystemSettings: React.FC = () => {
   const tabs = [
     { id: 'general', label: 'General', icon: Settings },
     { id: 'database', label: 'Database', icon: Database },
-    { id: 'api', label: 'API', icon: Server },
+    { id: 'api', label: 'API', icon: Code },
     { id: 'email', label: 'Email', icon: Mail },
     { id: 'security', label: 'Security', icon: Shield },
     { id: 'notifications', label: 'Notifications', icon: Bell },
@@ -372,8 +270,7 @@ const SystemSettings: React.FC = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
-              System Settings
-            </h1>
+              System </h1>
             <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
               Configure system-wide settings and preferences
             </p>
@@ -381,7 +278,7 @@ const SystemSettings: React.FC = () => {
           <div className="flex space-x-3">
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<RefreshCw className="w-4 h-4" />}
               mode={mode}
               onClick={() => setFormData(config)}
@@ -390,7 +287,7 @@ const SystemSettings: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="primary"
-              size="sm"
+              
               icon={<Save className="w-4 h-4" />}
               mode={mode}
               onClick={handleSave}
@@ -424,12 +321,11 @@ const SystemSettings: React.FC = () => {
           </div>
         </EnhancedCard>
 
-        {/* General Settings */}
+        {/* General */}
         {activeTab === 'general' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
-              General System Settings
-            </h3>
+              General System </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
@@ -581,19 +477,19 @@ const SystemSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* Database Settings */}
+        {/* */}
         {activeTab === 'database' && (
           <EnhancedCard mode={mode} elevated>
             <div className="flex items-center justify-between mb-4">
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
-                Database Configuration
+                Configuration
               </h3>
               <EnhancedButton
                 variant="secondary"
-                size="sm"
+                
                 icon={<RefreshCw className="w-4 h-4" />}
                 mode={mode}
-                onClick={() => handleTestConnection('Database')}
+                onClick={() => handleTestConnection('')}
                 loading={loading}
               >
                 Test Connection
@@ -619,7 +515,7 @@ const SystemSettings: React.FC = () => {
                 </label>
                 <EnhancedInput
                   type="number"
-                  value={formData.database.port}
+                  value={formData.database.port.toString()}
                   onChange={(e) => setFormData({
                     ...formData,
                     database: { ...formData.database, port: parseInt(e.target.value) }
@@ -629,7 +525,7 @@ const SystemSettings: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                  Database Name
+                  Name
                 </label>
                 <EnhancedInput
                   value={formData.database.name}
@@ -673,7 +569,7 @@ const SystemSettings: React.FC = () => {
                 </label>
                 <EnhancedInput
                   type="number"
-                  value={formData.database.connectionPool}
+                  value={formData.database.connectionPool.toString()}
                   onChange={(e) => setFormData({
                     ...formData,
                     database: { ...formData.database, connectionPool: parseInt(e.target.value) }
@@ -721,7 +617,7 @@ const SystemSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* API Settings */}
+        {/* API */}
         {activeTab === 'api' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
@@ -760,7 +656,7 @@ const SystemSettings: React.FC = () => {
                 </label>
                 <EnhancedInput
                   type="number"
-                  value={formData.api.rateLimit}
+                  value={formData.api.rateLimit.toString()}
                   onChange={(e) => setFormData({
                     ...formData,
                     api: { ...formData.api, rateLimit: parseInt(e.target.value) }
@@ -774,7 +670,7 @@ const SystemSettings: React.FC = () => {
                 </label>
                 <EnhancedInput
                   type="number"
-                  value={formData.api.timeout}
+                  value={formData.api.timeout.toString()}
                   onChange={(e) => setFormData({
                     ...formData,
                     api: { ...formData.api, timeout: parseInt(e.target.value) }
@@ -805,7 +701,7 @@ const SystemSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* Email Settings */}
+        {/* Email */}
         {activeTab === 'email' && (
           <EnhancedCard mode={mode} elevated>
             <div className="flex items-center justify-between mb-4">
@@ -814,7 +710,7 @@ const SystemSettings: React.FC = () => {
               </h3>
               <EnhancedButton
                 variant="secondary"
-                size="sm"
+                
                 icon={<Mail className="w-4 h-4" />}
                 mode={mode}
                 onClick={() => handleTestConnection('Email')}
@@ -861,7 +757,7 @@ const SystemSettings: React.FC = () => {
                 </label>
                 <EnhancedInput
                   type="number"
-                  value={formData.email.port}
+                  value={formData.email.port.toString()}
                   onChange={(e) => setFormData({
                     ...formData,
                     email: { ...formData.email, port: parseInt(e.target.value) }
@@ -917,7 +813,7 @@ const SystemSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* Security Settings */}
+        {/* Security */}
         {activeTab === 'security' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
@@ -931,7 +827,7 @@ const SystemSettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.security.sessionTimeout}
+                    value={formData.security.sessionTimeout.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       security: { ...formData.security, sessionTimeout: parseInt(e.target.value) }
@@ -945,7 +841,7 @@ const SystemSettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.security.maxLoginAttempts}
+                    value={formData.security.maxLoginAttempts.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       security: { ...formData.security, maxLoginAttempts: parseInt(e.target.value) }
@@ -959,7 +855,7 @@ const SystemSettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.security.lockoutDuration}
+                    value={formData.security.lockoutDuration.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       security: { ...formData.security, lockoutDuration: parseInt(e.target.value) }
@@ -973,7 +869,7 @@ const SystemSettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.security.passwordHistory}
+                    value={formData.security.passwordHistory.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       security: { ...formData.security, passwordHistory: parseInt(e.target.value) }
@@ -1022,7 +918,7 @@ const SystemSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* Notifications Settings */}
+        {/* Notifications */}
         {activeTab === 'notifications' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
@@ -1034,7 +930,7 @@ const SystemSettings: React.FC = () => {
                   <div>
                     <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Email Notifications</h4>
                     <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      Send notifications via email
+                      notifications via email
                     </p>
                   </div>
                   <input
@@ -1051,7 +947,7 @@ const SystemSettings: React.FC = () => {
                   <div>
                     <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>SMS Notifications</h4>
                     <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      Send notifications via SMS
+                      notifications via SMS
                     </p>
                   </div>
                   <input
@@ -1068,7 +964,7 @@ const SystemSettings: React.FC = () => {
                   <div>
                     <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Push Notifications</h4>
                     <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      Send push notifications
+                      push notifications
                     </p>
                   </div>
                   <input
@@ -1130,7 +1026,7 @@ const SystemSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* Storage Settings */}
+        {/* Storage */}
         {activeTab === 'storage' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
@@ -1151,7 +1047,7 @@ const SystemSettings: React.FC = () => {
                 >
                   <option value="local">Local Storage</option>
                   <option value="s3">Amazon S3</option>
-                  <option value="gcs">Google Cloud Storage</option>
+                  <option value="gcs">Google Storage</option>
                   <option value="azure">Azure Blob Storage</option>
                 </select>
               </div>
@@ -1183,8 +1079,7 @@ const SystemSettings: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                  Access Key
-                </label>
+                  Access </label>
                 <EnhancedInput
                   value={formData.storage.accessKey}
                   onChange={(e) => setFormData({
@@ -1196,8 +1091,7 @@ const SystemSettings: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                  Secret Key
-                </label>
+                  Secret </label>
                 <EnhancedInput
                   type="password"
                   value={formData.storage.secretKey}
@@ -1214,7 +1108,7 @@ const SystemSettings: React.FC = () => {
                 </label>
                 <EnhancedInput
                   type="number"
-                  value={formData.storage.maxFileSize}
+                  value={formData.storage.maxFileSize.toString()}
                   onChange={(e) => setFormData({
                     ...formData,
                     storage: { ...formData.storage, maxFileSize: parseInt(e.target.value) }
@@ -1228,8 +1122,7 @@ const SystemSettings: React.FC = () => {
                 <div>
                   <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>CDN Enabled</h4>
                   <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                    Enable Content Delivery Network
-                  </p>
+                    Enable Content Delivery </p>
                 </div>
                 <input
                   type="checkbox"

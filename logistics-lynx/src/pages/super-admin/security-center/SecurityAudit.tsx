@@ -12,15 +12,13 @@ import {
   Eye, 
   Lock, 
   Users, 
-  Database,
   Activity,
   BarChart3,
   FileText,
   Settings,
   RefreshCw,
   Download,
-  Filter
-} from 'lucide-react';
+  } from 'lucide-react';
 
 interface SecurityEvent {
   id: string;
@@ -112,7 +110,7 @@ const SecurityAudit: React.FC = () => {
         timestamp: new Date(Date.now() - 300000).toISOString(),
         type: 'warning',
         severity: 'medium',
-        source: 'Database',
+        source: '',
         description: 'Unusual query pattern detected',
         user: 'admin@company.com',
         ip: '10.0.0.50',
@@ -137,7 +135,7 @@ const SecurityAudit: React.FC = () => {
     const mockCompliance: ComplianceCheck[] = [
       {
         id: '1',
-        name: 'SOC 2 Type II Compliance',
+        name: 'SOC 2 II Compliance',
         status: 'pass',
         category: 'Compliance',
         description: 'Security controls and processes audit',
@@ -256,7 +254,7 @@ const SecurityAudit: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Threat Metrics Grid */}
+      {/* Threat Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardContent className="p-6">

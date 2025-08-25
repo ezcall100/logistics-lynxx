@@ -52,8 +52,7 @@ const SettingsOverview: React.FC = () => {
               }`}
             >
               <User className="w-4 h-4 inline mr-2" />
-              Users
-            </button>
+              </button>
           </nav>
         </div>
 

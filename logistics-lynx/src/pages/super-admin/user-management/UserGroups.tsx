@@ -8,85 +8,13 @@ import {
   Download,
   Upload,
   RefreshCw,
-  Settings,
   UserPlus,
   UserMinus,
   Shield,
   Lock,
-  Unlock,
   CheckCircle,
-  XCircle,
-  AlertCircle,
-  Clock,
   Star,
-  Key,
-  Building,
-  Mail,
-  Phone,
-  Calendar,
-  MapPin,
-  ExternalLink,
-  Copy,
-  Share,
-  Archive,
-  RotateCcw,
-  Save,
-  Send,
-  MessageSquare,
-  Bell,
-  Zap,
-  Droplets,
-  Cloud,
-  CloudRain,
-  CloudSnow,
-  CloudLightning,
-  Sun,
-  Moon,
-  Sunrise,
-  Sunset,
-  Wind,
-  Thermometer,
-  Gauge,
-  Timer,
-  Navigation,
-  Compass,
-  Map,
-  Layers,
-  Grid3X3,
-  Grid,
-  List,
-  Columns,
-  Maximize,
-  Minimize,
-  Move,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-  Type,
-  Bold,
-  Italic,
-  Underline,
-  Link,
-  Unlink,
-  Code,
-  Quote,
-  Hash,
-  AtSign,
-  Percent,
-  Minus,
-  Divide,
-  Equal,
-  Infinity,
-  Pi,
-  Sigma,
-  Square,
-  Circle,
-  Triangle,
-  Hexagon,
-  Octagon,
-  Star as StarIcon,
-  Heart,
-  Zap as ZapIcon
+  Zap
 } from 'lucide-react';
 import {
   EnhancedCard,
@@ -96,7 +24,6 @@ import {
   EnhancedModal,
   EnhancedTable,
   EnhancedSearch,
-  EnhancedProgress,
   stableStyles
 } from '../../../components/ui/EnhancedUIComponents';
 
@@ -322,7 +249,7 @@ const UserGroups: React.FC = () => {
       key: 'name',
       title: 'Group',
       sortable: true,
-      render: (_, row: UserGroup) => (
+      render: (_: any, row: UserGroup) => (
         <div className="flex items-center space-x-3">
           <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg ${stableStyles.surface[mode]}`}>
             {row.icon}
@@ -347,10 +274,10 @@ const UserGroups: React.FC = () => {
       key: 'category',
       title: 'Category',
       sortable: true,
-      render: (_, row: UserGroup) => (
+      render: (_: any, row: UserGroup) => (
         <EnhancedBadge
           variant={getCategoryColor(row.category) as any}
-          size="sm"
+          
           mode={mode}
         >
           {row.category}
@@ -361,7 +288,7 @@ const UserGroups: React.FC = () => {
       key: 'members',
       title: 'Members',
       sortable: true,
-      render: (_, row: UserGroup) => (
+      render: (_: any, row: UserGroup) => (
         <div className={`text-center ${stableStyles.textPrimary[mode]}`}>
           <div className="font-semibold">{row.memberCount}/{row.maxMembers}</div>
           <div className={`text-xs ${stableStyles.textMuted[mode]}`}>
@@ -374,13 +301,13 @@ const UserGroups: React.FC = () => {
       key: 'permissions',
       title: 'Permissions',
       sortable: false,
-      render: (_, row: UserGroup) => (
+      render: (_: any, row: UserGroup) => (
         <div className="flex flex-wrap gap-1">
           {row.permissions.slice(0, 2).map((perm, index) => (
             <EnhancedBadge
               key={index}
               variant="default"
-              size="sm"
+              
               mode={mode}
             >
               {perm}
@@ -388,8 +315,8 @@ const UserGroups: React.FC = () => {
           ))}
           {row.permissions.length > 2 && (
             <EnhancedBadge
-              variant="neutral"
-              size="sm"
+              variant="default"
+              
               mode={mode}
             >
               +{row.permissions.length - 2}
@@ -402,10 +329,10 @@ const UserGroups: React.FC = () => {
       key: 'status',
       title: 'Status',
       sortable: true,
-      render: (_, row: UserGroup) => (
+      render: (_: any, row: UserGroup) => (
         <EnhancedBadge
           variant={getStatusColor(row.status) as any}
-          size="sm"
+          
           mode={mode}
         >
           {row.status}
@@ -416,11 +343,11 @@ const UserGroups: React.FC = () => {
       key: 'actions',
       title: 'Actions',
       sortable: false,
-      render: (_, row: UserGroup) => (
+      render: (_: any, row: UserGroup) => (
         <div className="flex space-x-2">
           <EnhancedButton
             variant="ghost"
-            size="sm"
+            
             icon={<Eye className="w-4 h-4" />}
             mode={mode}
             onClick={() => {
@@ -430,7 +357,7 @@ const UserGroups: React.FC = () => {
           />
           <EnhancedButton
             variant="ghost"
-            size="sm"
+            
             icon={<Edit className="w-4 h-4" />}
             mode={mode}
             onClick={() => {
@@ -440,7 +367,7 @@ const UserGroups: React.FC = () => {
           />
           <EnhancedButton
             variant="ghost"
-            size="sm"
+            
             icon={<Trash2 className="w-4 h-4" />}
             mode={mode}
             onClick={() => {
@@ -476,7 +403,7 @@ const UserGroups: React.FC = () => {
           <div className="flex space-x-3">
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<Download className="w-4 h-4" />}
               mode={mode}
             >
@@ -484,7 +411,7 @@ const UserGroups: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="secondary"
-              size="sm"
+              
               icon={<Upload className="w-4 h-4" />}
               mode={mode}
             >
@@ -492,7 +419,7 @@ const UserGroups: React.FC = () => {
             </EnhancedButton>
             <EnhancedButton
               variant="primary"
-              size="sm"
+              
               icon={<Plus className="w-4 h-4" />}
               mode={mode}
               onClick={() => setShowCreateModal(true)}
@@ -561,12 +488,12 @@ const UserGroups: React.FC = () => {
           </EnhancedCard>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters and */}
         <EnhancedCard mode={mode}>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <EnhancedSearch
-                placeholder="Search groups..."
+                placeholder="groups..."
                 value={searchTerm}
                 onChange={setSearchTerm}
                 mode={mode}
@@ -597,7 +524,7 @@ const UserGroups: React.FC = () => {
               </select>
               <EnhancedButton
                 variant="ghost"
-                size="sm"
+                
                 icon={<RefreshCw className="w-4 h-4" />}
                 mode={mode}
               >
@@ -614,11 +541,7 @@ const UserGroups: React.FC = () => {
             columns={groupColumns}
             loading={loading}
             mode={mode}
-            pagination={{
-              pageSize: 10,
-              showSizeChanger: true,
-              showQuickJumper: true
-            }}
+            
           />
         </EnhancedCard>
       </div>
@@ -632,12 +555,10 @@ const UserGroups: React.FC = () => {
       >
         <div className="space-y-4">
           <EnhancedInput
-            label="Group Name"
             placeholder="Enter group name"
             mode={mode}
           />
           <EnhancedInput
-            label="Description"
             placeholder="Enter group description"
             mode={mode}
             multiline
@@ -645,9 +566,8 @@ const UserGroups: React.FC = () => {
           />
           <div className="grid grid-cols-2 gap-4">
             <EnhancedInput
-              label="Max Members"
-              type="number"
               placeholder="20"
+              type="number"
               mode={mode}
             />
             <select className={`px-4 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}>
@@ -671,7 +591,7 @@ const UserGroups: React.FC = () => {
         </div>
         <div className="flex justify-end space-x-3 mt-6">
           <EnhancedButton
-            variant="neutral"
+            variant="default"
             onClick={() => setShowCreateModal(false)}
             mode={mode}
           >
@@ -697,12 +617,12 @@ const UserGroups: React.FC = () => {
         {selectedGroup && (
           <div className="space-y-4">
             <EnhancedInput
-              label="Group Name"
+              placeholder="Group Name"
               value={selectedGroup.name}
               mode={mode}
             />
             <EnhancedInput
-              label="Description"
+              placeholder="Description"
               value={selectedGroup.description}
               mode={mode}
               multiline
@@ -710,9 +630,9 @@ const UserGroups: React.FC = () => {
             />
             <div className="grid grid-cols-2 gap-4">
               <EnhancedInput
-                label="Max Members"
+                placeholder="Max Members"
                 type="number"
-                value={selectedGroup.maxMembers}
+                value={selectedGroup.maxMembers.toString()}
                 mode={mode}
               />
               <select
@@ -748,7 +668,7 @@ const UserGroups: React.FC = () => {
         )}
         <div className="flex justify-end space-x-3 mt-6">
           <EnhancedButton
-            variant="neutral"
+            variant="default"
             onClick={() => setShowEditModal(false)}
             mode={mode}
           >
@@ -759,7 +679,7 @@ const UserGroups: React.FC = () => {
             onClick={() => setShowEditModal(false)}
             mode={mode}
           >
-            Save Changes
+            Changes
           </EnhancedButton>
         </div>
       </EnhancedModal>
@@ -784,7 +704,7 @@ const UserGroups: React.FC = () => {
         </div>
         <div className="flex justify-end space-x-3 mt-6">
           <EnhancedButton
-            variant="neutral"
+            variant="default"
             onClick={() => setShowDeleteModal(false)}
             mode={mode}
           >
@@ -815,7 +735,7 @@ const UserGroups: React.FC = () => {
             </p>
             <EnhancedButton
               variant="primary"
-              size="sm"
+              
               icon={<UserPlus className="w-4 h-4" />}
               mode={mode}
             >
@@ -839,14 +759,14 @@ const UserGroups: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <EnhancedBadge
                     variant={member.status === 'active' ? 'success' : member.status === 'pending' ? 'warning' : 'danger'}
-                    size="sm"
+                    
                     mode={mode}
                   >
                     {member.status}
                   </EnhancedBadge>
                   <EnhancedButton
                     variant="ghost"
-                    size="sm"
+                    
                     icon={<UserMinus className="w-4 h-4" />}
                     mode={mode}
                   />
@@ -857,7 +777,7 @@ const UserGroups: React.FC = () => {
         </div>
         <div className="flex justify-end space-x-3 mt-6">
           <EnhancedButton
-            variant="neutral"
+            variant="default"
             onClick={() => setShowMembersModal(false)}
             mode={mode}
           >

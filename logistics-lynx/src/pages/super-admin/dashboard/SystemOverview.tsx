@@ -424,7 +424,7 @@ const SystemOverview: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500" />
-                  <span className="font-medium text-green-700 dark:text-green-300">Web Server</span>
+                  <span className="font-medium text-green-700 dark:text-green-300">Web </span>
                 </div>
                 <span className="text-sm text-green-600 dark:text-green-400">Healthy</span>
               </div>
@@ -563,7 +563,7 @@ const SystemOverview: React.FC = () => {
               mode={mode}
               className="flex-col h-20"
             >
-              <span className="text-xs">Send Alert</span>
+              <span className="text-xs">Alert</span>
             </EnhancedButton>
             
             <EnhancedButton

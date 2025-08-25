@@ -562,7 +562,7 @@ const ActiveUsers: React.FC = () => {
           </div>
         </div>
 
-        {/* Key Metrics */}
+        {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <EnhancedCard mode={mode} elevated>
             <div className="flex items-center justify-between">
@@ -707,8 +707,7 @@ const ActiveUsers: React.FC = () => {
                 icon={<Globe className="w-4 h-4" />}
                 mode={mode}
               >
-                View Map
-              </EnhancedButton>
+                View </EnhancedButton>
             </div>
             <div className="space-y-4">
               {locationStats.map((stat, index) => (
@@ -761,7 +760,7 @@ const ActiveUsers: React.FC = () => {
                 <option value="away">Away</option>
               </select>
               <EnhancedSearch
-                placeholder="Search users..."
+                placeholder="users..."
                 value={searchQuery}
                 onChange={setSearchQuery}
                 mode={mode}

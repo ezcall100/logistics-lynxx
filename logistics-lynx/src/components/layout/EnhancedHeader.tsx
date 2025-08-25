@@ -22,6 +22,8 @@ import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
 interface HeaderProps {
   onSidebarToggle?: () => void;
   sidebarOpen?: boolean;
+  isDarkMode?: boolean;
+  onThemeToggle?: () => void;
   user?: {
     name: string;
     email: string;
@@ -33,26 +35,16 @@ interface HeaderProps {
 export const EnhancedHeader: React.FC<HeaderProps> = ({
   onSidebarToggle,
   sidebarOpen = true,
+  isDarkMode = false,
+  onThemeToggle,
   user
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(3);
   const location = useLocation();
-
-  // Auto-detect dark mode preference
-  useEffect(() => {
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(isDark);
-  }, []);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark');
-  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +60,13 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   ];
 
   return (
-    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 backdrop-blur-lg bg-white/95 dark:bg-gray-900/95">
+    <header className={`
+      border-b sticky top-0 z-50 backdrop-blur-lg transition-colors duration-300
+      ${isDarkMode 
+        ? 'bg-slate-800/95 border-slate-700' 
+        : 'bg-white/95 border-slate-200'
+      }
+    `}>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left Section */}
@@ -76,22 +74,48 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
             {/* Sidebar Toggle */}
             <button
               onClick={onSidebarToggle}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group"
+              className={`
+                p-2 rounded-lg transition-all duration-200 group
+                ${isDarkMode 
+                  ? 'bg-slate-700 hover:bg-slate-600' 
+                  : 'bg-slate-100 hover:bg-slate-200'
+                }
+              `}
             >
-              <Menu className="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200" />
+              <Menu className={`
+                h-5 w-5 transition-colors duration-200
+                ${isDarkMode 
+                  ? 'text-slate-400 group-hover:text-slate-200' 
+                  : 'text-slate-600 group-hover:text-slate-800'
+                }
+              `} />
             </button>
 
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group">
               <div className="relative">
-                <Truck className="h-8 w-8 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-200" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <Truck className={`
+                  h-8 w-8 transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'text-indigo-400 group-hover:text-indigo-300' 
+                    : 'text-indigo-600 group-hover:text-indigo-700'
+                  }
+                `} />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
               </div>
               <div className="hidden sm:block">
-                <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                <span className={`
+                  text-xl font-bold transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'text-slate-100 group-hover:text-indigo-400' 
+                    : 'text-slate-900 group-hover:text-indigo-600'
+                  }
+                `}>
                   Logistics Lynx
                 </span>
-                <div className="text-xs text-gray-500 dark:text-gray-400">TMS Platform</div>
+                <div className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                  TMS Platform
+                </div>
               </div>
             </Link>
           </div>
@@ -100,17 +124,39 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
           <div className="flex-1 max-w-2xl mx-8 hidden lg:block">
             <form onSubmit={handleSearch} className="relative">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className={`
+                  absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4
+                  ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}
+                `} />
                 <input
                   type="text"
                   placeholder="Search loads, carriers, analytics..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className={`
+                    w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent 
+                    transition-all duration-200
+                    ${isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-slate-100 placeholder-slate-400' 
+                      : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-500'
+                    }
+                  `}
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                  <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded">⌘</kbd>
-                  <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded">K</kbd>
+                  <kbd className={`
+                    px-2 py-1 text-xs font-semibold rounded
+                    ${isDarkMode 
+                      ? 'text-slate-400 bg-slate-700 border border-slate-600' 
+                      : 'text-slate-500 bg-slate-100 border border-slate-300'
+                    }
+                  `}>⌘</kbd>
+                  <kbd className={`
+                    px-2 py-1 text-xs font-semibold rounded
+                    ${isDarkMode 
+                      ? 'text-slate-400 bg-slate-700 border border-slate-600' 
+                      : 'text-slate-500 bg-slate-100 border border-slate-300'
+                    }
+                  `}>K</kbd>
                 </div>
               </div>
             </form>
@@ -124,13 +170,25 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
                 <button
                   key={action.name}
                   onClick={action.action}
-                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group"
+                  className={`
+                    p-2 rounded-lg transition-all duration-200 group
+                    ${isDarkMode 
+                      ? 'bg-slate-700 hover:bg-slate-600' 
+                      : 'bg-slate-100 hover:bg-slate-200'
+                    }
+                  `}
                   title={action.name}
                 >
                   <EnhancedIcon
                     name={action.icon}
                     size={18}
-                    className="text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
+                    className={`
+                      transition-colors duration-200
+                      ${isDarkMode 
+                        ? 'text-slate-400 group-hover:text-indigo-400' 
+                        : 'text-slate-600 group-hover:text-indigo-600'
+                      }
+                    `}
                   />
                 </button>
               ))}
@@ -138,10 +196,22 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
 
             {/* Notifications */}
             <div className="relative">
-              <button className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group relative">
-                <Bell className="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200" />
+              <button className={`
+                p-2 rounded-lg transition-all duration-200 group relative
+                ${isDarkMode 
+                  ? 'bg-slate-700 hover:bg-slate-600' 
+                  : 'bg-slate-100 hover:bg-slate-200'
+                }
+              `}>
+                <Bell className={`
+                  h-5 w-5 transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'text-slate-400 group-hover:text-slate-200' 
+                    : 'text-slate-600 group-hover:text-slate-800'
+                  }
+                `} />
                 {notifications > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
                     {notifications}
                   </span>
                 )}
@@ -150,14 +220,32 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
 
             {/* Theme Toggle */}
             <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group"
+              onClick={onThemeToggle}
+              className={`
+                p-2 rounded-lg transition-all duration-200 group
+                ${isDarkMode 
+                  ? 'bg-slate-700 hover:bg-slate-600' 
+                  : 'bg-slate-100 hover:bg-slate-200'
+                }
+              `}
               title="Toggle theme"
             >
-              {darkMode ? (
-                <Sun className="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-yellow-500" />
+              {isDarkMode ? (
+                <Sun className={`
+                  h-5 w-5 transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'text-slate-400 group-hover:text-amber-400' 
+                    : 'text-slate-600 group-hover:text-amber-500'
+                  }
+                `} />
               ) : (
-                <Moon className="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-500" />
+                <Moon className={`
+                  h-5 w-5 transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'text-slate-400 group-hover:text-indigo-400' 
+                    : 'text-slate-600 group-hover:text-indigo-500'
+                  }
+                `} />
               )}
             </button>
 
@@ -165,51 +253,105 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
             <div className="relative">
               <button
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                className="flex items-center space-x-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group"
+                className={`
+                  flex items-center space-x-3 p-2 rounded-lg transition-all duration-200 group
+                  ${isDarkMode 
+                    ? 'bg-slate-700 hover:bg-slate-600' 
+                    : 'bg-slate-100 hover:bg-slate-200'
+                  }
+                `}
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                   {user?.name?.charAt(0) || 'U'}
                 </div>
                 <div className="hidden md:block text-left">
-                  <div className="text-sm font-medium text-gray-900 dark:text-white">
+                  <div className={`text-sm font-medium ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                     {user?.name || 'User'}
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                     {user?.role || 'Admin'}
                   </div>
                 </div>
-                <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
+                <ChevronDown className={`
+                  h-4 w-4 transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'text-slate-400 group-hover:text-slate-300' 
+                    : 'text-slate-500 group-hover:text-slate-600'
+                  }
+                `} />
               </button>
 
               {/* User Dropdown */}
               {isUserDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                <div className={`
+                  absolute right-0 mt-2 w-64 rounded-lg shadow-lg border py-2 z-50 transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'bg-slate-800 border-slate-700' 
+                    : 'bg-white border-slate-200'
+                  }
+                `}>
+                  <div className={`
+                    px-4 py-3 border-b transition-colors duration-200
+                    ${isDarkMode 
+                      ? 'border-slate-700' 
+                      : 'border-slate-200'
+                    }
+                  `}>
+                    <div className={`text-sm font-medium ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                       {user?.name || 'User'}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                       {user?.email || 'user@example.com'}
                     </div>
                   </div>
                   
                   <div className="py-2">
-                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3">
+                    <button className={`
+                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                      ${isDarkMode 
+                        ? 'text-slate-300 hover:bg-slate-700' 
+                        : 'text-slate-700 hover:bg-slate-100'
+                      }
+                    `}>
                       <User className="h-4 w-4" />
                       <span>Profile</span>
                     </button>
-                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3">
+                    <button className={`
+                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                      ${isDarkMode 
+                        ? 'text-slate-300 hover:bg-slate-700' 
+                        : 'text-slate-700 hover:bg-slate-100'
+                      }
+                    `}>
                       <Settings className="h-4 w-4" />
                       <span>Settings</span>
                     </button>
-                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3">
+                    <button className={`
+                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                      ${isDarkMode 
+                        ? 'text-slate-300 hover:bg-slate-700' 
+                        : 'text-slate-700 hover:bg-slate-100'
+                      }
+                    `}>
                       <Shield className="h-4 w-4" />
                       <span>Security</span>
                     </button>
                   </div>
                   
-                  <div className="border-t border-gray-200 dark:border-gray-700 py-2">
-                    <button className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-3">
+                  <div className={`
+                    border-t py-2 transition-colors duration-200
+                    ${isDarkMode 
+                      ? 'border-slate-700' 
+                      : 'border-slate-200'
+                    }
+                  `}>
+                    <button className={`
+                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                      ${isDarkMode 
+                        ? 'text-rose-400 hover:bg-rose-900/20' 
+                        : 'text-rose-600 hover:bg-rose-50'
+                      }
+                    `}>
                       <LogOut className="h-4 w-4" />
                       <span>Sign out</span>
                     </button>
@@ -221,12 +363,24 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
+              className={`
+                lg:hidden p-2 rounded-lg transition-all duration-200
+                ${isDarkMode 
+                  ? 'bg-slate-700 hover:bg-slate-600' 
+                  : 'bg-slate-100 hover:bg-slate-200'
+                }
+              `}
             >
               {isMenuOpen ? (
-                <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <X className={`
+                  h-5 w-5 transition-colors duration-200
+                  ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}
+                `} />
               ) : (
-                <Menu className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <Menu className={`
+                  h-5 w-5 transition-colors duration-200
+                  ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}
+                `} />
               )}
             </button>
           </div>
@@ -234,15 +388,31 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
 
         {/* Mobile Search */}
         {isSearchOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className={`
+            lg:hidden py-4 border-t transition-colors duration-200
+            ${isDarkMode 
+              ? 'border-slate-700' 
+              : 'border-slate-200'
+            }
+          `}>
             <form onSubmit={handleSearch} className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className={`
+                absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4
+                ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}
+              `} />
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`
+                  w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+                  transition-colors duration-200
+                  ${isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-slate-100 placeholder-slate-400' 
+                    : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-500'
+                  }
+                `}
               />
             </form>
           </div>
@@ -250,13 +420,25 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className={`
+            lg:hidden py-4 border-t transition-colors duration-200
+            ${isDarkMode 
+              ? 'border-slate-700' 
+              : 'border-slate-200'
+            }
+          `}>
             <div className="space-y-2">
               {quickActions.map((action) => (
                 <button
                   key={action.name}
                   onClick={action.action}
-                  className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                  className={`
+                    w-full flex items-center space-x-3 px-4 py-2 text-left rounded-lg transition-colors duration-200
+                    ${isDarkMode 
+                      ? 'text-slate-300 hover:bg-slate-700' 
+                      : 'text-slate-700 hover:bg-slate-100'
+                    }
+                  `}
                 >
                   <EnhancedIcon name={action.icon} size={18} />
                   <span>{action.name}</span>

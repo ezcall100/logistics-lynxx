@@ -103,7 +103,7 @@ const SystemAlerts: React.FC = () => {
     },
     {
       id: 'ALT002',
-      title: 'Database Connection Pool Exhausted',
+      title: 'Connection Pool Exhausted',
       description: 'All database connections are currently in use',
       severity: 'critical',
       status: 'acknowledged',
@@ -146,7 +146,7 @@ const SystemAlerts: React.FC = () => {
     },
     {
       id: 'ALT005',
-      title: 'Network Latency Increased',
+      title: 'Latency Increased',
       description: 'Average response time has increased by 200ms',
       severity: 'low',
       status: 'active',
@@ -174,7 +174,7 @@ const SystemAlerts: React.FC = () => {
       }
     },
     {
-      component: 'Database Cluster',
+      component: 'Cluster',
       status: 'warning',
       uptime: 99.95,
       responseTime: 120,
@@ -230,7 +230,7 @@ const SystemAlerts: React.FC = () => {
   const mockIncidents: IncidentReport[] = [
     {
       id: 'INC001',
-      title: 'Database Connection Issues',
+      title: 'Connection Issues',
       description: 'Multiple database connection failures causing service outages',
       severity: 'critical',
       status: 'investigating',
@@ -541,7 +541,7 @@ const SystemAlerts: React.FC = () => {
           </div>
         </div>
 
-        {/* Key Metrics */}
+        {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <EnhancedCard mode={mode} elevated>
             <div className="flex items-center justify-between">
@@ -756,7 +756,7 @@ const SystemAlerts: React.FC = () => {
                 <option value="resolved">Resolved</option>
               </select>
               <EnhancedSearch
-                placeholder="Search alerts..."
+                placeholder="alerts..."
                 value={searchQuery}
                 onChange={setSearchQuery}
                 mode={mode}

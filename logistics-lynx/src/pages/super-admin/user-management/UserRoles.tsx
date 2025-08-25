@@ -151,7 +151,7 @@ const UserRoles: React.FC = () => {
   const mockPermissions: Permission[] = [
     { id: '1', name: 'User Management', description: 'Create, edit, and delete users', category: 'User', status: 'enabled' },
     { id: '2', name: 'Role Management', description: 'Create, edit, and delete roles', category: 'User', status: 'enabled' },
-    { id: '3', name: 'System Settings', description: 'Access to system configuration', category: 'System', status: 'enabled' },
+    { id: '3', name: 'System ', description: 'Access to system configuration', category: 'System', status: 'enabled' },
     { id: '4', name: 'Analytics View', description: 'View analytics and reports', category: 'Analytics', status: 'enabled' },
     { id: '5', name: 'Data Export', description: 'Export data and reports', category: 'Analytics', status: 'enabled' },
     { id: '6', name: 'Security Audit', description: 'Access to security logs', category: 'Security', status: 'enabled' },
@@ -431,12 +431,12 @@ const UserRoles: React.FC = () => {
           </EnhancedCard>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters and */}
         <EnhancedCard mode={mode}>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <EnhancedSearch
-                placeholder="Search roles..."
+                placeholder="roles..."
                 value={searchTerm}
                 onChange={setSearchTerm}
                 mode={mode}
@@ -599,7 +599,7 @@ const UserRoles: React.FC = () => {
             onClick={() => setShowEditModal(false)}
             mode={mode}
           >
-            Save Changes
+            Changes
           </EnhancedButton>
         </div>
       </EnhancedModal>

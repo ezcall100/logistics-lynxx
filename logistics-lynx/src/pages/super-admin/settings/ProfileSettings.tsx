@@ -3,13 +3,13 @@ import {
   User, 
   Camera, 
   Save, 
-  Eye, 
-  Shield, 
-  Bell, 
-  Settings, 
   Key, 
   Trash2,
-  RotateCcw
+  RotateCcw,
+  Settings,
+  Bell,
+  Shield,
+  Eye
 } from 'lucide-react';
 import { 
   EnhancedCard, 
@@ -192,8 +192,7 @@ const ProfileSettings: React.FC = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
-              Profile Settings
-            </h1>
+              Profile </h1>
             <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
               Manage your personal information and preferences
             </p>
@@ -343,8 +342,7 @@ const ProfileSettings: React.FC = () => {
                   </div>
                   <div>
                     <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                      Phone
-                    </label>
+                      </label>
                     <EnhancedInput
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -612,8 +610,7 @@ const ProfileSettings: React.FC = () => {
         {activeTab === 'privacy' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
-              Privacy Settings
-            </h3>
+              Privacy </h3>
             <div className="space-y-6">
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
@@ -664,7 +661,7 @@ const ProfileSettings: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Show Phone Number</h4>
+                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Show Number</h4>
                     <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
                       Allow others to see your phone number
                     </p>
@@ -717,8 +714,7 @@ const ProfileSettings: React.FC = () => {
         {activeTab === 'accessibility' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
-              Accessibility Settings
-            </h3>
+              Accessibility </h3>
             <div className="space-y-6">
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
@@ -795,7 +791,7 @@ const ProfileSettings: React.FC = () => {
           </EnhancedCard>
         )}
 
-        {/* Avatar Upload Modal */}
+        {/* Avatar Modal */}
         <EnhancedModal
           isOpen={showAvatarModal}
           onClose={() => setShowAvatarModal(false)}
@@ -817,7 +813,7 @@ const ProfileSettings: React.FC = () => {
                 )}
               </div>
               <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                Upload a new profile photo
+                a new profile photo
               </p>
             </div>
             <div className="space-y-3">
@@ -828,7 +824,7 @@ const ProfileSettings: React.FC = () => {
                 mode={mode}
                 onClick={() => document.getElementById('avatar-upload')?.click()}
               >
-                Upload Photo
+                Photo
               </EnhancedButton>
               <input
                 id="avatar-upload"
