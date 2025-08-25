@@ -78,51 +78,18 @@ import {
   Zap, 
   Droplets, 
   Cloud, 
-  CloudRain, 
-  CloudSnow, 
-  CloudLightning, 
-  Sun, 
-  Moon, 
-  Sunrise, 
-  Sunset, 
-  Wind, 
-  Thermometer, 
-  Gauge, 
-  Timer, 
-  Navigation, 
-  Compass, 
-  Map, 
-  Layers, 
-  Grid3X3, 
-  Rows, 
-  Sidebar, 
-  SidebarClose, 
-  SidebarOpen, 
-  PanelLeft, 
-  PanelRight, 
-  PanelTop, 
-  PanelBottom, 
-  Layout, 
-  LayoutGrid, 
-  LayoutList, 
-  LayoutTemplate, 
-  LayoutDashboard,
   Database,
   Server,
   Network,
   HardDrive,
   Building,
-  CreditCard,
-  Star as StarIcon,
-  Heart as HeartIcon,
-  Zap as ZapIcon
+  CreditCard
 } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
   EnhancedBadge, 
   EnhancedInput, 
-  EnhancedModal, 
   stableStyles 
 } from '../../../components/ui/EnhancedUIComponents';
 
@@ -522,7 +489,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.authentication.sessionTimeout}
+                    value={formData.authentication.sessionTimeout.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       authentication: { ...formData.authentication, sessionTimeout: parseInt(e.target.value) }
