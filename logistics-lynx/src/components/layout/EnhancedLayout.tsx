@@ -157,7 +157,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                 title="AI Agent Assistant"
                 onClick={() => {
                   console.log('AI Agent clicked');
-                  navigate('/super-admin/mcp');
+                  navigate('/mcp');
                 }}
               >
                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,7 +209,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                 title="Send Message"
                 onClick={() => {
                   console.log('Message clicked');
-                  navigate('/super-admin/business/support');
+                  navigate('/business/support');
                 }}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,7 +250,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                 title="Quick Actions"
                 onClick={() => {
                   console.log('Quick Actions clicked');
-                  navigate('/super-admin/dashboard');
+                  navigate('/dashboard');
                 }}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -270,7 +270,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                 title="Emergency Support"
                 onClick={() => {
                   console.log('Emergency Support clicked');
-                  navigate('/super-admin/business/support');
+                  navigate('/business/support');
                 }}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

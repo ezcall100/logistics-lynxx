@@ -106,7 +106,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       id: 'dashboard',
       title: 'Dashboard',
       icon: 'LayoutDashboard',
-      path: '/super-admin/dashboard',
+      path: '/dashboard',
       badge: 'Live',
       description: 'System overview and analytics',
       priority: 'high'
@@ -118,14 +118,14 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       badge: '8',
       description: 'Manage all users across the platform',
       children: [
-        { id: 'all-users', title: 'All Users', icon: 'Users', path: '/super-admin/users' },
-        { id: 'user-roles', title: 'User Roles', icon: 'Key', path: '/super-admin/users/roles' },
-        { id: 'user-groups', title: 'User Groups', icon: 'Users', path: '/super-admin/users/groups' },
-        { id: 'access-control', title: 'Access Control', icon: 'Shield', path: '/super-admin/users/access' },
-        { id: 'user-analytics', title: 'User Analytics', icon: 'BarChart3', path: '/super-admin/users/analytics' },
-        { id: 'billing-management', title: 'Billing Management', icon: 'CreditCard', path: '/super-admin/users/billing' },
-        { id: 'support-tickets', title: 'Support Tickets', icon: 'Headphones', path: '/super-admin/users/support' },
-        { id: 'user-onboarding', title: 'User Onboarding', icon: 'GraduationCap', path: '/super-admin/users/onboarding' }
+        { id: 'all-users', title: 'All Users', icon: 'Users', path: '/users' },
+        { id: 'user-roles', title: 'User Roles', icon: 'Key', path: '/users/roles' },
+        { id: 'user-groups', title: 'User Groups', icon: 'Users', path: '/users/groups' },
+        { id: 'access-control', title: 'Access Control', icon: 'Shield', path: '/users/access' },
+        { id: 'user-analytics', title: 'User Analytics', icon: 'BarChart3', path: '/users/analytics' },
+        { id: 'billing-management', title: 'Billing Management', icon: 'CreditCard', path: '/users/billing' },
+        { id: 'support-tickets', title: 'Support Tickets', icon: 'Headphones', path: '/users/support' },
+        { id: 'user-onboarding', title: 'User Onboarding', icon: 'GraduationCap', path: '/users/onboarding' }
       ],
       priority: 'high'
     },
@@ -135,16 +135,16 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'Server',
       description: 'Core system administration tools',
       children: [
-        { id: 'database-management', title: 'Database Management', icon: 'Database', path: '/super-admin/system/database' },
-        { id: 'api-management', title: 'API Management', icon: 'Code', path: '/super-admin/system/api' },
-        { id: 'server-monitoring', title: 'Server Monitoring', icon: 'Monitor', path: '/super-admin/system/monitoring' },
-        { id: 'deployment-management', title: 'Deployment Management', icon: 'Rocket', path: '/super-admin/system/deployment' },
-        { id: 'configuration', title: 'Configuration', icon: 'Settings', path: '/super-admin/system/config' },
-        { id: 'backup-recovery', title: 'Backup & Recovery', icon: 'HardDrive', path: '/super-admin/system/backup' },
-        { id: 'security-settings', title: 'Security Settings', icon: 'Shield', path: '/super-admin/system/security' },
-        { id: 'integration-hub', title: 'Integration Hub', icon: 'Plug', path: '/super-admin/system/integrations' },
-        { id: 'file-storage', title: 'File Storage', icon: 'Folder', path: '/super-admin/system/storage' },
-        { id: 'email-services', title: 'Email Services', icon: 'Mail', path: '/super-admin/system/email' }
+        { id: 'database-management', title: 'Database Management', icon: 'Database', path: '/system/database' },
+        { id: 'api-management', title: 'API Management', icon: 'Code', path: '/system/api' },
+        { id: 'server-monitoring', title: 'Server Monitoring', icon: 'Monitor', path: '/system/monitoring' },
+        { id: 'deployment-management', title: 'Deployment Management', icon: 'Rocket', path: '/system/deployment' },
+        { id: 'configuration', title: 'Configuration', icon: 'Settings', path: '/system/config' },
+        { id: 'backup-recovery', title: 'Backup & Recovery', icon: 'HardDrive', path: '/system/backup' },
+        { id: 'security-settings', title: 'Security Settings', icon: 'Shield', path: '/system/security' },
+        { id: 'integration-hub', title: 'Integration Hub', icon: 'Plug', path: '/system/integrations' },
+        { id: 'file-storage', title: 'File Storage', icon: 'Folder', path: '/system/storage' },
+        { id: 'email-services', title: 'Email Services', icon: 'Mail', path: '/system/email' }
       ],
       priority: 'high'
     },
@@ -155,14 +155,14 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       badge: 'Live',
       description: 'Security monitoring and management',
       children: [
-        { id: 'security-audit', title: 'Security Audit', icon: 'Eye', path: '/super-admin/security/audit' },
-        { id: 'access-logs', title: 'Access Logs', icon: 'FileText', path: '/super-admin/security/logs' },
-        { id: 'data-protection', title: 'Data Protection', icon: 'Shield', path: '/super-admin/security/protection' },
-        { id: 'api-security', title: 'API Security', icon: 'Code', path: '/super-admin/security/api' },
-        { id: 'user-permissions', title: 'User Permissions', icon: 'Key', path: '/super-admin/security/permissions' },
-        { id: 'security-policies', title: 'Security Policies', icon: 'FileText', path: '/super-admin/security/policies' },
-        { id: 'incident-response', title: 'Incident Response', icon: 'AlertCircle', path: '/super-admin/security/incidents' },
-        { id: 'compliance-management', title: 'Compliance Management', icon: 'CheckCircle', path: '/super-admin/security/compliance' }
+        { id: 'security-audit', title: 'Security Audit', icon: 'Eye', path: '/security/audit' },
+        { id: 'access-logs', title: 'Access Logs', icon: 'FileText', path: '/security/logs' },
+        { id: 'data-protection', title: 'Data Protection', icon: 'Shield', path: '/security/protection' },
+        { id: 'api-security', title: 'API Security', icon: 'Code', path: '/security/api' },
+        { id: 'user-permissions', title: 'User Permissions', icon: 'Key', path: '/security/permissions' },
+        { id: 'security-policies', title: 'Security Policies', icon: 'FileText', path: '/security/policies' },
+        { id: 'incident-response', title: 'Incident Response', icon: 'AlertCircle', path: '/security/incidents' },
+        { id: 'compliance-management', title: 'Compliance Management', icon: 'CheckCircle', path: '/security/compliance' }
       ],
       priority: 'high'
     },
@@ -172,14 +172,14 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'Activity',
       description: 'Real-time system monitoring',
       children: [
-        { id: 'performance-monitoring', title: 'Performance Monitoring', icon: 'Zap', path: '/super-admin/monitoring/performance' },
-        { id: 'error-tracking', title: 'Error Tracking', icon: 'AlertCircle', path: '/super-admin/monitoring/errors' },
-        { id: 'log-analysis', title: 'Log Analysis', icon: 'ScrollText', path: '/super-admin/monitoring/logs' },
-        { id: 'alert-management', title: 'Alert Management', icon: 'Bell', path: '/super-admin/monitoring/alerts' },
-        { id: 'uptime-monitoring', title: 'Uptime Monitoring', icon: 'Activity', path: '/super-admin/monitoring/uptime' },
-        { id: 'resource-usage', title: 'Resource Usage', icon: 'Cpu', path: '/super-admin/monitoring/resources' },
-        { id: 'network-monitoring', title: 'Network Monitoring', icon: 'Wifi', path: '/super-admin/monitoring/network' },
-        { id: 'health-checks', title: 'Health Checks', icon: 'Heart', path: '/super-admin/monitoring/health' }
+        { id: 'performance-monitoring', title: 'Performance Monitoring', icon: 'Zap', path: '/monitoring/performance' },
+        { id: 'error-tracking', title: 'Error Tracking', icon: 'AlertCircle', path: '/monitoring/errors' },
+        { id: 'log-analysis', title: 'Log Analysis', icon: 'ScrollText', path: '/monitoring/logs' },
+        { id: 'alert-management', title: 'Alert Management', icon: 'Bell', path: '/monitoring/alerts' },
+        { id: 'uptime-monitoring', title: 'Uptime Monitoring', icon: 'Activity', path: '/monitoring/uptime' },
+        { id: 'resource-usage', title: 'Resource Usage', icon: 'Cpu', path: '/monitoring/resources' },
+        { id: 'network-monitoring', title: 'Network Monitoring', icon: 'Wifi', path: '/monitoring/network' },
+        { id: 'health-checks', title: 'Health Checks', icon: 'Heart', path: '/monitoring/health' }
       ],
       priority: 'medium'
     },
@@ -189,18 +189,18 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'Globe',
       description: 'Multi-portal management system',
       children: [
-        { id: 'portal-overview', title: 'Portal Overview', icon: 'Eye', path: '/super-admin/portals' },
-        { id: 'portal-configuration', title: 'Portal Configuration', icon: 'Settings', path: '/super-admin/portals/config' },
-        { id: 'portal-users', title: 'Portal Users', icon: 'Users', path: '/super-admin/portals/users' },
-        { id: 'feature-management', title: 'Feature Management', icon: 'Star', path: '/super-admin/portals/features' },
-        { id: 'portal-analytics', title: 'Portal Analytics', icon: 'BarChart3', path: '/super-admin/portals/analytics' },
-        { id: 'portal-billing', title: 'Portal Billing', icon: 'CreditCard', path: '/super-admin/portals/billing' },
-        { id: 'portal-support', title: 'Portal Support', icon: 'Headphones', path: '/super-admin/portals/support' },
-        { id: 'portal-integrations', title: 'Portal Integrations', icon: 'Plug', path: '/super-admin/portals/integrations' },
-        { id: 'portal-backup', title: 'Portal Backup', icon: 'HardDrive', path: '/super-admin/portals/backup' },
-        { id: 'portal-security', title: 'Portal Security', icon: 'Shield', path: '/super-admin/portals/security' },
-        { id: 'portal-compliance', title: 'Portal Compliance', icon: 'CheckCircle', path: '/super-admin/portals/compliance' },
-        { id: 'portal-deployment', title: 'Portal Deployment', icon: 'Rocket', path: '/super-admin/portals/deployment' }
+        { id: 'portal-overview', title: 'Portal Overview', icon: 'Eye', path: '/portals' },
+        { id: 'portal-configuration', title: 'Portal Configuration', icon: 'Settings', path: '/portals/config' },
+        { id: 'portal-users', title: 'Portal Users', icon: 'Users', path: '/portals/users' },
+        { id: 'feature-management', title: 'Feature Management', icon: 'Star', path: '/portals/features' },
+        { id: 'portal-analytics', title: 'Portal Analytics', icon: 'BarChart3', path: '/portals/analytics' },
+        { id: 'portal-billing', title: 'Portal Billing', icon: 'CreditCard', path: '/portals/billing' },
+        { id: 'portal-support', title: 'Portal Support', icon: 'Headphones', path: '/portals/support' },
+        { id: 'portal-integrations', title: 'Portal Integrations', icon: 'Plug', path: '/portals/integrations' },
+        { id: 'portal-backup', title: 'Portal Backup', icon: 'HardDrive', path: '/portals/backup' },
+        { id: 'portal-security', title: 'Portal Security', icon: 'Shield', path: '/portals/security' },
+        { id: 'portal-compliance', title: 'Portal Compliance', icon: 'CheckCircle', path: '/portals/compliance' },
+        { id: 'portal-deployment', title: 'Portal Deployment', icon: 'Rocket', path: '/portals/deployment' }
       ],
       priority: 'medium'
     },
@@ -210,16 +210,16 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'BarChart3',
       description: 'Advanced analytics and reporting',
       children: [
-        { id: 'business-analytics', title: 'Business Analytics', icon: 'BarChart3', path: '/super-admin/analytics/business' },
-        { id: 'user-analytics', title: 'User Analytics', icon: 'Users', path: '/super-admin/analytics/users' },
-        { id: 'performance-reports', title: 'Performance Reports', icon: 'Zap', path: '/super-admin/analytics/performance' },
-        { id: 'security-reports', title: 'Security Reports', icon: 'Shield', path: '/super-admin/analytics/security' },
-        { id: 'financial-reports', title: 'Financial Reports', icon: 'DollarSign', path: '/super-admin/analytics/financial' },
-        { id: 'operational-reports', title: 'Operational Reports', icon: 'Settings', path: '/super-admin/analytics/operational' },
-        { id: 'custom-reports', title: 'Custom Reports', icon: 'FileText', path: '/super-admin/analytics/custom' },
-        { id: 'data-export', title: 'Data Export', icon: 'Download', path: '/super-admin/analytics/export' },
-        { id: 'dashboard-builder', title: 'Dashboard Builder', icon: 'Layers', path: '/super-admin/analytics/dashboards' },
-        { id: 'scheduled-reports', title: 'Scheduled Reports', icon: 'Calendar', path: '/super-admin/analytics/scheduled' }
+        { id: 'business-analytics', title: 'Business Analytics', icon: 'BarChart3', path: '/analytics/business' },
+        { id: 'user-analytics', title: 'User Analytics', icon: 'Users', path: '/analytics/users' },
+        { id: 'performance-reports', title: 'Performance Reports', icon: 'Zap', path: '/analytics/performance' },
+        { id: 'security-reports', title: 'Security Reports', icon: 'Shield', path: '/analytics/security' },
+        { id: 'financial-reports', title: 'Financial Reports', icon: 'DollarSign', path: '/analytics/financial' },
+        { id: 'operational-reports', title: 'Operational Reports', icon: 'Settings', path: '/analytics/operational' },
+        { id: 'custom-reports', title: 'Custom Reports', icon: 'FileText', path: '/analytics/custom' },
+        { id: 'data-export', title: 'Data Export', icon: 'Download', path: '/analytics/export' },
+        { id: 'dashboard-builder', title: 'Dashboard Builder', icon: 'Layers', path: '/analytics/dashboards' },
+        { id: 'scheduled-reports', title: 'Scheduled Reports', icon: 'Calendar', path: '/analytics/scheduled' }
       ],
       priority: 'medium'
     },
@@ -230,18 +230,18 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       badge: 'AI',
       description: 'AI and autonomous system control',
       children: [
-        { id: 'mcp-overview', title: 'MCP Overview', icon: 'Eye', path: '/super-admin/mcp' },
-        { id: 'agent-management', title: 'Agent Management', icon: 'Brain', path: '/super-admin/mcp/agents' },
-        { id: 'ai-models', title: 'AI Models', icon: 'Brain', path: '/super-admin/mcp/models' },
-        { id: 'data-pipeline', title: 'Data Pipeline', icon: 'Database', path: '/super-admin/mcp/pipeline' },
-        { id: 'machine-learning', title: 'Machine Learning', icon: 'Target', path: '/super-admin/mcp/learning' },
-        { id: 'ai-analytics', title: 'AI Analytics', icon: 'BarChart3', path: '/super-admin/mcp/analytics' },
-        { id: 'automation-rules', title: 'Automation Rules', icon: 'Zap', path: '/super-admin/mcp/automation' },
-        { id: 'ai-integrations', title: 'AI Integrations', icon: 'Plug', path: '/super-admin/mcp/integrations' },
-        { id: 'ai-monitoring', title: 'AI Monitoring', icon: 'Activity', path: '/super-admin/mcp/monitoring' },
-        { id: 'ai-compliance', title: 'AI Compliance', icon: 'CheckCircle', path: '/super-admin/mcp/compliance' },
-        { id: 'ai-documentation', title: 'AI Documentation', icon: 'FileText', path: '/super-admin/mcp/documentation' },
-        { id: 'ai-support', title: 'AI Support', icon: 'Headphones', path: '/super-admin/mcp/support' }
+        { id: 'mcp-overview', title: 'MCP Overview', icon: 'Eye', path: '/mcp' },
+        { id: 'agent-management', title: 'Agent Management', icon: 'Brain', path: '/mcp/agents' },
+        { id: 'ai-models', title: 'AI Models', icon: 'Brain', path: '/mcp/models' },
+        { id: 'data-pipeline', title: 'Data Pipeline', icon: 'Database', path: '/mcp/pipeline' },
+        { id: 'machine-learning', title: 'Machine Learning', icon: 'Target', path: '/mcp/learning' },
+        { id: 'ai-analytics', title: 'AI Analytics', icon: 'BarChart3', path: '/mcp/analytics' },
+        { id: 'automation-rules', title: 'Automation Rules', icon: 'Zap', path: '/mcp/automation' },
+        { id: 'ai-integrations', title: 'AI Integrations', icon: 'Plug', path: '/mcp/integrations' },
+        { id: 'ai-monitoring', title: 'AI Monitoring', icon: 'Activity', path: '/mcp/monitoring' },
+        { id: 'ai-compliance', title: 'AI Compliance', icon: 'CheckCircle', path: '/mcp/compliance' },
+        { id: 'ai-documentation', title: 'AI Documentation', icon: 'FileText', path: '/mcp/documentation' },
+        { id: 'ai-support', title: 'AI Support', icon: 'Headphones', path: '/mcp/support' }
       ],
       priority: 'medium'
     },
@@ -251,14 +251,14 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'Briefcase',
       description: 'Business operations management',
       children: [
-        { id: 'customer-management', title: 'Customer Management', icon: 'Users', path: '/super-admin/business/customers' },
-        { id: 'sales-pipeline', title: 'Sales Pipeline', icon: 'TrendingUp', path: '/super-admin/business/sales' },
-        { id: 'billing-invoicing', title: 'Billing & Invoicing', icon: 'CreditCard', path: '/super-admin/business/billing' },
-        { id: 'support-management', title: 'Support Management', icon: 'Headphones', path: '/super-admin/business/support' },
-        { id: 'documentation', title: 'Documentation', icon: 'FileText', path: '/super-admin/business/docs' },
-        { id: 'marketing-tools', title: 'Marketing Tools', icon: 'Megaphone', path: '/super-admin/business/marketing' },
-        { id: 'partner-management', title: 'Partner Management', icon: 'Handshake', path: '/super-admin/business/partners' },
-        { id: 'legal-compliance', title: 'Legal & Compliance', icon: 'Scale', path: '/super-admin/business/legal' }
+        { id: 'customer-management', title: 'Customer Management', icon: 'Users', path: '/business/customers' },
+        { id: 'sales-pipeline', title: 'Sales Pipeline', icon: 'TrendingUp', path: '/business/sales' },
+        { id: 'billing-invoicing', title: 'Billing & Invoicing', icon: 'CreditCard', path: '/business/billing' },
+        { id: 'support-management', title: 'Support Management', icon: 'Headphones', path: '/business/support' },
+        { id: 'documentation', title: 'Documentation', icon: 'FileText', path: '/business/docs' },
+        { id: 'marketing-tools', title: 'Marketing Tools', icon: 'Megaphone', path: '/business/marketing' },
+        { id: 'partner-management', title: 'Partner Management', icon: 'Handshake', path: '/business/partners' },
+        { id: 'legal-compliance', title: 'Legal & Compliance', icon: 'Scale', path: '/business/legal' }
       ],
       priority: 'low'
     },
@@ -268,14 +268,14 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'Code',
       description: 'Development and DevOps tools',
       children: [
-        { id: 'code-repository', title: 'Code Repository', icon: 'Folder', path: '/super-admin/dev/repository' },
-        { id: 'ci-cd-pipeline', title: 'CI/CD Pipeline', icon: 'Database', path: '/super-admin/dev/pipeline' },
-        { id: 'testing-suite', title: 'Testing Suite', icon: 'TestTube', path: '/super-admin/dev/testing' },
-        { id: 'environment-management', title: 'Environment Management', icon: 'Globe', path: '/super-admin/dev/environments' },
-        { id: 'performance-testing', title: 'Performance Testing', icon: 'Zap', path: '/super-admin/dev/performance' },
-        { id: 'security-testing', title: 'Security Testing', icon: 'Shield', path: '/super-admin/dev/security' },
-        { id: 'dev-documentation', title: 'Dev Documentation', icon: 'FileText', path: '/super-admin/dev/documentation' },
-        { id: 'release-management', title: 'Release Management', icon: 'Rocket', path: '/super-admin/dev/releases' }
+        { id: 'code-repository', title: 'Code Repository', icon: 'Folder', path: '/dev/repository' },
+        { id: 'ci-cd-pipeline', title: 'CI/CD Pipeline', icon: 'Database', path: '/dev/pipeline' },
+        { id: 'testing-suite', title: 'Testing Suite', icon: 'TestTube', path: '/dev/testing' },
+        { id: 'environment-management', title: 'Environment Management', icon: 'Globe', path: '/dev/environments' },
+        { id: 'performance-testing', title: 'Performance Testing', icon: 'Zap', path: '/dev/performance' },
+        { id: 'security-testing', title: 'Security Testing', icon: 'Shield', path: '/dev/security' },
+        { id: 'dev-documentation', title: 'Dev Documentation', icon: 'FileText', path: '/dev/documentation' },
+        { id: 'release-management', title: 'Release Management', icon: 'Rocket', path: '/dev/releases' }
       ],
       priority: 'low'
     },
@@ -285,11 +285,11 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       icon: 'Settings',
       description: 'System and user preferences',
       children: [
-        { id: 'settings-overview', title: 'Settings Overview', icon: 'Settings', path: '/super-admin/settings' },
-        { id: 'profile-settings', title: 'Profile Settings', icon: 'User', path: '/super-admin/settings/profile' },
-        { id: 'system-settings', title: 'System Settings', icon: 'Server', path: '/super-admin/settings/system' },
-        { id: 'user-preferences', title: 'User Preferences', icon: 'UserCheck', path: '/super-admin/settings/preferences' },
-        { id: 'security-settings', title: 'Security Settings', icon: 'Shield', path: '/super-admin/settings/security' }
+        { id: 'settings-overview', title: 'Settings Overview', icon: 'Settings', path: '/settings' },
+        { id: 'profile-settings', title: 'Profile Settings', icon: 'User', path: '/settings/profile' },
+        { id: 'system-settings', title: 'System Settings', icon: 'Server', path: '/settings/system' },
+        { id: 'user-preferences', title: 'User Preferences', icon: 'UserCheck', path: '/settings/preferences' },
+        { id: 'security-settings', title: 'Security Settings', icon: 'Shield', path: '/settings/security' }
       ],
       priority: 'high'
     }
