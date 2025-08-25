@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true, // This will fail if port 3000 is not available
-    host: true
+    host: true,
+    historyApiFallback: true // This is needed for client-side routing
   }
 })

@@ -303,16 +303,21 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   };
 
   const handleMenuClick = (item: MenuItem) => {
+    console.log('🔍 Menu clicked:', item.title, 'Path:', item.path, 'Has children:', !!item.children);
     if (item.path) {
+      console.log('🚀 Navigating to:', item.path);
       navigate(item.path);
       setActiveMenu(item.id);
     } else if (item.children) {
+      console.log('📂 Toggling menu:', item.id);
       toggleMenu(item.id);
     }
   };
 
   const handleSubMenuClick = (item: MenuItem) => {
+    console.log('🔍 SubMenu clicked:', item.title, 'Path:', item.path);
     if (item.path) {
+      console.log('🚀 Navigating to:', item.path);
       navigate(item.path);
       setActiveMenu(item.id);
     }
