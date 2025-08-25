@@ -272,6 +272,12 @@ const SuperAdminRoutes: React.FC = () => {
 
       {/* Default route - redirect to dashboard */}
       <Route path="/" element={<SystemOverview />} />
+      
+      {/* Dashboard default route */}
+      <Route path="/dashboard" element={<SystemOverview />} />
+      
+      {/* Catch-all route for unmatched paths */}
+      <Route path="*" element={<SystemOverview />} />
     </Routes>
   );
 };
