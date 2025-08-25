@@ -1,0 +1,112 @@
+# ========================
+# 🚀 TransBot AI - Production Docker Compose
+# ========================
+# Domain: transbotai.com
+# Server IP: 185.158.133.1
+
+version: '3.8'
+
+services:
+  # Frontend Application (Next.js)
+  transbot-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: transbot-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_APP_NAME=TransBot AI
+      - NEXT_PUBLIC_APP_URL=https://transbotai.com
+      - NEXT_PUBLIC_MCP_API_URL=https://transbotai.com/api
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    ports:
+      - "3000:3000"
+    networks:
+      - transbot-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MCP Backend Server
+  transbot-mcp:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: transbot-mcp
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - CORS_ORIGIN=https://transbotai.com
+      - BASE_URL=https://transbotai.com
+      - MCP_SECRET_KEY=${MCP_SECRET_KEY}
+    ports:
+      - "3001:3001"
+    networks:
+      - transbot-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: transbot-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/letsencrypt:ro
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - transbot-frontend
+      - transbot-mcp
+    networks:
+      - transbot-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SSL Certificate Renewal (Let's Encrypt)
+  certbot:
+    image: certbot/certbot
+    container_name: transbot-certbot
+    volumes:
+      - ./ssl:/etc/letsencrypt
+      - ./certbot-webroot:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@transbotai.com --agree-tos --no-eff-email -d transbotai.com -d www.transbotai.com
+    networks:
+      - transbot-network
+
+  # SSL Renewal Cron Job
+  certbot-renew:
+    image: certbot/certbot
+    container_name: transbot-certbot-renew
+    volumes:
+      - ./ssl:/etc/letsencrypt
+      - ./certbot-webroot:/var/www/certbot
+    command: renew
+    networks:
+      - transbot-network
+    profiles:
+      - renewal
+
+networks:
+  transbot-network:
+    driver: bridge
+
+volumes:
+  nginx-logs:
+    driver: local

@@ -34,6 +34,7 @@ export function useAdminNav() {
     
     // Security Center routes
     toSecurityAudit: () => navigate(`${base}/security/audit`),
+    toSecurityScanner: () => navigate(`${base}/security/scanner`),
     toSecurityLogs: () => navigate(`${base}/security/logs`),
     toSecurityProtection: () => navigate(`${base}/security/protection`),
     toSecurityApi: () => navigate(`${base}/security/api`),
@@ -44,6 +45,7 @@ export function useAdminNav() {
     
     // System Monitoring routes
     toMonitoringPerformance: () => navigate(`${base}/monitoring/performance`),
+    toMonitoringPerformanceDashboard: () => navigate(`${base}/monitoring/performance-dashboard`),
     toMonitoringErrors: () => navigate(`${base}/monitoring/errors`),
     toMonitoringLogs: () => navigate(`${base}/monitoring/logs`),
     toMonitoringAlerts: () => navigate(`${base}/monitoring/alerts`),

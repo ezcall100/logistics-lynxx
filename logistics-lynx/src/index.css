@@ -67,3 +67,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Responsive navigation fixes */
+@layer components {
+  /* Ensure consistent sidebar behavior across devices */
+  .sidebar-responsive {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  /* Tablet-specific fixes */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .sidebar-responsive {
+      @apply w-20;
+    }
+  }
+  
+  /* Desktop-specific fixes */
+  @media (min-width: 1024px) {
+    .sidebar-responsive {
+      @apply w-80;
+    }
+  }
+  
+  /* Mobile-specific fixes */
+  @media (max-width: 767px) {
+    .sidebar-responsive {
+      @apply w-0;
+    }
+  }
+}

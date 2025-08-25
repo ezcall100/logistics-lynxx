@@ -5,6 +5,7 @@ import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';
 import { executeFabAction } from '../FabActions';
 
+
 // Theme Context
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -52,12 +53,18 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
   // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 1024;
-      setIsMobile(mobile);
-      if (mobile) {
-        setSidebarOpen(false);
-      } else {
+      // Use more specific breakpoints to avoid tablet issues
+      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+      const isMobile = window.innerWidth < 768;
+      const isDesktop = window.innerWidth >= 1024;
+      
+      setIsMobile(isMobile || isTablet);
+      
+      // Keep sidebar open on desktop, closed on mobile/tablet
+      if (isDesktop) {
         setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
       }
     };
 

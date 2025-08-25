@@ -1,0 +1,79 @@
+# ========================
+# 🐳 TransBot AI - Docker Compose
+# ========================
+
+version: '3.8'
+
+services:
+  # Main TransBot AI Application
+  transbot-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_APP_NAME=TransBot AI
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - NEXT_PUBLIC_MCP_API_URL=https://mcp.transbotai.com/api
+      - NEXT_PUBLIC_CURSOR_AI_URL=https://cursor.transbotai.com/api
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MCP Server (Local Development)
+  mcp-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - MCP_PORT=3001
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: unless-stopped
+    profiles:
+      - development
+
+  # Redis Cache (Optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    profiles:
+      - cache
+
+  # PostgreSQL Database (Optional)
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=transbot
+      - POSTGRES_USER=transbot
+      - POSTGRES_PASSWORD=transbot_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - database
+
+volumes:
+  redis_data:
+  postgres_data:
+
+networks:
+  default:
+    name: transbot-network

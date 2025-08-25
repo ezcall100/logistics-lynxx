@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create axios instance with MCP API configuration
 export const http: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_MCP_BASE_URL || 'http://localhost:3001/api',
+  baseURL: import.meta.env.NEXT_PUBLIC_MCP_API_URL || 'http://localhost:3001/api',
   withCredentials: true,
   timeout: 20000,
   headers: {
@@ -68,7 +68,7 @@ http.interceptors.response.use(
         console.log('🔄 Attempting token refresh...');
         await axios.post('/auth/refresh', {}, { 
           withCredentials: true,
-          baseURL: import.meta.env.VITE_MCP_BASE_URL || 'http://localhost:3001/api'
+          baseURL: import.meta.env.NEXT_PUBLIC_MCP_API_URL || 'http://localhost:3001/api'
         });
         
         console.log('✅ Token refresh successful, retrying request');

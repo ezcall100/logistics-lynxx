@@ -535,7 +535,8 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className={`
-      ${isOpen ? 'w-80' : 'w-20'} h-full transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0
+      sidebar-responsive h-full overflow-hidden flex-shrink-0
+      ${isOpen ? 'w-80' : 'w-20'}
       ${isDarkMode 
         ? 'bg-slate-800 border-r border-slate-700' 
         : 'bg-white border-r border-slate-200'
@@ -574,6 +575,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
                 : 'bg-slate-100 hover:bg-slate-200'
               }
             `}
+            title={isOpen ? "Collapse Sidebar" : "Expand Sidebar"}
           >
             <ChevronRight className={`
               h-4 w-4 transition-transform duration-200 ${isOpen ? '' : 'rotate-180'}

@@ -2,7 +2,7 @@ import http from 'http';
 import https from 'https';
 
 // Configuration
-const MCP_BASE_URL = process.env.VITE_MCP_BASE_URL || 'http://localhost:3001/api';
+const MCP_BASE_URL = process.env.NEXT_PUBLIC_MCP_API_URL || 'http://localhost:3001/api';
 const TIMEOUT = 10000;
 
 // Test results storage
@@ -285,12 +285,12 @@ Options:
   --timeout <ms> Set request timeout in milliseconds (default: 10000)
 
 Environment Variables:
-  VITE_MCP_BASE_URL  Set MCP base URL
+  NEXT_PUBLIC_MCP_API_URL  Set MCP base URL
 
 Examples:
   node test-mcp-compatibility.js
   node test-mcp-compatibility.js --url http://localhost:3001/api
-  VITE_MCP_BASE_URL=http://localhost:3001/api node test-mcp-compatibility.js
+  NEXT_PUBLIC_MCP_API_URL=http://localhost:3001/api node test-mcp-compatibility.js
   `);
   process.exit(0);
 }
@@ -298,7 +298,7 @@ Examples:
 // Parse custom URL from arguments
 const urlIndex = args.indexOf('--url');
 if (urlIndex !== -1 && args[urlIndex + 1]) {
-  process.env.VITE_MCP_BASE_URL = args[urlIndex + 1];
+  process.env.NEXT_PUBLIC_MCP_API_URL = args[urlIndex + 1];
 }
 
 // Parse custom timeout from arguments
