@@ -503,7 +503,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.authentication.maxConcurrentSessions}
+                    value={formData.authentication.maxConcurrentSessions.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       authentication: { ...formData.authentication, maxConcurrentSessions: parseInt(e.target.value) }
@@ -525,7 +525,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.authentication.passwordPolicy.minLength}
+                    value={formData.authentication.passwordPolicy.minLength.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       authentication: {
@@ -545,7 +545,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.authentication.passwordPolicy.maxAge}
+                    value={formData.authentication.passwordPolicy.maxAge.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       authentication: {
@@ -647,7 +647,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.authentication.lockoutPolicy.maxAttempts}
+                    value={formData.authentication.lockoutPolicy.maxAttempts.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       authentication: {
@@ -667,7 +667,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.authentication.lockoutPolicy.lockoutDuration}
+                    value={formData.authentication.lockoutPolicy.lockoutDuration.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       authentication: {
