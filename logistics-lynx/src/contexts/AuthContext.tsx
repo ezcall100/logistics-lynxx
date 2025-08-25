@@ -1,11 +1,26 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
-interface User {
+// Type definitions for better type safety
+export type Role = 'super-admin' | 'admin' | 'manager' | 'user';
+export type Permission = 
+  | 'dashboard:read'
+  | 'users:read' | 'users:write' | 'users:delete'
+  | 'system:admin' | 'system:read'
+  | 'security:admin' | 'security:read'
+  | 'mcp:admin' | 'mcp:read'
+  | 'analytics:read' | 'analytics:write'
+  | 'settings:admin' | 'settings:read'
+  | 'portals:admin' | 'portals:read'
+  | 'business:admin' | 'business:read'
+  | 'invoices:read' | 'invoices:write'
+  | 'reports:read' | 'reports:write';
+
+export interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
-  permissions: string[];
+  role: Role;
+  permissions: Permission[];
   isAuthenticated: boolean;
   avatar?: string;
   company?: {
@@ -13,6 +28,9 @@ interface User {
     name: string;
     type: string;
   };
+  features?: string[]; // Feature flags
+  lastLogin?: string;
+  sessionExpiry?: string;
 }
 
 interface AuthContextType {
@@ -22,8 +40,10 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
-  hasPermission: (permission: string) => boolean;
   hasRole: (role: string) => boolean;
+  hasPermissions: (permissions: string[]) => boolean;
+  hasFeature: (feature: string) => boolean;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,12 +52,51 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Helper functions for permission checking
+const hasRoleFn = (user?: User) => (role: string): boolean => {
+  return user?.role === role || false;
+};
+
+const hasPermissionsFn = (user?: User) => (permissions: string[]): boolean => {
+  if (!user || !permissions.length) return false;
+  return permissions.every(permission => 
+    user.permissions.includes(permission as Permission)
+  );
+};
+
+const hasFeatureFn = (user?: User) => (feature: string): boolean => {
+  return user?.features?.includes(feature) || false;
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock authentication methods
-  const login = async (email: string, password: string): Promise<boolean> => {
+  // Multi-tab sync for logout/login
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'auth:logout') {
+        console.log('🔍 AuthContext: Logout detected from another tab');
+        setUser(null);
+        window.location.assign('/login');
+      }
+      if (e.key === 'auth:login' && e.newValue) {
+        console.log('🔍 AuthContext: Login detected from another tab');
+        try {
+          const userData = JSON.parse(e.newValue);
+          setUser(userData);
+        } catch (error) {
+          console.error('🔍 AuthContext: Failed to parse user data from storage', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Mock authentication methods (replace with real API calls)
+  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
@@ -54,13 +113,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           'dashboard:read',
           'users:read',
           'users:write',
+          'users:delete',
           'system:admin',
+          'system:read',
           'security:admin',
+          'security:read',
           'mcp:admin',
+          'mcp:read',
           'analytics:read',
+          'analytics:write',
           'settings:admin',
+          'settings:read',
           'portals:admin',
-          'business:admin'
+          'portals:read',
+          'business:admin',
+          'business:read',
+          'invoices:read',
+          'invoices:write',
+          'reports:read',
+          'reports:write'
         ],
         isAuthenticated: true,
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
@@ -68,11 +139,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           id: 'company-1',
           name: 'Logistics Lynx Corp',
           type: 'enterprise'
-        }
+        },
+        features: [
+          'fab.dispatch',
+          'ai.agents',
+          'advanced.analytics',
+          'multi.tenant'
+        ],
+        lastLogin: new Date().toISOString(),
+        sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
       };
 
       setUser(mockUser);
+      
+      // Store in localStorage (in production, use httpOnly cookies for tokens)
       localStorage.setItem('auth_user', JSON.stringify(mockUser));
+      localStorage.setItem('auth:login', JSON.stringify(mockUser));
       
       console.log('🔍 AuthContext: User logged in successfully', mockUser);
       return true;
@@ -82,15 +164,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem('auth_user');
+    localStorage.setItem('auth:logout', Date.now().toString());
     console.log('🔍 AuthContext: User logged out');
-  };
+  }, []);
 
-  const refreshUser = async (): Promise<void> => {
+  const refreshUser = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     
     try {
@@ -101,6 +184,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const storedUser = localStorage.getItem('auth_user');
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
+        
+        // Check if session is expired
+        if (parsedUser.sessionExpiry && new Date(parsedUser.sessionExpiry) < new Date()) {
+          console.log('🔍 AuthContext: Session expired, logging out');
+          logout();
+          return;
+        }
+        
         setUser(parsedUser);
         console.log('🔍 AuthContext: User data refreshed', parsedUser);
       }
@@ -110,15 +201,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [logout]);
 
-  const hasPermission = (permission: string): boolean => {
-    return user?.permissions.includes(permission) || false;
-  };
-
-  const hasRole = (role: string): boolean => {
-    return user?.role === role;
-  };
+  const updateUser = useCallback((updates: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser);
+      localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+      console.log('🔍 AuthContext: User updated', updates);
+    }
+  }, [user]);
 
   // Initialize authentication state on app load
   useEffect(() => {
@@ -127,8 +219,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const storedUser = localStorage.getItem('auth_user');
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          console.log('🔍 AuthContext: User restored from storage', parsedUser);
+          
+          // Check if session is expired
+          if (parsedUser.sessionExpiry && new Date(parsedUser.sessionExpiry) < new Date()) {
+            console.log('🔍 AuthContext: Session expired on init, clearing');
+            localStorage.removeItem('auth_user');
+            setUser(null);
+          } else {
+            setUser(parsedUser);
+            console.log('🔍 AuthContext: User restored from storage', parsedUser);
+          }
         } else {
           // For demo purposes, auto-login as super admin
           // In production, this would redirect to login
@@ -142,7 +242,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [login]);
+
+  // Set up session expiry check
+  useEffect(() => {
+    if (!user?.sessionExpiry) return;
+
+    const checkSessionExpiry = () => {
+      if (new Date(user.sessionExpiry!) < new Date()) {
+        console.log('🔍 AuthContext: Session expired, logging out');
+        logout();
+      }
+    };
+
+    const interval = setInterval(checkSessionExpiry, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, [user?.sessionExpiry, logout]);
 
   const value: AuthContextType = {
     user,
@@ -151,8 +266,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     refreshUser,
-    hasPermission,
-    hasRole
+    hasRole: hasRoleFn(user),
+    hasPermissions: hasPermissionsFn(user),
+    hasFeature: hasFeatureFn(user),
+    updateUser
   };
 
   return (

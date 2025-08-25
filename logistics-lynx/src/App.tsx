@@ -192,164 +192,167 @@ function App() {
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             
             {/* Protected Super Admin Portal - All routes under /super-admin/* */}
-            <Route 
-              path="/super-admin" 
-              element={
-                <ProtectedRoute requiredRole="super-admin">
-                  <SuperAdmin />
-                </ProtectedRoute>
-              }
-            >
-              {/* Dashboard Routes */}
-              <Route path="dashboard" element={<SystemOverview />} />
-              <Route path="dashboard/users" element={<ActiveUsers />} />
-              <Route path="dashboard/revenue" element={<RevenueMetrics />} />
-              <Route path="dashboard/alerts" element={<SystemAlerts />} />
+            <Route element={<ProtectedRoute roles={['super-admin']} />}>
+              <Route path="/super-admin" element={<SuperAdmin />}>
+                {/* Dashboard Routes */}
+                <Route path="dashboard" element={<SystemOverview />} />
+                <Route path="dashboard/users" element={<ActiveUsers />} />
+                <Route path="dashboard/revenue" element={<RevenueMetrics />} />
+                <Route path="dashboard/alerts" element={<SystemAlerts />} />
 
-              {/* User Management Routes */}
-              <Route path="users" element={<AllUsers />} />
-              <Route path="users/roles" element={<UserRoles />} />
-              <Route path="users/groups" element={<UserGroups />} />
-              <Route path="users/access" element={<AccessControl />} />
-              <Route path="users/analytics" element={<UserAnalytics />} />
-              <Route path="users/billing" element={<BillingManagement />} />
-              <Route path="users/support" element={<SupportTickets />} />
-              <Route path="users/onboarding" element={<UserOnboarding />} />
+                {/* User Management Routes - Requires specific permissions */}
+                <Route element={<ProtectedRoute permissions={['users:read']} />}>
+                  <Route path="users" element={<AllUsers />} />
+                  <Route path="users/roles" element={<UserRoles />} />
+                  <Route path="users/groups" element={<UserGroups />} />
+                  <Route path="users/access" element={<AccessControl />} />
+                  <Route path="users/analytics" element={<UserAnalytics />} />
+                  <Route path="users/billing" element={<BillingManagement />} />
+                  <Route path="users/support" element={<SupportTickets />} />
+                  <Route path="users/onboarding" element={<UserOnboarding />} />
+                </Route>
 
-              {/* System Administration Routes */}
-              <Route path="system/database" element={<DatabaseManagement />} />
-              <Route path="system/api" element={<APIManagement />} />
-              <Route path="system/monitoring" element={<ServerMonitoring />} />
-              <Route path="system/deployment" element={<DeploymentManagement />} />
-              <Route path="system/config" element={<Configuration />} />
-              <Route path="system/backup" element={<BackupRecovery />} />
-              <Route path="system/security" element={<SystemSecuritySettings />} />
-              <Route path="system/integrations" element={<IntegrationHub />} />
-              <Route path="system/storage" element={<FileStorage />} />
-              <Route path="system/email" element={<EmailServices />} />
+                {/* System Administration Routes - Requires system admin */}
+                <Route element={<ProtectedRoute permissions={['system:admin']} />}>
+                  <Route path="system/database" element={<DatabaseManagement />} />
+                  <Route path="system/api" element={<APIManagement />} />
+                  <Route path="system/monitoring" element={<ServerMonitoring />} />
+                  <Route path="system/deployment" element={<DeploymentManagement />} />
+                  <Route path="system/config" element={<Configuration />} />
+                  <Route path="system/backup" element={<BackupRecovery />} />
+                  <Route path="system/security" element={<SystemSecuritySettings />} />
+                  <Route path="system/integrations" element={<IntegrationHub />} />
+                  <Route path="system/storage" element={<FileStorage />} />
+                  <Route path="system/email" element={<EmailServices />} />
+                </Route>
 
-              {/* Security Center Routes */}
-              <Route path="security/audit" element={<SecurityAudit />} />
-              <Route path="security/logs" element={<AccessLogs />} />
-              <Route path="security/protection" element={<DataProtection />} />
-              <Route path="security/api" element={<APISecurity />} />
-              <Route path="security/permissions" element={<UserPermissions />} />
-              <Route path="security/policies" element={<SecurityPolicies />} />
-              <Route path="security/incidents" element={<IncidentResponse />} />
-              <Route path="security/compliance" element={<ComplianceManagement />} />
+                {/* Security Center Routes - Requires security admin */}
+                <Route element={<ProtectedRoute permissions={['security:admin']} />}>
+                  <Route path="security/audit" element={<SecurityAudit />} />
+                  <Route path="security/logs" element={<AccessLogs />} />
+                  <Route path="security/protection" element={<DataProtection />} />
+                  <Route path="security/api" element={<APISecurity />} />
+                  <Route path="security/permissions" element={<UserPermissions />} />
+                  <Route path="security/policies" element={<SecurityPolicies />} />
+                  <Route path="security/incidents" element={<IncidentResponse />} />
+                  <Route path="security/compliance" element={<ComplianceManagement />} />
+                </Route>
 
-              {/* System Monitoring Routes */}
-              <Route path="monitoring/performance" element={<PerformanceMonitoring />} />
-              <Route path="monitoring/errors" element={<ErrorTracking />} />
-              <Route path="monitoring/logs" element={<LogAnalysis />} />
-              <Route path="monitoring/alerts" element={<AlertManagement />} />
-              <Route path="monitoring/uptime" element={<UptimeMonitoring />} />
-              <Route path="monitoring/resources" element={<ResourceUsage />} />
-              <Route path="monitoring/network" element={<NetworkMonitoring />} />
-              <Route path="monitoring/health" element={<HealthChecks />} />
+                {/* System Monitoring Routes */}
+                <Route path="monitoring/performance" element={<PerformanceMonitoring />} />
+                <Route path="monitoring/errors" element={<ErrorTracking />} />
+                <Route path="monitoring/logs" element={<LogAnalysis />} />
+                <Route path="monitoring/alerts" element={<AlertManagement />} />
+                <Route path="monitoring/uptime" element={<UptimeMonitoring />} />
+                <Route path="monitoring/resources" element={<ResourceUsage />} />
+                <Route path="monitoring/network" element={<NetworkMonitoring />} />
+                <Route path="monitoring/health" element={<HealthChecks />} />
 
-              {/* Portal Management Routes */}
-              <Route path="portals" element={<PortalOverview />} />
-              <Route path="portals/config" element={<PortalConfiguration />} />
-              <Route path="portals/users" element={<PortalUsers />} />
-              <Route path="portals/features" element={<FeatureManagement />} />
-              <Route path="portals/analytics" element={<PortalAnalytics />} />
-              <Route path="portals/billing" element={<PortalBilling />} />
-              <Route path="portals/support" element={<PortalSupport />} />
-              <Route path="portals/integrations" element={<PortalIntegrations />} />
-              <Route path="portals/backup" element={<PortalBackup />} />
-              <Route path="portals/security" element={<PortalSecurity />} />
-              <Route path="portals/compliance" element={<PortalCompliance />} />
-              <Route path="portals/deployment" element={<PortalDeployment />} />
+                {/* Portal Management Routes */}
+                <Route path="portals" element={<PortalOverview />} />
+                <Route path="portals/config" element={<PortalConfiguration />} />
+                <Route path="portals/users" element={<PortalUsers />} />
+                <Route path="portals/features" element={<FeatureManagement />} />
+                <Route path="portals/analytics" element={<PortalAnalytics />} />
+                <Route path="portals/billing" element={<PortalBilling />} />
+                <Route path="portals/support" element={<PortalSupport />} />
+                <Route path="portals/integrations" element={<PortalIntegrations />} />
+                <Route path="portals/backup" element={<PortalBackup />} />
+                <Route path="portals/security" element={<PortalSecurity />} />
+                <Route path="portals/compliance" element={<PortalCompliance />} />
+                <Route path="portals/deployment" element={<PortalDeployment />} />
 
-              {/* Analytics & Reports Routes */}
-              <Route path="analytics/business" element={<BusinessAnalytics />} />
-              <Route path="analytics/users" element={<AnalyticsUserAnalytics />} />
-              <Route path="analytics/performance" element={<PerformanceReports />} />
-              <Route path="analytics/security" element={<SecurityReports />} />
-              <Route path="analytics/financial" element={<FinancialReports />} />
-              <Route path="analytics/operational" element={<OperationalReports />} />
-              <Route path="analytics/custom" element={<CustomReports />} />
-              <Route path="analytics/export" element={<DataExport />} />
-              <Route path="analytics/dashboards" element={<DashboardBuilder />} />
-              <Route path="analytics/scheduled" element={<ScheduledReports />} />
+                {/* Analytics & Reports Routes */}
+                <Route path="analytics/business" element={<BusinessAnalytics />} />
+                <Route path="analytics/users" element={<AnalyticsUserAnalytics />} />
+                <Route path="analytics/performance" element={<PerformanceReports />} />
+                <Route path="analytics/security" element={<SecurityReports />} />
+                <Route path="analytics/financial" element={<FinancialReports />} />
+                <Route path="analytics/operational" element={<OperationalReports />} />
+                <Route path="analytics/custom" element={<CustomReports />} />
+                <Route path="analytics/export" element={<DataExport />} />
+                <Route path="analytics/dashboards" element={<DashboardBuilder />} />
+                <Route path="analytics/scheduled" element={<ScheduledReports />} />
 
-              {/* MCP Control Center Routes */}
-              <Route path="mcp" element={<MCPOverview />} />
-              <Route path="mcp/agents" element={<AgentManagement />} />
-              <Route path="mcp/models" element={<AIModels />} />
-              <Route path="mcp/pipeline" element={<DataPipeline />} />
-              <Route path="mcp/learning" element={<MachineLearning />} />
-              <Route path="mcp/analytics" element={<AIAnalytics />} />
-              <Route path="mcp/automation" element={<AutomationRules />} />
-              <Route path="mcp/integrations" element={<AIIntegrations />} />
-              <Route path="mcp/monitoring" element={<AIMonitoring />} />
-              <Route path="mcp/compliance" element={<AICompliance />} />
-              <Route path="mcp/documentation" element={<AIDocumentation />} />
-              <Route path="mcp/support" element={<AISupport />} />
+                {/* MCP Control Center Routes - Requires MCP admin */}
+                <Route element={<ProtectedRoute permissions={['mcp:admin']} />}>
+                  <Route path="mcp" element={<MCPOverview />} />
+                  <Route path="mcp/agents" element={<AgentManagement />} />
+                  <Route path="mcp/models" element={<AIModels />} />
+                  <Route path="mcp/pipeline" element={<DataPipeline />} />
+                  <Route path="mcp/learning" element={<MachineLearning />} />
+                  <Route path="mcp/analytics" element={<AIAnalytics />} />
+                  <Route path="mcp/automation" element={<AutomationRules />} />
+                  <Route path="mcp/integrations" element={<AIIntegrations />} />
+                  <Route path="mcp/monitoring" element={<AIMonitoring />} />
+                  <Route path="mcp/compliance" element={<AICompliance />} />
+                  <Route path="mcp/documentation" element={<AIDocumentation />} />
+                  <Route path="mcp/support" element={<AISupport />} />
+                </Route>
 
-              {/* Business Operations Routes */}
-              <Route path="business/customers" element={<CustomerManagement />} />
-              <Route path="business/sales" element={<SalesPipeline />} />
-              <Route path="business/billing" element={<BillingInvoicing />} />
-              <Route path="business/support" element={<SupportManagement />} />
-              <Route path="business/docs" element={<Documentation />} />
-              <Route path="business/marketing" element={<MarketingTools />} />
-              <Route path="business/partners" element={<PartnerManagement />} />
-              <Route path="business/legal" element={<LegalCompliance />} />
+                {/* Business Operations Routes */}
+                <Route path="business/customers" element={<CustomerManagement />} />
+                <Route path="business/sales" element={<SalesPipeline />} />
+                <Route path="business/billing" element={<BillingInvoicing />} />
+                <Route path="business/support" element={<SupportManagement />} />
+                <Route path="business/docs" element={<Documentation />} />
+                <Route path="business/marketing" element={<MarketingTools />} />
+                <Route path="business/partners" element={<PartnerManagement />} />
+                <Route path="business/legal" element={<LegalCompliance />} />
 
-              {/* Development & DevOps Routes */}
-              <Route path="dev/repository" element={<CodeRepository />} />
-              <Route path="dev/pipeline" element={<CICDPipeline />} />
-              <Route path="dev/testing" element={<TestingSuite />} />
-              <Route path="dev/environments" element={<EnvironmentManagement />} />
-              <Route path="dev/performance" element={<PerformanceTesting />} />
-              <Route path="dev/security" element={<SecurityTesting />} />
-              <Route path="dev/documentation" element={<DevDocumentation />} />
-              <Route path="dev/releases" element={<ReleaseManagement />} />
+                {/* Development & DevOps Routes */}
+                <Route path="dev/repository" element={<CodeRepository />} />
+                <Route path="dev/pipeline" element={<CICDPipeline />} />
+                <Route path="dev/testing" element={<TestingSuite />} />
+                <Route path="dev/environments" element={<EnvironmentManagement />} />
+                <Route path="dev/performance" element={<PerformanceTesting />} />
+                <Route path="dev/security" element={<SecurityTesting />} />
+                <Route path="dev/documentation" element={<DevDocumentation />} />
+                <Route path="dev/releases" element={<ReleaseManagement />} />
 
-              {/* Settings Routes */}
-              <Route path="settings" element={<SettingsOverview />} />
-              <Route path="settings/profile" element={<ProfileSettings />} />
-              <Route path="settings/system" element={<SystemSettings />} />
-              <Route path="settings/preferences" element={<UserPreferences />} />
-              <Route path="settings/security" element={<SecuritySettings />} />
+                {/* Settings Routes */}
+                <Route path="settings" element={<SettingsOverview />} />
+                <Route path="settings/profile" element={<ProfileSettings />} />
+                <Route path="settings/system" element={<SystemSettings />} />
+                <Route path="settings/preferences" element={<UserPreferences />} />
+                <Route path="settings/security" element={<SecuritySettings />} />
 
-              {/* Security Dashboard Routes */}
-              <Route path="security/dashboard" element={<PlaceholderPage title="Security Dashboard" />} />
+                {/* Security Dashboard Routes */}
+                <Route path="security/dashboard" element={<PlaceholderPage title="Security Dashboard" />} />
 
-              {/* Invite Management Routes */}
-              <Route path="invites" element={<PlaceholderPage title="Invite Management" />} />
+                {/* Invite Management Routes */}
+                <Route path="invites" element={<PlaceholderPage title="Invite Management" />} />
 
-              {/* Default route - redirect to dashboard */}
-              <Route index element={<SystemOverview />} />
-              
-              {/* Catch-all route for unmatched paths - with debugging */}
-              <Route path="*" element={
-                <div className="min-h-screen bg-red-50 p-8">
-                  <div className="max-w-7xl mx-auto">
-                    <div className="bg-white rounded-lg shadow-lg p-8">
-                      <h1 className="text-3xl font-bold text-red-900 mb-6">
-                        🚨 Route Not Found
-                      </h1>
-                      <p className="text-lg text-red-700 mb-4">
-                        The requested page could not be found. This might be due to:
-                      </p>
-                      <ul className="list-disc list-inside text-red-600 space-y-2 mb-6">
-                        <li>Incorrect navigation path</li>
-                        <li>Missing route definition</li>
-                        <li>Route configuration issue</li>
-                      </ul>
-                      <button
-                        onClick={() => window.history.back()}
-                        className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                      >
-                        Go Back
-                      </button>
+                {/* Default route - redirect to dashboard */}
+                <Route index element={<SystemOverview />} />
+                
+                {/* Catch-all route for unmatched paths - with debugging */}
+                <Route path="*" element={
+                  <div className="min-h-screen bg-red-50 p-8">
+                    <div className="max-w-7xl mx-auto">
+                      <div className="bg-white rounded-lg shadow-lg p-8">
+                        <h1 className="text-3xl font-bold text-red-900 mb-6">
+                          🚨 Route Not Found
+                        </h1>
+                        <p className="text-lg text-red-700 mb-4">
+                          The requested page could not be found. This might be due to:
+                        </p>
+                        <ul className="list-disc list-inside text-red-600 space-y-2 mb-6">
+                          <li>Incorrect navigation path</li>
+                          <li>Missing route definition</li>
+                          <li>Route configuration issue</li>
+                        </ul>
+                        <button
+                          onClick={() => window.history.back()}
+                          className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                        >
+                          Go Back
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              } />
+                } />
+              </Route>
             </Route>
             
             {/* Fallback */}

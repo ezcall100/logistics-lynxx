@@ -1,62 +1,28 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
-  requiredRole?: string;
+  roles?: string[];
+  permissions?: string[];
   fallbackPath?: string;
 }
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  permissions: string[];
-  isAuthenticated: boolean;
-}
-
-// Mock authentication context - in a real app, this would come from your auth provider
-const useAuth = (): { user: User | null; isLoading: boolean } => {
-  // For now, we'll simulate a logged-in super admin user
-  // In production, this would check localStorage, cookies, or your auth service
-  const mockUser: User = {
-    id: '1',
-    name: 'Admin User',
-    email: 'admin@logisticslynx.com',
-    role: 'super-admin',
-    permissions: [
-      'dashboard:read',
-      'users:read',
-      'users:write',
-      'system:admin',
-      'security:admin',
-      'mcp:admin',
-      'analytics:read',
-      'settings:admin'
-    ],
-    isAuthenticated: true
-  };
-
-  return {
-    user: mockUser,
-    isLoading: false
-  };
-};
-
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  children,
-  requiredRole = 'super-admin',
+  roles = [],
+  permissions = [],
   fallbackPath = '/login'
 }) => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, hasRole, hasPermissions } = useAuth();
   const location = useLocation();
 
   console.log('🔍 ProtectedRoute: Checking access...', {
     user: user?.role,
-    requiredRole,
+    roles,
+    permissions,
     isAuthenticated: user?.isAuthenticated,
-    currentPath: location.pathname
+    currentPath: location.pathname,
+    isLoading
   });
 
   // Show loading state while checking authentication
@@ -65,7 +31,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking authentication...</p>
+          <p className="text-gray-600">Checking session...</p>
         </div>
       </div>
     );
@@ -74,60 +40,45 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Redirect to login if not authenticated
   if (!user || !user.isAuthenticated) {
     console.log('🔍 ProtectedRoute: User not authenticated, redirecting to login');
-    return <Navigate to={fallbackPath} state={{ from: location }} replace />;
+    return (
+      <Navigate 
+        to={fallbackPath} 
+        replace 
+        state={{ from: location.pathname + location.search }} 
+      />
+    );
   }
 
   // Check role-based access
-  if (requiredRole && user.role !== requiredRole) {
+  if (roles.length > 0 && !roles.some(role => hasRole(role))) {
     console.log('🔍 ProtectedRoute: Insufficient role', {
       userRole: user.role,
-      requiredRole
+      requiredRoles: roles
     });
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // Check specific permissions if needed
-  const hasRequiredPermissions = (permissions: string[]): boolean => {
-    return permissions.every(permission => user.permissions.includes(permission));
-  };
-
-  // Route-specific permission checks
-  const getRequiredPermissions = (pathname: string): string[] => {
-    if (pathname.includes('/security/')) {
-      return ['security:admin'];
-    }
-    if (pathname.includes('/system/')) {
-      return ['system:admin'];
-    }
-    if (pathname.includes('/mcp/')) {
-      return ['mcp:admin'];
-    }
-    if (pathname.includes('/users/')) {
-      return ['users:read'];
-    }
-    return ['dashboard:read']; // Default permission
-  };
-
-  const requiredPermissions = getRequiredPermissions(location.pathname);
-  if (!hasRequiredPermissions(requiredPermissions)) {
+  // Check specific permissions
+  if (permissions.length > 0 && !hasPermissions(permissions)) {
     console.log('🔍 ProtectedRoute: Insufficient permissions', {
       userPermissions: user.permissions,
-      requiredPermissions
+      requiredPermissions: permissions
     });
     return <Navigate to="/unauthorized" replace />;
   }
 
   console.log('🔍 ProtectedRoute: Access granted');
-  return <>{children}</>;
+  return <Outlet />;
 };
 
-// Higher-order component for easier usage
+// Higher-order component for easier usage (legacy support)
 export const withAuth = <P extends object>(
   Component: React.ComponentType<P>,
-  requiredRole?: string
+  roles?: string[],
+  permissions?: string[]
 ) => {
   return (props: P) => (
-    <ProtectedRoute requiredRole={requiredRole}>
+    <ProtectedRoute roles={roles} permissions={permissions}>
       <Component {...props} />
     </ProtectedRoute>
   );
