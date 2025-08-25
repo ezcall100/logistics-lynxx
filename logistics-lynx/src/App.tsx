@@ -37,6 +37,9 @@ const LandingPage = () => {
 };
 
 function App() {
+  console.log('🔍 App.tsx: App component rendering...');
+  console.log('🔍 App.tsx: Current location:', window.location.pathname);
+  
   return (
     <ErrorBoundary>
       <div className="App">
