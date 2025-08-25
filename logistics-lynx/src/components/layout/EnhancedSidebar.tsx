@@ -60,7 +60,9 @@ import {
   Building2,
   Ship,
   Train,
-  Plane
+  Plane,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
 
@@ -68,6 +70,7 @@ interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   isDarkMode: boolean;
+  onThemeToggle?: () => void;
   user?: {
     name: string;
     email: string;
@@ -92,6 +95,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   isOpen,
   onToggle,
   isDarkMode,
+  onThemeToggle,
   user
 }) => {
   const [expandedMenus, setExpandedMenus] = useState<{[key: string]: boolean}>({});
@@ -518,21 +522,56 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
             : 'border-slate-200'
           }
         `}>
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-indigo-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">
-                {user?.name?.charAt(0) || 'U'}
-              </span>
-            </div>
-            {isOpen && (
-              <div className="flex-1">
-                <p className={`text-sm font-medium ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>
-                  {user?.name || 'User'}
-                </p>
-                <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                  {user?.role || 'Admin'}
-                </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-indigo-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-semibold">
+                  {user?.name?.charAt(0) || 'U'}
+                </span>
               </div>
+              {isOpen && (
+                <div className="flex-1">
+                  <p className={`text-sm font-medium ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>
+                    {user?.name || 'User'}
+                  </p>
+                  <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {user?.role || 'Admin'}
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            {/* Theme Toggle */}
+            {onThemeToggle && (
+              <button
+                onClick={onThemeToggle}
+                className={`
+                  p-2 rounded-lg transition-all duration-200 group
+                  ${isDarkMode 
+                    ? 'bg-slate-700 hover:bg-slate-600' 
+                    : 'bg-slate-100 hover:bg-slate-200'
+                  }
+                `}
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {isDarkMode ? (
+                  <Sun className={`
+                    h-4 w-4 transition-colors duration-200
+                    ${isDarkMode 
+                      ? 'text-slate-400 group-hover:text-yellow-400' 
+                      : 'text-slate-600 group-hover:text-yellow-600'
+                    }
+                  `} />
+                ) : (
+                  <Moon className={`
+                    h-4 w-4 transition-colors duration-200
+                    ${isDarkMode 
+                      ? 'text-slate-400 group-hover:text-blue-400' 
+                      : 'text-slate-600 group-hover:text-blue-600'
+                    }
+                  `} />
+                )}
+              </button>
             )}
           </div>
         </div>

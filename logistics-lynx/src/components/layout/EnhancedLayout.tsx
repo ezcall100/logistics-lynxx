@@ -109,6 +109,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
           onToggle={toggleSidebar}
           user={user}
           isDarkMode={isDarkMode}
+          onThemeToggle={toggleTheme}
         />
 
         {/* Overlay for mobile */}
@@ -130,7 +131,6 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
             sidebarOpen={sidebarOpen}
             user={user}
             isDarkMode={isDarkMode}
-            onThemeToggle={toggleTheme}
           />
 
           {/* Page Content */}

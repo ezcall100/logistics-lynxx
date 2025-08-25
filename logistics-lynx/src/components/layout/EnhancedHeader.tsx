@@ -3,8 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Menu, 
   X, 
-  Sun, 
-  Moon, 
   Search, 
   Bell, 
   User, 
@@ -23,7 +21,6 @@ interface HeaderProps {
   onSidebarToggle?: () => void;
   sidebarOpen?: boolean;
   isDarkMode?: boolean;
-  onThemeToggle?: () => void;
   user?: {
     name: string;
     email: string;
@@ -36,7 +33,6 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   onSidebarToggle,
   sidebarOpen = true,
   isDarkMode = false,
-  onThemeToggle,
   user
 }) => {
   const navigate = useNavigate();
