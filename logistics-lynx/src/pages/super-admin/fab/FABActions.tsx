@@ -1,56 +1,113 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Eye, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
-const FABActions: React.FC = () => {
+const FABActions = () => {
+  const [actions] = useState([
+    {
+      id: 1,
+      name: 'Create Order',
+      description: 'Quickly create a new order',
+      icon: '📝',
+      category: 'Orders',
+      status: 'active',
+      usage: 45
+    },
+    {
+      id: 2,
+      name: 'Add Shipment',
+      description: 'Add a new shipment to tracking',
+      icon: '🚚',
+      category: 'Shipping',
+      status: 'active',
+      usage: 32
+    },
+    {
+      id: 3,
+      name: 'New Contact',
+      description: 'Create a new contact entry',
+      icon: '👤',
+      category: 'Contacts',
+      status: 'active',
+      usage: 28
+    },
+    {
+      id: 4,
+      name: 'Quick Report',
+      description: 'Generate a quick analytics report',
+      icon: '📊',
+      category: 'Analytics',
+      status: 'inactive',
+      usage: 22
+    }
+  ]);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">FAB Actions Management</h1>
-          <p className="text-gray-600 mt-2">Configure and manage floating action button actions</p>
+          <h1 className="text-3xl font-bold text-gray-900">FAB Actions</h1>
+          <p className="text-gray-600 mt-2">
+            Manage and configure your floating action button actions
+          </p>
         </div>
         <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="h-4 w-4 mr-2" />
           Add New Action
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid gap-6">
+        {/* Action List */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common actions available across the platform</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                ⚡
+              </div>
+              Configured Actions
+            </CardTitle>
+            <CardDescription>
+              Your current FAB action configurations
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'Create New Load', description: 'Quick load creation', status: 'active', icon: Plus },
-                { name: 'Generate Quote', description: 'Instant quote generation', status: 'active', icon: Zap },
-                { name: 'Open Support Ticket', description: 'Quick support access', status: 'active', icon: Plus },
-                { name: 'View Analytics', description: 'Dashboard analytics', status: 'inactive', icon: Eye }
-              ].map((action, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <action.icon className="h-4 w-4 text-blue-600" />
+              {actions.map((action) => (
+                <div key={action.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                      <span className="text-xl">{action.icon}</span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{action.name}</p>
-                      <p className="text-sm text-gray-500">{action.description}</p>
+                      <h4 className="font-medium text-gray-900">{action.name}</h4>
+                      <p className="text-sm text-gray-600">{action.description}</p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Badge variant="outline" className="text-xs">
+                          {action.category}
+                        </Badge>
+                        <Badge className={action.status === 'active' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-gray-100 text-gray-800'
+                        }>
+                          {action.status}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge variant={action.status === 'active' ? 'default' : 'secondary'}>
-                      {action.status}
-                    </Badge>
-                    <Button size="sm" variant="ghost">
-                      <Edit className="h-4 w-4" />
+                    <span className="text-sm text-gray-600">{action.usage} uses</span>
+                    <Button size="sm" variant="outline">
+                      Edit
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700">
-                      <Trash2 className="h-4 w-4" />
+                    <Button size="sm" variant="outline" className="text-red-600 border-red-300">
+                      Delete
                     </Button>
                   </div>
                 </div>
@@ -59,72 +116,57 @@ const FABActions: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Action Categories */}
         <Card>
           <CardHeader>
-            <CardTitle>Custom Actions</CardTitle>
-            <CardDescription>User-defined custom actions</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                📂
+              </div>
+              Action Categories
+            </CardTitle>
+            <CardDescription>
+              Organize your actions by category
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { name: 'Export Data', description: 'Custom data export', status: 'active', icon: Plus },
-                { name: 'Send Notification', description: 'Quick notification', status: 'active', icon: Zap },
-                { name: 'Schedule Meeting', description: 'Meeting scheduler', status: 'active', icon: Plus }
-              ].map((action, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <action.icon className="h-4 w-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{action.name}</p>
-                      <p className="text-sm text-gray-500">{action.description}</p>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    📝
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant={action.status === 'active' ? 'default' : 'secondary'}>
-                      {action.status}
-                    </Badge>
-                    <Button size="sm" variant="ghost">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <h4 className="font-medium text-gray-900">Orders</h4>
                 </div>
-              ))}
+                <p className="text-sm text-gray-600 mb-3">Order management actions</p>
+                <Badge variant="outline">2 actions</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    🚚
+                  </div>
+                  <h4 className="font-medium text-gray-900">Shipping</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Shipping and logistics actions</p>
+                <Badge variant="outline">1 action</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    👤
+                  </div>
+                  <h4 className="font-medium text-gray-900">Contacts</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Contact management actions</p>
+                <Badge variant="outline">1 action</Badge>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Action Statistics</CardTitle>
-          <CardDescription>Usage metrics for FAB actions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">1,247</div>
-              <div className="text-sm text-gray-600">Total Actions</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-green-600">89%</div>
-              <div className="text-sm text-gray-600">Success Rate</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">2.3s</div>
-              <div className="text-sm text-gray-600">Avg Response</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-orange-600">15</div>
-              <div className="text-sm text-gray-600">Active Actions</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

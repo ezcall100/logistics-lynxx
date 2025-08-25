@@ -1,34 +1,24 @@
-import React from 'react';
+import * as React from "react"
+import { cn } from "../../lib/utils.ts"
 
-interface InputProps {
-  type?: string;
-  placeholder?: string;
-  value?: string | number;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string;
-  disabled?: boolean;
-}
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export const Input: React.FC<InputProps> = ({ 
-  type = 'text',
-  placeholder,
-  value,
-  onChange,
-  className = '',
-  disabled = false
-}) => {
-  const baseClasses = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500';
-  const disabledClasses = disabled ? 'bg-gray-50 cursor-not-allowed' : '';
-  const classes = `${baseClasses} ${disabledClasses} ${className}`;
-  
-  return (
-    <input
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className={classes}
-      disabled={disabled}
-    />
-  );
-};
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Input.displayName = "Input"
+
+export { Input }

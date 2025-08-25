@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import SuperAdmin from './components/SuperAdmin';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -34,6 +34,8 @@ import AIMonitoring from './pages/super-admin/mcp-control-center/AIMonitoring';
 import AICompliance from './pages/super-admin/mcp-control-center/AICompliance';
 import AIDocumentation from './pages/super-admin/mcp-control-center/AIDocumentation';
 import AISupport from './pages/super-admin/mcp-control-center/AISupport';
+import AgentControlUI from './pages/mcp/AgentControlUI';
+
 
 // User Management Pages
 import AllUsers from './pages/super-admin/user-management/AllUsers';
@@ -305,6 +307,7 @@ function App() {
                 <Route element={<ProtectedRoute permissions={['mcp:admin']} />}>
                   <Route path="mcp" element={<MCPOverview />} />
                   <Route path="mcp/agents" element={<AgentManagement />} />
+                  <Route path="mcp/control" element={<AgentControlUI />} />
                   <Route path="mcp/models" element={<AIModels />} />
                   <Route path="mcp/pipeline" element={<DataPipeline />} />
                   <Route path="mcp/learning" element={<MachineLearning />} />

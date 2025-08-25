@@ -1,87 +1,216 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Globe, Languages } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
-const LanguageSettings: React.FC = () => {
+const LanguageSettings = () => {
+  const [languageSettings, setLanguageSettings] = useState({
+    primaryLanguage: 'en',
+    secondaryLanguage: 'es',
+    autoDetect: true,
+    dateFormat: 'MM/DD/YYYY',
+    timeFormat: '12h',
+    currency: 'USD',
+    timezone: 'UTC'
+  });
+
+  const handleSave = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Language Settings</h1>
-          <p className="text-gray-600 mt-2">Configure language and regional preferences</p>
+          <h1 className="text-3xl font-bold text-gray-900">Language & Regional Settings</h1>
+          <p className="text-gray-600 mt-2">
+            Configure language, date/time format, and regional preferences
+          </p>
         </div>
-        <Button className="bg-green-600 hover:bg-green-700">
-          <Globe className="h-4 w-4 mr-2" />
-          Save Settings
+        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+          Save Changes
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid gap-6">
+        {/* Language Settings */}
         <Card>
           <CardHeader>
-            <CardTitle>Language Preferences</CardTitle>
-            <CardDescription>Choose your preferred language</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                🌐
+              </div>
+              Language Settings
+            </CardTitle>
+            <CardDescription>
+              Choose your preferred languages
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Primary Language</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>English (US)</option>
-                <option>English (UK)</option>
-                <option>Spanish</option>
-                <option>French</option>
-                <option>German</option>
-                <option>Chinese</option>
-                <option>Japanese</option>
+              <Label>Primary Language</Label>
+              <select
+                value={languageSettings.primaryLanguage}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    primaryLanguage: e.target.value
+                  }))
+                }
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="zh">Chinese</option>
               </select>
             </div>
+            
             <div className="space-y-2">
-              <label className="text-sm font-medium">Secondary Language</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>None</option>
-                <option>Spanish</option>
-                <option>French</option>
-                <option>German</option>
+              <Label>Secondary Language</Label>
+              <select
+                value={languageSettings.secondaryLanguage}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    secondaryLanguage: e.target.value
+                  }))
+                }
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="es">Spanish</option>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="zh">Chinese</option>
               </select>
             </div>
+            
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Auto-detect Language</span>
-              <input type="checkbox" className="rounded" />
+              <Label>Auto-detect Language</Label>
+              <Switch
+                checked={languageSettings.autoDetect}
+                onCheckedChange={(checked: boolean) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    autoDetect: checked
+                  }))
+                }
+              />
             </div>
           </CardContent>
         </Card>
 
+        {/* Date & Time Settings */}
         <Card>
           <CardHeader>
-            <CardTitle>Regional Settings</CardTitle>
-            <CardDescription>Configure date, time, and number formats</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                📅
+              </div>
+              Date & Time Settings
+            </CardTitle>
+            <CardDescription>
+              Configure date and time display formats
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Time Zone</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>UTC-8 (Pacific Time)</option>
-                <option>UTC-5 (Eastern Time)</option>
-                <option>UTC+0 (GMT)</option>
-                <option>UTC+1 (Central European)</option>
+              <Label>Date Format</Label>
+              <select
+                value={languageSettings.dateFormat}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    dateFormat: e.target.value
+                  }))
+                }
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
               </select>
             </div>
+            
             <div className="space-y-2">
-              <label className="text-sm font-medium">Date Format</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>MM/DD/YYYY</option>
-                <option>DD/MM/YYYY</option>
-                <option>YYYY-MM-DD</option>
+              <Label>Time Format</Label>
+              <select
+                value={languageSettings.timeFormat}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    timeFormat: e.target.value
+                  }))
+                }
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="12h">12-hour</option>
+                <option value="24h">24-hour</option>
               </select>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Regional Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                🌍
+              </div>
+              Regional Settings
+            </CardTitle>
+            <CardDescription>
+              Configure currency and timezone
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Currency</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>USD ($)</option>
-                <option>EUR (€)</option>
-                <option>GBP (£)</option>
-                <option>JPY (¥)</option>
+              <Label>Currency</Label>
+              <select
+                value={languageSettings.currency}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    currency: e.target.value
+                  }))
+                }
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="CAD">CAD (C$)</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Timezone</Label>
+              <select
+                value={languageSettings.timezone}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                  setLanguageSettings(prev => ({
+                    ...prev,
+                    timezone: e.target.value
+                  }))
+                }
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="UTC">UTC</option>
+                <option value="EST">Eastern Time</option>
+                <option value="CST">Central Time</option>
+                <option value="MST">Mountain Time</option>
+                <option value="PST">Pacific Time</option>
               </select>
             </div>
           </CardContent>

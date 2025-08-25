@@ -1,108 +1,185 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, Volume2, MousePointer, Type } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
-const AccessibilitySettings: React.FC = () => {
+const AccessibilitySettings = () => {
+  const [accessibilitySettings, setAccessibilitySettings] = useState({
+    highContrast: false,
+    largeText: false,
+    screenReader: true,
+    reducedMotion: false,
+    focusIndicators: true,
+    keyboardNavigation: true,
+    colorBlindSupport: false
+  });
+
+  const handleSave = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Accessibility Settings</h1>
-          <p className="text-gray-600 mt-2">Configure accessibility features and preferences</p>
+          <p className="text-gray-600 mt-2">
+            Configure accessibility features for better usability
+          </p>
         </div>
-        <Button className="bg-orange-600 hover:bg-orange-700">
-          <Eye className="h-4 w-4 mr-2" />
-          Save Settings
+        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+          Save Changes
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid gap-6">
+        {/* Visual Accessibility */}
         <Card>
           <CardHeader>
-            <CardTitle>Visual Accessibility</CardTitle>
-            <CardDescription>Configure visual accessibility features</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                👁️
+              </div>
+              Visual Accessibility
+            </CardTitle>
+            <CardDescription>
+              Adjust visual settings for better visibility
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">High Contrast Mode</span>
-              <input type="checkbox" className="rounded" />
+              <Label>High Contrast Mode</Label>
+              <Switch
+                checked={accessibilitySettings.highContrast}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    highContrast: checked
+                  }))
+                }
+              />
             </div>
+            
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Reduce Motion</span>
-              <input type="checkbox" className="rounded" />
+              <Label>Large Text</Label>
+              <Switch
+                checked={accessibilitySettings.largeText}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    largeText: checked
+                  }))
+                }
+              />
             </div>
+            
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Large Text</span>
-              <input type="checkbox" className="rounded" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Font Size</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>Small</option>
-                <option>Medium</option>
-                <option>Large</option>
-                <option>Extra Large</option>
-              </select>
+              <Label>Color Blind Support</Label>
+              <Switch
+                checked={accessibilitySettings.colorBlindSupport}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    colorBlindSupport: checked
+                  }))
+                }
+              />
             </div>
           </CardContent>
         </Card>
 
+        {/* Navigation & Interaction */}
         <Card>
           <CardHeader>
-            <CardTitle>Audio & Navigation</CardTitle>
-            <CardDescription>Configure audio and navigation accessibility</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                ⌨️
+              </div>
+              Navigation & Interaction
+            </CardTitle>
+            <CardDescription>
+              Configure navigation and interaction preferences
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Screen Reader Support</span>
-              <input type="checkbox" className="rounded" defaultChecked />
+              <Label>Screen Reader Support</Label>
+              <Switch
+                checked={accessibilitySettings.screenReader}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    screenReader: checked
+                  }))
+                }
+              />
             </div>
+            
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Keyboard Navigation</span>
-              <input type="checkbox" className="rounded" defaultChecked />
+              <Label>Focus Indicators</Label>
+              <Switch
+                checked={accessibilitySettings.focusIndicators}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    focusIndicators: checked
+                  }))
+                }
+              />
             </div>
+            
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Audio Descriptions</span>
-              <input type="checkbox" className="rounded" />
+              <Label>Keyboard Navigation</Label>
+              <Switch
+                checked={accessibilitySettings.keyboardNavigation}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    keyboardNavigation: checked
+                  }))
+                }
+              />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Focus Indicator</label>
-              <select className="w-full p-2 border rounded-lg">
-                <option>Default</option>
-                <option>High Visibility</option>
-                <option>Custom Color</option>
-              </select>
+          </CardContent>
+        </Card>
+
+        {/* Motion & Animation */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                ✨
+              </div>
+              Motion & Animation
+            </CardTitle>
+            <CardDescription>
+              Configure motion and animation preferences
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label>Reduced Motion</Label>
+              <Switch
+                checked={accessibilitySettings.reducedMotion}
+                onCheckedChange={(checked: boolean) => 
+                  setAccessibilitySettings(prev => ({
+                    ...prev,
+                    reducedMotion: checked
+                  }))
+                }
+              />
             </div>
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Accessibility Testing</CardTitle>
-          <CardDescription>Test and verify accessibility features</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <Eye className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-              <p className="font-medium">Visual Test</p>
-              <p className="text-sm text-gray-500">Test contrast and readability</p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <Volume2 className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <p className="font-medium">Audio Test</p>
-              <p className="text-sm text-gray-500">Test screen reader compatibility</p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <MousePointer className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-              <p className="font-medium">Navigation Test</p>
-              <p className="text-sm text-gray-500">Test keyboard navigation</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

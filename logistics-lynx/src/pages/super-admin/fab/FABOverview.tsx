@@ -1,126 +1,203 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Zap, Palette, Copy, BarChart3, Plug } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
-const FABOverview: React.FC = () => {
+const FABOverview = () => {
+  const [fabStats] = useState({
+    totalActions: 24,
+    activeActions: 18,
+    customActions: 8,
+    usageCount: 156
+  });
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">FAB Actions Overview</h1>
-          <p className="text-gray-600 mt-2">Manage floating action buttons and quick actions</p>
+          <h1 className="text-3xl font-bold text-gray-900">FAB Overview</h1>
+          <p className="text-gray-600 mt-2">
+            Manage your Floating Action Button configurations and actions
+          </p>
         </div>
-        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-          New Feature
-        </Badge>
+        <Button className="bg-blue-600 hover:bg-blue-700">
+          Create New Action
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center space-x-2">
-              <Plus className="h-5 w-5 text-blue-600" />
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
-            </div>
-            <CardDescription>Configure floating action buttons</CardDescription>
+      <div className="grid gap-6">
+        {/* FAB Statistics */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                📊
+              </div>
+              FAB Statistics
+            </CardTitle>
+            <CardDescription>
+              Overview of your FAB usage and configurations
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Active FABs</span>
-                <Badge variant="secondary">12</Badge>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">{fabStats.totalActions}</div>
+                <div className="text-sm text-blue-600">Total Actions</div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Custom Actions</span>
-                <Badge variant="secondary">8</Badge>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">{fabStats.activeActions}</div>
+                <div className="text-sm text-green-600">Active Actions</div>
               </div>
-              <Button size="sm" className="w-full mt-3">
-                Configure Actions
-              </Button>
+              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">{fabStats.customActions}</div>
+                <div className="text-sm text-purple-600">Custom Actions</div>
+              </div>
+              <div className="text-center p-4 bg-orange-50 rounded-lg">
+                <div className="text-2xl font-bold text-orange-600">{fabStats.usageCount}</div>
+                <div className="text-sm text-orange-600">Total Usage</div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center space-x-2">
-              <Palette className="h-5 w-5 text-purple-600" />
-              <CardTitle className="text-lg">Customization</CardTitle>
-            </div>
-            <CardDescription>Style and appearance settings</CardDescription>
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                ⚡
+              </div>
+              Quick Actions
+            </CardTitle>
+            <CardDescription>
+              Most frequently used FAB actions
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Themes</span>
-                <Badge variant="secondary">4</Badge>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-blue-600">📝</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Create Order</h4>
+                    <p className="text-sm text-gray-600">Used 45 times</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Templates</span>
-                <Badge variant="secondary">6</Badge>
+              
+              <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <span className="text-green-600">🚚</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Add Shipment</h4>
+                    <p className="text-sm text-gray-600">Used 32 times</p>
+                  </div>
+                </div>
               </div>
-              <Button size="sm" variant="outline" className="w-full mt-3">
-                Customize
-              </Button>
+              
+              <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                    <span className="text-purple-600">👤</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">New Contact</h4>
+                    <p className="text-sm text-gray-600">Used 28 times</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                    <span className="text-orange-600">📊</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Quick Report</h4>
+                    <p className="text-sm text-gray-600">Used 22 times</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <span className="text-red-600">🔔</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Send Alert</h4>
+                    <p className="text-sm text-gray-600">Used 18 times</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <span className="text-yellow-600">⚙️</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Settings</h4>
+                    <p className="text-sm text-gray-600">Used 11 times</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center space-x-2">
-              <BarChart3 className="h-5 w-5 text-green-600" />
-              <CardTitle className="text-lg">Analytics</CardTitle>
-            </div>
-            <CardDescription>Usage and performance metrics</CardDescription>
+        {/* Recent Activity */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                📋
+              </div>
+              Recent FAB Activity
+            </CardTitle>
+            <CardDescription>
+              Your recent FAB action usage
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Total Clicks</span>
-                <Badge variant="secondary">1,247</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Avg. Response</span>
-                <Badge variant="secondary">2.3s</Badge>
-              </div>
-              <Button size="sm" variant="outline" className="w-full mt-3">
-                View Analytics
-              </Button>
+            <div className="space-y-4">
+              {[
+                { action: 'Create Order', time: '2 minutes ago', user: 'John Doe' },
+                { action: 'Add Shipment', time: '5 minutes ago', user: 'Jane Smith' },
+                { action: 'New Contact', time: '12 minutes ago', user: 'John Doe' },
+                { action: 'Quick Report', time: '1 hour ago', user: 'Mike Johnson' },
+                { action: 'Send Alert', time: '2 hours ago', user: 'Sarah Wilson' }
+              ].map((activity, index) => (
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm">⚡</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{activity.action}</p>
+                      <p className="text-sm text-gray-600">by {activity.user}</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="text-gray-600">
+                    {activity.time}
+                  </Badge>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent FAB Activity</CardTitle>
-          <CardDescription>Latest floating action button interactions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[
-              { action: 'New Load Created', user: 'John Doe', time: '2 minutes ago', icon: Plus },
-              { action: 'Quick Quote Generated', user: 'Jane Smith', time: '5 minutes ago', icon: Zap },
-              { action: 'Support Ticket Opened', user: 'Mike Johnson', time: '12 minutes ago', icon: Plus },
-              { action: 'Analytics Dashboard', user: 'Sarah Wilson', time: '18 minutes ago', icon: BarChart3 }
-            ].map((item, index) => (
-              <div key={index} className="flex items-center space-x-4 p-3 rounded-lg border">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <item.icon className="h-4 w-4 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{item.action}</p>
-                  <p className="text-sm text-gray-500">by {item.user}</p>
-                </div>
-                <span className="text-sm text-gray-400">{item.time}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

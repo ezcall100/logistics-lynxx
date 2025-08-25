@@ -1,75 +1,191 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, Download, Plus, Eye } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
-const FABTemplates: React.FC = () => {
+const FABTemplates = () => {
+  const [templates] = useState([
+    {
+      id: 1,
+      name: 'E-commerce Template',
+      description: 'Quick actions for online stores',
+      actions: ['Add Product', 'View Orders', 'Customer Support'],
+      category: 'E-commerce',
+      usage: 45
+    },
+    {
+      id: 2,
+      name: 'Logistics Template',
+      description: 'Transportation and shipping actions',
+      actions: ['Create Shipment', 'Track Package', 'Schedule Pickup'],
+      category: 'Logistics',
+      usage: 32
+    },
+    {
+      id: 3,
+      name: 'CRM Template',
+      description: 'Customer relationship management',
+      actions: ['Add Contact', 'Create Lead', 'Schedule Meeting'],
+      category: 'CRM',
+      usage: 28
+    }
+  ]);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">FAB Templates</h1>
-          <p className="text-gray-600 mt-2">Pre-built FAB templates and configurations</p>
+          <p className="text-gray-600 mt-2">
+            Pre-configured FAB action templates for different use cases
+          </p>
         </div>
-        <Button className="bg-green-600 hover:bg-green-700">
-          <Plus className="h-4 w-4 mr-2" />
+        <Button className="bg-blue-600 hover:bg-blue-700">
           Create Template
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          { name: 'E-commerce', description: 'Shopping cart and checkout actions', category: 'Business', icon: '🛒' },
-          { name: 'Dashboard', description: 'Analytics and reporting actions', category: 'Analytics', icon: '📊' },
-          { name: 'Support', description: 'Help and support actions', category: 'Support', icon: '🆘' },
-          { name: 'Social', description: 'Social media and sharing actions', category: 'Social', icon: '📱' },
-          { name: 'Productivity', description: 'Task and project management', category: 'Productivity', icon: '✅' },
-          { name: 'Custom', description: 'Fully customizable template', category: 'Custom', icon: '⚙️' }
-        ].map((template, index) => (
-          <Card key={index} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl">{template.icon}</span>
-                <CardTitle className="text-lg">{template.name}</CardTitle>
+      <div className="grid gap-6">
+        {/* Available Templates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                📋
               </div>
-              <CardDescription>{template.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Badge variant="outline">{template.category}</Badge>
-                <div className="flex space-x-2">
-                  <Button size="sm" variant="outline" className="flex-1">
-                    <Eye className="h-4 w-4 mr-1" />
-                    Preview
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex-1">
-                    <Copy className="h-4 w-4 mr-1" />
-                    Use
-                  </Button>
+              Available Templates
+            </CardTitle>
+            <CardDescription>
+              Choose from pre-built templates or create your own
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4">
+              {templates.map((template) => (
+                <div key={template.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h4 className="font-medium text-gray-900">{template.name}</h4>
+                        <Badge variant="outline">{template.category}</Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {template.actions.map((action, index) => (
+                          <Badge key={index} className="bg-gray-100 text-gray-700">
+                            {action}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2 ml-4">
+                      <span className="text-sm text-gray-600">{template.usage} uses</span>
+                      <Button size="sm" variant="outline">
+                        Use Template
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Template Categories</CardTitle>
-          <CardDescription>Browse templates by category</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['Business', 'Analytics', 'Support', 'Social', 'Productivity', 'Custom', 'Finance', 'Marketing'].map((category) => (
-              <div key={category} className="p-4 border rounded-lg text-center hover:bg-gray-50 cursor-pointer">
-                <div className="text-lg font-medium text-gray-900">{category}</div>
-                <div className="text-sm text-gray-500">12 templates</div>
+        {/* Template Categories */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                📂
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              Template Categories
+            </CardTitle>
+            <CardDescription>
+              Browse templates by category
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    🛒
+                  </div>
+                  <h4 className="font-medium text-gray-900">E-commerce</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Online store management</p>
+                <Badge variant="outline">3 templates</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    🚚
+                  </div>
+                  <h4 className="font-medium text-gray-900">Logistics</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Transportation & shipping</p>
+                <Badge variant="outline">2 templates</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    👥
+                  </div>
+                  <h4 className="font-medium text-gray-900">CRM</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Customer management</p>
+                <Badge variant="outline">2 templates</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Popular Templates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                ⭐
+              </div>
+              Popular Templates
+            </CardTitle>
+            <CardDescription>
+              Most frequently used templates
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {templates.slice(0, 2).map((template) => (
+                <div key={template.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-blue-600">📋</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{template.name}</h4>
+                      <p className="text-sm text-gray-600">{template.actions.length} actions</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600">{template.usage} uses</span>
+                    <Button size="sm">
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

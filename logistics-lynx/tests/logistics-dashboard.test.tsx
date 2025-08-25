@@ -32,9 +32,7 @@ jest.mock('@/components/ui/input', () => ({
   Input: ({ ...props }: any) => <input {...props} />
 }));
 
-jest.mock('@/components/ui/label', () => ({
-  Label: ({ children, ...props }: any) => <label {...props}>{children}</label>
-}));
+// Removed Radix UI label mock - using custom components
 
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,

@@ -1,104 +1,134 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
-const MobileSync: React.FC = () => {
+const MobileSync = () => {
+  const [syncStatus] = useState({
+    lastSync: '2 minutes ago',
+    nextSync: 'in 3 minutes',
+    syncProgress: 85,
+    isActive: true
+  });
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Mobile Sync</h1>
-          <p className="text-gray-600 mt-2">Manage data synchronization between mobile and web</p>
+          <p className="text-gray-600 mt-2">
+            Monitor and manage data synchronization across mobile devices
+          </p>
         </div>
-        <Button className="bg-green-600 hover:bg-green-700">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Sync Now
+        <Button className="bg-blue-600 hover:bg-blue-700">
+          Force Sync
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Last Sync</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2 min ago</div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">Successful</span> sync
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Sync Status</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">Online</div>
-            <p className="text-xs text-muted-foreground">
-              All devices connected
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Changes</CardTitle>
-            <AlertCircle className="h-4 w-4 text-orange-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              Waiting to sync
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Sync Conflicts</CardTitle>
-            <AlertCircle className="h-4 w-4 text-red-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">3</div>
-            <p className="text-xs text-muted-foreground">
-              Need resolution
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid gap-6">
+        {/* Sync Status Overview */}
         <Card>
           <CardHeader>
-            <CardTitle>Sync History</CardTitle>
-            <CardDescription>Recent synchronization activities</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                🔄
+              </div>
+              Sync Status Overview
+            </CardTitle>
+            <CardDescription>
+              Current synchronization status and progress
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    ✅
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Sync Status</h4>
+                    <p className="text-sm text-gray-600">Active and running</p>
+                  </div>
+                </div>
+                <Badge className="bg-green-100 text-green-800">
+                  Active
+                </Badge>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Sync Progress</span>
+                  <span className="text-gray-900">{syncStatus.syncProgress}%</span>
+                </div>
+                <Progress value={syncStatus.syncProgress} className="h-2" />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 border rounded-lg">
+                  <p className="text-sm text-gray-600">Last Sync</p>
+                  <p className="font-medium text-gray-900">{syncStatus.lastSync}</p>
+                </div>
+                <div className="p-3 border rounded-lg">
+                  <p className="text-sm text-gray-600">Next Sync</p>
+                  <p className="font-medium text-gray-900">{syncStatus.nextSync}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Device Sync Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                📱
+              </div>
+              Device Sync Status
+            </CardTitle>
+            <CardDescription>
+              Synchronization status for each connected device
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
-                { time: '2 minutes ago', status: 'success', action: 'Data sync completed', device: 'iPhone 14' },
-                { time: '15 minutes ago', status: 'success', action: 'Settings updated', device: 'Android Tablet' },
-                { time: '1 hour ago', status: 'error', action: 'Sync failed - network error', device: 'iPad Pro' },
-                { time: '2 hours ago', status: 'success', action: 'User data synced', device: 'iPhone 13' }
-              ].map((item, index) => (
-                <div key={index} className="flex items-center space-x-4 p-3 border rounded-lg">
-                  <div className={`p-2 rounded-lg ${
-                    item.status === 'success' ? 'bg-green-100' : 'bg-red-100'
-                  }`}>
-                    {item.status === 'success' ? (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4 text-red-600" />
-                    )}
+                { name: 'iPhone 15 Pro', user: 'John Doe', status: 'synced', lastSync: '1 minute ago', dataSize: '2.3 MB' },
+                { name: 'Samsung Galaxy S24', user: 'Jane Smith', status: 'syncing', lastSync: 'in progress', dataSize: '1.8 MB' },
+                { name: 'iPad Pro', user: 'Mike Johnson', status: 'pending', lastSync: '2 hours ago', dataSize: '4.1 MB' },
+                { name: 'Google Pixel 8', user: 'Sarah Wilson', status: 'synced', lastSync: '5 minutes ago', dataSize: '3.2 MB' }
+              ].map((device, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                      <span className="text-xl">📱</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{device.name}</h4>
+                      <p className="text-sm text-gray-600">{device.user}</p>
+                      <p className="text-xs text-gray-500">Last sync: {device.lastSync}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">{item.action}</p>
-                    <p className="text-sm text-gray-500">{item.device} • {item.time}</p>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-sm text-gray-600">{device.dataSize}</span>
+                    <Badge className={
+                      device.status === 'synced' ? 'bg-green-100 text-green-800' :
+                      device.status === 'syncing' ? 'bg-blue-100 text-blue-800' :
+                      'bg-yellow-100 text-yellow-800'
+                    }>
+                      {device.status}
+                    </Badge>
+                    <Button size="sm" variant="outline">
+                      Sync Now
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -106,32 +136,108 @@ const MobileSync: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Sync History */}
         <Card>
           <CardHeader>
-            <CardTitle>Device Status</CardTitle>
-            <CardDescription>Connected mobile devices</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                📋
+              </div>
+              Sync History
+            </CardTitle>
+            <CardDescription>
+              Recent synchronization activities and logs
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
-                { name: 'iPhone 14', status: 'online', lastSeen: '2 min ago', battery: '85%' },
-                { name: 'Android Tablet', status: 'online', lastSeen: '15 min ago', battery: '67%' },
-                { name: 'iPad Pro', status: 'offline', lastSeen: '1 hour ago', battery: '23%' },
-                { name: 'iPhone 13', status: 'online', lastSeen: '2 hours ago', battery: '92%' }
-              ].map((device, index) => (
+                { time: '2 minutes ago', action: 'Data sync completed', device: 'iPhone 15 Pro', status: 'success', dataSize: '2.3 MB' },
+                { time: '5 minutes ago', action: 'Configuration sync', device: 'Samsung Galaxy S24', status: 'success', dataSize: '156 KB' },
+                { time: '12 minutes ago', action: 'User preferences sync', device: 'iPad Pro', status: 'success', dataSize: '89 KB' },
+                { time: '1 hour ago', action: 'Full data sync', device: 'Google Pixel 8', status: 'success', dataSize: '15.2 MB' },
+                { time: '2 hours ago', action: 'Sync failed', device: 'iPad Pro', status: 'error', dataSize: '0 KB' }
+              ].map((entry, index) => (
                 <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium text-gray-900">{device.name}</p>
-                    <p className="text-sm text-gray-500">Last seen: {device.lastSeen}</p>
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      entry.status === 'success' ? 'bg-green-100' : 'bg-red-100'
+                    }`}>
+                      {entry.status === 'success' ? '✅' : '❌'}
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{entry.action}</h4>
+                      <p className="text-sm text-gray-600">{entry.device} • {entry.time}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <Badge variant={device.status === 'online' ? 'default' : 'secondary'}>
-                      {device.status}
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600">{entry.dataSize}</span>
+                    <Badge className={
+                      entry.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }>
+                      {entry.status}
                     </Badge>
-                    <p className="text-sm text-gray-500 mt-1">{device.battery}</p>
                   </div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sync Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                ⚙️
+              </div>
+              Sync Settings
+            </CardTitle>
+            <CardDescription>
+              Configure synchronization preferences and schedules
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-gray-900">Auto Sync Interval</h4>
+                  <p className="text-sm text-gray-600">Every 5 minutes</p>
+                </div>
+                <Button size="sm" variant="outline">
+                  Configure
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-gray-900">Sync on WiFi Only</h4>
+                  <p className="text-sm text-gray-600">Save mobile data</p>
+                </div>
+                <Badge className="bg-green-100 text-green-800">
+                  Enabled
+                </Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-gray-900">Conflict Resolution</h4>
+                  <p className="text-sm text-gray-600">Server wins by default</p>
+                </div>
+                <Button size="sm" variant="outline">
+                  Configure
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-gray-900">Data Retention</h4>
+                  <p className="text-sm text-gray-600">Keep sync logs for 30 days</p>
+                </div>
+                <Button size="sm" variant="outline">
+                  Configure
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
