@@ -311,6 +311,13 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  const handleSubMenuClick = (item: MenuItem) => {
+    if (item.path) {
+      navigate(item.path);
+      setActiveMenu(item.id);
+    }
+  };
+
   const filteredItems = navigationItems.filter(item =>
     searchQuery === '' || 
     item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -325,7 +332,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
     return (
       <div key={item.id}>
         <div
-          onClick={() => handleMenuClick(item)}
+          onClick={() => level === 0 ? handleMenuClick(item) : handleSubMenuClick(item)}
           className={`
             flex items-center justify-between py-3 rounded-lg cursor-pointer transition-all duration-200 group
             ${isOpen ? 'px-4' : 'px-2 justify-center'}
