@@ -12,16 +12,6 @@ import {
   CheckCircle,
   Key
 } from 'lucide-react';
-import {
-  EnhancedCard,
-  EnhancedButton,
-  EnhancedBadge,
-  EnhancedInput,
-  EnhancedModal,
-  EnhancedTable,
-  EnhancedSearch,
-  stableStyles
-} from '../../../components/ui/EnhancedUIComponents';
 
 interface Role {
   id: string;
@@ -38,26 +28,11 @@ interface Role {
   icon: string;
 }
 
-interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  status: 'enabled' | 'disabled';
-}
-
 const UserRoles: React.FC = () => {
   console.log('🔑 UserRoles component is rendering!');
-  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<Role[]>([]);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
 
   // Mock data for roles
   const mockRoles: Role[] = [
@@ -98,7 +73,7 @@ const UserRoles: React.FC = () => {
       status: 'active',
       createdAt: '2024-01-03',
       updatedAt: '2024-01-13',
-      createdBy: 'Admin',
+      createdBy: 'Super Admin',
       priority: 3,
       color: 'green',
       icon: '👥'
@@ -107,7 +82,7 @@ const UserRoles: React.FC = () => {
       id: '4',
       name: 'User',
       description: 'Standard user access with basic permissions',
-      permissions: ['profile.edit', 'dashboard.view'],
+      permissions: ['basic.access', 'profile.edit'],
       userCount: 150,
       status: 'active',
       createdAt: '2024-01-04',
@@ -116,529 +91,232 @@ const UserRoles: React.FC = () => {
       priority: 4,
       color: 'gray',
       icon: '👤'
-    },
-    {
-      id: '5',
-      name: 'Guest',
-      description: 'Limited access for external users',
-      permissions: ['dashboard.view'],
-      userCount: 45,
-      status: 'active',
-      createdAt: '2024-01-05',
-      updatedAt: '2024-01-11',
-      createdBy: 'Admin',
-      priority: 5,
-      color: 'yellow',
-      icon: '👋'
-    },
-    {
-      id: '6',
-      name: 'Analyst',
-      description: 'Data analysis and reporting access',
-      permissions: ['analytics.view', 'reports.view', 'data.export'],
-      userCount: 8,
-      status: 'active',
-      createdAt: '2024-01-06',
-      updatedAt: '2024-01-10',
-      createdBy: 'Admin',
-      priority: 3,
-      color: 'purple',
-      icon: '📊'
     }
-  ];
-
-  // Mock data for permissions
-  const mockPermissions: Permission[] = [
-    { id: '1', name: 'User Management', description: 'Create, edit, and delete users', category: 'User', status: 'enabled' },
-    { id: '2', name: 'Role Management', description: 'Create, edit, and delete roles', category: 'User', status: 'enabled' },
-    { id: '3', name: 'System ', description: 'Access to system configuration', category: 'System', status: 'enabled' },
-    { id: '4', name: 'Analytics View', description: 'View analytics and reports', category: 'Analytics', status: 'enabled' },
-    { id: '5', name: 'Data Export', description: 'Export data and reports', category: 'Analytics', status: 'enabled' },
-    { id: '6', name: 'Security Audit', description: 'Access to security logs', category: 'Security', status: 'enabled' },
-    { id: '7', name: 'API Management', description: 'Manage API keys and endpoints', category: 'System', status: 'enabled' },
-    { id: '8', name: 'Portal Management', description: 'Manage portal settings', category: 'Portal', status: 'enabled' }
   ];
 
   useEffect(() => {
     // Simulate API call
     setTimeout(() => {
       setRoles(mockRoles);
-      setPermissions(mockPermissions);
       setLoading(false);
     }, 1000);
   }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'inactive': return 'danger';
-      case 'draft': return 'warning';
-      default: return 'default';
+      case 'active':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>;
+      case 'inactive':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>;
+      case 'draft':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Draft</span>;
+      default:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Unknown</span>;
     }
   };
 
-  const getPriorityColor = (priority: number) => {
+  const getPriorityBadge = (priority: number) => {
     switch (priority) {
-      case 1: return 'danger';
-      case 2: return 'warning';
-      case 3: return 'success';
-      case 4: return 'default';
-      case 5: return 'neutral';
-      default: return 'default';
+      case 1:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Critical</span>;
+      case 2:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">High</span>;
+      case 3:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Medium</span>;
+      case 4:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Low</span>;
+      default:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Unknown</span>;
     }
   };
 
-  const filteredRoles = roles.filter(role => {
-    const matchesSearch = role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         role.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || role.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
-
-  const roleColumns = [
-    {
-      key: 'name',
-      title: 'Role',
-      sortable: true,
-      render: (_: any, row: Role) => (
-        <div className="flex items-center space-x-3">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg ${stableStyles.surface[mode]}`}>
-            {row.icon}
-          </div>
-          <div>
-            <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
-              {row.name}
-            </div>
-            <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-              {row.description}
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      key: 'userCount',
-      title: 'Users',
-      sortable: true,
-      render: (_: any, row: Role) => (
-        <div className={`text-center ${stableStyles.textPrimary[mode]}`}>
-          <div className="font-semibold">{row.userCount}</div>
-          <div className={`text-xs ${stableStyles.textMuted[mode]}`}>active users</div>
-        </div>
-      )
-    },
-    {
-      key: 'permissions',
-      title: 'Permissions',
-      sortable: false,
-      render: (_: any, row: Role) => (
-        <div className="flex flex-wrap gap-1">
-          {row.permissions.slice(0, 3).map((perm, index) => (
-            <EnhancedBadge
-              key={index}
-              variant="default"
-              mode={mode}
-            >
-              {perm}
-            </EnhancedBadge>
-          ))}
-          {row.permissions.length > 3 && (
-            <EnhancedBadge
-              variant="default"
-              mode={mode}
-            >
-              +{row.permissions.length - 3}
-            </EnhancedBadge>
-          )}
-        </div>
-      )
-    },
-    {
-      key: 'priority',
-      title: 'Priority',
-      sortable: true,
-      render: (_: any, row: Role) => (
-        <EnhancedBadge
-          variant={getPriorityColor(row.priority) as any}
-          mode={mode}
-        >
-          {row.priority}
-        </EnhancedBadge>
-      )
-    },
-    {
-      key: 'status',
-      title: 'Status',
-      sortable: true,
-      render: (_: any, row: Role) => (
-        <EnhancedBadge
-          variant={getStatusColor(row.status) as any}
-          mode={mode}
-        >
-          {row.status}
-        </EnhancedBadge>
-      )
-    },
-    {
-      key: 'actions',
-      title: 'Actions',
-      sortable: false,
-      render: (_: any, row: Role) => (
-        <div className="flex space-x-2">
-          <EnhancedButton
-            variant="ghost"
-            size="sm"
-            icon={<Eye className="w-4 h-4" />}
-            mode={mode}
-            onClick={() => setSelectedRole(row)}
-          >
-            View
-          </EnhancedButton>
-          <EnhancedButton
-            variant="ghost"
-            size="sm"
-            icon={<Edit className="w-4 h-4" />}
-            mode={mode}
-            onClick={() => {
-              setSelectedRole(row);
-              setShowEditModal(true);
-            }}
-          >
-            Edit
-          </EnhancedButton>
-          <EnhancedButton
-            variant="ghost"
-            size="sm"
-            icon={<Trash2 className="w-4 h-4" />}
-            mode={mode}
-            onClick={() => {
-              setSelectedRole(row);
-              setShowDeleteModal(true);
-            }}
-          >
-            Delete
-          </EnhancedButton>
-        </div>
-      )
-    }
-  ];
-
-  const metrics = {
-    totalRoles: roles.length,
-    activeRoles: roles.filter(r => r.status === 'active').length,
-    totalUsers: roles.reduce((sum, role) => sum + role.userCount, 0),
-    avgPermissions: Math.round(roles.reduce((sum, role) => sum + role.permissions.length, 0) / roles.length)
-  };
-
-  return (
-    <div className={`min-h-screen ${stableStyles.primary[mode]} p-6`}>
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
-              User Roles
-            </h1>
-            <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
-              Manage user roles and permissions across the platform
-            </p>
-          </div>
-          <div className="flex space-x-3">
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-              Export Roles
-            </EnhancedButton>
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Upload className="w-4 h-4" />}
-              mode={mode}
-            >
-              Import Roles
-            </EnhancedButton>
-            <EnhancedButton
-              variant="primary"
-              size="sm"
-              icon={<Plus className="w-4 h-4" />}
-              mode={mode}
-              onClick={() => setShowCreateModal(true)}
-            >
-              Create Role
-            </EnhancedButton>
-          </div>
-        </div>
-
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Total Roles</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.totalRoles}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Active Roles</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.activeRoles}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Total Users</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.totalUsers}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <Users className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Avg Permissions</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.avgPermissions}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <Key className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-        </div>
-
-        {/* Filters and */}
-        <EnhancedCard mode={mode}>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <EnhancedSearch
-                placeholder="roles..."
-                value={searchTerm}
-                onChange={setSearchTerm}
-                mode={mode}
-              />
-            </div>
-            <div className="flex space-x-3">
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className={`px-4 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="draft">Draft</option>
-              </select>
-              <EnhancedButton
-                variant="ghost"
-                size="sm"
-                icon={<RefreshCw className="w-4 h-4" />}
-                mode={mode}
-              >
-                Refresh
-              </EnhancedButton>
-            </div>
-          </div>
-        </EnhancedCard>
-
-        {/* Roles Table */}
-        <EnhancedCard mode={mode}>
-          <EnhancedTable
-            data={filteredRoles}
-            columns={roleColumns}
-            loading={loading}
-            mode={mode}
-          />
-        </EnhancedCard>
-      </div>
-
-      {/* Create Role Modal */}
-      <EnhancedModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Create New Role"
-        mode={mode}
-      >
-        <div className="space-y-4">
-          <div>
-            <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-              Role Name
-            </label>
-            <EnhancedInput
-              placeholder="Enter role name"
-              mode={mode}
-            />
-          </div>
-          <div>
-            <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-              Description
-            </label>
-            <textarea
-              placeholder="Enter role description"
-              rows={3}
-              className={`w-full px-4 py-3 ${mode === "light" ? 'bg-white/80' : 'bg-slate-800/80'} backdrop-blur-sm border border-slate-200/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 ${stableStyles.transitionSmooth} ${mode === "light" ? 'text-slate-700 placeholder-slate-400' : 'text-white placeholder-slate-500'}`}
-            />
-          </div>
-          <div>
-            <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-              Permissions
-            </label>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {permissions.map(permission => (
-                <label key={permission.id} className="flex items-center space-x-2">
-                  <input type="checkbox" className="rounded" />
-                  <span className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                    {permission.name}
-                  </span>
-                </label>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-8"></div>
+            <div className="space-y-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
               ))}
             </div>
           </div>
         </div>
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="secondary"
-            onClick={() => setShowCreateModal(false)}
-            mode={mode}
-          >
-            Cancel
-          </EnhancedButton>
-          <EnhancedButton
-            variant="primary"
-            onClick={() => setShowCreateModal(false)}
-            mode={mode}
-          >
-            Create Role
-          </EnhancedButton>
-        </div>
-      </EnhancedModal>
+      </div>
+    );
+  }
 
-      {/* Edit Role Modal */}
-      <EnhancedModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        title="Edit Role"
-        mode={mode}
-      >
-        {selectedRole && (
-          <div className="space-y-4">
-            <div>
-              <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                Role Name
-              </label>
-              <EnhancedInput
-                value={selectedRole.name}
-                mode={mode}
-              />
-            </div>
-            <div>
-              <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                Description
-              </label>
-              <textarea
-                value={selectedRole.description}
-                rows={3}
-                className={`w-full px-4 py-3 ${mode === "light" ? 'bg-white/80' : 'bg-slate-800/80'} backdrop-blur-sm border border-slate-200/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 ${stableStyles.transitionSmooth} ${mode === "light" ? 'text-slate-700 placeholder-slate-400' : 'text-white placeholder-slate-500'}`}
-              />
-            </div>
-            <div>
-              <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                Permissions
-              </label>
-              <div className="space-y-2 max-h-40 overflow-y-auto">
-                {permissions.map(permission => (
-                  <label key={permission.id} className="flex items-center space-x-2">
-                    <input 
-                      type="checkbox" 
-                      className="rounded"
-                      checked={selectedRole.permissions.includes(permission.name.toLowerCase().replace(' ', '.'))}
-                    />
-                    <span className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      {permission.name}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="secondary"
-            onClick={() => setShowEditModal(false)}
-            mode={mode}
-          >
-            Cancel
-          </EnhancedButton>
-          <EnhancedButton
-            variant="primary"
-            onClick={() => setShowEditModal(false)}
-            mode={mode}
-          >
-            Changes
-          </EnhancedButton>
-        </div>
-      </EnhancedModal>
-
-      {/* Delete Role Modal */}
-      <EnhancedModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        title="Delete Role"
-        mode={mode}
-      >
-        <div className="space-y-4">
-          <p className={`${stableStyles.textSecondary[mode]}`}>
-            Are you sure you want to delete the role "{selectedRole?.name}"? This action cannot be undone.
-          </p>
-          <div className={`p-4 rounded-lg ${stableStyles.surface[mode]}`}>
-            <p className={`text-sm ${stableStyles.textMuted[mode]}`}>
-              This role is currently assigned to {selectedRole?.userCount} users.
-              You may want to reassign these users before deleting the role.
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              User Roles
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
+              Manage user roles and permissions across the platform
             </p>
           </div>
+          <div className="flex space-x-3">
+            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              <Download className="w-4 h-4 inline mr-2" />
+              Export
+            </button>
+            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              <Upload className="w-4 h-4 inline mr-2" />
+              Import
+            </button>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Plus className="w-4 h-4 inline mr-2" />
+              Add Role
+            </button>
+          </div>
         </div>
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="secondary"
-            onClick={() => setShowDeleteModal(false)}
-            mode={mode}
-          >
-            Cancel
-          </EnhancedButton>
-          <EnhancedButton
-            variant="danger"
-            onClick={() => setShowDeleteModal(false)}
-            mode={mode}
-          >
-            Delete Role
-          </EnhancedButton>
+
+        {/* Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="Search roles by name, description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
+            </div>
+            <div className="flex gap-2">
+              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
         </div>
-      </EnhancedModal>
+
+        {/* Roles Table */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Priority
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Users
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Permissions
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Last Updated
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {roles.map((role) => (
+                  <tr key={role.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                          {role.icon}
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                            {role.name}
+                          </div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {role.description}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(role.status)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getPriorityBadge(role.priority)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white">{role.userCount}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">users</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white">
+                        {role.permissions.length} permissions
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {role.permissions.slice(0, 2).join(', ')}
+                        {role.permissions.length > 2 && '...'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(role.updatedAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Summary */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{roles.length}</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Total Roles</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {roles.filter(r => r.status === 'active').length}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Active Roles</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {roles.reduce((sum, role) => sum + role.userCount, 0)}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Total Users</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                {roles.reduce((sum, role) => sum + role.permissions.length, 0)}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Total Permissions</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

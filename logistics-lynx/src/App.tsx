@@ -193,7 +193,7 @@ function App() {
             
             {/* Protected Super Admin Portal - All routes under /super-admin/* */}
             <Route element={<ProtectedRoute roles={['super-admin']} />}>
-              <Route path="/super-admin" element={<SuperAdmin />}>
+              <Route path="/super-admin/*" element={<SuperAdmin />}>
                 {/* Dashboard Routes */}
                 <Route path="dashboard" element={<SystemOverview />} />
                 <Route path="dashboard/users" element={<ActiveUsers />} />

@@ -16,16 +16,6 @@ import {
   Star,
   Zap
 } from 'lucide-react';
-import {
-  EnhancedCard,
-  EnhancedButton,
-  EnhancedBadge,
-  EnhancedInput,
-  EnhancedModal,
-  EnhancedTable,
-  EnhancedSearch,
-  stableStyles
-} from '../../../components/ui/EnhancedUIComponents';
 
 interface UserGroup {
   id: string;
@@ -45,30 +35,11 @@ interface UserGroup {
   joinApproval: boolean;
 }
 
-interface GroupMember {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  joinedAt: string;
-  status: 'active' | 'pending' | 'suspended';
-  avatar: string;
-}
-
 const UserGroups: React.FC = () => {
   console.log('👥 UserGroups component is rendering!');
-  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState<UserGroup[]>([]);
-  const [selectedGroup, setSelectedGroup] = useState<UserGroup | null>(null);
-  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showMembersModal, setShowMembersModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [filterCategory, setFilterCategory] = useState<string>('all');
 
   // Mock data for groups
   const mockGroups: UserGroup[] = [
@@ -102,7 +73,7 @@ const UserGroups: React.FC = () => {
       category: 'Marketing',
       color: 'green',
       icon: '📢',
-      permissions: ['content.create', 'analytics.view', 'social.manage'],
+      permissions: ['content.create', 'analytics.view', 'campaign.manage'],
       isPrivate: false,
       joinApproval: false
     },
@@ -119,7 +90,7 @@ const UserGroups: React.FC = () => {
       category: 'Sales',
       color: 'purple',
       icon: '💰',
-      permissions: ['leads.view', 'crm.access', 'reports.view'],
+      permissions: ['leads.view', 'deals.manage', 'reports.view'],
       isPrivate: true,
       joinApproval: true
     },
@@ -136,74 +107,9 @@ const UserGroups: React.FC = () => {
       category: 'Support',
       color: 'orange',
       icon: '🎧',
-      permissions: ['tickets.view', 'knowledge.access', 'chat.access'],
+      permissions: ['tickets.view', 'tickets.resolve', 'knowledge.access'],
       isPrivate: false,
       joinApproval: false
-    },
-    {
-      id: '5',
-      name: 'Executive Team',
-      description: 'Senior management and executives',
-      memberCount: 5,
-      maxMembers: 8,
-      status: 'active',
-      createdAt: '2024-01-05',
-      updatedAt: '2024-01-11',
-      createdBy: 'Admin',
-      category: 'Management',
-      color: 'red',
-      icon: '👔',
-      permissions: ['all.access', 'reports.view', 'analytics.view'],
-      isPrivate: true,
-      joinApproval: true
-    },
-    {
-      id: '6',
-      name: 'QA Team',
-      description: 'Quality assurance and testing team',
-      memberCount: 4,
-      maxMembers: 6,
-      status: 'active',
-      createdAt: '2024-01-06',
-      updatedAt: '2024-01-10',
-      createdBy: 'Admin',
-      category: 'Development',
-      color: 'yellow',
-      icon: '🔍',
-      permissions: ['testing.access', 'bugs.report', 'quality.view'],
-      isPrivate: false,
-      joinApproval: true
-    }
-  ];
-
-  // Mock data for group members
-  const mockMembers: GroupMember[] = [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@company.com',
-      role: 'Lead Developer',
-      joinedAt: '2024-01-01',
-      status: 'active',
-      avatar: '👨‍💻'
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      email: 'jane.smith@company.com',
-      role: 'Senior Developer',
-      joinedAt: '2024-01-02',
-      status: 'active',
-      avatar: '👩‍💻'
-    },
-    {
-      id: '3',
-      name: 'Mike Johnson',
-      email: 'mike.johnson@company.com',
-      role: 'Developer',
-      joinedAt: '2024-01-03',
-      status: 'active',
-      avatar: '👨‍💻'
     }
   ];
 
@@ -211,580 +117,239 @@ const UserGroups: React.FC = () => {
     // Simulate API call
     setTimeout(() => {
       setGroups(mockGroups);
-      setGroupMembers(mockMembers);
       setLoading(false);
     }, 1000);
   }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'inactive': return 'danger';
-      case 'archived': return 'neutral';
-      default: return 'default';
+      case 'active':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>;
+      case 'inactive':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>;
+      case 'archived':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Archived</span>;
+      default:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Unknown</span>;
     }
   };
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryBadge = (category: string) => {
     switch (category) {
-      case 'Development': return 'blue';
-      case 'Marketing': return 'green';
-      case 'Sales': return 'purple';
-      case 'Support': return 'orange';
-      case 'Management': return 'red';
-      default: return 'default';
+      case 'Development':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Development</span>;
+      case 'Marketing':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Marketing</span>;
+      case 'Sales':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Sales</span>;
+      case 'Support':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">Support</span>;
+      default:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{category}</span>;
     }
   };
 
-  const filteredGroups = groups.filter(group => {
-    const matchesSearch = group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         group.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || group.status === filterStatus;
-    const matchesCategory = filterCategory === 'all' || group.category === filterCategory;
-    return matchesSearch && matchesStatus && matchesCategory;
-  });
-
-  const groupColumns = [
-    {
-      key: 'name',
-      title: 'Group',
-      sortable: true,
-      render: (_: any, row: UserGroup) => (
-        <div className="flex items-center space-x-3">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg ${stableStyles.surface[mode]}`}>
-            {row.icon}
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
-                {row.name}
-              </div>
-              {row.isPrivate && (
-                <Lock className="w-4 h-4 text-gray-500" />
-              )}
-            </div>
-            <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-              {row.description}
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-8"></div>
+            <div className="space-y-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              ))}
             </div>
           </div>
         </div>
-      )
-    },
-    {
-      key: 'category',
-      title: 'Category',
-      sortable: true,
-      render: (_: any, row: UserGroup) => (
-        <EnhancedBadge
-          variant={getCategoryColor(row.category) as any}
-          
-          mode={mode}
-        >
-          {row.category}
-        </EnhancedBadge>
-      )
-    },
-    {
-      key: 'members',
-      title: 'Members',
-      sortable: true,
-      render: (_: any, row: UserGroup) => (
-        <div className={`text-center ${stableStyles.textPrimary[mode]}`}>
-          <div className="font-semibold">{row.memberCount}/{row.maxMembers}</div>
-          <div className={`text-xs ${stableStyles.textMuted[mode]}`}>
-            {Math.round((row.memberCount / row.maxMembers) * 100)}% full
-          </div>
-        </div>
-      )
-    },
-    {
-      key: 'permissions',
-      title: 'Permissions',
-      sortable: false,
-      render: (_: any, row: UserGroup) => (
-        <div className="flex flex-wrap gap-1">
-          {row.permissions.slice(0, 2).map((perm, index) => (
-            <EnhancedBadge
-              key={index}
-              variant="default"
-              
-              mode={mode}
-            >
-              {perm}
-            </EnhancedBadge>
-          ))}
-          {row.permissions.length > 2 && (
-            <EnhancedBadge
-              variant="default"
-              
-              mode={mode}
-            >
-              +{row.permissions.length - 2}
-            </EnhancedBadge>
-          )}
-        </div>
-      )
-    },
-    {
-      key: 'status',
-      title: 'Status',
-      sortable: true,
-      render: (_: any, row: UserGroup) => (
-        <EnhancedBadge
-          variant={getStatusColor(row.status) as any}
-          
-          mode={mode}
-        >
-          {row.status}
-        </EnhancedBadge>
-      )
-    },
-    {
-      key: 'actions',
-      title: 'Actions',
-      sortable: false,
-      render: (_: any, row: UserGroup) => (
-        <div className="flex space-x-2">
-          <EnhancedButton
-            variant="ghost"
-            
-            icon={<Eye className="w-4 h-4" />}
-            mode={mode}
-            onClick={() => {
-              setSelectedGroup(row);
-              setShowMembersModal(true);
-            }}
-          />
-          <EnhancedButton
-            variant="ghost"
-            
-            icon={<Edit className="w-4 h-4" />}
-            mode={mode}
-            onClick={() => {
-              setSelectedGroup(row);
-              setShowEditModal(true);
-            }}
-          />
-          <EnhancedButton
-            variant="ghost"
-            
-            icon={<Trash2 className="w-4 h-4" />}
-            mode={mode}
-            onClick={() => {
-              setSelectedGroup(row);
-              setShowDeleteModal(true);
-            }}
-          />
-        </div>
-      )
-    }
-  ];
-
-  const metrics = {
-    totalGroups: groups.length,
-    activeGroups: groups.filter(g => g.status === 'active').length,
-    totalMembers: groups.reduce((sum, group) => sum + group.memberCount, 0),
-    avgMembersPerGroup: Math.round(groups.reduce((sum, group) => sum + group.memberCount, 0) / groups.length)
-  };
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen ${stableStyles.primary[mode]} p-6`}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               User Groups
             </h1>
-            <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
-              Organize users into groups for better management and collaboration
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
+              Manage user groups and team organization
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
-              variant="secondary"
-              
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-              Export Groups
-            </EnhancedButton>
-            <EnhancedButton
-              variant="secondary"
-              
-              icon={<Upload className="w-4 h-4" />}
-              mode={mode}
-            >
-              Import Groups
-            </EnhancedButton>
-            <EnhancedButton
-              variant="primary"
-              
-              icon={<Plus className="w-4 h-4" />}
-              mode={mode}
-              onClick={() => setShowCreateModal(true)}
-            >
-              Create Group
-            </EnhancedButton>
+            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              <Download className="w-4 h-4 inline mr-2" />
+              Export
+            </button>
+            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              <Upload className="w-4 h-4 inline mr-2" />
+              Import
+            </button>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Plus className="w-4 h-4 inline mr-2" />
+              Add Group
+            </button>
           </div>
         </div>
 
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Total Groups</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.totalGroups}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <Users className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Active Groups</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.activeGroups}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Total Members</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.totalMembers}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <UserPlus className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-
-          <EnhancedCard mode={mode}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${stableStyles.textMuted[mode]}`}>Avg Members/Group</p>
-                <p className={`text-2xl font-bold ${stableStyles.textPrimary[mode]}`}>
-                  {metrics.avgMembersPerGroup}
-                </p>
-              </div>
-              <div className={`w-12 h-12 rounded-lg ${stableStyles.accent[mode]} flex items-center justify-center`}>
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </EnhancedCard>
-        </div>
-
-        {/* Filters and */}
-        <EnhancedCard mode={mode}>
-          <div className="flex flex-col sm:flex-row gap-4">
+        {/* Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
-              <EnhancedSearch
-                placeholder="groups..."
+              <input
+                type="text"
+                placeholder="Search groups by name, description..."
                 value={searchTerm}
-                onChange={setSearchTerm}
-                mode={mode}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
             </div>
-            <div className="flex space-x-3">
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className={`px-4 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
-              >
-                <option value="all">All Status</option>
+            <div className="flex gap-2">
+              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="">All Status</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
                 <option value="archived">Archived</option>
               </select>
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-                className={`px-4 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
-              >
-                <option value="all">All Categories</option>
+              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="">All Categories</option>
                 <option value="Development">Development</option>
                 <option value="Marketing">Marketing</option>
                 <option value="Sales">Sales</option>
                 <option value="Support">Support</option>
-                <option value="Management">Management</option>
               </select>
-              <EnhancedButton
-                variant="ghost"
-                
-                icon={<RefreshCw className="w-4 h-4" />}
-                mode={mode}
-              >
-                Refresh
-              </EnhancedButton>
             </div>
           </div>
-        </EnhancedCard>
+        </div>
 
         {/* Groups Table */}
-        <EnhancedCard mode={mode}>
-          <EnhancedTable
-            data={filteredGroups}
-            columns={groupColumns}
-            loading={loading}
-            mode={mode}
-            
-          />
-        </EnhancedCard>
-      </div>
-
-      {/* Create Group Modal */}
-      <EnhancedModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Create New Group"
-        mode={mode}
-      >
-        <div className="space-y-4">
-          <EnhancedInput
-            placeholder="Enter group name"
-            mode={mode}
-          />
-          <EnhancedInput
-            placeholder="Enter group description"
-            mode={mode}
-            multiline
-            rows={3}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <EnhancedInput
-              placeholder="20"
-              type="number"
-              mode={mode}
-            />
-            <select className={`px-4 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}>
-              <option value="Development">Development</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Sales">Sales</option>
-              <option value="Support">Support</option>
-              <option value="Management">Management</option>
-            </select>
-          </div>
-          <div className="flex items-center space-x-4">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" className="rounded" />
-              <span className={`text-sm ${stableStyles.textSecondary[mode]}`}>Private Group</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" className="rounded" />
-              <span className={`text-sm ${stableStyles.textSecondary[mode]}`}>Require Approval</span>
-            </label>
+        <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Group
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Members
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Privacy
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Last Updated
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {groups.map((group) => (
+                  <tr key={group.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                          {group.icon}
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                            {group.name}
+                          </div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {group.description}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(group.status)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getCategoryBadge(group.category)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white">
+                        {group.memberCount} / {group.maxMembers}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        members
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        {group.isPrivate ? (
+                          <Lock className="w-4 h-4 text-red-500" />
+                        ) : (
+                          <Users className="w-4 h-4 text-green-500" />
+                        )}
+                        <span className="text-sm text-gray-900 dark:text-white">
+                          {group.isPrivate ? 'Private' : 'Public'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(group.updatedAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="default"
-            onClick={() => setShowCreateModal(false)}
-            mode={mode}
-          >
-            Cancel
-          </EnhancedButton>
-          <EnhancedButton
-            variant="primary"
-            onClick={() => setShowCreateModal(false)}
-            mode={mode}
-          >
-            Create Group
-          </EnhancedButton>
-        </div>
-      </EnhancedModal>
 
-      {/* Edit Group Modal */}
-      <EnhancedModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        title="Edit Group"
-        mode={mode}
-      >
-        {selectedGroup && (
-          <div className="space-y-4">
-            <EnhancedInput
-              placeholder="Group Name"
-              value={selectedGroup.name}
-              mode={mode}
-            />
-            <EnhancedInput
-              placeholder="Description"
-              value={selectedGroup.description}
-              mode={mode}
-              multiline
-              rows={3}
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <EnhancedInput
-                placeholder="Max Members"
-                type="number"
-                value={selectedGroup.maxMembers.toString()}
-                mode={mode}
-              />
-              <select
-                value={selectedGroup.category}
-                className={`px-4 py-2 rounded-lg border ${stableStyles.border[mode]} ${stableStyles.textPrimary[mode]} bg-transparent`}
-              >
-                <option value="Development">Development</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Sales">Sales</option>
-                <option value="Support">Support</option>
-                <option value="Management">Management</option>
-              </select>
+        {/* Summary */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{groups.length}</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Total Groups</div>
             </div>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  className="rounded"
-                  checked={selectedGroup.isPrivate}
-                />
-                <span className={`text-sm ${stableStyles.textSecondary[mode]}`}>Private Group</span>
-              </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  className="rounded"
-                  checked={selectedGroup.joinApproval}
-                />
-                <span className={`text-sm ${stableStyles.textSecondary[mode]}`}>Require Approval</span>
-              </label>
-            </div>
-          </div>
-        )}
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="default"
-            onClick={() => setShowEditModal(false)}
-            mode={mode}
-          >
-            Cancel
-          </EnhancedButton>
-          <EnhancedButton
-            variant="primary"
-            onClick={() => setShowEditModal(false)}
-            mode={mode}
-          >
-            Changes
-          </EnhancedButton>
-        </div>
-      </EnhancedModal>
-
-      {/* Delete Group Modal */}
-      <EnhancedModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        title="Delete Group"
-        mode={mode}
-      >
-        <div className="space-y-4">
-          <p className={`${stableStyles.textSecondary[mode]}`}>
-            Are you sure you want to delete the group "{selectedGroup?.name}"? This action cannot be undone.
-          </p>
-          <div className={`p-4 rounded-lg ${stableStyles.surface[mode]}`}>
-            <p className={`text-sm ${stableStyles.textMuted[mode]}`}>
-              This group currently has {selectedGroup?.memberCount} members.
-              All members will be removed from this group.
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="default"
-            onClick={() => setShowDeleteModal(false)}
-            mode={mode}
-          >
-            Cancel
-          </EnhancedButton>
-          <EnhancedButton
-            variant="danger"
-            onClick={() => setShowDeleteModal(false)}
-            mode={mode}
-          >
-            Delete Group
-          </EnhancedButton>
-        </div>
-      </EnhancedModal>
-
-      {/* Group Members Modal */}
-      <EnhancedModal
-        isOpen={showMembersModal}
-        onClose={() => setShowMembersModal(false)}
-        title={`${selectedGroup?.name} - Members`}
-        mode={mode}
-        size="lg"
-      >
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-              {selectedGroup?.memberCount} members
-            </p>
-            <EnhancedButton
-              variant="primary"
-              
-              icon={<UserPlus className="w-4 h-4" />}
-              mode={mode}
-            >
-              Add Member
-            </EnhancedButton>
-          </div>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {groupMembers.map(member => (
-              <div key={member.id} className={`flex items-center justify-between p-3 rounded-lg ${stableStyles.surface[mode]}`}>
-                <div className="flex items-center space-x-3">
-                  <div className="text-2xl">{member.avatar}</div>
-                  <div>
-                    <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
-                      {member.name}
-                    </div>
-                    <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      {member.email} • {member.role}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <EnhancedBadge
-                    variant={member.status === 'active' ? 'success' : member.status === 'pending' ? 'warning' : 'danger'}
-                    
-                    mode={mode}
-                  >
-                    {member.status}
-                  </EnhancedBadge>
-                  <EnhancedButton
-                    variant="ghost"
-                    
-                    icon={<UserMinus className="w-4 h-4" />}
-                    mode={mode}
-                  />
-                </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {groups.filter(g => g.status === 'active').length}
               </div>
-            ))}
+              <div className="text-sm text-gray-500 dark:text-gray-400">Active Groups</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {groups.reduce((sum, group) => sum + group.memberCount, 0)}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Total Members</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                {groups.filter(g => g.isPrivate).length}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Private Groups</div>
+            </div>
           </div>
         </div>
-        <div className="flex justify-end space-x-3 mt-6">
-          <EnhancedButton
-            variant="default"
-            onClick={() => setShowMembersModal(false)}
-            mode={mode}
-          >
-            Close
-          </EnhancedButton>
-        </div>
-      </EnhancedModal>
+      </div>
     </div>
   );
 };

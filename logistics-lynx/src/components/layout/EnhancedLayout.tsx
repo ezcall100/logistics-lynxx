@@ -160,7 +160,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="AI Agent Assistant"
                   onClick={() => {
                     console.log('AI Agent clicked');
-                    navigate('/mcp');
+                    navigate('mcp');
                     setFabOpen(false);
                   }}
                 >
@@ -214,7 +214,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Send Message"
                   onClick={() => {
                     console.log('Message clicked');
-                    navigate('/business/support');
+                    navigate('business/support');
                     setFabOpen(false);
                   }}
                 >
@@ -258,7 +258,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Quick Actions"
                   onClick={() => {
                     console.log('Quick Actions clicked');
-                    navigate('/dashboard');
+                    navigate('dashboard');
                     setFabOpen(false);
                   }}
                 >
@@ -280,7 +280,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Emergency Support"
                   onClick={() => {
                     console.log('Emergency Support clicked');
-                    navigate('/business/support');
+                    navigate('business/support');
                     setFabOpen(false);
                   }}
                 >
