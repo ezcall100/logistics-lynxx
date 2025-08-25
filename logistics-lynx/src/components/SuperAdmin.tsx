@@ -5,7 +5,7 @@ import { EnhancedLayout } from './layout/EnhancedLayout';
 
 const SuperAdmin: React.FC = () => {
   console.log('🔍 SuperAdmin component rendering...');
-  
+
   // Mock user data
   const user = {
     name: 'Admin User',
@@ -17,9 +17,9 @@ const SuperAdmin: React.FC = () => {
 
   return (
     <EnhancedLayout user={user}>
-      <Routes>
-        <Route path="/*" element={<SuperAdminRoutes />} />
-      </Routes>
+            <Routes>
+              <Route path="/*" element={<SuperAdminRoutes />} />
+            </Routes>
     </EnhancedLayout>
   );
 };
