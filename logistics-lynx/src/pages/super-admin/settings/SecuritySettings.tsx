@@ -725,7 +725,9 @@ const SecuritySettings: React.FC = () => {
                               accessControl: { ...formData.accessControl, ipWhitelist: newList }
                             });
                           }}
-                        />
+                        >
+                          Remove
+                        </EnhancedButton>
                       </div>
                     ))}
                   </div>
@@ -760,7 +762,9 @@ const SecuritySettings: React.FC = () => {
                               accessControl: { ...formData.accessControl, ipBlacklist: newList }
                             });
                           }}
-                        />
+                        >
+                          Remove
+                        </EnhancedButton>
                       </div>
                     ))}
                   </div>
@@ -893,7 +897,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.auditLogging.retentionDays}
+                    value={formData.auditLogging.retentionDays.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       auditLogging: { ...formData.auditLogging, retentionDays: parseInt(e.target.value) }
@@ -1018,7 +1022,7 @@ const SecuritySettings: React.FC = () => {
                   </label>
                   <EnhancedInput
                     type="number"
-                    value={formData.encryption.keyRotation}
+                    value={formData.encryption.keyRotation.toString()}
                     onChange={(e) => setFormData({
                       ...formData,
                       encryption: { ...formData.encryption, keyRotation: parseInt(e.target.value) }
