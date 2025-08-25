@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import SuperAdminRoutes from '../pages/super-admin/SuperAdminRoutes';
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { EnhancedLayout } from './layout/EnhancedLayout';
+import { useAuth } from '../contexts/AuthContext';
 
 const SuperAdmin: React.FC = () => {
   console.log('🔍 SuperAdmin component rendering...');
+  const location = useLocation();
+  const { user } = useAuth();
+  
+  console.log('🔍 SuperAdmin: Current location:', location.pathname);
+  console.log('🔍 SuperAdmin: User data:', user);
 
-  // Mock user data
-  const user = {
-    name: 'Admin User',
-    email: 'admin@logisticslynx.com',
-    role: 'Super Admin'
-  };
-
-  console.log('🔍 User data:', user);
+  if (!user) {
+    console.error('🔍 SuperAdmin: No user data available');
+    return null;
+  }
 
   return (
     <EnhancedLayout user={user}>
-            <Routes>
-              <Route path="/*" element={<SuperAdminRoutes />} />
-            </Routes>
+      <Outlet />
     </EnhancedLayout>
   );
 };
