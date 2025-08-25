@@ -178,12 +178,12 @@ interface SecurityEvent {
 }
 
 const SecuritySettings: React.FC = () => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('authentication');
-  const [showIPModal, setShowIPModal] = useState(false);
-  const [showCertificateModal, setShowCertificateModal] = useState(false);
+  const [showIPModal] = useState(false);
+  const [showCertificateModal] = useState(false);
   const [config, setConfig] = useState<SecurityConfig>({
     authentication: {
       twoFactorEnabled: true,

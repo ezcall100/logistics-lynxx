@@ -5,7 +5,7 @@
  * Tests all endpoints to ensure they're working properly
  */
 
-const http = require('http');
+import http from 'http';
 
 const MCP_BASE_URL = 'http://localhost:3001/api';
 const TIMEOUT = 5000;

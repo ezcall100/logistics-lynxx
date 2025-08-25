@@ -51,9 +51,6 @@ import {
   Square,
   Circle,
   Triangle,
-  Star,
-  Heart,
-  Zap,
   Save,
   Edit,
   Download
@@ -199,7 +196,7 @@ interface SettingsCategory {
 }
 
 const Settings: React.FC = () => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<SystemSettings | null>(null);
   const [activeCategory, setActiveCategory] = useState('general');

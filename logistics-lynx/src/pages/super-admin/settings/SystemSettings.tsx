@@ -5,10 +5,6 @@ import {
   RefreshCw, 
   Plus, 
   File, 
-  Plus as PlusIcon, 
-  Star,
-  Heart,
-  Zap,
   Settings,
   Database,
   Code,
@@ -112,12 +108,12 @@ interface SystemConfig {
 }
 
 const SystemSettings: React.FC = () => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showPasswordModal] = useState(false);
+  const [showBackupModal] = useState(false);
   const [config, setConfig] = useState<SystemConfig>({
     general: {
       systemName: 'Logistics Lynx',
