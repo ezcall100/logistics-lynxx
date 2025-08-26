@@ -2,11 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
+// Role definitions with demo credentials
+const roles = [
+  { label: 'Super Admin', value: 'super_admin', email: 'admin@transbotai.com', password: 'demo-password' },
+  { label: 'Carrier Admin', value: 'carrier_admin', email: 'carrier@transbotai.com', password: 'demo-password' },
+  { label: 'Broker Admin', value: 'freight_broker_admin', email: 'broker@transbotai.com', password: 'demo-password' },
+  { label: 'Shipper Admin', value: 'shipper_admin', email: 'shipper@transbotai.com', password: 'demo-password' },
+  { label: 'Driver', value: 'carrier_driver', email: 'driver@transbotai.com', password: 'demo-password' },
+  { label: 'Owner Operator', value: 'owner_operator', email: 'owner@transbotai.com', password: 'demo-password' },
+];
+
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [autoFillEnabled, setAutoFillEnabled] = useState(true);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -14,6 +26,31 @@ const LoginPage: React.FC = () => {
 
   // Get the page they were trying to visit
   const from = location.state?.from?.pathname || '/super-admin';
+
+  // Handle role selection with autofill
+  const handleRoleChange = (roleValue: string) => {
+    setSelectedRole(roleValue);
+    if (autoFillEnabled && roleValue) {
+      const role = roles.find(r => r.value === roleValue);
+      if (role) {
+        setEmail(role.email);
+        setPassword(role.password);
+      }
+    }
+  };
+
+  // Role-based redirect function
+  const redirectUserByRole = (role: string): string => {
+    switch (role) {
+      case 'super_admin': return '/super-admin/dashboard';
+      case 'carrier_admin': return '/carrier/dashboard';
+      case 'freight_broker_admin': return '/broker/dashboard';
+      case 'shipper_admin': return '/shipper/dashboard';
+      case 'carrier_driver': return '/driver/dashboard';
+      case 'owner_operator': return '/owner-operator/dashboard';
+      default: return '/super-admin/dashboard';
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +61,9 @@ const LoginPage: React.FC = () => {
       const success = await login(email, password);
       if (success) {
         console.log('🔍 LoginPage: Login successful, redirecting to', from);
-        navigate(from, { replace: true });
+        // Redirect based on selected role
+        const redirectPath = selectedRole ? redirectUserByRole(selectedRole) : from;
+        navigate(redirectPath, { replace: true });
       } else {
         setError('Invalid email or password');
       }
@@ -70,6 +109,42 @@ const LoginPage: React.FC = () => {
           )}
 
           <div className="space-y-4">
+            {/* Role Selection */}
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                Select Role
+              </label>
+              <select
+                id="role"
+                name="role"
+                value={selectedRole}
+                onChange={(e) => handleRoleChange(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Choose your role...</option>
+                {roles.map((role) => (
+                  <option key={role.value} value={role.value}>
+                    {role.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Auto-fill Toggle */}
+            <div className="flex items-center">
+              <input
+                id="autoFill"
+                name="autoFill"
+                type="checkbox"
+                checked={autoFillEnabled}
+                onChange={(e) => setAutoFillEnabled(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="autoFill" className="ml-2 block text-sm text-gray-700">
+                Auto-fill demo credentials
+              </label>
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email Address
@@ -83,7 +158,7 @@ const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="admin@logisticslynx.com"
+                placeholder="Enter your email"
               />
             </div>
 
@@ -124,7 +199,7 @@ const LoginPage: React.FC = () => {
 
           <div className="text-center">
             <p className="text-xs text-gray-500">
-              Demo Credentials: admin@logisticslynx.com / demo-password
+              Demo Credentials: Select a role above to auto-fill
             </p>
           </div>
         </form>
