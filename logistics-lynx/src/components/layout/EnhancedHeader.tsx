@@ -16,6 +16,7 @@ import {
   Activity
 } from 'lucide-react';
 import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeaderProps {
   onSidebarToggle?: () => void;
@@ -36,6 +37,7 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   user
 }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -328,13 +330,19 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
                       : 'border-slate-200'
                     }
                   `}>
-                    <button className={`
-                      w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
-                      ${isDarkMode 
-                        ? 'text-rose-400 hover:bg-rose-900/20' 
-                        : 'text-rose-600 hover:bg-rose-50'
-                      }
-                    `}>
+                    <button 
+                      onClick={() => {
+                        logout();
+                        setIsUserDropdownOpen(false);
+                      }}
+                      className={`
+                        w-full px-4 py-2 text-left text-sm flex items-center space-x-3 transition-colors duration-200
+                        ${isDarkMode 
+                          ? 'text-rose-400 hover:bg-rose-900/20' 
+                          : 'text-rose-600 hover:bg-rose-50'
+                        }
+                      `}
+                    >
                       <LogOut className="h-4 w-4" />
                       <span>Sign out</span>
                     </button>
