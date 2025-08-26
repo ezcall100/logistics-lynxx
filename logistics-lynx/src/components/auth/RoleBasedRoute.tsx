@@ -30,7 +30,9 @@ export const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
 
   // Check if user has access to this portal
   const userRole = user.role || 'super_admin'; // Default to super_admin for demo
+  console.log('🔍 RoleBasedRoute: User role:', userRole, 'Portal:', portal);
   const hasAccess = canAccessPortal(userRole, portal);
+  console.log('🔍 RoleBasedRoute: Has access:', hasAccess);
 
   if (!hasAccess) {
     console.warn(`Access denied: User role ${userRole} cannot access portal ${portal}`);

@@ -54,7 +54,7 @@ const AccessDeniedPage: React.FC = () => {
             You don't have permission to access this portal
           </p>
           <p className="text-sm text-gray-500 mb-8">
-            Current role: <span className="font-semibold">{user?.role || 'Unknown'}</span>
+            Current role: <span className="font-semibold">{user?.role?.replace('_', ' ').toUpperCase() || 'Unknown'}</span>
           </p>
         </div>
 

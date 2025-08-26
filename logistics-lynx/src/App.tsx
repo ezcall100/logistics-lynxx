@@ -6,6 +6,17 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import LoginPage from './pages/auth/LoginPage';
 import UnauthorizedPage from './pages/auth/UnauthorizedPage';
+import AccessDeniedPage from './pages/auth/AccessDeniedPage';
+
+// Import role-based route guards
+import { 
+  SuperAdminRoute, 
+  CarrierRoute, 
+  BrokerRoute, 
+  ShipperRoute, 
+  DriverRoute, 
+  OwnerOperatorRoute 
+} from './components/auth/RoleBasedRoute';
 
 // Import all the SuperAdmin page components
 // Dashboard Pages
@@ -36,6 +47,12 @@ import AIDocumentation from './pages/super-admin/mcp-control-center/AIDocumentat
 import AISupport from './pages/super-admin/mcp-control-center/AISupport';
 import AgentControlUI from './pages/mcp/AgentControlUI';
 
+// Import Portal Dashboard Components
+import CarrierDashboard from './pages/carrier/CarrierDashboard';
+import BrokerDashboard from './pages/broker/BrokerDashboard';
+import ShipperDashboard from './pages/shipper/ShipperDashboard';
+import DriverDashboard from './pages/driver/DriverDashboard';
+import OwnerOperatorDashboard from './pages/owner-operator/OwnerOperatorDashboard';
 
 // User Management Pages
 import AllUsers from './pages/super-admin/user-management/AllUsers';
@@ -219,9 +236,10 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            <Route path="/access-denied" element={<AccessDeniedPage />} />
             
             {/* Protected Super Admin Portal - All routes under /super-admin/* */}
-            <Route element={<ProtectedRoute roles={['super-admin']} />}>
+            <Route element={<SuperAdminRoute />}>
               <Route path="/super-admin/*" element={<SuperAdmin />}>
                 {/* Dashboard Routes */}
                 <Route path="dashboard" element={<SystemOverview />} />
@@ -409,6 +427,31 @@ function App() {
                   </div>
                 } />
               </Route>
+            </Route>
+            
+            {/* Protected Carrier Portal */}
+            <Route element={<CarrierRoute />}>
+              <Route path="/carrier/dashboard" element={<CarrierDashboard />} />
+            </Route>
+            
+            {/* Protected Broker Portal */}
+            <Route element={<BrokerRoute />}>
+              <Route path="/broker/dashboard" element={<BrokerDashboard />} />
+            </Route>
+            
+            {/* Protected Shipper Portal */}
+            <Route element={<ShipperRoute />}>
+              <Route path="/shipper/dashboard" element={<ShipperDashboard />} />
+            </Route>
+            
+            {/* Protected Driver Portal */}
+            <Route element={<DriverRoute />}>
+              <Route path="/driver/dashboard" element={<DriverDashboard />} />
+            </Route>
+            
+            {/* Protected Owner Operator Portal */}
+            <Route element={<OwnerOperatorRoute />}>
+              <Route path="/owner-operator/dashboard" element={<OwnerOperatorDashboard />} />
             </Route>
             
             {/* Fallback */}

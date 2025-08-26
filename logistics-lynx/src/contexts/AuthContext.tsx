@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
 // Type definitions for better type safety
-export type Role = 'super-admin' | 'admin' | 'manager' | 'user';
+export type Role = 'super_admin' | 'carrier_admin' | 'freight_broker_admin' | 'shipper_admin' | 'carrier_driver' | 'owner_operator';
 export type Permission = 
   | 'dashboard:read'
   | 'users:read' | 'users:write' | 'users:delete'
@@ -103,13 +103,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Determine role based on email for demo purposes
+      let role: Role = 'super_admin';
+      let name = 'Admin User';
+      
+      if (email.includes('carrier@')) {
+        role = 'carrier_admin';
+        name = 'Carrier Admin';
+      } else if (email.includes('broker@')) {
+        role = 'freight_broker_admin';
+        name = 'Broker Admin';
+      } else if (email.includes('shipper@')) {
+        role = 'shipper_admin';
+        name = 'Shipper Admin';
+      } else if (email.includes('driver@')) {
+        role = 'carrier_driver';
+        name = 'Driver';
+      } else if (email.includes('owner@')) {
+        role = 'owner_operator';
+        name = 'Owner Operator';
+      }
+      
       // Mock successful login for demo
       const mockUser: User = {
         id: '1',
-        name: 'Admin User',
+        name: name,
         email: email,
-        role: 'super-admin',
-        permissions: [
+        role: role,
+        permissions: role === 'super_admin' ? [
           'dashboard:read',
           'users:read',
           'users:write',
@@ -132,6 +153,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           'invoices:write',
           'reports:read',
           'reports:write'
+        ] : [
+          'dashboard:read',
+          'analytics:read',
+          'settings:read'
         ],
         isAuthenticated: true,
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
