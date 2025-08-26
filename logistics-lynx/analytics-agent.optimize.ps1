@@ -1,51 +1,40 @@
-# ⚙️ OPTIMIZATION PATCH: AnalyticsAgent
-# 🔐 Secure Runtime Patch – TransBot AI MCP
-# 📅 Timestamp: $(Get-Date)
+# ✅ OPTIMIZATION PATCH: AnalyticsAgent
+# 📦 TransBot AI | MCP Agent Optimizer — Production Grade
+# 🗓️ Timestamp: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 
-Write-Host "🚀 Starting AnalyticsAgent Optimization Patch..." -ForegroundColor Cyan
+Write-Host "🚀 INITIATING: AnalyticsAgent Optimization Sequence..." -ForegroundColor Cyan
 
-# STEP 1: Stop the running container
-Write-Host "🛑 Stopping existing AnalyticsAgent container..." -ForegroundColor Yellow
-docker stop analytics-agent
-docker rm analytics-agent
+# STEP 1: Stop any existing container instance
+Write-Host "🛑 Halting active AnalyticsAgent instance..." -ForegroundColor Yellow
+docker stop analytics-agent 2>$null
+docker rm analytics-agent 2>$null
 
-# STEP 2: Allocate more memory (increase to 2GB)
-Write-Host "🔧 Re-deploying with increased memory limit (2GB)..." -ForegroundColor Yellow
+# STEP 2: Deploy with updated memory allocation (2GB)
+Write-Host "🔁 Re-deploying AnalyticsAgent with enhanced memory (2GB)..." -ForegroundColor Yellow
 docker run -d `
   --name analytics-agent `
   --memory="2g" `
   --env-file .env.production `
-  -v $(Get-Location)/logs:/app/logs `
+  -v "$(Get-Location)\logs:/app/logs" `
   transbotai/analytics-agent:latest
 
-# STEP 3: Enable debug & throttle mode (low-load diagnostics)
-Write-Host "🧪 Enabling debug + diagnostics mode..." -ForegroundColor Yellow
-docker exec analytics-agent node -e `
-"require('./agent').enableDebug('memory','query');" ; `
-"require('./agent').runDiagnostics({ duration: '10m', throttle: true });"
+# STEP 3: Trigger debug + diagnostics mode inside container
+Write-Host "🧠 Activating debug diagnostics..." -ForegroundColor Yellow
+docker exec analytics-agent node -e @"
+  const agent = require('./agent');
+  agent.enableDebug('memory', 'query');
+  agent.runDiagnostics({ duration: '10m', throttle: true });
+"@
 
-# STEP 4: Clear queued backlog using SelfHealingAgent
-Write-Host "🧹 Dispatching SelfHealingAgent to clear backlog..." -ForegroundColor Yellow
-docker exec self-healing-agent node -e `
-"require('./agent').clearQueue('analytics-agent', { maxAge: 5 * 60 * 1000 });"
+# STEP 4: Clear agent backlog via SelfHealingAgent
+Write-Host "🧹 Clearing task queue using SelfHealingAgent..." -ForegroundColor Yellow
+docker exec self-healing-agent node -e @"
+  const agent = require('./agent');
+  agent.clearQueue('analytics-agent', { maxAge: 5 * 60 * 1000 });
+"@
 
-# STEP 5: Confirm deployment
-Write-Host "✅ AnalyticsAgent re-optimized and deployed with diagnostics active." -ForegroundColor Green
+# STEP 5: Display system status
+Write-Host "✅ Optimization complete. Showing running containers..." -ForegroundColor Green
+docker ps --filter "name=analytics-agent"
 
-# STEP 6: Post-deployment verification
-Write-Host "🔍 Running post-deployment checks..." -ForegroundColor Cyan
-
-# Check container status
-Write-Host "📊 Container Status:" -ForegroundColor White
-docker ps | findstr analytics-agent
-
-# Check memory usage
-Write-Host "🧠 Memory Usage:" -ForegroundColor White
-docker stats analytics-agent --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"
-
-# Check logs for any errors
-Write-Host "📋 Recent Logs:" -ForegroundColor White
-docker logs --tail 10 analytics-agent
-
-Write-Host "✅ AnalyticsAgent Optimization Patch Complete!" -ForegroundColor Green
-Write-Host "🫡 Commander, your MCP agent is now optimized and ready for peak performance." -ForegroundColor Cyan
+Write-Host "🧠 LOGS: Use 'docker logs -f analytics-agent' to monitor in real time." -ForegroundColor Cyan
