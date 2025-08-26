@@ -1,0 +1,77 @@
+{
+  "deployment": {
+    "version": "2.0.0",
+    "environment": "production",
+    "timestamp": "2025-08-26T18:44:23.693Z",
+    "mcpAgents": 250,
+    "taskQueueSize": 1000,
+    "confidenceThreshold": 0.85
+  },
+  "services": {
+    "transbot-ai": {
+      "type": "web",
+      "port": 3000,
+      "healthCheck": "/health",
+      "environment": "production"
+    },
+    "redis": {
+      "type": "cache",
+      "port": 6379,
+      "purpose": "session-storage"
+    },
+    "postgres": {
+      "type": "database",
+      "port": 5432,
+      "purpose": "local-development"
+    },
+    "nginx": {
+      "type": "proxy",
+      "ports": [
+        80,
+        443
+      ],
+      "purpose": "reverse-proxy"
+    }
+  },
+  "agents": {
+    "Autonomous Load Matcher": {
+      "status": "active",
+      "performance": 94.5,
+      "tasksCompleted": 408
+    },
+    "Predictive Analytics Engine": {
+      "status": "active",
+      "performance": 89.2,
+      "tasksCompleted": 340
+    },
+    "Customer Service Assistant": {
+      "status": "training",
+      "performance": 76.8,
+      "tasksCompleted": 272
+    },
+    "Frontend Developer Agent": {
+      "status": "active",
+      "performance": 92.1,
+      "tasksCompleted": 204
+    },
+    "Backend API Agent": {
+      "status": "active",
+      "performance": 88.7,
+      "tasksCompleted": 136
+    }
+  },
+  "database": {
+    "tables": [
+      "carrier_loads",
+      "fleet_status",
+      "carrier_stats",
+      "broker_loads",
+      "carrier_partners",
+      "broker_stats",
+      "shipper_shipments",
+      "shipper_stats"
+    ],
+    "rlsEnabled": true,
+    "sampleDataInserted": true
+  }
+}
