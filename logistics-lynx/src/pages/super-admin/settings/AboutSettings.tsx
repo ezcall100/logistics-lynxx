@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 const AboutSettings: React.FC = () => {
   const systemInfo = {
     version: '2.1.0',
@@ -36,7 +36,7 @@ const AboutSettings: React.FC = () => {
             Current system version and build details
           </p>
         </div>
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Version</p>
@@ -65,7 +65,7 @@ const AboutSettings: React.FC = () => {
             Current license and subscription details
           </p>
         </div>
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">License Type</p>
@@ -104,7 +104,7 @@ const AboutSettings: React.FC = () => {
             System performance and reliability statistics
           </p>
         </div>
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Uptime</p>

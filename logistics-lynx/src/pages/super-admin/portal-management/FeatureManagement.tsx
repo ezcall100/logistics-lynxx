@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Flag } from 'lucide-react';
 
 interface FeatureManagementProps {}

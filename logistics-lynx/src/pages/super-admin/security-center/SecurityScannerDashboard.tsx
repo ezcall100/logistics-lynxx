@@ -2,7 +2,7 @@
 // 🔒 Security Scanner Dashboard
 // ========================
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
@@ -355,8 +355,8 @@ const SecurityScannerDashboard: React.FC = () => {
       {/* Security Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Security Score</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Security Score</h3>
             <Shield className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -370,8 +370,8 @@ const SecurityScannerDashboard: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Active Scans</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Active Scans</h3>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -383,8 +383,8 @@ const SecurityScannerDashboard: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Critical Findings</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Critical Findings</h3>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </div>
           <div>
@@ -396,8 +396,8 @@ const SecurityScannerDashboard: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Average Risk Score</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Average Risk Score</h3>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>

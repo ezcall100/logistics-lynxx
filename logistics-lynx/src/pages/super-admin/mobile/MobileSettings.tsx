@@ -30,7 +30,7 @@ const MobileSettings = () => {
         {/* Notification Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🔔
               </div>
@@ -40,7 +40,7 @@ const MobileSettings = () => {
               Configure how and when you receive notifications
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-1">
                 <Label className="text-base font-medium">Push Notifications</Label>
@@ -62,7 +62,7 @@ const MobileSettings = () => {
         {/* Data & Sync Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
@@ -72,7 +72,7 @@ const MobileSettings = () => {
               Manage data synchronization and storage preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-1">
                 <Label className="text-base font-medium">Auto Sync</Label>
@@ -102,7 +102,7 @@ const MobileSettings = () => {
         {/* Location & Privacy */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 📍
               </div>
@@ -112,7 +112,7 @@ const MobileSettings = () => {
               Control location services and privacy settings
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-1">
                 <Label className="text-base font-medium">Location Services</Label>
@@ -126,7 +126,7 @@ const MobileSettings = () => {
         {/* App Performance */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 ⚡
               </div>
@@ -174,7 +174,7 @@ const MobileSettings = () => {
         {/* Security Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>

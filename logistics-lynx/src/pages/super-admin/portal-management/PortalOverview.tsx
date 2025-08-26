@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { EnhancedProgress } from '../../../components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs.tsx';
 import { 

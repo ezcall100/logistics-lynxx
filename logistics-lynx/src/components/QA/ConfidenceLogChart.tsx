@@ -5,7 +5,7 @@
 // Domain: transbotai.com
 
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Progress } from '../../components/ui/progress';
 import { 
@@ -300,7 +300,7 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
       {filterable && (
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="text-lg">Filters</h3>
+            <h3 className="text-lg">Filters</h3>
           </div>
           <div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -365,7 +365,7 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <ResponsiveCard>
-          <ResponsiveCardContent className="p-6">
+          <div className="p-6">
             <div className="flex items-center space-x-2">
               <Target className="h-5 w-5 text-blue-500" />
               <div>
@@ -378,7 +378,7 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           </div>
         </ResponsiveCard>
         <ResponsiveCard>
-          <ResponsiveCardContent className="p-6">
+          <div className="p-6">
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               <div>
@@ -389,7 +389,7 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           </div>
         </ResponsiveCard>
         <ResponsiveCard>
-          <ResponsiveCardContent className="p-6">
+          <div className="p-6">
             <div className="flex items-center space-x-2">
               <Activity className="h-5 w-5 text-purple-500" />
               <div>
@@ -400,7 +400,7 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           </div>
         </ResponsiveCard>
         <ResponsiveCard>
-          <ResponsiveCardContent className="p-6">
+          <div className="p-6">
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-orange-500" />
               <div>

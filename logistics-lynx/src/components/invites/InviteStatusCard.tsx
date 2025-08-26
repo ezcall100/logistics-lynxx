@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { resendInvitation, cancelInvitation } from '@/api/invites';
@@ -181,14 +181,14 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
   return (
     <>
       <ResponsiveCard className="hover:shadow-md transition-shadow">
-        <ResponsiveCardHeader className="pb-3">
+        <div className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-full bg-muted">
                 <Mail className="h-4 w-4" />
               </div>
               <div>
-                <ResponsiveCardTitle className="text-lg">{invitation.email}</h3>
+                <h3 className="text-lg">{invitation.email}</h3>
                 <p className="text-slate-600 dark:text-slate-400">
                   Invited by {invitation.invited_by?.name || invitation.invited_by?.email || 'Unknown'}
                 </p>
@@ -207,7 +207,7 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
           </div>
         </div>
         
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />

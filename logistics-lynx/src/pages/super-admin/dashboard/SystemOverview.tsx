@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { MCP, MCPMetrics } from '@/services/mcp';
 import { executeFabAction } from '@/components/FabActions';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '@/components/ui';
+import { ResponsiveCard, EnhancedButton } from '@/components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';

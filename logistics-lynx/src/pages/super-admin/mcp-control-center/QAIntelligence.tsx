@@ -36,7 +36,7 @@ import {
   Target
 } from 'lucide-react';
 import { confidenceLogger } from '@/services/confidence-logger';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -251,7 +251,7 @@ const QAIntelligence: React.FC = () => {
       {/* Filters */}
       <ResponsiveCard>
         <div className="mb-4">
-          <ResponsiveCardTitle className="flex items-center">
+          <h3 className="flex items-center">
             <Filter className="h-5 w-5 mr-2" />
             Filters
           </h3>
@@ -313,8 +313,8 @@ const QAIntelligence: React.FC = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Total Decisions</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Total Decisions</h3>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -326,8 +326,8 @@ const QAIntelligence: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Average Confidence</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Average Confidence</h3>
             <Target className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -341,8 +341,8 @@ const QAIntelligence: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Total Failures</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Total Failures</h3>
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -354,8 +354,8 @@ const QAIntelligence: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Active Agents</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Active Agents</h3>
             <Zap className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>

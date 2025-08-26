@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Server, 
   Activity, 
@@ -17,7 +17,7 @@ import {
   TrendingDown,
   X
 } from 'lucide-react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const ServerMonitoring: React.FC = () => {
   const [servers, setServers] = useState([

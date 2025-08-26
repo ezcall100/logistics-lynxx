@@ -3,8 +3,6 @@ import {
   Mail, 
   Save, 
   RefreshCw, 
-  Plus, 
-  File, 
   Settings,
   Database,
   Code,
@@ -112,8 +110,8 @@ const SystemSettings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
-  const [showPasswordModal] = useState(false);
-  const [showBackupModal] = useState(false);
+  // const [showPasswordModal] = useState(false);
+  // const [showBackupModal] = useState(false);
   const [config, setConfig] = useState<SystemConfig>({
     general: {
       systemName: 'Logistics Lynx',

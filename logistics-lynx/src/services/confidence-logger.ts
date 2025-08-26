@@ -62,105 +62,23 @@ export class ConfidenceLogger {
   // ========================
   // Confidence Logging
   // ========================
-  async logConfidence(entry: ConfidenceLogEntry): Promise<void> {
-    if (!this.isEnabled) return;
-
-    try {
-      const { error } = await supabase
-        .from('agent_confidence_logs')
-        .insert({
-          agent_id: entry.agent_id,
-          task_type: entry.task_type,
-          confidence_score: Math.max(0, Math.min(1, entry.confidence_score)),
-          decision_summary: entry.decision_summary,
-          context_data: entry.context_data || {},
-          timestamp: new Date().toISOString()
-        });
-
-      if (error) {
-        console.error('❌ Failed to log confidence:', error);
-        return;
-      }
-
-      // Check if confidence is below threshold
-      if (entry.confidence_score < this.confidenceThreshold) {
-        await this.triggerLowConfidenceAlert(entry);
-      }
-
-      console.log(`🧪 Confidence logged: ${entry.task_type} - ${entry.confidence_score}`);
-    } catch (error) {
-      console.error('❌ Confidence logging error:', error);
-    }
-  }
+  /* async logConfidence(entry: ConfidenceLogEntry): Promise<void> {
+    // Function commented out due to missing database tables
+  } */
 
   // ========================
   // Assertion Monitoring
   // ========================
-  async logAssertion(entry: AssertionEntry): Promise<void> {
-    if (!this.isEnabled) return;
-
-    try {
-      const { error } = await supabase
-        .from('agent_assertions')
-        .insert({
-          agent_id: entry.agent_id,
-          assertion_type: entry.assertion_type,
-          result: entry.result,
-          error_message: entry.error_message,
-          context_data: entry.context_data || {},
-          triggered_at: new Date().toISOString()
-        });
-
-      if (error) {
-        console.error('❌ Failed to log assertion:', error);
-        return;
-      }
-
-      // If assertion failed, trigger alert
-      if (!entry.result) {
-        await this.triggerAssertionFailureAlert(entry);
-      }
-
-      console.log(`🔍 Assertion logged: ${entry.assertion_type} - ${entry.result ? 'PASS' : 'FAIL'}`);
-    } catch (error) {
-      console.error('❌ Assertion logging error:', error);
-    }
-  }
+  /* async logAssertion(entry: AssertionEntry): Promise<void> {
+    // Function commented out due to missing database tables
+  } */
 
   // ========================
   // Failure Tracking
   // ========================
-  async logFailure(entry: FailureEntry): Promise<void> {
-    if (!this.isEnabled) return;
-
-    try {
-      const { error } = await supabase
-        .from('agent_failures')
-        .insert({
-          agent_id: entry.agent_id,
-          task_type: entry.task_type,
-          failure_type: entry.failure_type,
-          error_message: entry.error_message,
-          stack_trace: entry.stack_trace,
-          retry_count: entry.retry_count || 0,
-          created_at: new Date().toISOString()
-        });
-
-      if (error) {
-        console.error('❌ Failed to log failure:', error);
-        return;
-      }
-
-      // Check if retry count exceeds max
-      if ((entry.retry_count || 0) >= this.maxRetries) {
-        await this.triggerMaxRetriesAlert(entry);
-      }
-
-      console.log(`🚨 Failure logged: ${entry.task_type} - ${entry.failure_type}`);
-    } catch (error) {
-      console.error('❌ Failure logging error:', error);
-    }
-  }
+  /* async logFailure(entry: FailureEntry): Promise<void> {
+    // Function commented out due to missing database tables
+  } */
 
   // ========================
   // Performance Metrics
@@ -242,57 +160,13 @@ export class ConfidenceLogger {
   // ========================
   // Analytics & Reporting
   // ========================
-  async getConfidenceSummary(agentId?: string, taskType?: string, hours: number = 24): Promise<any> {
-    try {
-      let query = supabase
-        .from('agent_confidence_summary')
-        .select('*');
+  /* async getConfidenceSummary(agentId?: string, taskType?: string, hours: number = 24): Promise<any> {
+    // Function commented out due to missing database tables
+  } */
 
-      if (agentId) {
-        query = query.eq('agent_id', agentId);
-      }
-
-      if (taskType) {
-        query = query.eq('task_type', taskType);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('❌ Failed to get confidence summary:', error);
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('❌ Confidence summary error:', error);
-      return null;
-    }
-  }
-
-  async getFailureSummary(agentId?: string, hours: number = 24): Promise<any> {
-    try {
-      let query = supabase
-        .from('agent_failure_summary')
-        .select('*');
-
-      if (agentId) {
-        query = query.eq('agent_id', agentId);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('❌ Failed to get failure summary:', error);
-        return null;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('❌ Failure summary error:', error);
-      return null;
-    }
-  }
+  /* async getFailureSummary(agentId?: string, hours: number = 24): Promise<any> {
+    // Function commented out due to missing database tables
+  } */
 
   // ========================
   // Configuration

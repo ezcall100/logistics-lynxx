@@ -16,42 +16,7 @@ import {
   RefreshCw,
   Trash2,
   Archive,
-  RotateCcw,
-  Copy,
-  Share,
-  ExternalLink,
-  MessageSquare,
-  Phone,
-  Grid,
-  List,
-  Columns,
-  Maximize,
-  Minimize,
-  Move,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-  Type,
-  Bold,
-  Italic,
-  Underline,
-  Link,
-  Unlink,
-  Code,
-  Quote,
-  Hash,
-  AtSign,
-  Percent,
-  Minus,
-  Divide,
-  Equal,
-  Infinity,
-  Pi,
-  Sigma,
-  Square,
-  Circle,
-  Triangle,
-  Save,
+  RotateCcw,Link,Save,
   Edit,
   Download
   } from 'lucide-react';
@@ -191,7 +156,7 @@ interface SettingsCategory {
   id: string;
   name: string;
   description: string;
-  icon: React.ComponentType<any>;
+  icon: React.Component<any>;
   color: string;
 }
 

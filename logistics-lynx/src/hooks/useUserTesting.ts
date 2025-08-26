@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { TestingTask } from '@/types/testing';
 import { useTestingTasks } from './testing/useTestingTasks';
 

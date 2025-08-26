@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -376,17 +376,17 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <ResponsiveCard className="w-full max-w-2xl">
-        <ResponsiveCardHeader className="text-center">
+        <div className="text-center">
           <div className="flex items-center justify-center mb-4">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
               <currentStepData.icon className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <ResponsiveCardTitle className="text-2xl">{currentStepData.title}</h3>
+          <h3 className="text-2xl">{currentStepData.title}</h3>
           <p className="text-slate-600 dark:text-slate-400">{currentStepData.description}</p>
         </div>
         
-        <ResponsiveCardContent className="space-y-6">
+        <div className="space-y-6">
           {/* Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
@@ -207,8 +207,8 @@ const SecurityDashboard: React.FC = () => {
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <ResponsiveCard>
-              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <ResponsiveCardTitle className="text-sm font-medium">Total Companies</h3>
+              <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <h3 className="text-sm font-medium">Total Companies</h3>
                 <Database className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
@@ -220,8 +220,8 @@ const SecurityDashboard: React.FC = () => {
             </ResponsiveCard>
 
             <ResponsiveCard>
-              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <ResponsiveCardTitle className="text-sm font-medium">Total Users</h3>
+              <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <h3 className="text-sm font-medium">Total Users</h3>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
@@ -235,8 +235,8 @@ const SecurityDashboard: React.FC = () => {
             </ResponsiveCard>
 
             <ResponsiveCard>
-              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <ResponsiveCardTitle className="text-sm font-medium">Admin Users</h3>
+              <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <h3 className="text-sm font-medium">Admin Users</h3>
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
@@ -250,8 +250,8 @@ const SecurityDashboard: React.FC = () => {
             </ResponsiveCard>
 
             <ResponsiveCard>
-              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <ResponsiveCardTitle className="text-sm font-medium">Audit Events (30d)</h3>
+              <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <h3 className="text-sm font-medium">Audit Events (30d)</h3>
                 <FileText className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
@@ -273,14 +273,14 @@ const SecurityDashboard: React.FC = () => {
                   Security assessment based on role distribution and activity
                 </p>
               </div>
-              <ResponsiveCardContent className="space-y-4">
+              <div className="space-y-4">
                 {securityOverview.map((company) => {
                   const score = getSecurityScore(company);
                   return (
                     <div key={company.company_id} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">{company.company_name}</span>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">= 80 ? "default" : score >= 60 ? "secondary" : "destructive"}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {score}/100
                         </span>
                       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Globe, 
   Activity, 
@@ -24,7 +24,7 @@ import {
   Zap,
   X
 } from 'lucide-react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const APIManagement: React.FC = () => {
   const [apis, setApis] = useState([

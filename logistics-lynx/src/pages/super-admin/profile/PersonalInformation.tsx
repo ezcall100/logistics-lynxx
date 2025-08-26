@@ -46,7 +46,7 @@ const PersonalInformation = () => {
         {/* Basic Information */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
@@ -56,7 +56,7 @@ const PersonalInformation = () => {
               Your name and contact details
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>First Name</Label>
@@ -116,7 +116,7 @@ const PersonalInformation = () => {
         {/* Professional Information */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 💼
               </div>
@@ -126,7 +126,7 @@ const PersonalInformation = () => {
               Your job title and department
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Job Title</Label>
@@ -159,7 +159,7 @@ const PersonalInformation = () => {
         {/* Address Information */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🏠
               </div>
@@ -169,7 +169,7 @@ const PersonalInformation = () => {
               Your residential address
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Street Address</Label>
               <Input
@@ -240,7 +240,7 @@ const PersonalInformation = () => {
         {/* Emergency Contact */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🚨
               </div>
@@ -250,7 +250,7 @@ const PersonalInformation = () => {
               Contact information for emergencies
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Contact Name</Label>

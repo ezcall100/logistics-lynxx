@@ -34,7 +34,7 @@ const AccessibilitySettings = () => {
         {/* Visual Accessibility */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👁️
               </div>
@@ -44,7 +44,7 @@ const AccessibilitySettings = () => {
               Adjust visual settings for better visibility
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>High Contrast Mode</Label>
               <Switch
@@ -89,7 +89,7 @@ const AccessibilitySettings = () => {
         {/* Navigation & Interaction */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 ⌨️
               </div>
@@ -99,7 +99,7 @@ const AccessibilitySettings = () => {
               Configure navigation and interaction preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Screen Reader Support</Label>
               <Switch
@@ -144,7 +144,7 @@ const AccessibilitySettings = () => {
         {/* Motion & Animation */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ✨
               </div>
@@ -154,7 +154,7 @@ const AccessibilitySettings = () => {
               Configure motion and animation preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Reduced Motion</Label>
               <Switch

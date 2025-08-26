@@ -35,7 +35,7 @@ const AdvancedSettings: React.FC = () => {
             Optimize system performance and resource usage
           </p>
         </div>
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Performance Mode</Label>
@@ -76,7 +76,7 @@ const AdvancedSettings: React.FC = () => {
             Development and debugging options
           </p>
         </div>
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Debug Mode</Label>
@@ -114,7 +114,7 @@ const AdvancedSettings: React.FC = () => {
             Enable experimental features and beta functionality
           </p>
         </div>
-        <ResponsiveCardContent className="space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Experimental Features</Label>

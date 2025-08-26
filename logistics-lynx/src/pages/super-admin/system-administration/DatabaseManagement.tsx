@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Database, 
   Server, 
@@ -23,7 +23,7 @@ import {
   Unlock,
   X
 } from 'lucide-react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const DatabaseManagement: React.FC = () => {
   const [databases, setDatabases] = useState([

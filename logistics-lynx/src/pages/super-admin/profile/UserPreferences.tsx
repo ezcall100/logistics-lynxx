@@ -46,7 +46,7 @@ const UserPreferences = () => {
         {/* Language & Regional */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🌐
               </div>
@@ -56,7 +56,7 @@ const UserPreferences = () => {
               Set your preferred language and regional settings
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Language</Label>
               <select
@@ -101,7 +101,7 @@ const UserPreferences = () => {
         {/* Theme & Appearance */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🎨
               </div>
@@ -111,7 +111,7 @@ const UserPreferences = () => {
               Choose your preferred theme and visual settings
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Theme</Label>
               <select
@@ -135,7 +135,7 @@ const UserPreferences = () => {
         {/* Notifications */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔔
               </div>
@@ -145,7 +145,7 @@ const UserPreferences = () => {
               Configure your notification preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Email Notifications</Label>
               <Switch
@@ -190,7 +190,7 @@ const UserPreferences = () => {
         {/* Privacy Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>
@@ -200,7 +200,7 @@ const UserPreferences = () => {
               Control your privacy and visibility settings
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Profile Visibility</Label>
               <select
@@ -250,7 +250,7 @@ const UserPreferences = () => {
         {/* Accessibility */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                 ♿
               </div>
@@ -260,7 +260,7 @@ const UserPreferences = () => {
               Configure accessibility features
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>High Contrast Mode</Label>
               <Switch

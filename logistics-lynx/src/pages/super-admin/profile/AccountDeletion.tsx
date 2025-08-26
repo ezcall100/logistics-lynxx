@@ -55,7 +55,7 @@ const AccountDeletion = () => {
         {/* Warning Card */}
         <ResponsiveCard className="border-red-200 bg-red-50">
           <div className="mb-4">
-            <ResponsiveCardTitle className="text-red-800 flex items-center gap-2">
+            <h3 className="text-red-800 flex items-center gap-2">
               ⚠️ Warning
             </h3>
           </div>
@@ -70,7 +70,7 @@ const AccountDeletion = () => {
         {/* Account Information */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
@@ -117,7 +117,7 @@ const AccountDeletion = () => {
         {/* Data That Will Be Deleted */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🗑️
               </div>
@@ -200,7 +200,7 @@ const AccountDeletion = () => {
         {/* Action Buttons */}
         {deletionStep === 'warning' && (
           <ResponsiveCard>
-            <ResponsiveCardContent className="pt-6">
+            <div className="pt-6">
               <div className="flex gap-3">
                 <EnhancedButton 
                   onClick={handleStartDeletion}
@@ -220,11 +220,11 @@ const AccountDeletion = () => {
         {deletionStep === 'confirmation' && (
           <ResponsiveCard className="border-red-200 bg-red-50">
             <div className="mb-4">
-              <ResponsiveCardTitle className="text-red-800 flex items-center gap-2">
+              <h3 className="text-red-800 flex items-center gap-2">
                 🔒 Final Confirmation
               </h3>
             </div>
-            <ResponsiveCardContent className="space-y-4">
+            <div className="space-y-4">
               <p className="text-red-700">
                 To confirm account deletion, please type <strong>DELETE</strong> in the field below:
               </p>
@@ -256,7 +256,7 @@ const AccountDeletion = () => {
         {/* Processing Step */}
         {deletionStep === 'processing' && (
           <ResponsiveCard>
-            <ResponsiveCardContent className="pt-6">
+            <div className="pt-6">
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🔄</span>
@@ -278,7 +278,7 @@ const AccountDeletion = () => {
         {/* Alternative Options */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 💡
               </div>

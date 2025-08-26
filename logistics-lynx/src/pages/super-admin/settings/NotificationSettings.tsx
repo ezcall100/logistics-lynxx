@@ -72,7 +72,7 @@ const NotificationSettings = () => {
         {/* Email Notifications */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📧
               </div>
@@ -82,7 +82,7 @@ const NotificationSettings = () => {
               Configure email notification preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable Email Notifications</Label>
               <Switch
@@ -120,7 +120,7 @@ const NotificationSettings = () => {
         {/* Push Notifications */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔔
               </div>
@@ -130,7 +130,7 @@ const NotificationSettings = () => {
               Configure push notification preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable Push Notifications</Label>
               <Switch
@@ -149,7 +149,7 @@ const NotificationSettings = () => {
         {/* SMS Notifications */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
@@ -159,7 +159,7 @@ const NotificationSettings = () => {
               Configure SMS notification preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable SMS Notifications</Label>
               <Switch
@@ -178,7 +178,7 @@ const NotificationSettings = () => {
         {/* In-App Notifications */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 💬
               </div>
@@ -188,7 +188,7 @@ const NotificationSettings = () => {
               Configure in-app notification preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable In-App Notifications</Label>
               <Switch

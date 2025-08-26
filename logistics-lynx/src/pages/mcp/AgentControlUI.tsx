@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Input } from '../../components/ui/input.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs.tsx';
 import { ScrollArea } from '../../components/ui/scroll-area.tsx';
@@ -203,7 +203,7 @@ const AgentControlUI: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {agents.map((agent) => (
               <ResponsiveCard key={agent.id} className="hover:shadow-lg transition-shadow">
-                <ResponsiveCardContent className="space-y-2 p-4">
+                <div className="space-y-2 p-4">
                   <div className="text-lg font-semibold">{agent.name}</div>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                     {agent.status}
@@ -244,7 +244,7 @@ const AgentControlUI: React.FC = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {metrics.map((metric) => (
                 <ResponsiveCard key={metric.id}>
-                  <ResponsiveCardContent className="space-y-1 p-4">
+                  <div className="space-y-1 p-4">
                     <div className="font-semibold text-sm">{metric.id}</div>
                     <div className="text-sm">Uptime: {metric.uptime}</div>
                     <div className="text-sm">Latency: {metric.latency}</div>

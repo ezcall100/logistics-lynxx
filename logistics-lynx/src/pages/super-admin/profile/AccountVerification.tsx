@@ -55,7 +55,7 @@ const AccountVerification = () => {
         {/* Email Verification */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📧
               </div>
@@ -65,7 +65,7 @@ const AccountVerification = () => {
               Verify your email address for account security
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.email.email}</p>
@@ -97,7 +97,7 @@ const AccountVerification = () => {
         {/* Phone Verification */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
@@ -107,7 +107,7 @@ const AccountVerification = () => {
               Verify your phone number for additional security
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.phone.phone}</p>
@@ -155,7 +155,7 @@ const AccountVerification = () => {
         {/* Identity Verification */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🆔
               </div>
@@ -165,7 +165,7 @@ const AccountVerification = () => {
               Verify your identity with official documents
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.identity.documentType}</p>
@@ -193,7 +193,7 @@ const AccountVerification = () => {
         {/* Two-Factor Authentication */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 🔐
               </div>
@@ -203,7 +203,7 @@ const AccountVerification = () => {
               Add an extra layer of security to your account
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.twoFactor.method}</p>
@@ -229,7 +229,7 @@ const AccountVerification = () => {
         {/* Verification Benefits */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 ✨
               </div>

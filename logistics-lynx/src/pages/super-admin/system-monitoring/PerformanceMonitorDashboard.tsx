@@ -2,7 +2,7 @@
 // 📊 Performance Monitor Dashboard
 // ========================
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
@@ -26,11 +26,9 @@ import {
   RotateCcw,
   Gauge,
   Cpu,
-  Memory,
   HardDrive,
   Network
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, AreaChart, Area, HeatMap, HeatMapGrid } from 'recharts';
 
 interface PerformanceMetric {
   id: string;
@@ -97,8 +95,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
     uptime: 0,
     lastUpdate: ''
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [monitoringActive, setMonitoringActive] = useState(true);
 
@@ -227,7 +225,7 @@ const PerformanceMonitorDashboard: React.FC = () => {
       for (let hour = 0; hour < 24; hour++) {
         mockHeatmapData.push({
           hour,
-          day: days[day],
+          day: days[day] || "Unknown",
           retries: Math.floor(Math.random() * 50),
           failures: Math.floor(Math.random() * 20)
         });
@@ -350,8 +348,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
       {/* System Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">CPU Usage</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">CPU Usage</h3>
             <Cpu className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -365,8 +363,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Memory Usage</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Memory Usage</h3>
             <Memory className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
@@ -379,8 +377,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Error Rate</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Error Rate</h3>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </div>
           <div>
@@ -393,8 +391,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
         </ResponsiveCard>
 
         <ResponsiveCard>
-          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <ResponsiveCardTitle className="text-sm font-medium">Uptime</h3>
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 className="text-sm font-medium">Uptime</h3>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>

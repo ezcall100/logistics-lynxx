@@ -34,7 +34,7 @@ const LanguageSettings = () => {
         {/* Language Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🌐
               </div>
@@ -44,7 +44,7 @@ const LanguageSettings = () => {
               Choose your preferred languages
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Primary Language</Label>
               <select
@@ -103,7 +103,7 @@ const LanguageSettings = () => {
         {/* Date & Time Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📅
               </div>
@@ -113,7 +113,7 @@ const LanguageSettings = () => {
               Configure date and time display formats
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Date Format</Label>
               <select
@@ -154,7 +154,7 @@ const LanguageSettings = () => {
         {/* Regional Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🌍
               </div>
@@ -164,7 +164,7 @@ const LanguageSettings = () => {
               Configure currency and timezone
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Currency</Label>
               <select

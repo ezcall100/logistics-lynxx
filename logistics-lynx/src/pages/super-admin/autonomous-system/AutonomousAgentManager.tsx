@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Bot, Activity, GitBranch, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 
 interface AutonomousAgentProps {
@@ -104,7 +104,7 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
           <ResponsiveCard key={agent.agentId} className="shadow-lg hover:shadow-xl transition-shadow">
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <ResponsiveCardTitle className="text-lg">{agent.agentName}</h3>
+                <h3 className="text-lg">{agent.agentName}</h3>
                 <div className="flex items-center space-x-2">
                   <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status)}`}></div>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{agent.status}</span>

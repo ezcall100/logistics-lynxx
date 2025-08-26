@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Bot, Bot, Activity, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
 
@@ -71,7 +71,7 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Bot className="h-5 w-5 text-blue-600" />
-              <ResponsiveCardTitle className="text-lg">Autonomous Agent: system-controller</h3>
+              <h3 className="text-lg">Autonomous Agent: system-controller</h3>
             </div>
             <div className="flex items-center space-x-2">
               <div className={`w-3 h-3 rounded-full ${agentStatus.isRunning ? 'bg-green-500' : 'bg-red-500'}`}></div>

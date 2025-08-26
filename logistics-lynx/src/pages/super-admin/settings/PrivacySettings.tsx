@@ -42,7 +42,7 @@ const PrivacySettings = () => {
         {/* Data Collection */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
@@ -52,7 +52,7 @@ const PrivacySettings = () => {
               Control what data is collected and how it's used
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Analytics Data</Label>
               <Switch
@@ -97,7 +97,7 @@ const PrivacySettings = () => {
         {/* Profile Visibility */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
@@ -107,7 +107,7 @@ const PrivacySettings = () => {
               Control who can see your profile information
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Profile Visibility</Label>
               <select
@@ -137,7 +137,7 @@ const PrivacySettings = () => {
         {/* Security Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>
@@ -147,7 +147,7 @@ const PrivacySettings = () => {
               Configure security and authentication settings
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Two-Factor Authentication</Label>
               <Switch

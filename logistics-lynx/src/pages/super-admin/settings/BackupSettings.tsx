@@ -79,7 +79,7 @@ const BackupSettings = () => {
         {/* Automatic Backup Configuration */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔄
               </div>
@@ -89,7 +89,7 @@ const BackupSettings = () => {
               Configure automated backup schedules and retention policies
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="auto-backup-enabled">Enable Automatic Backups</Label>
               <Switch
@@ -157,7 +157,7 @@ const BackupSettings = () => {
         {/* Storage Configuration */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 💾
               </div>
@@ -167,7 +167,7 @@ const BackupSettings = () => {
               Configure backup storage location and security settings
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="storage-type">Storage Type</Label>
@@ -221,7 +221,7 @@ const BackupSettings = () => {
         {/* Manual Backup Controls */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 ⚡
               </div>
@@ -231,7 +231,7 @@ const BackupSettings = () => {
               Create manual backups and restore from previous backups
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Last Backup</Label>
@@ -273,7 +273,7 @@ const BackupSettings = () => {
         {/* Backup History */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                 📋
               </div>

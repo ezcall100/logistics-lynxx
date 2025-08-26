@@ -42,7 +42,7 @@ const AvatarMedia = () => {
         {/* Current Avatar */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
@@ -52,7 +52,7 @@ const AvatarMedia = () => {
               Your current profile picture
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center space-x-4">
               <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                 <img 
@@ -74,7 +74,7 @@ const AvatarMedia = () => {
         {/* Upload New Avatar */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📤
               </div>
@@ -84,7 +84,7 @@ const AvatarMedia = () => {
               Upload a new profile picture
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Choose Image</Label>
               <Input
@@ -118,7 +118,7 @@ const AvatarMedia = () => {
         {/* Avatar Settings */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
@@ -128,7 +128,7 @@ const AvatarMedia = () => {
               Configure avatar display preferences
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label>Show Avatar in Comments</Label>
@@ -154,7 +154,7 @@ const AvatarMedia = () => {
         {/* Media Gallery */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 🖼️
               </div>

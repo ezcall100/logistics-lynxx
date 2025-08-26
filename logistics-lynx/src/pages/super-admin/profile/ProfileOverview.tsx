@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 const ProfileOverview = () => {
   const [profile, setProfile] = useState({
     name: 'John Doe',
@@ -59,7 +59,7 @@ const ProfileOverview = () => {
       <div className="grid gap-6">
         {/* Profile Header */}
         <ResponsiveCard>
-          <ResponsiveCardContent className="pt-6">
+          <div className="pt-6">
             <div className="flex items-center space-x-6">
               <div className="relative">
                 <img
@@ -90,7 +90,7 @@ const ProfileOverview = () => {
         {/* Personal Information */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
@@ -137,7 +137,7 @@ const ProfileOverview = () => {
         {/* Account Security */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>
@@ -183,7 +183,7 @@ const ProfileOverview = () => {
         {/* Preferences */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>

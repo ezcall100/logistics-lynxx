@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
+import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Input } from '../../../components/ui/input.tsx';
 // Custom Label component
 const Label = ({ children, htmlFor, className = '' }: { children: React.ReactNode; htmlFor?: string; className?: string }) => (
@@ -95,7 +95,7 @@ const IntegrationSettings = () => {
         {/* API Configuration */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🔌
               </div>
@@ -105,7 +105,7 @@ const IntegrationSettings = () => {
               Configure REST API endpoints and authentication
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="api-enabled">Enable API Access</Label>
               <Switch
@@ -180,7 +180,7 @@ const IntegrationSettings = () => {
         {/* Webhook Configuration */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔗
               </div>
@@ -190,7 +190,7 @@ const IntegrationSettings = () => {
               Set up webhooks for real-time event notifications
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="webhook-enabled">Enable Webhooks</Label>
               <Switch
@@ -250,7 +250,7 @@ const IntegrationSettings = () => {
         {/* Third-Party Integrations */}
         <ResponsiveCard>
           <div className="mb-4">
-            <ResponsiveCardTitle className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🔌
               </div>
@@ -260,7 +260,7 @@ const IntegrationSettings = () => {
               Manage external service integrations
             </p>
           </div>
-          <ResponsiveCardContent className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="third-party-enabled">Enable Third-Party Integrations</Label>
               <Switch
