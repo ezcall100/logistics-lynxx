@@ -100,7 +100,7 @@ function Enable-AgentMonitoring {
             restartOnBreach: true,
             monitoringInterval: 30000
         });
-        console.log('Monitoring enabled for $AgentName');
+        console.log('Monitoring enabled for $($AgentName)');
 "@
 }
 
@@ -112,11 +112,11 @@ function Clear-AgentQueue {
     
     docker exec $AgentName node -e @"
         const agent = require('./agent');
-        const cleared = agent.clearQueue('$AgentName', { 
+        const cleared = agent.clearQueue('$($AgentName)', { 
             maxAge: 5 * 60 * 1000,
             priority: 'high'
         });
-        console.log('Cleared', cleared, 'tasks from $AgentName queue');
+        console.log('Cleared', cleared, 'tasks from $($AgentName) queue');
 "@
 }
 
