@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import './index.css'
 
@@ -19,7 +18,6 @@ console.log('🔍 Main.tsx: Current URL:', window.location.href);
 try {
   const rootElement = document.getElementById('root');
   console.log('🔍 Main.tsx: Root element found:', !!rootElement);
-  console.log('🔍 Main.tsx: Root element:', rootElement);
   
   if (rootElement) {
     console.log('🔍 Main.tsx: Creating React root...');
@@ -28,15 +26,12 @@ try {
     console.log('🔍 Main.tsx: Rendering React app...');
     root.render(
       <React.StrictMode>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <App />
       </React.StrictMode>,
     );
     console.log('🔍 Main.tsx: React app rendered successfully');
   } else {
     console.error('❌ Main.tsx: Root element not found!');
-    console.error('❌ Main.tsx: Available elements:', document.body.innerHTML.substring(0, 200));
   }
 } catch (error) {
   console.error('❌ Main.tsx: Error rendering React app:', error);

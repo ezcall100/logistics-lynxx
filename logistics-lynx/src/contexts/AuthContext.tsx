@@ -107,7 +107,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       let role: Role = 'super_admin';
       let name = 'Admin User';
       
-      if (email.includes('carrier@')) {
+      if (email === 'ezcallnet.mo@gmail.com') {
+        role = 'super_admin';
+        name = 'Super Administrator';
+      } else if (email.includes('carrier@')) {
         role = 'carrier_admin';
         name = 'Carrier Admin';
       } else if (email.includes('broker@')) {
@@ -257,10 +260,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         } else {
           // For demo purposes, auto-login as super admin
           // In production, this would redirect to login
-          await login('admin@logisticslynx.com', 'demo-password');
+          console.log('🔍 AuthContext: No stored user, auto-logging in as super admin');
+          await login('ezcallnet.mo@gmail.com', 'demo-password');
         }
       } catch (error) {
         console.error('🔍 AuthContext: Failed to initialize auth', error);
+        // If there's an error parsing stored user, try auto-login
+        try {
+          console.log('🔍 AuthContext: Attempting auto-login after error');
+          await login('ezcallnet.mo@gmail.com', 'demo-password');
+        } catch (autoLoginError) {
+          console.error('🔍 AuthContext: Auto-login failed', autoLoginError);
+        }
       } finally {
         setIsLoading(false);
       }
