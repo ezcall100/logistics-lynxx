@@ -258,20 +258,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.log('🔍 AuthContext: User restored from storage', parsedUser);
           }
         } else {
-          // For demo purposes, auto-login as super admin
+          // For demo purposes, don't auto-login - let user login manually
           // In production, this would redirect to login
-          console.log('🔍 AuthContext: No stored user, auto-logging in as super admin');
-          await login('ezcallnet.mo@gmail.com', 'demo-password');
+          console.log('🔍 AuthContext: No stored user, waiting for manual login');
+          setUser(null);
         }
       } catch (error) {
         console.error('🔍 AuthContext: Failed to initialize auth', error);
-        // If there's an error parsing stored user, try auto-login
-        try {
-          console.log('🔍 AuthContext: Attempting auto-login after error');
-          await login('ezcallnet.mo@gmail.com', 'demo-password');
-        } catch (autoLoginError) {
-          console.error('🔍 AuthContext: Auto-login failed', autoLoginError);
-        }
+        // If there's an error parsing stored user, just set user to null
+        console.log('🔍 AuthContext: Error parsing stored user, setting user to null');
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
