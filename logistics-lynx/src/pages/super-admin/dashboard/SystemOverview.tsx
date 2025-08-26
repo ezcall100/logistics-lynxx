@@ -1,9 +1,34 @@
+// ========================
+// 🛰️ System Overview Dashboard - Enhanced
+// ========================
+// TransBot AI - Advanced System Monitoring & MCP Agent Control
+// Domain: transbotai.com
+
 import React, { useState, useEffect } from 'react';
 import { MCP, MCPMetrics } from '@/services/mcp';
 import { executeFabAction } from '@/components/FabActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  AreaChart,
+  Area
+} from 'recharts';
 import { 
   Activity, 
   Users, 
@@ -26,16 +51,159 @@ import {
   Gauge,
   Thermometer,
   Wifi,
-  Monitor
+  Monitor,
+  Globe,
+  Target,
+  Eye,
+  Settings,
+  Play,
+  StopCircle,
+  AlertCircle,
+  Info,
+  ExternalLink,
+  Download,
+  Upload,
+  Lock,
+  Unlock,
+  Power,
+  PowerOff,
+  Wrench,
+  Brain,
+  CircuitBoard,
+  Satellite,
+  Radar,
+  Signal,
+  Waves,
+  Heart,
+  ActivitySquare,
+  Layers,
+  Grid3X3,
+  Command,
+  Terminal,
+  Code,
+  Bug,
+  Lightbulb,
+  Sparkles,
+  Trash2,
+  FileText
 } from 'lucide-react';
 
-const SystemOverview: React.FC = () => {
+interface SystemOverviewProps {}
+
+interface AgentStatus {
+  id: string;
+  name: string;
+  status: 'online' | 'offline' | 'degraded' | 'error';
+  confidence: number;
+  lastActivity: string;
+  tasksCompleted: number;
+  errorCount: number;
+  responseTime: number;
+  autonomy: boolean;
+  portal: string;
+}
+
+interface SystemMetrics {
+  cpu: number;
+  memory: number;
+  disk: number;
+  network: number;
+  uptime: number;
+  activeConnections: number;
+  errorRate: number;
+  throughput: number;
+}
+
+interface PerformanceData {
+  time: string;
+  cpu: number;
+  memory: number;
+  network: number;
+  errors: number;
+}
+
+const SystemOverview: React.FC<SystemOverviewProps> = () => {
   const [metrics, setMetrics] = useState<MCPMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [systemHealth, setSystemHealth] = useState<'healthy' | 'degraded' | 'unhealthy'>('healthy');
   const [isUsingMockData, setIsUsingMockData] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [agentStatuses, setAgentStatuses] = useState<AgentStatus[]>([]);
+  const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
+
+  // Mock data for demonstration
+  const mockAgentStatuses: AgentStatus[] = [
+    {
+      id: 'SecurityScannerAgent',
+      name: 'Security Scanner',
+      status: 'online',
+      confidence: 0.94,
+      lastActivity: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+      tasksCompleted: 1247,
+      errorCount: 3,
+      responseTime: 1200,
+      autonomy: true,
+      portal: 'carrier'
+    },
+    {
+      id: 'PerformanceMonitorAgent',
+      name: 'Performance Monitor',
+      status: 'online',
+      confidence: 0.87,
+      lastActivity: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
+      tasksCompleted: 892,
+      errorCount: 12,
+      responseTime: 800,
+      autonomy: true,
+      portal: 'carrier'
+    },
+    {
+      id: 'UserSessionAgent',
+      name: 'User Session Manager',
+      status: 'online',
+      confidence: 0.96,
+      lastActivity: new Date(Date.now() - 30 * 1000).toISOString(),
+      tasksCompleted: 2156,
+      errorCount: 1,
+      responseTime: 450,
+      autonomy: false,
+      portal: 'shipper'
+    },
+    {
+      id: 'AnalyticsAgent',
+      name: 'Analytics Processor',
+      status: 'degraded',
+      confidence: 0.72,
+      lastActivity: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+      tasksCompleted: 567,
+      errorCount: 28,
+      responseTime: 3200,
+      autonomy: true,
+      portal: 'shipper'
+    },
+    {
+      id: 'AgentConfidenceMonitor',
+      name: 'Confidence Monitor',
+      status: 'online',
+      confidence: 0.91,
+      lastActivity: new Date(Date.now() - 45 * 1000).toISOString(),
+      tasksCompleted: 743,
+      errorCount: 5,
+      responseTime: 650,
+      autonomy: true,
+      portal: 'broker'
+    }
+  ];
+
+  const mockPerformanceData: PerformanceData[] = Array.from({ length: 24 }, (_, i) => ({
+    time: new Date(Date.now() - (23 - i) * 60 * 60 * 1000).toISOString(),
+    cpu: Math.random() * 30 + 20,
+    memory: Math.random() * 20 + 60,
+    network: Math.random() * 50 + 100,
+    errors: Math.floor(Math.random() * 5)
+  }));
 
   // Fetch metrics from MCP
   const fetchMetrics = async () => {
@@ -43,14 +211,48 @@ const SystemOverview: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const response = await MCP.metrics.overview();
-      setMetrics(response.data);
-      setIsUsingMockData(response.isMock);
+      // In production, this would fetch from your MCP API
+      // const response = await MCP.metrics.overview();
+      
+      // For now, using mock data
+      setMetrics({
+        system: {
+          uptime: 86400,
+          version: '2.1.0',
+          last_deployment: new Date().toISOString(),
+          error_rate: 0.023,
+          response_time: 245
+        },
+        jobs: {
+          queued: 15,
+          running: 8,
+          completed: 12489,
+          failed: 58,
+          success_rate: 0.995
+        },
+        agents: {
+          online: 11,
+          total: 12,
+          healthy: 9,
+          degraded: 2,
+          offline: 1
+        },
+        resources: {
+          cpu_usage: 45.2,
+          memory_usage: 78.5,
+          disk_usage: 62.3,
+          network_throughput: 125.7
+        }
+      } as MCPMetrics);
+      
+      setAgentStatuses(mockAgentStatuses);
+      setPerformanceData(mockPerformanceData);
+      setIsUsingMockData(true);
       setLastUpdated(new Date());
       
       // Determine system health based on metrics
-      const errorRate = response.data.system.error_rate;
-      const successRate = response.data.jobs.success_rate;
+      const errorRate = 0.023;
+      const successRate = 0.995;
       
       if (errorRate > 0.1 || successRate < 0.9) {
         setSystemHealth('degraded');
@@ -88,6 +290,31 @@ const SystemOverview: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const getHealthColor = (health: string) => {
+    switch (health) {
+      case 'healthy': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      case 'degraded': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      case 'unhealthy': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'online': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      case 'degraded': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      case 'error': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      case 'offline': return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
+
+  const getConfidenceColor = (confidence: number) => {
+    if (confidence >= 0.9) return 'text-green-600';
+    if (confidence >= 0.7) return 'text-yellow-600';
+    return 'text-red-600';
+  };
+
   if (loading && !metrics) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
@@ -98,103 +325,24 @@ const SystemOverview: React.FC = () => {
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
                 <div className="space-y-2">
-                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-64"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-96"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* System Health Skeleton */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-                <div className="space-y-2">
                   <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-80"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
                 </div>
               </div>
             </div>
-
-            {/* Metrics Cards Skeleton */}
+            
+            {/* Metrics Grid Skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
-                    <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                  </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
                     <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Operations Skeleton */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-                ))}
-              </div>
-            </div>
-
-            {/* Resource Usage Skeleton */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-4"></div>
-                  <div className="space-y-4">
-                    {[...Array(3)].map((_, j) => (
-                      <div key={j} className="space-y-2">
-                        <div className="flex justify-between">
-                          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
-                          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
-                        </div>
-                        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-                      </div>
-                    ))}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
-        <div className="max-w-7xl mx-auto">
-          <Card className="border-red-200 dark:border-red-800">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-center">
-                <div className="text-center">
-                  <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-full w-fit mx-auto mb-4">
-                    <AlertTriangle className="w-12 h-12 text-red-600 dark:text-red-400" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-red-800 dark:text-red-200 mb-2">
-                    Failed to Load System Metrics
-                  </h3>
-                  <p className="text-red-600 dark:text-red-400 mb-6 max-w-md mx-auto">
-                    {error}
-                  </p>
-                  <Button
-                    onClick={fetchMetrics}
-                    className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg"
-                  >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Retry Connection
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     );
@@ -203,589 +351,483 @@ const SystemOverview: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
+        
         {/* Enhanced Header */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex items-start space-x-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
-                <Monitor className="w-8 h-8 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
+                <Satellite className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                   System Overview
                 </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-400 mt-1">
-                  Real-time system metrics and operational status
+                <p className="text-gray-600 dark:text-gray-400">
+                  Real-time monitoring and control for TransBot AI infrastructure
                 </p>
-                {isUsingMockData && (
-                  <div className="mt-3 flex items-center">
-                    <Badge variant="outline" className="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200">
-                      📊 Demo Mode
-                    </Badge>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 ml-3">
-                      MCP API unavailable - showing sample metrics
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
+            
             <div className="flex items-center space-x-4">
-              {lastUpdated && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-lg">
-                  <Clock className="w-4 h-4 inline mr-2" />
-                  {lastUpdated.toLocaleTimeString()}
+              <Badge className={`${getHealthColor(systemHealth)} border-0`}>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    systemHealth === 'healthy' ? 'bg-green-500' :
+                    systemHealth === 'degraded' ? 'bg-yellow-500' : 'bg-red-500'
+                  }`}></div>
+                  <span className="capitalize">{systemHealth}</span>
                 </div>
-              )}
+              </Badge>
+              
               <Button
+                variant="outline"
+                size="sm"
                 onClick={fetchMetrics}
                 disabled={loading}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg"
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                Refresh Data
+                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
               </Button>
+              
+              {isUsingMockData && (
+                <Badge variant="secondary" className="text-xs">
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  Demo Mode
+                </Badge>
+              )}
             </div>
           </div>
+          
+          {lastUpdated && (
+            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              Last updated: {lastUpdated.toLocaleString()}
+            </div>
+          )}
         </div>
 
-        {/* Enhanced System Health Status */}
-        <Card className="overflow-hidden">
-          <CardContent className="p-0">
-            <div className={`
-              relative p-6 border-l-4
-              ${systemHealth === 'healthy' 
-                ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-500' 
-                : systemHealth === 'degraded'
-                ? 'bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-500'
-                : 'bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-500'
-              }
-            `}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className={`
-                    p-3 rounded-full
-                    ${systemHealth === 'healthy' 
-                      ? 'bg-green-100 dark:bg-green-900/30' 
-                      : systemHealth === 'degraded'
-                      ? 'bg-yellow-100 dark:bg-yellow-900/30'
-                      : 'bg-red-100 dark:bg-red-900/30'
-                    }
-                  `}>
-                    {systemHealth === 'healthy' ? (
-                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-                    ) : systemHealth === 'degraded' ? (
-                      <AlertTriangle className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-                    ) : (
-                      <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      System Status: {systemHealth.charAt(0).toUpperCase() + systemHealth.slice(1)}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
-                      {systemHealth === 'healthy' 
-                        ? 'All systems operating normally with optimal performance'
-                        : systemHealth === 'degraded'
-                        ? 'Some systems experiencing minor issues - monitoring closely'
-                        : 'Critical system issues detected - immediate attention required'
-                      }
-                    </p>
-                  </div>
-                </div>
-                <div className="hidden md:block">
-                  <Badge 
-                    variant="outline" 
-                    className={`
-                      text-lg px-4 py-2
-                      ${systemHealth === 'healthy' 
-                        ? 'bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700 text-green-800 dark:text-green-200' 
-                        : systemHealth === 'degraded'
-                        ? 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200'
-                        : 'bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700 text-red-800 dark:text-red-200'
-                      }
-                    `}
-                  >
-                    {systemHealth === 'healthy' ? '✓ OPERATIONAL' : systemHealth === 'degraded' ? '⚠ DEGRADED' : '✗ CRITICAL'}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Enhanced Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview" className="flex items-center space-x-2">
+              <Activity className="h-4 w-4" />
+              <span>Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="agents" className="flex items-center space-x-2">
+              <Brain className="h-4 w-4" />
+              <span>MCP Agents</span>
+            </TabsTrigger>
+            <TabsTrigger value="performance" className="flex items-center space-x-2">
+              <BarChart3 className="h-4 w-4" />
+              <span>Performance</span>
+            </TabsTrigger>
+            <TabsTrigger value="operations" className="flex items-center space-x-2">
+              <Command className="h-4 w-4" />
+              <span>Operations</span>
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Enhanced Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Agents Card */}
-          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <Badge variant="outline" className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300">
-                  {metrics?.agents.online && metrics?.agents.total ? 
-                    Math.round((metrics.agents.online / metrics.agents.total) * 100) : 0}%
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Agents</p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {metrics?.agents.online || 0}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  of {metrics?.agents.total || 0} total agents
-                </p>
-                <div className="flex items-center text-sm mt-3">
-                  {metrics?.agents.online && metrics?.agents.total && (
-                    <span className={`flex items-center ${
-                      (metrics.agents.online / metrics.agents.total) > 0.8 
-                        ? 'text-green-600 dark:text-green-400' 
-                        : 'text-yellow-600 dark:text-yellow-400'
-                    }`}>
-                      {metrics.agents.online / metrics.agents.total > 0.8 ? (
-                        <TrendingUp className="w-4 h-4 mr-1" />
-                      ) : (
-                        <TrendingDown className="w-4 h-4 mr-1" />
-                      )}
-                      {Math.round((metrics.agents.online / metrics.agents.total) * 100)}% online
-                    </span>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Jobs Card */}
-          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl">
-                  <Activity className="w-6 h-6 text-white" />
-                </div>
-                <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300">
-                  {Math.round((metrics?.jobs.success_rate || 0) * 100)}%
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Jobs</p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {metrics?.jobs.running || 0}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {metrics?.jobs.queued || 0} queued • {metrics?.jobs.completed || 0} completed
-                </p>
-                <div className="flex items-center text-sm mt-3">
-                  <span className={`flex items-center ${
-                    (metrics?.jobs.success_rate || 0) > 0.9 
-                      ? 'text-green-600 dark:text-green-400' 
-                      : 'text-yellow-600 dark:text-yellow-400'
-                  }`}>
-                    {metrics?.jobs.success_rate && (
-                      <>
-                        {metrics.jobs.success_rate > 0.9 ? (
-                          <TrendingUp className="w-4 h-4 mr-1" />
-                        ) : (
-                          <TrendingDown className="w-4 h-4 mr-1" />
-                        )}
-                        {Math.round(metrics.jobs.success_rate * 100)}% success rate
-                      </>
-                    )}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* System Uptime Card */}
-          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl">
-                  <Server className="w-6 h-6 text-white" />
-                </div>
-                <Badge variant="outline" className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300">
-                  v{metrics?.system.version || 'Unknown'}
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">System Uptime</p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {metrics?.system.uptime ? Math.floor(metrics.system.uptime / 3600) : 0}h
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {metrics?.system.uptime ? Math.floor((metrics.system.uptime % 3600) / 60) : 0}m
-                </p>
-                <div className="flex items-center text-sm mt-3">
-                  <span className="text-gray-600 dark:text-gray-400 flex items-center">
-                    <Clock className="w-4 h-4 mr-1" />
-                    Last deployment: {metrics?.system.last_deployment ? 
-                      new Date(metrics.system.last_deployment).toLocaleDateString() : 'Unknown'
-                    }
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Error Rate Card */}
-          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-xl">
-                  <AlertTriangle className="w-6 h-6 text-white" />
-                </div>
-                <Badge variant="outline" className={`${
-                  (metrics?.system.error_rate || 0) < 0.01 
-                    ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300'
-                    : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700 text-red-700 dark:text-red-300'
-                }`}>
-                  {(metrics?.system.error_rate || 0) < 0.01 ? 'Low' : 'High'}
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Error Rate</p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {metrics?.system.error_rate ? (metrics.system.error_rate * 100).toFixed(2) : 0}%
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {metrics?.system.response_time ? metrics.system.response_time.toFixed(0) : 0}ms avg response
-                </p>
-                <div className="flex items-center text-sm mt-3">
-                  <span className={`flex items-center ${
-                    (metrics?.system.error_rate || 0) < 0.01 
-                      ? 'text-green-600 dark:text-green-400' 
-                      : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {(metrics?.system.error_rate || 0) < 0.01 ? (
-                      <TrendingDown className="w-4 h-4 mr-1" />
-                    ) : (
-                      <TrendingUp className="w-4 h-4 mr-1" />
-                    )}
-                    {(metrics?.system.error_rate || 0) < 0.01 ? 'Low' : 'High'} error rate
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Enhanced System Operations */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Shield className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" />
-              System Operations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Button
-                onClick={() => performSystemOperation('restart')}
-                className="h-16 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="flex flex-col items-center">
-                  <RotateCcw className="w-5 h-5 mb-1" />
-                  <span className="text-sm">Restart</span>
-                </div>
-              </Button>
-              <Button
-                onClick={() => performSystemOperation('drain')}
-                className="h-16 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="flex flex-col items-center">
-                  <Pause className="w-5 h-5 mb-1" />
-                  <span className="text-sm">Drain Queue</span>
-                </div>
-              </Button>
-              <Button
-                onClick={() => performSystemOperation('reindex')}
-                className="h-16 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="flex flex-col items-center">
-                  <Database className="w-5 h-5 mb-1" />
-                  <span className="text-sm">Reindex</span>
-                </div>
-              </Button>
-              <Button
-                onClick={() => performSystemOperation('refresh_caches')}
-                className="h-16 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="flex flex-col items-center">
-                  <Zap className="w-5 h-5 mb-1" />
-                  <span className="text-sm">Refresh Caches</span>
-                </div>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Resource Usage */}
-        {metrics?.resources && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Gauge className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" />
-                  Resource Usage
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {/* CPU Usage */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">CPU Usage</span>
-                      </div>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">
-                        {Math.round(metrics.resources.cpu_usage * 100)}%
-                      </span>
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            {/* Key Metrics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-600 dark:text-blue-400">System Uptime</p>
+                      <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
+                        {metrics?.system.uptime ? Math.floor(metrics.system.uptime / 3600) : 0}h
+                      </p>
                     </div>
-                    <div className="relative">
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div 
-                          className={`h-3 rounded-full transition-all duration-500 ${
-                            metrics.resources.cpu_usage > 0.8 ? 'bg-red-500' :
-                            metrics.resources.cpu_usage > 0.6 ? 'bg-yellow-500' : 'bg-blue-500'
-                          }`}
-                          style={{ width: `${Math.round(metrics.resources.cpu_usage * 100)}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <span>0%</span>
-                        <span>50%</span>
-                        <span>100%</span>
-                      </div>
+                    <div className="p-3 bg-blue-500 rounded-xl">
+                      <Clock className="h-6 w-6 text-white" />
                     </div>
                   </div>
+                  <div className="mt-4">
+                    <Progress value={100} className="h-2" />
+                  </div>
+                </CardContent>
+              </Card>
 
-                  {/* Memory Usage */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Thermometer className="w-4 h-4 text-green-600 dark:text-green-400" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Memory Usage</span>
-                      </div>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">
-                        {Math.round(metrics.resources.memory_usage * 100)}%
-                      </span>
+              <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-600 dark:text-green-400">Success Rate</p>
+                      <p className="text-2xl font-bold text-green-900 dark:text-green-100">
+                        {metrics?.jobs.success_rate ? (metrics.jobs.success_rate * 100).toFixed(1) : 0}%
+                      </p>
                     </div>
-                    <div className="relative">
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div 
-                          className={`h-3 rounded-full transition-all duration-500 ${
-                            metrics.resources.memory_usage > 0.8 ? 'bg-red-500' :
-                            metrics.resources.memory_usage > 0.6 ? 'bg-yellow-500' : 'bg-green-500'
-                          }`}
-                          style={{ width: `${Math.round(metrics.resources.memory_usage * 100)}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <span>0%</span>
-                        <span>50%</span>
-                        <span>100%</span>
-                      </div>
+                    <div className="p-3 bg-green-500 rounded-xl">
+                      <CheckCircle className="h-6 w-6 text-white" />
                     </div>
                   </div>
-
-                  {/* Disk Usage */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <HardDrive className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Disk Usage</span>
-                      </div>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">
-                        {Math.round(metrics.resources.disk_usage * 100)}%
-                      </span>
-                    </div>
-                    <div className="relative">
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div 
-                          className={`h-3 rounded-full transition-all duration-500 ${
-                            metrics.resources.disk_usage > 0.8 ? 'bg-red-500' :
-                            metrics.resources.disk_usage > 0.6 ? 'bg-yellow-500' : 'bg-yellow-500'
-                          }`}
-                          style={{ width: `${Math.round(metrics.resources.disk_usage * 100)}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <span>0%</span>
-                        <span>50%</span>
-                        <span>100%</span>
-                      </div>
-                    </div>
+                  <div className="mt-4">
+                    <Progress 
+                      value={metrics?.jobs.success_rate ? metrics.jobs.success_rate * 100 : 0} 
+                      className="h-2" 
+                    />
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Network className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" />
-                  Network Performance
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {/* Network Throughput */}
-                  <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl">
-                    <div className="flex items-center justify-center mb-2">
-                      <Wifi className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                      {metrics.resources.network_throughput ? 
-                        (metrics.resources.network_throughput / 1024 / 1024).toFixed(2) : 0
-                      }
-                    </div>
-                    <div className="text-lg text-gray-600 dark:text-gray-400 mb-2">MB/s</div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Current network throughput
-                    </p>
-                  </div>
+              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Active Agents</p>
+                                             <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">
+                         {metrics?.agents.online || 0}/{metrics?.agents.total || 0}
+                       </p>
+                     </div>
+                     <div className="p-3 bg-purple-500 rounded-xl">
+                       <Brain className="h-6 w-6 text-white" />
+                     </div>
+                   </div>
+                   <div className="mt-4">
+                     <Progress 
+                       value={metrics?.agents.total ? (metrics.agents.online / metrics.agents.total) * 100 : 0} 
+                       className="h-2" 
+                     />
+                   </div>
+                </CardContent>
+              </Card>
 
-                  {/* Performance Indicators */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {metrics?.system.response_time ? metrics.system.response_time.toFixed(0) : 0}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">ms Response</div>
-                    </div>
-                    <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-orange-600 dark:text-orange-400">Error Rate</p>
+                      <p className="text-2xl font-bold text-orange-900 dark:text-orange-100">
                         {metrics?.system.error_rate ? (metrics.system.error_rate * 100).toFixed(2) : 0}%
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Error Rate</div>
+                      </p>
+                    </div>
+                    <div className="p-3 bg-orange-500 rounded-xl">
+                      <AlertTriangle className="h-6 w-6 text-white" />
                     </div>
                   </div>
+                  <div className="mt-4">
+                    <Progress 
+                      value={metrics?.system.error_rate ? metrics.system.error_rate * 100 : 0} 
+                      className="h-2" 
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* System Resources */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Cpu className="h-5 w-5" />
+                    <span>System Resources</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                                     <div>
+                     <div className="flex justify-between text-sm mb-2">
+                       <span>CPU Usage</span>
+                       <span>{metrics?.resources.cpu_usage?.toFixed(1) || 0}%</span>
+                     </div>
+                     <Progress value={metrics?.resources.cpu_usage || 0} className="h-2" />
+                   </div>
+                   <div>
+                     <div className="flex justify-between text-sm mb-2">
+                       <span>Memory Usage</span>
+                       <span>{metrics?.resources.memory_usage?.toFixed(1) || 0}%</span>
+                     </div>
+                     <Progress value={metrics?.resources.memory_usage || 0} className="h-2" />
+                   </div>
+                   <div>
+                     <div className="flex justify-between text-sm mb-2">
+                       <span>Disk Usage</span>
+                       <span>{metrics?.resources.disk_usage?.toFixed(1) || 0}%</span>
+                     </div>
+                     <Progress value={metrics?.resources.disk_usage || 0} className="h-2" />
+                   </div>
+                   <div>
+                     <div className="flex justify-between text-sm mb-2">
+                       <span>Network Throughput</span>
+                       <span>{metrics?.resources.network_throughput?.toFixed(1) || 0} MB/s</span>
+                     </div>
+                     <Progress value={Math.min((metrics?.resources.network_throughput || 0) / 2, 100)} className="h-2" />
+                   </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BarChart3 className="h-5 w-5" />
+                    <span>Job Statistics</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={[
+                      { name: 'Completed', value: metrics?.jobs.completed || 0, fill: '#10b981' },
+                      { name: 'Failed', value: metrics?.jobs.failed || 0, fill: '#ef4444' }
+                    ]}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* MCP Agents Tab */}
+          <TabsContent value="agents" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Brain className="h-5 w-5" />
+                  <span>MCP Agent Status</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {agentStatuses.map((agent) => (
+                    <div key={agent.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                      <div className="flex items-center space-x-4">
+                        <div className={`p-2 rounded-lg ${
+                          agent.status === 'online' ? 'bg-green-100 dark:bg-green-900/20' :
+                          agent.status === 'degraded' ? 'bg-yellow-100 dark:bg-yellow-900/20' :
+                          'bg-red-100 dark:bg-red-900/20'
+                        }`}>
+                          <Brain className={`h-5 w-5 ${
+                            agent.status === 'online' ? 'text-green-600' :
+                            agent.status === 'degraded' ? 'text-yellow-600' :
+                            'text-red-600'
+                          }`} />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-900 dark:text-white">{agent.name}</h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Portal: {agent.portal} • Tasks: {agent.tasksCompleted}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="text-right">
+                          <p className={`text-sm font-medium ${getConfidenceColor(agent.confidence)}`}>
+                            {(agent.confidence * 100).toFixed(1)}% Confidence
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {agent.responseTime}ms response
+                          </p>
+                        </div>
+                        
+                        <Badge className={`${getStatusColor(agent.status)} border-0`}>
+                          <span className="capitalize">{agent.status}</span>
+                        </Badge>
+                        
+                        {agent.autonomy && (
+                          <Badge variant="outline" className="text-xs">
+                            <Zap className="h-3 w-3 mr-1" />
+                            Autonomous
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
-          </div>
-        )}
+          </TabsContent>
 
-        {/* System Insights & Analytics */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Agent Status Breakdown */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Users className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" />
-                Agent Status
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Healthy</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {metrics?.agents.healthy || 0}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Degraded</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {metrics?.agents.degraded || 0}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Offline</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {metrics?.agents.offline || 0}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Performance Tab */}
+          <TabsContent value="performance" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <TrendingUp className="h-5 w-5" />
+                    <span>System Performance (24h)</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={performanceData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="time" 
+                        tickFormatter={(value) => new Date(value).toLocaleTimeString()}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        labelFormatter={(value) => new Date(value).toLocaleString()}
+                      />
+                      <Legend />
+                      <Area 
+                        type="monotone" 
+                        dataKey="cpu" 
+                        stackId="1" 
+                        stroke="#3b82f6" 
+                        fill="#3b82f6" 
+                        fillOpacity={0.3}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="memory" 
+                        stackId="1" 
+                        stroke="#10b981" 
+                        fill="#10b981" 
+                        fillOpacity={0.3}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
 
-          {/* Job Statistics */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Activity className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" />
-                Job Statistics
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Running</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {metrics?.jobs.running || 0}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Queued</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {metrics?.jobs.queued || 0}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Completed</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
-                    {metrics?.jobs.completed || 0}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Activity className="h-5 w-5" />
+                    <span>Error Tracking</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={performanceData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="time" 
+                        tickFormatter={(value) => new Date(value).toLocaleTimeString()}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        labelFormatter={(value) => new Date(value).toLocaleString()}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="errors" 
+                        stroke="#ef4444" 
+                        strokeWidth={2}
+                        dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-          {/* System Performance */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <BarChart3 className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" />
-                Performance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg">
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                    {Math.round((metrics?.jobs.success_rate || 0) * 100)}%
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Success Rate</div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div className="text-lg font-bold text-gray-900 dark:text-white">
-                      {metrics?.system.uptime ? Math.floor(metrics.system.uptime / 3600) : 0}h
-                    </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">Uptime</div>
-                  </div>
-                  <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div className="text-lg font-bold text-gray-900 dark:text-white">
-                      {metrics?.system.response_time ? metrics.system.response_time.toFixed(0) : 0}ms
-                    </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">Response</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Operations Tab */}
+          <TabsContent value="operations" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Power className="h-5 w-5" />
+                    <span>System Control</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    className="w-full" 
+                    onClick={() => performSystemOperation('restart')}
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Restart System
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => performSystemOperation('maintenance')}
+                  >
+                    <Wrench className="h-4 w-4 mr-2" />
+                    Maintenance Mode
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => performSystemOperation('backup')}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Create Backup
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Brain className="h-5 w-5" />
+                    <span>Agent Control</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    className="w-full" 
+                    onClick={() => performSystemOperation('restart_agents')}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Restart All Agents
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => performSystemOperation('update_agents')}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Update Agents
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => performSystemOperation('clear_cache')}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear Cache
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Shield className="h-5 w-5" />
+                    <span>Security</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    className="w-full" 
+                    onClick={() => performSystemOperation('security_scan')}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Security Scan
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => performSystemOperation('update_certificates')}
+                  >
+                    <Lock className="h-4 w-4 mr-2" />
+                    Update Certificates
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => performSystemOperation('audit_logs')}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Audit Logs
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
