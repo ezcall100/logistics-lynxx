@@ -135,7 +135,7 @@ function Start-AgentDiagnostics {
             cpu: true,
             network: true
         }).then(result => {
-            console.log('Diagnostics complete for $AgentName:', result);
+            console.log('Diagnostics complete for $($AgentName):', result);
         });
 "@
 }
