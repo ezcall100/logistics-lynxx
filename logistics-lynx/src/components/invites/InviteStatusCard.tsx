@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { resendInvitation, cancelInvitation } from '@/api/invites';
@@ -182,34 +180,34 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
   
   return (
     <>
-      <Card className="hover:shadow-md transition-shadow">
-        <CardHeader className="pb-3">
+      <ResponsiveCard className="hover:shadow-md transition-shadow">
+        <ResponsiveCardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-full bg-muted">
                 <Mail className="h-4 w-4" />
               </div>
               <div>
-                <CardTitle className="text-lg">{invitation.email}</CardTitle>
-                <CardDescription>
+                <ResponsiveCardTitle className="text-lg">{invitation.email}</h3>
+                <p className="text-slate-600 dark:text-slate-400">
                   Invited by {invitation.invited_by?.name || invitation.invited_by?.email || 'Unknown'}
-                </CardDescription>
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Badge className={statusConfig.color}>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                 <StatusIcon className="h-3 w-3 mr-1" />
                 {statusConfig.label}
-              </Badge>
-              <Badge className={roleConfig.color}>
+              </span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                 <User className="h-3 w-3 mr-1" />
                 {roleConfig.label}
-              </Badge>
+              </span>
             </div>
           </div>
-        </CardHeader>
+        </div>
         
-        <CardContent className="space-y-4">
+        <ResponsiveCardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -255,7 +253,7 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
           
           <div className="flex items-center gap-2 pt-2">
             {canResend && (
-              <Button
+              <EnhancedButton
                 variant="outline"
                 size="sm"
                 onClick={handleResend}
@@ -272,11 +270,11 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
                     Resend
                   </>
                 )}
-              </Button>
+              </EnhancedButton>
             )}
             
             {canCancel && (
-              <Button
+              <EnhancedButton
                 variant="outline"
                 size="sm"
                 onClick={() => setShowCancelDialog(true)}
@@ -284,11 +282,11 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Cancel
-              </Button>
+              </EnhancedButton>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
       
       {/* Cancel Confirmation Dialog */}
       <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
@@ -302,14 +300,14 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
           </DialogHeader>
           
           <DialogFooter>
-            <Button
+            <EnhancedButton
               variant="outline"
               onClick={() => setShowCancelDialog(false)}
               disabled={isCancelling}
             >
               Keep Invitation
-            </Button>
-            <Button
+            </EnhancedButton>
+            <EnhancedButton
               variant="destructive"
               onClick={handleCancel}
               disabled={isCancelling}
@@ -322,7 +320,7 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
               ) : (
                 'Cancel Invitation'
               )}
-            </Button>
+            </EnhancedButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

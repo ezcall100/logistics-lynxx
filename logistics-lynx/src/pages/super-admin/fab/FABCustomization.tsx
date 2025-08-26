@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const FABCustomization = () => {
   const [customization] = useState({
     theme: 'blue',
@@ -26,26 +16,26 @@ const FABCustomization = () => {
             Customize the appearance and behavior of your floating action buttons
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Save Changes
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Theme Customization */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🎨
               </div>
               Theme & Colors
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Choose your preferred color scheme and theme
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {['blue', 'green', 'purple', 'orange', 'red', 'gray', 'pink', 'yellow'].map((color) => (
                 <div key={color} className={`p-4 border rounded-lg cursor-pointer ${
@@ -56,23 +46,23 @@ const FABCustomization = () => {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Position Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📍
               </div>
               Position Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure where the FAB appears on the screen
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { pos: 'top-left', icon: '↖️' },
@@ -88,23 +78,23 @@ const FABCustomization = () => {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Size & Animation */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
               Size & Animation
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Adjust the size and animation effects
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h4 className="font-medium text-gray-900 mb-3">Size Options</h4>
@@ -138,23 +128,23 @@ const FABCustomization = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Preview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 👁️
               </div>
               Live Preview
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               See how your FAB will look with current settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="relative h-64 border rounded-lg bg-gray-50">
               <div className={`absolute ${customization.position === 'top-left' ? 'top-4 left-4' :
                 customization.position === 'top-right' ? 'top-4 right-4' :
@@ -171,8 +161,8 @@ const FABCustomization = () => {
                 <p className="text-gray-500">Preview Area</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

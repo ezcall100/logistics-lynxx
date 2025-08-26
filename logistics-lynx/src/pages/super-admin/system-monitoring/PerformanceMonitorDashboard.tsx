@@ -2,9 +2,7 @@
 // 📊 Performance Monitor Dashboard
 // ========================
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
@@ -325,15 +323,15 @@ const PerformanceMonitorDashboard: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
+          <EnhancedButton
             variant={monitoringActive ? "default" : "outline"}
             size="sm"
             onClick={toggleMonitoring}
           >
             {monitoringActive ? <Pause className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
             {monitoringActive ? 'Monitoring' : 'Paused'}
-          </Button>
-          <Button
+          </EnhancedButton>
+          <EnhancedButton
             variant="outline"
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
@@ -341,71 +339,71 @@ const PerformanceMonitorDashboard: React.FC = () => {
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
             {autoRefresh ? 'Auto' : 'Manual'}
-          </Button>
-          <Button variant="outline" size="sm" onClick={exportPerformanceReport}>
+          </EnhancedButton>
+          <EnhancedButton variant="outline" size="sm" onClick={exportPerformanceReport}>
             <Download className="h-4 w-4 mr-2" />
             Export
-          </Button>
+          </EnhancedButton>
         </div>
       </div>
 
       {/* System Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">CPU Usage</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">CPU Usage</h3>
             <Cpu className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{systemMetrics.cpuUsage.toFixed(1)}%</div>
             <Progress value={systemMetrics.cpuUsage} className="mt-2" />
             <p className="text-xs text-muted-foreground mt-1">
               {systemMetrics.cpuUsage > 80 ? 'High Load' : 
                systemMetrics.cpuUsage > 60 ? 'Moderate' : 'Normal'}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Memory Usage</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Memory Usage</h3>
             <Memory className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{systemMetrics.memoryUsage.toFixed(1)}%</div>
             <Progress value={systemMetrics.memoryUsage} className="mt-2" />
             <p className="text-xs text-muted-foreground">
               {systemMetrics.activeConnections} active connections
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Error Rate</h3>
             <AlertTriangle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold text-red-600">{systemMetrics.errorRate.toFixed(1)}%</div>
             <p className="text-xs text-muted-foreground">
               {systemMetrics.errorRate > 5 ? 'High Error Rate' : 
                systemMetrics.errorRate > 2 ? 'Moderate' : 'Low'}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Uptime</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Uptime</h3>
             <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{formatUptime(systemMetrics.uptime)}</div>
             <p className="text-xs text-muted-foreground">
               Last updated: {new Date(systemMetrics.lastUpdate).toLocaleTimeString()}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
 
       {/* Main Content Tabs */}
@@ -419,12 +417,12 @@ const PerformanceMonitorDashboard: React.FC = () => {
 
         <TabsContent value="latency" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Response Time Trends</CardTitle>
-                <CardDescription>Average, P95, and P99 latency over time</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Response Time Trends</h3>
+                <p className="text-slate-600 dark:text-slate-400">Average, P95, and P99 latency over time</p>
+              </div>
+              <div>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={latencyData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -437,15 +435,15 @@ const PerformanceMonitorDashboard: React.FC = () => {
                     <Line type="monotone" dataKey="p99Latency" stroke="#ffc658" name="P99" />
                   </LineChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Request Volume & Errors</CardTitle>
-                <CardDescription>Request count and error rate trends</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Request Volume & Errors</h3>
+                <p className="text-slate-600 dark:text-slate-400">Request count and error rate trends</p>
+              </div>
+              <div>
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart data={latencyData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -458,19 +456,19 @@ const PerformanceMonitorDashboard: React.FC = () => {
                     <Area yAxisId="right" type="monotone" dataKey="errors" stroke="#ff7300" fill="#ff7300" name="Errors" />
                   </AreaChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
           </div>
         </TabsContent>
 
         <TabsContent value="confidence" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Agent Confidence Scores</CardTitle>
-                <CardDescription>Average confidence and success rates by agent</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Agent Confidence Scores</h3>
+                <p className="text-slate-600 dark:text-slate-400">Average confidence and success rates by agent</p>
+              </div>
+              <div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={confidenceTrendData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -482,15 +480,15 @@ const PerformanceMonitorDashboard: React.FC = () => {
                     <Bar dataKey="successRate" fill="#82ca9d" name="Success Rate %" />
                   </BarChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Agent Performance Table</CardTitle>
-                <CardDescription>Detailed agent performance metrics</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Agent Performance Table</h3>
+                <p className="text-slate-600 dark:text-slate-400">Detailed agent performance metrics</p>
+              </div>
+              <div>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -522,18 +520,18 @@ const PerformanceMonitorDashboard: React.FC = () => {
                     ))}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
           </div>
         </TabsContent>
 
         <TabsContent value="retries" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Retry & Failure Heatmap</CardTitle>
-              <CardDescription>Retry and failure patterns by hour and day</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Retry & Failure Heatmap</h3>
+              <p className="text-slate-600 dark:text-slate-400">Retry and failure patterns by hour and day</p>
+            </div>
+            <div>
               <div className="grid grid-cols-25 gap-1">
                 {Array.from({ length: 24 }, (_, hour) => (
                   <div key={hour} className="text-xs text-center font-mono">
@@ -575,17 +573,17 @@ const PerformanceMonitorDashboard: React.FC = () => {
                   <span>High</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="metrics" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Real-time Performance Metrics</CardTitle>
-              <CardDescription>Live performance data from MCP agents</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Real-time Performance Metrics</h3>
+              <p className="text-slate-600 dark:text-slate-400">Live performance data from MCP agents</p>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -609,9 +607,9 @@ const PerformanceMonitorDashboard: React.FC = () => {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <Badge className={getStatusColor(metric.statusCode)}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {metric.statusCode}
-                        </Badge>
+                        </span>
                       </TableCell>
                       <TableCell>
                         <span className={getConfidenceColor(metric.confidence)}>
@@ -620,9 +618,9 @@ const PerformanceMonitorDashboard: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         {metric.retryCount > 0 ? (
-                          <Badge variant="outline" className="text-orange-600">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                             {metric.retryCount}
-                          </Badge>
+                          </span>
                         ) : (
                           <CheckCircle className="h-4 w-4 text-green-500" />
                         )}
@@ -635,8 +633,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
       </Tabs>
     </div>

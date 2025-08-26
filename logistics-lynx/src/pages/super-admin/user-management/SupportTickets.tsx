@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Headphones } from 'lucide-react';
 
 interface SupportTicketsProps {}
@@ -29,12 +27,12 @@ const SupportTickets: React.FC<SupportTicketsProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Support Tickets</CardTitle>
-          <CardDescription>User support requests, ticket management, resolution tracking</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Support Tickets</h3>
+          <p className="text-slate-600 dark:text-slate-400">User support requests, ticket management, resolution tracking</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const SupportTickets: React.FC<SupportTicketsProps> = () => {
                 User support requests, ticket management, resolution tracking
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Ticket Management</Badge>
-                <Badge variant="outline">Support Analytics</Badge>
-                <Badge variant="outline">Resolution Tracking</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Ticket Management</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Support Analytics</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Resolution Tracking</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Support Tickets
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

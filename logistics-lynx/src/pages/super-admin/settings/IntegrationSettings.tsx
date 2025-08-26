@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Input } from '../../../components/ui/input.tsx';
-import { Badge } from '../../../components/ui/badge.tsx'// Custom Label component
+// Custom Label component
 const Label = ({ children, htmlFor, className = '' }: { children: React.ReactNode; htmlFor?: string; className?: string }) => (
   <label htmlFor={htmlFor} className={`block text-sm font-medium text-gray-700 mb-2 ${className}`}>
     {children}
@@ -83,30 +82,30 @@ const IntegrationSettings = () => {
             Configure external integrations and API connections for your TMS platform
           </p>
         </div>
-        <Button 
+        <EnhancedButton 
           onClick={handleSave} 
           disabled={isLoading}
           className="bg-blue-600 hover:bg-blue-700"
         >
           {isLoading ? 'Saving...' : 'Save Changes'}
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* API Configuration */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🔌
               </div>
               API Configuration
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure REST API endpoints and authentication
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="api-enabled">Enable API Access</Label>
               <Switch
@@ -168,30 +167,30 @@ const IntegrationSettings = () => {
               />
             </div>
             
-            <Button
+            <EnhancedButton
               variant="outline"
               onClick={() => handleTestConnection('api')}
               disabled={isLoading}
             >
               Test API Connection
-            </Button>
-          </CardContent>
-        </Card>
+            </EnhancedButton>
+          </div>
+        </ResponsiveCard>
 
         {/* Webhook Configuration */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔗
               </div>
               Webhook Configuration
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Set up webhooks for real-time event notifications
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="webhook-enabled">Enable Webhooks</Label>
               <Switch
@@ -238,30 +237,30 @@ const IntegrationSettings = () => {
               </div>
             </div>
             
-            <Button
+            <EnhancedButton
               variant="outline"
               onClick={() => handleTestConnection('webhook')}
               disabled={isLoading}
             >
               Test Webhook
-            </Button>
-          </CardContent>
-        </Card>
+            </EnhancedButton>
+          </div>
+        </ResponsiveCard>
 
         {/* Third-Party Integrations */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🔌
               </div>
               Third-Party Integrations
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Manage external service integrations
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="third-party-enabled">Enable Third-Party Integrations</Label>
               <Switch
@@ -280,9 +279,9 @@ const IntegrationSettings = () => {
               <Label>Active Integrations</Label>
               <div className="flex flex-wrap gap-2">
                 {integrations.thirdParty.providers.map((provider) => (
-                  <Badge key={provider} variant="secondary" className="capitalize">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                     {provider}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
@@ -295,15 +294,15 @@ const IntegrationSettings = () => {
                 {['stripe', 'twilio', 'sendgrid', 'slack', 'zapier', 'hubspot'].map((provider) => (
                   <div key={provider} className="flex items-center justify-between p-3 border rounded-lg">
                     <span className="capitalize font-medium">{provider}</span>
-                    <Button variant="outline" size="sm">
+                    <EnhancedButton variant="outline" size="sm">
                       Configure
-                    </Button>
+                    </EnhancedButton>
                   </div>
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

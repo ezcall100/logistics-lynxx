@@ -1,13 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
 const MobileSync = () => {
@@ -27,26 +18,26 @@ const MobileSync = () => {
             Monitor and manage data synchronization across mobile devices
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Force Sync
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Sync Status Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🔄
               </div>
               Sync Status Overview
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Current synchronization status and progress
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -58,9 +49,9 @@ const MobileSync = () => {
                     <p className="text-sm text-gray-600">Active and running</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Active
-                </Badge>
+                </span>
               </div>
               
               <div className="space-y-2">
@@ -82,23 +73,23 @@ const MobileSync = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Device Sync Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
               Device Sync Status
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Synchronization status for each connected device
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {[
                 { name: 'iPhone 15 Pro', user: 'John Doe', status: 'synced', lastSync: '1 minute ago', dataSize: '2.3 MB' },
@@ -119,37 +110,33 @@ const MobileSync = () => {
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-sm text-gray-600">{device.dataSize}</span>
-                    <Badge className={
-                      device.status === 'synced' ? 'bg-green-100 text-green-800' :
-                      device.status === 'syncing' ? 'bg-blue-100 text-blue-800' :
-                      'bg-yellow-100 text-yellow-800'
-                    }>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {device.status}
-                    </Badge>
-                    <Button size="sm" variant="outline">
+                    </span>
+                    <EnhancedButton size="sm" variant="outline">
                       Sync Now
-                    </Button>
+                    </EnhancedButton>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Sync History */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 📋
               </div>
               Sync History
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Recent synchronization activities and logs
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {[
                 { time: '2 minutes ago', action: 'Data sync completed', device: 'iPhone 15 Pro', status: 'success', dataSize: '2.3 MB' },
@@ -172,41 +159,39 @@ const MobileSync = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">{entry.dataSize}</span>
-                    <Badge className={
-                      entry.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {entry.status}
-                    </Badge>
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Sync Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
               Sync Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure synchronization preferences and schedules
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-1">
                   <h4 className="font-medium text-gray-900">Auto Sync Interval</h4>
                   <p className="text-sm text-gray-600">Every 5 minutes</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -214,9 +199,9 @@ const MobileSync = () => {
                   <h4 className="font-medium text-gray-900">Sync on WiFi Only</h4>
                   <p className="text-sm text-gray-600">Save mobile data</p>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Enabled
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -224,9 +209,9 @@ const MobileSync = () => {
                   <h4 className="font-medium text-gray-900">Conflict Resolution</h4>
                   <p className="text-sm text-gray-600">Server wins by default</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -234,13 +219,13 @@ const MobileSync = () => {
                   <h4 className="font-medium text-gray-900">Data Retention</h4>
                   <p className="text-sm text-gray-600">Keep sync logs for 30 days</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

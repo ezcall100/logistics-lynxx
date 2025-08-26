@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Plug } from 'lucide-react';
 
 interface PortalIntegrationsProps {}
@@ -29,12 +27,12 @@ const PortalIntegrations: React.FC<PortalIntegrationsProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Portal Integrations</CardTitle>
-          <CardDescription>Portal-specific integrations, API connections</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Portal Integrations</h3>
+          <p className="text-slate-600 dark:text-slate-400">Portal-specific integrations, API connections</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const PortalIntegrations: React.FC<PortalIntegrationsProps> = () => {
                 Portal-specific integrations, API connections
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Portal Integrations</Badge>
-                <Badge variant="outline">Api Connections</Badge>
-                <Badge variant="outline">Integration Health</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Portal Integrations</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Api Connections</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Integration Health</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Portal Integrations
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

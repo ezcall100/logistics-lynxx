@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Bell } from 'lucide-react';
 
 interface AlertManagementProps {}
@@ -29,12 +27,12 @@ const AlertManagement: React.FC<AlertManagementProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Alert Management</CardTitle>
-          <CardDescription>Custom alerts, escalation rules, notification management</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Alert Management</h3>
+          <p className="text-slate-600 dark:text-slate-400">Custom alerts, escalation rules, notification management</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const AlertManagement: React.FC<AlertManagementProps> = () => {
                 Custom alerts, escalation rules, notification management
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Custom Alerts</Badge>
-                <Badge variant="outline">Escalation Rules</Badge>
-                <Badge variant="outline">Notification Management</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Custom Alerts</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Escalation Rules</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Notification Management</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Alert Management
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

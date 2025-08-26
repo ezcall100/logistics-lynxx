@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([
     {
@@ -82,30 +72,30 @@ const ActiveSessions = () => {
             Manage your active login sessions across devices
           </p>
         </div>
-        <Button 
+        <EnhancedButton 
           variant="outline" 
           onClick={handleTerminateAllOtherSessions}
           className="text-red-600 border-red-300 hover:bg-red-50"
         >
           Terminate All Other Sessions
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Session Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
               Session Summary
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Overview of your active sessions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">4</div>
@@ -124,23 +114,23 @@ const ActiveSessions = () => {
                 <div className="text-sm text-red-600">Suspicious Sessions</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Active Sessions List */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔐
               </div>
               Active Sessions
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Your current and recent login sessions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {sessions.map((session) => (
                 <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
@@ -154,13 +144,13 @@ const ActiveSessions = () => {
                           {session.device}
                         </h4>
                         {session.isCurrent && (
-                          <Badge className="bg-blue-100 text-blue-800">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                             Current Session
-                          </Badge>
+                          </span>
                         )}
-                        <Badge className={getStatusColor(session.status)}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {session.status}
-                        </Badge>
+                        </span>
                       </div>
                       <p className="text-sm text-gray-600 mt-1">
                         {session.location} • IP: {session.ipAddress}
@@ -172,36 +162,36 @@ const ActiveSessions = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     {!session.isCurrent && (
-                      <Button
+                      <EnhancedButton
                         size="sm"
                         variant="outline"
                         onClick={() => handleTerminateSession(session.id)}
                         className="text-red-600 border-red-300 hover:bg-red-50"
                       >
                         Terminate
-                      </Button>
+                      </EnhancedButton>
                     )}
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Security Recommendations */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                 ⚠️
               </div>
               Security Recommendations
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Tips to keep your account secure
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -231,8 +221,8 @@ const ActiveSessions = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

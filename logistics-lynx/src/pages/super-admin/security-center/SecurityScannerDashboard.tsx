@@ -2,9 +2,7 @@
 // 🔒 Security Scanner Dashboard
 // ========================
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
@@ -338,7 +336,7 @@ const SecurityScannerDashboard: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
+          <EnhancedButton
             variant="outline"
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
@@ -346,69 +344,69 @@ const SecurityScannerDashboard: React.FC = () => {
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
             {autoRefresh ? 'Auto' : 'Manual'}
-          </Button>
-          <Button variant="outline" size="sm" onClick={exportSecurityReport}>
+          </EnhancedButton>
+          <EnhancedButton variant="outline" size="sm" onClick={exportSecurityReport}>
             <Download className="h-4 w-4 mr-2" />
             Export
-          </Button>
+          </EnhancedButton>
         </div>
       </div>
 
       {/* Security Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Security Score</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Security Score</h3>
             <Shield className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{securityMetrics.securityScore}%</div>
             <Progress value={securityMetrics.securityScore} className="mt-2" />
             <p className="text-xs text-muted-foreground mt-1">
               {securityMetrics.securityScore >= 80 ? 'Excellent' : 
                securityMetrics.securityScore >= 60 ? 'Good' : 'Needs Attention'}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Scans</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Active Scans</h3>
             <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{securityMetrics.activeScans}</div>
             <p className="text-xs text-muted-foreground">
               {securityMetrics.totalScans} total scans
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Critical Findings</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Critical Findings</h3>
             <AlertTriangle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold text-red-600">{securityMetrics.criticalFindings}</div>
             <p className="text-xs text-muted-foreground">
               {securityMetrics.highFindings} high priority
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Risk Score</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Average Risk Score</h3>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{securityMetrics.averageRiskScore.toFixed(1)}</div>
             <p className="text-xs text-muted-foreground">
               Scale: 0-10 (10 = highest risk)
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
 
       {/* Main Content Tabs */}
@@ -421,26 +419,26 @@ const SecurityScannerDashboard: React.FC = () => {
         </TabsList>
 
         <TabsContent value="scans" className="space-y-4">
-          <Card>
-            <CardHeader>
+          <ResponsiveCard>
+            <div className="mb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Security Scans</CardTitle>
-                  <CardDescription>Active and completed security scans</CardDescription>
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Security Scans</h3>
+                  <p className="text-slate-600 dark:text-slate-400">Active and completed security scans</p>
                 </div>
                 <div className="flex space-x-2">
-                  <Button size="sm" onClick={() => startNewScan('vulnerability')}>
+                  <EnhancedButton size="sm" onClick={() => startNewScan('vulnerability')}>
                     <Search className="h-4 w-4 mr-2" />
                     Vulnerability Scan
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => startNewScan('compliance')}>
+                  </EnhancedButton>
+                  <EnhancedButton size="sm" variant="outline" onClick={() => startNewScan('compliance')}>
                     <FileText className="h-4 w-4 mr-2" />
                     Compliance Scan
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -458,18 +456,18 @@ const SecurityScannerDashboard: React.FC = () => {
                   {securityScans.map((scan) => (
                     <TableRow key={scan.id}>
                       <TableCell>
-                        <Badge variant="outline">{scan.type}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{scan.type}</span>
                       </TableCell>
                       <TableCell className="font-mono text-sm">{scan.target}</TableCell>
                       <TableCell>
-                        <Badge className={getStatusColor(scan.status)}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {scan.status}
-                        </Badge>
+                        </span>
                       </TableCell>
                       <TableCell>
-                        <Badge className={`${getSeverityColor(scan.severity)} text-white`}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {scan.severity}
-                        </Badge>
+                        </span>
                       </TableCell>
                       <TableCell>{scan.findings}</TableCell>
                       <TableCell>{scan.riskScore.toFixed(1)}</TableCell>
@@ -481,17 +479,17 @@ const SecurityScannerDashboard: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="findings" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Security Findings</CardTitle>
-              <CardDescription>Detailed security vulnerabilities and issues</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Security Findings</h3>
+              <p className="text-slate-600 dark:text-slate-400">Detailed security vulnerabilities and issues</p>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -508,17 +506,17 @@ const SecurityScannerDashboard: React.FC = () => {
                   {securityFindings.map((finding) => (
                     <TableRow key={finding.id}>
                       <TableCell>
-                        <Badge variant="outline">{finding.type}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{finding.type}</span>
                       </TableCell>
                       <TableCell className="max-w-xs truncate">{finding.title}</TableCell>
                       <TableCell>
-                        <Badge className={`${getSeverityColor(finding.severity)} text-white`}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {finding.severity}
-                        </Badge>
+                        </span>
                       </TableCell>
                       <TableCell>{finding.cvss?.toFixed(1) || 'N/A'}</TableCell>
                       <TableCell>
-                        <Badge variant="outline">{finding.status}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{finding.status}</span>
                       </TableCell>
                       <TableCell className="font-mono text-xs">{finding.agentId}</TableCell>
                       <TableCell>
@@ -528,17 +526,17 @@ const SecurityScannerDashboard: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="audit" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Agent Audit Logs</CardTitle>
-              <CardDescription>Real-time agent activity and security events</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Agent Audit Logs</h3>
+              <p className="text-slate-600 dark:text-slate-400">Real-time agent activity and security events</p>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -560,7 +558,7 @@ const SecurityScannerDashboard: React.FC = () => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">{log.action}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{log.action}</span>
                       </TableCell>
                       <TableCell className="font-mono text-sm">{log.resource}</TableCell>
                       <TableCell className="font-mono text-sm">{log.ipAddress}</TableCell>
@@ -578,18 +576,18 @@ const SecurityScannerDashboard: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Findings Distribution</CardTitle>
-                <CardDescription>Breakdown of security findings by severity</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Findings Distribution</h3>
+                <p className="text-slate-600 dark:text-slate-400">Breakdown of security findings by severity</p>
+              </div>
+              <div>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -609,15 +607,15 @@ const SecurityScannerDashboard: React.FC = () => {
                     <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Scan Activity Trend</CardTitle>
-                <CardDescription>Security scan activity over time</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Scan Activity Trend</h3>
+                <p className="text-slate-600 dark:text-slate-400">Security scan activity over time</p>
+              </div>
+              <div>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={scanTrendData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -629,8 +627,8 @@ const SecurityScannerDashboard: React.FC = () => {
                     <Line type="monotone" dataKey="findings" stroke="#82ca9d" name="Findings" />
                   </LineChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
           </div>
         </TabsContent>
       </Tabs>

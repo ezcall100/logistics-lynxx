@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Bot, Activity, GitBranch, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 
 interface AutonomousAgentProps {
@@ -85,14 +83,14 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
             </h1>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => handleAgentAction('all', 'restart')}>
+            <EnhancedButton variant="outline" onClick={() => handleAgentAction('all', 'restart')}>
               <RotateCcw className="h-4 w-4 mr-2" />
               Restart All
-            </Button>
-            <Button variant="default">
+            </EnhancedButton>
+            <EnhancedButton variant="default">
               <Settings className="h-4 w-4 mr-2" />
               Agent Settings
-            </Button>
+            </EnhancedButton>
           </div>
         </div>
         <p className="text-gray-600">
@@ -103,18 +101,18 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
       {/* Agent Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {agents.map((agent) => (
-          <Card key={agent.agentId} className="shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
+          <ResponsiveCard key={agent.agentId} className="shadow-lg hover:shadow-xl transition-shadow">
+            <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{agent.agentName}</CardTitle>
+                <ResponsiveCardTitle className="text-lg">{agent.agentName}</h3>
                 <div className="flex items-center space-x-2">
                   <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status)}`}></div>
-                  <Badge variant="outline">{agent.status}</Badge>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{agent.status}</span>
                 </div>
               </div>
-              <CardDescription>{agent.agentType} agent</CardDescription>
-            </CardHeader>
-            <CardContent>
+              <p className="text-slate-600 dark:text-slate-400">{agent.agentType} agent</p>
+            </div>
+            <div>
               <div className="space-y-4">
                 {/* Performance Metrics */}
                 <div className="grid grid-cols-2 gap-4">
@@ -145,7 +143,7 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
 
                 {/* Agent Controls */}
                 <div className="flex space-x-2 pt-2">
-                  <Button 
+                  <EnhancedButton 
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'start')}
@@ -153,8 +151,8 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
                   >
                     <Play className="h-3 w-3 mr-1" />
                     Start
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'stop')}
@@ -162,19 +160,19 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
                   >
                     <Pause className="h-3 w-3 mr-1" />
                     Stop
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'restart')}
                   >
                     <RotateCcw className="h-3 w-3 mr-1" />
                     Restart
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         ))}
       </div>
     </div>

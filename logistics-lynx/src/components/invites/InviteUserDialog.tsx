@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { createInvitation } from '@/api/invites';
@@ -284,15 +282,15 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
           </div>
 
           <DialogFooter>
-            <Button
+            <EnhancedButton
               type="button"
               variant="outline"
               onClick={handleCancel}
               disabled={isLoading}
             >
               Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading || !email || !role}>
+            </EnhancedButton>
+            <EnhancedButton type="submit" disabled={isLoading || !email || !role}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -304,7 +302,7 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
                   Send Invitation
                 </>
               )}
-            </Button>
+            </EnhancedButton>
           </DialogFooter>
         </form>
       </DialogContent>

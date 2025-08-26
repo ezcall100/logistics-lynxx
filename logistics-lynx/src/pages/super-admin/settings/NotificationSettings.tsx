@@ -1,13 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-
 // Custom Label component
 const Label = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
   <label className={`block text-sm font-medium text-gray-700 mb-2 ${className}`}>
@@ -72,26 +63,26 @@ const NotificationSettings = () => {
             Configure how and when you receive notifications
           </p>
         </div>
-        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
           Save Changes
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Email Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📧
               </div>
               Email Notifications
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure email notification preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable Email Notifications</Label>
               <Switch
@@ -123,23 +114,23 @@ const NotificationSettings = () => {
                 <option value="weekly">Weekly Digest</option>
               </select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Push Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔔
               </div>
               Push Notifications
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure push notification preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable Push Notifications</Label>
               <Switch
@@ -152,23 +143,23 @@ const NotificationSettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* SMS Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
               SMS Notifications
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure SMS notification preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable SMS Notifications</Label>
               <Switch
@@ -181,23 +172,23 @@ const NotificationSettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* In-App Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 💬
               </div>
               In-App Notifications
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure in-app notification preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Enable In-App Notifications</Label>
               <Switch
@@ -210,8 +201,8 @@ const NotificationSettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

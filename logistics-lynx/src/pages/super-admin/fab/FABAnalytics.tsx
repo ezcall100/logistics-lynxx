@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const FABAnalytics = () => {
   const [analytics] = useState({
     totalClicks: 1247,
@@ -32,26 +22,26 @@ const FABAnalytics = () => {
             Track performance and usage metrics for your floating action buttons
           </p>
         </div>
-        <Button variant="outline">
+        <EnhancedButton variant="outline">
           Export Data
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Key Metrics */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
               Key Metrics
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Overview of FAB performance metrics
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">{analytics.totalClicks}</div>
@@ -70,23 +60,23 @@ const FABAnalytics = () => {
                 <div className="text-sm text-orange-600">Active Actions</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Top Performing Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 ⭐
               </div>
               Top Performing Actions
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Most frequently used and successful FAB actions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {analytics.topActions.map((action, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
@@ -104,31 +94,31 @@ const FABAnalytics = () => {
                       <div className="text-sm font-medium text-gray-900">{action.success}%</div>
                       <div className="text-xs text-gray-600">Success Rate</div>
                     </div>
-                    <Badge className="bg-green-100 text-green-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {action.success >= 95 ? 'Excellent' : 
                        action.success >= 90 ? 'Good' : 'Fair'}
-                    </Badge>
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Usage Trends */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 📈
               </div>
               Usage Trends
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               FAB usage patterns over time
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -178,23 +168,23 @@ const FABAnalytics = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Performance Insights */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                 💡
               </div>
               Performance Insights
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Recommendations for improving FAB performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -226,8 +216,8 @@ const FABAnalytics = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

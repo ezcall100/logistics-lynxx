@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Settings } from 'lucide-react';
 
 interface PortalConfigurationProps {}
@@ -29,12 +27,12 @@ const PortalConfiguration: React.FC<PortalConfigurationProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Portal Configuration</CardTitle>
-          <CardDescription>Settings, branding, customization options</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Portal Configuration</h3>
+          <p className="text-slate-600 dark:text-slate-400">Settings, branding, customization options</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const PortalConfiguration: React.FC<PortalConfigurationProps> = () => {
                 Settings, branding, customization options
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Portal Settings</Badge>
-                <Badge variant="outline">Branding Customization</Badge>
-                <Badge variant="outline">Theme Management</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Portal Settings</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Branding Customization</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Theme Management</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Portal Configuration
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

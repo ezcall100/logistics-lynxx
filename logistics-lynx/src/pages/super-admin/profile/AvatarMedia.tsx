@@ -1,12 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -48,19 +40,19 @@ const AvatarMedia = () => {
 
       <div className="grid gap-6">
         {/* Current Avatar */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
               Current Avatar
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Your current profile picture
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center space-x-4">
               <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                 <img 
@@ -76,23 +68,23 @@ const AvatarMedia = () => {
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Upload New Avatar */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📤
               </div>
               Upload New Avatar
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Upload a new profile picture
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Choose Image</Label>
               <Input
@@ -120,23 +112,23 @@ const AvatarMedia = () => {
                 </p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Avatar Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
               Avatar Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure avatar display preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label>Show Avatar in Comments</Label>
@@ -156,23 +148,23 @@ const AvatarMedia = () => {
               </div>
               <input type="checkbox" defaultChecked className="rounded" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Media Gallery */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 🖼️
               </div>
               Media Gallery
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Manage your uploaded media files
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((item) => (
                 <div key={item} className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
@@ -181,12 +173,12 @@ const AvatarMedia = () => {
               ))}
             </div>
             <div className="mt-4">
-              <Button variant="outline" className="w-full">
+              <EnhancedButton variant="outline" className="w-full">
                 View All Media
-              </Button>
+              </EnhancedButton>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

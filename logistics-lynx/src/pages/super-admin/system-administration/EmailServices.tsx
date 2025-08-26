@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Mail } from 'lucide-react';
 
 interface EmailServicesProps {}
@@ -29,12 +27,12 @@ const EmailServices: React.FC<EmailServicesProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Email Services</CardTitle>
-          <CardDescription>SMTP configuration, email templates, delivery tracking</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Email Services</h3>
+          <p className="text-slate-600 dark:text-slate-400">SMTP configuration, email templates, delivery tracking</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const EmailServices: React.FC<EmailServicesProps> = () => {
                 SMTP configuration, email templates, delivery tracking
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Smtp Config</Badge>
-                <Badge variant="outline">Email Templates</Badge>
-                <Badge variant="outline">Delivery Tracking</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Smtp Config</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Email Templates</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Delivery Tracking</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Email Services
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

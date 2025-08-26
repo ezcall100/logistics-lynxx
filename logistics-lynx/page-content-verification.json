@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-08-26T19:27:03.149Z",
+  "testPages": 7,
+  "results": {
+    "passed": [
+      {
+        "name": "Server Monitoring",
+        "path": "system/monitoring",
+        "component": "ServerMonitoring",
+        "filePath": "src/pages/super-admin/system-administration/ServerMonitoring.tsx"
+      },
+      {
+        "name": "Database Management",
+        "path": "system/database",
+        "component": "DatabaseManagement",
+        "filePath": "src/pages/super-admin/system-administration/DatabaseManagement.tsx"
+      },
+      {
+        "name": "API Management",
+        "path": "system/api",
+        "component": "ApiManagement",
+        "filePath": "src/pages/super-admin/system-administration/ApiManagement.tsx"
+      },
+      {
+        "name": "Security Audit",
+        "path": "security/audit",
+        "component": "SecurityAudit",
+        "filePath": "src/pages/super-admin/security-center/SecurityAudit.tsx"
+      },
+      {
+        "name": "Performance Monitoring",
+        "path": "monitoring/performance",
+        "component": "PerformanceMonitoring",
+        "filePath": "src/pages/super-admin/system-monitoring/PerformanceMonitoring.tsx"
+      },
+      {
+        "name": "User Management",
+        "path": "users",
+        "component": "AllUsers",
+        "filePath": "src/pages/super-admin/user-management/AllUsers.tsx"
+      }
+    ],
+    "failed": [
+      {
+        "name": "MCP Overview",
+        "path": "mcp",
+        "component": "McpOverview",
+        "issue": "May be showing generic content instead of specific content"
+      }
+    ],
+    "missing": []
+  },
+  "routesConfigured": true,
+  "commonIssues": [
+    "Catch-all route may be interfering with specific routes"
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "missing": 0,
+    "total": 7
+  }
+}

@@ -7,9 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { MCP, MCPMetrics } from '@/services/mcp';
 import { executeFabAction } from '@/components/FabActions';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '@/components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -551,7 +549,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge className={`${getHealthColor(systemHealth)} border-0`}>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                 <div className="flex items-center space-x-2">
                   <div className={`w-2 h-2 rounded-full ${
                     systemHealth === 'healthy' ? 'bg-green-500' :
@@ -559,9 +557,9 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                   }`}></div>
                   <span className="capitalize">{systemHealth}</span>
                 </div>
-              </Badge>
+              </span>
               
-              <Button
+              <EnhancedButton
                 variant="outline"
                 size="sm"
                 onClick={fetchMetrics}
@@ -569,13 +567,13 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
-              </Button>
+              </EnhancedButton>
               
               {isUsingMockData && (
-                <Badge variant="secondary" className="text-xs">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   <Sparkles className="h-3 w-3 mr-1" />
                   Demo Mode
-                </Badge>
+                </span>
               )}
             </div>
           </div>
@@ -641,8 +639,8 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
           <TabsContent value="overview" className="space-y-6">
             {/* Key Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-700">
-                <CardContent className="p-6">
+              <ResponsiveCard>
+                <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-600 dark:text-blue-400">System Uptime</p>
@@ -657,11 +655,11 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                   <div className="mt-4">
                     <Progress value={100} className="h-2" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
 
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-700">
-                <CardContent className="p-6">
+              <ResponsiveCard>
+                <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-green-600 dark:text-green-400">Success Rate</p>
@@ -679,11 +677,11 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       className="h-2" 
                     />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
 
-              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-700">
-                <CardContent className="p-6">
+              <ResponsiveCard>
+                <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Active Agents</p>
@@ -701,11 +699,11 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       className="h-2" 
                     />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
 
-              <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-700">
-                <CardContent className="p-6">
+              <ResponsiveCard>
+                <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-orange-600 dark:text-orange-400">Error Rate</p>
@@ -723,20 +721,20 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       className="h-2" 
                     />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
             </div>
 
             {/* System Resources */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <Cpu className="h-5 w-5" />
                     <span>System Resources</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                  </h3>
+                </div>
+                <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span>CPU Usage</span>
@@ -765,17 +763,17 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                     </div>
                     <Progress value={Math.min((metrics?.resources.network_throughput || 0) / 2, 100)} className="h-2" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <BarChart3 className="h-5 w-5" />
                     <span>Job Statistics</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                </div>
+                <div>
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={[
                       { name: 'Completed', value: metrics?.jobs.completed || 0, fill: '#10b981' },
@@ -788,21 +786,21 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       <Bar dataKey="value" />
                     </BarChart>
                   </ResponsiveContainer>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
             </div>
           </TabsContent>
 
           {/* MCP Agents Tab */}
           <TabsContent value="agents" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                   <Brain className="h-5 w-5" />
                   <span>MCP Agent Status</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              </div>
+              <div>
                 <div className="space-y-4">
                   {agentStatuses.map((agent) => (
                     <div key={agent.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -837,40 +835,40 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                         </div>
                         
                         <div className="flex flex-col items-end space-y-1">
-                          <Badge className={`${getStatusColor(agent.status)} border-0`}>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                             <span className="capitalize">{agent.status}</span>
-                          </Badge>
+                          </span>
                           
-                          <Badge className={`${getPriorityColor(agent.priority)} border-0 text-xs`}>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                             {agent.priority}
-                          </Badge>
+                          </span>
                           
                           {agent.autonomy && (
-                            <Badge variant="outline" className="text-xs">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                               <Zap className="h-3 w-3 mr-1" />
                               Autonomous
-                            </Badge>
+                            </span>
                           )}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
           </TabsContent>
 
           {/* Performance Tab */}
           <TabsContent value="performance" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <TrendingUp className="h-5 w-5" />
                     <span>System Performance (24h)</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                </div>
+                <div>
                   <ResponsiveContainer width="100%" height={300}>
                     <AreaChart data={performanceData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -901,17 +899,17 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       />
                     </AreaChart>
                   </ResponsiveContainer>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <Activity className="h-5 w-5" />
                     <span>Error Tracking</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                </div>
+                <div>
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={performanceData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -932,22 +930,22 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       />
                     </LineChart>
                   </ResponsiveContainer>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
             </div>
           </TabsContent>
 
           {/* Telemetry Tab */}
           <TabsContent value="telemetry" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <Radar className="h-5 w-5" />
                     <span>Agent Confidence Distribution</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                </div>
+                <div>
                   <ResponsiveContainer width="100%" height={300}>
                     <ScatterChart data={agentTelemetry}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -974,17 +972,17 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       />
                     </ScatterChart>
                   </ResponsiveContainer>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <PieChartIcon className="h-5 w-5" />
                     <span>Task Type Distribution</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                </div>
+                <div>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
@@ -1012,115 +1010,115 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
             </div>
           </TabsContent>
 
           {/* Operations Tab */}
           <TabsContent value="operations" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <Power className="h-5 w-5" />
                     <span>System Control</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <EnhancedButton 
                     className="w-full" 
                     onClick={() => performSystemOperation('restart')}
                   >
                     <RotateCcw className="h-4 w-4 mr-2" />
                     Restart System
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     variant="outline" 
                     className="w-full"
                     onClick={() => performSystemOperation('maintenance')}
                   >
                     <Wrench className="h-4 w-4 mr-2" />
                     Maintenance Mode
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     variant="outline" 
                     className="w-full"
                     onClick={() => performSystemOperation('backup')}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Create Backup
-                  </Button>
-                </CardContent>
-              </Card>
+                  </EnhancedButton>
+                </div>
+              </ResponsiveCard>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <Brain className="h-5 w-5" />
                     <span>Agent Control</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <EnhancedButton 
                     className="w-full" 
                     onClick={() => performSystemOperation('restart_agents')}
                   >
                     <Play className="h-4 w-4 mr-2" />
                     Restart All Agents
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     variant="outline" 
                     className="w-full"
                     onClick={() => performSystemOperation('update_agents')}
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Update Agents
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     variant="outline" 
                     className="w-full"
                     onClick={() => performSystemOperation('clear_cache')}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Clear Cache
-                  </Button>
-                </CardContent>
-              </Card>
+                  </EnhancedButton>
+                </div>
+              </ResponsiveCard>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
+              <ResponsiveCard>
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
                     <Shield className="h-5 w-5" />
                     <span>Security</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <EnhancedButton 
                     className="w-full" 
                     onClick={() => performSystemOperation('security_scan')}
                   >
                     <Shield className="h-4 w-4 mr-2" />
                     Security Scan
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     variant="outline" 
                     className="w-full"
                     onClick={() => performSystemOperation('update_certificates')}
                   >
                     <Lock className="h-4 w-4 mr-2" />
                     Update Certificates
-                  </Button>
-                  <Button 
+                  </EnhancedButton>
+                  <EnhancedButton 
                     variant="outline" 
                     className="w-full"
                     onClick={() => performSystemOperation('audit_logs')}
                   >
                     <FileText className="h-4 w-4 mr-2" />
                     Audit Logs
-                  </Button>
-                </CardContent>
-              </Card>
+                  </EnhancedButton>
+                </div>
+              </ResponsiveCard>
             </div>
           </TabsContent>
         </Tabs>

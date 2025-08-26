@@ -1,8 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx'
-import { Button } from '../../../components/ui/button.tsx'
-import { Badge } from '../../../components/ui/badge.tsx'
-
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 const AboutSettings: React.FC = () => {
   const systemInfo = {
     version: '2.1.0',
@@ -32,14 +29,14 @@ const AboutSettings: React.FC = () => {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>System Information</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">System Information</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             Current system version and build details
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <ResponsiveCardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Version</p>
@@ -55,20 +52,20 @@ const AboutSettings: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">System Status</p>
-              <Badge variant="success">{systemInfo.systemStatus}</Badge>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{systemInfo.systemStatus}</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>License Information</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">License Information</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             Current license and subscription details
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <ResponsiveCardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">License Type</p>
@@ -79,35 +76,35 @@ const AboutSettings: React.FC = () => {
               <p className="text-lg font-semibold">{systemInfo.licenseExpiry}</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Active Features</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Active Features</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             Currently enabled system features and modules
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
+        </div>
+        <div>
           <div className="grid grid-cols-2 gap-2">
             {systemInfo.activeFeatures.map((feature, index) => (
-              <Badge key={index} variant="outline" className="justify-start">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                 {feature}
-              </Badge>
+              </span>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Performance Metrics</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Performance Metrics</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             System performance and reliability statistics
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <ResponsiveCardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Uptime</p>
@@ -118,12 +115,12 @@ const AboutSettings: React.FC = () => {
               <p className="text-lg font-semibold">{systemInfo.supportContact}</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
       <div className="flex justify-end space-x-2">
-        <Button variant="outline">Check for Updates</Button>
-        <Button>Contact Support</Button>
+        <EnhancedButton variant="outline">Check for Updates</EnhancedButton>
+        <EnhancedButton>Contact Support</EnhancedButton>
       </div>
     </div>
   );

@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
-import { Button } from '../../../components/ui/button.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { EnhancedProgress } from '../../../components/ui/EnhancedUIComponents';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs.tsx';
 import { 
   Shield, 
   AlertTriangle, 
   CheckCircle, 
   XCircle, 
-  Eye, 
-  Lock, 
+  Clock, 
   Users, 
-  Activity,
-  BarChart3,
-  FileText,
+  Activity, 
   Settings,
   RefreshCw,
+  Eye,
   Download,
-  } from 'lucide-react';
+  Filter,
+  Search,
+  BarChart3,
+  TrendingUp,
+  TrendingDown
+} from 'lucide-react';
 
 interface SecurityEvent {
   id: string;
@@ -226,20 +226,20 @@ const SecurityAudit: React.FC = () => {
           <p className="text-gray-600">Comprehensive security monitoring and compliance management</p>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={loadSecurityData} disabled={isLoading}>
+          <EnhancedButton variant="outline" onClick={loadSecurityData} disabled={isLoading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
-          </Button>
-          <Button>
+          </EnhancedButton>
+          <EnhancedButton>
             <Download className="w-4 h-4 mr-2" />
             Export Report
-          </Button>
+          </EnhancedButton>
         </div>
       </div>
 
       {/* Security Score Card */}
-      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-        <CardContent className="p-6">
+      <ResponsiveCard className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <div className="p-6">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Security Score</h3>
@@ -251,13 +251,13 @@ const SecurityAudit: React.FC = () => {
             </div>
           </div>
           <EnhancedProgress value={threatMetrics.securityScore} className="mt-4" />
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
       {/* Threat Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Threats</p>
@@ -265,11 +265,11 @@ const SecurityAudit: React.FC = () => {
               </div>
               <Shield className="w-8 h-8 text-red-500" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Critical Threats</p>
@@ -277,23 +277,23 @@ const SecurityAudit: React.FC = () => {
               </div>
               <AlertTriangle className="w-8 h-8 text-red-500" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Blocked Attempts</p>
                 <p className="text-2xl font-bold text-green-600">{threatMetrics.blockedAttempts}</p>
               </div>
-              <Lock className="w-8 h-8 text-green-500" />
+              <Clock className="w-8 h-8 text-green-500" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Successful Breaches</p>
@@ -301,98 +301,94 @@ const SecurityAudit: React.FC = () => {
               </div>
               <CheckCircle className="w-8 h-8 text-green-500" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="events" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="events">Security Events</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
-        </TabsList>
+      <ResponsiveCard className="space-y-6">
+        <div className="grid w-full grid-cols-4">
+          <EnhancedButton variant="outline" value="events">Security Events</EnhancedButton>
+          <EnhancedButton variant="outline" value="compliance">Compliance</EnhancedButton>
+          <EnhancedButton variant="outline" value="analytics">Analytics</EnhancedButton>
+          <EnhancedButton variant="outline" value="settings">Settings</EnhancedButton>
+        </div>
 
-        <TabsContent value="events" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="w-5 h-5" />
-                <span>Real-time Security Events</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {securityEvents.map((event) => (
-                  <div key={event.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <div className={`w-3 h-3 rounded-full ${getSeverityColor(event.severity)}`} />
-                      <div>
-                        <p className="font-medium text-gray-900">{event.description}</p>
-                        <p className="text-sm text-gray-500">
-                          {event.source} • {event.user} • {event.ip}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500">{new Date(event.timestamp).toLocaleString()}</p>
-                      <Badge variant="outline">{event.action}</Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="compliance" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <FileText className="w-5 h-5" />
-                <span>Compliance Status</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {complianceChecks.map((check) => (
-                  <div key={check.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      {getStatusIcon(check.status)}
-                      <div>
-                        <p className="font-medium text-gray-900">{check.name}</p>
-                        <p className="text-sm text-gray-500">{check.description}</p>
-                        <p className="text-xs text-gray-400">
-                          Last checked: {new Date(check.lastChecked).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className={getStatusColor(check.status)}>
-                        {check.status.toUpperCase()}
-                      </Badge>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Next: {new Date(check.nextCheck).toLocaleDateString()}
+                 <ResponsiveCard className="space-y-6">
+          <div className="mb-4">
+            <h3 className="flex items-center space-x-2">
+              <Activity className="w-5 h-5" />
+              <span>Real-time Security Events</span>
+            </h3>
+          </div>
+          <div>
+            <div className="space-y-4">
+              {securityEvents.map((event) => (
+                <div key={event.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-3 h-3 rounded-full ${getSeverityColor(event.severity)}`} />
+                    <div>
+                      <p className="font-medium text-gray-900">{event.description}</p>
+                      <p className="text-sm text-gray-500">
+                        {event.source} • {event.user} • {event.ip}
                       </p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500">{new Date(event.timestamp).toLocaleString()}</p>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{event.action}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ResponsiveCard>
 
-        <TabsContent value="analytics" className="space-y-6">
+                 <ResponsiveCard className="space-y-6">
+          <div className="mb-4">
+            <h3 className="flex items-center space-x-2">
+              <Clock className="w-5 h-5" />
+              <span>Compliance Status</span>
+            </h3>
+          </div>
+          <div>
+            <div className="space-y-4">
+              {complianceChecks.map((check) => (
+                <div key={check.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    {getStatusIcon(check.status)}
+                    <div>
+                      <p className="font-medium text-gray-900">{check.name}</p>
+                      <p className="text-sm text-gray-500">{check.description}</p>
+                      <p className="text-xs text-gray-400">
+                        Last checked: {new Date(check.lastChecked).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                      {check.status.toUpperCase()}
+                    </span>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Next: {new Date(check.nextCheck).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ResponsiveCard>
+
+                 <ResponsiveCard className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="flex items-center space-x-2">
                   <BarChart3 className="w-5 h-5" />
                   <span>Threat Distribution</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              </div>
+              <div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Critical</span>
@@ -418,17 +414,17 @@ const SecurityAudit: React.FC = () => {
                   </div>
                   <EnhancedProgress value={(threatMetrics.lowThreats / threatMetrics.totalThreats) * 100} className="h-2" />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="flex items-center space-x-2">
                   <Users className="w-5 h-5" />
                   <span>Access Patterns</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              </div>
+              <div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <span className="text-sm font-medium">Failed Logins</span>
@@ -447,57 +443,55 @@ const SecurityAudit: React.FC = () => {
                     <span className="text-sm text-blue-600 font-bold">1,247</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Settings className="w-5 h-5" />
-                <span>Security Settings</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">Real-time Monitoring</h4>
-                    <p className="text-sm text-gray-500">Enable real-time security event monitoring</p>
-                  </div>
-                  <Button variant="outline">Configure</Button>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">Alert Notifications</h4>
-                    <p className="text-sm text-gray-500">Configure alert notification channels</p>
-                  </div>
-                  <Button variant="outline">Configure</Button>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">Compliance Reporting</h4>
-                    <p className="text-sm text-gray-500">Set up automated compliance reports</p>
-                  </div>
-                  <Button variant="outline">Configure</Button>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">Threat Intelligence</h4>
-                    <p className="text-sm text-gray-500">Configure threat intelligence feeds</p>
-                  </div>
-                  <Button variant="outline">Configure</Button>
-                </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </ResponsiveCard>
+          </div>
+        </ResponsiveCard>
+
+                 <ResponsiveCard className="space-y-6">
+          <div className="mb-4">
+            <h3 className="flex items-center space-x-2">
+              <Settings className="w-5 h-5" />
+              <span>Security Settings</span>
+            </h3>
+          </div>
+          <div>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium text-gray-900">Real-time Monitoring</h4>
+                  <p className="text-sm text-gray-500">Enable real-time security event monitoring</p>
+                </div>
+                <EnhancedButton variant="outline">Configure</EnhancedButton>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium text-gray-900">Alert Notifications</h4>
+                  <p className="text-sm text-gray-500">Configure alert notification channels</p>
+                </div>
+                <EnhancedButton variant="outline">Configure</EnhancedButton>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium text-gray-900">Compliance Reporting</h4>
+                  <p className="text-sm text-gray-500">Set up automated compliance reports</p>
+                </div>
+                <EnhancedButton variant="outline">Configure</EnhancedButton>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium text-gray-900">Threat Intelligence</h4>
+                  <p className="text-sm text-gray-500">Configure threat intelligence feeds</p>
+                </div>
+                <EnhancedButton variant="outline">Configure</EnhancedButton>
+              </div>
+            </div>
+          </div>
+        </ResponsiveCard>
+      </ResponsiveCard>
     </div>
   );
 };

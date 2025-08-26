@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const ActivityHistory = () => {
   const [activities] = useState([
     {
@@ -86,26 +76,26 @@ const ActivityHistory = () => {
             View your recent account activity and login history
           </p>
         </div>
-        <Button variant="outline">
+        <EnhancedButton variant="outline">
           Export Activity Log
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Activity Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
               Activity Summary
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Overview of your recent account activity
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">15</div>
@@ -124,23 +114,23 @@ const ActivityHistory = () => {
                 <div className="text-sm text-purple-600">Security Updates</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📋
               </div>
               Recent Activity
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Your latest account activities and events
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {activities.map((activity) => (
                 <div key={activity.id} className="flex items-start space-x-4 p-4 border rounded-lg">
@@ -152,9 +142,9 @@ const ActivityHistory = () => {
                       <p className="text-sm font-medium text-gray-900">
                         {activity.description}
                       </p>
-                      <Badge className={getStatusColor(activity.status)}>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                         {activity.status}
-                      </Badge>
+                      </span>
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
                       {activity.timestamp}
@@ -169,27 +159,27 @@ const ActivityHistory = () => {
             </div>
             
             <div className="mt-6 text-center">
-              <Button variant="outline">
+              <EnhancedButton variant="outline">
                 Load More Activity
-              </Button>
+              </EnhancedButton>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Security Alerts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🚨
               </div>
               Security Alerts
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Important security-related activities
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -203,13 +193,13 @@ const ActivityHistory = () => {
                     </p>
                   </div>
                 </div>
-                <Button size="sm" variant="outline" className="text-red-600 border-red-300">
+                <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-300">
                   Review
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

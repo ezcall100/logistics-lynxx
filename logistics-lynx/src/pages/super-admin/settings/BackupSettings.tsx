@@ -1,16 +1,7 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
 const BackupSettings = () => {
@@ -75,30 +66,30 @@ const BackupSettings = () => {
             Configure automated backups and recovery options for your TMS data
           </p>
         </div>
-        <Button 
+        <EnhancedButton 
           onClick={handleSave} 
           disabled={isLoading}
           className="bg-blue-600 hover:bg-blue-700"
         >
           {isLoading ? 'Saving...' : 'Save Changes'}
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Automatic Backup Configuration */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔄
               </div>
               Automatic Backup Configuration
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure automated backup schedules and retention policies
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="auto-backup-enabled">Enable Automatic Backups</Label>
               <Switch
@@ -160,23 +151,23 @@ const BackupSettings = () => {
                 />
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Storage Configuration */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 💾
               </div>
               Storage Configuration
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure backup storage location and security settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="storage-type">Storage Type</Label>
@@ -224,23 +215,23 @@ const BackupSettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Manual Backup Controls */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 ⚡
               </div>
               Manual Backup Controls
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Create manual backups and restore from previous backups
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Last Backup</Label>
@@ -261,38 +252,38 @@ const BackupSettings = () => {
             )}
             
             <div className="flex gap-3">
-              <Button
+              <EnhancedButton
                 onClick={handleManualBackup}
                 disabled={isLoading}
                 className="bg-green-600 hover:bg-green-700"
               >
                 {isLoading ? 'Creating Backup...' : 'Create Manual Backup'}
-              </Button>
-              <Button
+              </EnhancedButton>
+              <EnhancedButton
                 variant="outline"
                 onClick={handleRestore}
                 disabled={isLoading}
               >
                 Restore from Backup
-              </Button>
+              </EnhancedButton>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Backup History */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                 📋
               </div>
               Recent Backups
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               View recent backup history and status
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-3">
               {[
                 { date: '2024-01-15 14:30:00', status: 'completed', size: '2.3 GB' },
@@ -305,16 +296,14 @@ const BackupSettings = () => {
                     <p className="font-medium">{backup.date}</p>
                     <p className="text-sm text-gray-600">{backup.size}</p>
                   </div>
-                  <Badge 
-                    variant={backup.status === 'completed' ? 'default' : 'destructive'}
-                  >
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                     {backup.status}
-                  </Badge>
+                  </span>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

@@ -5,9 +5,7 @@
 // Domain: transbotai.com
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Progress } from '../../components/ui/progress';
 import { 
@@ -277,10 +275,10 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Badge variant={isLoading ? 'secondary' : 'default'}>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
             {isLoading ? 'Loading...' : 'Live'}
-          </Badge>
-          <Button
+          </span>
+          <EnhancedButton
             variant="outline"
             size="sm"
             onClick={loadConfidenceLogs}
@@ -288,23 +286,23 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
-          </Button>
+          </EnhancedButton>
           {exportEnabled && (
-            <Button variant="outline" size="sm" onClick={exportToCSV}>
+            <EnhancedButton variant="outline" size="sm" onClick={exportToCSV}>
               <Download className="h-4 w-4 mr-2" />
               Export CSV
-            </Button>
+            </EnhancedButton>
           )}
         </div>
       </div>
 
       {/* Filters */}
       {filterable && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Filters</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="text-lg">Filters</h3>
+          </div>
+          <div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm font-medium">Agent</label>
@@ -360,14 +358,14 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                 </select>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       )}
 
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <ResponsiveCardContent className="p-6">
             <div className="flex items-center space-x-2">
               <Target className="h-5 w-5 text-blue-500" />
               <div>
@@ -377,10 +375,10 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
+          </div>
+        </ResponsiveCard>
+        <ResponsiveCard>
+          <ResponsiveCardContent className="p-6">
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               <div>
@@ -388,10 +386,10 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                 <p className="text-2xl font-bold text-green-600">{successRate.toFixed(1)}%</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
+          </div>
+        </ResponsiveCard>
+        <ResponsiveCard>
+          <ResponsiveCardContent className="p-6">
             <div className="flex items-center space-x-2">
               <Activity className="h-5 w-5 text-purple-500" />
               <div>
@@ -399,10 +397,10 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                 <p className="text-2xl font-bold">{filteredLogs.length}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
+          </div>
+        </ResponsiveCard>
+        <ResponsiveCard>
+          <ResponsiveCardContent className="p-6">
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-orange-500" />
               <div>
@@ -410,8 +408,8 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                 <p className="text-sm font-bold">{lastUpdate.toLocaleTimeString()}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
 
       {/* Charts */}
@@ -423,12 +421,12 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
         </TabsList>
 
         <TabsContent value="timeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Confidence Over Time</CardTitle>
-              <CardDescription>Agent confidence scores over the selected time range</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Confidence Over Time</h3>
+              <p className="text-slate-600 dark:text-slate-400">Agent confidence scores over the selected time range</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={filteredLogs}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -451,17 +449,17 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                   />
                 </LineChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="distribution" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Status Distribution</CardTitle>
-              <CardDescription>Distribution of agent task statuses</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Status Distribution</h3>
+              <p className="text-slate-600 dark:text-slate-400">Distribution of agent task statuses</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={400}>
                 <PieChart>
                   <Pie
@@ -489,17 +487,17 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="agents" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Agent Performance</CardTitle>
-              <CardDescription>Average confidence scores by agent</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Agent Performance</h3>
+              <p className="text-slate-600 dark:text-slate-400">Average confidence scores by agent</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={uniqueAgents.map(agentId => {
                   const agentLogs = filteredLogs.filter(log => log.agentId === agentId);
@@ -515,18 +513,18 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                   <Bar dataKey="confidence" fill="#3b82f6" />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
       </Tabs>
 
       {/* Recent Logs Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Confidence Logs</CardTitle>
-          <CardDescription>Latest agent confidence scores and task results</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Recent Confidence Logs</h3>
+          <p className="text-slate-600 dark:text-slate-400">Latest agent confidence scores and task results</p>
+        </div>
+        <div>
           <div className="space-y-4">
             {filteredLogs.slice(0, 10).map((log) => (
               <div key={log.id} className="flex items-center justify-between p-4 border rounded-lg">
@@ -535,7 +533,7 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                     <span className="font-medium">{log.agentName}</span>
                     <span className="text-sm text-muted-foreground">{log.task}</span>
                   </div>
-                  <Badge variant="outline">{log.portal}</Badge>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{log.portal}</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
@@ -549,18 +547,15 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                       {log.duration}ms
                     </div>
                   </div>
-                  <Badge 
-                    style={{ backgroundColor: getStatusColor(log.status) }}
-                    className="text-white"
-                  >
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                     {log.status}
-                  </Badge>
+                  </span>
                 </div>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

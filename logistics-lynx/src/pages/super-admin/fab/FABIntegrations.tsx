@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const FABIntegrations = () => {
   const [integrations] = useState([
     {
@@ -54,26 +44,26 @@ const FABIntegrations = () => {
             Connect your FAB actions with external services and platforms
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add Integration
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Connected Integrations */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔗
               </div>
               Connected Integrations
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Active integrations with external services
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {integrations.filter(i => i.status === 'connected').map((integration) => (
                 <div key={integration.id} className="flex items-center justify-between p-4 border rounded-lg">
@@ -88,36 +78,36 @@ const FABIntegrations = () => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge className="bg-green-100 text-green-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       Connected
-                    </Badge>
-                    <Button size="sm" variant="outline">
+                    </span>
+                    <EnhancedButton size="sm" variant="outline">
                       Configure
-                    </Button>
-                    <Button size="sm" variant="outline" className="text-red-600 border-red-300">
+                    </EnhancedButton>
+                    <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-300">
                       Disconnect
-                    </Button>
+                    </EnhancedButton>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Available Integrations */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📦
               </div>
               Available Integrations
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Integrations you can connect to your FAB actions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {integrations.filter(i => i.status === 'disconnected').map((integration) => (
                 <div key={integration.id} className="p-4 border rounded-lg hover:bg-gray-50">
@@ -130,9 +120,9 @@ const FABIntegrations = () => {
                       <p className="text-sm text-gray-600">{integration.description}</p>
                     </div>
                   </div>
-                  <Button size="sm" className="w-full">
+                  <EnhancedButton size="sm" className="w-full">
                     Connect
-                  </Button>
+                  </EnhancedButton>
                 </div>
               ))}
               
@@ -146,9 +136,9 @@ const FABIntegrations = () => {
                     <p className="text-sm text-gray-600">Track FAB usage analytics</p>
                   </div>
                 </div>
-                <Button size="sm" className="w-full">
+                <EnhancedButton size="sm" className="w-full">
                   Connect
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="p-4 border rounded-lg hover:bg-gray-50">
@@ -161,28 +151,28 @@ const FABIntegrations = () => {
                     <p className="text-sm text-gray-600">Send SMS notifications</p>
                   </div>
                 </div>
-                <Button size="sm" className="w-full">
+                <EnhancedButton size="sm" className="w-full">
                   Connect
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Integration Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
               Integration Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure global integration settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div>
@@ -213,8 +203,8 @@ const FABIntegrations = () => {
                 </select>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

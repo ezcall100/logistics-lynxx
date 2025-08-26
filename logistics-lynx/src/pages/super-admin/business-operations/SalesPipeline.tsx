@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { TrendingUp } from 'lucide-react';
 
 interface SalesPipelineProps {}
@@ -29,12 +27,12 @@ const SalesPipeline: React.FC<SalesPipelineProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Sales Pipeline</CardTitle>
-          <CardDescription>Lead management, opportunity tracking, sales analytics</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Sales Pipeline</h3>
+          <p className="text-slate-600 dark:text-slate-400">Lead management, opportunity tracking, sales analytics</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const SalesPipeline: React.FC<SalesPipelineProps> = () => {
                 Lead management, opportunity tracking, sales analytics
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Lead Management</Badge>
-                <Badge variant="outline">Opportunity Tracking</Badge>
-                <Badge variant="outline">Sales Analytics</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Lead Management</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Opportunity Tracking</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Sales Analytics</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Sales Pipeline
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

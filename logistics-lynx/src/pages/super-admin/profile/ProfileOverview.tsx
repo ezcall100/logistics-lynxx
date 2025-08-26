@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx'
-import { Button } from '../../../components/ui/button.tsx'
-import { Badge } from '../../../components/ui/badge.tsx'
-
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 const ProfileOverview = () => {
   const [profile, setProfile] = useState({
     name: 'John Doe',
@@ -44,25 +41,25 @@ const ProfileOverview = () => {
         <div className="flex gap-3">
           {isEditing ? (
             <>
-              <Button variant="outline" onClick={handleCancel}>
+              <EnhancedButton variant="outline" onClick={handleCancel}>
                 Cancel
-              </Button>
-              <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+              </EnhancedButton>
+              <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
                 Save Changes
-              </Button>
+              </EnhancedButton>
             </>
           ) : (
-            <Button onClick={handleEdit} className="bg-blue-600 hover:bg-blue-700">
+            <EnhancedButton onClick={handleEdit} className="bg-blue-600 hover:bg-blue-700">
               Edit Profile
-            </Button>
+            </EnhancedButton>
           )}
         </div>
       </div>
 
       <div className="grid gap-6">
         {/* Profile Header */}
-        <Card>
-          <CardContent className="pt-6">
+        <ResponsiveCard>
+          <ResponsiveCardContent className="pt-6">
             <div className="flex items-center space-x-6">
               <div className="relative">
                 <img
@@ -76,10 +73,10 @@ const ProfileOverview = () => {
                 <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
                 <p className="text-gray-600">{profile.email}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <Badge variant="default">{profile.role}</Badge>
-                  <Badge variant="success" className="bg-green-100 text-green-800">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{profile.role}</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                     {profile.status}
-                  </Badge>
+                  </span>
                 </div>
               </div>
               <div className="text-right">
@@ -87,23 +84,23 @@ const ProfileOverview = () => {
                 <p className="text-sm font-medium">{profile.lastLogin}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Personal Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
               Personal Information
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Your basic account information and contact details
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
@@ -134,100 +131,100 @@ const ProfileOverview = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Account Security */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>
               Account Security
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Manage your account security settings and authentication
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Two-Factor Authentication</h4>
                   <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <EnhancedButton variant="outline" size="sm">
                   Enable 2FA
-                </Button>
+                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Password</h4>
                   <p className="text-sm text-gray-600">Last changed 30 days ago</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <EnhancedButton variant="outline" size="sm">
                   Change Password
-                </Button>
+                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Active Sessions</h4>
                   <p className="text-sm text-gray-600">3 active sessions across devices</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <EnhancedButton variant="outline" size="sm">
                   View Sessions
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Preferences */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
               Preferences
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Customize your account preferences and settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Language</h4>
                   <p className="text-sm text-gray-600">English (US)</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <EnhancedButton variant="outline" size="sm">
                   Change
-                </Button>
+                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Time Zone</h4>
                   <p className="text-sm text-gray-600">Eastern Time (ET)</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <EnhancedButton variant="outline" size="sm">
                   Change
-                </Button>
+                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Notifications</h4>
                   <p className="text-sm text-gray-600">Email and push notifications enabled</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <EnhancedButton variant="outline" size="sm">
                   Configure
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

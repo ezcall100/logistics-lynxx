@@ -1,16 +1,6 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-
 const AccessibilitySettings = () => {
   const [accessibilitySettings, setAccessibilitySettings] = useState({
     highContrast: false,
@@ -35,26 +25,26 @@ const AccessibilitySettings = () => {
             Configure accessibility features for better usability
           </p>
         </div>
-        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
           Save Changes
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Visual Accessibility */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👁️
               </div>
               Visual Accessibility
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Adjust visual settings for better visibility
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>High Contrast Mode</Label>
               <Switch
@@ -93,23 +83,23 @@ const AccessibilitySettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Navigation & Interaction */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 ⌨️
               </div>
               Navigation & Interaction
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure navigation and interaction preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Screen Reader Support</Label>
               <Switch
@@ -148,23 +138,23 @@ const AccessibilitySettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Motion & Animation */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ✨
               </div>
               Motion & Animation
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure motion and animation preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Reduced Motion</Label>
               <Switch
@@ -177,8 +167,8 @@ const AccessibilitySettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

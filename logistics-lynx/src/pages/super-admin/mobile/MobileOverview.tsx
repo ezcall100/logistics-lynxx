@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const MobileOverview = () => {
   const [mobileStats] = useState({
     totalDevices: 24,
@@ -26,26 +16,26 @@ const MobileOverview = () => {
             Monitor and manage mobile device connections and synchronization
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add Device
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Mobile Statistics */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
               Mobile Statistics
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Overview of mobile device usage and status
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">{mobileStats.totalDevices}</div>
@@ -64,23 +54,23 @@ const MobileOverview = () => {
                 <div className="text-sm text-orange-600">Avg Response Time</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Device Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
               Device Status
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Current status of connected mobile devices
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {[
                 { name: 'iPhone 15 Pro', user: 'John Doe', status: 'online', lastSync: '1 minute ago' },
@@ -100,36 +90,33 @@ const MobileOverview = () => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge className={device.status === 'online' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                    }>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {device.status}
-                    </Badge>
-                    <Button size="sm" variant="outline">
+                    </span>
+                    <EnhancedButton size="sm" variant="outline">
                       Manage
-                    </Button>
+                    </EnhancedButton>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Sync Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🔄
               </div>
               Synchronization Status
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Real-time synchronization status and performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -141,9 +128,9 @@ const MobileOverview = () => {
                     <p className="text-sm text-gray-600">All devices synchronized</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Healthy
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -156,9 +143,9 @@ const MobileOverview = () => {
                     <p className="text-sm text-gray-600">All connections stable</p>
                   </div>
                 </div>
-                <Badge className="bg-blue-100 text-blue-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Stable
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -171,13 +158,13 @@ const MobileOverview = () => {
                     <p className="text-sm text-gray-600">Average response time: 2.3s</p>
                   </div>
                 </div>
-                <Badge className="bg-orange-100 text-orange-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Good
-                </Badge>
+                </span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

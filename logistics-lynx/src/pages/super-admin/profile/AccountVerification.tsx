@@ -1,16 +1,6 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-
 const AccountVerification = () => {
   const [verificationStatus, setVerificationStatus] = useState({
     email: {
@@ -63,19 +53,19 @@ const AccountVerification = () => {
 
       <div className="grid gap-6">
         {/* Email Verification */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📧
               </div>
               Email Verification
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Verify your email address for account security
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.email.email}</p>
@@ -87,40 +77,37 @@ const AccountVerification = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge className={verificationStatus.email.verified 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
-                }>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   {verificationStatus.email.verified ? 'Verified' : 'Unverified'}
-                </Badge>
+                </span>
                 {!verificationStatus.email.verified && (
-                  <Button
+                  <EnhancedButton
                     size="sm"
                     onClick={handleResendEmail}
                     disabled={isResendingEmail}
                   >
                     {isResendingEmail ? 'Sending...' : 'Resend Email'}
-                  </Button>
+                  </EnhancedButton>
                 )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Phone Verification */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
               Phone Verification
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Verify your phone number for additional security
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.phone.phone}</p>
@@ -132,20 +119,17 @@ const AccountVerification = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge className={verificationStatus.phone.verified 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
-                }>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   {verificationStatus.phone.verified ? 'Verified' : 'Unverified'}
-                </Badge>
+                </span>
                 {!verificationStatus.phone.verified && (
-                  <Button
+                  <EnhancedButton
                     size="sm"
                     onClick={handleSendSMS}
                     disabled={isSendingSMS}
                   >
                     {isSendingSMS ? 'Sending...' : 'Send SMS Code'}
-                  </Button>
+                  </EnhancedButton>
                 )}
               </div>
             </div>
@@ -159,29 +143,29 @@ const AccountVerification = () => {
                     maxLength={6}
                     className="w-32"
                   />
-                  <Button size="sm">
+                  <EnhancedButton size="sm">
                     Verify
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Identity Verification */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🆔
               </div>
               Identity Verification
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Verify your identity with official documents
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.identity.documentType}</p>
@@ -193,36 +177,33 @@ const AccountVerification = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge className={verificationStatus.identity.verified 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
-                }>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   {verificationStatus.identity.verified ? 'Verified' : 'Unverified'}
-                </Badge>
+                </span>
                 {!verificationStatus.identity.verified && (
-                  <Button size="sm">
+                  <EnhancedButton size="sm">
                     Upload Document
-                  </Button>
+                  </EnhancedButton>
                 )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Two-Factor Authentication */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 🔐
               </div>
               Two-Factor Authentication
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Add an extra layer of security to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">{verificationStatus.twoFactor.method}</p>
@@ -234,34 +215,31 @@ const AccountVerification = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge className={verificationStatus.twoFactor.enabled 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
-                }>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   {verificationStatus.twoFactor.enabled ? 'Enabled' : 'Disabled'}
-                </Badge>
-                <Button size="sm" variant="outline">
+                </span>
+                <EnhancedButton size="sm" variant="outline">
                   {verificationStatus.twoFactor.enabled ? 'Manage' : 'Enable'}
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Verification Benefits */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 ✨
               </div>
               Verification Benefits
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Benefits of completing account verification
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -291,8 +269,8 @@ const AccountVerification = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

@@ -1,16 +1,6 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-
 const LanguageSettings = () => {
   const [languageSettings, setLanguageSettings] = useState({
     primaryLanguage: 'en',
@@ -35,26 +25,26 @@ const LanguageSettings = () => {
             Configure language, date/time format, and regional preferences
           </p>
         </div>
-        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
           Save Changes
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Language Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🌐
               </div>
               Language Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Choose your preferred languages
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Primary Language</Label>
               <select
@@ -107,23 +97,23 @@ const LanguageSettings = () => {
                 }
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Date & Time Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📅
               </div>
               Date & Time Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure date and time display formats
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Date Format</Label>
               <select
@@ -158,23 +148,23 @@ const LanguageSettings = () => {
                 <option value="24h">24-hour</option>
               </select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Regional Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 🌍
               </div>
               Regional Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure currency and timezone
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Currency</Label>
               <select
@@ -213,8 +203,8 @@ const LanguageSettings = () => {
                 <option value="PST">Pacific Time</option>
               </select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

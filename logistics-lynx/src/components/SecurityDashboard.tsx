@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
@@ -193,10 +191,10 @@ const SecurityDashboard: React.FC = () => {
             Monitor RLS policies, audit logs, and security status across all companies
           </p>
         </div>
-        <Button onClick={loadSecurityData} variant="outline">
+        <EnhancedButton onClick={loadSecurityData} variant="outline">
           <Activity className="h-4 w-4 mr-2" />
           Refresh
-        </Button>
+        </EnhancedButton>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
@@ -208,83 +206,83 @@ const SecurityDashboard: React.FC = () => {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Companies</CardTitle>
+            <ResponsiveCard>
+              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <ResponsiveCardTitle className="text-sm font-medium">Total Companies</h3>
                 <Database className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="text-2xl font-bold">{securityOverview.length}</div>
                 <p className="text-xs text-muted-foreground">
                   Active organizations
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <ResponsiveCard>
+              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <ResponsiveCardTitle className="text-sm font-medium">Total Users</h3>
                 <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="text-2xl font-bold">
                   {securityOverview.reduce((sum, company) => sum + company.total_users, 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Across all companies
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Admin Users</CardTitle>
+            <ResponsiveCard>
+              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <ResponsiveCardTitle className="text-sm font-medium">Admin Users</h3>
                 <Shield className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="text-2xl font-bold">
                   {securityOverview.reduce((sum, company) => sum + company.admin_users, 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   With elevated privileges
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Audit Events (30d)</CardTitle>
+            <ResponsiveCard>
+              <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <ResponsiveCardTitle className="text-sm font-medium">Audit Events (30d)</h3>
                 <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="text-2xl font-bold">
                   {securityOverview.reduce((sum, company) => sum + company.audit_events_last_30_days, 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Security events logged
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Company Security Scores</CardTitle>
-                <CardDescription>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Company Security Scores</h3>
+                <p className="text-slate-600 dark:text-slate-400">
                   Security assessment based on role distribution and activity
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </p>
+              </div>
+              <ResponsiveCardContent className="space-y-4">
                 {securityOverview.map((company) => {
                   const score = getSecurityScore(company);
                   return (
                     <div key={company.company_id} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">{company.company_name}</span>
-                        <Badge variant={score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive"}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">= 80 ? "default" : score >= 60 ? "secondary" : "destructive"}>
                           {score}/100
-                        </Badge>
+                        </span>
                       </div>
                       <Progress value={score} className="h-2" />
                       <div className="text-xs text-muted-foreground">
@@ -293,17 +291,17 @@ const SecurityDashboard: React.FC = () => {
                     </div>
                   );
                 })}
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Role Distribution</CardTitle>
-                <CardDescription>
+            <ResponsiveCard>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Role Distribution</h3>
+                <p className="text-slate-600 dark:text-slate-400">
                   User roles across all companies
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </p>
+              </div>
+              <div>
                 <div className="space-y-4">
                   {['admin', 'manager', 'user', 'viewer'].map((role) => {
                     const count = securityOverview.reduce((sum, company) => {
@@ -319,25 +317,25 @@ const SecurityDashboard: React.FC = () => {
                     return (
                       <div key={role} className="flex items-center justify-between">
                         <span className="text-sm font-medium capitalize">{role}s</span>
-                        <Badge variant="outline">{count}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{count}</span>
                       </div>
                     );
                   })}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </ResponsiveCard>
           </div>
         </TabsContent>
 
         <TabsContent value="audit" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Audit Logs</CardTitle>
-              <CardDescription>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Recent Audit Logs</h3>
+              <p className="text-slate-600 dark:text-slate-400">
                 Security events and user actions across all companies
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div>
               <div className="space-y-4">
                 {auditLogs.map((log) => (
                   <div key={log.id} className="flex items-start space-x-4 p-4 border rounded-lg">
@@ -347,7 +345,7 @@ const SecurityDashboard: React.FC = () => {
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center space-x-2">
                         <span className="font-medium">{log.action.replace('_', ' ')}</span>
-                        <Badge variant="outline">{log.resource_type}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{log.resource_type}</span>
                         <span className="text-sm text-muted-foreground">
                           {new Date(log.created_at).toLocaleString()}
                         </span>
@@ -369,19 +367,19 @@ const SecurityDashboard: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="rls" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Row Level Security Status</CardTitle>
-              <CardDescription>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Row Level Security Status</h3>
+              <p className="text-slate-600 dark:text-slate-400">
                 RLS policies and table security configuration
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div>
               <div className="space-y-4">
                 {rlsStatus.map((table) => (
                   <div key={table.table_name} className="flex items-center justify-between p-4 border rounded-lg">
@@ -398,14 +396,14 @@ const SecurityDashboard: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <Badge variant={table.row_security ? "default" : "destructive"}>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {table.row_security ? "Secured" : "Unsecured"}
-                    </Badge>
+                    </span>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
       </Tabs>
     </div>

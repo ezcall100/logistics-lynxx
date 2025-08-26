@@ -1,13 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
@@ -30,26 +21,26 @@ const MobileSettings = () => {
             Configure mobile app behavior and preferences
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Save Settings
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Notification Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 🔔
               </div>
               Notification Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Configure how and when you receive notifications
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-1">
                 <Label className="text-base font-medium">Push Notifications</Label>
@@ -65,23 +56,23 @@ const MobileSettings = () => {
               </div>
               <Switch checked={settings.backgroundRefresh} />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Data & Sync Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
               Data & Sync Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Manage data synchronization and storage preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-1">
                 <Label className="text-base font-medium">Auto Sync</Label>
@@ -105,23 +96,23 @@ const MobileSettings = () => {
               </div>
               <Switch checked={settings.dataCompression} />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Location & Privacy */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 📍
               </div>
               Location & Privacy
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Control location services and privacy settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </p>
+          </div>
+          <ResponsiveCardContent className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-1">
                 <Label className="text-base font-medium">Location Services</Label>
@@ -129,32 +120,32 @@ const MobileSettings = () => {
               </div>
               <Switch checked={settings.locationServices} />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* App Performance */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 ⚡
               </div>
               App Performance
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Optimize app performance and battery usage
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-1">
                   <h4 className="font-medium text-gray-900">Battery Usage</h4>
                   <p className="text-sm text-gray-600">Low impact mode enabled</p>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Optimized
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -162,9 +153,9 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Storage Usage</h4>
                   <p className="text-sm text-gray-600">2.3 GB of 64 GB used</p>
                 </div>
-                <Badge className="bg-blue-100 text-blue-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   3.6%
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -172,37 +163,37 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Cache Size</h4>
                   <p className="text-sm text-gray-600">156 MB cached data</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Clear Cache
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Security Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>
               Security Settings
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Manage app security and authentication
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-1">
                   <h4 className="font-medium text-gray-900">Biometric Authentication</h4>
                   <p className="text-sm text-gray-600">Use fingerprint or face ID</p>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Enabled
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -210,9 +201,9 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Session Timeout</h4>
                   <p className="text-sm text-gray-600">Auto-logout after 30 minutes</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -220,13 +211,13 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Device Management</h4>
                   <p className="text-sm text-gray-600">Manage trusted devices</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Manage
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

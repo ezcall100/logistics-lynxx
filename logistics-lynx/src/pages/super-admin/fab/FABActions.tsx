@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const FABActions = () => {
   const [actions] = useState([
     {
@@ -58,26 +48,26 @@ const FABActions = () => {
             Manage and configure your floating action button actions
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add New Action
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Action List */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 ⚡
               </div>
               Configured Actions
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Your current FAB action configurations
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {actions.map((action) => (
                 <div key={action.id} className="flex items-center justify-between p-4 border rounded-lg">
@@ -89,47 +79,44 @@ const FABActions = () => {
                       <h4 className="font-medium text-gray-900">{action.name}</h4>
                       <p className="text-sm text-gray-600">{action.description}</p>
                       <div className="flex items-center space-x-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {action.category}
-                        </Badge>
-                        <Badge className={action.status === 'active' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                        }>
+                        </span>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                           {action.status}
-                        </Badge>
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">{action.usage} uses</span>
-                    <Button size="sm" variant="outline">
+                    <EnhancedButton size="sm" variant="outline">
                       Edit
-                    </Button>
-                    <Button size="sm" variant="outline" className="text-red-600 border-red-300">
+                    </EnhancedButton>
+                    <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-300">
                       Delete
-                    </Button>
+                    </EnhancedButton>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Action Categories */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📂
               </div>
               Action Categories
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Organize your actions by category
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="flex items-center space-x-3 mb-3">
@@ -139,7 +126,7 @@ const FABActions = () => {
                   <h4 className="font-medium text-gray-900">Orders</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Order management actions</p>
-                <Badge variant="outline">2 actions</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">2 actions</span>
               </div>
               
               <div className="p-4 border rounded-lg">
@@ -150,7 +137,7 @@ const FABActions = () => {
                   <h4 className="font-medium text-gray-900">Shipping</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Shipping and logistics actions</p>
-                <Badge variant="outline">1 action</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">1 action</span>
               </div>
               
               <div className="p-4 border rounded-lg">
@@ -161,11 +148,11 @@ const FABActions = () => {
                   <h4 className="font-medium text-gray-900">Contacts</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Contact management actions</p>
-                <Badge variant="outline">1 action</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">1 action</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

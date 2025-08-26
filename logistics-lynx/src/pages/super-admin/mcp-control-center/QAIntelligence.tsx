@@ -36,9 +36,7 @@ import {
   Target
 } from 'lucide-react';
 import { confidenceLogger } from '@/services/confidence-logger';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -175,9 +173,9 @@ const QAIntelligence: React.FC = () => {
   };
 
   const getConfidenceBadge = (confidence: number) => {
-    if (confidence >= 0.8) return <Badge variant="default" className="bg-green-100 text-green-800">High</Badge>;
-    if (confidence >= 0.6) return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Medium</Badge>;
-    return <Badge variant="destructive">Low</Badge>;
+    if (confidence >= 0.8) return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">High</span>;
+    if (confidence >= 0.6) return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Medium</span>;
+    return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Low</span>;
   };
 
   // ========================
@@ -231,34 +229,34 @@ const QAIntelligence: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
+          <EnhancedButton
             variant="outline"
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
             {autoRefresh ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
             {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
-          </Button>
-          <Button
+          </EnhancedButton>
+          <EnhancedButton
             variant="outline"
             size="sm"
             onClick={fetchData}
           >
             <RefreshCw className="h-4 w-4" />
             Refresh
-          </Button>
+          </EnhancedButton>
         </div>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
+      <ResponsiveCard>
+        <div className="mb-4">
+          <ResponsiveCardTitle className="flex items-center">
             <Filter className="h-5 w-5 mr-2" />
             Filters
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        </div>
+        <div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="text-sm font-medium">Agent</label>
@@ -303,72 +301,72 @@ const QAIntelligence: React.FC = () => {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" size="sm" onClick={() => exportData('confidence')}>
+              <EnhancedButton variant="outline" size="sm" onClick={() => exportData('confidence')}>
                 <Download className="h-4 w-4 mr-2" />
                 Export Data
-              </Button>
+              </EnhancedButton>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Decisions</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Total Decisions</h3>
             <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{totalDecisions.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               Across all agents and tasks
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Confidence</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Average Confidence</h3>
             <Target className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className={`text-2xl font-bold ${getConfidenceColor(avgConfidence)}`}>
               {(avgConfidence * 100).toFixed(1)}%
             </div>
             <p className="text-xs text-muted-foreground">
               {getConfidenceBadge(avgConfidence)}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Failures</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Total Failures</h3>
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold text-red-600">{totalFailures}</div>
             <p className="text-xs text-muted-foreground">
               {resolutionRate.toFixed(1)}% resolved
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Agents</CardTitle>
+        <ResponsiveCard>
+          <ResponsiveCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <ResponsiveCardTitle className="text-sm font-medium">Active Agents</h3>
             <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             <div className="text-2xl font-bold">
               {new Set(confidenceData.map(d => d.agent_id)).size}
             </div>
             <p className="text-xs text-muted-foreground">
               Currently monitored
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
 
       {/* Charts and Tables */}
@@ -380,14 +378,14 @@ const QAIntelligence: React.FC = () => {
         </TabsList>
 
         <TabsContent value="confidence" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Agent Confidence Trends</CardTitle>
-              <CardDescription>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Agent Confidence Trends</h3>
+              <p className="text-slate-600 dark:text-slate-400">
                 Confidence scores by task type over the selected time period
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={confidenceChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -400,14 +398,14 @@ const QAIntelligence: React.FC = () => {
                   <Line type="monotone" dataKey="Max Confidence" stroke="#00C49F" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Confidence Details</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Confidence Details</h3>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -436,19 +434,19 @@ const QAIntelligence: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="failures" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Failure Analysis</CardTitle>
-              <CardDescription>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Failure Analysis</h3>
+              <p className="text-slate-600 dark:text-slate-400">
                 Failure counts and resolution rates by task type
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={failureChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -460,14 +458,14 @@ const QAIntelligence: React.FC = () => {
                   <Bar dataKey="Resolved Count" fill="#4ECDC4" />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Failure Details</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Failure Details</h3>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -492,19 +490,19 @@ const QAIntelligence: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="performance" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance Metrics</CardTitle>
-              <CardDescription>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Performance Metrics</h3>
+              <p className="text-slate-600 dark:text-slate-400">
                 Success rates and response times by task type
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={performanceChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -516,14 +514,14 @@ const QAIntelligence: React.FC = () => {
                   <Bar dataKey="Avg Response Time (ms)" fill="#45B7D1" />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance Details</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Performance Details</h3>
+            </div>
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -552,8 +550,8 @@ const QAIntelligence: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
       </Tabs>
     </div>

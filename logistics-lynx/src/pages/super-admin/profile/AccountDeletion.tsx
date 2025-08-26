@@ -1,16 +1,6 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-
 const AccountDeletion = () => {
   const [deletionStep, setDeletionStep] = useState<'warning' | 'confirmation' | 'processing'>('warning');
   const [confirmationText, setConfirmationText] = useState('');
@@ -63,34 +53,34 @@ const AccountDeletion = () => {
 
       <div className="grid gap-6">
         {/* Warning Card */}
-        <Card className="border-red-200 bg-red-50">
-          <CardHeader>
-            <CardTitle className="text-red-800 flex items-center gap-2">
+        <ResponsiveCard className="border-red-200 bg-red-50">
+          <div className="mb-4">
+            <ResponsiveCardTitle className="text-red-800 flex items-center gap-2">
               ⚠️ Warning
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          </div>
+          <div>
             <p className="text-red-700">
               Account deletion is permanent and cannot be undone. All your data, 
               projects, and settings will be permanently removed from our systems.
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Account Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 👤
               </div>
               Account Information
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Details of the account that will be deleted
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <div>
@@ -121,23 +111,23 @@ const AccountDeletion = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Data That Will Be Deleted */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🗑️
               </div>
               Data That Will Be Deleted
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               All of the following data will be permanently removed
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -149,7 +139,7 @@ const AccountDeletion = () => {
                     <p className="text-sm text-gray-600">{accountData.activeProjects} active projects</p>
                   </div>
                 </div>
-                <Badge variant="destructive">Will be deleted</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Will be deleted</span>
               </div>
               
               <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -162,7 +152,7 @@ const AccountDeletion = () => {
                     <p className="text-sm text-gray-600">{accountData.teamMembers} team members</p>
                   </div>
                 </div>
-                <Badge variant="destructive">Will be deleted</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Will be deleted</span>
               </div>
               
               <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -175,7 +165,7 @@ const AccountDeletion = () => {
                     <p className="text-sm text-gray-600">Preferences, notifications, security settings</p>
                   </div>
                 </div>
-                <Badge variant="destructive">Will be deleted</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Will be deleted</span>
               </div>
               
               <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -188,7 +178,7 @@ const AccountDeletion = () => {
                     <p className="text-sm text-gray-600">Usage data, performance metrics, reports</p>
                   </div>
                 </div>
-                <Badge variant="destructive">Will be deleted</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Will be deleted</span>
               </div>
               
               <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -201,40 +191,40 @@ const AccountDeletion = () => {
                     <p className="text-sm text-gray-600">Payment methods, invoices, subscription data</p>
                   </div>
                 </div>
-                <Badge variant="destructive">Will be deleted</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Will be deleted</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Action Buttons */}
         {deletionStep === 'warning' && (
-          <Card>
-            <CardContent className="pt-6">
+          <ResponsiveCard>
+            <ResponsiveCardContent className="pt-6">
               <div className="flex gap-3">
-                <Button 
+                <EnhancedButton 
                   onClick={handleStartDeletion}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   Start Account Deletion
-                </Button>
-                <Button variant="outline">
+                </EnhancedButton>
+                <EnhancedButton variant="outline">
                   Cancel
-                </Button>
+                </EnhancedButton>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         )}
 
         {/* Confirmation Step */}
         {deletionStep === 'confirmation' && (
-          <Card className="border-red-200 bg-red-50">
-            <CardHeader>
-              <CardTitle className="text-red-800 flex items-center gap-2">
+          <ResponsiveCard className="border-red-200 bg-red-50">
+            <div className="mb-4">
+              <ResponsiveCardTitle className="text-red-800 flex items-center gap-2">
                 🔒 Final Confirmation
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </h3>
+            </div>
+            <ResponsiveCardContent className="space-y-4">
               <p className="text-red-700">
                 To confirm account deletion, please type <strong>DELETE</strong> in the field below:
               </p>
@@ -248,25 +238,25 @@ const AccountDeletion = () => {
                 />
               </div>
               <div className="flex gap-3">
-                <Button 
+                <EnhancedButton 
                   onClick={handleConfirmDeletion}
                   disabled={confirmationText !== 'DELETE'}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   Permanently Delete Account
-                </Button>
-                <Button variant="outline" onClick={handleCancel}>
+                </EnhancedButton>
+                <EnhancedButton variant="outline" onClick={handleCancel}>
                   Cancel
-                </Button>
+                </EnhancedButton>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         )}
 
         {/* Processing Step */}
         {deletionStep === 'processing' && (
-          <Card>
-            <CardContent className="pt-6">
+          <ResponsiveCard>
+            <ResponsiveCardContent className="pt-6">
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🔄</span>
@@ -281,24 +271,24 @@ const AccountDeletion = () => {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         )}
 
         {/* Alternative Options */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 💡
               </div>
               Alternative Options
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Consider these alternatives before deleting your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -329,15 +319,15 @@ const AccountDeletion = () => {
               </div>
             </div>
             <div className="mt-4 flex gap-3">
-              <Button variant="outline">
+              <EnhancedButton variant="outline">
                 Export Data
-              </Button>
-              <Button variant="outline">
+              </EnhancedButton>
+              <EnhancedButton variant="outline">
                 Contact Support
-              </Button>
+              </EnhancedButton>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

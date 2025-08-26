@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const FABTemplates = () => {
   const [templates] = useState([
     {
@@ -46,26 +36,26 @@ const FABTemplates = () => {
             Pre-configured FAB action templates for different use cases
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Create Template
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Available Templates */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📋
               </div>
               Available Templates
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Choose from pre-built templates or create your own
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid gap-4">
               {templates.map((template) => (
                 <div key={template.id} className="p-4 border rounded-lg hover:bg-gray-50">
@@ -73,44 +63,44 @@ const FABTemplates = () => {
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h4 className="font-medium text-gray-900">{template.name}</h4>
-                        <Badge variant="outline">{template.category}</Badge>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{template.category}</span>
                       </div>
                       <p className="text-sm text-gray-600 mb-3">{template.description}</p>
                       <div className="flex flex-wrap gap-2">
                         {template.actions.map((action, index) => (
-                          <Badge key={index} className="bg-gray-100 text-gray-700">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                             {action}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 ml-4">
                       <span className="text-sm text-gray-600">{template.usage} uses</span>
-                      <Button size="sm" variant="outline">
+                      <EnhancedButton size="sm" variant="outline">
                         Use Template
-                      </Button>
+                      </EnhancedButton>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Template Categories */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📂
               </div>
               Template Categories
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Browse templates by category
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
                 <div className="flex items-center space-x-3 mb-3">
@@ -120,7 +110,7 @@ const FABTemplates = () => {
                   <h4 className="font-medium text-gray-900">E-commerce</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Online store management</p>
-                <Badge variant="outline">3 templates</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">3 templates</span>
               </div>
               
               <div className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -131,7 +121,7 @@ const FABTemplates = () => {
                   <h4 className="font-medium text-gray-900">Logistics</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Transportation & shipping</p>
-                <Badge variant="outline">2 templates</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">2 templates</span>
               </div>
               
               <div className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -142,26 +132,26 @@ const FABTemplates = () => {
                   <h4 className="font-medium text-gray-900">CRM</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Customer management</p>
-                <Badge variant="outline">2 templates</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">2 templates</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Popular Templates */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                 ⭐
               </div>
               Popular Templates
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Most frequently used templates
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {templates.slice(0, 2).map((template) => (
                 <div key={template.id} className="flex items-center justify-between p-3 border rounded-lg">
@@ -176,15 +166,15 @@ const FABTemplates = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">{template.usage} uses</span>
-                    <Button size="sm">
+                    <EnhancedButton size="sm">
                       Apply
-                    </Button>
+                    </EnhancedButton>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
 const MobileDevices = () => {
   const [devices] = useState([
     {
@@ -70,26 +60,26 @@ const MobileDevices = () => {
             Manage and monitor all connected mobile devices
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add Device
-        </Button>
+        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
         {/* Device Statistics */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 📊
               </div>
               Device Statistics
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Overview of mobile device usage and status
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">{devices.length}</div>
@@ -114,23 +104,23 @@ const MobileDevices = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Device List */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 📱
               </div>
               Connected Devices
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Detailed information about each connected device
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               {devices.map((device) => (
                 <div key={device.id} className="border rounded-lg p-4">
@@ -146,16 +136,12 @@ const MobileDevices = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Badge className={
-                        device.status === 'active' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                         {device.status}
-                      </Badge>
-                      <Button size="sm" variant="outline">
+                      </span>
+                      <EnhancedButton size="sm" variant="outline">
                         Manage
-                      </Button>
+                      </EnhancedButton>
                     </div>
                   </div>
                   
@@ -193,32 +179,32 @@ const MobileDevices = () => {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Device Management */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 ⚙️
               </div>
               Device Management
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Bulk actions and device management tools
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-1">
                   <h4 className="font-medium text-gray-900">Remote Wipe</h4>
                   <p className="text-sm text-gray-600">Securely erase data from selected devices</p>
                 </div>
-                <Button size="sm" variant="outline" className="text-red-600 border-red-200">
+                <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-200">
                   Wipe Device
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -226,9 +212,9 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">Device Lock</h4>
                   <p className="text-sm text-gray-600">Lock devices remotely for security</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Lock Device
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -236,9 +222,9 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">App Updates</h4>
                   <p className="text-sm text-gray-600">Push app updates to all devices</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Update Apps
-                </Button>
+                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -246,28 +232,28 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">Device Reports</h4>
                   <p className="text-sm text-gray-600">Generate device usage reports</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <EnhancedButton size="sm" variant="outline">
                   Generate Report
-                </Button>
+                </EnhancedButton>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
         {/* Security Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <ResponsiveCard>
+          <div className="mb-4">
+            <ResponsiveCardTitle className="flex items-center gap-2">
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 🔒
               </div>
               Security Status
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
               Security compliance and device health status
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          <div>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -279,9 +265,9 @@ const MobileDevices = () => {
                     <p className="text-sm text-gray-600">All devices are encrypted</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Compliant
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -294,9 +280,9 @@ const MobileDevices = () => {
                     <p className="text-sm text-gray-600">All devices have screen lock enabled</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Compliant
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -309,9 +295,9 @@ const MobileDevices = () => {
                     <p className="text-sm text-gray-600">2 devices need OS updates</p>
                   </div>
                 </div>
-                <Badge className="bg-yellow-100 text-yellow-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Attention
-                </Badge>
+                </span>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -324,13 +310,13 @@ const MobileDevices = () => {
                     <p className="text-sm text-gray-600">No jailbroken devices detected</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   Secure
-                </Badge>
+                </span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -376,18 +375,18 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl">
-        <CardHeader className="text-center">
+      <ResponsiveCard className="w-full max-w-2xl">
+        <ResponsiveCardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
               <currentStepData.icon className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl">{currentStepData.title}</CardTitle>
-          <CardDescription>{currentStepData.description}</CardDescription>
-        </CardHeader>
+          <ResponsiveCardTitle className="text-2xl">{currentStepData.title}</h3>
+          <p className="text-slate-600 dark:text-slate-400">{currentStepData.description}</p>
+        </div>
         
-        <CardContent className="space-y-6">
+        <ResponsiveCardContent className="space-y-6">
           {/* Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -404,16 +403,16 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
           {/* Navigation */}
           <div className="flex justify-between pt-6">
-            <Button
+            <EnhancedButton
               variant="outline"
               onClick={handleBack}
               disabled={currentStep === 0 || isLoading}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
-            </Button>
+            </EnhancedButton>
             
-            <Button
+            <EnhancedButton
               onClick={handleNext}
               disabled={!canProceed() || isLoading}
             >
@@ -433,10 +432,10 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </>
               )}
-            </Button>
+            </EnhancedButton>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

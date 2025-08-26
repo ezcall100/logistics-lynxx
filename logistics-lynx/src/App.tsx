@@ -28,6 +28,7 @@ import BackupRecovery from './pages/super-admin/system-administration/BackupReco
 import IntegrationHub from './pages/super-admin/system-administration/IntegrationHub';
 import FileStorage from './pages/super-admin/system-administration/FileStorage';
 import EmailServices from './pages/super-admin/system-administration/EmailServices';
+import ServerMonitoring from './pages/super-admin/system-administration/ServerMonitoring';
 
 // Security Center Routes
 import SecurityAudit from './pages/super-admin/security-center/SecurityAudit';
@@ -390,6 +391,7 @@ function App() {
             {/* System Administration Routes */}
             <Route path="system/database" element={<DatabaseManagement />} />
             <Route path="system/api" element={<ApiManagement />} />
+            <Route path="system/monitoring" element={<ServerMonitoring />} />
             <Route path="system/deployment" element={<DeploymentManagement />} />
             <Route path="system/config" element={<Configuration />} />
             <Route path="system/backup" element={<BackupRecovery />} />
@@ -484,8 +486,8 @@ function App() {
             <Route path="settings/preferences" element={<UserPreferences />} />
             <Route path="settings/security" element={<SecuritySettings />} />
             
-            {/* Catch-all route */}
-            <Route path="*" element={<SystemOverview />} />
+            {/* Catch-all route - redirect to dashboard */}
+            <Route path="*" element={<Navigate to="dashboard" replace />} />
           </Route>
           
           <Route path="*" element={<HomePage />} />

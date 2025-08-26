@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-08-26T19:04:44.048Z",
+  "testConfig": {
+    "baseUrl": "http://localhost:3000",
+    "superAdminEmail": "ezcallnet.mo@gmail.com",
+    "superAdminPassword": "admin123",
+    "testTimeout": 5000
+  },
+  "results": {
+    "authContext": true,
+    "superAdmin": true,
+    "appRouting": true,
+    "enhancedLayout": false,
+    "enhancedSidebar": true
+  },
+  "summary": {
+    "passed": 4,
+    "total": 5,
+    "successRate": "80.0"
+  }
+}

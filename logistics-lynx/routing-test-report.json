@@ -1,0 +1,506 @@
+{
+  "timestamp": "2025-08-26T18:58:40.304Z",
+  "summary": {
+    "total": 81,
+    "passed": 81,
+    "missing": 0,
+    "successRate": "100.0"
+  },
+  "results": {
+    "passed": [
+      {
+        "route": "dashboard",
+        "path": "/super-admin/dashboard",
+        "component": "SystemOverview",
+        "filePath": "src/pages/super-admin/dashboard/SystemOverview.tsx"
+      },
+      {
+        "route": "dashboard/users",
+        "path": "/super-admin/dashboard/users",
+        "component": "ActiveUsers",
+        "filePath": "src/pages/super-admin/dashboard/ActiveUsers.tsx"
+      },
+      {
+        "route": "users",
+        "path": "/super-admin/users",
+        "component": "AllUsers",
+        "filePath": "src/pages/super-admin/user-management/AllUsers.tsx"
+      },
+      {
+        "route": "users/roles",
+        "path": "/super-admin/users/roles",
+        "component": "UserRoles",
+        "filePath": "src/pages/super-admin/user-management/UserRoles.tsx"
+      },
+      {
+        "route": "users/groups",
+        "path": "/super-admin/users/groups",
+        "component": "UserGroups",
+        "filePath": "src/pages/super-admin/user-management/UserGroups.tsx"
+      },
+      {
+        "route": "users/access",
+        "path": "/super-admin/users/access",
+        "component": "AccessControl",
+        "filePath": "src/pages/super-admin/user-management/AccessControl.tsx"
+      },
+      {
+        "route": "users/analytics",
+        "path": "/super-admin/users/analytics",
+        "component": "UserAnalytics",
+        "filePath": "src/pages/super-admin/user-management/UserAnalytics.tsx"
+      },
+      {
+        "route": "users/billing",
+        "path": "/super-admin/users/billing",
+        "component": "BillingManagement",
+        "filePath": "src/pages/super-admin/user-management/BillingManagement.tsx"
+      },
+      {
+        "route": "users/support",
+        "path": "/super-admin/users/support",
+        "component": "SupportTickets",
+        "filePath": "src/pages/super-admin/user-management/SupportTickets.tsx"
+      },
+      {
+        "route": "users/onboarding",
+        "path": "/super-admin/users/onboarding",
+        "component": "UserOnboarding",
+        "filePath": "src/pages/super-admin/user-management/UserOnboarding.tsx"
+      },
+      {
+        "route": "system/database",
+        "path": "/super-admin/system/database",
+        "component": "DatabaseManagement",
+        "filePath": "src/pages/super-admin/system-administration/DatabaseManagement.tsx"
+      },
+      {
+        "route": "system/api",
+        "path": "/super-admin/system/api",
+        "component": "ApiManagement",
+        "filePath": "src/pages/super-admin/system-administration/ApiManagement.tsx"
+      },
+      {
+        "route": "system/deployment",
+        "path": "/super-admin/system/deployment",
+        "component": "DeploymentManagement",
+        "filePath": "src/pages/super-admin/system-administration/DeploymentManagement.tsx"
+      },
+      {
+        "route": "system/config",
+        "path": "/super-admin/system/config",
+        "component": "Configuration",
+        "filePath": "src/pages/super-admin/system-administration/Configuration.tsx"
+      },
+      {
+        "route": "system/backup",
+        "path": "/super-admin/system/backup",
+        "component": "BackupRecovery",
+        "filePath": "src/pages/super-admin/system-administration/BackupRecovery.tsx"
+      },
+      {
+        "route": "system/integrations",
+        "path": "/super-admin/system/integrations",
+        "component": "IntegrationHub",
+        "filePath": "src/pages/super-admin/system-administration/IntegrationHub.tsx"
+      },
+      {
+        "route": "system/storage",
+        "path": "/super-admin/system/storage",
+        "component": "FileStorage",
+        "filePath": "src/pages/super-admin/system-administration/FileStorage.tsx"
+      },
+      {
+        "route": "system/email",
+        "path": "/super-admin/system/email",
+        "component": "EmailServices",
+        "filePath": "src/pages/super-admin/system-administration/EmailServices.tsx"
+      },
+      {
+        "route": "security/audit",
+        "path": "/super-admin/security/audit",
+        "component": "SecurityAudit",
+        "filePath": "src/pages/super-admin/security-center/SecurityAudit.tsx"
+      },
+      {
+        "route": "security/logs",
+        "path": "/super-admin/security/logs",
+        "component": "AccessLogs",
+        "filePath": "src/pages/super-admin/security-center/AccessLogs.tsx"
+      },
+      {
+        "route": "security/protection",
+        "path": "/super-admin/security/protection",
+        "component": "DataProtection",
+        "filePath": "src/pages/super-admin/security-center/DataProtection.tsx"
+      },
+      {
+        "route": "security/api",
+        "path": "/super-admin/security/api",
+        "component": "ApiSecurity",
+        "filePath": "src/pages/super-admin/security-center/ApiSecurity.tsx"
+      },
+      {
+        "route": "security/permissions",
+        "path": "/super-admin/security/permissions",
+        "component": "UserPermissions",
+        "filePath": "src/pages/super-admin/security-center/UserPermissions.tsx"
+      },
+      {
+        "route": "security/policies",
+        "path": "/super-admin/security/policies",
+        "component": "SecurityPolicies",
+        "filePath": "src/pages/super-admin/security-center/SecurityPolicies.tsx"
+      },
+      {
+        "route": "security/incidents",
+        "path": "/super-admin/security/incidents",
+        "component": "IncidentResponse",
+        "filePath": "src/pages/super-admin/security-center/IncidentResponse.tsx"
+      },
+      {
+        "route": "security/compliance",
+        "path": "/super-admin/security/compliance",
+        "component": "ComplianceManagement",
+        "filePath": "src/pages/super-admin/security-center/ComplianceManagement.tsx"
+      },
+      {
+        "route": "monitoring/performance",
+        "path": "/super-admin/monitoring/performance",
+        "component": "PerformanceMonitoring",
+        "filePath": "src/pages/super-admin/system-monitoring/PerformanceMonitoring.tsx"
+      },
+      {
+        "route": "monitoring/errors",
+        "path": "/super-admin/monitoring/errors",
+        "component": "ErrorTracking",
+        "filePath": "src/pages/super-admin/system-monitoring/ErrorTracking.tsx"
+      },
+      {
+        "route": "monitoring/logs",
+        "path": "/super-admin/monitoring/logs",
+        "component": "LogAnalysis",
+        "filePath": "src/pages/super-admin/system-monitoring/LogAnalysis.tsx"
+      },
+      {
+        "route": "monitoring/alerts",
+        "path": "/super-admin/monitoring/alerts",
+        "component": "AlertManagement",
+        "filePath": "src/pages/super-admin/system-monitoring/AlertManagement.tsx"
+      },
+      {
+        "route": "monitoring/uptime",
+        "path": "/super-admin/monitoring/uptime",
+        "component": "UptimeMonitoring",
+        "filePath": "src/pages/super-admin/system-monitoring/UptimeMonitoring.tsx"
+      },
+      {
+        "route": "monitoring/resources",
+        "path": "/super-admin/monitoring/resources",
+        "component": "ResourceUsage",
+        "filePath": "src/pages/super-admin/system-monitoring/ResourceUsage.tsx"
+      },
+      {
+        "route": "monitoring/network",
+        "path": "/super-admin/monitoring/network",
+        "component": "NetworkMonitoring",
+        "filePath": "src/pages/super-admin/system-monitoring/NetworkMonitoring.tsx"
+      },
+      {
+        "route": "monitoring/health",
+        "path": "/super-admin/monitoring/health",
+        "component": "HealthChecks",
+        "filePath": "src/pages/super-admin/system-monitoring/HealthChecks.tsx"
+      },
+      {
+        "route": "portals",
+        "path": "/super-admin/portals",
+        "component": "PortalOverview",
+        "filePath": "src/pages/super-admin/portal-management/PortalOverview.tsx"
+      },
+      {
+        "route": "portals/config",
+        "path": "/super-admin/portals/config",
+        "component": "PortalConfiguration",
+        "filePath": "src/pages/super-admin/portal-management/PortalConfiguration.tsx"
+      },
+      {
+        "route": "portals/users",
+        "path": "/super-admin/portals/users",
+        "component": "PortalUsers",
+        "filePath": "src/pages/super-admin/portal-management/PortalUsers.tsx"
+      },
+      {
+        "route": "portals/features",
+        "path": "/super-admin/portals/features",
+        "component": "FeatureManagement",
+        "filePath": "src/pages/super-admin/portal-management/FeatureManagement.tsx"
+      },
+      {
+        "route": "portals/analytics",
+        "path": "/super-admin/portals/analytics",
+        "component": "PortalAnalytics",
+        "filePath": "src/pages/super-admin/portal-management/PortalAnalytics.tsx"
+      },
+      {
+        "route": "portals/billing",
+        "path": "/super-admin/portals/billing",
+        "component": "PortalBilling",
+        "filePath": "src/pages/super-admin/portal-management/PortalBilling.tsx"
+      },
+      {
+        "route": "portals/support",
+        "path": "/super-admin/portals/support",
+        "component": "PortalSupport",
+        "filePath": "src/pages/super-admin/portal-management/PortalSupport.tsx"
+      },
+      {
+        "route": "portals/integrations",
+        "path": "/super-admin/portals/integrations",
+        "component": "PortalIntegrations",
+        "filePath": "src/pages/super-admin/portal-management/PortalIntegrations.tsx"
+      },
+      {
+        "route": "portals/backup",
+        "path": "/super-admin/portals/backup",
+        "component": "PortalBackup",
+        "filePath": "src/pages/super-admin/portal-management/PortalBackup.tsx"
+      },
+      {
+        "route": "portals/security",
+        "path": "/super-admin/portals/security",
+        "component": "PortalSecurity",
+        "filePath": "src/pages/super-admin/portal-management/PortalSecurity.tsx"
+      },
+      {
+        "route": "portals/compliance",
+        "path": "/super-admin/portals/compliance",
+        "component": "PortalCompliance",
+        "filePath": "src/pages/super-admin/portal-management/PortalCompliance.tsx"
+      },
+      {
+        "route": "portals/deployment",
+        "path": "/super-admin/portals/deployment",
+        "component": "PortalDeployment",
+        "filePath": "src/pages/super-admin/portal-management/PortalDeployment.tsx"
+      },
+      {
+        "route": "analytics/business",
+        "path": "/super-admin/analytics/business",
+        "component": "BusinessAnalytics",
+        "filePath": "src/pages/super-admin/analytics-reports/BusinessAnalytics.tsx"
+      },
+      {
+        "route": "analytics/users",
+        "path": "/super-admin/analytics/users",
+        "component": "UserAnalytics",
+        "filePath": "src/pages/super-admin/user-management/UserAnalytics.tsx"
+      },
+      {
+        "route": "analytics/performance",
+        "path": "/super-admin/analytics/performance",
+        "component": "PerformanceReports",
+        "filePath": "src/pages/super-admin/analytics-reports/PerformanceReports.tsx"
+      },
+      {
+        "route": "analytics/security",
+        "path": "/super-admin/analytics/security",
+        "component": "SecurityReports",
+        "filePath": "src/pages/super-admin/analytics-reports/SecurityReports.tsx"
+      },
+      {
+        "route": "analytics/financial",
+        "path": "/super-admin/analytics/financial",
+        "component": "FinancialReports",
+        "filePath": "src/pages/super-admin/analytics-reports/FinancialReports.tsx"
+      },
+      {
+        "route": "analytics/operational",
+        "path": "/super-admin/analytics/operational",
+        "component": "OperationalReports",
+        "filePath": "src/pages/super-admin/analytics-reports/OperationalReports.tsx"
+      },
+      {
+        "route": "analytics/custom",
+        "path": "/super-admin/analytics/custom",
+        "component": "CustomReports",
+        "filePath": "src/pages/super-admin/analytics-reports/CustomReports.tsx"
+      },
+      {
+        "route": "analytics/export",
+        "path": "/super-admin/analytics/export",
+        "component": "DataExport",
+        "filePath": "src/pages/super-admin/analytics-reports/DataExport.tsx"
+      },
+      {
+        "route": "analytics/dashboards",
+        "path": "/super-admin/analytics/dashboards",
+        "component": "DashboardBuilder",
+        "filePath": "src/pages/super-admin/analytics-reports/DashboardBuilder.tsx"
+      },
+      {
+        "route": "analytics/scheduled",
+        "path": "/super-admin/analytics/scheduled",
+        "component": "ScheduledReports",
+        "filePath": "src/pages/super-admin/analytics-reports/ScheduledReports.tsx"
+      },
+      {
+        "route": "mcp",
+        "path": "/super-admin/mcp",
+        "component": "McpOverview",
+        "filePath": "src/pages/super-admin/mcp-control-center/McpOverview.tsx"
+      },
+      {
+        "route": "mcp/agents",
+        "path": "/super-admin/mcp/agents",
+        "component": "AgentManagement",
+        "filePath": "src/pages/super-admin/mcp-control-center/AgentManagement.tsx"
+      },
+      {
+        "route": "mcp/models",
+        "path": "/super-admin/mcp/models",
+        "component": "AiModels",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiModels.tsx"
+      },
+      {
+        "route": "mcp/pipeline",
+        "path": "/super-admin/mcp/pipeline",
+        "component": "DataPipeline",
+        "filePath": "src/pages/super-admin/mcp-control-center/DataPipeline.tsx"
+      },
+      {
+        "route": "mcp/learning",
+        "path": "/super-admin/mcp/learning",
+        "component": "MachineLearning",
+        "filePath": "src/pages/super-admin/mcp-control-center/MachineLearning.tsx"
+      },
+      {
+        "route": "mcp/analytics",
+        "path": "/super-admin/mcp/analytics",
+        "component": "AiAnalytics",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiAnalytics.tsx"
+      },
+      {
+        "route": "mcp/automation",
+        "path": "/super-admin/mcp/automation",
+        "component": "AutomationRules",
+        "filePath": "src/pages/super-admin/mcp-control-center/AutomationRules.tsx"
+      },
+      {
+        "route": "mcp/integrations",
+        "path": "/super-admin/mcp/integrations",
+        "component": "AiIntegrations",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiIntegrations.tsx"
+      },
+      {
+        "route": "mcp/monitoring",
+        "path": "/super-admin/mcp/monitoring",
+        "component": "AiMonitoring",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiMonitoring.tsx"
+      },
+      {
+        "route": "mcp/compliance",
+        "path": "/super-admin/mcp/compliance",
+        "component": "AiCompliance",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiCompliance.tsx"
+      },
+      {
+        "route": "mcp/documentation",
+        "path": "/super-admin/mcp/documentation",
+        "component": "AiDocumentation",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiDocumentation.tsx"
+      },
+      {
+        "route": "mcp/support",
+        "path": "/super-admin/mcp/support",
+        "component": "AiSupport",
+        "filePath": "src/pages/super-admin/mcp-control-center/AiSupport.tsx"
+      },
+      {
+        "route": "business/customers",
+        "path": "/super-admin/business/customers",
+        "component": "CustomerManagement",
+        "filePath": "src/pages/super-admin/business-operations/CustomerManagement.tsx"
+      },
+      {
+        "route": "business/sales",
+        "path": "/super-admin/business/sales",
+        "component": "SalesPipeline",
+        "filePath": "src/pages/super-admin/business-operations/SalesPipeline.tsx"
+      },
+      {
+        "route": "business/billing",
+        "path": "/super-admin/business/billing",
+        "component": "BillingInvoicing",
+        "filePath": "src/pages/super-admin/business-operations/BillingInvoicing.tsx"
+      },
+      {
+        "route": "business/support",
+        "path": "/super-admin/business/support",
+        "component": "SupportManagement",
+        "filePath": "src/pages/super-admin/business-operations/SupportManagement.tsx"
+      },
+      {
+        "route": "business/docs",
+        "path": "/super-admin/business/docs",
+        "component": "Documentation",
+        "filePath": "src/pages/super-admin/business-operations/Documentation.tsx"
+      },
+      {
+        "route": "business/marketing",
+        "path": "/super-admin/business/marketing",
+        "component": "MarketingTools",
+        "filePath": "src/pages/super-admin/business-operations/MarketingTools.tsx"
+      },
+      {
+        "route": "business/partners",
+        "path": "/super-admin/business/partners",
+        "component": "PartnerManagement",
+        "filePath": "src/pages/super-admin/business-operations/PartnerManagement.tsx"
+      },
+      {
+        "route": "business/legal",
+        "path": "/super-admin/business/legal",
+        "component": "LegalCompliance",
+        "filePath": "src/pages/super-admin/business-operations/LegalCompliance.tsx"
+      },
+      {
+        "route": "settings",
+        "path": "/super-admin/settings",
+        "component": "Settings",
+        "filePath": "src/pages/super-admin/settings/Settings.tsx"
+      },
+      {
+        "route": "settings/profile",
+        "path": "/super-admin/settings/profile",
+        "component": "ProfileSettings",
+        "filePath": "src/pages/super-admin/settings/ProfileSettings.tsx"
+      },
+      {
+        "route": "settings/system",
+        "path": "/super-admin/settings/system",
+        "component": "SystemSettings",
+        "filePath": "src/pages/super-admin/settings/SystemSettings.tsx"
+      },
+      {
+        "route": "settings/preferences",
+        "path": "/super-admin/settings/preferences",
+        "component": "UserPreferences",
+        "filePath": "src/pages/super-admin/settings/UserPreferences.tsx"
+      },
+      {
+        "route": "settings/security",
+        "path": "/super-admin/settings/security",
+        "component": "SecuritySettings",
+        "filePath": "src/pages/super-admin/system-administration/SecuritySettings.tsx"
+      }
+    ],
+    "failed": [],
+    "missing": []
+  },
+  "sidebarNavigation": {
+    "matches": 5,
+    "mismatches": 5,
+    "total": 10
+  }
+}

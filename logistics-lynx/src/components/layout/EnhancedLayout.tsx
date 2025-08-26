@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { EnhancedHeader } from './EnhancedHeader';
 import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';

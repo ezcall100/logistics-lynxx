@@ -1,500 +1,341 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Database, 
-  HardDrive, 
-  Activity, 
-  Clock, 
-  CheckCircle, 
-  RefreshCw, 
-  Download, 
-  Settings, 
+  Server, 
   Shield, 
-  BarChart3, 
-  TrendingUp, 
-  Zap, 
-  Network, 
-  Archive, 
-  Trash2,
+  Users, 
+  Activity, 
+  AlertTriangle, 
+  CheckCircle, 
+  Clock, 
+  Settings,
+  RefreshCw,
+  Eye,
+  BarChart3,
+  TrendingUp,
+  TrendingDown,
   Plus,
-  } from 'lucide-react';
-
-interface DatabaseStatus {
-  id: string;
-  name: string;
-  status: 'online' | 'offline' | 'maintenance' | 'error';
-  type: 'primary' | 'replica' | 'backup';
-  size: string;
-  connections: number;
-  maxConnections: number;
-  uptime: string;
-  lastBackup: string;
-  performance: number;
-  health: 'excellent' | 'good' | 'warning' | 'critical';
-}
-
-interface BackupJob {
-  id: string;
-  database: string;
-  type: 'full' | 'incremental' | 'differential';
-  status: 'completed' | 'running' | 'failed' | 'scheduled';
-  size: string;
-  duration: string;
-  createdAt: string;
-  retention: string;
-}
+  Edit,
+  Trash2,
+  Download,
+  Upload,
+  Lock,
+  Unlock,
+  X
+} from 'lucide-react';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 
 const DatabaseManagement: React.FC = () => {
-  const [databases, setDatabases] = useState<DatabaseStatus[]>([]);
-  const [backups, setBackups] = useState<BackupJob[]>([]);
-  const [selectedDatabase] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [showBackupModal, setShowBackupModal] = useState(false);
-  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
+  const [databases, setDatabases] = useState([
+    {
+      id: 1,
+      name: 'Primary Database',
+      type: 'PostgreSQL',
+      status: 'online',
+      size: '2.4 GB',
+      connections: 45,
+      uptime: '15d 8h 32m',
+      lastBackup: '2 hours ago',
+      performance: 98
+    },
+    {
+      id: 2,
+      name: 'Analytics Database',
+      type: 'PostgreSQL',
+      status: 'online',
+      size: '8.7 GB',
+      connections: 23,
+      uptime: '8d 12h 15m',
+      lastBackup: '1 hour ago',
+      performance: 95
+    },
+    {
+      id: 3,
+      name: 'Cache Database',
+      type: 'Redis',
+      status: 'warning',
+      size: '512 MB',
+      connections: 67,
+      uptime: '3d 6h 48m',
+      lastBackup: '30 minutes ago',
+      performance: 87
+    },
+    {
+      id: 4,
+      name: 'Archive Database',
+      type: 'PostgreSQL',
+      status: 'offline',
+      size: '15.2 GB',
+      connections: 0,
+      uptime: '0d 0h 0m',
+      lastBackup: '1 day ago',
+      performance: 0
+    }
+  ]);
 
-  useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setDatabases([
-        {
-          id: '1',
-          name: 'TMS Primary Database',
-          status: 'online',
-          type: 'primary',
-          size: '2.4 TB',
-          connections: 156,
-          maxConnections: 200,
-          uptime: '45 days, 12 hours',
-          lastBackup: '2 hours ago',
-          performance: 94,
-          health: 'excellent'
-        },
-        {
-          id: '2',
-          name: 'Analytics Database',
-          status: 'online',
-          type: 'replica',
-          size: '1.8 TB',
-          connections: 89,
-          maxConnections: 150,
-          uptime: '23 days, 8 hours',
-          lastBackup: '6 hours ago',
-          performance: 87,
-          health: 'good'
-        },
-        {
-          id: '3',
-          name: 'Backup Database',
-          status: 'maintenance',
-          type: 'backup',
-          size: '2.1 TB',
-          connections: 12,
-          maxConnections: 50,
-          uptime: '5 days, 3 hours',
-          lastBackup: '1 day ago',
-          performance: 72,
-          health: 'warning'
-        }
-      ]);
-
-      setBackups([
-        {
-          id: '1',
-          database: 'TMS Primary Database',
-          type: 'full',
-          status: 'completed',
-          size: '2.4 TB',
-          duration: '45 minutes',
-          createdAt: '2 hours ago',
-          retention: '30 days'
-        },
-        {
-          id: '2',
-          database: 'Analytics Database',
-          type: 'incremental',
-          status: 'running',
-          size: '156 GB',
-          duration: '12 minutes',
-          createdAt: '6 hours ago',
-          retention: '7 days'
-        }
-      ]);
-
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+  const [selectedDatabase, setSelectedDatabase] = useState<number | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'text-green-600 bg-green-100';
+      case 'online': return 'text-emerald-600 bg-emerald-100';
+      case 'warning': return 'text-amber-600 bg-amber-100';
       case 'offline': return 'text-red-600 bg-red-100';
-      case 'maintenance': return 'text-yellow-600 bg-yellow-100';
-      case 'error': return 'text-red-600 bg-red-100';
       default: return 'text-gray-600 bg-gray-100';
     }
   };
 
-  const getHealthColor = (health: string) => {
-    switch (health) {
-      case 'excellent': return 'text-green-600';
-      case 'good': return 'text-blue-600';
-      case 'warning': return 'text-yellow-600';
-      case 'critical': return 'text-red-600';
-      default: return 'text-gray-600';
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'online': return <CheckCircle className="w-4 h-4" />;
+      case 'warning': return <AlertTriangle className="w-4 h-4" />;
+      case 'offline': return <X className="w-4 h-4" />;
+      default: return <Clock className="w-4 h-4" />;
     }
   };
 
-  const getPerformanceColor = (performance: number) => {
-    if (performance >= 90) return 'text-green-600';
-    if (performance >= 75) return 'text-blue-600';
-    if (performance >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+  const refreshData = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
   };
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2">
-            <Database className="h-6 w-6 text-blue-600" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              Database Management
-            </h1>
-          </div>
-          <p className="text-gray-600 dark:text-gray-400">
-            Monitor, backup, and maintain all database systems
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+            Database Management
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400">
+            Monitor and manage database performance, backups, and security
           </p>
         </div>
-        <div className="flex items-center space-x-3">
-          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Plus className="h-4 w-4" />
-            <span>New Database</span>
-          </button>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-            <Download className="h-4 w-4" />
-            <span>Backup Now</span>
-          </button>
+        <div className="flex space-x-2">
+          <EnhancedButton
+            onClick={refreshData}
+            icon={<RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />}
+            variant="secondary"
+          >
+            Refresh
+          </EnhancedButton>
+          <EnhancedButton
+            icon={<Plus className="w-4 h-4" />}
+            variant="primary"
+          >
+            Add Database
+          </EnhancedButton>
         </div>
       </div>
 
-      {/* Quick Stats */}
+      {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Databases</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{databases.length}</p>
-            </div>
-            <Database className="h-8 w-8 text-blue-600" />
+        <ResponsiveCard className="text-center">
+          <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-blue-100 dark:bg-blue-900/20">
+            <Database className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
-          <div className="mt-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <span className="text-sm text-green-600">All Online</span>
-            </div>
-          </div>
-        </div>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">4 Databases</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Total Instances</p>
+        </ResponsiveCard>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Size</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">6.3 TB</p>
-            </div>
-            <HardDrive className="h-8 w-8 text-green-600" />
+        <ResponsiveCard className="text-center">
+          <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/20">
+            <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <div className="mt-4">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-blue-600" />
-              <span className="text-sm text-blue-600">+12% this month</span>
-            </div>
-          </div>
-        </div>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">2 Online</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Healthy Databases</p>
+        </ResponsiveCard>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Connections</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">257</p>
-            </div>
-            <Network className="h-8 w-8 text-purple-600" />
+        <ResponsiveCard className="text-center">
+          <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-amber-100 dark:bg-amber-900/20">
+            <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
           </div>
-          <div className="mt-4">
-            <div className="flex items-center space-x-2">
-              <Activity className="h-4 w-4 text-green-600" />
-              <span className="text-sm text-green-600">78% capacity</span>
-            </div>
-          </div>
-        </div>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">1 Warning</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400">High Connections</p>
+        </ResponsiveCard>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Backup Status</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">Current</p>
-            </div>
-            <Shield className="h-8 w-8 text-emerald-600" />
+        <ResponsiveCard className="text-center">
+          <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/20">
+            <X className="w-6 h-6 text-red-600 dark:text-red-400" />
           </div>
-          <div className="mt-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <span className="text-sm text-green-600">Last: 2 hours ago</span>
-            </div>
-          </div>
-        </div>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">1 Offline</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Archive Database</p>
+        </ResponsiveCard>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8 px-6">
-            {['overview', 'backups', 'performance', 'maintenance'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
-                  activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </nav>
+      {/* Database List */}
+      <ResponsiveCard>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+            Database Status
+          </h2>
+          <EnhancedButton variant="ghost" size="sm">
+            <Settings className="w-4 h-4 mr-2" />
+            Configure
+          </EnhancedButton>
         </div>
 
-        <div className="p-6">
-          {activeTab === 'overview' && (
-            <div className="space-y-6">
+        <div className="space-y-4">
+          {databases.map((db) => (
+            <div
+              key={db.id}
+              className={`p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
+                selectedDatabase === db.id
+                  ? 'border-blue-300 bg-blue-50 dark:border-blue-600 dark:bg-blue-900/20'
+                  : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+              }`}
+              onClick={() => setSelectedDatabase(selectedDatabase === db.id ? null : db.id)}
+            >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Database Status</h3>
-                <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700">
-                  <RefreshCw className="h-4 w-4" />
-                  <span>Refresh</span>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {databases.map((db) => (
-                  <div key={db.id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <Database className="h-6 w-6 text-blue-600" />
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white">{db.name}</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{db.type} database</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(db.status)}`}>
-                          {db.status}
-                        </span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getHealthColor(db.health)}`}>
-                          {db.health}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Size</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{db.size}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Connections</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{db.connections}/{db.maxConnections}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Uptime</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{db.uptime}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Performance</p>
-                        <p className={`font-semibold ${getPerformanceColor(db.performance)}`}>{db.performance}%</p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center justify-between">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Last backup: {db.lastBackup}
-                      </p>
-                      <div className="flex items-center space-x-2">
-                        <button className="text-blue-600 hover:text-blue-700 text-sm">View Details</button>
-                        <button className="text-gray-600 hover:text-gray-700 text-sm">Configure</button>
-                      </div>
-                    </div>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(db.status)}`}>
+                      {getStatusIcon(db.status)}
+                      <span className="ml-1 capitalize">{db.status}</span>
+                    </span>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'backups' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Backup Jobs</h3>
-                <button 
-                  onClick={() => setShowBackupModal(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>New Backup Job</span>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {backups.map((backup) => (
-                  <div key={backup.id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <Archive className="h-6 w-6 text-green-600" />
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white">{backup.database}</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{backup.type} backup</p>
-                        </div>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        backup.status === 'completed' ? 'text-green-600 bg-green-100' :
-                        backup.status === 'running' ? 'text-blue-600 bg-blue-100' :
-                        'text-red-600 bg-red-100'
-                      }`}>
-                        {backup.status}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Size</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{backup.size}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Duration</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{backup.duration}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Created</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{backup.createdAt}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Retention</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">{backup.retention}</p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <button className="text-blue-600 hover:text-blue-700 text-sm">Download</button>
-                        <button className="text-gray-600 hover:text-gray-700 text-sm">Restore</button>
-                        <button className="text-red-600 hover:text-red-700 text-sm">Delete</button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'performance' && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Performance Monitoring</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Query Performance</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Average Response Time</span>
-                      <span className="font-semibold text-green-600">45ms</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Slow Queries (&gt;1s)</span>
-                      <span className="font-semibold text-yellow-600">12</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Cache Hit Rate</span>
-                      <span className="font-semibold text-blue-600">87%</span>
-                    </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">
+                      {db.name}
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      {db.type} • Size: {db.size} • Uptime: {db.uptime}
+                    </p>
                   </div>
                 </div>
-
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Resource Usage</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">CPU Usage</span>
-                      <span className="font-semibold text-blue-600">34%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Memory Usage</span>
-                      <span className="font-semibold text-green-600">67%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Disk I/O</span>
-                      <span className="font-semibold text-purple-600">23%</span>
-                    </div>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">
+                    {db.connections} connections
+                  </span>
+                  <Eye className="w-4 h-4 text-slate-400" />
                 </div>
               </div>
-            </div>
-          )}
 
-          {activeTab === 'maintenance' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Maintenance Tasks</h3>
-                <button 
-                  onClick={() => setShowMaintenanceModal(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <Settings className="h-4 w-4" />
-                  <span>Schedule Maintenance</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Scheduled Tasks</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Daily Backup</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Every day at 2:00 AM</p>
+              {selectedDatabase === db.id && (
+                <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-full bg-blue-100 dark:bg-blue-900/20">
+                        <Activity className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <p className="text-xs text-slate-600 dark:text-slate-400">Performance</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100">{db.performance}%</p>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Weekly Optimization</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Every Sunday at 3:00 AM</p>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-full bg-green-100 dark:bg-green-900/20">
+                        <Users className="w-4 h-4 text-green-600 dark:text-green-400" />
                       </div>
-                      <Clock className="h-5 w-5 text-blue-600" />
+                      <p className="text-xs text-slate-600 dark:text-slate-400">Connections</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100">{db.connections}</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-full bg-purple-100 dark:bg-purple-900/20">
+                        <Database className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">Size</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100">{db.size}</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center w-8 h-8 mx-auto mb-2 rounded-full bg-orange-100 dark:bg-orange-900/20">
+                        <Clock className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">Last Backup</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100">{db.lastBackup}</p>
                     </div>
                   </div>
-                </div>
-
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h4>
-                  <div className="space-y-3">
-                    <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white">Optimize Tables</span>
-                      <Zap className="h-5 w-5 text-blue-600" />
-                    </button>
-                    <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white">Clear Logs</span>
-                      <Trash2 className="h-5 w-5 text-red-600" />
-                    </button>
-                    <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white">Update Statistics</span>
-                      <BarChart3 className="h-5 w-5 text-green-600" />
-                    </button>
+                  
+                  <div className="flex space-x-2">
+                    <EnhancedButton variant="ghost" size="sm">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </EnhancedButton>
+                    <EnhancedButton variant="ghost" size="sm">
+                      <Download className="w-4 h-4 mr-2" />
+                      Backup
+                    </EnhancedButton>
+                    <EnhancedButton variant="ghost" size="sm">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Restore
+                    </EnhancedButton>
+                    <EnhancedButton variant="ghost" size="sm">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Security
+                    </EnhancedButton>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          )}
+          ))}
         </div>
+      </ResponsiveCard>
+
+      {/* Performance Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ResponsiveCard>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              Database Performance
+            </h3>
+            <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div className="h-48 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+            <p className="text-slate-500 dark:text-slate-400">Performance chart placeholder</p>
+          </div>
+        </ResponsiveCard>
+
+        <ResponsiveCard>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              Connection Usage
+            </h3>
+            <TrendingDown className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </div>
+          <div className="h-48 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+            <p className="text-slate-500 dark:text-slate-400">Connection chart placeholder</p>
+          </div>
+        </ResponsiveCard>
       </div>
+
+      {/* Security Status */}
+      <ResponsiveCard>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Security Status
+          </h3>
+          <EnhancedButton variant="ghost" size="sm">
+            <Shield className="w-4 h-4 mr-2" />
+            Security Settings
+          </EnhancedButton>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center space-x-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
+            <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <div>
+              <p className="font-medium text-slate-800 dark:text-slate-100">Encryption</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">AES-256 enabled</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
+            <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <div>
+              <p className="font-medium text-slate-800 dark:text-slate-100">Backups</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Automated daily</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20">
+            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+            <div>
+              <p className="font-medium text-slate-800 dark:text-slate-100">Access Control</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Review needed</p>
+            </div>
+          </div>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

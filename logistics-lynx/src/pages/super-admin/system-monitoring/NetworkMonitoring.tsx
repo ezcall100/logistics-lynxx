@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Wifi } from 'lucide-react';
 
 interface NetworkMonitoringProps {}
@@ -29,12 +27,12 @@ const NetworkMonitoring: React.FC<NetworkMonitoringProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Network Monitoring</CardTitle>
-          <CardDescription>Bandwidth usage, latency tracking, connectivity monitoring</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Network Monitoring</h3>
+          <p className="text-slate-600 dark:text-slate-400">Bandwidth usage, latency tracking, connectivity monitoring</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const NetworkMonitoring: React.FC<NetworkMonitoringProps> = () => {
                 Bandwidth usage, latency tracking, connectivity monitoring
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Bandwidth Monitoring</Badge>
-                <Badge variant="outline">Latency Tracking</Badge>
-                <Badge variant="outline">Connectivity Analysis</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Bandwidth Monitoring</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Latency Tracking</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Connectivity Analysis</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Network Monitoring
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

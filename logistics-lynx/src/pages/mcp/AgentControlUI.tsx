@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card.tsx';
-import { Button } from '../../components/ui/button.tsx';
-import { Badge } from '../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Input } from '../../components/ui/input.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs.tsx';
 import { ScrollArea } from '../../components/ui/scroll-area.tsx';
@@ -204,12 +202,12 @@ const AgentControlUI: React.FC = () => {
         <TabsContent value="status">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {agents.map((agent) => (
-              <Card key={agent.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="space-y-2 p-4">
+              <ResponsiveCard key={agent.id} className="hover:shadow-lg transition-shadow">
+                <ResponsiveCardContent className="space-y-2 p-4">
                   <div className="text-lg font-semibold">{agent.name}</div>
-                  <Badge variant={agent.status === 'Pending' ? 'secondary' : 'default'}>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                     {agent.status}
-                  </Badge>
+                  </span>
                   <div className="text-sm text-muted-foreground">{agent.currentTask}</div>
                   {agent.confidence !== null && (
                     <>
@@ -220,9 +218,9 @@ const AgentControlUI: React.FC = () => {
                   <div className="text-xs text-muted-foreground">
                     Last Activity: {agent.lastActivity}
                   </div>
-                  <Button variant="outline" size="sm">Details</Button>
-                </CardContent>
-              </Card>
+                  <EnhancedButton variant="outline" size="sm">Details</EnhancedButton>
+                </div>
+              </ResponsiveCard>
             ))}
           </div>
         </TabsContent>
@@ -245,14 +243,14 @@ const AgentControlUI: React.FC = () => {
             </Alert>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {metrics.map((metric) => (
-                <Card key={metric.id}>
-                  <CardContent className="space-y-1 p-4">
+                <ResponsiveCard key={metric.id}>
+                  <ResponsiveCardContent className="space-y-1 p-4">
                     <div className="font-semibold text-sm">{metric.id}</div>
                     <div className="text-sm">Uptime: {metric.uptime}</div>
                     <div className="text-sm">Latency: {metric.latency}</div>
                     <div className="text-sm">Test Coverage: {metric.tests}</div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </ResponsiveCard>
               ))}
             </div>
           </div>
@@ -271,7 +269,7 @@ const AgentControlUI: React.FC = () => {
                 placeholder="Type a command (e.g. deploy broker.portal)"
                 onKeyPress={(e) => e.key === 'Enter' && handleCommand()}
               />
-              <Button onClick={handleCommand}>Execute</Button>
+              <EnhancedButton onClick={handleCommand}>Execute</EnhancedButton>
             </div>
             <div className="bg-muted p-4 rounded text-sm font-mono h-40 overflow-y-auto border">
               {consoleOutput.length === 0 ? (

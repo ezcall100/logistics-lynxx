@@ -351,7 +351,7 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
 }
 
-export const EnhancedButton: React.FC<ButtonProps> = ({ 
+export const EnhancedButton: React.FC<EnhancedButtonProps> = ({ 
   children, 
   onClick, 
   variant = "primary", 
@@ -430,7 +430,7 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export const EnhancedCard: React.FC<CardProps> = ({ 
+export const EnhancedCard: React.FC<ResponsiveCardProps> = ({ 
   children, 
   className = "", 
   hover = true, 
@@ -517,7 +517,7 @@ interface BadgeProps {
   mode?: 'light' | 'dark';
 }
 
-export const EnhancedBadge: React.FC<BadgeProps> = ({ 
+export const EnhancedBadge: React.FC<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"> = ({ 
   children, 
   variant = "default", 
   className = "", 

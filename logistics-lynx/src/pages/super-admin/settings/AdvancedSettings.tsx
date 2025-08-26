@@ -1,17 +1,7 @@
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-
 const AdvancedSettings: React.FC = () => {
   const [advancedSettings, setAdvancedSettings] = useState({
     debugMode: false,
@@ -38,14 +28,14 @@ const AdvancedSettings: React.FC = () => {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Performance Settings</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Performance Settings</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             Optimize system performance and resource usage
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <ResponsiveCardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Performance Mode</Label>
@@ -76,17 +66,17 @@ const AdvancedSettings: React.FC = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSettingChange('maxConcurrentRequests', parseInt(e.target.value))}
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Debugging & Development</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Debugging & Development</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             Development and debugging options
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <ResponsiveCardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Debug Mode</Label>
@@ -114,17 +104,17 @@ const AdvancedSettings: React.FC = () => {
               <option value="debug">Debug</option>
             </select>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Experimental Features</CardTitle>
-          <CardDescription>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Experimental Features</h3>
+          <p className="text-slate-600 dark:text-slate-400">
             Enable experimental features and beta functionality
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <ResponsiveCardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Experimental Features</Label>
@@ -137,12 +127,12 @@ const AdvancedSettings: React.FC = () => {
               onCheckedChange={(checked: boolean) => handleSettingChange('experimentalFeatures', checked)}
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
       <div className="flex justify-end space-x-2">
-        <Button variant="outline">Reset to Defaults</Button>
-        <Button>Save Changes</Button>
+        <EnhancedButton variant="outline">Reset to Defaults</EnhancedButton>
+        <EnhancedButton>Save Changes</EnhancedButton>
       </div>
     </div>
   );

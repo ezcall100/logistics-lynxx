@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Button } from '../../../components/ui/button.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { Layout } from 'lucide-react';
 
 interface DashboardBuilderProps {}
@@ -29,12 +27,12 @@ const DashboardBuilder: React.FC<DashboardBuilderProps> = () => {
       </div>
 
       {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Dashboard Builder</CardTitle>
-          <CardDescription>Custom dashboard creation, widget library, layout designer</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <ResponsiveCard>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Dashboard Builder</h3>
+          <p className="text-slate-600 dark:text-slate-400">Custom dashboard creation, widget library, layout designer</p>
+        </div>
+        <div>
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -51,17 +49,17 @@ const DashboardBuilder: React.FC<DashboardBuilderProps> = () => {
                 Custom dashboard creation, widget library, layout designer
               </p>
               <div className="mt-4 space-y-2">
-                <Badge variant="outline">Dashboard Builder</Badge>
-                <Badge variant="outline">Widget Library</Badge>
-                <Badge variant="outline">Layout Designer</Badge>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Dashboard Builder</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Widget Library</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Layout Designer</span>
               </div>
-              <Button className="mt-6">
+              <EnhancedButton className="mt-6">
                 Configure Dashboard Builder
-              </Button>
+              </EnhancedButton>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
     </div>
   );
 };

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card.tsx';
-import { Badge } from '../../../components/ui/badge.tsx';
-import { Button } from '../../../components/ui/button.tsx';
+import { ResponsiveCard, EnhancedButton, stableStyles } from '../../../components/ui';
 import { EnhancedProgress } from '../../../components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs.tsx';
 import { 
@@ -260,21 +258,21 @@ const PortalOverview: React.FC = () => {
           <p className="text-gray-600">Multi-portal system overview and management</p>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={loadPortalData} disabled={isLoading}>
+          <EnhancedButton variant="outline" onClick={loadPortalData} disabled={isLoading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
-          </Button>
-          <Button>
+          </EnhancedButton>
+          <EnhancedButton>
             <Plus className="w-4 h-4 mr-2" />
             Add Portal
-          </Button>
+          </EnhancedButton>
         </div>
       </div>
 
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Portals</p>
@@ -285,11 +283,11 @@ const PortalOverview: React.FC = () => {
             <div className="mt-4">
               <p className="text-sm text-green-600">{metrics.activePortals} active</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Users</p>
@@ -300,11 +298,11 @@ const PortalOverview: React.FC = () => {
             <div className="mt-4">
               <p className="text-sm text-blue-600">{metrics.activeUsers.toLocaleString()} active</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Average Uptime</p>
@@ -315,11 +313,11 @@ const PortalOverview: React.FC = () => {
             <div className="mt-4">
               <EnhancedProgress value={metrics.averageUptime} className="h-2" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
 
-        <Card>
-          <CardContent className="p-6">
+        <ResponsiveCard>
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">System Health</p>
@@ -330,13 +328,13 @@ const PortalOverview: React.FC = () => {
             <div className="mt-4">
               <p className="text-sm text-red-600">{metrics.totalErrors} errors</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </ResponsiveCard>
       </div>
 
       {/* Search and Filters */}
-      <Card>
-        <CardContent className="p-6">
+      <ResponsiveCard>
+        <div className="p-6">
           <div className="flex items-center space-x-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -360,8 +358,8 @@ const PortalOverview: React.FC = () => {
               <option value="error">Error</option>
             </select>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </ResponsiveCard>
 
       {/* Portals */}
       <Tabs defaultValue="overview" className="space-y-6">
@@ -374,25 +372,25 @@ const PortalOverview: React.FC = () => {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredPortals.map((portal) => (
-              <Card key={portal.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
+              <ResponsiveCard key={portal.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="mb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">{getTypeIcon(portal.type)}</span>
                       <div>
-                        <CardTitle className="text-lg">{portal.name}</CardTitle>
+                        <h3 className="text-lg">{portal.name}</h3>
                         <p className="text-sm text-gray-500">{portal.key}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
                       {getStatusIcon(portal.status)}
-                      <Badge className={getStatusColor(portal.status)}>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                         {portal.status}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -420,7 +418,7 @@ const PortalOverview: React.FC = () => {
                     
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">Environment</span>
-                      <Badge variant="outline">{portal.environment}</Badge>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">{portal.environment}</span>
                     </div>
                     
                     {portal.alerts > 0 && (
@@ -442,44 +440,44 @@ const PortalOverview: React.FC = () => {
                         Last activity: {new Date(portal.lastActivity).toLocaleString()}
                       </p>
                       <div className="flex items-center space-x-2">
-                        <Button size="sm" variant="outline">
+                        <EnhancedButton size="sm" variant="outline">
                           <Eye className="w-3 h-3" />
-                        </Button>
-                        <Button size="sm" variant="outline">
+                        </EnhancedButton>
+                        <EnhancedButton size="sm" variant="outline">
                           <Edit className="w-3 h-3" />
-                        </Button>
-                        <Button size="sm" variant="outline">
+                        </EnhancedButton>
+                        <EnhancedButton size="sm" variant="outline">
                           <Settings className="w-3 h-3" />
-                        </Button>
+                        </EnhancedButton>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </ResponsiveCard>
             ))}
           </div>
         </TabsContent>
 
         <TabsContent value="details" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Portal Configuration Details</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Portal Configuration Details</h3>
+            </div>
+            <div>
               <p className="text-gray-600">Detailed portal configuration and settings will be displayed here.</p>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Portal Analytics</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <ResponsiveCard>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Portal Analytics</h3>
+            </div>
+            <div>
               <p className="text-gray-600">Portal performance analytics and metrics will be displayed here.</p>
-            </CardContent>
-          </Card>
+            </div>
+          </ResponsiveCard>
         </TabsContent>
       </Tabs>
     </div>
