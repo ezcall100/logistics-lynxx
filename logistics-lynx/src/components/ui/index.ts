@@ -12,9 +12,6 @@ export { default as EnhancedIcon } from './EnhancedIcon';
 export { default as FloatingActionButton } from './FloatingActionButton';
 export * from './toast';
 export * from './input';
-export * from './button';
-export * from './badge';
-export * from './card';
 export { default as Breadcrumbs } from './Breadcrumbs';
 
 // Basic UI Components

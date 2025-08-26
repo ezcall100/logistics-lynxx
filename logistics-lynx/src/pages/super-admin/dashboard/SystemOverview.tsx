@@ -729,7 +729,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <Cpu className="h-5 w-5" />
                     <span>System Resources</span>
                   </h3>
@@ -768,7 +768,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
 
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <BarChart3 className="h-5 w-5" />
                     <span>Job Statistics</span>
                   </h3>
@@ -795,7 +795,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
           <TabsContent value="agents" className="space-y-6">
             <ResponsiveCard>
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                   <Brain className="h-5 w-5" />
                   <span>MCP Agent Status</span>
                 </h3>
@@ -863,7 +863,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <TrendingUp className="h-5 w-5" />
                     <span>System Performance (24h)</span>
                   </h3>
@@ -904,7 +904,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
 
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <Activity className="h-5 w-5" />
                     <span>Error Tracking</span>
                   </h3>
@@ -940,7 +940,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <Radar className="h-5 w-5" />
                     <span>Agent Confidence Distribution</span>
                   </h3>
@@ -977,7 +977,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
 
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <PieChartIcon className="h-5 w-5" />
                     <span>Task Type Distribution</span>
                   </h3>
@@ -1020,7 +1020,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <Power className="h-5 w-5" />
                     <span>System Control</span>
                   </h3>
@@ -1054,7 +1054,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
 
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <Brain className="h-5 w-5" />
                     <span>Agent Control</span>
                   </h3>
@@ -1088,7 +1088,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
 
               <ResponsiveCard>
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100" className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
                     <Shield className="h-5 w-5" />
                     <span>Security</span>
                   </h3>
