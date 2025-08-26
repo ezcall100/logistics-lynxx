@@ -1,14 +1,11 @@
 import React from 'react';
 import { Package, Truck, DollarSign, Clock, MapPin, Users } from 'lucide-react';
+import PortalLayout from '../../components/layout/PortalLayout';
 
 const ShipperDashboard: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <PortalLayout title="Shipper Dashboard" subtitle="Track shipments and manage logistics operations">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Shipper Dashboard</h1>
-          <p className="text-gray-600 mt-2">Track shipments and manage logistics operations</p>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
@@ -116,7 +113,7 @@ const ShipperDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PortalLayout>
   );
 };
 
