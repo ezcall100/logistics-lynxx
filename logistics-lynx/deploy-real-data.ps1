@@ -27,6 +27,10 @@ try {
     # Execute the SQL
     Write-Host "Creating tables and RLS policies..." -ForegroundColor Yellow
     
+    # Show what would be deployed (using the sqlContent variable)
+    $lineCount = ($sqlContent -split "`n").Count
+    Write-Host "SQL script loaded: $lineCount lines" -ForegroundColor Green
+    
     # Note: In a real deployment, you would use:
     # supabase db push --db-url $env:SUPABASE_DB_URL
     # For now, we'll just show what would be deployed

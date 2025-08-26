@@ -1,5 +1,6 @@
 
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import SuperAdmin from './components/SuperAdmin';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
@@ -231,6 +232,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <div className="App">
+          <Toaster position="top-right" richColors />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
