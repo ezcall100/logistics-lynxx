@@ -9,6 +9,7 @@ export { default as ResponsiveDashboard } from '../layout/ResponsiveDashboard';
 // Enhanced UI Components
 export * from './EnhancedUIComponents';
 export { default as EnhancedUIComponents } from './EnhancedUIComponents';
+export { EnhancedButton } from './EnhancedUIComponents';
 export { default as EnhancedIcon } from './EnhancedIcon';
 export { default as FloatingActionButton } from './FloatingActionButton';
 export * from './toast';
@@ -19,7 +20,26 @@ export { default as Breadcrumbs } from './Breadcrumbs';
 export { Switch } from './switch';
 export { Separator } from './separator';
 export { Label } from './label';
-export { Alert, AlertDescription } from './alert';
+export { Alert, AlertTitle, AlertDescription } from './alert';
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 export { ScrollArea } from './scroll-area';
 export { Progress } from './progress';
+export { Input } from './input';
+export { Textarea } from './textarea';
+export { Checkbox } from './checkbox';
+export { 
+  Dialog, 
+  DialogTrigger, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription, 
+  DialogFooter 
+} from './dialog';
+export { 
+  Select, 
+  SelectTrigger, 
+  SelectContent, 
+  SelectItem, 
+  SelectValue 
+} from './select';
