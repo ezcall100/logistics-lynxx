@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import './index.css'
 
@@ -26,7 +27,9 @@ try {
     console.log('🔍 Main.tsx: Rendering React app...');
     root.render(
       <React.StrictMode>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </React.StrictMode>,
     );
     console.log('🔍 Main.tsx: React app rendered successfully');

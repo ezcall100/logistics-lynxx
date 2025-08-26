@@ -6,6 +6,20 @@ import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
+import {
+  ResponsiveContainer,
+  LineChart,
+  AreaChart,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Line,
+  Area,
+  Bar
+} from 'recharts';
 import { 
   Zap, 
   Activity, 
@@ -27,7 +41,8 @@ import {
   Gauge,
   Cpu,
   HardDrive,
-  Network
+  Network,
+  Memory
 } from 'lucide-react';
 
 interface PerformanceMetric {

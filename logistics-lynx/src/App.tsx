@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import SuperAdmin from './components/SuperAdmin';
 import SystemOverview from './pages/super-admin/dashboard/SystemOverview';
@@ -366,8 +366,7 @@ const LoginPage = () => {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+      <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           
@@ -492,7 +491,6 @@ function App() {
           
           <Route path="*" element={<HomePage />} />
         </Routes>
-      </BrowserRouter>
     </AuthProvider>
   );
 }
