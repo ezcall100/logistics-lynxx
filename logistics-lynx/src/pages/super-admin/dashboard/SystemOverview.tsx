@@ -1,7 +1,7 @@
 // ========================
-// 🛰️ System Overview Dashboard - Enhanced
+// 🛰️ System Overview Dashboard - Advanced MCP Agent Control Center
 // ========================
-// TransBot AI - Advanced System Monitoring & MCP Agent Control
+// TransBot AI - Enterprise-Grade System Monitoring & Autonomous Agent Management
 // Domain: transbotai.com
 
 import React, { useState, useEffect } from 'react';
@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   LineChart, 
   Line, 
@@ -27,7 +28,14 @@ import {
   Pie,
   Cell,
   AreaChart,
-  Area
+  Area,
+  ScatterChart,
+  Scatter,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis
 } from 'recharts';
 import { 
   Activity, 
@@ -71,11 +79,9 @@ import {
   Brain,
   CircuitBoard,
   Satellite,
-  Radar,
   Signal,
   Waves,
   Heart,
-  ActivitySquare,
   Layers,
   Grid3X3,
   Command,
@@ -85,7 +91,52 @@ import {
   Lightbulb,
   Sparkles,
   Trash2,
-  FileText
+  FileText,
+  BarChart4,
+  PieChart as PieChartIcon,
+  Zap as ZapIcon,
+  Target as TargetIcon,
+  TrendingUp as TrendingUpIcon,
+  AlertCircle as AlertCircleIcon,
+  CheckCircle as CheckCircleIcon,
+  Clock as ClockIcon,
+  Users as UsersIcon,
+  Server as ServerIcon,
+  Database as DatabaseIcon,
+  Network as NetworkIcon,
+  Shield as ShieldIcon,
+  Settings as SettingsIcon,
+  Play as PlayIcon,
+  Pause as PauseIcon,
+  RotateCcw as RotateCcwIcon,
+  Power as PowerIcon,
+  PowerOff as PowerOffIcon,
+  Wrench as WrenchIcon,
+  Brain as BrainIcon,
+  CircuitBoard as CircuitBoardIcon,
+  Satellite as SatelliteIcon,
+  Radar as RadarIcon,
+  Signal as SignalIcon,
+  Waves as WavesIcon,
+  Heart as HeartIcon,
+  Layers as LayersIcon,
+  Grid3X3 as Grid3X3Icon,
+  Command as CommandIcon,
+  Terminal as TerminalIcon,
+  Code as CodeIcon,
+  Bug as BugIcon,
+  Lightbulb as LightbulbIcon,
+  Sparkles as SparklesIcon,
+  Trash2 as Trash2Icon,
+  FileText as FileTextIcon,
+  Globe as GlobeIcon,
+  Eye as EyeIcon,
+  ExternalLink as ExternalLinkIcon,
+  Download as DownloadIcon,
+  Upload as UploadIcon,
+  Lock as LockIcon,
+  Unlock as UnlockIcon,
+  Info as InfoIcon
 } from 'lucide-react';
 
 interface SystemOverviewProps {}
@@ -101,6 +152,15 @@ interface AgentStatus {
   responseTime: number;
   autonomy: boolean;
   portal: string;
+  version: string;
+  uptime: number;
+  memoryUsage: number;
+  cpuUsage: number;
+  queueLength: number;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  healthScore: number;
+  lastError?: string;
+  performanceTrend: 'improving' | 'stable' | 'declining';
 }
 
 interface SystemMetrics {
@@ -120,6 +180,19 @@ interface PerformanceData {
   memory: number;
   network: number;
   errors: number;
+  agentCount: number;
+  confidence: number;
+  throughput: number;
+}
+
+interface AgentTelemetry {
+  agentId: string;
+  timestamp: string;
+  confidence: number;
+  responseTime: number;
+  success: boolean;
+  taskType: string;
+  portal: string;
 }
 
 const SystemOverview: React.FC<SystemOverviewProps> = () => {
@@ -132,8 +205,12 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [agentStatuses, setAgentStatuses] = useState<AgentStatus[]>([]);
   const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
+  const [agentTelemetry, setAgentTelemetry] = useState<AgentTelemetry[]>([]);
+  const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [alertLevel, setAlertLevel] = useState<'info' | 'warning' | 'critical'>('info');
 
-  // Mock data for demonstration
+  // Enhanced mock data for demonstration
   const mockAgentStatuses: AgentStatus[] = [
     {
       id: 'SecurityScannerAgent',
@@ -145,7 +222,15 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       errorCount: 3,
       responseTime: 1200,
       autonomy: true,
-      portal: 'carrier'
+      portal: 'carrier',
+      version: '2.1.0',
+      uptime: 86400,
+      memoryUsage: 45.2,
+      cpuUsage: 23.1,
+      queueLength: 0,
+      priority: 'high',
+      healthScore: 92,
+      performanceTrend: 'improving'
     },
     {
       id: 'PerformanceMonitorAgent',
@@ -157,7 +242,15 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       errorCount: 12,
       responseTime: 800,
       autonomy: true,
-      portal: 'carrier'
+      portal: 'carrier',
+      version: '2.0.8',
+      uptime: 72000,
+      memoryUsage: 38.7,
+      cpuUsage: 31.5,
+      queueLength: 2,
+      priority: 'medium',
+      healthScore: 78,
+      performanceTrend: 'stable'
     },
     {
       id: 'UserSessionAgent',
@@ -169,7 +262,15 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       errorCount: 1,
       responseTime: 450,
       autonomy: false,
-      portal: 'shipper'
+      portal: 'shipper',
+      version: '2.2.1',
+      uptime: 43200,
+      memoryUsage: 28.3,
+      cpuUsage: 15.8,
+      queueLength: 0,
+      priority: 'critical',
+      healthScore: 95,
+      performanceTrend: 'improving'
     },
     {
       id: 'AnalyticsAgent',
@@ -181,7 +282,16 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       errorCount: 28,
       responseTime: 3200,
       autonomy: true,
-      portal: 'shipper'
+      portal: 'shipper',
+      version: '1.9.5',
+      uptime: 36000,
+      memoryUsage: 67.8,
+      cpuUsage: 89.2,
+      queueLength: 15,
+      priority: 'high',
+      healthScore: 45,
+      lastError: 'Memory pressure detected',
+      performanceTrend: 'declining'
     },
     {
       id: 'AgentConfidenceMonitor',
@@ -193,16 +303,57 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       errorCount: 5,
       responseTime: 650,
       autonomy: true,
-      portal: 'broker'
+      portal: 'broker',
+      version: '2.1.2',
+      uptime: 64800,
+      memoryUsage: 42.1,
+      cpuUsage: 19.7,
+      queueLength: 1,
+      priority: 'high',
+      healthScore: 88,
+      performanceTrend: 'stable'
+    },
+    {
+      id: 'SelfHealingAgent',
+      name: 'Self-Healing System',
+      status: 'online',
+      confidence: 0.89,
+      lastActivity: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
+      tasksCompleted: 432,
+      errorCount: 8,
+      responseTime: 1800,
+      autonomy: true,
+      portal: 'carrier',
+      version: '2.0.9',
+      uptime: 54000,
+      memoryUsage: 51.3,
+      cpuUsage: 27.4,
+      queueLength: 0,
+      priority: 'critical',
+      healthScore: 82,
+      performanceTrend: 'improving'
     }
   ];
 
-  const mockPerformanceData: PerformanceData[] = Array.from({ length: 24 }, (_, i) => ({
-    time: new Date(Date.now() - (23 - i) * 60 * 60 * 1000).toISOString(),
+  const mockPerformanceData: PerformanceData[] = Array.from({ length: 48 }, (_, i) => ({
+    time: new Date(Date.now() - (47 - i) * 30 * 60 * 1000).toISOString(),
     cpu: Math.random() * 30 + 20,
     memory: Math.random() * 20 + 60,
     network: Math.random() * 50 + 100,
-    errors: Math.floor(Math.random() * 5)
+    errors: Math.floor(Math.random() * 5),
+    agentCount: Math.floor(Math.random() * 3) + 10,
+    confidence: Math.random() * 0.3 + 0.7,
+    throughput: Math.random() * 200 + 300
+  }));
+
+  const mockAgentTelemetry: AgentTelemetry[] = Array.from({ length: 100 }, (_, i) => ({
+    agentId: mockAgentStatuses[Math.floor(Math.random() * mockAgentStatuses.length)].id,
+    timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
+    confidence: Math.random() * 0.4 + 0.6,
+    responseTime: Math.random() * 3000 + 500,
+    success: Math.random() > 0.1,
+    taskType: ['validation', 'processing', 'analysis', 'monitoring', 'optimization'][Math.floor(Math.random() * 5)],
+    portal: ['shipper', 'carrier', 'broker', 'admin', 'driver'][Math.floor(Math.random() * 5)]
   }));
 
   // Fetch metrics from MCP
@@ -247,6 +398,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       
       setAgentStatuses(mockAgentStatuses);
       setPerformanceData(mockPerformanceData);
+      setAgentTelemetry(mockAgentTelemetry);
       setIsUsingMockData(true);
       setLastUpdated(new Date());
       
@@ -256,10 +408,13 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
       
       if (errorRate > 0.1 || successRate < 0.9) {
         setSystemHealth('degraded');
+        setAlertLevel('warning');
       } else if (errorRate > 0.2 || successRate < 0.8) {
         setSystemHealth('unhealthy');
+        setAlertLevel('critical');
       } else {
         setSystemHealth('healthy');
+        setAlertLevel('info');
       }
       
     } catch (err: any) {
@@ -286,9 +441,11 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
   useEffect(() => {
     fetchMetrics();
     
-    const interval = setInterval(fetchMetrics, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    if (autoRefresh) {
+      const interval = setInterval(fetchMetrics, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [autoRefresh]);
 
   const getHealthColor = (health: string) => {
     switch (health) {
@@ -313,6 +470,30 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
     if (confidence >= 0.9) return 'text-green-600';
     if (confidence >= 0.7) return 'text-yellow-600';
     return 'text-red-600';
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'critical': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      case 'high': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/20';
+      case 'medium': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      case 'low': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
+
+  const getHealthScoreColor = (score: number) => {
+    if (score >= 90) return 'text-green-600';
+    if (score >= 70) return 'text-yellow-600';
+    return 'text-red-600';
+  };
+
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'improving': return <TrendingUp className="h-4 w-4 text-green-600" />;
+      case 'declining': return <TrendingDown className="h-4 w-4 text-red-600" />;
+      default: return <Activity className="h-4 w-4 text-blue-600" />;
+    }
   };
 
   if (loading && !metrics) {
@@ -352,7 +533,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Enhanced Header */}
+        {/* Enhanced Header with Alert System */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -361,10 +542,10 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  System Overview
+                  MCP Agent Control Center
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Real-time monitoring and control for TransBot AI infrastructure
+                  Advanced monitoring and control for TransBot AI autonomous agents
                 </p>
               </div>
             </div>
@@ -404,11 +585,36 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
               Last updated: {lastUpdated.toLocaleString()}
             </div>
           )}
+
+          {/* System Alert */}
+          {systemHealth !== 'healthy' && (
+            <Alert className={`mt-4 ${
+              alertLevel === 'critical' ? 'border-red-200 bg-red-50 dark:bg-red-900/20' :
+              alertLevel === 'warning' ? 'border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20' :
+              'border-blue-200 bg-blue-50 dark:bg-blue-900/20'
+            }`}>
+              <AlertCircle className={`h-4 w-4 ${
+                alertLevel === 'critical' ? 'text-red-600' :
+                alertLevel === 'warning' ? 'text-yellow-600' :
+                'text-blue-600'
+              }`} />
+              <AlertDescription className={`${
+                alertLevel === 'critical' ? 'text-red-800 dark:text-red-200' :
+                alertLevel === 'warning' ? 'text-yellow-800 dark:text-yellow-200' :
+                'text-blue-800 dark:text-blue-200'
+              }`}>
+                {systemHealth === 'degraded' 
+                  ? 'System performance is degraded. Some agents may be experiencing issues.'
+                  : 'Critical system issues detected. Immediate attention required.'
+                }
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
         {/* Enhanced Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <Activity className="h-4 w-4" />
               <span>Overview</span>
@@ -420,6 +626,10 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
             <TabsTrigger value="performance" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span>Performance</span>
+            </TabsTrigger>
+            <TabsTrigger value="telemetry" className="flex items-center space-x-2">
+              <Radar className="h-4 w-4" />
+              <span>Telemetry</span>
             </TabsTrigger>
             <TabsTrigger value="operations" className="flex items-center space-x-2">
               <Command className="h-4 w-4" />
@@ -477,20 +687,20 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Active Agents</p>
-                                             <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">
-                         {metrics?.agents.online || 0}/{metrics?.agents.total || 0}
-                       </p>
-                     </div>
-                     <div className="p-3 bg-purple-500 rounded-xl">
-                       <Brain className="h-6 w-6 text-white" />
-                     </div>
-                   </div>
-                   <div className="mt-4">
-                     <Progress 
-                       value={metrics?.agents.total ? (metrics.agents.online / metrics.agents.total) * 100 : 0} 
-                       className="h-2" 
-                     />
-                   </div>
+                      <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">
+                        {metrics?.agents.online || 0}/{metrics?.agents.total || 0}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-purple-500 rounded-xl">
+                      <Brain className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <Progress 
+                      value={metrics?.agents.total ? (metrics.agents.online / metrics.agents.total) * 100 : 0} 
+                      className="h-2" 
+                    />
+                  </div>
                 </CardContent>
               </Card>
 
@@ -527,34 +737,34 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                                     <div>
-                     <div className="flex justify-between text-sm mb-2">
-                       <span>CPU Usage</span>
-                       <span>{metrics?.resources.cpu_usage?.toFixed(1) || 0}%</span>
-                     </div>
-                     <Progress value={metrics?.resources.cpu_usage || 0} className="h-2" />
-                   </div>
-                   <div>
-                     <div className="flex justify-between text-sm mb-2">
-                       <span>Memory Usage</span>
-                       <span>{metrics?.resources.memory_usage?.toFixed(1) || 0}%</span>
-                     </div>
-                     <Progress value={metrics?.resources.memory_usage || 0} className="h-2" />
-                   </div>
-                   <div>
-                     <div className="flex justify-between text-sm mb-2">
-                       <span>Disk Usage</span>
-                       <span>{metrics?.resources.disk_usage?.toFixed(1) || 0}%</span>
-                     </div>
-                     <Progress value={metrics?.resources.disk_usage || 0} className="h-2" />
-                   </div>
-                   <div>
-                     <div className="flex justify-between text-sm mb-2">
-                       <span>Network Throughput</span>
-                       <span>{metrics?.resources.network_throughput?.toFixed(1) || 0} MB/s</span>
-                     </div>
-                     <Progress value={Math.min((metrics?.resources.network_throughput || 0) / 2, 100)} className="h-2" />
-                   </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>CPU Usage</span>
+                      <span>{metrics?.resources.cpu_usage?.toFixed(1) || 0}%</span>
+                    </div>
+                    <Progress value={metrics?.resources.cpu_usage || 0} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Memory Usage</span>
+                      <span>{metrics?.resources.memory_usage?.toFixed(1) || 0}%</span>
+                    </div>
+                    <Progress value={metrics?.resources.memory_usage || 0} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Disk Usage</span>
+                      <span>{metrics?.resources.disk_usage?.toFixed(1) || 0}%</span>
+                    </div>
+                    <Progress value={metrics?.resources.disk_usage || 0} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Network Throughput</span>
+                      <span>{metrics?.resources.network_throughput?.toFixed(1) || 0} MB/s</span>
+                    </div>
+                    <Progress value={Math.min((metrics?.resources.network_throughput || 0) / 2, 100)} className="h-2" />
+                  </div>
                 </CardContent>
               </Card>
 
@@ -611,7 +821,7 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                         <div>
                           <h3 className="font-medium text-gray-900 dark:text-white">{agent.name}</h3>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Portal: {agent.portal} • Tasks: {agent.tasksCompleted}
+                            Portal: {agent.portal} • Tasks: {agent.tasksCompleted} • Version: {agent.version}
                           </p>
                         </div>
                       </div>
@@ -622,20 +832,26 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                             {(agent.confidence * 100).toFixed(1)}% Confidence
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {agent.responseTime}ms response
+                            {agent.responseTime}ms response • {agent.uptime}h uptime
                           </p>
                         </div>
                         
-                        <Badge className={`${getStatusColor(agent.status)} border-0`}>
-                          <span className="capitalize">{agent.status}</span>
-                        </Badge>
-                        
-                        {agent.autonomy && (
-                          <Badge variant="outline" className="text-xs">
-                            <Zap className="h-3 w-3 mr-1" />
-                            Autonomous
+                        <div className="flex flex-col items-end space-y-1">
+                          <Badge className={`${getStatusColor(agent.status)} border-0`}>
+                            <span className="capitalize">{agent.status}</span>
                           </Badge>
-                        )}
+                          
+                          <Badge className={`${getPriorityColor(agent.priority)} border-0 text-xs`}>
+                            {agent.priority}
+                          </Badge>
+                          
+                          {agent.autonomy && (
+                            <Badge variant="outline" className="text-xs">
+                              <Zap className="h-3 w-3 mr-1" />
+                              Autonomous
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -715,6 +931,86 @@ const SystemOverview: React.FC<SystemOverviewProps> = () => {
                         dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
                       />
                     </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Telemetry Tab */}
+          <TabsContent value="telemetry" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Radar className="h-5 w-5" />
+                    <span>Agent Confidence Distribution</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <ScatterChart data={agentTelemetry}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="responseTime" 
+                        name="Response Time (ms)"
+                        type="number"
+                      />
+                      <YAxis 
+                        dataKey="confidence" 
+                        name="Confidence"
+                        domain={[0, 1]}
+                      />
+                      <Tooltip 
+                        formatter={(value: number, name: string) => [
+                          name === 'confidence' ? `${(value * 100).toFixed(1)}%` : value,
+                          name
+                        ]}
+                      />
+                      <Scatter 
+                        dataKey="confidence" 
+                        fill="#3b82f6" 
+                        name="Confidence"
+                      />
+                    </ScatterChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <PieChartIcon className="h-5 w-5" />
+                    <span>Task Type Distribution</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={Object.entries(
+                          agentTelemetry.reduce((acc, telemetry) => {
+                            acc[telemetry.taskType] = (acc[telemetry.taskType] || 0) + 1;
+                            return acc;
+                          }, {} as Record<string, number>)
+                        ).map(([taskType, count]) => ({ name: taskType, value: count }))}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        dataKey="value"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {Object.entries(
+                          agentTelemetry.reduce((acc, telemetry) => {
+                            acc[telemetry.taskType] = (acc[telemetry.taskType] || 0) + 1;
+                            return acc;
+                          }, {} as Record<string, number>)
+                        ).map(([taskType], index) => (
+                          <Cell key={`cell-${index}`} fill={['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 5]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
