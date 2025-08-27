@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -401,9 +400,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
-            </EnhancedButton>
             
-            <EnhancedButton
               onClick={handleNext}
               disabled={!canProceed() || isLoading}
             >
@@ -423,7 +420,6 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </>
               )}
-            </EnhancedButton>
           </div>
         </div>
       </ResponsiveCard>

@@ -1,9 +1,7 @@
 import React, { ReactNode } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import ResponsiveLayout from './ResponsiveLayout';
 import ResponsiveGrid from '../ui/ResponsiveGrid';
-import ResponsiveCard from '../ui/ResponsiveCard';
 
 interface DashboardMetric {
   title: string;

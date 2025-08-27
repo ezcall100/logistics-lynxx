@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '../../../components/ui/input.tsx';
 // Custom Label component
 const Label = ({ children, htmlFor, className = '' }: { children: React.ReactNode; htmlFor?: string; className?: string }) => (
@@ -90,7 +89,6 @@ const IntegrationSettings = () => {
           className="bg-blue-600 hover:bg-blue-700"
         >
           {isLoading ? 'Saving...' : 'Save Changes'}
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -169,13 +167,11 @@ const IntegrationSettings = () => {
               />
             </div>
             
-            <EnhancedButton
               variant="outline"
               onClick={handleTestConnection}
               disabled={isLoading}
             >
               Test API Connection
-            </EnhancedButton>
           </div>
         </ResponsiveCard>
 
@@ -239,13 +235,11 @@ const IntegrationSettings = () => {
               </div>
             </div>
             
-            <EnhancedButton
               variant="outline"
               onClick={handleTestConnection}
               disabled={isLoading}
             >
               Test Webhook
-            </EnhancedButton>
           </div>
         </ResponsiveCard>
 
@@ -296,9 +290,7 @@ const IntegrationSettings = () => {
                 {['stripe', 'twilio', 'sendgrid', 'slack', 'zapier', 'hubspot'].map((provider) => (
                   <div key={provider} className="flex items-center justify-between p-3 border rounded-lg">
                     <span className="capitalize font-medium">{provider}</span>
-                    <EnhancedButton variant="outline" size="sm">
                       Configure
-                    </EnhancedButton>
                   </div>
                 ))}
               </div>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABAnalytics = () => {
   const [analytics, setAnalytics] = useState({
     totalClicks: 1247,
@@ -26,7 +25,6 @@ const FABAnalytics = () => {
         </div>
         <EnhancedButton variant="outline">
           Export Data
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">

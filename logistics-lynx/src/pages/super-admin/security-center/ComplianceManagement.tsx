@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Shield } from 'lucide-react';
 
 interface ComplianceManagementProps {}

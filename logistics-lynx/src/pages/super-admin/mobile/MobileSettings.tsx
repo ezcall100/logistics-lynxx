@@ -1,12 +1,11 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
 const MobileSettings = () => {
-  const [settings, setSettings] = useState({
+  const [settings] = useState({
     pushNotifications: true,
     locationServices: false,
     autoSync: true,
@@ -26,7 +25,6 @@ const MobileSettings = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Save Settings
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -166,9 +164,7 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Cache Size</h4>
                   <p className="text-sm text-gray-600">156 MB cached data</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Clear Cache
-                </EnhancedButton>
               </div>
             </div>
           </div>
@@ -204,9 +200,7 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Session Timeout</h4>
                   <p className="text-sm text-gray-600">Auto-logout after 30 minutes</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -214,9 +208,7 @@ const MobileSettings = () => {
                   <h4 className="font-medium text-gray-900">Device Management</h4>
                   <p className="text-sm text-gray-600">Manage trusted devices</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Manage
-                </EnhancedButton>
               </div>
             </div>
           </div>

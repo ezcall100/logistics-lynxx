@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Headphones } from 'lucide-react';
 
 interface SupportManagementProps {}
@@ -55,8 +54,7 @@ const SupportManagement: React.FC<SupportManagementProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Helpdesk Management</span>
               </div>
               <EnhancedButton className="mt-6">
-                Configure Support Management
-              </EnhancedButton>
+                Configure Support Management</EnhancedButton>
             </div>
           )}
         </div>

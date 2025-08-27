@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([
     {
@@ -80,7 +79,6 @@ const ActiveSessions = () => {
           className="text-red-600 border-red-300 hover:bg-red-50"
         >
           Terminate All Other Sessions
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -164,14 +162,12 @@ const ActiveSessions = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     {!session.isCurrent && (
-                      <EnhancedButton
                         size="sm"
                         variant="outline"
                         onClick={() => handleTerminateSession(session.id)}
                         className="text-red-600 border-red-300 hover:bg-red-50"
                       >
                         Terminate
-                      </EnhancedButton>
                     )}
                   </div>
                 </div>

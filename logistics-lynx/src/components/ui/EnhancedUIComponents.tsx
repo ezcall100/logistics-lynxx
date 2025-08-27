@@ -789,8 +789,9 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
             )}
             {filterable && (
               <div className="flex gap-2">
-                <EnhancedButton
-                  variant="secondary"
+                  <EnhancedButton
+
+                    variant="secondary"
                   size="sm"
                   icon={<Filter className="w-4 h-4" />}
                   mode={mode}
@@ -850,7 +851,6 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
 
 // Default export for backward compatibility
 export default {
-  EnhancedButton,
   EnhancedCard,
   EnhancedInput,
   EnhancedBadge,

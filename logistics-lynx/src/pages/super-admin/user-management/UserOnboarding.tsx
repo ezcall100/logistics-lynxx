@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { GraduationCap } from 'lucide-react';
 
 interface UserOnboardingProps {}
@@ -55,8 +54,7 @@ const UserOnboarding: React.FC<UserOnboardingProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Completion Metrics</span>
               </div>
               <EnhancedButton className="mt-6">
-                Configure User Onboarding
-              </EnhancedButton>
+                Configure User Onboarding</EnhancedButton>
             </div>
           )}
         </div>

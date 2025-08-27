@@ -1,11 +1,10 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 const AccountVerification = () => {
-  const [verificationStatus, setVerificationStatus] = useState({
+  const [verificationStatus] = useState({
     email: {
       verified: true,
       email: 'john.doe@tms-enterprise.com',
@@ -13,7 +12,7 @@ const AccountVerification = () => {
     },
     phone: {
       verified: false,
-      phone: '+1 (555) 123-4567',
+      phone: '+1 (555); 123-4567',
       verifiedAt: null
     },
     identity: {
@@ -90,7 +89,6 @@ const AccountVerification = () => {
                     disabled={isResendingEmail}
                   >
                     {isResendingEmail ? 'Sending...' : 'Resend Email'}
-                  </EnhancedButton>
                 )}
               </div>
             </div>
@@ -126,13 +124,11 @@ const AccountVerification = () => {
                   {verificationStatus.phone.verified ? 'Verified' : 'Unverified'}
                 </span>
                 {!verificationStatus.phone.verified && (
-                  <EnhancedButton
                     size="sm"
                     onClick={handleSendSMS}
                     disabled={isSendingSMS}
                   >
                     {isSendingSMS ? 'Sending...' : 'Send SMS Code'}
-                  </EnhancedButton>
                 )}
               </div>
             </div>
@@ -146,10 +142,8 @@ const AccountVerification = () => {
                     maxLength={6}
                     className="w-32"
                   />
-                  <EnhancedButton size="sm">
                     Verify
-                  </EnhancedButton>
-                </div>
+                </div></EnhancedButton>
               </div>
             )}
           </div>
@@ -184,9 +178,7 @@ const AccountVerification = () => {
                   {verificationStatus.identity.verified ? 'Verified' : 'Unverified'}
                 </span>
                 {!verificationStatus.identity.verified && (
-                  <EnhancedButton size="sm">
                     Upload Document
-                  </EnhancedButton>
                 )}
               </div>
             </div>
@@ -221,9 +213,7 @@ const AccountVerification = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                   {verificationStatus.twoFactor.enabled ? 'Enabled' : 'Disabled'}
                 </span>
-                <EnhancedButton size="sm" variant="outline">
                   {verificationStatus.twoFactor.enabled ? 'Manage' : 'Enable'}
-                </EnhancedButton>
               </div>
             </div>
           </div>

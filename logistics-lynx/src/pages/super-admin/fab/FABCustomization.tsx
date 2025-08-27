@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABCustomization = () => {
   const [customization, setCustomization] = useState({
     theme: 'blue',
@@ -21,7 +20,6 @@ const FABCustomization = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Save Changes
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">

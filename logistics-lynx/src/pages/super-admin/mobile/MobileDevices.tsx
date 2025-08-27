@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Lock } from 'lucide-react';
+
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const MobileDevices = () => {
-  const [devices, setDevices] = useState([
+  const [devices] = useState([
     {
       id: 1,
       name: 'iPhone 15 Pro',
@@ -65,7 +64,6 @@ const MobileDevices = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add Device
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -142,9 +140,7 @@ const MobileDevices = () => {
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                         {device.status}
                       </span>
-                      <EnhancedButton size="sm" variant="outline">
                         Manage
-                      </EnhancedButton>
                     </div>
                   </div>
                   
@@ -205,9 +201,7 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">Remote Wipe</h4>
                   <p className="text-sm text-gray-600">Securely erase data from selected devices</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-200">
                   Wipe Device
-                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -215,9 +209,7 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">Device Lock</h4>
                   <p className="text-sm text-gray-600">Lock devices remotely for security</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Lock Device
-                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -225,9 +217,7 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">App Updates</h4>
                   <p className="text-sm text-gray-600">Push app updates to all devices</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Update Apps
-                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -235,9 +225,7 @@ const MobileDevices = () => {
                   <h4 className="font-medium text-gray-900">Device Reports</h4>
                   <p className="text-sm text-gray-600">Generate device usage reports</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Generate Report
-                </EnhancedButton>
               </div>
             </div>
           </div>

@@ -4,7 +4,6 @@
 
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { Activity, AlertTriangle, RefreshCw, Filter, Download, Eye, EyeOff, Zap, Target } from 'lucide-react';
 import { confidenceLogger } from '@/services/confidence-logger';
@@ -207,15 +206,12 @@ const QAIntelligence: React.FC = () => {
           >
             {autoRefresh ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
             {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
-          </EnhancedButton>
-          <EnhancedButton
             variant="outline"
             size="sm"
             onClick={fetchData}
           >
             <RefreshCw className="h-4 w-4" />
             Refresh
-          </EnhancedButton>
         </div>
       </div>
 
@@ -272,10 +268,8 @@ const QAIntelligence: React.FC = () => {
               </Select>
             </div>
             <div className="flex items-end">
-              <EnhancedButton variant="outline" size="sm" onClick={() => exportData('confidence')}>
                 <Download className="h-4 w-4 mr-2" />
                 Export Data
-              </EnhancedButton>
             </div>
           </div>
         </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
@@ -183,7 +182,6 @@ const SecurityDashboard: React.FC = () => {
         <EnhancedButton onClick={loadSecurityData} variant="outline">
           <Activity className="h-4 w-4 mr-2" />
           Refresh
-        </EnhancedButton>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">

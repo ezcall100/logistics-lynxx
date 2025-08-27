@@ -1,7 +1,6 @@
 import React from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const AboutSettings: React.FC = () => {
   const systemInfo = {
     version: '2.1.0',
@@ -122,7 +121,6 @@ const AboutSettings: React.FC = () => {
 
       <div className="flex justify-end space-x-2">
         <EnhancedButton variant="outline">Check for Updates</EnhancedButton>
-        <EnhancedButton>Contact Support</EnhancedButton>
       </div>
     </div>
   );

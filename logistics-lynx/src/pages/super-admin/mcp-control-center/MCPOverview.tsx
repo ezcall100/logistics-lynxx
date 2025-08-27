@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Cpu, Brain, Zap, Settings, Play, Pause, RefreshCw, Download, Plus, Database,  } from 'lucide-react';
 import { 
   EnhancedCard, 
@@ -610,22 +609,24 @@ const MCPOverview: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+
+                variant="secondary"
               size="sm"
               icon={<Download className="w-4 h-4" />}
               mode={mode}
             >
-              Export Data
-            </EnhancedButton>
-            <EnhancedButton
-              variant="primary"
+
+              >
+
+                Export Data
+
+              </EnhancedButton>
               size="sm"
               icon={<Play className="w-4 h-4" />}
               mode={mode}
             >
               Start All Systems
-            </EnhancedButton>
           </div>
         </div>
 
@@ -739,22 +740,24 @@ const MCPOverview: React.FC = () => {
               AI Agents
             </h2>
             <div className="flex space-x-2">
-              <EnhancedButton
-                variant="secondary"
+                <EnhancedButton
+
+                  variant="secondary"
                 size="sm"
                 icon={<Plus className="w-4 h-4" />}
                 mode={mode}
               >
-                Add Agent
-              </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
+
+                >
+
+                  Add Agent
+
+                </EnhancedButton>
                 size="sm"
                 icon={<Settings className="w-4 h-4" />}
                 mode={mode}
               >
                 Configure
-              </EnhancedButton>
             </div>
           </div>
           
@@ -776,14 +779,19 @@ const MCPOverview: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Machine Learning Models
               </h2>
-              <EnhancedButton
-                variant="secondary"
+                <EnhancedButton
+
+                  variant="secondary"
                 size="sm"
                 icon={<Cpu className="w-4 h-4" />}
                 mode={mode}
               >
-                Train New
-              </EnhancedButton>
+
+                >
+
+                  Train New
+
+                </EnhancedButton>
             </div>
             
             <EnhancedTable
@@ -802,14 +810,19 @@ const MCPOverview: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Data Pipelines
               </h2>
-              <EnhancedButton
-                variant="secondary"
+                <EnhancedButton
+
+                  variant="secondary"
                 size="sm"
                 icon={<Database className="w-4 h-4" />}
                 mode={mode}
               >
-                Create Pipeline
-              </EnhancedButton>
+
+                >
+
+                  Create Pipeline
+
+                </EnhancedButton>
             </div>
             
             <EnhancedTable
@@ -830,22 +843,24 @@ const MCPOverview: React.FC = () => {
               Automation Rules
             </h2>
             <div className="flex space-x-2">
-              <EnhancedButton
-                variant="secondary"
+                <EnhancedButton
+
+                  variant="secondary"
                 size="sm"
                 icon={<Plus className="w-4 h-4" />}
                 mode={mode}
               >
-                Add Rule
-              </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
+
+                >
+
+                  Add Rule
+
+                </EnhancedButton>
                 size="sm"
                 icon={<Zap className="w-4 h-4" />}
                 mode={mode}
               >
                 Test Rules
-              </EnhancedButton>
             </div>
           </div>
           
@@ -866,65 +881,121 @@ const MCPOverview: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+
+                variant="secondary"
               size="sm"
               icon={<Play className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Start All</span>
-            </EnhancedButton>
+
+              >
+
+                <span className="text-xs">Start All</span>
+
+              </EnhancedButton>
             
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+
+            
+                variant="secondary"
               size="sm"
               icon={<Pause className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Pause All</span>
-            </EnhancedButton>
+
             
-                         <EnhancedButton
-               variant="secondary"
+              >
+
+            
+                <span className="text-xs">Pause All</span>
+
+            
+              </EnhancedButton>
+            
+               <EnhancedButton
+
+            
+                 variant="secondary"
                size="sm"
                icon={<Pause className="w-4 h-4" />}
                mode={mode}
                className="flex-col h-20"
              >
                <span className="text-xs">Stop All</span>
-             </EnhancedButton>
+
             
-            <EnhancedButton
-              variant="secondary"
+               >
+
+            
+                 <span className="text-xs">Stop All</span>
+
+            
+               </EnhancedButton>
+            
+              <EnhancedButton
+
+            
+                variant="secondary"
               size="sm"
               icon={<RefreshCw className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Restart</span>
-            </EnhancedButton>
+
             
-            <EnhancedButton
-              variant="secondary"
+              >
+
+            
+                <span className="text-xs">Restart</span>
+
+            
+              </EnhancedButton>
+            
+              <EnhancedButton
+
+            
+                variant="secondary"
               size="sm"
               icon={<Settings className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Configure</span>
-            </EnhancedButton>
+
             
-            <EnhancedButton
-              variant="secondary"
+              >
+
+            
+                <span className="text-xs">Configure</span>
+
+            
+              </EnhancedButton>
+            
+              <EnhancedButton
+
+            
+                variant="secondary"
               size="sm"
               icon={<Download className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Export Logs</span>
-            </EnhancedButton>
+
+            
+              >
+
+            
+                <span className="text-xs">Export Logs</span>
+
+            
+              </EnhancedButton>
           </div>
         </EnhancedCard>
       </div>

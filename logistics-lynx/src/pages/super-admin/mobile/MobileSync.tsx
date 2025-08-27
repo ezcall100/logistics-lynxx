@@ -1,11 +1,10 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Progress } from '@/components/ui/progress';
 
 const MobileSync = () => {
-  const [syncStatus, setSyncStatus] = useState({
+  const [syncStatus] = useState({
     lastSync: '2 minutes ago',
     nextSync: 'in 3 minutes',
     syncProgress: 85,
@@ -23,7 +22,6 @@ const MobileSync = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Force Sync
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -116,9 +114,7 @@ const MobileSync = () => {
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {device.status}
                     </span>
-                    <EnhancedButton size="sm" variant="outline">
                       Sync Now
-                    </EnhancedButton>
                   </div>
                 </div>
               ))}
@@ -192,9 +188,7 @@ const MobileSync = () => {
                   <h4 className="font-medium text-gray-900">Auto Sync Interval</h4>
                   <p className="text-sm text-gray-600">Every 5 minutes</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -212,9 +206,7 @@ const MobileSync = () => {
                   <h4 className="font-medium text-gray-900">Conflict Resolution</h4>
                   <p className="text-sm text-gray-600">Server wins by default</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </EnhancedButton>
               </div>
               
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -222,9 +214,7 @@ const MobileSync = () => {
                   <h4 className="font-medium text-gray-900">Data Retention</h4>
                   <p className="text-sm text-gray-600">Keep sync logs for 30 days</p>
                 </div>
-                <EnhancedButton size="sm" variant="outline">
                   Configure
-                </EnhancedButton>
               </div>
             </div>
           </div>

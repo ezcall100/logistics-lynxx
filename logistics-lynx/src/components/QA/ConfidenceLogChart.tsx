@@ -6,7 +6,6 @@
 
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Progress } from '../../components/ui/progress';
 import { 
@@ -271,12 +270,9 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
-          </EnhancedButton>
           {exportEnabled && (
-            <EnhancedButton variant="outline" size="sm" onClick={exportToCSV}>
               <Download className="h-4 w-4 mr-2" />
               Export CSV
-            </EnhancedButton>
           )}
         </div>
       </div>

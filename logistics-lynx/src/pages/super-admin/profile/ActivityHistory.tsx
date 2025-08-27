@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const ActivityHistory = () => {
-  const [activities, setActivities] = useState([
+  const [activities] = useState([
     {
       id: 1,
       type: 'login',
@@ -81,7 +80,6 @@ const ActivityHistory = () => {
         </div>
         <EnhancedButton variant="outline">
           Export Activity Log
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -162,9 +160,7 @@ const ActivityHistory = () => {
             </div>
             
             <div className="mt-6 text-center">
-              <EnhancedButton variant="outline">
                 Load More Activity
-              </EnhancedButton>
             </div>
           </div>
         </ResponsiveCard>
@@ -196,9 +192,7 @@ const ActivityHistory = () => {
                     </p>
                   </div>
                 </div>
-                <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-300">
                   Review
-                </EnhancedButton>
               </div>
             </div>
           </div>

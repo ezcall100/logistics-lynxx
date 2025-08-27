@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABTemplates = () => {
   const [templates, setTemplates] = useState([
     {
@@ -40,7 +39,6 @@ const FABTemplates = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Create Template
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -78,9 +76,7 @@ const FABTemplates = () => {
                     </div>
                     <div className="flex items-center space-x-2 ml-4">
                       <span className="text-sm text-gray-600">{template.usage} uses</span>
-                      <EnhancedButton size="sm" variant="outline">
                         Use Template
-                      </EnhancedButton>
                     </div>
                   </div>
                 </div>
@@ -168,9 +164,7 @@ const FABTemplates = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">{template.usage} uses</span>
-                    <EnhancedButton size="sm">
                       Apply
-                    </EnhancedButton>
                   </div>
                 </div>
               ))}

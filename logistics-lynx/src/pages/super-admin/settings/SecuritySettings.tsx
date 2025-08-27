@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Shield, Save, RefreshCw, Download, Trash2, Plus, Users, Clock, CheckCircle, AlertTriangle, Lock } from 'lucide-react';
 import { 
   EnhancedCard, 
@@ -299,7 +298,6 @@ const SecuritySettings: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
               variant="secondary"
               size="sm"
               icon={<RefreshCw className="w-4 h-4" />}
@@ -307,8 +305,6 @@ const SecuritySettings: React.FC = () => {
               onClick={() => setFormData(config)}
             >
               Reset
-            </EnhancedButton>
-            <EnhancedButton
               variant="secondary"
               size="sm"
               icon={<Shield className="w-4 h-4" />}
@@ -317,8 +313,6 @@ const SecuritySettings: React.FC = () => {
               loading={loading}
             >
               Test Security
-            </EnhancedButton>
-            <EnhancedButton
               variant="primary"
               size="sm"
               icon={<Save className="w-4 h-4" />}
@@ -327,14 +321,13 @@ const SecuritySettings: React.FC = () => {
               loading={saving}
             >
               Save Changes
-            </EnhancedButton>
           </div>
         </div>
 
         {/* Tabs */}
         <EnhancedCard mode={mode}>
           <div className="flex space-x-1 border-b">
-            {tabs.map((tab) => {
+            {tabs.map((tab, index) => {
               const Icon = tab.icon;
               return (
                 <button
@@ -620,7 +613,6 @@ const SecuritySettings: React.FC = () => {
                     <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
                       IP Whitelist
                     </label>
-                    <EnhancedButton
                       variant="secondary"
                       size="sm"
                       icon={<Plus className="w-4 h-4" />}
@@ -628,13 +620,11 @@ const SecuritySettings: React.FC = () => {
                       onClick={() => setShowIPModal(true)}
                     >
                       Add IP
-                    </EnhancedButton>
                   </div>
                   <div className="space-y-2">
                     {formData.accessControl.ipWhitelist.map((ip, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded">
                         <span className="text-sm text-green-800">{ip}</span>
-                        <EnhancedButton
                           variant="ghost"
                           size="sm"
                           icon={<Trash2 className="w-4 h-4" />}
@@ -648,7 +638,6 @@ const SecuritySettings: React.FC = () => {
                           }}
                         >
                           Remove
-                        </EnhancedButton>
                       </div>
                     ))}
                   </div>
@@ -658,20 +647,24 @@ const SecuritySettings: React.FC = () => {
                     <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
                       IP Blacklist
                     </label>
-                    <EnhancedButton
-                      variant="secondary"
+                      <EnhancedButton
+
+                        variant="secondary"
                       size="sm"
                       icon={<Plus className="w-4 h-4" />}
                       mode={mode}
                     >
-                      Add IP
-                    </EnhancedButton>
+
+                      >
+
+                        Add IP
+
+                      </EnhancedButton>
                   </div>
                   <div className="space-y-2">
                     {formData.accessControl.ipBlacklist.map((ip, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-red-50 rounded">
                         <span className="text-sm text-red-800">{ip}</span>
-                        <EnhancedButton
                           variant="ghost"
                           size="sm"
                           icon={<Trash2 className="w-4 h-4" />}
@@ -685,7 +678,6 @@ const SecuritySettings: React.FC = () => {
                           }}
                         >
                           Remove
-                        </EnhancedButton>
                       </div>
                     ))}
                   </div>
@@ -1044,14 +1036,19 @@ const SecuritySettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Recent Security Events
               </h3>
-              <EnhancedButton
-                variant="secondary"
+                <EnhancedButton
+
+                  variant="secondary"
                 size="sm"
                 icon={<Download className="w-4 h-4" />}
                 mode={mode}
               >
-                Export Logs
-              </EnhancedButton>
+
+                >
+
+                  Export Logs
+
+                </EnhancedButton>
             </div>
             <div className="space-y-4">
               {securityEvents.map((event) => (

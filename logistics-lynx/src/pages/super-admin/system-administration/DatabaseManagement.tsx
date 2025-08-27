@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { AlertTriangle, Clock, Plus, Edit, Upload, CheckCircle, X, RefreshCw, Settings, Eye, Activity, Users, Download, Shield, TrendingUp, TrendingDown, Database } from 'lucide-react';
 
 const DatabaseManagement: React.FC = () => {
@@ -149,10 +148,8 @@ const DatabaseManagement: React.FC = () => {
           <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
             Database Status
           </h2>
-          <EnhancedButton variant="ghost" size="sm">
             <Settings className="w-4 h-4 mr-2" />
             Configure
-          </EnhancedButton>
         </div>
 
         <div className="space-y-4">
@@ -282,10 +279,8 @@ const DatabaseManagement: React.FC = () => {
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             Security Status
           </h3>
-          <EnhancedButton variant="ghost" size="sm">
             <Shield className="w-4 h-4 mr-2" />
             Security Settings
-          </EnhancedButton>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

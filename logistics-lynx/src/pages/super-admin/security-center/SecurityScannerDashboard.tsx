@@ -3,7 +3,6 @@
 // ========================
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
@@ -66,7 +65,7 @@ interface SecurityMetrics {
 
 const SecurityScannerDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
+  const [selectedTimeframe] = useState('24h');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   const [securityScans, setSecurityScans] = useState<SecurityScan[]>([]);
@@ -325,11 +324,8 @@ const SecurityScannerDashboard: React.FC = () => {
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
             {autoRefresh ? 'Auto' : 'Manual'}
-          </EnhancedButton>
-          <EnhancedButton variant="outline" size="sm" onClick={exportSecurityReport}>
             <Download className="h-4 w-4 mr-2" />
             Export
-          </EnhancedButton>
         </div>
       </div>
 
@@ -408,14 +404,10 @@ const SecurityScannerDashboard: React.FC = () => {
                   <p className="text-slate-600 dark:text-slate-400">Active and completed security scans</p>
                 </div>
                 <div className="flex space-x-2">
-                  <EnhancedButton size="sm" onClick={() => startNewScan('vulnerability')}>
                     <Search className="h-4 w-4 mr-2" />
                     Vulnerability Scan
-                  </EnhancedButton>
-                  <EnhancedButton size="sm" variant="outline" onClick={() => startNewScan('compliance')}>
                     <FileText className="h-4 w-4 mr-2" />
                     Compliance Scan
-                  </EnhancedButton>
                 </div>
               </div>
             </div>

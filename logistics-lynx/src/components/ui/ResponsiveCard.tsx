@@ -60,7 +60,6 @@ const ResponsiveCard: React.FC<ResponsiveCardProps> = ({
 
 // Export additional custom components for easy access
 export {
-  EnhancedButton,
   EnhancedInput,
   EnhancedBadge,
   EnhancedProgress,

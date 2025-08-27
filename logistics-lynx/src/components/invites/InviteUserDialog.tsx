@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -290,8 +289,6 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
               disabled={isLoading}
             >
               Cancel
-            </EnhancedButton>
-            <EnhancedButton type="submit" disabled={isLoading || !email || !role}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -303,7 +300,6 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
                   Send Invitation
                 </>
               )}
-            </EnhancedButton>
           </DialogFooter>
         </form>
       </DialogContent>

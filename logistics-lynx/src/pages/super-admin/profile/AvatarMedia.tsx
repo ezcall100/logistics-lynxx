@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -178,7 +177,6 @@ const AvatarMedia = () => {
             <div className="mt-4">
               <EnhancedButton variant="outline" className="w-full">
                 View All Media
-              </EnhancedButton>
             </div>
           </div>
         </ResponsiveCard>

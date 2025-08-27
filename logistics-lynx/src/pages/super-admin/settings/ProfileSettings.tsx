@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { User, Camera, Save, Key, Trash2, RotateCcw, Settings, Shield, Bell, Eye } from 'lucide-react';
 import { 
   EnhancedCard, 
@@ -192,7 +191,6 @@ const ProfileSettings: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
               variant="secondary"
               size="sm"
               icon={<RotateCcw className="w-4 h-4" />}
@@ -200,8 +198,6 @@ const ProfileSettings: React.FC = () => {
               onClick={() => setFormData(profile)}
             >
               Reset
-            </EnhancedButton>
-            <EnhancedButton
               variant="primary"
               size="sm"
               icon={<Save className="w-4 h-4" />}
@@ -210,7 +206,6 @@ const ProfileSettings: React.FC = () => {
               loading={saving}
             >
               Save Changes
-            </EnhancedButton>
           </div>
         </div>
 
@@ -274,7 +269,6 @@ const ProfileSettings: React.FC = () => {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <EnhancedButton
                     variant="secondary"
                     size="sm"
                     icon={<Camera className="w-4 h-4" />}
@@ -282,8 +276,6 @@ const ProfileSettings: React.FC = () => {
                     onClick={() => setShowAvatarModal(true)}
                   >
                     Change Photo
-                  </EnhancedButton>
-                  <EnhancedButton
                     variant="secondary"
                     size="sm"
                     icon={<Key className="w-4 h-4" />}
@@ -291,7 +283,6 @@ const ProfileSettings: React.FC = () => {
                     onClick={() => setShowPasswordModal(true)}
                   >
                     Change Password
-                  </EnhancedButton>
                 </div>
               </div>
             </EnhancedCard>
@@ -811,7 +802,6 @@ const ProfileSettings: React.FC = () => {
               </p>
             </div>
             <div className="space-y-3">
-              <EnhancedButton
                 variant="primary"
                 size="sm"
                 icon={<Camera className="w-4 h-4" />}
@@ -819,7 +809,6 @@ const ProfileSettings: React.FC = () => {
                 onClick={() => document.getElementById('avatar-upload')?.click()}
               >
                 Photo
-              </EnhancedButton>
               <input
                 id="avatar-upload"
                 type="file"
@@ -828,7 +817,6 @@ const ProfileSettings: React.FC = () => {
                 className="hidden"
               />
               {formData.avatar && (
-                <EnhancedButton
                   variant="danger"
                   size="sm"
                   icon={<Trash2 className="w-4 h-4" />}
@@ -836,7 +824,6 @@ const ProfileSettings: React.FC = () => {
                   onClick={() => setFormData({ ...formData, avatar: '' })}
                 >
                   Remove Photo
-                </EnhancedButton>
               )}
             </div>
           </div>
@@ -885,21 +872,17 @@ const ProfileSettings: React.FC = () => {
               />
             </div>
             <div className="flex justify-end space-x-3">
-              <EnhancedButton
                 variant="secondary"
                 onClick={() => setShowPasswordModal(false)}
                 mode={mode}
               >
                 Cancel
-              </EnhancedButton>
-              <EnhancedButton
                 variant="primary"
                 onClick={handlePasswordChange}
                 loading={saving}
                 mode={mode}
               >
                 Change Password
-              </EnhancedButton>
             </div>
           </div>
         </EnhancedModal>

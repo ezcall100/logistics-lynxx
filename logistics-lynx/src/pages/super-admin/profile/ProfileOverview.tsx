@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const ProfileOverview = () => {
-  const [profile, setProfile] = useState({
+  const [profile] = useState({
     name: 'John Doe',
     email: 'john.doe@tms-enterprise.com',
     role: 'Super Admin',
     department: 'IT Management',
     location: 'New York, NY',
-    phone: '+1 (555) 123-4567',
+    phone: '+1 (555); 123-4567',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
     status: 'Active',
     lastLogin: '2024-01-15 14:30:00',
@@ -44,15 +43,10 @@ const ProfileOverview = () => {
             <>
               <EnhancedButton variant="outline" onClick={handleCancel}>
                 Cancel
-              </EnhancedButton>
-              <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
                 Save Changes
-              </EnhancedButton>
             </>
           ) : (
-            <EnhancedButton onClick={handleEdit} className="bg-blue-600 hover:bg-blue-700">
               Edit Profile
-            </EnhancedButton>
           )}
         </div>
       </div>
@@ -155,27 +149,21 @@ const ProfileOverview = () => {
                   <h4 className="font-medium">Two-Factor Authentication</h4>
                   <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
                 </div>
-                <EnhancedButton variant="outline" size="sm">
                   Enable 2FA
-                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Password</h4>
                   <p className="text-sm text-gray-600">Last changed 30 days ago</p>
                 </div>
-                <EnhancedButton variant="outline" size="sm">
                   Change Password
-                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Active Sessions</h4>
                   <p className="text-sm text-gray-600">3 active sessions across devices</p>
                 </div>
-                <EnhancedButton variant="outline" size="sm">
                   View Sessions
-                </EnhancedButton>
               </div>
             </div>
           </div>
@@ -201,27 +189,21 @@ const ProfileOverview = () => {
                   <h4 className="font-medium">Language</h4>
                   <p className="text-sm text-gray-600">English (US)</p>
                 </div>
-                <EnhancedButton variant="outline" size="sm">
                   Change
-                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Time Zone</h4>
                   <p className="text-sm text-gray-600">Eastern Time (ET)</p>
                 </div>
-                <EnhancedButton variant="outline" size="sm">
                   Change
-                </EnhancedButton>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Notifications</h4>
                   <p className="text-sm text-gray-600">Email and push notifications enabled</p>
                 </div>
-                <EnhancedButton variant="outline" size="sm">
                   Configure
-                </EnhancedButton>
               </div>
             </div>
           </div>

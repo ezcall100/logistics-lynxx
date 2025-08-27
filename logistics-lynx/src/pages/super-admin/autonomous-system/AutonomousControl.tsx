@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Bot, Activity, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
 
@@ -52,13 +51,10 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
               onClick={() => handleFabAction('quickAction', { action: 'refresh', page: 'autonomous-control' })}
             >
               Refresh
-            </EnhancedButton>
-            <EnhancedButton 
               variant="default"
               onClick={() => handleFabAction('assistant', 'Help me with Autonomous Control')}
             >
               AI Assistant
-            </EnhancedButton>
           </div>
         </div>
         <p className="text-gray-600">
@@ -102,7 +98,6 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
           </div>
           
           <div className="flex space-x-2 mt-4">
-            <EnhancedButton 
               size="sm" 
               variant="outline"
               onClick={() => handleAgentAction('start')}
@@ -110,8 +105,6 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
             >
               <Play className="h-3 w-3 mr-1" />
               Start Agent
-            </EnhancedButton>
-            <EnhancedButton 
               size="sm" 
               variant="outline"
               onClick={() => handleAgentAction('stop')}
@@ -119,15 +112,12 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
             >
               <Pause className="h-3 w-3 mr-1" />
               Stop Agent
-            </EnhancedButton>
-            <EnhancedButton 
               size="sm" 
               variant="outline"
               onClick={() => handleAgentAction('restart')}
             >
               <RotateCcw className="h-3 w-3 mr-1" />
               Restart Agent
-            </EnhancedButton>
           </div>
         </div>
       </ResponsiveCard>
@@ -168,32 +158,26 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
               <div className="border-t pt-6">
                 <h4 className="text-md font-semibold text-gray-900 mb-4">Portal Features</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <EnhancedButton 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
                     onClick={() => handleFabAction('dispatch', { type: 'autonomous-control_configure', payload: { action: 'configure' } })}
                   >
                     <Settings className="h-5 w-5 mb-1" />
                     Configure
-                  </EnhancedButton>
-                  <EnhancedButton 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
                     onClick={() => handleFabAction('assistant', 'Help me understand Autonomous Control')}
                   >
                     <Bot className="h-5 w-5 mb-1" />
                     AI Help
-                  </EnhancedButton>
-                  <EnhancedButton 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
                     onClick={() => handleFabAction('quickAction', { action: 'export', page: 'autonomous-control' })}
                   >
                     <Activity className="h-5 w-5 mb-1" />
                     Monitor
-                  </EnhancedButton>
                 </div>
-              </div>
+              </div></EnhancedButton>
             </div>
           )}
         </div>

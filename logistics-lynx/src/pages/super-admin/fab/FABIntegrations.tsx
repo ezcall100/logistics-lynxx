@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABIntegrations = () => {
   const [integrations, setIntegrations] = useState([
     {
@@ -49,7 +48,6 @@ const FABIntegrations = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add Integration
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -84,12 +82,8 @@ const FABIntegrations = () => {
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       Connected
                     </span>
-                    <EnhancedButton size="sm" variant="outline">
                       Configure
-                    </EnhancedButton>
-                    <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-300">
                       Disconnect
-                    </EnhancedButton>
                   </div>
                 </div>
               ))}
@@ -123,9 +117,7 @@ const FABIntegrations = () => {
                       <p className="text-sm text-gray-600">{integration.description}</p>
                     </div>
                   </div>
-                  <EnhancedButton size="sm" className="w-full">
                     Connect
-                  </EnhancedButton>
                 </div>
               ))}
               
@@ -139,9 +131,7 @@ const FABIntegrations = () => {
                     <p className="text-sm text-gray-600">Track FAB usage analytics</p>
                   </div>
                 </div>
-                <EnhancedButton size="sm" className="w-full">
                   Connect
-                </EnhancedButton>
               </div>
               
               <div className="p-4 border rounded-lg hover:bg-gray-50">
@@ -154,9 +144,7 @@ const FABIntegrations = () => {
                     <p className="text-sm text-gray-600">Send SMS notifications</p>
                   </div>
                 </div>
-                <EnhancedButton size="sm" className="w-full">
                   Connect
-                </EnhancedButton>
               </div>
             </div>
           </div>

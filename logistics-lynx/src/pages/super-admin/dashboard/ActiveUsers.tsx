@@ -420,8 +420,9 @@ const ActiveUsers: React.FC = () => {
       title: 'Actions',
       render: (_: any) => (
         <div className="flex items-center space-x-2">
-          <EnhancedButton
-            variant="ghost"
+            <EnhancedButton
+
+              variant="ghost"
             size="sm"
             icon={<Eye className="w-4 h-4" />}
             mode={mode}
@@ -526,22 +527,22 @@ const ActiveUsers: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-              Export Data
-            </EnhancedButton>
-            <EnhancedButton
-              variant="primary"
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-            >
-              Refresh
-            </EnhancedButton>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Download className="w-4 h-4" />}
+                mode={mode}
+              >
+                Export Data
+              </EnhancedButton>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<RefreshCw className="w-4 h-4" />}
+                mode={mode}
+              >
+                Refresh
+              </EnhancedButton>
           </div>
         </div>
 
@@ -644,8 +645,9 @@ const ActiveUsers: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Device Distribution
               </h3>
-              <EnhancedButton
-                variant="secondary"
+                <EnhancedButton
+
+                  variant="secondary"
                 size="sm"
                 icon={<BarChart3 className="w-4 h-4" />}
                 mode={mode}
@@ -690,7 +692,8 @@ const ActiveUsers: React.FC = () => {
                 icon={<Globe className="w-4 h-4" />}
                 mode={mode}
               >
-                View </EnhancedButton>
+                View Map
+              </EnhancedButton>
             </div>
             <div className="space-y-4">
               {locationStats.map((stat) => (
@@ -767,8 +770,9 @@ const ActiveUsers: React.FC = () => {
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
               Recent User Activity
             </h3>
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+
+                variant="secondary"
               size="sm"
               icon={<Activity className="w-4 h-4" />}
               mode={mode}
@@ -794,8 +798,9 @@ const ActiveUsers: React.FC = () => {
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+
+                variant="secondary"
               size="sm"
               icon={<UserPlus className="w-4 h-4" />}
               mode={mode}
@@ -803,9 +808,8 @@ const ActiveUsers: React.FC = () => {
             >
               <span className="text-xs">Add User</span>
             </EnhancedButton>
-
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+                variant="secondary"
               size="sm"
               icon={<UserMinus className="w-4 h-4" />}
               mode={mode}
@@ -813,7 +817,6 @@ const ActiveUsers: React.FC = () => {
             >
               <span className="text-xs">Remove User</span>
             </EnhancedButton>
-
             <EnhancedButton
               variant="secondary"
               size="sm"
@@ -824,35 +827,35 @@ const ActiveUsers: React.FC = () => {
               <span className="text-xs">Verify Users</span>
             </EnhancedButton>
 
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<UserX className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Block User</span>
-            </EnhancedButton>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<UserX className="w-4 h-4" />}
+                mode={mode}
+                className="flex-col h-20"
+              >
+                <span className="text-xs">Block User</span>
+              </EnhancedButton>
 
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Export Data</span>
-            </EnhancedButton>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Download className="w-4 h-4" />}
+                mode={mode}
+                className="flex-col h-20"
+              >
+                <span className="text-xs">Export Data</span>
+              </EnhancedButton>
 
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Settings className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Settings</span>
-            </EnhancedButton>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Settings className="w-4 h-4" />}
+                mode={mode}
+                className="flex-col h-20"
+              >
+                <span className="text-xs">Settings</span>
+              </EnhancedButton>
           </div>
         </EnhancedCard>
       </div>

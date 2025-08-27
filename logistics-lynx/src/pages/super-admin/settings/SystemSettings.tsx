@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
-import { Mail, Save, RefreshCw, Settings, Database, Code, Shield, Bell, HardDrive, Lock } from 'lucide-react';
+import { Mail, Save, RefreshCw, Settings, Database, Code, Shield, Bell, HardDrive } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -255,7 +254,6 @@ const SystemSettings: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
               variant="secondary"
               
               icon={<RefreshCw className="w-4 h-4" />}
@@ -263,8 +261,6 @@ const SystemSettings: React.FC = () => {
               onClick={() => window.location.reload()}
             >
               Reset
-            </EnhancedButton>
-            <EnhancedButton
               variant="primary"
               
               icon={<Save className="w-4 h-4" />}
@@ -273,7 +269,6 @@ const SystemSettings: React.FC = () => {
               loading={saving}
             >
               Save Changes
-            </EnhancedButton>
           </div>
         </div>
 
@@ -463,7 +458,6 @@ const SystemSettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Configuration
               </h3>
-              <EnhancedButton
                 variant="secondary"
                 
                 icon={<RefreshCw className="w-4 h-4" />}
@@ -472,7 +466,6 @@ const SystemSettings: React.FC = () => {
                 loading={loading}
               >
                 Test Connection
-              </EnhancedButton>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -687,7 +680,6 @@ const SystemSettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Email Configuration
               </h3>
-              <EnhancedButton
                 variant="secondary"
                 
                 icon={<Mail className="w-4 h-4" />}
@@ -696,7 +688,6 @@ const SystemSettings: React.FC = () => {
                 loading={loading}
               >
                 Test Connection
-              </EnhancedButton>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>

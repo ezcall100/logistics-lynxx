@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const MobileOverview = () => {
-  const [mobileStats, setMobileStats] = useState({
+  const [mobileStats] = useState({
     totalDevices: 24,
     activeDevices: 18,
     syncStatus: 'healthy',
@@ -21,7 +20,6 @@ const MobileOverview = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add Device
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -96,9 +94,7 @@ const MobileOverview = () => {
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       {device.status}
                     </span>
-                    <EnhancedButton size="sm" variant="outline">
                       Manage
-                    </EnhancedButton>
                   </div>
                 </div>
               ))}

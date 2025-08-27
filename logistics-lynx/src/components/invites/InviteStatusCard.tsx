@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { resendInvitation, cancelInvitation } from '@/api/invites';
@@ -260,11 +259,9 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
                     Resend
                   </>
                 )}
-              </EnhancedButton>
             )}
             
             {canCancel && (
-              <EnhancedButton
                 variant="outline"
                 size="sm"
                 onClick={() => setShowCancelDialog(true)}
@@ -272,7 +269,6 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Cancel
-              </EnhancedButton>
             )}
           </div>
         </div>
@@ -290,14 +286,11 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
           </DialogHeader>
           
           <DialogFooter>
-            <EnhancedButton
               variant="outline"
               onClick={() => setShowCancelDialog(false)}
               disabled={isCancelling}
             >
               Keep Invitation
-            </EnhancedButton>
-            <EnhancedButton
               variant="destructive"
               onClick={handleCancel}
               disabled={isCancelling}
@@ -310,7 +303,6 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
               ) : (
                 'Cancel Invitation'
               )}
-            </EnhancedButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

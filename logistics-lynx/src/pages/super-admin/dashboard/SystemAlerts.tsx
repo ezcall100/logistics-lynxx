@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Bell, AlertTriangle, CheckCircle, XCircle, Info, Clock, RefreshCw, Download, Eye, Settings, HelpCircle, Archive, Server, Gauge, AlertCircle, AlertOctagon, PowerOff, Plus } from 'lucide-react';
 import {
   EnhancedCard,
@@ -791,8 +790,8 @@ const SystemAlerts: React.FC = () => {
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+                variant="secondary"
               size="sm"
               icon={<Plus className="w-4 h-4" />}
               mode={mode}
@@ -800,9 +799,8 @@ const SystemAlerts: React.FC = () => {
             >
               <span className="text-xs">Create Alert</span>
             </EnhancedButton>
-
-            <EnhancedButton
-              variant="secondary"
+              <EnhancedButton
+                variant="secondary"
               size="sm"
               icon={<CheckCircle className="w-4 h-4" />}
               mode={mode}
@@ -810,41 +808,39 @@ const SystemAlerts: React.FC = () => {
             >
               <span className="text-xs">Acknowledge All</span>
             </EnhancedButton>
-
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Archive className="w-4 h-4" />}
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Archive className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Archive Old</span>
-            </EnhancedButton>
-
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
+                </EnhancedButton>
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Download className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Export Data</span>
             </EnhancedButton>
 
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Settings className="w-4 h-4" />}
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<Settings className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >
               <span className="text-xs">Settings</span>
             </EnhancedButton>
 
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<HelpCircle className="w-4 h-4" />}
+              <EnhancedButton
+                variant="secondary"
+                size="sm"
+                icon={<HelpCircle className="w-4 h-4" />}
               mode={mode}
               className="flex-col h-20"
             >

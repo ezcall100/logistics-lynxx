@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABOverview = () => {
   const [fabStats, setFabStats] = useState({
     totalActions: 24,
@@ -21,7 +20,6 @@ const FABOverview = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Create New Action
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">

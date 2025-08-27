@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 const AccountDeletion = () => {
@@ -210,10 +209,7 @@ const AccountDeletion = () => {
                   className="bg-red-600 hover:bg-red-700"
                 >
                   Start Account Deletion
-                </EnhancedButton>
-                <EnhancedButton variant="outline">
                   Cancel
-                </EnhancedButton>
               </div>
             </div>
           </ResponsiveCard>
@@ -241,16 +237,12 @@ const AccountDeletion = () => {
                 />
               </div>
               <div className="flex gap-3">
-                <EnhancedButton 
                   onClick={handleConfirmDeletion}
                   disabled={confirmationText !== 'DELETE'}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   Permanently Delete Account
-                </EnhancedButton>
-                <EnhancedButton variant="outline" onClick={handleCancel}>
                   Cancel
-                </EnhancedButton>
               </div>
             </div>
           </ResponsiveCard>
@@ -322,12 +314,8 @@ const AccountDeletion = () => {
               </div>
             </div>
             <div className="mt-4 flex gap-3">
-              <EnhancedButton variant="outline">
                 Export Data
-              </EnhancedButton>
-              <EnhancedButton variant="outline">
                 Contact Support
-              </EnhancedButton>
             </div>
           </div>
         </ResponsiveCard>

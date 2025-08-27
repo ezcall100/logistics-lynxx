@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Bot, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 
 interface AutonomousAgentProps {
@@ -87,11 +86,8 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
             <EnhancedButton variant="outline" onClick={() => handleAgentAction('all', 'restart')}>
               <RotateCcw className="h-4 w-4 mr-2" />
               Restart All
-            </EnhancedButton>
-            <EnhancedButton variant="default">
               <Settings className="h-4 w-4 mr-2" />
               Agent Settings
-            </EnhancedButton>
           </div>
         </div>
         <p className="text-gray-600">
@@ -144,7 +140,6 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
 
                 {/* Agent Controls */}
                 <div className="flex space-x-2 pt-2">
-                  <EnhancedButton 
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'start')}
@@ -152,8 +147,6 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
                   >
                     <Play className="h-3 w-3 mr-1" />
                     Start
-                  </EnhancedButton>
-                  <EnhancedButton 
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'stop')}
@@ -161,15 +154,12 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
                   >
                     <Pause className="h-3 w-3 mr-1" />
                     Stop
-                  </EnhancedButton>
-                  <EnhancedButton 
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'restart')}
                   >
                     <RotateCcw className="h-3 w-3 mr-1" />
                     Restart
-                  </EnhancedButton>
                 </div>
               </div>
             </div>

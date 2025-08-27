@@ -3,7 +3,7 @@ import { BarChart3, TrendingUp, CheckCircle, Clock, Settings, Search, Filter, Up
 
 const PerformanceMonitor: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Array<{id: number; name: string; status: string; value: number; date: string}>>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -32,7 +32,7 @@ const PerformanceMonitor: React.FC = () => {
     return matchesSearch && matchesFilter;
   });
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'text-green-600 bg-green-100';
       case 'inactive': return 'text-red-600 bg-red-100';

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABActions = () => {
   const [actions, setActions] = useState([
     {
@@ -52,7 +51,6 @@ const FABActions = () => {
         </div>
         <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
           Add New Action
-        </EnhancedButton>
       </div>
 
       <div className="grid gap-6">
@@ -92,12 +90,8 @@ const FABActions = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">{action.usage} uses</span>
-                    <EnhancedButton size="sm" variant="outline">
                       Edit
-                    </EnhancedButton>
-                    <EnhancedButton size="sm" variant="outline" className="text-red-600 border-red-300">
                       Delete
-                    </EnhancedButton>
                   </div>
                 </div>
               ))}

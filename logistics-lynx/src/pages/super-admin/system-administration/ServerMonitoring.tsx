@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { AlertTriangle, Clock, CheckCircle, X, RefreshCw, Settings, Eye, TrendingUp, TrendingDown, Cpu, Server, HardDrive, Network } from 'lucide-react';
 
 const ServerMonitoring: React.FC = () => {
@@ -141,42 +140,41 @@ const ServerMonitoring: React.FC = () => {
           <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
             Server Status
           </h2>
-          <EnhancedButton variant="ghost" size="sm">
             <Settings className="w-4 h-4 mr-2" />
             Configure Alerts
-          </EnhancedButton>
         </div>
 
         <div className="space-y-4">
           {servers.map((server) => (
-            <div
-              key={server.id}
-              className={`p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
-                selectedServer === server.id
-                  ? 'border-blue-300 bg-blue-50 dark:border-blue-600 dark:bg-blue-900/20'
-                  : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
-              }`}
-              onClick={() => setSelectedServer(selectedServer === server.id ? null : server.id)}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(server.status)}`}>
-                      {getStatusIcon(server.status)}
-                      <span className="ml-1 capitalize">{server.status}</span>
-                    </span>
+            <div key={server.id}>
+              <EnhancedButton
+                className={`p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
+                  selectedServer === server.id
+                    ? 'border-blue-300 bg-blue-50 dark:border-blue-600 dark:bg-blue-900/20'
+                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                }`}
+                onClick={() => setSelectedServer(selectedServer === server.id ? null : server.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(server.status)}`}>
+                        {getStatusIcon(server.status)}
+                        <span className="ml-1 capitalize">{server.status}</span>
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-slate-800 dark:text-slate-100">
+                        {server.name}
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Uptime: {server.uptime} • Last check: {server.lastCheck}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-800 dark:text-slate-100">
-                      {server.name}
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Uptime: {server.uptime} • Last check: {server.lastCheck}
-                    </p>
-                  </div>
+                  <Eye className="w-4 h-4 text-slate-400" />
                 </div>
-                <Eye className="w-4 h-4 text-slate-400" />
-              </div>
+              </EnhancedButton>
 
               {selectedServer === server.id && (
                 <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">

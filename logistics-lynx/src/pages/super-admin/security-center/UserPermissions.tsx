@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Key } from 'lucide-react';
 
 interface UserPermissionsProps {}
@@ -55,8 +54,7 @@ const UserPermissions: React.FC<UserPermissionsProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Security Groups</span>
               </div>
               <EnhancedButton className="mt-6">
-                Configure User Permissions
-              </EnhancedButton>
+                Configure User Permissions</EnhancedButton>
             </div>
           )}
         </div>
