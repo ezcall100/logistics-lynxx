@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Download,
-  Upload, 
-  Edit, 
-  Trash2, 
-  Eye
-} from 'lucide-react';
+import { Plus, Download, Upload, Edit, Trash2, Eye } from 'lucide-react';
 
 interface User {
   id: string;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { CheckCircle, AlertTriangle, Eye } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import * as HeroIcons from '@heroicons/react/24/outline';
 import * as TablerIcons from '@tabler/icons-react';

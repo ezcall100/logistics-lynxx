@@ -1,24 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Bell,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Info,
-  Clock,
-  RefreshCw,
-  Download,
-  Eye,
-  Settings,
-  HelpCircle,
-  Archive,
-  Server,
-  Gauge,
-  AlertCircle,
-  AlertOctagon,
-  PowerOff,
-  Plus
-} from 'lucide-react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { Bell, AlertTriangle, CheckCircle, XCircle, Info, Clock, RefreshCw, Download, Eye, Settings, HelpCircle, Archive, Server, Gauge, AlertCircle, AlertOctagon, PowerOff, Plus } from 'lucide-react';
 import {
   EnhancedCard,
   EnhancedButton,

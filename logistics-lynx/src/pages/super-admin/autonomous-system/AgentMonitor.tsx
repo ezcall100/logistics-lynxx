@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
-import { Activity, Bot, Activity, Settings, Play, Pause, RotateCcw } from 'lucide-react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { Activity, Bot, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
 
 interface AgentMonitorProps {}

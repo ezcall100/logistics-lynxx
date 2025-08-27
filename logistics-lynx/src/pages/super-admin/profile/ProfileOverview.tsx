@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import { useState } from 'react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const ProfileOverview = () => {
   const [profile, setProfile] = useState({
     name: 'John Doe',

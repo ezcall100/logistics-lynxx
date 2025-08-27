@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Database, Shield, Server, Eye } from 'lucide-react';
 import { stableStyles } from './EnhancedUIComponents';
 
 interface FABAction {

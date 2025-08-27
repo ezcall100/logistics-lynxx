@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MenuSection } from '@/lib/types/menu';
-import {  } from 'lucide-react';
+import { Settings, Code, Shield, Network, Users, Clock, CheckCircle, AlertTriangle, Eye } from 'lucide-react';
 
 export const SHIPPER_ADMIN_MENU: MenuSection = {
   items: [

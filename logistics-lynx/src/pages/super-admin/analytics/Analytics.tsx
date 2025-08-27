@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ResponsiveCard } from '../../../components/ui';
 
 const Analytics: React.FC = () => {

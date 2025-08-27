@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Search, Filter, X, ChevronDown, ChevronUp, RefreshCw, Package } from 'lucide-react';
+import { useState } from 'react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Search, Filter, X, ChevronDown, ChevronUp, RefreshCw, Package, Eye } from 'lucide-react';
 
 // Stable Design System - No Flashing, Eye-Friendly, KPI-Focused
 export const stableStyles = {

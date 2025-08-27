@@ -1,5 +1,7 @@
 import React from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const AboutSettings: React.FC = () => {
   const systemInfo = {
     version: '2.1.0',

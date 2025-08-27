@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate, NavLink } from 'react-router-dom';
-import { ChevronRight, Search, Truck, Sun, Moon } from 'lucide-react';
+import { ChevronRight, Search, Truck, Sun, Moon, Bell, HardDrive, CheckCircle, Eye } from 'lucide-react';
 import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
 
 interface SidebarProps {

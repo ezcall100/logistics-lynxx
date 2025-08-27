@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Search, Bell, User, Settings, LogOut, ChevronDown, Truck, Shield } from 'lucide-react';
 import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';

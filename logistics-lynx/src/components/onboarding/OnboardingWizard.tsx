@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import { User, CheckCircle, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { User, CheckCircle, ArrowRight, ArrowLeft, Loader2, Shield } from 'lucide-react';
 
 interface OnboardingStep {
   id: string;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {  } from 'lucide-react';
+import { Settings, Database, Shield, Bell, Network, Users, Clock, CheckCircle, AlertTriangle, Eye, Lock } from 'lucide-react';
 
 export interface MenuSection {
   items: MenuItem[];

@@ -8,8 +8,6 @@ const InviteManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const [invitations, setInvitations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {

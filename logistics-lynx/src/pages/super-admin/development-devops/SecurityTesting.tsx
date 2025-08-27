@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
-import { ShieldCheck } from 'lucide-react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { ShieldCheck, Shield } from 'lucide-react';
 
 interface SecurityTestingProps {}
 

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { CheckCircle, AlertTriangle, Eye } from 'lucide-react';
 import { EnhancedLayout } from '../layout/EnhancedLayout';
 import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
 

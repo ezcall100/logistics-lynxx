@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
@@ -46,7 +47,6 @@ const SecurityDashboard: React.FC = () => {
   const [securityOverview, setSecurityOverview] = useState<SecurityOverview[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [rlsStatus, setRlsStatus] = useState<RLSStatus[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

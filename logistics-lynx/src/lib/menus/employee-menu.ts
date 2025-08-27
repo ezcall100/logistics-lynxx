@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import {  } from 'lucide-react';
+import { Settings, Shield, Bell, Users, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export const EMPLOYEE_MENU: MenuSection = {
   items: [

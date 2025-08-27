@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { AlertTriangle, Clock, CheckCircle, X, RefreshCw, Settings, Eye, TrendingUp, TrendingDown, Cpu, Server, HardDrive, Network } from 'lucide-react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const ServerMonitoring: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedServer, setSelectedServer] = useState<number | null>(null);
 
-  const [servers, setServers] = useState([
+  const [servers] = useState([
     {
       id: 1,
       name: 'Production Server 1',

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MenuSection } from '@/lib/types/menu';
-import {  } from 'lucide-react';
+import { Settings, Shield, Bell, Clock } from 'lucide-react';
 
 export const DRIVER_MENU: MenuSection = {
   items: [

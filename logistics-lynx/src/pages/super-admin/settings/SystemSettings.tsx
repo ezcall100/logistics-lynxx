@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Save, RefreshCw, Settings, Database, Code, Shield, Bell, HardDrive } from 'lucide-react';
+import { useState } from 'react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { Mail, Save, RefreshCw, Settings, Database, Code, Shield, Bell, HardDrive, Lock } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -149,101 +150,15 @@ const SystemSettings: React.FC = () => {
       username: '',
       password: '',
       encryption: 'tls',
-      fromAddress: 'noreply@logisticslynx.com',
-      fromName: 'Logistics Lynx'
-    },
-    security: {
-      maxLoginAttempts: 5,
-      lockoutDuration: 15,
-      passwordHistory: 5,
-      twoFactorEnabled: false,
-      sslEnabled: true,
-      sessionTimeout: 30
-    },
-    notifications: {
-      emailNotifications: true,
-      smsNotifications: false,
-      pushNotifications: true,
-      webhookUrl: '',
-      slackWebhook: '',
-      teamsWebhook: ''
-    },
-    storage: {
-      provider: 'aws',
-      bucket: '',
-      region: 'us-east-1',
-      accessKey: '',
-      secretKey: '',
-      maxFileSize: 10485760,
-      allowedFileTypes: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
-      cdnEnabled: false,
-      cdnUrl: ''
-    }
-  });
-  const [saving, setSaving] = useState(false);
-  const [mode] = useState<'light' | 'dark'>('light');
-  // const [showPasswordModal] = useState(false);
-  // const [showBackupModal] = useState(false);
-  const [config, setConfig] = useState<SystemConfig>({
-    general: {
-      systemName: 'Logistics Lynx',
-      systemVersion: '2.1.0',
-      environment: 'production',
-      timezone: 'America/Los_Angeles',
-      dateFormat: 'MM/DD/YYYY',
-      timeFormat: '12h',
-      language: 'en',
-      maintenanceMode: false,
-      debugMode: false
-    },
-    database: {
-      host: 'localhost',
-      port: 5432,
-      name: 'logistics_lynx',
-      username: 'admin',
-      password: '********',
-      connectionPool: 10,
-      sslEnabled: true,
-      backupEnabled: true,
-      backupFrequency: 'daily',
-      retentionDays: 30
-    },
-    api: {
-      baseUrl: 'https://api.logisticslynx.com',
-      version: 'v1',
-      rateLimit: 1000,
-      timeout: 30000,
-      corsEnabled: true,
-      corsOrigins: ['https://app.logisticslynx.com', 'https://admin.logisticslynx.com'],
-      authentication: {
-        jwtSecret: '********',
-        jwtExpiry: 3600,
-        refreshTokenExpiry: 604800,
-        passwordPolicy: {
-          minLength: 8,
-          requireUppercase: true,
-          requireLowercase: true,
-          requireNumbers: true,
-          requireSpecialChars: true
-        }
-      }
-    },
-    email: {
-      provider: 'smtp',
-      host: 'smtp.gmail.com',
-      port: 587,
-      username: 'noreply@logisticslynx.com',
-      password: '********',
-      encryption: 'tls',
       fromEmail: 'noreply@logisticslynx.com',
       fromName: 'Logistics Lynx',
       replyTo: 'support@logisticslynx.com'
     },
     security: {
-      twoFactorEnabled: true,
-      sessionTimeout: 3600,
+      twoFactorEnabled: false,
+      sessionTimeout: 30,
       maxLoginAttempts: 5,
-      lockoutDuration: 900,
+      lockoutDuration: 15,
       passwordHistory: 5,
       ipWhitelist: [],
       ipBlacklist: [],
@@ -261,28 +176,26 @@ const SystemSettings: React.FC = () => {
     },
     storage: {
       provider: 's3',
-      bucket: 'logistics-lynx-storage',
-      region: 'us-west-2',
-      accessKey: '********',
-      secretKey: '********',
+      bucket: '',
+      region: 'us-east-1',
+      accessKey: '',
+      secretKey: '',
       maxFileSize: 10485760,
-      allowedFileTypes: ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'],
-      cdnEnabled: true,
-      cdnUrl: 'https://cdn.logisticslynx.com'
+      allowedFileTypes: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+      cdnEnabled: false,
+      cdnUrl: ''
     }
   });
+  const [saving, setSaving] = useState(false);
+  const [mode] = useState<'light' | 'dark'>('light');
+  // const [showPasswordModal] = useState(false);
+  // const [showBackupModal] = useState(false);
 
-  const [formData] = useState(config);
-
-  useEffect(() => {
-    setFormData(config);
-  }, [config]);
 
   const handleSave = async () => {
     setSaving(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-    setConfig(formData);
     setSaving(false);
   };
 
@@ -347,7 +260,7 @@ const SystemSettings: React.FC = () => {
               
               icon={<RefreshCw className="w-4 h-4" />}
               mode={mode}
-              onClick={() => setFormData(config)}
+              onClick={() => window.location.reload()}
             >
               Reset
             </EnhancedButton>

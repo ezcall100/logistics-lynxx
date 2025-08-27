@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Save, RefreshCw, Download, Trash2, Plus } from 'lucide-react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { Shield, Save, RefreshCw, Download, Trash2, Plus, Users, Clock, CheckCircle, AlertTriangle, Lock } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -95,14 +96,7 @@ interface SecurityEvent {
 const SecuritySettings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
-  const [formData, setFormData] = useState({
-        general: { appName: '', version: '', environment: '' },
-        database: { host: '', port: 5432, name: '', user: '' },
-        api: { baseUrl: '', timeout: 30000, retries: 3 },
-        security: { maxLoginAttempts: 5, lockoutDuration: 15, passwordHistory: 5, twoFactorEnabled: false, sslEnabled: true },
-        notifications: { emailNotifications: true, smsNotifications: false, pushNotifications: true, webhookUrl: '', slackWebhook: '', teamsWebhook: '' },
-        storage: { provider: 'aws', bucket: '', region: '', accessKey: '', secretKey: '', maxFileSize: 10485760, cdnEnabled: false }
-      });
+
   const [saving, setSaving] = useState(false);
 
   const [mode, setMode] = useState<'light' | 'dark'>('light');
@@ -637,7 +631,7 @@ const SecuritySettings: React.FC = () => {
                     </EnhancedButton>
                   </div>
                   <div className="space-y-2">
-                    {formData.accessControl.ipWhitelist.map((ip) => (
+                    {formData.accessControl.ipWhitelist.map((ip, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded">
                         <span className="text-sm text-green-800">{ip}</span>
                         <EnhancedButton
@@ -674,7 +668,7 @@ const SecuritySettings: React.FC = () => {
                     </EnhancedButton>
                   </div>
                   <div className="space-y-2">
-                    {formData.accessControl.ipBlacklist.map((ip) => (
+                    {formData.accessControl.ipBlacklist.map((ip, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-red-50 rounded">
                         <span className="text-sm text-red-800">{ip}</span>
                         <EnhancedButton
@@ -861,7 +855,7 @@ const SecuritySettings: React.FC = () => {
                       </span>
                       <input
                         type="checkbox"
-                        checked={enabled}
+                        checked={enabled as boolean}
                         onChange={(e) => setFormData({
                           ...formData,
                           auditLogging: {

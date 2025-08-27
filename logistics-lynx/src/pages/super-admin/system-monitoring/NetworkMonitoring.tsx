@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
-import { Wifi } from 'lucide-react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { Wifi, Network } from 'lucide-react';
 
 interface NetworkMonitoringProps {}
 

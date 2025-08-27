@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABTemplates = () => {
   const [templates, setTemplates] = useState([
     {

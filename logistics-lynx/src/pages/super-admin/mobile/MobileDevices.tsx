@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { Lock } from 'lucide-react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const MobileDevices = () => {
   const [devices, setDevices] = useState([
     {

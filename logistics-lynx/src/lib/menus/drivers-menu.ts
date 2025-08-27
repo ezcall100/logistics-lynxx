@@ -1,4 +1,4 @@
-import {  } from 'lucide-react';
+import { Settings, CheckCircle } from 'lucide-react';
 
 import type { MenuItem } from '@/types/menu';
 

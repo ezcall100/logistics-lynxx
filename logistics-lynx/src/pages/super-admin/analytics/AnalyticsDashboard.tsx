@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, TrendingDown, Activity, Target, Users, RefreshCw, Download, Settings, Eye, Plus, Bell, AlertTriangle, CheckCircle, XCircle, Info, Circle, Triangle } from 'lucide-react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { BarChart3, TrendingUp, TrendingDown, Activity, Target, Users, RefreshCw, Download, Settings, Eye, Plus, Bell, AlertTriangle, CheckCircle, XCircle, Info } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 

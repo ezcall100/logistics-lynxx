@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { DollarSign, TrendingUp, TrendingDown, BarChart3, PieChart, LineChart, Target, RefreshCw, Download, Eye, Settings, HelpCircle, Pi, Users, User, ShoppingCart, Receipt } from 'lucide-react';
 import {
   EnhancedCard,

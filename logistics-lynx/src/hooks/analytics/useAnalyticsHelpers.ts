@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useCallback } from 'react';
+
 import { RealAnalyticsData } from './types';
 
 export const useAnalyticsHelpers = (analyticsData: RealAnalyticsData) => {

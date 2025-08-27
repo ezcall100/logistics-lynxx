@@ -97,24 +97,44 @@ jobs:
     environment: 
       name: production
       url: https://www.transbotai.com
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
     steps:
       - name: Deploy to Vercel
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
         uses: amondnet/vercel-action@v25
         continue-on-error: true
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-token: ${{ env.VERCEL_TOKEN }}
+          vercel-org-id: ${{ env.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ env.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
+
+      - name: Skip Vercel deployment
+        if: env.VERCEL_TOKEN == '' || env.VERCEL_ORG_ID == '' || env.VERCEL_PROJECT_ID == ''
+        run: |
+          echo "⚠️  Vercel deployment skipped - missing required secrets"
+          echo "Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID"
 
       # Deploy to Docker Hub if credentials are available
       - name: Deploy to Docker Hub
-        if: secrets.DOCKER_HUB_TOKEN != ''
+        if: env.DOCKER_HUB_TOKEN != '' && env.DOCKER_HUB_USERNAME != ''
         continue-on-error: true
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
         run: |
-          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-          docker tag ${{ needs.build.outputs.image }} ${{ secrets.DOCKER_HUB_USERNAME }}/transbot-ai:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/transbot-ai:latest
+          echo "${DOCKER_HUB_TOKEN}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
+          docker tag ${{ needs.build.outputs.image }} ${DOCKER_HUB_USERNAME}/transbot-ai:latest
+          docker push ${DOCKER_HUB_USERNAME}/transbot-ai:latest
 
   # ========================
   # 📊 Post-Deployment Tests
@@ -133,7 +153,7 @@ jobs:
           if curl -f https://www.transbotai.com/api/health 2>/dev/null; then
             echo "✅ Main application is healthy"
           else
-            echo "⚠️  Main application health check failed (may not be deployed)"
+            echo "⚠️  Main application health check failed (may not be deployed or Vercel deployment was skipped)"
           fi
           
           # Test MCP API

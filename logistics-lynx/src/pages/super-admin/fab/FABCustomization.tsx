@@ -1,4 +1,7 @@
 import { useState } from 'react';
+
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 const FABCustomization = () => {
   const [customization, setCustomization] = useState({
     theme: 'blue',

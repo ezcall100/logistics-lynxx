@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { AlertTriangle, Clock, Plus, Edit, Upload, CheckCircle, X, RefreshCw, Settings, Eye, Activity, Users, Download, Shield, TrendingUp, TrendingDown, Database } from 'lucide-react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const DatabaseManagement: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<number | null>(null);
 
-  const [databases, setDatabases] = useState([
+  const [databases] = useState([
     {
       id: 1,
       name: 'Primary Database',

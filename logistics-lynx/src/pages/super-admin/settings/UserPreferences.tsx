@@ -1,10 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Settings,
-  Bell,
-  Shield,
-  User
-} from 'lucide-react';
+import { useState } from 'react';
+import { Settings, Bell, Shield, User } from 'lucide-react';
 
 const UserPreferences: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');

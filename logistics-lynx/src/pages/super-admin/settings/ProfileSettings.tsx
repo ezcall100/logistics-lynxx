@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { User, Camera, Save, Key, Trash2, RotateCcw } from 'lucide-react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { User, Camera, Save, Key, Trash2, RotateCcw, Settings, Shield, Bell, Eye } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -52,14 +53,7 @@ interface UserProfile {
 
 const ProfileSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
-  const [formData, setFormData] = useState({
-        general: { appName: '', version: '', environment: '' },
-        database: { host: '', port: 5432, name: '', user: '' },
-        api: { baseUrl: '', timeout: 30000, retries: 3 },
-        security: { maxLoginAttempts: 5, lockoutDuration: 15, passwordHistory: 5, twoFactorEnabled: false, sslEnabled: true },
-        notifications: { emailNotifications: true, smsNotifications: false, pushNotifications: true, webhookUrl: '', slackWebhook: '', teamsWebhook: '' },
-        storage: { provider: 'aws', bucket: '', region: '', accessKey: '', secretKey: '', maxFileSize: 10485760, cdnEnabled: false }
-      });
+
   const [saving, setSaving] = useState(false);
 
   const [mode, setMode] = useState<'light' | 'dark'>('light');

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { usePermissions, useCanPerform } from '../../hooks/usePermissions';
 
 /**

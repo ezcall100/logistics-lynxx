@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { EnhancedProgress } from '../../../components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs.tsx';
 import { Globe, Users, Activity, Settings, AlertTriangle, CheckCircle, XCircle, RefreshCw, Pause, Edit, Eye, Plus, Search,  } from 'lucide-react';

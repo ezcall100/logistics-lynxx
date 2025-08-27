@@ -1,4 +1,7 @@
 import { useState } from 'react';
+
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 const AccountVerification = () => {

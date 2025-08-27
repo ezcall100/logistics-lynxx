@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Cpu, Brain, Zap, Settings, Play, Pause, RefreshCw, Download, Plus, Database,  } from 'lucide-react';
 import { 
   EnhancedCard, 
@@ -84,7 +85,6 @@ const MCPOverview: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const [mode, setMode] = useState<'light' | 'dark'>('light');
-  const [loading, setLoading] = useState(true);
   const [aiAgents, setAIAgents] = useState<AIAgent[]>([]);
   const [mlModels, setMLModels] = useState<MLModel[]>([]);
   const [dataPipelines, setDataPipelines] = useState<DataPipeline[]>([]);

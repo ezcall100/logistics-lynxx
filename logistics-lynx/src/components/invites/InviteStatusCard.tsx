@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import { useState } from 'react';
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { resendInvitation, cancelInvitation } from '@/api/invites';

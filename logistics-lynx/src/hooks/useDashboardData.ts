@@ -45,7 +45,6 @@ export const useKpis = (role?: string) => {
 // Performance Hook
 export const usePerformance = (range: '7d' | '30d' | '90d' = '30d', metric?: string) => {
   const [performance, setPerformance] = useState<PerformanceData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPerformance = useCallback(async () => {
@@ -71,7 +70,6 @@ export const usePerformance = (range: '7d' | '30d' | '90d' = '30d', metric?: str
 // Activity Hook
 export const useActivity = (limit: number = 10) => {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchActivities = useCallback(async () => {
@@ -97,7 +95,6 @@ export const useActivity = (limit: number = 10) => {
 // System Health Hook
 export const useSystemHealth = () => {
   const [health, setHealth] = useState<SystemHealth | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchHealth = useCallback(async () => {
@@ -123,7 +120,6 @@ export const useSystemHealth = () => {
 // Portals Hook
 export const usePortals = () => {
   const [portals, setPortals] = useState<PortalData[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPortals = useCallback(async () => {

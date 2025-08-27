@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, CheckCircle, XCircle, Lock, Users, Database, Activity, RefreshCw, Download, Target, Circle, Triangle } from 'lucide-react';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
+import { Shield, AlertTriangle, CheckCircle, XCircle, Lock, Users, Database, Activity, RefreshCw, Download, Target } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -52,7 +53,6 @@ const SecurityAudit: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const [mode, setMode] = useState<'light' | 'dark'>('light');
-  const [loading, setLoading] = useState(true);
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([]);
   const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
   const [complianceChecks, setComplianceChecks] = useState<ComplianceCheck[]>([]);

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import { useState } from 'react';
+
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Input } from '../../../components/ui/input.tsx';
 // Custom Label component
 const Label = ({ children, htmlFor, className = '' }: { children: React.ReactNode; htmlFor?: string; className?: string }) => (

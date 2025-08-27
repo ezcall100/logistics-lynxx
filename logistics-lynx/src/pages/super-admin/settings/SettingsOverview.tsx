@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import {
-  Settings,
-  Bell,
-  Shield,
-  User
-} from 'lucide-react';
+import { useState } from 'react';
+import { Settings, Bell, Shield, User } from 'lucide-react';
 
 const SettingsOverview: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('general');
-
   const [activeTab, setActiveTab] = useState('general');
 
   return (

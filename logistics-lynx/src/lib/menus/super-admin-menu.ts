@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MenuSection } from '@/lib/types/menu';
-  import {  } from 'lucide-react';
+  import { Settings, Code, Shield, Users, Clock, CheckCircle } from 'lucide-react';
 
 export const SUPER_ADMIN_MENU: MenuSection = {
   items: [

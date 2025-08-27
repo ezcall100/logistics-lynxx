@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Globe, Activity, AlertTriangle, CheckCircle, Clock, Settings, RefreshCw, Eye, TrendingUp, TrendingDown, Plus, Edit, Download, Upload, Shield, Zap, X } from 'lucide-react';
 import { ResponsiveCard } from '../../../components/ui';
 
@@ -6,7 +6,7 @@ const APIManagement: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedApi, setSelectedApi] = useState<number | null>(null);
 
-  const [apis, setApis] = useState([
+  const [apis] = useState([
     {
       id: 1,
       name: 'User Management API',

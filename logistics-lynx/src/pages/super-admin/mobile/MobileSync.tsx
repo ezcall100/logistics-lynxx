@@ -1,4 +1,7 @@
 import { useState } from 'react';
+
+import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedUIComponents';
 import { Progress } from '@/components/ui/progress';
 
 const MobileSync = () => {
