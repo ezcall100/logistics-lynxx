@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const FABIntegrations = () => {
-  const [integrations] = useState([
+  const [integrations, setIntegrations] = useState([
     {
       id: 1,
       name: 'Slack',

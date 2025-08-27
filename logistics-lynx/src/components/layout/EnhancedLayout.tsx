@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { EnhancedHeader } from './EnhancedHeader';
 import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';
@@ -149,7 +149,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
               <div className="mb-6">
                 <Breadcrumbs />
               </div>
-              <Outlet />
+              {children}
             </div>
           </main>
         </div>

@@ -1,24 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Users,
-  UserCheck,
-  UserX,
-  UserPlus,
-  UserMinus,
-  Activity,
-  Clock,
-  Globe,
-  Smartphone,
-  Monitor,
-  Tablet,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  Eye,
-  Settings,
-  RefreshCw,
-  Download
-} from 'lucide-react';
+import { Users, UserCheck, UserX, UserPlus, UserMinus, Activity, Clock, Globe, Smartphone, Monitor, Tablet, TrendingUp, TrendingDown, BarChart3, Eye, Settings, RefreshCw, Download } from 'lucide-react';
 import {
   EnhancedCard,
   EnhancedButton,
@@ -79,16 +60,18 @@ interface LocationStats {
 }
 
 const ActiveUsers: React.FC = () => {
-  console.log('🚀 ActiveUsers component is rendering!');
-  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [selectedTimeframe, setSelectedTimeframe] = useState('1h');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+
   const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
   const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
   const [deviceStats, setDeviceStats] = useState<DeviceStats[]>([]);
   const [locationStats, setLocationStats] = useState<LocationStats[]>([]);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('1h');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+
+  console.log('🚀 ActiveUsers component is rendering!');
 
   // Mock data
   const mockActiveUsers: ActiveUser[] = [
@@ -671,7 +654,7 @@ const ActiveUsers: React.FC = () => {
               </EnhancedButton>
             </div>
             <div className="space-y-4">
-              {deviceStats.map((stat, index) => (
+              {deviceStats.map((stat) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center space-x-3">
                     {getDeviceIcon(stat.device.toLowerCase())}
@@ -710,7 +693,7 @@ const ActiveUsers: React.FC = () => {
                 View </EnhancedButton>
             </div>
             <div className="space-y-4">
-              {locationStats.map((stat, index) => (
+              {locationStats.map((stat) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">{stat.flag}</span>

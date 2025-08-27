@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Mail, 
-  Save, 
-  RefreshCw, 
-  Settings,
-  Database,
-  Code,
-  Shield,
-  Bell,
-  HardDrive
-} from 'lucide-react';
+import { Mail, Save, RefreshCw, Settings, Database, Code, Shield, Bell, HardDrive } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -106,10 +96,92 @@ interface SystemConfig {
 }
 
 const SystemSettings: React.FC = () => {
-  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
+  const [formData, setFormData] = useState<SystemConfig>({
+    general: {
+      systemName: 'Logistics Lynx',
+      systemVersion: '1.0.0',
+      environment: 'development',
+      timezone: 'UTC',
+      dateFormat: 'YYYY-MM-DD',
+      timeFormat: '24h',
+      language: 'en',
+      maintenanceMode: false,
+      debugMode: true
+    },
+    database: {
+      host: 'localhost',
+      port: 5432,
+      name: 'logistics_lynx',
+      username: 'admin',
+      password: '',
+      connectionPool: 10,
+      sslEnabled: false,
+      backupEnabled: true,
+      backupFrequency: 'daily',
+      retentionDays: 30
+    },
+    api: {
+      baseUrl: 'http://localhost:3001',
+      version: 'v1',
+      rateLimit: 1000,
+      timeout: 30000,
+      corsEnabled: true,
+      corsOrigins: ['http://localhost:3000'],
+      authentication: {
+        jwtSecret: '',
+        jwtExpiry: 3600,
+        refreshTokenExpiry: 86400,
+        passwordPolicy: {
+          minLength: 8,
+          requireUppercase: true,
+          requireLowercase: true,
+          requireNumbers: true,
+          requireSpecialChars: true
+        }
+      }
+    },
+    email: {
+      provider: 'smtp',
+      host: 'smtp.gmail.com',
+      port: 587,
+      username: '',
+      password: '',
+      encryption: 'tls',
+      fromAddress: 'noreply@logisticslynx.com',
+      fromName: 'Logistics Lynx'
+    },
+    security: {
+      maxLoginAttempts: 5,
+      lockoutDuration: 15,
+      passwordHistory: 5,
+      twoFactorEnabled: false,
+      sslEnabled: true,
+      sessionTimeout: 30
+    },
+    notifications: {
+      emailNotifications: true,
+      smsNotifications: false,
+      pushNotifications: true,
+      webhookUrl: '',
+      slackWebhook: '',
+      teamsWebhook: ''
+    },
+    storage: {
+      provider: 'aws',
+      bucket: '',
+      region: 'us-east-1',
+      accessKey: '',
+      secretKey: '',
+      maxFileSize: 10485760,
+      allowedFileTypes: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+      cdnEnabled: false,
+      cdnUrl: ''
+    }
+  });
+  const [saving, setSaving] = useState(false);
+  const [mode] = useState<'light' | 'dark'>('light');
   // const [showPasswordModal] = useState(false);
   // const [showBackupModal] = useState(false);
   const [config, setConfig] = useState<SystemConfig>({
@@ -200,7 +272,7 @@ const SystemSettings: React.FC = () => {
     }
   });
 
-  const [formData, setFormData] = useState(config);
+  const [formData] = useState(config);
 
   useEffect(() => {
     setFormData(config);

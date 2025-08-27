@@ -1,24 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { EnhancedProgress } from '../../../components/ui/EnhancedUIComponents';
-import { 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  Users, 
-  Activity, 
-  Settings,
-  RefreshCw,
-  Eye,
-  Download,
-  Filter,
-  Search,
-  BarChart3,
-  TrendingUp,
-  TrendingDown
-} from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, XCircle, Clock, Users, Activity, Settings, RefreshCw, Eye, Download, BarChart3 } from 'lucide-react';
 
 interface SecurityEvent {
   id: string;
@@ -54,6 +37,9 @@ interface ThreatMetrics {
 }
 
 const SecurityAudit: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
+
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([]);
   const [complianceChecks, setComplianceChecks] = useState<ComplianceCheck[]>([]);
   const [threatMetrics, setThreatMetrics] = useState<ThreatMetrics>({
@@ -66,8 +52,6 @@ const SecurityAudit: React.FC = () => {
     successfulBreaches: 0,
     securityScore: 0
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
 
   useEffect(() => {
     loadSecurityData();

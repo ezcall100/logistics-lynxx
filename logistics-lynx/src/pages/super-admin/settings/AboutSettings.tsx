@@ -88,7 +88,7 @@ const AboutSettings: React.FC = () => {
         </div>
         <div>
           <div className="grid grid-cols-2 gap-2">
-            {systemInfo.activeFeatures.map((feature, index) => (
+            {systemInfo.activeFeatures.map((feature) => (
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                 {feature}
               </span>

@@ -1,38 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import {
-  LayoutDashboard,
-  TrendingUp,
-  Users,
-  Building2,
-  DollarSign,
-  BarChart3,
-  Target,
-  Settings,
-  UserCheck,
-  Briefcase,
-  Calendar,
-  FileText,
-  Activity,
-  Award,
-  PieChart,
-  LineChart,
-  Globe,
-  Shield,
-  Zap,
-  Brain,
-  Crown,
-  Building,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  TrendingDown,
-  CreditCard,
-  Calculator,
-  Scale,
-  Gavel,
-  Landmark
-} from "lucide-react";
+import {  } from 'lucide-react';
 
 export const EXECUTIVE_MENU: MenuSection = {
   items: [

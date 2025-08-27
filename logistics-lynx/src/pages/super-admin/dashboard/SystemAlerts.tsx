@@ -75,15 +75,17 @@ interface IncidentReport {
 }
 
 const SystemAlerts: React.FC = () => {
-  console.log('🚨 SystemAlerts component is rendering!');
-  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [selectedSeverity, setSelectedSeverity] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+
   const [alerts, setAlerts] = useState<SystemAlert[]>([]);
   const [systemHealth, setSystemHealth] = useState<SystemHealth[]>([]);
   const [incidents, setIncidents] = useState<IncidentReport[]>([]);
-  const [selectedSeverity, setSelectedSeverity] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+
+  console.log('🚨 SystemAlerts component is rendering!');
 
   // Mock data
   const mockAlerts: SystemAlert[] = [
@@ -351,7 +353,7 @@ const SystemAlerts: React.FC = () => {
             {row.description}
           </div>
           <div className="flex flex-wrap gap-1 mt-1">
-            {row.tags.map((tag, index) => (
+            {row.tags.map((tag) => (
               <span key={index} className={`text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 ${stableStyles.textSecondary[mode]}`}>
                 {tag}
               </span>
@@ -673,7 +675,7 @@ const SystemAlerts: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {systemHealth.map((health, index) => (
+            {systemHealth.map((health) => (
               <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>

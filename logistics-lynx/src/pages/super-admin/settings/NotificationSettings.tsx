@@ -63,14 +63,14 @@ const NotificationSettings = () => {
             Configure how and when you receive notifications
           </p>
         </div>
-        <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+        <button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
           Save Changes
-        </EnhancedButton>
+        </button>
       </div>
 
       <div className="grid gap-6">
         {/* Email Notifications */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -115,10 +115,10 @@ const NotificationSettings = () => {
               </select>
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
 
         {/* Push Notifications */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -144,10 +144,10 @@ const NotificationSettings = () => {
               />
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
 
         {/* SMS Notifications */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -173,10 +173,10 @@ const NotificationSettings = () => {
               />
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
 
         {/* In-App Notifications */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -202,7 +202,7 @@ const NotificationSettings = () => {
               />
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
       </div>
     </div>
   );

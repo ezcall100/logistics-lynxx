@@ -67,7 +67,7 @@ const ResponsiveDashboard: React.FC<ResponsiveDashboardProps> = ({
             cols={{ mobile: 1, tablet: 2, desktop: 4 }}
             gap="medium"
           >
-            {metrics.map((metric, index) => (
+            {metrics.map((metric) => (
               <ResponsiveCard 
                 key={index}
                 padding="medium"

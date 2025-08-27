@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useCallback } from 'react';
-import { LayoutDashboard, Key, Activity, Code, FileText, AlertTriangle } from 'lucide-react';
+import {  } from 'lucide-react';
 import type { UserRole } from '@/types/auth';
 import type { LucideIcon } from 'lucide-react';
 

@@ -1,90 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Shield, 
-  Lock, 
-  Unlock, 
-  Key, 
-  Eye, 
-  EyeOff, 
-  Users, 
-  UserCheck, 
-  UserX, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  Calendar, 
-  MapPin, 
-  Globe, 
-  Save, 
-  RefreshCw, 
-  Download, 
-  Upload, 
-  Edit, 
-  Trash2, 
-  Plus, 
-  Search, 
-  Filter, 
-  Info, 
-  HelpCircle, 
-  ExternalLink, 
-  Copy, 
-  Share, 
-  Archive, 
-  RotateCcw, 
-  Send, 
-  MessageSquare, 
-  Phone, 
-  Video, 
-  Camera, 
-  Image, 
-  File, 
-  Folder, 
-  FolderOpen, 
-  Grid, 
-  List, 
-  Columns, 
-  Maximize, 
-  Minimize, 
-  Move, 
-  RotateCw, 
-  ZoomIn, 
-  ZoomOut, 
-  Type, 
-  Bold, 
-  Italic, 
-  Underline, 
-  Link, 
-  Unlink, 
-  Code, 
-  Quote, 
-  Hash, 
-  AtSign, 
-  Percent, 
-  Minus, 
-  Divide, 
-  Plus as PlusIcon, 
-  Equal, 
-  Infinity, 
-  Pi, 
-  Sigma, 
-  Square, 
-  Circle, 
-  Triangle, 
-  Hexagon, 
-  Octagon, 
-  Star, 
-  Heart, 
-  Zap, 
-  Droplets, 
-  Cloud, 
-  Database,
-  Server,
-  Network,
-  HardDrive,
-  Building,
-  CreditCard
-} from 'lucide-react';
+import { Shield, Save, RefreshCw, Download, Trash2, Plus } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -178,12 +93,24 @@ interface SecurityEvent {
 }
 
 const SecuritySettings: React.FC = () => {
-  const [mode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('general');
+  const [formData, setFormData] = useState({
+        general: { appName: '', version: '', environment: '' },
+        database: { host: '', port: 5432, name: '', user: '' },
+        api: { baseUrl: '', timeout: 30000, retries: 3 },
+        security: { maxLoginAttempts: 5, lockoutDuration: 15, passwordHistory: 5, twoFactorEnabled: false, sslEnabled: true },
+        notifications: { emailNotifications: true, smsNotifications: false, pushNotifications: true, webhookUrl: '', slackWebhook: '', teamsWebhook: '' },
+        storage: { provider: 'aws', bucket: '', region: '', accessKey: '', secretKey: '', maxFileSize: 10485760, cdnEnabled: false }
+      });
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('authentication');
-  const [showIPModal] = useState(false);
-  const [showCertificateModal] = useState(false);
+
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+
+
+
+  // const [showIPModal, setShowIPModal] = useState(false);
+  // const [showCertificateModal, setShowCertificateModal] = useState(false);
   const [config, setConfig] = useState<SecurityConfig>({
     authentication: {
       twoFactorEnabled: true,
@@ -425,7 +352,7 @@ const SecuritySettings: React.FC = () => {
                       : `${stableStyles.textSecondary[mode]} hover:${stableStyles.textPrimary[mode]}`
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Lock className="w-4 h-4" />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -710,7 +637,7 @@ const SecuritySettings: React.FC = () => {
                     </EnhancedButton>
                   </div>
                   <div className="space-y-2">
-                    {formData.accessControl.ipWhitelist.map((ip, index) => (
+                    {formData.accessControl.ipWhitelist.map((ip) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded">
                         <span className="text-sm text-green-800">{ip}</span>
                         <EnhancedButton
@@ -747,7 +674,7 @@ const SecuritySettings: React.FC = () => {
                     </EnhancedButton>
                   </div>
                   <div className="space-y-2">
-                    {formData.accessControl.ipBlacklist.map((ip, index) => (
+                    {formData.accessControl.ipBlacklist.map((ip) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-red-50 rounded">
                         <span className="text-sm text-red-800">{ip}</span>
                         <EnhancedButton

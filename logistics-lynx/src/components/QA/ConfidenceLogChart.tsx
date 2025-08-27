@@ -23,23 +23,7 @@ import {
   Pie,
   Cell
 } from 'recharts';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Download, 
-  RefreshCw, 
-  Filter, 
-  Settings,
-  Eye,
-  BarChart3,
-  Clock,
-  Target,
-  Zap
-} from 'lucide-react';
+import { Activity, CheckCircle, Download, RefreshCw, Clock, Target } from 'lucide-react';
 
 interface ConfidenceLog {
   id: string;
@@ -473,14 +457,14 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
                     cy="50%"
                     outerRadius={150}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   >
                     {Object.entries(
                       filteredLogs.reduce((acc, log) => {
                         acc[log.status] = (acc[log.status] || 0) + 1;
                         return acc;
                       }, {} as Record<string, number>)
-                    ).map(([status], index) => (
+                    ).map(([status]) => (
                       <Cell key={`cell-${index}`} fill={getStatusColor(status)} />
                     ))}
                   </Pie>

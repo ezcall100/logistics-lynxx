@@ -66,18 +66,17 @@ const BackupSettings = () => {
             Configure automated backups and recovery options for your TMS data
           </p>
         </div>
-        <EnhancedButton 
+        <button 
           onClick={handleSave} 
           disabled={isLoading}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
           {isLoading ? 'Saving...' : 'Save Changes'}
-        </EnhancedButton>
+        </button>
       </div>
 
       <div className="grid gap-6">
         {/* Automatic Backup Configuration */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -152,10 +151,10 @@ const BackupSettings = () => {
               </div>
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
 
         {/* Storage Configuration */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -216,10 +215,10 @@ const BackupSettings = () => {
               />
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
 
         {/* Manual Backup Controls */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -252,26 +251,25 @@ const BackupSettings = () => {
             )}
             
             <div className="flex gap-3">
-              <EnhancedButton
+              <button
                 onClick={handleManualBackup}
                 disabled={isLoading}
-                className="bg-green-600 hover:bg-green-700"
-              >
+                className="bg-green-600 hover:bg-green-700 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                 {isLoading ? 'Creating Backup...' : 'Create Manual Backup'}
-              </EnhancedButton>
-              <EnhancedButton
-                variant="outline"
+              </button>
+              <button
+               
                 onClick={handleRestore}
                 disabled={isLoading}
-              >
+               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                 Restore from Backup
-              </EnhancedButton>
+              </button>
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
 
         {/* Backup History */}
-        <ResponsiveCard>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="mb-4">
             <h3 className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -290,7 +288,7 @@ const BackupSettings = () => {
                 { date: '2024-01-14 02:00:00', status: 'completed', size: '2.1 GB' },
                 { date: '2024-01-13 02:00:00', status: 'completed', size: '2.0 GB' },
                 { date: '2024-01-12 02:00:00', status: 'failed', size: '0 GB' }
-              ].map((backup, index) => (
+              ].map((backup) => (
                 <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
                     <p className="font-medium">{backup.date}</p>
@@ -303,7 +301,7 @@ const BackupSettings = () => {
               ))}
             </div>
           </div>
-        </ResponsiveCard>
+        </div>
       </div>
     </div>
   );

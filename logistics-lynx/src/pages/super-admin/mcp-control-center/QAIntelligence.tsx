@@ -3,38 +3,8 @@
 // ========================
 
 import React, { useState, useEffect } from 'react';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell
-} from 'recharts';
-import { 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  TrendingUp, 
-  TrendingDown,
-  RefreshCw,
-  Filter,
-  Download,
-  Eye,
-  EyeOff,
-  Settings,
-  Zap,
-  Shield,
-  Target
-} from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { Activity, AlertTriangle, RefreshCw, Filter, Download, Eye, EyeOff, Zap, Target } from 'lucide-react';
 import { confidenceLogger } from '@/services/confidence-logger';
 import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -74,14 +44,15 @@ interface PerformanceMetrics {
 }
 
 const QAIntelligence: React.FC = () => {
-  const [confidenceData, setConfidenceData] = useState<ConfidenceData[]>([]);
-  const [failureData, setFailureData] = useState<FailureData[]>([]);
-  const [performanceData, setPerformanceData] = useState<PerformanceMetrics[]>([]);
   const [loading, setLoading] = useState(true);
+  const [autoRefresh, setAutoRefresh] = useState(true);
   const [selectedAgent, setSelectedAgent] = useState<string>('all');
   const [selectedTaskType, setSelectedTaskType] = useState<string>('all');
   const [timeRange, setTimeRange] = useState<number>(24);
-  const [autoRefresh, setAutoRefresh] = useState(true);
+
+  const [confidenceData, setConfidenceData] = useState<ConfidenceData[]>([]);
+  const [failureData, setFailureData] = useState<FailureData[]>([]);
+  const [performanceData, setPerformanceData] = useState<PerformanceMetrics[]>([]);
 
   // ========================
   // Data Fetching
@@ -418,7 +389,7 @@ const QAIntelligence: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {confidenceData.map((item, index) => (
+                  {confidenceData.map((item) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium">{item.task_type}</TableCell>
                       <TableCell className="font-mono text-sm">{item.agent_id}</TableCell>
@@ -478,7 +449,7 @@ const QAIntelligence: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {failureData.map((item, index) => (
+                  {failureData.map((item) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium">{item.task_type}</TableCell>
                       <TableCell>{item.failure_type}</TableCell>
@@ -534,7 +505,7 @@ const QAIntelligence: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {performanceData.map((item, index) => (
+                  {performanceData.map((item) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium">{item.task_type}</TableCell>
                       <TableCell className="font-mono text-sm">{item.agent_id}</TableCell>

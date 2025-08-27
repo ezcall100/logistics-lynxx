@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const MobileOverview = () => {
-  const [mobileStats] = useState({
+  const [mobileStats, setMobileStats] = useState({
     totalDevices: 24,
     activeDevices: 18,
     syncStatus: 'healthy',
@@ -77,7 +77,7 @@ const MobileOverview = () => {
                 { name: 'Samsung Galaxy S24', user: 'Jane Smith', status: 'online', lastSync: '3 minutes ago' },
                 { name: 'iPad Pro', user: 'Mike Johnson', status: 'offline', lastSync: '2 hours ago' },
                 { name: 'Google Pixel 8', user: 'Sarah Wilson', status: 'online', lastSync: '5 minutes ago' }
-              ].map((device, index) => (
+              ].map((device) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">

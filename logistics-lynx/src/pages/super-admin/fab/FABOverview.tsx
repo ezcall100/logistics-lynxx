@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const FABOverview = () => {
-  const [fabStats] = useState({
+  const [fabStats, setFabStats] = useState({
     totalActions: 24,
     activeActions: 18,
     customActions: 8,
@@ -168,7 +168,7 @@ const FABOverview = () => {
                 { action: 'New Contact', time: '12 minutes ago', user: 'John Doe' },
                 { action: 'Quick Report', time: '1 hour ago', user: 'Mike Johnson' },
                 { action: 'Send Alert', time: '2 hours ago', user: 'Sarah Wilson' }
-              ].map((activity, index) => (
+              ].map((activity) => (
                 <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">

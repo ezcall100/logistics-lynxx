@@ -1,24 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MenuSection } from '@/lib/types/menu';
-import {
-  LayoutDashboard,
-  Package,
-  MessageSquare,
-  MapPin,
-  PackageSearch,
-  Truck,
-  ShieldAlert,
-  BarChart3,
-  FileText,
-  TrendingUp,
-  DollarSign,
-  Settings,
-  Phone,
-  Clock,
-  User,
-  Bell
-} from "lucide-react";
+import {  } from 'lucide-react';
 
 export const DRIVER_MENU: MenuSection = {
   items: [

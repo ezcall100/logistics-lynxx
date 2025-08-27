@@ -3,20 +3,7 @@ import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Shield, 
-  Users, 
-  Eye, 
-  Lock, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock,
-  Activity,
-  Database,
-  Key,
-  FileText,
-  BarChart3
-} from 'lucide-react';
+import { Shield, Users, Lock, AlertTriangle, Activity, Database, Key, FileText } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 interface SecurityOverview {
@@ -54,6 +41,8 @@ interface RLSStatus {
 }
 
 const SecurityDashboard: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+
   const [securityOverview, setSecurityOverview] = useState<SecurityOverview[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [rlsStatus, setRlsStatus] = useState<RLSStatus[]>([]);

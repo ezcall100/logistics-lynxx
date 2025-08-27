@@ -13,10 +13,10 @@ const roles = [
 ];
 
 const LoginPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [autoFillEnabled, setAutoFillEnabled] = useState(true);
   

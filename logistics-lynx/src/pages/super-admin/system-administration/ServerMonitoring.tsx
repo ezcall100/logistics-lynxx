@@ -1,25 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Server, 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  Cpu, 
-  HardDrive, 
-  Network, 
-  Zap,
-  RefreshCw,
-  Settings,
-  Eye,
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  X
-} from 'lucide-react';
+import { AlertTriangle, Clock, CheckCircle, X, RefreshCw, Settings, Eye, TrendingUp, TrendingDown, Cpu, Server, HardDrive, Network } from 'lucide-react';
 import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const ServerMonitoring: React.FC = () => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedServer, setSelectedServer] = useState<number | null>(null);
+
   const [servers, setServers] = useState([
     {
       id: 1,
@@ -66,9 +52,6 @@ const ServerMonitoring: React.FC = () => {
       lastCheck: '5 minutes ago'
     }
   ]);
-
-  const [selectedServer, setSelectedServer] = useState<number | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {

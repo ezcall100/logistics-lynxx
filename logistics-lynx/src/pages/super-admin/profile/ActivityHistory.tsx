@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const ActivityHistory = () => {
-  const [activities] = useState([
+  const [activities, setActivities] = useState([
     {
       id: 1,
       type: 'login',

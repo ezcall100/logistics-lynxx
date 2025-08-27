@@ -1,46 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import {
-  LayoutDashboard,
-  Users,
-  Package,
-  DollarSign,
-  Target,
-  TrendingUp,
-  Phone,
-  Mail,
-  Calendar,
-  FileText,
-  ClipboardList,
-  UserPlus,
-  Search,
-  BarChart3,
-  Award,
-  Clock,
-  MapPin,
-  Truck,
-  Calculator,
-  CreditCard,
-  CheckCircle,
-  AlertTriangle,
-  Activity,
-  Settings,
-  Bell,
-  MessageSquare,
-  Building2,
-  Route,
-  Handshake,
-  BrainCircuit,
-  Zap,
-  Star,
-  Shield,
-  Globe,
-  PieChart,
-  TrendingDown,
-  BookOpen,
-  ContactIcon,
-  UserCheck
-} from "lucide-react";
+import {  } from 'lucide-react';
 
 export const AGENTS_MENU: MenuSection = {
   items: [

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
-import { Bot, Activity, GitBranch, Settings, Play, Pause, RotateCcw } from 'lucide-react';
+import { Bot, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 
 interface AutonomousAgentProps {
   agentId: string;

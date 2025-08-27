@@ -2,22 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { EnhancedProgress } from '../../../components/ui/EnhancedUIComponents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs.tsx';
-import { 
-  Globe, 
-  Users, 
-  Activity, 
-  Settings, 
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  RefreshCw,
-  Play,
-  Pause,
-  Edit,
-  Eye,
-  Plus,
-  Search,
-  } from 'lucide-react';
+import { Globe, Users, Activity, Settings, AlertTriangle, CheckCircle, XCircle, RefreshCw, Pause, Edit, Eye, Plus, Search,  } from 'lucide-react';
 
 interface Portal {
   id: string;
@@ -49,6 +34,10 @@ interface PortalMetrics {
 }
 
 const PortalOverview: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+
   const [portals, setPortals] = useState<Portal[]>([]);
   const [metrics, setMetrics] = useState<PortalMetrics>({
     totalPortals: 0,
@@ -61,9 +50,6 @@ const PortalOverview: React.FC = () => {
     totalErrors: 0
   });
   const [selectedPortal, setSelectedPortal] = useState<Portal | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadPortalData();

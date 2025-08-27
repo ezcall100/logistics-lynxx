@@ -30,9 +30,9 @@ interface User {
 }
 
 const AllUsers: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [users, setUsers] = useState<User[]>([]);
 
   // Mock data
   const mockUsers: User[] = [

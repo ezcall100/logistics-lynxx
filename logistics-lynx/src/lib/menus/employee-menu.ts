@@ -1,40 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import {
-  LayoutDashboard,
-  Users,
-  Package,
-  Truck,
-  FileText,
-  Calendar,
-  Clock,
-  Target,
-  BookOpen,
-  Award,
-  Settings,
-  UserCheck,
-  Briefcase,
-  ClipboardList,
-  MessageSquare,
-  Bell,
-  Activity,
-  CheckCircle,
-  AlertTriangle,
-  Upload,
-  Download,
-  Mail,
-  Phone,
-  MapPin,
-  DollarSign,
-  CreditCard,
-  PieChart,
-  BarChart3,
-  TrendingUp,
-  Shield,
-  Wrench,
-  Heart,
-  Coffee
-} from "lucide-react";
+import {  } from 'lucide-react';
 
 export const EMPLOYEE_MENU: MenuSection = {
   items: [

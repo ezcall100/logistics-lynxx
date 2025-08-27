@@ -3,18 +3,7 @@ import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { resendInvitation, cancelInvitation } from '@/api/invites';
-import { 
-  Mail, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
-  AlertCircle, 
-  RefreshCw, 
-  Trash2,
-  User,
-  Calendar,
-  Loader2
-} from 'lucide-react';
+import { Mail, Clock, CheckCircle, AlertCircle, RefreshCw, Trash2, User, Calendar, Loader2 } from 'lucide-react';
 
 interface Invitation {
   id: string;

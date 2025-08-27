@@ -44,6 +44,18 @@ import SecurityPolicies from './pages/super-admin/security-center/SecurityPolici
 import IncidentResponse from './pages/super-admin/security-center/IncidentResponse';
 import ComplianceManagement from './pages/super-admin/security-center/ComplianceManagement';
 
+// NEW: Import all 10 new Super Admin pages
+import SuperAdminDashboard from './pages/super-admin/dashboard/SuperAdminDashboard';
+import UserManagement from './pages/super-admin/user-management/UserManagement';
+import MCPAgentManagement from './pages/super-admin/mcp-agents/MCPAgentManagement';
+import SystemSettings from './pages/super-admin/system-settings/SystemSettings';
+import QATestingPanel from './pages/super-admin/qa-testing/QATestingPanel';
+import UIComponentRegistry from './pages/super-admin/ui-components/UIComponentRegistry';
+import AutonomousSystem from './pages/super-admin/autonomous-system/AutonomousSystem';
+import PerformanceMonitor from './pages/super-admin/performance/PerformanceMonitor';
+import AgentWorkflows from './pages/super-admin/agent-workflows/AgentWorkflows';
+import DeploymentControls from './pages/super-admin/deployment/DeploymentControls';
+
 // Landing page component
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -153,6 +165,18 @@ function App() {
               <Route path="security/policies" element={<SecurityPolicies />} />
               <Route path="security/incidents" element={<IncidentResponse />} />
               <Route path="security/compliance" element={<ComplianceManagement />} />
+
+              {/* NEW: All 10 New Super Admin Pages */}
+              <Route path="dashboard/super-admin" element={<SuperAdminDashboard />} />
+              <Route path="user-management/overview" element={<UserManagement />} />
+              <Route path="mcp-agents/management" element={<MCPAgentManagement />} />
+              <Route path="system-settings/overview" element={<SystemSettings />} />
+              <Route path="qa-testing/panel" element={<QATestingPanel />} />
+              <Route path="ui-components/registry" element={<UIComponentRegistry />} />
+              <Route path="autonomous-system/overview" element={<AutonomousSystem />} />
+              <Route path="performance/monitor" element={<PerformanceMonitor />} />
+              <Route path="agent-workflows/overview" element={<AgentWorkflows />} />
+              <Route path="deployment/controls" element={<DeploymentControls />} />
 
               {/* System Monitoring Routes */}
               <Route path="monitoring/performance" element={<PlaceholderPage title="Performance Monitoring" />} />

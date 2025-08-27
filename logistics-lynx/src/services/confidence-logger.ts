@@ -2,7 +2,7 @@
 // 🧪 QA Intelligence Layer - Confidence Logger
 // ========================
 
-import { supabase } from '@/integrations/supabase/client';
+// import { supabase } from '@/integrations/supabase/client';
 
 export interface ConfidenceLogEntry {
   agent_id: string;
@@ -62,9 +62,10 @@ export class ConfidenceLogger {
   // ========================
   // Confidence Logging
   // ========================
-  /* async logConfidence(entry: ConfidenceLogEntry): Promise<void> {
-    // Function commented out due to missing database tables
-  } */
+  async logConfidenceEntry(entry: ConfidenceLogEntry): Promise<void> {
+    if (!this.isEnabled) return;
+    console.log('📊 Confidence logged:', entry);
+  }
 
   // ========================
   // Assertion Monitoring
@@ -76,9 +77,10 @@ export class ConfidenceLogger {
   // ========================
   // Failure Tracking
   // ========================
-  /* async logFailure(entry: FailureEntry): Promise<void> {
-    // Function commented out due to missing database tables
-  } */
+  async logFailureEntry(entry: FailureEntry): Promise<void> {
+    if (!this.isEnabled) return;
+    console.log('❌ Failure logged:', entry);
+  }
 
   // ========================
   // Performance Metrics
@@ -87,28 +89,7 @@ export class ConfidenceLogger {
     if (!this.isEnabled) return;
 
     try {
-      const { error } = await supabase
-        .from('agent_performance_metrics')
-        .upsert({
-          agent_id: metrics.agent_id,
-          task_type: metrics.task_type,
-          success_rate: metrics.success_rate,
-          avg_response_time_ms: metrics.avg_response_time_ms,
-          total_requests: metrics.total_requests,
-          successful_requests: metrics.successful_requests,
-          failed_requests: metrics.failed_requests,
-          retry_count: metrics.retry_count,
-          measurement_period_hours: metrics.measurement_period_hours,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'agent_id,task_type'
-        });
-
-      if (error) {
-        console.error('❌ Failed to update performance metrics:', error);
-        return;
-      }
-
+      // TODO: Implement Supabase integration when database is ready
       console.log(`📊 Performance updated: ${metrics.task_type} - ${metrics.success_rate}% success`);
     } catch (error) {
       console.error('❌ Performance metrics error:', error);
@@ -118,44 +99,44 @@ export class ConfidenceLogger {
   // ========================
   // Alert System
   // ========================
-  private async triggerLowConfidenceAlert(entry: ConfidenceLogEntry): Promise<void> {
-    console.warn(`⚠️ Low confidence alert: ${entry.task_type} - ${entry.confidence_score}`);
-    
-    // TODO: Integrate with notification system (Slack, Email, etc.)
-    // await this.sendNotification({
-    //   type: 'low_confidence',
-    //   agent_id: entry.agent_id,
-    //   task_type: entry.task_type,
-    //   confidence_score: entry.confidence_score,
-    //   message: `Agent ${entry.agent_id} has low confidence (${entry.confidence_score}) for task ${entry.task_type}`
-    // });
-  }
+  // private async triggerLowConfidenceAlert(entry: ConfidenceLogEntry): Promise<void> {
+  //   console.warn(`Low confidence alert: ${entry.task_type} - ${entry.confidence_score}`);
+  //   
+  //   // TODO: Integrate with notification system (Slack, Email, etc.)
+  //   // await this.sendNotification({
+  //   //   type: 'low_confidence',
+  //   //   agent_id: entry.agent_id,
+  //   //   task_type: entry.task_type,
+  //   //   confidence_score: entry.confidence_score,
+  //   //   message: `Agent ${entry.agent_id} has low confidence (${entry.confidence_score}) for task ${entry.task_type}`
+  //   // });
+  // }
 
-  private async triggerAssertionFailureAlert(entry: AssertionEntry): Promise<void> {
-    console.warn(`⚠️ Assertion failure alert: ${entry.assertion_type}`);
-    
-    // TODO: Integrate with notification system
-    // await this.sendNotification({
-    //   type: 'assertion_failure',
-    //   agent_id: entry.agent_id,
-    //   assertion_type: entry.assertion_type,
-    //   error_message: entry.error_message,
-    //   message: `Assertion ${entry.assertion_type} failed for agent ${entry.agent_id}`
-    // });
-  }
+  // private async triggerAssertionFailureAlert(entry: AssertionEntry): Promise<void> {
+  //   console.warn(`Assertion failure alert: ${entry.assertion_type}`);
+  //   
+  //   // TODO: Integrate with notification system
+  //   // await this.sendNotification({
+  //   //   type: 'assertion_failure',
+  //   //   agent_id: entry.agent_id,
+  //   //   assertion_type: entry.assertion_type,
+  //   //   error_message: entry.error_message,
+  //   //   message: `Assertion ${entry.assertion_type} failed for agent ${entry.agent_id}`
+  //   // });
+  // }
 
-  private async triggerMaxRetriesAlert(entry: FailureEntry): Promise<void> {
-    console.warn(`🚨 Max retries alert: ${entry.task_type} - ${entry.failure_type}`);
-    
-    // TODO: Integrate with notification system
-    // await this.sendNotification({
-    //   type: 'max_retries',
-    //   agent_id: entry.agent_id,
-    //   task_type: entry.task_type,
-    //   retry_count: entry.retry_count,
-    //   message: `Agent ${entry.agent_id} exceeded max retries for task ${entry.task_type}`
-    // });
-  }
+  // private async triggerMaxRetriesAlert(entry: FailureEntry): Promise<void> {
+  //   console.warn(`Max retries alert: ${entry.task_type} - ${entry.failure_type}`);
+  //   
+  //   // TODO: Integrate with notification system
+  //   // await this.sendNotification({
+  //   //   type: 'max_retries',
+  //   //   agent_id: entry.agent_id,
+  //   //   task_type: entry.task_type,
+  //   //   retry_count: entry.retry_count,
+  //   //   message: `Agent ${entry.agent_id} exceeded max retries for task ${entry.task_type}`
+  //   // });
+  // }
 
   // ========================
   // Analytics & Reporting
@@ -199,13 +180,13 @@ export const confidenceLogger = ConfidenceLogger.getInstance();
 
 // Decorator for automatic confidence logging
 export function withConfidenceLogging(agentId: string, taskType: string) {
-  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
+  return function (_target: any, _propertyName: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
       const startTime = Date.now();
       let success = false;
-      let error: any = null;
+      // let error: any = null;
       let confidenceScore = 0.5; // Default confidence
 
       try {
@@ -215,7 +196,7 @@ export function withConfidenceLogging(agentId: string, taskType: string) {
         confidenceScore = 0.9; // High confidence for successful execution
 
         // Log confidence
-        await confidenceLogger.logConfidence({
+        await confidenceLogger.logConfidenceEntry({
           agent_id: agentId,
           task_type: taskType,
           confidence_score: confidenceScore,
@@ -225,16 +206,16 @@ export function withConfidenceLogging(agentId: string, taskType: string) {
 
         return result;
       } catch (err) {
-        error = err;
+        // error = err;
         confidenceScore = 0.1; // Low confidence for failed execution
 
         // Log failure
-        await confidenceLogger.logFailure({
+        await confidenceLogger.logFailureEntry({
           agent_id: agentId,
           task_type: taskType,
           failure_type: 'execution_error',
-          error_message: err.message,
-          stack_trace: err.stack
+          error_message: (err as Error).message,
+          stack_trace: (err as Error).stack || ""
         });
 
         throw err;

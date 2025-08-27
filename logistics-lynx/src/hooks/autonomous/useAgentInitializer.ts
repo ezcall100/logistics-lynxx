@@ -63,7 +63,7 @@ export const useAgentInitializer = () => {
       }))
     ];
 
-    agentTypes.forEach((agentConfig, index) => {
+    agentTypes.forEach((agentConfig) => {
       // Immediate activation for 24/7 autonomous operation - no staggering needed
       const immediateStart = new Date(Date.now() + (index * 1000)); // Start each agent within seconds
       

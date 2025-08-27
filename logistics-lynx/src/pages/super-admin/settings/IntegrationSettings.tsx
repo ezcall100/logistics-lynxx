@@ -66,7 +66,7 @@ const IntegrationSettings = () => {
     setIsLoading(false);
   };
 
-  const handleTestConnection = async (type: string) => {
+  const handleTestConnection = async () => {
     setIsLoading(true);
     // Simulate connection test
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -169,7 +169,7 @@ const IntegrationSettings = () => {
             
             <EnhancedButton
               variant="outline"
-              onClick={() => handleTestConnection('api')}
+              onClick={handleTestConnection}
               disabled={isLoading}
             >
               Test API Connection
@@ -239,7 +239,7 @@ const IntegrationSettings = () => {
             
             <EnhancedButton
               variant="outline"
-              onClick={() => handleTestConnection('webhook')}
+              onClick={handleTestConnection}
               disabled={isLoading}
             >
               Test Webhook

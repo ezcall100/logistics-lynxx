@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const FABTemplates = () => {
-  const [templates] = useState([
+  const [templates, setTemplates] = useState([
     {
       id: 1,
       name: 'E-commerce Template',
@@ -67,7 +67,7 @@ const FABTemplates = () => {
                       </div>
                       <p className="text-sm text-gray-600 mb-3">{template.description}</p>
                       <div className="flex flex-wrap gap-2">
-                        {template.actions.map((action, index) => (
+                        {template.actions.map((action) => (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                             {action}
                           </span>

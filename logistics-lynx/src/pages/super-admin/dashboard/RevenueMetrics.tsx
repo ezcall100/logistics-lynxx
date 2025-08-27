@@ -1,61 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  PieChart,
-  LineChart,
-  Target,
-  RefreshCw,
-  Download,
-  Eye,
-  Settings,
-  CheckCircle,
-  Info,
-  HelpCircle,
-  Video,
-  Camera,
-  Image,
-  File,
-  Folder,
-  Plus,
-  Pi,
-  CreditCard,
-  Truck,
-  Package,
-  Users,
-  User,
-  Activity,
-  Globe,
-  ShoppingCart,
-  CreditCard as CreditCardIcon,
-  Wallet,
-  Banknote,
-  Coins,
-  Receipt,
-  Calculator,
-  ChartBar,
-  ChartLine,
-  ChartPie,
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
-  ArrowUp,
-  ArrowDown,
-  ArrowRight,
-  ArrowLeft,
-  ChevronUp,
-  ChevronDown,
-  ChevronRight,
-  ChevronLeft,
-  MoreHorizontal,
-  Plus as PlusIcon,
-  Minus as MinusIcon,
-  X,
-  Check,
-  Info as InfoIcon,
-  Clock as ClockIcon
-} from 'lucide-react';
+import { DollarSign, TrendingUp, TrendingDown, BarChart3, PieChart, LineChart, Target, RefreshCw, Download, Eye, Settings, HelpCircle, Pi, Users, User, ShoppingCart, Receipt } from 'lucide-react';
 import {
   EnhancedCard,
   EnhancedButton,
@@ -109,16 +53,18 @@ interface RevenueForecast {
 }
 
 const RevenueMetrics: React.FC = () => {
-  console.log('💰 RevenueMetrics component is rendering!');
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [selectedPeriod, setSelectedPeriod] = useState('30d');
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+
   const [revenueMetrics, setRevenueMetrics] = useState<RevenueMetric[]>([]);
   const [transactions, setTransactions] = useState<RevenueTransaction[]>([]);
   const [revenueSources, setRevenueSources] = useState<RevenueSource[]>([]);
   const [revenueForecast, setRevenueForecast] = useState<RevenueForecast[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = useState('30d');
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
-  const [searchQuery, setSearchQuery] = useState('');
+
+  console.log('💰 RevenueMetrics component is rendering!');
 
   // Mock data
   const mockRevenueMetrics: RevenueMetric[] = [
@@ -628,7 +574,7 @@ const RevenueMetrics: React.FC = () => {
               </EnhancedButton>
             </div>
             <div className="space-y-4">
-              {revenueSources.map((source, index) => (
+              {revenueSources.map((source) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div 
@@ -671,7 +617,7 @@ const RevenueMetrics: React.FC = () => {
               </EnhancedButton>
             </div>
             <div className="space-y-4">
-              {revenueForecast.map((forecast, index) => (
+              {revenueForecast.map((forecast) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div>
                     <p className={`font-medium ${stableStyles.textPrimary[mode]}`}>

@@ -28,7 +28,7 @@ const AdvancedSettings: React.FC = () => {
         </p>
       </div>
 
-      <ResponsiveCard>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Performance Settings</h3>
           <p className="text-slate-600 dark:text-slate-400">
@@ -67,9 +67,9 @@ const AdvancedSettings: React.FC = () => {
             />
           </div>
         </div>
-      </ResponsiveCard>
+      </div>
 
-      <ResponsiveCard>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Debugging & Development</h3>
           <p className="text-slate-600 dark:text-slate-400">
@@ -105,9 +105,9 @@ const AdvancedSettings: React.FC = () => {
             </select>
           </div>
         </div>
-      </ResponsiveCard>
+      </div>
 
-      <ResponsiveCard>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Experimental Features</h3>
           <p className="text-slate-600 dark:text-slate-400">
@@ -128,11 +128,11 @@ const AdvancedSettings: React.FC = () => {
             />
           </div>
         </div>
-      </ResponsiveCard>
+      </div>
 
       <div className="flex justify-end space-x-2">
-        <EnhancedButton variant="outline">Reset to Defaults</EnhancedButton>
-        <EnhancedButton>Save Changes</EnhancedButton>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Reset to Defaults</button>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save Changes</button>
       </div>
     </div>
   );

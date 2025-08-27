@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import { ResponsiveCard } from '../../../components/ui';
 
 const SecurityCenter: React.FC = () => {
   return (

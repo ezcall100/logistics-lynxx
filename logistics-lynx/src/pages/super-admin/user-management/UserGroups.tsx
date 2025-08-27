@@ -1,21 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Users,
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  Download,
-  Upload,
-  RefreshCw,
-  UserPlus,
-  UserMinus,
-  Shield,
-  Lock,
-  CheckCircle,
-  Star,
-  Zap
-} from 'lucide-react';
+import { Plus, Edit, Upload, Eye, Users, Download, Trash2, Lock } from 'lucide-react';
 
 interface UserGroup {
   id: string;
@@ -36,10 +20,11 @@ interface UserGroup {
 }
 
 const UserGroups: React.FC = () => {
-  console.log('👥 UserGroups component is rendering!');
   const [loading, setLoading] = useState(true);
-  const [groups, setGroups] = useState<UserGroup[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [groups, setGroups] = useState<UserGroup[]>([]);
+
+  console.log('👥 UserGroups component is rendering!');
 
   // Mock data for groups
   const mockGroups: UserGroup[] = [

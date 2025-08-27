@@ -1,22 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  UserCog,
-  Wrench,
-  Building2,
-  BadgeDollarSign,
-  UserCog2,
-  FileStack,
-  CreditCard,
-  Phone,
-  MessageSquare,
-  FileText,
-  Share2,
-  Mail,
-  BookOpen,
-  HelpCircle,
-  Moon,
-  Sun,
-} from "lucide-react";
+import {  } from 'lucide-react';
 
 export const MENU_ANIMATION_DURATION = 200;
 export const MENU_TRANSITION_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';

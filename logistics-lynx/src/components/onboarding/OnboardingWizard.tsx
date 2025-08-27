@@ -8,17 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  Building, 
-  Shield, 
-  CheckCircle, 
-  ArrowRight, 
-  ArrowLeft,
-  Loader2
-} from 'lucide-react';
+import { User, CheckCircle, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 
 interface OnboardingStep {
   id: string;

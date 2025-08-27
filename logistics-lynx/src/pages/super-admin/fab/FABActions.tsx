@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const FABActions = () => {
-  const [actions] = useState([
+  const [actions, setActions] = useState([
     {
       id: 1,
       name: 'Create Order',

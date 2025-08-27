@@ -6,28 +6,7 @@ import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
-import { 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Eye, 
-  Lock, 
-  Users, 
-  Activity,
-  BarChart3,
-  FileText,
-  Settings,
-  RefreshCw,
-  Download,
-  Zap,
-  Target,
-  Search,
-  AlertCircle,
-  Clock,
-  TrendingUp,
-  TrendingDown
-} from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, XCircle, Activity, BarChart3, FileText, RefreshCw, Download, Search } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 interface SecurityScan {
@@ -85,6 +64,10 @@ interface SecurityMetrics {
 }
 
 const SecurityScannerDashboard: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
+  const [autoRefresh, setAutoRefresh] = useState(true);
+
   const [securityScans, setSecurityScans] = useState<SecurityScan[]>([]);
   const [securityFindings, setSecurityFindings] = useState<SecurityFinding[]>([]);
   const [agentAuditLogs, setAgentAuditLogs] = useState<AgentAuditLog[]>([]);
@@ -100,9 +83,6 @@ const SecurityScannerDashboard: React.FC = () => {
     lastScanTime: '',
     nextScheduledScan: ''
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
-  const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
     loadSecurityData();
@@ -595,12 +575,12 @@ const SecurityScannerDashboard: React.FC = () => {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {findingsData.map((entry, index) => (
+                      {findingsData.map((entry) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>

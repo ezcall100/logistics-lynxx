@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const MobileDevices = () => {
-  const [devices] = useState([
+  const [devices, setDevices] = useState([
     {
       id: 1,
       name: 'iPhone 15 Pro',

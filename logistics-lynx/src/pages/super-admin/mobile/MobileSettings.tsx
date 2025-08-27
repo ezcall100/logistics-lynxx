@@ -3,7 +3,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
 const MobileSettings = () => {
-  const [settings] = useState({
+  const [settings, setSettings] = useState({
     pushNotifications: true,
     locationServices: false,
     autoSync: true,

@@ -1,32 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Globe, 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  Settings,
-  RefreshCw,
-  Eye,
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  Plus,
-  Edit,
-  Trash2,
-  Download,
-  Upload,
-  Lock,
-  Unlock,
-  Shield,
-  Key,
-  Users,
-  Zap,
-  X
-} from 'lucide-react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
+import { Globe, Activity, AlertTriangle, CheckCircle, Clock, Settings, RefreshCw, Eye, TrendingUp, TrendingDown, Plus, Edit, Download, Upload, Shield, Zap, X } from 'lucide-react';
+import { ResponsiveCard } from '../../../components/ui';
 
 const APIManagement: React.FC = () => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedApi, setSelectedApi] = useState<number | null>(null);
+
   const [apis, setApis] = useState([
     {
       id: 1,
@@ -74,9 +53,6 @@ const APIManagement: React.FC = () => {
     }
   ]);
 
-  const [selectedApi, setSelectedApi] = useState<number | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'online': return 'text-emerald-600 bg-emerald-100';
@@ -115,19 +91,19 @@ const APIManagement: React.FC = () => {
           </p>
         </div>
         <div className="flex space-x-2">
-          <EnhancedButton
+          <button
             onClick={refreshData}
-            icon={<RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />}
-            variant="secondary"
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 flex items-center space-x-2"
           >
-            Refresh
-          </EnhancedButton>
-          <EnhancedButton
-            icon={<Plus className="w-4 h-4" />}
-            variant="primary"
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </button>
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center space-x-2"
           >
-            Add API
-          </EnhancedButton>
+            <Plus className="w-4 h-4" />
+            <span>Add API</span>
+          </button>
         </div>
       </div>
 
@@ -172,10 +148,10 @@ const APIManagement: React.FC = () => {
           <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
             API Status
           </h2>
-          <EnhancedButton variant="ghost" size="sm">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             <Settings className="w-4 h-4 mr-2" />
             Configure
-          </EnhancedButton>
+          </button>
         </div>
 
         <div className="space-y-4">
@@ -248,22 +224,22 @@ const APIManagement: React.FC = () => {
                   </div>
                   
                   <div className="flex space-x-2">
-                    <EnhancedButton variant="ghost" size="sm">
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                       <Edit className="w-4 h-4 mr-2" />
                       Edit
-                    </EnhancedButton>
-                    <EnhancedButton variant="ghost" size="sm">
+                    </button>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                       <Download className="w-4 h-4 mr-2" />
                       Documentation
-                    </EnhancedButton>
-                    <EnhancedButton variant="ghost" size="sm">
+                    </button>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                       <Upload className="w-4 h-4 mr-2" />
                       Deploy
-                    </EnhancedButton>
-                    <EnhancedButton variant="ghost" size="sm">
+                    </button>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                       <Shield className="w-4 h-4 mr-2" />
                       Security
-                    </EnhancedButton>
+                    </button>
                   </div>
                 </div>
               )}
@@ -305,10 +281,10 @@ const APIManagement: React.FC = () => {
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             API Security Status
           </h3>
-          <EnhancedButton variant="ghost" size="sm">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             <Shield className="w-4 h-4 mr-2" />
             Security Settings
-          </EnhancedButton>
+          </button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

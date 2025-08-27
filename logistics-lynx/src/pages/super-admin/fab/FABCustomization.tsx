@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const FABCustomization = () => {
-  const [customization] = useState({
+  const [customization, setCustomization] = useState({
     theme: 'blue',
     position: 'bottom-right',
     size: 'medium',

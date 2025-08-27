@@ -1,6 +1,6 @@
 import { useState } from 'react';
 const FABAnalytics = () => {
-  const [analytics] = useState({
+  const [analytics, setAnalytics] = useState({
     totalClicks: 1247,
     successRate: 89,
     avgResponseTime: 2.3,
@@ -78,7 +78,7 @@ const FABAnalytics = () => {
           </div>
           <div>
             <div className="space-y-4">
-              {analytics.topActions.map((action, index) => (
+              {analytics.topActions.map((action) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">

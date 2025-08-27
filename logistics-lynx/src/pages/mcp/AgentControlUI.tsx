@@ -7,25 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Progress } from '../../components/ui/progress';
 import { Alert, AlertDescription } from '../../components/ui/alert';
-import { 
-  Bot, 
-  Activity, 
-  Play, 
-  Pause, 
-  RotateCcw,
-  Terminal,
-  BarChart3,
-  FileText,
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Zap,
-  Shield,
-  Database,
-  Code,
-  TestTube,
-  ShieldCheck
-} from 'lucide-react';
+import { Terminal, Shield, ShieldCheck } from 'lucide-react';
 
 interface Agent {
   id: string;
@@ -61,7 +43,7 @@ const AgentControlUI: React.FC = () => {
   ]);
 
   // Mock agent data
-  const [agents] = useState<Agent[]>([
+  const [agents, setAgents] = useState<Agent[]>([
     {
       id: 'builder.frontend.shipper',
       name: 'Frontend Shipper Builder',
@@ -131,7 +113,7 @@ const AgentControlUI: React.FC = () => {
   ]);
 
   // Mock metrics data
-  const [metrics] = useState<Metric[]>([
+  const [metrics, setMetrics] = useState<Metric[]>([
     {
       id: 'builder.frontend.shipper',
       uptime: '99.95%',
@@ -229,7 +211,7 @@ const AgentControlUI: React.FC = () => {
 
         <TabsContent value="logs">
           <div className="mt-4 space-y-2 bg-muted p-4 rounded text-sm font-mono h-60 overflow-y-auto border">
-            {agentLogs.map((line, index) => (
+            {agentLogs.map((line) => (
               <div key={index}>{line}</div>
             ))}
           </div>
@@ -279,7 +261,7 @@ const AgentControlUI: React.FC = () => {
                   No commands executed yet. Try: start builder.frontend.broker
                 </div>
               ) : (
-                consoleOutput.map((line, index) => (
+                consoleOutput.map((line) => (
                   <div key={index}>{line}</div>
                 ))
               )}

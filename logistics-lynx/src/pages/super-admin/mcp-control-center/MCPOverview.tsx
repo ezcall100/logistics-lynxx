@@ -1,36 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Cpu, 
-  Brain, 
-  Zap, 
-  Activity, 
-  Target, 
-  TrendingUp, 
-  PieChart, 
-  LineChart, 
-  Settings, 
-  Play, 
-  Pause, 
-  RefreshCw, 
-  Download, 
-  Plus, 
-  CheckCircle, 
-  Info, 
-  HelpCircle, 
-  Video, 
-  Camera, 
-  Image, 
-  File, 
-  Folder, 
-  FolderOpen, 
-  Plus as PlusIcon, 
-  Database,
-  Globe,
-  Truck,
-  Package,
-  DollarSign,
-  CreditCard,
-  } from 'lucide-react';
+import { Cpu, Brain, Zap, Settings, Play, Pause, RefreshCw, Download, Plus, Database,  } from 'lucide-react';
 import { 
   EnhancedCard, 
   EnhancedButton, 
@@ -112,6 +81,8 @@ interface AutomationRule {
 }
 
 const MCPOverview: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(true);
   const [aiAgents, setAIAgents] = useState<AIAgent[]>([]);

@@ -1,50 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { InviteStatusCard } from '@/components/invites/InviteStatusCard';
-import {
-  Plus,
-  Search,
-  Filter,
-  Mail,
-  Calendar,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Eye,
-  Edit,
-  Trash2,
-  Download,
-  Upload,
-  RefreshCw,
-  Settings,
-  Users,
-  UserPlus,
-  Send,
-  Copy,
-  ExternalLink,
-  Star,
-  Award,
-  Trophy,
-  Medal,
-  Crown,
-  Flag,
-  Bookmark,
-  Tag,
-  Hash,
-  AtSign,
-  Percent,
-  Euro,
-  Bitcoin,
-  CreditCard,
-  Wallet,
-  PiggyBank,
-  Coins,
-  Gem,
-  Diamond
-} from 'lucide-react';
+import { Plus, Search, Users } from 'lucide-react';
 
 const InviteManagement: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [invitations, setInvitations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');

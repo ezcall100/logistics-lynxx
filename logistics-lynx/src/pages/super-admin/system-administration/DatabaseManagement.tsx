@@ -1,31 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Database, 
-  Server, 
-  Shield, 
-  Users, 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  Settings,
-  RefreshCw,
-  Eye,
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  Plus,
-  Edit,
-  Trash2,
-  Download,
-  Upload,
-  Lock,
-  Unlock,
-  X
-} from 'lucide-react';
+import { AlertTriangle, Clock, Plus, Edit, Upload, CheckCircle, X, RefreshCw, Settings, Eye, Activity, Users, Download, Shield, TrendingUp, TrendingDown, Database } from 'lucide-react';
 import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
 
 const DatabaseManagement: React.FC = () => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedDatabase, setSelectedDatabase] = useState<number | null>(null);
+
   const [databases, setDatabases] = useState([
     {
       id: 1,
@@ -72,9 +52,6 @@ const DatabaseManagement: React.FC = () => {
       performance: 0
     }
   ]);
-
-  const [selectedDatabase, setSelectedDatabase] = useState<number | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {

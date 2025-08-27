@@ -1,20 +1,4 @@
-import {
-  Home,
-  Truck,
-  MapPin,
-  Package,
-  Clock,
-  Settings,
-  Bell,
-  User,
-  FileText,
-  CheckCircle,
-  AlertTriangle,
-  Calendar,
-  Upload,
-  Download,
-  Mail
-} from 'lucide-react';
+import {  } from 'lucide-react';
 
 import type { MenuItem } from '@/types/menu';
 

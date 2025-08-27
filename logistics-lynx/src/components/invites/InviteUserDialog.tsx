@@ -242,7 +242,7 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
                 <span className="font-medium">{selectedRoleDetails.label} Permissions</span>
               </div>
               <div className="space-y-1">
-                {selectedRoleDetails.permissions.map((permission, index) => (
+                {selectedRoleDetails.permissions.map((permission) => (
                   <div key={index} className="flex items-center gap-2 text-sm">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                     {permission}

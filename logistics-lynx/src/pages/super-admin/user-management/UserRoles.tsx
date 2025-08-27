@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Shield, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  Download,
-  Upload,
-  RefreshCw,
-  Users,
-  CheckCircle,
-  Key
-} from 'lucide-react';
+import { Plus, Edit, Upload, Eye, Download, Trash2 } from 'lucide-react';
 
 interface Role {
   id: string;
@@ -29,10 +17,11 @@ interface Role {
 }
 
 const UserRoles: React.FC = () => {
-  console.log('🔑 UserRoles component is rendering!');
   const [loading, setLoading] = useState(true);
-  const [roles, setRoles] = useState<Role[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  console.log('🔑 UserRoles component is rendering!');
 
   // Mock data for roles
   const mockRoles: Role[] = [

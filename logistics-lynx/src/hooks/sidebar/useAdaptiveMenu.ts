@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { LayoutDashboard } from 'lucide-react';
+import {  } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface MenuRecommendation {
