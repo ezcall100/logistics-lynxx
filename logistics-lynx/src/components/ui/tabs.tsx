@@ -1,4 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+// Inline cn function to avoid import issues
+const cn = (...inputs: any[]) => {
+  return twMerge(clsx(inputs))
+}
 
 interface TabsContextType {
   activeTab: string;
@@ -48,7 +55,7 @@ interface TabsListProps {
 
 export const TabsList: React.FC<TabsListProps> = ({ children, className = '' }) => {
   return (
-    <div className={`inline-flex h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 dark:bg-slate-800 dark:text-slate-400 ${className}`}>
+    <div className={cn("inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground", className)}>
       {children}
     </div>
   );
@@ -69,11 +76,13 @@ export const TabsTrigger: React.FC<TabsTriggerProps> = ({ children, value, class
   
   return (
     <button
-      className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
+      className={cn(
+        "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         isActive 
-          ? "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-slate-50" 
-          : "hover:bg-white hover:text-slate-950 dark:hover:bg-slate-950 dark:hover:text-slate-50"
-      } ${className}`}
+          ? "bg-background text-foreground shadow-sm" 
+          : "hover:bg-background hover:text-foreground",
+        className
+      )}
       onClick={() => setActiveTab(value)}
     >
       {children}
@@ -96,7 +105,7 @@ export const TabsContent: React.FC<TabsContentProps> = ({ children, value, class
   if (activeTab !== value) return null;
   
   return (
-    <div className={`mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 ${className}`}>
+    <div className={cn("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className)}>
       {children}
     </div>
   );

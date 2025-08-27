@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ResponsiveCard, EnhancedButton } from '../../../components/ui';
-import { Input } from '../../components/ui/input.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs.tsx';
-import { ScrollArea } from '../../components/ui/scroll-area.tsx';
-import { Progress } from '../../components/ui/progress.tsx';
-import { Alert, AlertDescription } from '../../components/ui/alert.tsx';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Input } from '../../components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { ScrollArea } from '../../components/ui/scroll-area';
+import { Progress } from '../../components/ui/progress';
+import { Alert, AlertDescription } from '../../components/ui/alert';
 import { 
   Bot, 
   Activity, 
@@ -202,12 +204,12 @@ const AgentControlUI: React.FC = () => {
         <TabsContent value="status">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {agents.map((agent) => (
-              <ResponsiveCard key={agent.id} className="hover:shadow-lg transition-shadow">
-                <div className="space-y-2 p-4">
+              <Card key={agent.id} className="hover:shadow-lg transition-shadow">
+                <CardContent className="space-y-2 p-4">
                   <div className="text-lg font-semibold">{agent.name}</div>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                  <Badge variant={agent.status === 'Pending' ? 'secondary' : 'default'}>
                     {agent.status}
-                  </span>
+                  </Badge>
                   <div className="text-sm text-muted-foreground">{agent.currentTask}</div>
                   {agent.confidence !== null && (
                     <>
@@ -218,9 +220,9 @@ const AgentControlUI: React.FC = () => {
                   <div className="text-xs text-muted-foreground">
                     Last Activity: {agent.lastActivity}
                   </div>
-                  <EnhancedButton variant="outline" size="sm">Details</EnhancedButton>
-                </div>
-              </ResponsiveCard>
+                  <Button variant="outline" size="sm">Details</Button>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </TabsContent>
@@ -243,14 +245,14 @@ const AgentControlUI: React.FC = () => {
             </Alert>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {metrics.map((metric) => (
-                <ResponsiveCard key={metric.id}>
-                  <div className="space-y-1 p-4">
+                <Card key={metric.id}>
+                  <CardContent className="space-y-1 p-4">
                     <div className="font-semibold text-sm">{metric.id}</div>
                     <div className="text-sm">Uptime: {metric.uptime}</div>
                     <div className="text-sm">Latency: {metric.latency}</div>
                     <div className="text-sm">Test Coverage: {metric.tests}</div>
-                  </div>
-                </ResponsiveCard>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
@@ -269,7 +271,7 @@ const AgentControlUI: React.FC = () => {
                 placeholder="Type a command (e.g. deploy broker.portal)"
                 onKeyPress={(e) => e.key === 'Enter' && handleCommand()}
               />
-              <EnhancedButton onClick={handleCommand}>Execute</EnhancedButton>
+              <Button onClick={handleCommand}>Execute</Button>
             </div>
             <div className="bg-muted p-4 rounded text-sm font-mono h-40 overflow-y-auto border">
               {consoleOutput.length === 0 ? (

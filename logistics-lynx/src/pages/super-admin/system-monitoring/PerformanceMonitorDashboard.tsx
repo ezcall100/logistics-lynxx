@@ -42,7 +42,7 @@ import {
   Cpu,
   HardDrive,
   Network,
-  Memory
+  Database
 } from 'lucide-react';
 
 interface PerformanceMetric {
@@ -379,8 +379,8 @@ const PerformanceMonitorDashboard: React.FC = () => {
 
         <ResponsiveCard>
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="text-sm font-medium">Memory Usage</h3>
-            <Memory className="h-4 w-4 text-muted-foreground" />
+                            <h3 className="text-sm font-medium">Memory Usage</h3>
+                <Database className="h-4 w-4 text-muted-foreground" />
           </div>
           <div>
             <div className="text-2xl font-bold">{systemMetrics.memoryUsage.toFixed(1)}%</div>

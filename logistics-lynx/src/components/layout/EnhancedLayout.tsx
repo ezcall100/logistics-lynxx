@@ -149,7 +149,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
               <div className="mb-6">
                 <Breadcrumbs />
               </div>
-              {children}
+              <Outlet />
             </div>
           </main>
         </div>

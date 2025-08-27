@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 // Role definitions with demo credentials
 const roles = [
-  { label: 'Super Admin', value: 'super_admin', email: 'admin@transbotai.com', password: 'demo-password' },
+  { label: 'Super Admin', value: 'super_admin', email: 'ezcallnet.mo@gmail.com', password: 'demo-password' },
   { label: 'Carrier Admin', value: 'carrier_admin', email: 'carrier@transbotai.com', password: 'demo-password' },
   { label: 'Broker Admin', value: 'freight_broker_admin', email: 'broker@transbotai.com', password: 'demo-password' },
   { label: 'Shipper Admin', value: 'shipper_admin', email: 'shipper@transbotai.com', password: 'demo-password' },
