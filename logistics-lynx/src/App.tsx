@@ -93,6 +93,9 @@ const AICompliance = lazy(() => import('./pages/super-admin/mcp-control-center/A
 const AIDocumentation = lazy(() => import('./pages/super-admin/mcp-control-center/AIDocumentation'));
 const AISupport = lazy(() => import('./pages/super-admin/mcp-control-center/AISupport'));
 
+// ✅ Phase 2: MCP Orchestration
+const Phase2Orchestration = lazy(() => import('./pages/super-admin/phase2-orchestration'));
+
 // ✅ Business Operations - All Components Available
 const CustomerManagement = lazy(() => import('./pages/super-admin/business-operations/CustomerManagement'));
 const SalesPipeline = lazy(() => import('./pages/super-admin/business-operations/SalesPipeline'));
@@ -248,6 +251,9 @@ function App() {
             <Route path="mcp/compliance" element={<AICompliance />} />
             <Route path="mcp/documentation" element={<AIDocumentation />} />
             <Route path="mcp/support" element={<AISupport />} />
+            
+            {/* Phase 2: MCP Orchestration */}
+            <Route path="phase2-orchestration" element={<Phase2Orchestration />} />
             
             {/* Business Operations - Complete Routes Matching Sidebar */}
             <Route path="business/customers" element={<CustomerManagement />} />
