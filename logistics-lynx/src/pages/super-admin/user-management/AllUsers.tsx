@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Download, Upload, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Download, Upload, Edit, Trash2, Eye, Search, Filter, RefreshCw, UserPlus, Shield, Activity } from 'lucide-react';
 
 interface User {
   id: string;
@@ -20,14 +20,23 @@ interface User {
   twoFactorEnabled: boolean;
   loginCount: number;
   lastActivity: string;
+  mcpAgentId?: string;
+  agentStatus?: 'online' | 'offline' | 'busy';
+  confidenceScore?: number;
 }
 
 const AllUsers: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
-  // Mock data
+  // Enhanced mock data with MCP agent integration
   const mockUsers: User[] = [
     {
       id: '1',
@@ -46,7 +55,10 @@ const AllUsers: React.FC = () => {
       verified: true,
       twoFactorEnabled: true,
       loginCount: 156,
-      lastActivity: '2024-01-15 14:30:00'
+      lastActivity: '2024-01-15 14:30:00',
+      mcpAgentId: 'agent-admin-001',
+      agentStatus: 'online',
+      confidenceScore: 0.95
     },
     {
       id: '2',
@@ -65,44 +77,201 @@ const AllUsers: React.FC = () => {
       verified: true,
       twoFactorEnabled: false,
       loginCount: 89,
-      lastActivity: '2024-01-15 13:45:00'
+      lastActivity: '2024-01-15 13:45:00',
+      mcpAgentId: 'agent-user-002',
+      agentStatus: 'online',
+      confidenceScore: 0.87
+    },
+    {
+      id: '3',
+      name: 'Mike Johnson',
+      email: 'mike.johnson@company.com',
+      role: 'manager',
+      status: 'pending',
+      company: 'Tech Corp',
+      department: 'Sales',
+      lastLogin: '2024-01-14 16:20:00',
+      createdAt: '2024-01-10',
+      phone: '+1 (555) 345-6789',
+      location: 'Chicago, IL',
+      permissions: ['read', 'write', 'manage'],
+      subscription: 'premium',
+      verified: false,
+      twoFactorEnabled: true,
+      loginCount: 23,
+      lastActivity: '2024-01-14 16:20:00',
+      mcpAgentId: 'agent-manager-003',
+      agentStatus: 'busy',
+      confidenceScore: 0.72
+    },
+    {
+      id: '4',
+      name: 'Sarah Wilson',
+      email: 'sarah.wilson@company.com',
+      role: 'user',
+      status: 'inactive',
+      company: 'Tech Corp',
+      department: 'HR',
+      lastLogin: '2024-01-10 09:15:00',
+      createdAt: '2023-12-01',
+      phone: '+1 (555) 456-7890',
+      location: 'Austin, TX',
+      permissions: ['read'],
+      subscription: 'basic',
+      verified: true,
+      twoFactorEnabled: false,
+      loginCount: 45,
+      lastActivity: '2024-01-10 09:15:00',
+      mcpAgentId: 'agent-user-004',
+      agentStatus: 'offline',
+      confidenceScore: 0.65
+    },
+    {
+      id: '5',
+      name: 'David Brown',
+      email: 'david.brown@company.com',
+      role: 'admin',
+      status: 'suspended',
+      company: 'Tech Corp',
+      department: 'Finance',
+      lastLogin: '2024-01-08 11:30:00',
+      createdAt: '2023-09-15',
+      phone: '+1 (555) 567-8901',
+      location: 'Seattle, WA',
+      permissions: ['read', 'write', 'admin'],
+      subscription: 'enterprise',
+      verified: true,
+      twoFactorEnabled: true,
+      loginCount: 234,
+      lastActivity: '2024-01-08 11:30:00',
+      mcpAgentId: 'agent-admin-005',
+      agentStatus: 'offline',
+      confidenceScore: 0.0
     }
   ];
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setUsers(mockUsers);
-      setLoading(false);
-    }, 1000);
+    // Simulate MCP connection check
+    const checkMcpConnection = async () => {
+      try {
+        // Simulate API call to MCP server
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setMcpStatus('connected');
+      } catch (error) {
+        setMcpStatus('disconnected');
+      }
+    };
+
+    // Simulate API call for users
+    const loadUsers = async () => {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setUsers(mockUsers);
+        setFilteredUsers(mockUsers);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to load users:', error);
+        setLoading(false);
+      }
+    };
+
+    checkMcpConnection();
+    loadUsers();
   }, []);
+
+  // Filter users based on search and filters
+  useEffect(() => {
+    let filtered = users;
+
+    if (searchQuery) {
+      filtered = filtered.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.company.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (statusFilter) {
+      filtered = filtered.filter(user => user.status === statusFilter);
+    }
+
+    if (roleFilter) {
+      filtered = filtered.filter(user => user.role === roleFilter);
+    }
+
+    setFilteredUsers(filtered);
+  }, [users, searchQuery, statusFilter, roleFilter]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</span>;
       case 'inactive':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Inactive</span>;
       case 'pending':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Pending</span>;
       case 'suspended':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Suspended</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Suspended</span>;
       default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Unknown</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Unknown</span>;
     }
   };
 
   const getRoleBadge = (role: string) => {
     switch (role) {
       case 'admin':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Admin</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Admin</span>;
       case 'manager':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Manager</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Manager</span>;
       case 'user':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">User</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">User</span>;
       default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{role}</span>;
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">{role}</span>;
     }
+  };
+
+  const getAgentStatusBadge = (status?: string) => {
+    switch (status) {
+      case 'online':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Online</span>;
+      case 'busy':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Busy</span>;
+      case 'offline':
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Offline</span>;
+      default:
+        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">N/A</span>;
+    }
+  };
+
+  const getConfidenceScoreColor = (score?: number) => {
+    if (!score) return 'text-gray-400';
+    if (score >= 0.8) return 'text-green-600 dark:text-green-400';
+    if (score >= 0.6) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
+  };
+
+  const handleSelectUser = (userId: string) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedUsers.length === filteredUsers.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(filteredUsers.map(user => user.id));
+    }
+  };
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    // Simulate refresh
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
   };
 
   if (loading) {
@@ -133,10 +302,34 @@ const AllUsers: React.FC = () => {
               User Management
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-              Manage all users across the platform
+              Manage all users across the platform with MCP agent integration
             </p>
+            <div className="flex items-center mt-2 space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  mcpStatus === 'connected' ? 'bg-green-500' : 
+                  mcpStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
+                }`}></div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  MCP Status: {mcpStatus.charAt(0).toUpperCase() + mcpStatus.slice(1)}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Activity className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {filteredUsers.length} users found
+                </span>
+              </div>
+            </div>
           </div>
           <div className="flex space-x-3">
+            <button 
+              onClick={handleRefresh}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            >
+              <RefreshCw className="w-4 h-4 inline mr-2" />
+              Refresh
+            </button>
             <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
               <Download className="w-4 h-4 inline mr-2" />
               Export
@@ -145,34 +338,46 @@ const AllUsers: React.FC = () => {
               <Upload className="w-4 h-4 inline mr-2" />
               Import
             </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              <Plus className="w-4 h-4 inline mr-2" />
+            <button 
+              onClick={() => setShowAddUser(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <UserPlus className="w-4 h-4 inline mr-2" />
               Add User
             </button>
           </div>
         </div>
 
-        {/* Search */}
+        {/* Search and Filters */}
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
           <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search users by name, email, company..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
             </div>
             <div className="flex gap-2">
-              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+              <select 
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
                 <option value="">All Status</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
                 <option value="pending">Pending</option>
                 <option value="suspended">Suspended</option>
               </select>
-              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+              <select 
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
                 <option value="">All Roles</option>
                 <option value="admin">Admin</option>
                 <option value="manager">Manager</option>
@@ -182,12 +387,45 @@ const AllUsers: React.FC = () => {
           </div>
         </div>
 
+        {/* Bulk Actions */}
+        {selectedUsers.length > 0 && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-blue-800 dark:text-blue-200">
+                {selectedUsers.length} user(s) selected
+              </span>
+              <div className="flex space-x-2">
+                <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                  <Shield className="w-4 h-4 inline mr-1" />
+                  Update Permissions
+                </button>
+                <button className="px-3 py-1 text-sm bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors">
+                  <Edit className="w-4 h-4 inline mr-1" />
+                  Bulk Edit
+                </button>
+                <button className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                  <Trash2 className="w-4 h-4 inline mr-1" />
+                  Delete Selected
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Users Table */}
         <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
+                  <th className="px-6 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.length === filteredUsers.length && filteredUsers.length > 0}
+                      onChange={handleSelectAll}
+                      className="rounded border-gray-300 dark:border-gray-600"
+                    />
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     User
                   </th>
@@ -196,6 +434,9 @@ const AllUsers: React.FC = () => {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    MCP Agent
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Company
@@ -209,8 +450,16 @@ const AllUsers: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {users.map((user) => (
+                {filteredUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        checked={selectedUsers.includes(user.id)}
+                        onChange={() => handleSelectUser(user.id)}
+                        className="rounded border-gray-300 dark:border-gray-600"
+                      />
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
@@ -223,6 +472,9 @@ const AllUsers: React.FC = () => {
                           <div className="text-sm text-gray-500 dark:text-gray-400">
                             {user.email}
                           </div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">
+                            ID: {user.id}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -233,6 +485,16 @@ const AllUsers: React.FC = () => {
                       {getStatusBadge(user.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="space-y-1">
+                        {getAgentStatusBadge(user.agentStatus)}
+                        {user.confidenceScore !== undefined && (
+                          <div className={`text-xs ${getConfidenceScoreColor(user.confidenceScore)}`}>
+                            Confidence: {(user.confidenceScore * 100).toFixed(0)}%
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-white">{user.company}</div>
                       <div className="text-sm text-gray-500 dark:text-gray-400">{user.department}</div>
                     </td>
@@ -241,13 +503,13 @@ const AllUsers: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" title="View Details">
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" title="Edit User">
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" title="Delete User">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -263,7 +525,7 @@ const AllUsers: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700 dark:text-gray-300">
-              Showing 1 to {users.length} of {users.length} users
+              Showing 1 to {filteredUsers.length} of {filteredUsers.length} users
             </div>
             <div className="flex space-x-2">
               <button className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -272,6 +534,37 @@ const AllUsers: React.FC = () => {
               <button className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600">
                 Next
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* MCP Agent Status Summary */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">MCP Agent Status Summary</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {users.filter(u => u.agentStatus === 'online').length}
+              </div>
+              <div className="text-sm text-green-600 dark:text-green-400">Online Agents</div>
+            </div>
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                {users.filter(u => u.agentStatus === 'busy').length}
+              </div>
+              <div className="text-sm text-yellow-600 dark:text-yellow-400">Busy Agents</div>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
+                {users.filter(u => u.agentStatus === 'offline').length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Offline Agents</div>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {users.filter(u => u.confidenceScore && u.confidenceScore >= 0.8).length}
+              </div>
+              <div className="text-sm text-blue-600 dark:text-blue-400">High Confidence</div>
             </div>
           </div>
         </div>

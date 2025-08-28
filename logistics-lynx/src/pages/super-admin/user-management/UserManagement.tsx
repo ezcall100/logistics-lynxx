@@ -1,34 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Search, Filter, Upload, Plus, Edit, Sun, Moon, CheckCircle, RefreshCw, Settings, Eye, TrendingUp, BarChart3, Trash2 } from 'lucide-react';
+import AddUserForm from './forms/AddUserForm';
+import EditUserForm from './forms/EditUserForm';
+import ViewUserForm from './forms/ViewUserForm';
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: string;
+  department: string;
+  status: 'active' | 'inactive' | 'pending';
+  permissions: string[];
+  mcpAgentId?: string;
+  agentStatus?: 'online' | 'offline' | 'busy';
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 const UserManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<Array<{id: number; name: string; status: string; value: number; date: string}>>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
 
   // Mock data for demonstration
-  const mockData = [
-    { id: 1, name: 'Item 1', status: 'active', value: 100, date: '2024-01-15' },
-    { id: 2, name: 'Item 2', status: 'inactive', value: 200, date: '2024-01-16' },
-    { id: 3, name: 'Item 3', status: 'active', value: 150, date: '2024-01-17' },
-    { id: 4, name: 'Item 4', status: 'pending', value: 300, date: '2024-01-18' },
-    { id: 5, name: 'Item 5', status: 'active', value: 250, date: '2024-01-19' },
+  const mockUsers: User[] = [
+    {
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      phone: '+1 (555) 123-4567',
+      role: 'manager',
+      department: 'engineering',
+      status: 'active',
+      permissions: ['user.manage', 'analytics.view'],
+      mcpAgentId: 'agent_12345',
+      agentStatus: 'online',
+      createdAt: '2024-01-15',
+      updatedAt: '2024-01-20'
+    },
+    {
+      id: '2',
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane.smith@example.com',
+      phone: '+1 (555) 234-5678',
+      role: 'admin',
+      department: 'marketing',
+      status: 'active',
+      permissions: ['user.manage', 'role.manage'],
+      mcpAgentId: 'agent_12346',
+      agentStatus: 'online',
+      createdAt: '2024-01-16',
+      updatedAt: '2024-01-19'
+    },
+    {
+      id: '3',
+      firstName: 'Bob',
+      lastName: 'Johnson',
+      email: 'bob.johnson@example.com',
+      phone: '+1 (555) 345-6789',
+      role: 'user',
+      department: 'sales',
+      status: 'pending',
+      permissions: ['basic.access'],
+      mcpAgentId: 'agent_12347',
+      agentStatus: 'offline',
+      createdAt: '2024-01-17',
+      updatedAt: '2024-01-18'
+    }
   ];
 
   useEffect(() => {
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
-      setData(mockData);
+      setUsers(mockUsers);
       setIsLoading(false);
     }, 1000);
   }, []);
 
-  const filteredData = data.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = selectedFilter === 'all' || item.status === selectedFilter;
+  const filteredUsers = users.filter(user => {
+    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+    const matchesSearch = fullName.includes(searchQuery.toLowerCase()) || 
+                         user.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = selectedFilter === 'all' || user.status === selectedFilter;
     return matchesSearch && matchesFilter;
   });
 
@@ -41,7 +104,42 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+  const totalValue = users.reduce((sum, user) => sum + (user.permissions.length * 10), 0);
+
+  // CRUD Operation Handlers
+  const handleAddUser = (userData: User) => {
+    setUsers(prev => [...prev, userData]);
+    setViewMode('list');
+  };
+
+  const handleEditUser = (userData: User) => {
+    setUsers(prev => prev.map(user => user.id === userData.id ? userData : user));
+    setViewMode('list');
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    setUsers(prev => prev.filter(user => user.id !== userId));
+    setViewMode('list');
+  };
+
+  const handleViewUser = (userId: string) => {
+    setSelectedUserId(userId);
+    setViewMode('view');
+  };
+
+  const handleEditUserClick = (userId: string) => {
+    setSelectedUserId(userId);
+    setViewMode('edit');
+  };
+
+  const handleAddUserClick = () => {
+    setViewMode('add');
+  };
+
+  const handleBackToList = () => {
+    setViewMode('list');
+    setSelectedUserId('');
+  };
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100'} p-6`}>
@@ -78,7 +176,7 @@ const UserManagement: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className={`text-sm font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Total Items</p>
-                <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{data.length}</p>
+                <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{users.length}</p>
               </div>
               <div className={`p-3 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'}`}>
                 <BarChart3 className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
@@ -91,7 +189,7 @@ const UserManagement: React.FC = () => {
               <div>
                 <p className={`text-sm font-medium ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Active</p>
                 <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {data.filter(item => item.status === 'active').length}
+                  {users.filter(user => user.status === 'active').length}
                 </p>
               </div>
               <div className={`p-3 rounded-full ${isDarkMode ? 'bg-green-900' : 'bg-green-100'}`}>
@@ -105,7 +203,7 @@ const UserManagement: React.FC = () => {
               <div>
                 <p className={`text-sm font-medium ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>Pending</p>
                 <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {data.filter(item => item.status === 'pending').length}
+                  {users.filter(user => user.status === 'pending').length}
                 </p>
               </div>
               <div className={`p-3 rounded-full ${isDarkMode ? 'bg-yellow-900' : 'bg-yellow-100'}`}>
@@ -189,10 +287,10 @@ const UserManagement: React.FC = () => {
                       Status
                     </th>
                     <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Value
+                      Role
                     </th>
                     <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Date
+                      Email
                     </th>
                     <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
                       Actions
@@ -200,34 +298,43 @@ const UserManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className={`divide-y ${isDarkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                  {filteredData.map((item) => (
-                    <tr key={item.id} className={`hover:bg-opacity-50 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id} className={`hover:bg-opacity-50 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                       <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        #{item.id}
+                        #{user.id}
                       </td>
                       <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {item.name}
+                        {user.firstName} {user.lastName}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(item.status)}`}>
-                          {item.status}
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(user.status)}`}>
+                          {user.status}
                         </span>
                       </td>
                       <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        ${item.value.toLocaleString()}
+                        {user.role}
                       </td>
                       <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                        {item.date}
+                        {user.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900">
+                          <button 
+                            onClick={() => handleViewUser(user.id)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
                             <Eye className="w-4 h-4" />
                           </button>
-                          <button className="text-green-600 hover:text-green-900">
+                          <button 
+                            onClick={() => handleEditUserClick(user.id)}
+                            className="text-green-600 hover:text-green-900"
+                          >
                             <Edit className="w-4 h-4" />
                           </button>
-                          <button className="text-red-600 hover:text-red-900">
+                          <button 
+                            onClick={() => handleDeleteUser(user.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -244,13 +351,16 @@ const UserManagement: React.FC = () => {
         <div className={`mt-8 rounded-xl shadow-lg p-6 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-opacity-50 transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
+            <button 
+              onClick={handleAddUserClick}
+              className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-opacity-50 transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}
+            >
               <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'}`}>
                 <Plus className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
               </div>
               <div className="text-left">
                 <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create New</p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>Add a new item</p>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>Add a new user</p>
               </div>
             </button>
             
@@ -286,6 +396,32 @@ const UserManagement: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Form Components */}
+      {viewMode === 'add' && (
+        <AddUserForm
+          onSave={handleAddUser}
+          onCancel={handleBackToList}
+        />
+      )}
+
+      {viewMode === 'edit' && selectedUserId && (
+        <EditUserForm
+          userId={selectedUserId}
+          onSave={handleEditUser}
+          onCancel={handleBackToList}
+          onDelete={handleDeleteUser}
+        />
+      )}
+
+      {viewMode === 'view' && selectedUserId && (
+        <ViewUserForm
+          userId={selectedUserId}
+          onEdit={handleEditUserClick}
+          onDelete={handleDeleteUser}
+          onBack={handleBackToList}
+        />
+      )}
     </div>
   );
 };

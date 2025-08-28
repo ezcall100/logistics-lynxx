@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +11,7 @@ import {
   Settings, 
   BarChart3,
   Cpu,
-  Memory,
+  HardDrive,
   Network,
   Clock,
   CheckCircle,
@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { TaskDistributionEngine } from '@/components/mcp/TaskDistributionEngine';
 import { WorkflowBuilder } from '@/components/mcp/WorkflowBuilder';
-import { AgentLoadBalancer } from '@/components/mcp/AgentLoadBalancer';
+import AgentLoadBalancer from '@/components/mcp/AgentLoadBalancer';
 import { AutomationRuleEngine } from '@/components/mcp/AutomationRuleEngine';
 
 export default function Phase2OrchestrationPage() {
@@ -171,7 +171,7 @@ export default function Phase2OrchestrationPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center text-sm">
-              <Memory className="w-4 h-4 mr-2" />
+              <HardDrive className="w-4 h-4 mr-2" />
               System Memory
             </CardTitle>
           </CardHeader>

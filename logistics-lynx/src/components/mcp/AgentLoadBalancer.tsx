@@ -1,613 +1,318 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { 
+import {
+  BarChart3,
   Activity, 
   Cpu, 
-  Memory, 
-  Network, 
-  Zap, 
-  Settings, 
+  HardDrive, 
+  Network,
+  Zap,
+  Settings,
+  RefreshCw,
   AlertTriangle,
-  TrendingUp,
-  TrendingDown,
-  Gauge,
-  Shield,
-  Clock,
-  Users,
-  BarChart3
+  CheckCircle,
+  XCircle,
+  Clock
 } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 
 interface AgentMetrics {
   id: string;
   name: string;
-  type: string;
-  status: 'online' | 'offline' | 'overloaded' | 'idle';
   cpu: number;
   memory: number;
   network: number;
-  queueLength: number;
-  maxConcurrency: number;
-  currentLoad: number;
+  status: 'online' | 'offline' | 'busy' | 'error';
+  load: number;
   responseTime: number;
-  errorRate: number;
-  throughput: number;
-  lastHeartbeat: string;
-  uptime: number;
-  tasksCompleted: number;
-  tasksFailed: number;
+  lastSeen: string;
 }
 
-interface LoadBalancerConfig {
-  autoThrottle: boolean;
-  maxCpuThreshold: number;
-  maxMemoryThreshold: number;
-  maxResponseTime: number;
-  maxErrorRate: number;
-  loadBalancingStrategy: 'round-robin' | 'least-loaded' | 'fastest-response' | 'weighted';
-  healthCheckInterval: number;
-  failoverEnabled: boolean;
-}
-
-interface AgentLoadBalancerProps {
-  className?: string;
-}
-
-export function AgentLoadBalancer({ className }: AgentLoadBalancerProps) {
+const AgentLoadBalancer: React.FC = () => {
   const [agents, setAgents] = useState<AgentMetrics[]>([]);
-  const [config, setConfig] = useState<LoadBalancerConfig>({
-    autoThrottle: true,
-    maxCpuThreshold: 80,
-    maxMemoryThreshold: 85,
-    maxResponseTime: 5000,
-    maxErrorRate: 5,
-    loadBalancingStrategy: 'least-loaded',
-    healthCheckInterval: 30,
-    failoverEnabled: true
-  });
-  const [isAutoThrottling, setIsAutoThrottling] = useState(false);
-  const [systemHealth, setSystemHealth] = useState<'healthy' | 'warning' | 'critical'>('healthy');
+  const [loading, setLoading] = useState(true);
+  const [autoBalance, setAutoBalance] = useState(true);
+  const [threshold, setThreshold] = useState(80);
 
   // Mock data for demonstration
+  const mockAgents: AgentMetrics[] = [
+    {
+      id: 'agent-1',
+      name: 'Frontend Agent',
+      cpu: 45,
+      memory: 62,
+      network: 28,
+      status: 'online',
+      load: 65,
+      responseTime: 120,
+      lastSeen: new Date().toISOString()
+    },
+    {
+      id: 'agent-2',
+      name: 'Backend Agent',
+      cpu: 78,
+      memory: 85,
+      network: 45,
+      status: 'busy',
+      load: 92,
+      responseTime: 350,
+      lastSeen: new Date().toISOString()
+    },
+    {
+      id: 'agent-3',
+      name: 'Database Agent',
+      cpu: 32,
+      memory: 48,
+      network: 15,
+      status: 'online',
+      load: 42,
+      responseTime: 85,
+      lastSeen: new Date().toISOString()
+    },
+    {
+      id: 'agent-4',
+      name: 'Analytics Agent',
+      cpu: 91,
+      memory: 88,
+      network: 67,
+      status: 'error',
+      load: 98,
+      responseTime: 1200,
+      lastSeen: new Date().toISOString()
+    }
+  ];
+
   useEffect(() => {
-    const mockAgents: AgentMetrics[] = [
-      {
-        id: 'agent-1',
-        name: 'Frontend Dev Agent',
-        type: 'frontend-dev-agent',
-        status: 'online',
-        cpu: 45,
-        memory: 62,
-        network: 28,
-        queueLength: 3,
-        maxConcurrency: 5,
-        currentLoad: 2,
-        responseTime: 1200,
-        errorRate: 0.5,
-        throughput: 45,
-        lastHeartbeat: new Date().toISOString(),
-        uptime: 86400,
-        tasksCompleted: 156,
-        tasksFailed: 2
-      },
-      {
-        id: 'agent-2',
-        name: 'Backend API Agent',
-        type: 'backend-api-agent',
-        status: 'overloaded',
-        cpu: 92,
-        memory: 88,
-        network: 75,
-        queueLength: 12,
-        maxConcurrency: 8,
-        currentLoad: 7,
-        responseTime: 8500,
-        errorRate: 8.2,
-        throughput: 23,
-        lastHeartbeat: new Date().toISOString(),
-        uptime: 43200,
-        tasksCompleted: 89,
-        tasksFailed: 8
-      },
-      {
-        id: 'agent-3',
-        name: 'Data Pipeline Agent',
-        type: 'data-pipeline-agent',
-        status: 'idle',
-        cpu: 15,
-        memory: 25,
-        network: 8,
-        queueLength: 0,
-        maxConcurrency: 3,
-        currentLoad: 0,
-        responseTime: 800,
-        errorRate: 0.1,
-        throughput: 12,
-        lastHeartbeat: new Date().toISOString(),
-        uptime: 172800,
-        tasksCompleted: 234,
-        tasksFailed: 1
-      },
-      {
-        id: 'agent-4',
-        name: 'ML Agent',
-        type: 'ml-agent',
-        status: 'online',
-        cpu: 78,
-        memory: 82,
-        network: 45,
-        queueLength: 5,
-        maxConcurrency: 4,
-        currentLoad: 3,
-        responseTime: 3200,
-        errorRate: 2.1,
-        throughput: 18,
-        lastHeartbeat: new Date().toISOString(),
-        uptime: 64800,
-        tasksCompleted: 67,
-        tasksFailed: 3
-      }
-    ];
-
-    setAgents(mockAgents);
-
-    // Simulate real-time updates
-    const interval = setInterval(() => {
-      setAgents(prev => prev.map(agent => ({
-        ...agent,
-        cpu: Math.max(0, Math.min(100, agent.cpu + (Math.random() - 0.5) * 10)),
-        memory: Math.max(0, Math.min(100, agent.memory + (Math.random() - 0.5) * 8)),
-        network: Math.max(0, Math.min(100, agent.network + (Math.random() - 0.5) * 15)),
-        responseTime: Math.max(100, agent.responseTime + (Math.random() - 0.5) * 500),
-        lastHeartbeat: new Date().toISOString()
-      })));
-    }, 5000);
-
-    return () => clearInterval(interval);
+    // Simulate loading data
+    setTimeout(() => {
+      setAgents(mockAgents);
+      setLoading(false);
+    }, 1000);
   }, []);
-
-  // Auto-throttling logic
-  useEffect(() => {
-    if (!config.autoThrottle) return;
-
-    const checkAndThrottle = () => {
-      const overloadedAgents = agents.filter(agent => 
-        agent.cpu > config.maxCpuThreshold ||
-        agent.memory > config.maxMemoryThreshold ||
-        agent.responseTime > config.maxResponseTime ||
-        agent.errorRate > config.maxErrorRate
-      );
-
-      if (overloadedAgents.length > 0) {
-        setIsAutoThrottling(true);
-        setSystemHealth('warning');
-        
-        // Simulate throttling
-        setTimeout(() => {
-          setAgents(prev => prev.map(agent => {
-            if (overloadedAgents.find(o => o.id === agent.id)) {
-              return {
-                ...agent,
-                status: 'overloaded' as const,
-                maxConcurrency: Math.max(1, agent.maxConcurrency - 1)
-              };
-            }
-            return agent;
-          }));
-          setIsAutoThrottling(false);
-        }, 2000);
-      } else {
-        setSystemHealth('healthy');
-      }
-    };
-
-    const interval = setInterval(checkAndThrottle, 10000);
-    return () => clearInterval(interval);
-  }, [agents, config]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'default';
-      case 'idle': return 'secondary';
-      case 'overloaded': return 'destructive';
-      case 'offline': return 'outline';
-      default: return 'outline';
+      case 'online':
+        return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
+      case 'busy':
+        return 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/20';
+      case 'error':
+        return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
+      default:
+        return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-700';
     }
   };
 
-  const getHealthColor = (health: string) => {
-    switch (health) {
-      case 'healthy': return 'default';
-      case 'warning': return 'secondary';
-      case 'critical': return 'destructive';
-      default: return 'outline';
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'online':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'busy':
+        return <Clock className="w-4 h-4" />;
+      case 'error':
+        return <XCircle className="w-4 h-4" />;
+      default:
+        return <AlertTriangle className="w-4 h-4" />;
     }
   };
 
-  const handleThrottleAgent = (agentId: string, action: 'throttle' | 'unthrottle') => {
-    setAgents(prev => prev.map(agent => {
-      if (agent.id === agentId) {
-        return {
-          ...agent,
-          maxConcurrency: action === 'throttle' 
-            ? Math.max(1, agent.maxConcurrency - 1)
-            : Math.min(10, agent.maxConcurrency + 1)
-        };
-      }
-      return agent;
-    }));
+  const getLoadColor = (load: number) => {
+    if (load >= 90) return 'text-red-600 dark:text-red-400';
+    if (load >= 70) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-green-600 dark:text-green-400';
   };
 
-  const handleRestartAgent = (agentId: string) => {
-    setAgents(prev => prev.map(agent => {
-      if (agent.id === agentId) {
-        return {
-          ...agent,
-          status: 'offline' as const,
-          uptime: 0
-        };
-      }
-      return agent;
-    }));
-
-    // Simulate restart
-    setTimeout(() => {
-      setAgents(prev => prev.map(agent => {
-        if (agent.id === agentId) {
-          return {
-            ...agent,
-            status: 'online' as const,
-            uptime: 0,
-            cpu: 0,
-            memory: 0,
-            network: 0,
-            queueLength: 0,
-            currentLoad: 0
-          };
-        }
-        return agent;
-      }));
-    }, 3000);
-  };
-
-  const totalAgents = agents.length;
-  const onlineAgents = agents.filter(a => a.status === 'online').length;
-  const overloadedAgents = agents.filter(a => a.status === 'overloaded').length;
-  const averageCpu = agents.reduce((sum, a) => sum + a.cpu, 0) / totalAgents;
-  const averageMemory = agents.reduce((sum, a) => sum + a.memory, 0) / totalAgents;
+  if (loading) {
+    return (
+      <div className="animate-pulse">
+        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+        <div className="space-y-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`space-y-6 ${className}`}>
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Agent Load Balancer</h2>
-          <p className="text-muted-foreground">
-            Real-time load dashboard and auto-throttle mechanism
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Agent Load Balancer
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Monitor and balance MCP agent workloads
           </p>
         </div>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <Switch
-              checked={config.autoThrottle}
-              onCheckedChange={(checked) => setConfig(prev => ({ ...prev, autoThrottle: checked }))}
+            <input
+              type="checkbox"
+              checked={autoBalance}
+              onChange={(e) => setAutoBalance(e.target.checked)}
+              className="rounded border-gray-300 dark:border-gray-600"
             />
-            <span className="text-sm">Auto Throttle</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">
+              Auto-balance
+            </span>
           </div>
-          <Badge variant={getHealthColor(systemHealth)}>
-            {isAutoThrottling ? 'Throttling...' : systemHealth}
-          </Badge>
+          <button className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <RefreshCw className="w-4 h-4 inline mr-2" />
+            Refresh
+          </button>
         </div>
       </div>
 
-      {/* System Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Total Agents</p>
-                <p className="text-2xl font-bold">{totalAgents}</p>
-              </div>
-              <Users className="h-8 w-8 text-muted-foreground" />
-            </div>
-            <div className="mt-2">
-              <p className="text-xs text-muted-foreground">
-                {onlineAgents} online, {overloadedAgents} overloaded
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Threshold Control */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Load Threshold: {threshold}%
+          </label>
+          <Settings className="w-4 h-4 text-gray-400" />
+        </div>
+        <Slider
+          value={threshold}
+          onChange={setThreshold}
+          min={50}
+          max={95}
+          step={5}
+          className="w-full"
+        />
+        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <span>50%</span>
+          <span>95%</span>
+        </div>
+      </div>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+      {/* Agent Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {agents.map((agent) => (
+          <div key={agent.id} className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-start mb-4">
               <div>
-                <p className="text-sm font-medium">Avg CPU</p>
-                <p className="text-2xl font-bold">{averageCpu.toFixed(1)}%</p>
-              </div>
-              <Cpu className="h-8 w-8 text-muted-foreground" />
-            </div>
-            <div className="mt-2">
-              <Progress value={averageCpu} className="h-2" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Avg Memory</p>
-                <p className="text-2xl font-bold">{averageMemory.toFixed(1)}%</p>
-              </div>
-              <Memory className="h-8 w-8 text-muted-foreground" />
-            </div>
-            <div className="mt-2">
-              <Progress value={averageMemory} className="h-2" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Total Throughput</p>
-                <p className="text-2xl font-bold">
-                  {agents.reduce((sum, a) => sum + a.throughput, 0)}
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {agent.name}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  ID: {agent.id}
                 </p>
               </div>
-              <BarChart3 className="h-8 w-8 text-muted-foreground" />
+              <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(agent.status)}`}>
+                {getStatusIcon(agent.status)}
+                <span>{agent.status}</span>
+              </div>
             </div>
-            <div className="mt-2">
-              <p className="text-xs text-muted-foreground">tasks/min</p>
+
+            {/* Metrics */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Cpu className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">CPU</span>
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  {agent.cpu}%
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <HardDrive className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Memory</span>
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  {agent.memory}%
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Network className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Network</span>
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  {agent.network}%
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Activity className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Load</span>
+                </div>
+                <span className={`text-sm font-medium ${getLoadColor(agent.load)}`}>
+                  {agent.load}%
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Response</span>
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  {agent.responseTime}ms
+                </span>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Progress Bar */}
+            <div className="mt-4">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <span>Load Level</span>
+                <span>{agent.load}%</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    agent.load >= 90 ? 'bg-red-500' :
+                    agent.load >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                  }`}
+                  style={{ width: `${agent.load}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Agent Metrics */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Activity className="w-5 h-5 mr-2" />
-                Agent Metrics
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {agents.map(agent => (
-                  <div key={agent.id} className="p-4 border rounded-lg">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h4 className="font-medium">{agent.name}</h4>
-                        <p className="text-sm text-muted-foreground">{agent.type}</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant={getStatusColor(agent.status)}>
-                          {agent.status}
-                        </Badge>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleThrottleAgent(agent.id, 'throttle')}
-                          disabled={agent.maxConcurrency <= 1}
-                        >
-                          <TrendingDown className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleThrottleAgent(agent.id, 'unthrottle')}
-                          disabled={agent.maxConcurrency >= 10}
-                        >
-                          <TrendingUp className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRestartAgent(agent.id)}
-                        >
-                          <Zap className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span>CPU</span>
-                          <span>{agent.cpu.toFixed(1)}%</span>
-                        </div>
-                        <Progress 
-                          value={agent.cpu} 
-                          className="h-2 mt-1"
-                          variant={agent.cpu > config.maxCpuThreshold ? 'destructive' : 'default'}
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Memory</span>
-                          <span>{agent.memory.toFixed(1)}%</span>
-                        </div>
-                        <Progress 
-                          value={agent.memory} 
-                          className="h-2 mt-1"
-                          variant={agent.memory > config.maxMemoryThreshold ? 'destructive' : 'default'}
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Load</span>
-                          <span>{agent.currentLoad}/{agent.maxConcurrency}</span>
-                        </div>
-                        <Progress 
-                          value={(agent.currentLoad / agent.maxConcurrency) * 100} 
-                          className="h-2 mt-1"
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Response</span>
-                          <span>{(agent.responseTime / 1000).toFixed(1)}s</span>
-                        </div>
-                        <div className="h-2 mt-1 bg-muted rounded">
-                          <div 
-                            className={`h-full rounded ${
-                              agent.responseTime > config.maxResponseTime ? 'bg-destructive' : 'bg-primary'
-                            }`}
-                            style={{ width: `${Math.min(100, (agent.responseTime / config.maxResponseTime) * 100)}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Queue:</span>
-                        <span className="ml-1 font-medium">{agent.queueLength}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Error Rate:</span>
-                        <span className="ml-1 font-medium">{agent.errorRate.toFixed(1)}%</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Throughput:</span>
-                        <span className="ml-1 font-medium">{agent.throughput}/min</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Uptime:</span>
-                        <span className="ml-1 font-medium">
-                          {Math.floor(agent.uptime / 3600)}h {Math.floor((agent.uptime % 3600) / 60)}m
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Configuration */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Load Balancer Config</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Max CPU Threshold</label>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Slider
-                    value={[config.maxCpuThreshold]}
-                    onValueChange={([value]) => setConfig(prev => ({ ...prev, maxCpuThreshold: value }))}
-                    max={100}
-                    min={50}
-                    step={5}
-                    className="flex-1"
-                  />
-                  <span className="text-sm w-12">{config.maxCpuThreshold}%</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Max Memory Threshold</label>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Slider
-                    value={[config.maxMemoryThreshold]}
-                    onValueChange={([value]) => setConfig(prev => ({ ...prev, maxMemoryThreshold: value }))}
-                    max={100}
-                    min={50}
-                    step={5}
-                    className="flex-1"
-                  />
-                  <span className="text-sm w-12">{config.maxMemoryThreshold}%</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Max Response Time</label>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Slider
-                    value={[config.maxResponseTime / 1000]}
-                    onValueChange={([value]) => setConfig(prev => ({ ...prev, maxResponseTime: value * 1000 }))}
-                    max={10}
-                    min={1}
-                    step={0.5}
-                    className="flex-1"
-                  />
-                  <span className="text-sm w-12">{config.maxResponseTime / 1000}s</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Max Error Rate</label>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Slider
-                    value={[config.maxErrorRate]}
-                    onValueChange={([value]) => setConfig(prev => ({ ...prev, maxErrorRate: value }))}
-                    max={20}
-                    min={1}
-                    step={0.5}
-                    className="flex-1"
-                  />
-                  <span className="text-sm w-12">{config.maxErrorRate}%</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Health Check Interval</label>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Slider
-                    value={[config.healthCheckInterval]}
-                    onValueChange={([value]) => setConfig(prev => ({ ...prev, healthCheckInterval: value }))}
-                    max={60}
-                    min={10}
-                    step={5}
-                    className="flex-1"
-                  />
-                  <span className="text-sm w-12">{config.healthCheckInterval}s</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Alerts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {agents.filter(a => a.status === 'overloaded').map(agent => (
-                  <div key={agent.id} className="flex items-center space-x-2 p-2 bg-destructive/10 rounded">
-                    <AlertTriangle className="w-4 h-4 text-destructive" />
-                    <span className="text-sm">{agent.name} is overloaded</span>
-                  </div>
-                ))}
-                {agents.filter(a => a.errorRate > config.maxErrorRate).map(agent => (
-                  <div key={agent.id} className="flex items-center space-x-2 p-2 bg-destructive/10 rounded">
-                    <AlertTriangle className="w-4 h-4 text-destructive" />
-                    <span className="text-sm">{agent.name} has high error rate</span>
-                  </div>
-                ))}
-                {agents.filter(a => a.responseTime > config.maxResponseTime).map(agent => (
-                  <div key={agent.id} className="flex items-center space-x-2 p-2 bg-destructive/10 rounded">
-                    <AlertTriangle className="w-4 h-4 text-destructive" />
-                    <span className="text-sm">{agent.name} is slow to respond</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+      {/* Summary Stats */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Load Balancer Summary
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+              {agents.filter(a => a.status === 'online').length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Online</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+              {agents.filter(a => a.status === 'busy').length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Busy</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+              {agents.filter(a => a.status === 'error').length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Errors</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {Math.round(agents.reduce((sum, a) => sum + a.load, 0) / agents.length)}%
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Avg Load</div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default AgentLoadBalancer;
