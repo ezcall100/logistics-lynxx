@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { EnhancedHeader } from './EnhancedHeader';
 import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';
@@ -36,7 +35,6 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
   children,
   user
 }) => {
-  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
