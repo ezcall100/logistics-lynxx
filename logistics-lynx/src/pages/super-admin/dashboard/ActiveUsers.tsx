@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, UserCheck, UserX, UserPlus, UserMinus, Activity, Clock, Globe, Smartphone, Monitor, Tablet, TrendingUp, TrendingDown, BarChart3, Eye, Settings, RefreshCw, Download } from 'lucide-react';
+import { Users, UserCheck, UserX, UserPlus, UserMinus, Activity, Clock, Globe, Smartphone, Monitor, Tablet, TrendingUp, TrendingDown, BarChart3, Settings, RefreshCw, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   EnhancedCard,
-  EnhancedButton,
   EnhancedBadge,
   EnhancedTable,
   EnhancedSearch,
@@ -62,7 +62,7 @@ interface LocationStats {
 const ActiveUsers: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [selectedTimeframe, setSelectedTimeframe] = useState('1h');
   const [selectedStatus, setSelectedStatus] = useState('all');
 
@@ -420,23 +420,9 @@ const ActiveUsers: React.FC = () => {
       title: 'Actions',
       render: (_: any) => (
         <div className="flex items-center space-x-2">
-            <EnhancedButton
-
-              variant="ghost"
-            size="sm"
-            icon={<Eye className="w-4 h-4" />}
-            mode={mode}
-          >
+          <Button>
             View
-          </EnhancedButton>
-          <EnhancedButton
-            variant="ghost"
-            size="sm"
-            icon={<Settings className="w-4 h-4" />}
-            mode={mode}
-          >
-            Settings
-          </EnhancedButton>
+          </Button>
         </div>
       )
     }
@@ -527,22 +513,14 @@ const ActiveUsers: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Download className="w-4 h-4" />}
-                mode={mode}
-              >
-                Export Data
-              </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<RefreshCw className="w-4 h-4" />}
-                mode={mode}
-              >
-                Refresh
-              </EnhancedButton>
+            <Button variant="outline">
+              <Download className="w-4 h-4 mr-2" />
+              Export Data
+            </Button>
+            <Button variant="ghost">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
           </div>
         </div>
 
@@ -562,7 +540,7 @@ const ActiveUsers: React.FC = () => {
             </div>
             <div className="mt-4">
               <EnhancedProgress
-                value={(metrics.totalActive / 100) * 100}
+                value={Math.min((metrics.totalActive / 100) * 100, 100)}
                 max={100}
                 mode={mode}
                 variant="success"
@@ -584,7 +562,7 @@ const ActiveUsers: React.FC = () => {
             </div>
             <div className="mt-4">
               <EnhancedProgress
-                value={(metrics.onlineUsers / metrics.totalActive) * 100}
+                value={metrics.totalActive > 0 ? (metrics.onlineUsers / metrics.totalActive) * 100 : 0}
                 max={100}
                 mode={mode}
                 variant="success"
@@ -606,7 +584,7 @@ const ActiveUsers: React.FC = () => {
             </div>
             <div className="mt-4">
               <EnhancedProgress
-                value={(metrics.totalSessions / 200) * 100}
+                value={Math.min((metrics.totalSessions / 200) * 100, 100)}
                 max={100}
                 mode={mode}
                 variant="default"
@@ -628,7 +606,7 @@ const ActiveUsers: React.FC = () => {
             </div>
             <div className="mt-4">
               <EnhancedProgress
-                value={(metrics.avgSessionDuration / 120) * 100}
+                value={Math.min((metrics.avgSessionDuration / 120) * 100, 100)}
                 max={100}
                 mode={mode}
                 variant="warning"
@@ -645,19 +623,17 @@ const ActiveUsers: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Device Distribution
               </h3>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<BarChart3 className="w-4 h-4" />}
-                mode={mode}
-              >
+              <Button variant="outline" className="flex items-center">
+                <BarChart3 className="w-4 h-4 mr-2" />
                 View Details
-              </EnhancedButton>
+              </Button>
             </div>
             <div className="space-y-4">
-              {deviceStats.map((stat) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              {deviceStats.map((stat, statIndex) => (
+                <div
+                  key={statIndex}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                >
                   <div className="flex items-center space-x-3">
                     {getDeviceIcon(stat.device.toLowerCase())}
                     <div>
@@ -686,18 +662,17 @@ const ActiveUsers: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Geographic Distribution
               </h3>
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Globe className="w-4 h-4" />}
-                mode={mode}
-              >
+              <Button variant="outline" className="flex items-center">
+                <Globe className="w-4 h-4 mr-2" />
                 View Map
-              </EnhancedButton>
+              </Button>
             </div>
             <div className="space-y-4">
-              {locationStats.map((stat) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              {locationStats.map((stat, statIndex) => (
+                <div
+                  key={statIndex}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                >
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">{stat.flag}</span>
                     <div>
@@ -717,8 +692,7 @@ const ActiveUsers: React.FC = () => {
             </div>
           </EnhancedCard>
         </div>
-
-        {/* Active Users Table */}
+        {/* End Device and Location Stats */}
         <EnhancedCard mode={mode} elevated>
           <div className="flex items-center justify-between mb-6">
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
@@ -770,15 +744,10 @@ const ActiveUsers: React.FC = () => {
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
               Recent User Activity
             </h3>
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Activity className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+              <Activity className="w-4 h-4 mr-2" />
               View All
-            </EnhancedButton>
+            </Button>
           </div>
 
           <EnhancedTable
@@ -798,64 +767,30 @@ const ActiveUsers: React.FC = () => {
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<UserPlus className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Add User</span>
-            </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-              size="sm"
-              icon={<UserMinus className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Remove User</span>
-            </EnhancedButton>
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<UserCheck className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Verify Users</span>
-            </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<UserX className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Block User</span>
-              </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Download className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Export Data</span>
-              </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Settings className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Settings</span>
-              </EnhancedButton>
+            <Button>
+              <UserPlus className="w-4 h-4" />
+              <span>Add User</span>
+            </Button>
+            <Button>
+              <UserMinus className="w-4 h-4" />
+              <span>Remove User</span>
+            </Button>
+            <Button>
+              <UserCheck className="w-4 h-4" />
+              <span>Verify Users</span>
+            </Button>
+            <Button>
+              <UserX className="w-4 h-4" />
+              <span>Block User</span>
+            </Button>
+            <Button>
+              <Download className="w-4 h-4" />
+              <span>Export Data</span>
+            </Button>
+            <Button>
+              <Settings className="w-4 h-4" />
+              <span>Settings</span>
+            </Button>
           </div>
         </EnhancedCard>
       </div>

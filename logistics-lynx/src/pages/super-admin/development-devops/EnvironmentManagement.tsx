@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Layers } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface EnvironmentManagementProps {}
 
@@ -53,10 +54,11 @@ const EnvironmentManagement: React.FC<EnvironmentManagementProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Staging Management</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Production Monitoring</span>
               </div>
-              <EnhancedButton className="mt-6">
-                Configure Environment Management</EnhancedButton>
-            </div>
-          )}
+                              <Button>
+                Configure Environment Management
+              </Button>
+              </div>
+            )}
         </div>
       </ResponsiveCard>
     </div>

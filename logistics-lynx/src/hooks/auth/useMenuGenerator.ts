@@ -104,3 +104,5 @@ export const useMenuGenerator = () => {
 
   return { getMenuForRole };
 };
+
+export default useMenuGenerator;

@@ -9,7 +9,6 @@ export { default as ResponsiveDashboard } from '../layout/ResponsiveDashboard';
 // Enhanced UI Components
 export * from './EnhancedUIComponents';
 export { default as EnhancedUIComponents } from './EnhancedUIComponents';
-export { EnhancedButton } from './EnhancedUIComponents';
 export { default as EnhancedIcon } from './EnhancedIcon';
 export { default as FloatingActionButton } from './FloatingActionButton';
 export * from './toast';

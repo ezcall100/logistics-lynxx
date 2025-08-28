@@ -151,3 +151,5 @@ export const TruckIcon = (props: Omit<EnhancedIconProps, 'name'>) => (
 export const PackageIcon = (props: Omit<EnhancedIconProps, 'name'>) => (
   <EnhancedIcon name="Package" {...props} />
 );
+
+export default getIconComponent;

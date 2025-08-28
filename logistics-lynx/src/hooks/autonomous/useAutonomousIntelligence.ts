@@ -160,3 +160,5 @@ export const useAutonomousIntelligence = () => {
     activate250Agents
   };
 };
+
+export default useAutonomousIntelligence;

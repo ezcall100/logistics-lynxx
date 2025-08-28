@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { User, CheckCircle, ArrowRight, ArrowLeft, Loader2, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface OnboardingStep {
   id: string;
@@ -393,12 +394,9 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
           {/* Navigation */}
           <div className="flex justify-between pt-6">
-            <EnhancedButton
-              variant="outline"
-              onClick={handleBack}
-              disabled={currentStep === 0 || isLoading}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button>
+                 
+              <ArrowLeft className="h-4 w-4 mr-2" /></Button>
               Back
             
               onClick={handleNext}
@@ -426,3 +424,5 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     </div>
   );
 };
+
+export default handleBack;

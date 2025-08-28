@@ -45,3 +45,5 @@ export const useResourceManager = () => {
     calculateOptimalResources
   };
 };
+
+export default useResourceManager;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, AlertTriangle, CheckCircle, XCircle, Info, Clock, RefreshCw, Download, Eye, Settings, HelpCircle, Archive, Server, Gauge, AlertCircle, AlertOctagon, PowerOff, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   EnhancedCard,
-  EnhancedButton,
   EnhancedBadge,
   EnhancedTable,
   EnhancedSearch,
@@ -58,7 +58,7 @@ interface IncidentReport {
 const SystemAlerts: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
 
@@ -334,8 +334,8 @@ const SystemAlerts: React.FC = () => {
             {row.description}
           </div>
           <div className="flex flex-wrap gap-1 mt-1">
-            {row.tags.map((tag) => (
-              <span key={index} className={`text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 ${stableStyles.textSecondary[mode]}`}>
+            {row.tags.map((tag, tagIndex) => (
+              <span key={tagIndex} className={`text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 ${stableStyles.textSecondary[mode]}`}>
                 {tag}
               </span>
             ))}
@@ -400,22 +400,14 @@ const SystemAlerts: React.FC = () => {
       title: 'Actions',
       render: (_: any, __: SystemAlert) => (
         <div className="flex items-center space-x-2">
-          <EnhancedButton
-            variant="ghost"
-            size="sm"
-            icon={<Eye className="w-4 h-4" />}
-            mode={mode}
-          >
+          <Button>
+                 
+              <Eye className="w-4 h-4 mr-2" /></Button>
             View
-          </EnhancedButton>
-          <EnhancedButton
-            variant="ghost"
-            size="sm"
-            icon={<CheckCircle className="w-4 h-4" />}
-            mode={mode}
-          >
+          <Button>
+            <CheckCircle className="w-4 h-4 mr-2" />
             Acknowledge
-          </EnhancedButton>
+          </Button>
         </div>
       )
     }
@@ -505,22 +497,14 @@ const SystemAlerts: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+                 
+              <Download className="w-4 h-4 mr-2" /></Button>
               Export Report
-            </EnhancedButton>
-            <EnhancedButton
-              variant="primary"
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+              <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
-            </EnhancedButton>
+            </Button>
           </div>
         </div>
 
@@ -645,19 +629,15 @@ const SystemAlerts: React.FC = () => {
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
               System Health Overview
             </h3>
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<Gauge className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+              <Gauge className="w-4 h-4 mr-2" />
               View Details
-            </EnhancedButton>
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {systemHealth.map((health) => (
-              <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            {systemHealth.map((health, healthIndex) => (
+              <div key={healthIndex} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>
                     {health.component}
@@ -763,14 +743,10 @@ const SystemAlerts: React.FC = () => {
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
               Recent Incidents
             </h3>
-            <EnhancedButton
-              variant="secondary"
-              size="sm"
-              icon={<AlertCircle className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+              <AlertCircle className="w-4 h-4 mr-2" />
               View All
-            </EnhancedButton>
+            </Button>
           </div>
 
           <EnhancedTable
@@ -790,62 +766,30 @@ const SystemAlerts: React.FC = () => {
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <EnhancedButton
-                variant="secondary"
-              size="sm"
-              icon={<Plus className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Create Alert</span>
-            </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-              size="sm"
-              icon={<CheckCircle className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Acknowledge All</span>
-            </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Archive className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Archive Old</span>
-                </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Export Data</span>
-            </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Settings className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Settings</span>
-            </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<HelpCircle className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Help</span>
-            </EnhancedButton>
+            <Button>
+              <Plus className="w-4 h-4" />
+              <span>Create Alert</span>
+            </Button>
+            <Button>
+              <CheckCircle className="w-4 h-4" />
+              <span>Acknowledge All</span>
+            </Button>
+            <Button>
+              <Archive className="w-4 h-4" />
+              <span>Archive Old</span>
+            </Button>
+            <Button>
+              <Download className="w-4 h-4" />
+              <span>Export Data</span>
+            </Button>
+            <Button>
+              <Settings className="w-4 h-4" />
+              <span>Settings</span>
+            </Button>
+            <Button>
+              <HelpCircle className="w-4 h-4" />
+              <span>Help</span>
+            </Button>
           </div>
         </EnhancedCard>
       </div>

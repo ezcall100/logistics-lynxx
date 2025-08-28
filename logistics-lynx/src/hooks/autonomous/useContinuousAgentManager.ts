@@ -117,3 +117,5 @@ export const useContinuousAgentManager = () => {
     setIsRunning
   };
 };
+
+export default useContinuousAgentManager;

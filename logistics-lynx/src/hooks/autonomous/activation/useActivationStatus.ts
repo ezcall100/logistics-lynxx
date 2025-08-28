@@ -49,3 +49,5 @@ export const useActivationStatus = () => {
 
   return { activationStatus, setActivationStatus };
 };
+
+export default useActivationStatus;

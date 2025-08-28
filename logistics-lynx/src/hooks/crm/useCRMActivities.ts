@@ -45,3 +45,5 @@ export const useCRMActivities = () => {
     createActivity
   };
 };
+
+export default useCRMActivities;

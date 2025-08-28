@@ -88,3 +88,5 @@ export const useAgentInitializer = () => {
 
   return { initializeAgents };
 };
+
+export default useAgentInitializer;

@@ -150,3 +150,5 @@ export const useCarrierData = () => {
     }
   };
 };
+
+export default useCarrierData;

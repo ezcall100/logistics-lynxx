@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { AlertTriangle, Clock, Plus, Edit, Upload, CheckCircle, X, RefreshCw, Settings, Eye, Activity, Users, Download, Shield, TrendingUp, TrendingDown, Database } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const DatabaseManagement: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -91,20 +92,15 @@ const DatabaseManagement: React.FC = () => {
           </p>
         </div>
         <div className="flex space-x-2">
-          <EnhancedButton
-            onClick={refreshData}
-            icon={<RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />}
-            variant="secondary"
-          >
-            Refresh
-          </EnhancedButton>
-          <EnhancedButton
-            icon={<Plus className="w-4 h-4" />}
-            variant="primary"
-          >
-            Add Database
-          </EnhancedButton>
-        </div>
+          <Button><Button>
+                variant="secondary"
+              </Button>>
+            Refresh<Button>
+                variant="primary"
+              </Button>>
+            Add Database<Button>
+                 
+              </Button></div>
       </div>
 
       {/* Overview Cards */}
@@ -222,22 +218,27 @@ const DatabaseManagement: React.FC = () => {
                   </div>
                   
                   <div className="flex space-x-2">
-                    <EnhancedButton variant="ghost" size="sm">
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
-                    </EnhancedButton>
-                    <EnhancedButton variant="ghost" size="sm">
-                      <Download className="w-4 h-4 mr-2" />
-                      Backup
-                    </EnhancedButton>
-                    <EnhancedButton variant="ghost" size="sm">
-                      <Upload className="w-4 h-4 mr-2" />
-                      Restore
-                    </EnhancedButton>
-                    <EnhancedButton variant="ghost" size="sm">
-                      <Shield className="w-4 h-4 mr-2" />
-                      Security
-                    </EnhancedButton>
+                    <Button>
+                 
+              <Edit className="w-4 h-4 mr-2" /></Button>
+                      <Button>
+                Edit
+              </Button><Button>
+                 
+              <Download className="w-4 h-4 mr-2" /></Button>
+                      <Button>
+                Backup
+              </Button><Button>
+                 
+              <Upload className="w-4 h-4 mr-2" /></Button>
+                      <Button>
+                Restore
+              </Button><Button>
+                 
+              <Shield className="w-4 h-4 mr-2" /></Button>
+                      <Button>
+                Security
+              </Button>
                   </div>
                 </div>
               )}

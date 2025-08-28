@@ -89,3 +89,5 @@ export const useScalingActions = () => {
     executeScalingAction
   };
 };
+
+export default useScalingActions;

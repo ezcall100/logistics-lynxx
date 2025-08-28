@@ -79,3 +79,5 @@ export const useTestingSession = () => {
     setCurrentSession
   };
 };
+
+export default useTestingSession;

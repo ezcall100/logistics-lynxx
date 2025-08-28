@@ -39,3 +39,5 @@ export const useCodingAssistant = () => {
     toggleAssistant
   };
 };
+
+export default useCodingAssistant;

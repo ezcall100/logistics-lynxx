@@ -47,3 +47,5 @@ export const useAnalyticsTracking = () => {
     trackPerformance
   };
 };
+
+export default useAnalyticsTracking;

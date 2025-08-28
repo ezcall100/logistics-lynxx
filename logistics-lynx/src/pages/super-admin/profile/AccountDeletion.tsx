@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 const AccountDeletion = () => {
   const [deletionStep, setDeletionStep] = useState<'warning' | 'confirmation' | 'processing'>('warning');
   const [confirmationText, setConfirmationText] = useState('');
@@ -204,14 +205,13 @@ const AccountDeletion = () => {
           <ResponsiveCard>
             <div className="pt-6">
               <div className="flex gap-3">
-                <EnhancedButton 
-                  onClick={handleStartDeletion}
-                  className="bg-red-600 hover:bg-red-700"
-                >
-                  Start Account Deletion
-                  Cancel
-              </div>
-            </div>
+                <Button>
+                onClick={handleStartDeletion}
+              </Button>className="bg-red-600 hover:bg-red-700"
+                >Start Account Deletion
+                  Cancel<Button>
+                 
+              </Button></div>
           </ResponsiveCard>
         )}
 

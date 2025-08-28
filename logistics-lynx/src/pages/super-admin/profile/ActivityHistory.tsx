@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const ActivityHistory = () => {
   const [activities] = useState([
     {
@@ -78,8 +79,9 @@ const ActivityHistory = () => {
             View your recent account activity and login history
           </p>
         </div>
-        <EnhancedButton variant="outline">
-          Export Activity Log
+        <Button>
+                Export Activity Log
+              </Button>
       </div>
 
       <div className="grid gap-6">
@@ -192,7 +194,9 @@ const ActivityHistory = () => {
                     </p>
                   </div>
                 </div>
-                  Review
+                <Button>
+                Review
+              </Button>
               </div>
             </div>
           </div>

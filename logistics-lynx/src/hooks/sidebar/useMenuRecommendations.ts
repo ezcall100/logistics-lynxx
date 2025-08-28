@@ -55,3 +55,5 @@ export const useMenuRecommendations = () => {
     generateRecommendations
   };
 };
+
+export default useMenuRecommendations;

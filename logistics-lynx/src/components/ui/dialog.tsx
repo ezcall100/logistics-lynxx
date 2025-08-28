@@ -121,3 +121,5 @@ export const DialogFooter: React.FC<DialogFooterProps> = ({ children, className 
     {children}
   </div>
 );
+
+export default useDialog;

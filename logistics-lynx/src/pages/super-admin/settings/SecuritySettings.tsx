@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Save, RefreshCw, Download, Trash2, Plus, Users, Clock, CheckCircle, AlertTriangle, Lock } from 'lucide-react';
-import { 
+import { Button } from '@/components/ui/button';
+import {
   EnhancedCard, 
-  EnhancedButton, 
   EnhancedBadge, 
   EnhancedInput, 
   stableStyles 
@@ -298,29 +298,18 @@ const SecuritySettings: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-              variant="secondary"
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-              onClick={() => setFormData(config)}
-            >
+            <Button onClick={() => setFormData(config)}>
+              <RefreshCw className="w-4 h-4 mr-2" />
               Reset
-              variant="secondary"
-              size="sm"
-              icon={<Shield className="w-4 h-4" />}
-              mode={mode}
-              onClick={handleTestSecurity}
-              loading={loading}
-            >
+            </Button>
+            <Button>
+              <Shield className="w-4 h-4 mr-2" />
               Test Security
-              variant="primary"
-              size="sm"
-              icon={<Save className="w-4 h-4" />}
-              mode={mode}
-              onClick={handleSave}
-              loading={saving}
-            >
+            </Button>
+            <Button>
+              <Save className="w-4 h-4 mr-2" />
               Save Changes
+            </Button>
           </div>
         </div>
 
@@ -613,22 +602,16 @@ const SecuritySettings: React.FC = () => {
                     <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
                       IP Whitelist
                     </label>
-                      variant="secondary"
-                      size="sm"
-                      icon={<Plus className="w-4 h-4" />}
-                      mode={mode}
-                      onClick={() => setShowIPModal(true)}
-                    >
+                    <Button onClick={() => setShowIPModal(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
                       Add IP
+                    </Button>
                   </div>
                   <div className="space-y-2">
                     {formData.accessControl.ipWhitelist.map((ip, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded">
                         <span className="text-sm text-green-800">{ip}</span>
-                          variant="ghost"
-                          size="sm"
-                          icon={<Trash2 className="w-4 h-4" />}
-                          mode={mode}
+                        <Button
                           onClick={() => {
                             const newList = formData.accessControl.ipWhitelist.filter((_, i) => i !== index);
                             setFormData({
@@ -637,7 +620,9 @@ const SecuritySettings: React.FC = () => {
                             });
                           }}
                         >
+                          <Trash2 className="w-4 h-4 mr-2" />
                           Remove
+                        </Button>
                       </div>
                     ))}
                   </div>
@@ -647,28 +632,16 @@ const SecuritySettings: React.FC = () => {
                     <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
                       IP Blacklist
                     </label>
-                      <EnhancedButton
-
-                        variant="secondary"
-                      size="sm"
-                      icon={<Plus className="w-4 h-4" />}
-                      mode={mode}
-                    >
-
-                      >
-
-                        Add IP
-
-                      </EnhancedButton>
+                    <Button onClick={() => setShowIPModal(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add IP
+                    </Button>
                   </div>
                   <div className="space-y-2">
                     {formData.accessControl.ipBlacklist.map((ip, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-red-50 rounded">
                         <span className="text-sm text-red-800">{ip}</span>
-                          variant="ghost"
-                          size="sm"
-                          icon={<Trash2 className="w-4 h-4" />}
-                          mode={mode}
+                        <Button
                           onClick={() => {
                             const newList = formData.accessControl.ipBlacklist.filter((_, i) => i !== index);
                             setFormData({
@@ -678,6 +651,7 @@ const SecuritySettings: React.FC = () => {
                           }}
                         >
                           Remove
+                        </Button>
                       </div>
                     ))}
                   </div>
@@ -1036,19 +1010,10 @@ const SecuritySettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Recent Security Events
               </h3>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Download className="w-4 h-4" />}
-                mode={mode}
+                <Button mode={mode}
               >
-
-                >
-
-                  Export Logs
-
-                </EnhancedButton>
+                Export Logs
+              </Button>
             </div>
             <div className="space-y-4">
               {securityEvents.map((event) => (

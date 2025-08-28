@@ -296,3 +296,5 @@ export const useAutonomousKnowledge = () => {
     optimizeRoute
   };
 };
+
+export default useAutonomousKnowledge;

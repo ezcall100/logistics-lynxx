@@ -181,10 +181,6 @@ process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!
     }
   }, [supabase, generateDocumentAlerts]);
 
-
-
-
-
   const markAlertAsRead = async (alertId: string) => {
     try {
       const { error } = await supabase
@@ -305,3 +301,5 @@ process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!
     loadDocumentAlerts
   };
 };
+
+export default useDocumentWatcher;

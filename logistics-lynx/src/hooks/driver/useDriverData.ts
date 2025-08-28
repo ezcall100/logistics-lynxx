@@ -277,3 +277,5 @@ export const useDriverData = () => {
     updateVehicleStatus,
   };
 };
+
+export default useDriverData;

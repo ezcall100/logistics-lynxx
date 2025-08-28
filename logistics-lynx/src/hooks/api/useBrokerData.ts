@@ -170,3 +170,5 @@ export const useBrokerData = () => {
     }
   };
 };
+
+export default useBrokerData;

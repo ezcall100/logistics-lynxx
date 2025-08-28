@@ -202,3 +202,5 @@ export const useFinancialsManagement = () => {
     refreshStats
   };
 };
+
+export default useFinancialsManagement;

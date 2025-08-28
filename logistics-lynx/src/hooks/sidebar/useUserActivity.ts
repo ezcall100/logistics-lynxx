@@ -46,3 +46,5 @@ export const useUserActivity = () => {
     loadUserActivity
   };
 };
+
+export default useUserActivity;

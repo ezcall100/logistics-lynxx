@@ -164,3 +164,5 @@ export const useRealtimeData = () => {
     }
   }, []);
 };
+
+export default getService;

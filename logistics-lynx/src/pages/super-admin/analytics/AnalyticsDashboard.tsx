@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, TrendingDown, Activity, Target, Users, RefreshCw, Download, Settings, Eye, Plus, Bell, AlertTriangle, CheckCircle, XCircle, Info } from 'lucide-react';
-import { 
+import { Button } from '@/components/ui/button';
+import {
   EnhancedCard, 
-  EnhancedButton, 
   EnhancedBadge, 
   EnhancedTable, 
   EnhancedSearch, 
@@ -520,24 +520,14 @@ const AnalyticsDashboard: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-
-              >
-
-                Export Data
-
-              </EnhancedButton>
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+                 
+              <Download className="w-4 h-4 mr-2" /></Button>
+              Export Data
+            <Button>
+              <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
+            </Button>
           </div>
         </div>
 
@@ -582,19 +572,10 @@ const AnalyticsDashboard: React.FC = () => {
             <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
               Key Performance Indicators
             </h2>
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Target className="w-4 h-4" />}
-              mode={mode}
-            >
-
-              >
-
+              <Button>
+                <Target className="w-4 h-4 mr-2" />
                 Set Targets
-
-              </EnhancedButton>
+              </Button>
           </div>
           
           <EnhancedTable
@@ -615,19 +596,10 @@ const AnalyticsDashboard: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Data Visualizations
               </h2>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<BarChart3 className="w-4 h-4" />}
-                mode={mode}
-              >
-
-                >
-
+                <Button>
+                  <BarChart3 className="w-4 h-4 mr-2" />
                   Add Chart
-
-                </EnhancedButton>
+                </Button>
             </div>
             
             <div className="space-y-4">
@@ -638,16 +610,14 @@ const AnalyticsDashboard: React.FC = () => {
                       {chart.name}
                     </h3>
                     <div className="flex space-x-2">
-                        variant="ghost"
-                        size="sm"
-                        icon={<Eye className="w-4 h-4" />}
-                        mode={mode}
-                      />
-                        variant="ghost"
-                        size="sm"
-                        icon={<Download className="w-4 h-4" />}
-                        mode={mode}
-                      />
+                      <Button>
+                        <Eye className="w-4 h-4 mr-2" />
+                        View
+                      </Button>
+                      <Button>
+                        <Download className="w-4 h-4 mr-2" />
+                        Download
+                      </Button>
                     </div>
                   </div>
                   <div className="h-48 bg-gray-100 rounded flex items-center justify-center">
@@ -668,19 +638,10 @@ const AnalyticsDashboard: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Generated Reports
               </h2>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Plus className="w-4 h-4" />}
-                mode={mode}
-              >
-
-                >
-
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
                   Generate Report
-
-                </EnhancedButton>
+                </Button>
             </div>
             
             <EnhancedTable
@@ -700,19 +661,10 @@ const AnalyticsDashboard: React.FC = () => {
             <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
               System Alerts
             </h2>
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Bell className="w-4 h-4" />}
-              mode={mode}
-            >
-
-              >
-
+              <Button>
+                <Bell className="w-4 h-4 mr-2" />
                 View All
-
-              </EnhancedButton>
+              </Button>
           </div>
           
           <EnhancedTable
@@ -732,121 +684,30 @@ const AnalyticsDashboard: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<BarChart3 className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            <Button>
+              <BarChart3 className="w-4 h-4" />
               <span className="text-xs">Create Chart</span>
-
-              >
-
-                <span className="text-xs">Create Chart</span>
-
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Export Data</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Export Data</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Target className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Set KPIs</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Set KPIs</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<TrendingUp className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Trend Analysis</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Trend Analysis</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Users className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">User Analytics</span>
-
-            
-              >
-
-            
-                <span className="text-xs">User Analytics</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Settings className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Configure</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Configure</span>
-
-            
-              </EnhancedButton>
+            </Button>
+            <Button>
+              <Download className="w-4 h-4" />
+              <span>Export Data</span>
+            </Button>
+            <Button>
+              <Target className="w-4 h-4" />
+              <span>Set KPIs</span>
+            </Button>
+            <Button>
+              <TrendingUp className="w-4 h-4" />
+              <span>Trend Analysis</span>
+            </Button>
+            <Button>
+              <Users className="w-4 h-4" />
+              <span>User Analytics</span>
+            </Button>
+            <Button>
+              <Settings className="w-4 h-4" />
+              <span>Configure</span>
+            </Button>
           </div>
         </EnhancedCard>
       </div>

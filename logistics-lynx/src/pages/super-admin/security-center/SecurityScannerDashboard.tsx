@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Progress } from '../../../components/ui/progress';
 import { Shield, AlertTriangle, CheckCircle, XCircle, Activity, BarChart3, FileText, RefreshCw, Download, Search } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { Button } from '@/components/ui/button';
 
 interface SecurityScan {
   id: string;
@@ -316,12 +317,12 @@ const SecurityScannerDashboard: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <EnhancedButton
-            variant="outline"
-            size="sm"
-            onClick={() => setAutoRefresh(!autoRefresh)}
+          <Button>
+                variant="outline"
+              </Button>size="sm"
+            onClick={() =>setAutoRefresh(!autoRefresh)}
             className={autoRefresh ? 'bg-green-50 border-green-200' : ''}
-          >
+          ></Button>
             <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
             {autoRefresh ? 'Auto' : 'Manual'}
             <Download className="h-4 w-4 mr-2" />

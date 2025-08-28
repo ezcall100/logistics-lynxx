@@ -14,3 +14,5 @@ export const getProvider = () => current;
 if (import.meta.env.VITE_USE_SUPABASE === 'true') {
   setProvider('supabase');
 }
+
+export default getProvider;

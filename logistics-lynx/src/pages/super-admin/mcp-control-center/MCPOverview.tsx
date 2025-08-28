@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Cpu, Brain, Zap, Settings, Play, Pause, RefreshCw, Download, Plus, Database,  } from 'lucide-react';
+import { Cpu, Brain, Zap, Database } from 'lucide-react';
 import { 
   EnhancedCard, 
-  EnhancedButton, 
+  Button, 
   EnhancedBadge, 
   EnhancedTable, 
-  EnhancedSearch, 
   EnhancedProgress, 
   stableStyles 
 } from '../../../components/ui/EnhancedUIComponents';
@@ -83,13 +82,11 @@ interface AutomationRule {
 const MCPOverview: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [aiAgents, setAIAgents] = useState<AIAgent[]>([]);
   const [mlModels, setMLModels] = useState<MLModel[]>([]);
   const [dataPipelines, setDataPipelines] = useState<DataPipeline[]>([]);
   const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
-  const [selectedAgent, setSelectedAgent] = useState<AIAgent | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Mock data
   const mockAIAgents: AIAgent[] = [
@@ -326,7 +323,7 @@ const MCPOverview: React.FC = () => {
       key: 'name',
       title: 'Agent Name',
       sortable: true,
-      render: (value: string, row: AIAgent) => (
+      render: (_value: string, row: AIAgent) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.name}
@@ -353,7 +350,7 @@ const MCPOverview: React.FC = () => {
       key: 'performance',
       title: 'Performance',
       sortable: true,
-      render: (value: number, row: AIAgent) => (
+      render: (_value: number, row: AIAgent) => (
         <div>
           <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.performance}%
@@ -368,7 +365,7 @@ const MCPOverview: React.FC = () => {
       key: 'tasksCompleted',
       title: 'Tasks',
       sortable: true,
-      render: (value: number, row: AIAgent) => (
+      render: (_value: number, row: AIAgent) => (
         <div>
           <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.tasksCompleted}
@@ -396,7 +393,7 @@ const MCPOverview: React.FC = () => {
       key: 'name',
       title: 'Model Name',
       sortable: true,
-      render: (value: string, row: MLModel) => (
+      render: (_value: string, row: MLModel) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.name}
@@ -421,9 +418,9 @@ const MCPOverview: React.FC = () => {
       key: 'status',
       title: 'Status',
       sortable: true,
-      render: (value: string, row: MLModel) => (
+      render: (_value: string, row: MLModel) => (
         <div>
-          {getStatusBadge(value)}
+          {getStatusBadge(_value)}
           {row.status === 'training' && (
             <div className="mt-1">
               <EnhancedProgress
@@ -442,7 +439,7 @@ const MCPOverview: React.FC = () => {
       key: 'accuracy',
       title: 'Metrics',
       sortable: true,
-      render: (value: number, row: MLModel) => (
+      render: (_value: number, row: MLModel) => (
         <div>
           <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.accuracy}% accuracy
@@ -470,7 +467,7 @@ const MCPOverview: React.FC = () => {
       key: 'name',
       title: 'Pipeline Name',
       sortable: true,
-      render: (value: string, row: DataPipeline) => (
+      render: (_value: string, row: DataPipeline) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.name}
@@ -491,7 +488,7 @@ const MCPOverview: React.FC = () => {
       key: 'throughput',
       title: 'Performance',
       sortable: true,
-      render: (value: number, row: DataPipeline) => (
+      render: (_value: number, row: DataPipeline) => (
         <div>
           <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.throughput}/sec
@@ -506,7 +503,7 @@ const MCPOverview: React.FC = () => {
       key: 'recordsProcessed',
       title: 'Records',
       sortable: true,
-      render: (value: number, row: DataPipeline) => (
+      render: (_value: number, row: DataPipeline) => (
         <div>
           <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.recordsProcessed.toLocaleString()}
@@ -534,7 +531,7 @@ const MCPOverview: React.FC = () => {
       key: 'name',
       title: 'Rule Name',
       sortable: true,
-      render: (value: string, row: AutomationRule) => (
+      render: (_value: string, row: AutomationRule) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.name}
@@ -561,7 +558,7 @@ const MCPOverview: React.FC = () => {
       key: 'executionCount',
       title: 'Executions',
       sortable: true,
-      render: (value: number, row: AutomationRule) => (
+      render: (_value: number, row: AutomationRule) => (
         <div>
           <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.executionCount}
@@ -609,24 +606,12 @@ const MCPOverview: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-
-              >
-
-                Export Data
-
-              </EnhancedButton>
-              size="sm"
-              icon={<Play className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+              Export Data
+            </Button>
+            <Button>
               Start All Systems
+            </Button>
           </div>
         </div>
 
@@ -740,24 +725,12 @@ const MCPOverview: React.FC = () => {
               AI Agents
             </h2>
             <div className="flex space-x-2">
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Plus className="w-4 h-4" />}
-                mode={mode}
-              >
-
-                >
-
-                  Add Agent
-
-                </EnhancedButton>
-                size="sm"
-                icon={<Settings className="w-4 h-4" />}
-                mode={mode}
-              >
+              <Button>
+                Add Agent
+              </Button>
+              <Button>
                 Configure
+              </Button>
             </div>
           </div>
           
@@ -779,19 +752,12 @@ const MCPOverview: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Machine Learning Models
               </h2>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Cpu className="w-4 h-4" />}
-                mode={mode}
+                <Button mode={mode}
               >
+                Train New
 
-                >
-
-                  Train New
-
-                </EnhancedButton>
+                </Button>
+               
             </div>
             
             <EnhancedTable
@@ -810,19 +776,12 @@ const MCPOverview: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Data Pipelines
               </h2>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Database className="w-4 h-4" />}
-                mode={mode}
+                <Button mode={mode}
               >
+                Create Pipeline
 
-                >
-
-                  Create Pipeline
-
-                </EnhancedButton>
+                </Button>
+               
             </div>
             
             <EnhancedTable
@@ -843,24 +802,12 @@ const MCPOverview: React.FC = () => {
               Automation Rules
             </h2>
             <div className="flex space-x-2">
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Plus className="w-4 h-4" />}
-                mode={mode}
-              >
-
-                >
-
-                  Add Rule
-
-                </EnhancedButton>
-                size="sm"
-                icon={<Zap className="w-4 h-4" />}
-                mode={mode}
-              >
+              <Button>
+                Add Rule
+              </Button>
+              <Button>
                 Test Rules
+              </Button>
             </div>
           </div>
           
@@ -881,121 +828,24 @@ const MCPOverview: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Play className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Start All</span>
-
-              >
-
-                <span className="text-xs">Start All</span>
-
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Pause className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Pause All</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Pause All</span>
-
-            
-              </EnhancedButton>
-            
-               <EnhancedButton
-
-            
-                 variant="secondary"
-               size="sm"
-               icon={<Pause className="w-4 h-4" />}
-               mode={mode}
-               className="flex-col h-20"
-             >
-               <span className="text-xs">Stop All</span>
-
-            
-               >
-
-            
-                 <span className="text-xs">Stop All</span>
-
-            
-               </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Restart</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Restart</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Settings className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Configure</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Configure</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Export Logs</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Export Logs</span>
-
-            
-              </EnhancedButton>
+            <Button className="flex-col h-20">
+              <span>Start All</span>
+            </Button>
+            <Button className="flex-col h-20">
+              <span>Stop All</span>
+            </Button>
+            <Button className="flex-col h-20">
+              <span>Restart</span>
+            </Button>
+            <Button className="flex-col h-20">
+              <span>Monitor</span>
+            </Button>
+            <Button className="flex-col h-20">
+              <span>Configure</span>
+            </Button>
+            <Button className="flex-col h-20">
+              <span>Diagnose</span>
+            </Button>
           </div>
         </EnhancedCard>
       </div>

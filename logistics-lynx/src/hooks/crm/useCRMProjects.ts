@@ -58,3 +58,5 @@ export const useCRMProjects = () => {
     updateProject
   };
 };
+
+export default useCRMProjects;

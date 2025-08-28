@@ -657,3 +657,5 @@ export const useAssetManagement = () => {
     handleCreateFuelTransaction,
   };
 };
+
+export default useAssetManagement;

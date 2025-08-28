@@ -95,3 +95,5 @@ export const useUserManagement = () => {
     bulkUpdateStatus,
   };
 };
+
+export default useUserManagement;

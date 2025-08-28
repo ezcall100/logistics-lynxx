@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const MobileDevices = () => {
   const [devices] = useState([
     {
@@ -62,11 +63,11 @@ const MobileDevices = () => {
             Manage and monitor all connected mobile devices
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
-          Add Device
-      </div>
-
-      <div className="grid gap-6">
+        <Button>
+                Add Device
+              </Button><Button>
+                 
+              </Button><div className="grid gap-6">
         {/* Device Statistics */}
         <ResponsiveCard>
           <div className="mb-4">

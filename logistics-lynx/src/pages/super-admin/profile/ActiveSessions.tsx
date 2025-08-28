@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([
     {
@@ -73,15 +74,13 @@ const ActiveSessions = () => {
             Manage your active login sessions across devices
           </p>
         </div>
-        <EnhancedButton 
-          variant="outline" 
-          onClick={handleTerminateAllOtherSessions}
+        <Button>
+                variant="outline" 
+              </Button>onClick={handleTerminateAllOtherSessions}
           className="text-red-600 border-red-300 hover:bg-red-50"
-        >
-          Terminate All Other Sessions
-      </div>
-
-      <div className="grid gap-6">
+        >Terminate All Other Sessions<Button>
+                 
+              </Button><div className="grid gap-6">
         {/* Session Summary */}
         <ResponsiveCard>
           <div className="mb-4">

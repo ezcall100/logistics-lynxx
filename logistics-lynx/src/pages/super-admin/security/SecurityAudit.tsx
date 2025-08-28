@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, AlertTriangle, CheckCircle, XCircle, Lock, Users, Database, Activity, RefreshCw, Download, Target } from 'lucide-react';
-import { 
+import { Button } from '@/components/ui/button';
+import {
   EnhancedCard, 
-  EnhancedButton, 
   EnhancedBadge, 
   EnhancedTable, 
   // EnhancedSearch, 
@@ -410,24 +410,14 @@ const SecurityAudit: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-
-              >
-
-                Export Report
-
-              </EnhancedButton>
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
+              <Download className="w-4 h-4 mr-2" />
+              Export Report
+            </Button>
+            <Button>
+              <RefreshCw className="w-4 h-4 mr-2" />
               Run Scan
+            </Button>
           </div>
         </div>
 
@@ -583,19 +573,10 @@ const SecurityAudit: React.FC = () => {
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
               </select>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Download className="w-4 h-4" />}
-                mode={mode}
+              <Button mode={mode}
               >
-
-                >
-
-                  Export
-
-                </EnhancedButton>
+                Export
+              </Button>
             </div>
           </div>
           
@@ -617,19 +598,10 @@ const SecurityAudit: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Security Vulnerabilities
               </h2>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<Shield className="w-4 h-4" />}
-                mode={mode}
+              <Button mode={mode}
               >
-
-                >
-
-                  View All
-
-                </EnhancedButton>
+                View All
+              </Button>
             </div>
             
             <EnhancedTable
@@ -648,19 +620,10 @@ const SecurityAudit: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Compliance Checks
               </h2>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<CheckCircle className="w-4 h-4" />}
-                mode={mode}
+              <Button mode={mode}
               >
-
-                >
-
-                  View All
-
-                </EnhancedButton>
+                View All
+              </Button>
             </div>
             
             <EnhancedTable
@@ -681,121 +644,24 @@ const SecurityAudit: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Shield className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            <Button className="flex-col h-20">
               <span className="text-xs">Vulnerability Scan</span>
-
-              >
-
-                <span className="text-xs">Vulnerability Scan</span>
-
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Users className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            </Button>
+            <Button className="flex-col h-20">
               <span className="text-xs">Access Review</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Access Review</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Lock className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            </Button>
+            <Button className="flex-col h-20">
               <span className="text-xs">Password Audit</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Password Audit</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Database className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            </Button>
+            <Button className="flex-col h-20">
               <span className="text-xs">Data Audit</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Data Audit</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<CheckCircle className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            </Button>
+            <Button className="flex-col h-20">
               <span className="text-xs">Compliance Check</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Compliance Check</span>
-
-            
-              </EnhancedButton>
-            
-              <EnhancedButton
-
-            
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            </Button>
+            <Button className="flex-col h-20">
               <span className="text-xs">Generate Report</span>
-
-            
-              >
-
-            
-                <span className="text-xs">Generate Report</span>
-
-            
-              </EnhancedButton>
+            </Button>
           </div>
         </EnhancedCard>
       </div>

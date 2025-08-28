@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, TrendingUp, TrendingDown, BarChart3, PieChart, LineChart, Target, RefreshCw, Download, Eye, Settings, HelpCircle, Pi, Users, User, ShoppingCart, Receipt } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   EnhancedCard,
-  EnhancedButton,
   EnhancedBadge,
   EnhancedTable,
   EnhancedSearch,
@@ -382,23 +382,10 @@ const RevenueMetrics: React.FC = () => {
       title: 'Actions',
       render: (value: any, row: RevenueTransaction) => (
         <div className="flex items-center space-x-2">
-            <EnhancedButton
-              variant="ghost"
-              size="sm"
-              icon={<Eye className="w-4 h-4" />}
-              mode={mode}
-            >
+            <Button>
               View
-            </EnhancedButton>
-            <EnhancedButton
-              variant="ghost"
-              size="sm"
-              icon={<Receipt className="w-4 h-4" />}
-              mode={mode}
-            >
-              Receipt
-            </EnhancedButton>
-        </div>
+            </Button>
+          </div>
       )
     }
   ];
@@ -422,22 +409,12 @@ const RevenueMetrics: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-            >
-              Export Report
-            </EnhancedButton>
-            <EnhancedButton
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
-            >
-              Refresh Data
-            </EnhancedButton>
+              <Button>
+                Export Report
+              </Button>
+              <Button>
+                Refresh Data
+              </Button>
           </div>
         </div>
 
@@ -564,19 +541,14 @@ const RevenueMetrics: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Revenue Sources
               </h3>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<PieChart className="w-4 h-4" />}
-                mode={mode}
-              >
-                View Chart
-              </EnhancedButton>
+                <Button>
+                  <PieChart className="w-4 h-4 mr-2" />
+                  View Chart
+                </Button>
             </div>
             <div className="space-y-4">
-              {revenueSources.map((source) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              {revenueSources.map((source, sourceIndex) => (
+                <div key={sourceIndex} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div 
                       className="w-4 h-4 rounded-full"
@@ -608,19 +580,14 @@ const RevenueMetrics: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Revenue Forecast
               </h3>
-                <EnhancedButton
-
-                  variant="secondary"
-                size="sm"
-                icon={<LineChart className="w-4 h-4" />}
-                mode={mode}
-              >
-                View Details
-              </EnhancedButton>
+                <Button>
+                  <LineChart className="w-4 h-4 mr-2" />
+                  View Details
+                </Button>
             </div>
             <div className="space-y-4">
-              {revenueForecast.map((forecast) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              {revenueForecast.map((forecast, forecastIndex) => (
+                <div key={forecastIndex} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div>
                     <p className={`font-medium ${stableStyles.textPrimary[mode]}`}>
                       {forecast.period}
@@ -732,65 +699,30 @@ const RevenueMetrics: React.FC = () => {
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <EnhancedButton
-
-                variant="secondary"
-              size="sm"
-              icon={<BarChart3 className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
+            <Button>
+              <BarChart3 className="w-4 h-4" />
               <span className="text-xs">Generate Report</span>
-            </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-              size="sm"
-              icon={<Download className="w-4 h-4" />}
-              mode={mode}
-              className="flex-col h-20"
-            >
-              <span className="text-xs">Export Data</span>
-            </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Target className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Set Targets</span>
-              </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<TrendingUp className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Forecast</span>
-              </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<Settings className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Settings</span>
-              </EnhancedButton>
-
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
-                icon={<HelpCircle className="w-4 h-4" />}
-                mode={mode}
-                className="flex-col h-20"
-              >
-                <span className="text-xs">Help</span>
-              </EnhancedButton>
+            </Button>
+            <Button>
+              <Download className="w-4 h-4" />
+              <span>Export Data</span>
+            </Button>
+            <Button>
+              <Target className="w-4 h-4" />
+              <span>Set Targets</span>
+            </Button>
+            <Button>
+              <TrendingUp className="w-4 h-4" />
+              <span>Forecast</span>
+            </Button>
+            <Button>
+              <Settings className="w-4 h-4" />
+              <span>Settings</span>
+            </Button>
+            <Button>
+              <HelpCircle className="w-4 h-4" />
+              <span>Help</span>
+            </Button>
           </div>
         </EnhancedCard>
       </div>

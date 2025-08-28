@@ -46,3 +46,5 @@ export const useUserTesting = () => {
 
 // Re-export types for convenience
 export type { TestingSession, UserFeedback, PerformanceMetric, TestingTask } from '@/types/testing';
+
+export default useUserTesting;

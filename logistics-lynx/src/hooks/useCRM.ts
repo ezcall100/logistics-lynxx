@@ -94,3 +94,5 @@ export const useCRM = () => {
     fetchAllCRMData
   };
 };
+
+export default useCRM;

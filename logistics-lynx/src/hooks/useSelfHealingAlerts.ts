@@ -213,3 +213,5 @@ export const useSelfHealingAlerts = () => {
     getStrategyStats
   };
 };
+
+export default useSelfHealingAlerts;

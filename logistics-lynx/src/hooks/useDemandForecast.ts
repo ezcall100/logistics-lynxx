@@ -83,3 +83,5 @@ export const useDemandForecast = () => {
     predictResourceNeeds
   };
 };
+
+export default useDemandForecast;

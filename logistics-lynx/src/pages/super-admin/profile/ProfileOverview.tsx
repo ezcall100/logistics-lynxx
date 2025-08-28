@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-const ProfileOverview = () => {
+import { Button } from '@/components/ui/button';
+
+const ProfileOverview: React.FC = () => {
   const [profile] = useState({
     name: 'John Doe',
     email: 'john.doe@tms-enterprise.com',
@@ -41,12 +43,17 @@ const ProfileOverview = () => {
         <div className="flex gap-3">
           {isEditing ? (
             <>
-              <EnhancedButton variant="outline" onClick={handleCancel}>
+              <Button variant="outline" onClick={handleCancel}>
                 Cancel
+              </Button>
+              <Button onClick={handleSave}>
                 Save Changes
+              </Button>
             </>
           ) : (
-              Edit Profile
+              <Button onClick={handleEdit}>
+                Edit Profile
+              </Button>
           )}
         </div>
       </div>
@@ -149,21 +156,27 @@ const ProfileOverview = () => {
                   <h4 className="font-medium">Two-Factor Authentication</h4>
                   <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
                 </div>
-                  Enable 2FA
+                  <Button>
+                Enable 2FA
+              </Button>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Password</h4>
                   <p className="text-sm text-gray-600">Last changed 30 days ago</p>
                 </div>
-                  Change Password
+                  <Button>
+                Change Password
+              </Button>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Active Sessions</h4>
                   <p className="text-sm text-gray-600">3 active sessions across devices</p>
                 </div>
-                  View Sessions
+                  <Button>
+                View Sessions
+              </Button>
               </div>
             </div>
           </div>
@@ -189,21 +202,24 @@ const ProfileOverview = () => {
                   <h4 className="font-medium">Language</h4>
                   <p className="text-sm text-gray-600">English (US)</p>
                 </div>
-                  Change
+                  <Button>Chang
+              e</Button>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Time Zone</h4>
                   <p className="text-sm text-gray-600">Eastern Time (ET)</p>
                 </div>
-                  Change
+                  <Button>Chang
+              e</Button>
               </div>
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Notifications</h4>
                   <p className="text-sm text-gray-600">Email and push notifications enabled</p>
                 </div>
-                  Configure
+                  <Button>Configur
+              e</Button>
               </div>
             </div>
           </div>

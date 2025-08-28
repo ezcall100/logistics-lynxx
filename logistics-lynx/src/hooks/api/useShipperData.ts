@@ -123,3 +123,5 @@ export const useShipperData = () => {
     }
   };
 };
+
+export default useShipperData;

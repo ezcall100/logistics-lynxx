@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { Search, Filter, X, ChevronDown, ChevronUp, RefreshCw, Package, Eye } from 'lucide-react';
+import { Search, X, ChevronDown, ChevronUp, RefreshCw, Package } from 'lucide-react';
 
 // Stable Design System - No Flashing, Eye-Friendly, KPI-Focused
 export const stableStyles = {
@@ -139,7 +138,7 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
 }
 
-export const EnhancedButton: React.FC<EnhancedButtonProps> = ({ 
+export const Button: React.FC<ButtonProps> = ({ 
   children, 
   onClick, 
   variant = "primary", 
@@ -206,7 +205,7 @@ export const EnhancedButton: React.FC<EnhancedButtonProps> = ({
 };
 
 // 🎨 Enhanced Card Component
-interface CardProps {
+interface ResponsiveCardProps {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
@@ -244,6 +243,7 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   className?: string;
   icon?: React.ReactNode;
   error?: string;
@@ -259,6 +259,7 @@ export const EnhancedInput: React.FC<InputProps> = ({
   placeholder, 
   value, 
   onChange, 
+  onKeyPress,
   className = "", 
   icon, 
   error, 
@@ -281,6 +282,7 @@ export const EnhancedInput: React.FC<InputProps> = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      onKeyPress={onKeyPress}
       disabled={disabled}
       required={required}
       className={`w-full px-4 py-3 ${icon ? 'pl-12' : ''} ${mode === "light" ? 'bg-white/80' : 'bg-slate-800/80'} backdrop-blur-sm border ${error ? 'border-red-300' : success ? 'border-emerald-300' : mode === "light" ? 'border-slate-200/50' : 'border-slate-700/50'} rounded-xl focus:outline-none focus:ring-2 ${error ? 'focus:ring-red-500/30' : success ? 'focus:ring-emerald-500/30' : 'focus:ring-teal-500/30'} focus:border-teal-500 ${stableStyles.transitionSmooth} ${mode === "light" ? 'text-slate-700 placeholder-slate-400' : 'text-white placeholder-slate-500'} ${premium ? 'animate-pulse' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
@@ -467,7 +469,7 @@ export const EnhancedTable: React.FC<TableProps> = ({
                 </td>
               </tr>
             ) : (
-              data.map((row) => (
+              data.map((row, index) => (
                 <tr
                   key={row.id || index}
                   className={`${index % 2 === 0 ? (mode === "light" ? 'bg-white' : 'bg-slate-800') : (mode === "light" ? 'bg-slate-50' : 'bg-slate-750')} hover:${mode === "light" ? 'bg-slate-100' : 'bg-slate-700'} ${stableStyles.transitionFast}`}
@@ -569,7 +571,7 @@ export const EnhancedSearch: React.FC<SearchProps> = ({
       
       {showSuggestions && suggestions.length > 0 && (
         <div className={`absolute top-full left-0 right-0 mt-2 ${stableStyles.surface[mode]} rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto`}>
-          {suggestions.map((suggestion) => (
+          {suggestions.map((suggestion, index) => (
             <div
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
@@ -744,22 +746,18 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
   className = "",
   mode = "light",
   pagination = false,
-  pageSize = 10,
   currentPage = 1,
   onPageChange,
   totalPages = 1,
   searchable = false,
   onSearch,
   filterable = false,
-  filters = {},
-  onFilterChange,
   selectable = false,
   onSelectionChange,
   loading = false,
   emptyMessage = "No data available"
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -767,7 +765,6 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
   };
 
   const handleSelectionChange = (rows: any[]) => {
-    setSelectedRows(rows);
     onSelectionChange?.(rows);
   };
 
@@ -789,15 +786,9 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
             )}
             {filterable && (
               <div className="flex gap-2">
-                  <EnhancedButton
-
-                    variant="secondary"
-                  size="sm"
-                  icon={<Filter className="w-4 h-4" />}
-                  mode={mode}
-                >
+                <Button mode={mode}>
                   Filters
-                </EnhancedButton>
+                </Button>
               </div>
             )}
           </div>
@@ -823,24 +814,20 @@ export const EnhancedDataGrid: React.FC<DataGridProps> = ({
               Page {currentPage} of {totalPages}
             </div>
             <div className="flex gap-2">
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
+              <Button
                 onClick={() => onPageChange?.(currentPage - 1)}
                 disabled={currentPage === 1}
                 mode={mode}
               >
                 Previous
-              </EnhancedButton>
-              <EnhancedButton
-                variant="secondary"
-                size="sm"
+              </Button>
+              <Button
                 onClick={() => onPageChange?.(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 mode={mode}
               >
                 Next
-              </EnhancedButton>
+              </Button>
             </div>
           </div>
         </div>

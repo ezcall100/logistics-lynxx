@@ -24,6 +24,7 @@ import {
   Cell
 } from 'recharts';
 import { Activity, CheckCircle, Download, RefreshCw, Clock, Target } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ConfidenceLog {
   id: string;
@@ -262,13 +263,9 @@ const ConfidenceLogChart: React.FC<AgentConfidenceChartProps> = ({
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
             {isLoading ? 'Loading...' : 'Live'}
           </span>
-          <EnhancedButton
-            variant="outline"
-            size="sm"
-            onClick={loadConfidenceLogs}
-            disabled={isLoading}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+          <Button>
+                 
+              </Button><RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
           {exportEnabled && (
               <Download className="h-4 w-4 mr-2" />

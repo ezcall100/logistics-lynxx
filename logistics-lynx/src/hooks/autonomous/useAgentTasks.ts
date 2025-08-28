@@ -168,3 +168,5 @@ export const useAgentTasks = () => {
     executeDeploymentTask
   };
 };
+
+export default useAgentTasks;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const FABTemplates = () => {
   const [templates, setTemplates] = useState([
     {
@@ -37,11 +38,11 @@ const FABTemplates = () => {
             Pre-configured FAB action templates for different use cases
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
-          Create Template
-      </div>
-
-      <div className="grid gap-6">
+        <Button>
+                Create Template
+              </Button><Button>
+                 
+              </Button><div className="grid gap-6">
         {/* Available Templates */}
         <ResponsiveCard>
           <div className="mb-4">

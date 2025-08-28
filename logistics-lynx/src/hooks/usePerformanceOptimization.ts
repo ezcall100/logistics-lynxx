@@ -285,3 +285,5 @@ export const usePerformanceOptimization = () => {
     executeOptimization
   };
 };
+
+export default usePerformanceOptimization;

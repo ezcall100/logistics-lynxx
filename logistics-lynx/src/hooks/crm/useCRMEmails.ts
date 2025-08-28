@@ -45,3 +45,5 @@ export const useCRMEmails = () => {
     createEmail
   };
 };
+
+export default useCRMEmails;

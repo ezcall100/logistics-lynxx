@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Input } from '../../components/ui/input';
@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Progress } from '../../components/ui/progress';
 import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Terminal, Shield, ShieldCheck } from 'lucide-react';
+import { Terminal, ShieldCheck } from 'lucide-react';
 
 interface Agent {
   id: string;
@@ -43,7 +43,7 @@ const AgentControlUI: React.FC = () => {
   ]);
 
   // Mock agent data
-  const [agents, setAgents] = useState<Agent[]>([
+  const [agents] = useState<Agent[]>([
     {
       id: 'builder.frontend.shipper',
       name: 'Frontend Shipper Builder',
@@ -113,7 +113,7 @@ const AgentControlUI: React.FC = () => {
   ]);
 
   // Mock metrics data
-  const [metrics, setMetrics] = useState<Metric[]>([
+  const [metrics] = useState<Metric[]>([
     {
       id: 'builder.frontend.shipper',
       uptime: '99.95%',
@@ -202,7 +202,9 @@ const AgentControlUI: React.FC = () => {
                   <div className="text-xs text-muted-foreground">
                     Last Activity: {agent.lastActivity}
                   </div>
-                  <Button variant="outline" size="sm">Details</Button>
+                  <Button>
+                    Detail
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -211,7 +213,7 @@ const AgentControlUI: React.FC = () => {
 
         <TabsContent value="logs">
           <div className="mt-4 space-y-2 bg-muted p-4 rounded text-sm font-mono h-60 overflow-y-auto border">
-            {agentLogs.map((line) => (
+            {agentLogs.map((line, index) => (
               <div key={index}>{line}</div>
             ))}
           </div>
@@ -253,7 +255,9 @@ const AgentControlUI: React.FC = () => {
                 placeholder="Type a command (e.g. deploy broker.portal)"
                 onKeyPress={(e) => e.key === 'Enter' && handleCommand()}
               />
-              <Button onClick={handleCommand}>Execute</Button>
+              <Button>
+                Execute
+              </Button>
             </div>
             <div className="bg-muted p-4 rounded text-sm font-mono h-40 overflow-y-auto border">
               {consoleOutput.length === 0 ? (
@@ -261,7 +265,7 @@ const AgentControlUI: React.FC = () => {
                   No commands executed yet. Try: start builder.frontend.broker
                 </div>
               ) : (
-                consoleOutput.map((line) => (
+                consoleOutput.map((line, index) => (
                   <div key={index}>{line}</div>
                 ))
               )}

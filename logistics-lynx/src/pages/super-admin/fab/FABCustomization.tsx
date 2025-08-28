@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const FABCustomization = () => {
   const [customization, setCustomization] = useState({
     theme: 'blue',
@@ -18,8 +19,8 @@ const FABCustomization = () => {
             Customize the appearance and behavior of your floating action buttons
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
-          Save Changes
+        <Button>Save Change
+              s</Button>
       </div>
 
       <div className="grid gap-6">

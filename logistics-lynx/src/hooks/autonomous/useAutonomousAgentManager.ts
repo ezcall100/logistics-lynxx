@@ -248,8 +248,6 @@ export const useAutonomousAgentManager = () => {
     }
   };
 
-
-
   return {
     agents,
     systemStatus,
@@ -260,3 +258,5 @@ export const useAutonomousAgentManager = () => {
     initializeAgents: () => setAgents(initializeAgents())
   };
 };
+
+export default useAutonomousAgentManager;

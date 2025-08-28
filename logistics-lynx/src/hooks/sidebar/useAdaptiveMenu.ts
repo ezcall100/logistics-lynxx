@@ -53,7 +53,7 @@ export const useAdaptiveMenu = () => {
       
       // Apply AI insights to menu items
       const enhancedMenu: AdaptiveMenu = {
-        items: baseMenu.map((item) => ({
+        items: baseMenu.map((item, index) => ({
           id: item.id,
           label: item.label,
           path: item.path,
@@ -78,3 +78,5 @@ export const useAdaptiveMenu = () => {
     generateAdaptiveMenu
   };
 };
+
+export default useAdaptiveMenu;

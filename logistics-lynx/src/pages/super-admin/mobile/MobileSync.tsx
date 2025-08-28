@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 
 const MobileSync = () => {
   const [syncStatus] = useState({
@@ -20,11 +21,11 @@ const MobileSync = () => {
             Monitor and manage data synchronization across mobile devices
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
-          Force Sync
-      </div>
-
-      <div className="grid gap-6">
+        <Button>
+                Force Sync
+              </Button><Button>
+                 
+              </Button><div className="grid gap-6">
         {/* Sync Status Overview */}
         <ResponsiveCard>
           <div className="mb-4">

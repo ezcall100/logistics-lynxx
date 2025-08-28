@@ -3,7 +3,8 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { resendInvitation, cancelInvitation } from '@/api/invites';
-import { Mail, Clock, CheckCircle, AlertCircle, RefreshCw, Trash2, User, Calendar, Loader2 } from 'lucide-react';
+import { Mail, Clock, CheckCircle, AlertCircle, RefreshCw, Trash2, User, Calendar, Loader2, XCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Invitation {
   id: string;
@@ -242,9 +243,7 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
           
           <div className="flex items-center gap-2 pt-2">
             {canResend && (
-              <EnhancedButton
-                variant="outline"
-                size="sm"
+              <Button
                 onClick={handleResend}
                 disabled={isResending}
               >
@@ -259,16 +258,17 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
                     Resend
                   </>
                 )}
+              </Button>
             )}
             
             {canCancel && (
-                variant="outline"
-                size="sm"
+              <Button
                 onClick={() => setShowCancelDialog(true)}
                 disabled={isCancelling}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Cancel
+              </Button>
             )}
           </div>
         </div>
@@ -286,11 +286,14 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
           </DialogHeader>
           
           <DialogFooter>
+            <Button
               variant="outline"
               onClick={() => setShowCancelDialog(false)}
               disabled={isCancelling}
             >
               Keep Invitation
+            </Button>
+            <Button
               variant="destructive"
               onClick={handleCancel}
               disabled={isCancelling}
@@ -303,6 +306,7 @@ export const InviteStatusCard: React.FC<InviteStatusCardProps> = ({
               ) : (
                 'Cancel Invitation'
               )}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

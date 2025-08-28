@@ -60,3 +60,5 @@ export const useCRMEvents = () => {
     updateEvent
   };
 };
+
+export default useCRMEvents;

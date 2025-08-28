@@ -166,3 +166,5 @@ export const useAutonomousActivation = () => {
     executeComprehensiveTesting
   };
 };
+
+export default useAutonomousActivation;

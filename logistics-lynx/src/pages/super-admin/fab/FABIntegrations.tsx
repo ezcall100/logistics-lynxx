@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const FABIntegrations = () => {
   const [integrations, setIntegrations] = useState([
     {
@@ -46,11 +47,11 @@ const FABIntegrations = () => {
             Connect your FAB actions with external services and platforms
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
-          Add Integration
-      </div>
-
-      <div className="grid gap-6">
+        <Button>
+                Add Integration
+              </Button><Button>
+                 
+              </Button><div className="grid gap-6">
         {/* Connected Integrations */}
         <ResponsiveCard>
           <div className="mb-4">

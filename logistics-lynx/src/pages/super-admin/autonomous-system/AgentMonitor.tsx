@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Activity, Bot, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
+import { Button } from '@/components/ui/button';
 
 interface AgentMonitorProps {}
 
@@ -46,17 +47,17 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
             </h1>
           </div>
           <div className="flex space-x-2">
-            <EnhancedButton 
-              variant="outline" 
-              onClick={() => handleFabAction('quickAction', { action: 'refresh', page: 'agent-monitor' })}
+            <Button>
+                variant="outline" 
+              </Button>onClick={() =>handleFabAction('quickAction', { action: 'refresh', page: 'agent-monitor' })}
             >
               Refresh
               variant="default"
               onClick={() => handleFabAction('assistant', 'Help me with Agent Monitor')}
             >
-              AI Assistant
-          </div>
-        </div>
+              AI Assistant<Button>
+                 
+              </Button></div>
         <p className="text-gray-600">
           Real-time monitoring of all autonomous agents
         </p>
@@ -177,7 +178,7 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
                     <Activity className="h-5 w-5 mb-1" />
                     Monitor
                 </div>
-              </div></EnhancedButton>
+              </div></Button>
             </div>
           )}
         </div>

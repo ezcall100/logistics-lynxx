@@ -204,3 +204,5 @@ export const useSelfLearning = () => {
     adjustThresholds
   };
 };
+
+export default useSelfLearning;

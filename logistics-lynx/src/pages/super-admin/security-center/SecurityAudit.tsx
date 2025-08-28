@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { EnhancedButton, EnhancedBadge } from '@/components/ui/EnhancedUIComponents';
+import { Button } from '@/components/ui/button';
 import { Shield, AlertTriangle, CheckCircle, Clock, Eye } from 'lucide-react';
-
 interface SecurityAuditProps {}
 
 interface AuditItem {
@@ -184,7 +183,7 @@ const SecurityAudit: React.FC<SecurityAuditProps> = () => {
         <ResponsiveCard>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Security Checks</h2>
           <div className="space-y-4">
-            {auditItems.map((item) => (
+            {auditItems.map((item, index) => (
               <div key={item.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">
@@ -202,15 +201,15 @@ const SecurityAudit: React.FC<SecurityAuditProps> = () => {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <EnhancedButton variant="ghost" size="sm">
-                      View Details
-                    </EnhancedButton>
-                    {item.status === 'failed' && (
-                      <EnhancedButton variant="danger" size="sm">
-                        Fix Issue
-                      </EnhancedButton>
-                    )}
-                  </div>
+                    <Button>
+                View Details
+              </Button><Button>
+                {item.status === 'failed' && (
+              </Button><Button>
+                Fix Issue
+              </Button><Button>
+                )}
+              </Button></div>
                 </div>
               </div>
             ))}

@@ -333,3 +333,5 @@ export const useWebsiteImprovementImplementation = () => {
     implementFunctionalityEnhancement,
   };
 };
+
+export default useWebsiteImprovementImplementation;

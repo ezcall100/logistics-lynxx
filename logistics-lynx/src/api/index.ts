@@ -64,3 +64,5 @@ export const createErrorState = (error: any) => ({
   data: null,
   error: handleAPIError(error),
 });
+
+export default createLoadingState;

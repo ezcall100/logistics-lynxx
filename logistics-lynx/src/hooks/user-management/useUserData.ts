@@ -60,3 +60,5 @@ export const useUserData = () => {
     refetch: fetchUsers,
   };
 };
+
+export default useUserData;

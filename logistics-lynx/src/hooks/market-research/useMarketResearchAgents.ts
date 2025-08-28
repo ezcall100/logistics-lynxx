@@ -178,3 +178,5 @@ export const useMarketResearchAgents = () => {
     getActionableRecommendations
   };
 };
+
+export default useMarketResearchAgents;

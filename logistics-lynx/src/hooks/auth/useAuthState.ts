@@ -126,3 +126,5 @@ export const useAuthState = () => {
     resetAuthState,
   };
 };
+
+export default useAuthState;

@@ -101,3 +101,5 @@ export const subscribeToActivities = () => {
   console.log('Subscribing to activities');
   return () => console.log('Unsubscribed from activities');
 };
+
+export default subscribeToKpis;

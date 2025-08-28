@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const FABAnalytics = () => {
   const [analytics, setAnalytics] = useState({
     totalClicks: 1247,
@@ -23,11 +24,11 @@ const FABAnalytics = () => {
             Track performance and usage metrics for your floating action buttons
           </p>
         </div>
-        <EnhancedButton variant="outline">
-          Export Data
-      </div>
-
-      <div className="grid gap-6">
+        <Button>
+                Export Data
+              </Button><Button>
+                 
+              </Button><div className="grid gap-6">
         {/* Key Metrics */}
         <ResponsiveCard>
           <div className="mb-4">

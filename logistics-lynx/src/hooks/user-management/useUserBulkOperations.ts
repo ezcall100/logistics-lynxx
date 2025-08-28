@@ -71,3 +71,5 @@ export const useUserBulkOperations = () => {
     bulkUpdateStatus,
   };
 };
+
+export default useUserBulkOperations;

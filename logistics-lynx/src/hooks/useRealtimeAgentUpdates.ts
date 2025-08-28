@@ -178,3 +178,5 @@ export const useRealtimeAgentUpdates = () => {
     disconnect
   };
 };
+
+export default useRealtimeAgentUpdates;

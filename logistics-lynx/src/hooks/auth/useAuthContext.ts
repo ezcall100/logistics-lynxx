@@ -193,3 +193,5 @@ export const useAuthContext = () => {
     updateSelectedRole
   };
 };
+
+export default useAuthContext;

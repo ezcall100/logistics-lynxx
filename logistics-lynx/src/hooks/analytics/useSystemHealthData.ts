@@ -40,3 +40,5 @@ export const useSystemHealthData = () => {
 
   return { fetchSystemHealthData };
 };
+
+export default useSystemHealthData;

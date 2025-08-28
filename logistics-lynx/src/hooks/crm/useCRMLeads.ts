@@ -58,3 +58,5 @@ export const useCRMLeads = () => {
     updateLead
   };
 };
+
+export default useCRMLeads;

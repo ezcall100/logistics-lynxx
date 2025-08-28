@@ -79,3 +79,5 @@ export const useAILearningData = () => {
 
   return { fetchAILearningData };
 };
+
+export default useAILearningData;

@@ -89,3 +89,5 @@ export const useAutonomousAI = () => {
 
   return { callAutonomousAI, loading };
 };
+
+export default useAutonomousAI;

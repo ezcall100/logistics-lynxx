@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 import { Bot, Activity, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
 
@@ -7,8 +8,7 @@ interface AutonomousControlProps {}
 
 const AutonomousControl: React.FC<AutonomousControlProps> = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
-  const [agentStatus, setAgentStatus] = useState({
+  const [agentStatus] = useState({
     isRunning: true,
     lastActivity: new Date(),
     performance: { cpu: 25, memory: 60, tasksCompleted: 0, successRate: 95 }
@@ -30,7 +30,7 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
   };
 
   const handleAgentAction = async (action: 'start' | 'stop' | 'restart') => {
-    console.log(`Agent ${item.autonomousAgent} action: ${action}`);
+    console.log(`Agent action: ${action}`);
     // Implement autonomous agent control
   };
 
@@ -46,15 +46,12 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
             </h1>
           </div>
           <div className="flex space-x-2">
-            <EnhancedButton 
-              variant="outline" 
-              onClick={() => handleFabAction('quickAction', { action: 'refresh', page: 'autonomous-control' })}
-            >
+            <Button onClick={() => handleFabAction('quickAction', { action: 'refresh', page: 'autonomous-control' })}>
               Refresh
-              variant="default"
-              onClick={() => handleFabAction('assistant', 'Help me with Autonomous Control')}
-            >
+            </Button>
+            <Button>
               AI Assistant
+            </Button>
           </div>
         </div>
         <p className="text-gray-600">
@@ -98,26 +95,26 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
           </div>
           
           <div className="flex space-x-2 mt-4">
-              size="sm" 
-              variant="outline"
+            <Button
               onClick={() => handleAgentAction('start')}
               disabled={agentStatus.isRunning}
             >
               <Play className="h-3 w-3 mr-1" />
               Start Agent
-              size="sm" 
-              variant="outline"
+            </Button>
+            <Button
               onClick={() => handleAgentAction('stop')}
               disabled={!agentStatus.isRunning}
             >
               <Pause className="h-3 w-3 mr-1" />
               Stop Agent
-              size="sm" 
-              variant="outline"
+            </Button>
+            <Button
               onClick={() => handleAgentAction('restart')}
             >
               <RotateCcw className="h-3 w-3 mr-1" />
               Restart Agent
+            </Button>
           </div>
         </div>
       </ResponsiveCard>
@@ -125,9 +122,14 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
       {/* Main Content */}
       <ResponsiveCard className="shadow-lg">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Autonomous Control</h3>
-          <p className="text-slate-600 dark:text-slate-400">AI agent management and autonomous system control</p>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            Autonomous Control
+          </h3>
+          <p className="text-slate-600 dark:text-slate-400">
+            AI agent management and autonomous system control
+          </p>
         </div>
+      {/* End Main Content Header */}
         <div>
           {isLoading ? (
             <div className="space-y-4">
@@ -158,26 +160,22 @@ const AutonomousControl: React.FC<AutonomousControlProps> = () => {
               <div className="border-t pt-6">
                 <h4 className="text-md font-semibold text-gray-900 mb-4">Portal Features</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    variant="outline" 
-                    className="h-20 flex flex-col items-center justify-center"
+                  <Button
                     onClick={() => handleFabAction('dispatch', { type: 'autonomous-control_configure', payload: { action: 'configure' } })}
                   >
                     <Settings className="h-5 w-5 mb-1" />
                     Configure
-                    variant="outline" 
-                    className="h-20 flex flex-col items-center justify-center"
-                    onClick={() => handleFabAction('assistant', 'Help me understand Autonomous Control')}
-                  >
+                  </Button>
+                  <Button>
                     <Bot className="h-5 w-5 mb-1" />
                     AI Help
-                    variant="outline" 
-                    className="h-20 flex flex-col items-center justify-center"
-                    onClick={() => handleFabAction('quickAction', { action: 'export', page: 'autonomous-control' })}
-                  >
+                  </Button>
+                  <Button>
                     <Activity className="h-5 w-5 mb-1" />
                     Monitor
+                  </Button>
                 </div>
-              </div></EnhancedButton>
+              </div>
             </div>
           )}
         </div>

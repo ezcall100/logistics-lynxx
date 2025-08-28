@@ -43,3 +43,5 @@ export const useRoleMetricsData = () => {
 
   return { fetchRoleMetricsData };
 };
+
+export default useRoleMetricsData;

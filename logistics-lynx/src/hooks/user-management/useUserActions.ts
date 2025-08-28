@@ -43,3 +43,5 @@ export const useUserActions = () => {
     closeDeleteDialog,
   };
 };
+
+export default useUserActions;

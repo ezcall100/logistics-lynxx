@@ -47,3 +47,5 @@ export const useGPTAssistance = () => {
 
   return { seekGPTAssistance };
 };
+
+export default useGPTAssistance;

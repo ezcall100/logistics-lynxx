@@ -157,3 +157,5 @@ export const useAutonomousSidebar = () => {
     refreshAdaptiveMenu
   };
 };
+
+export default useAutonomousSidebar;

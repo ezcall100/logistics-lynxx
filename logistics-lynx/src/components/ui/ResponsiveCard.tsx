@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { 
   EnhancedCard, 
-  EnhancedButton, 
+  Button, 
   EnhancedInput, 
   EnhancedBadge,
   EnhancedProgress,

@@ -63,3 +63,5 @@ export const usePredictiveScaling = () => {
       executeScalingAction(forecast, currentResources, calculateOptimalResources(forecast.predicted_load), setCurrentResources)
   };
 };
+
+export default usePredictiveScaling;

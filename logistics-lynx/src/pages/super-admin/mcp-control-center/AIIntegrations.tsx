@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Plug } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface AIIntegrationsProps {}
 
@@ -53,9 +54,9 @@ const AIIntegrations: React.FC<AIIntegrationsProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Api Connections</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Third Party Ai</span>
               </div>
-              <EnhancedButton className="mt-6">
-                Configure AI Integrations</EnhancedButton>
-            </div>
+              <Button>
+                 
+              </Button></div>
           )}
         </div>
       </ResponsiveCard>

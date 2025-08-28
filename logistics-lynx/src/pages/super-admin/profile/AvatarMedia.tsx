@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 const AvatarMedia = () => {
   const [avatarState, setAvatarState] = useState({
@@ -175,10 +176,11 @@ const AvatarMedia = () => {
               ))}
             </div>
             <div className="mt-4">
-              <EnhancedButton variant="outline" className="w-full">
+              <Button>
                 View All Media
-            </div>
-          </div>
+              </Button><Button>
+                 
+              </Button></div>
         </ResponsiveCard>
       </div>
     </div>

@@ -333,3 +333,5 @@ export const useN8NIntegration = () => {
     reportWorkflowExecution
   };
 };
+
+export default useN8NIntegration;

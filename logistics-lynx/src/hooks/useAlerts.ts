@@ -214,3 +214,5 @@ export const useAlerts = () => {
     getAlertStats
   };
 };
+
+export default useAlerts;

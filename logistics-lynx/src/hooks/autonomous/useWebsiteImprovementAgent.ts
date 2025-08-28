@@ -370,3 +370,5 @@ async function measureWebsitePerformance(): Promise<WebsiteMetrics> {
     }
   };
 }
+
+export default useWebsiteImprovementAgent;

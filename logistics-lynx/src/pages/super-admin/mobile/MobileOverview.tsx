@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { Button } from '@/components/ui/button';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 const MobileOverview = () => {
   const [mobileStats] = useState({
@@ -18,8 +18,9 @@ const MobileOverview = () => {
             Monitor and manage mobile device connections and synchronization
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
-          Add Device
+        <Button>
+                Add Device
+              </Button>
       </div>
 
       <div className="grid gap-6">

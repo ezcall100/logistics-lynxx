@@ -450,3 +450,5 @@ export const useMCPIntegration = () => {
     }
   };
 };
+
+export default useMCPIntegration;

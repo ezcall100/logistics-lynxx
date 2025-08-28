@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Book } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface DocumentationProps {}
 
@@ -53,9 +54,9 @@ const Documentation: React.FC<DocumentationProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">User Guides</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Api Documentation</span>
               </div>
-              <EnhancedButton className="mt-6">
-                Configure Documentation</EnhancedButton>
-            </div>
+              <Button>
+                 
+              </Button></div>
           )}
         </div>
       </ResponsiveCard>

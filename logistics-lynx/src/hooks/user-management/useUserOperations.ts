@@ -147,3 +147,5 @@ export const useUserOperations = () => {
     deleteUser,
   };
 };
+
+export default useUserOperations;

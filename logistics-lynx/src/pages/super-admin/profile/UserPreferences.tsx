@@ -4,6 +4,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
 const UserPreferences = () => {
   const [preferences, setPreferences] = useState({
     language: 'en',
@@ -39,8 +40,9 @@ const UserPreferences = () => {
             Customize your user experience and account settings
           </p>
         </div>
-        <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
-          Save Changes
+        <Button>
+                Save Changes
+              </Button>
       </div>
 
       <div className="grid gap-6">

@@ -279,3 +279,5 @@ export const useRealtimeUIOptimization = () => {
     executeOptimization: (rule: UIOptimizationRule) => executeOptimization(rule, null)
   };
 };
+
+export default useRealtimeUIOptimization;

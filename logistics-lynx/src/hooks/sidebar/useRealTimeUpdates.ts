@@ -45,3 +45,5 @@ export const useRealTimeUpdates = () => {
 
   return { setupRealTimeUpdates };
 };
+
+export default useRealTimeUpdates;

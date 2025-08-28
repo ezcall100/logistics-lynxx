@@ -110,3 +110,5 @@ export const getAvailableMetrics = () => {
     unit: m.unit
   }));
 };
+
+export default getAvailableMetrics;

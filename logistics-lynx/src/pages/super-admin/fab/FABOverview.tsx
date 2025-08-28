@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
+import { Button } from '@/components/ui/button';
 const FABOverview = () => {
-  const [fabStats, setFabStats] = useState({
+  const [fabStats] = useState({
     totalActions: 24,
     activeActions: 18,
     customActions: 8,
@@ -18,8 +19,9 @@ const FABOverview = () => {
             Manage your Floating Action Button configurations and actions
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
+        <Button>
           Create New Action
+        </Button>
       </div>
 
       <div className="grid gap-6">
@@ -169,8 +171,8 @@ const FABOverview = () => {
                 { action: 'New Contact', time: '12 minutes ago', user: 'John Doe' },
                 { action: 'Quick Report', time: '1 hour ago', user: 'Mike Johnson' },
                 { action: 'Send Alert', time: '2 hours ago', user: 'Sarah Wilson' }
-              ].map((activity) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+              ].map((activity, activityIndex) => (
+                <div key={activityIndex} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
                       <span className="text-sm">⚡</span>

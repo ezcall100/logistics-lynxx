@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 const PersonalInformation = () => {
   const [personalInfo, setPersonalInfo] = useState({
@@ -39,8 +40,8 @@ const PersonalInformation = () => {
             Update your personal details and contact information
           </p>
         </div>
-        <EnhancedButton onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
-          Save Changes
+        <Button>Save Change
+              s</Button>
       </div>
 
       <div className="grid gap-6">

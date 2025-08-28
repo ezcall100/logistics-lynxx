@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 const AccountVerification = () => {
   const [verificationStatus] = useState({
     email: {
@@ -83,15 +84,14 @@ const AccountVerification = () => {
                   {verificationStatus.email.verified ? 'Verified' : 'Unverified'}
                 </span>
                 {!verificationStatus.email.verified && (
-                  <EnhancedButton
-                    size="sm"
-                    onClick={handleResendEmail}
+                  <Button>
+                size="sm"
+              </Button>onClick={handleResendEmail}
                     disabled={isResendingEmail}
-                  >
-                    {isResendingEmail ? 'Sending...' : 'Resend Email'}
-                )}
-              </div>
-            </div>
+                  >{isResendingEmail ? 'Sending...' : 'Resend Email'}
+                )}<Button>
+                 
+              </Button></div>
           </div>
         </ResponsiveCard>
 
@@ -143,7 +143,7 @@ const AccountVerification = () => {
                     className="w-32"
                   />
                     Verify
-                </div></EnhancedButton>
+                </div></Button>
               </div>
             )}
           </div>

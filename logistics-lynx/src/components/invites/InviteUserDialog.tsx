@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { createInvitation } from '@/api/invites';
 import { Loader2, Mail, Shield, UserPlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface InviteUserDialogProps {
   open: boolean;
@@ -218,7 +219,7 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
-                {availableRoles.map((roleOption) => (
+                {availableRoles.map((roleOption, index) => (
                   <SelectItem key={roleOption.value} value={roleOption.value}>
                     <div className="flex items-center gap-2">
                       <Shield className="h-4 w-4" />
@@ -242,7 +243,7 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
                 <span className="font-medium">{selectedRoleDetails.label} Permissions</span>
               </div>
               <div className="space-y-1">
-                {selectedRoleDetails.permissions.map((permission) => (
+                {selectedRoleDetails.permissions.map((permission, index) => (
                   <div key={index} className="flex items-center gap-2 text-sm">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                     {permission}
@@ -282,15 +283,15 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
           </div>
 
           <DialogFooter>
-            <EnhancedButton
-              type="button"
-              variant="outline"
-              onClick={handleCancel}
+            <Button>
+                type="button"
+              </Button><Button>
+                variant="outline"
+              </Button>onClick={handleCancel}
               disabled={isLoading}
-            >
-              Cancel
-              {isLoading ? (
-                <>
+            >Cancel<Button>
+                 
+              </Button><>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Sending...
                 </>
@@ -306,3 +307,5 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
     </Dialog>
   );
 };
+
+export default handleCancel;

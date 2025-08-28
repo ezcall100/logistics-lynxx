@@ -94,3 +94,5 @@ export const useLoginForm = () => {
     handleForgotPassword,
   };
 };
+
+export default useLoginForm;

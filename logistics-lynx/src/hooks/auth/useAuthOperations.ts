@@ -57,3 +57,5 @@ export const useAuthOperations = () => {
     signOut,
   };
 };
+
+export default useAuthOperations;

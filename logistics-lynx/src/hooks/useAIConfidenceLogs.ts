@@ -183,3 +183,5 @@ export const useAIConfidenceLogs = () => {
     getStats
   };
 };
+
+export default useAIConfidenceLogs;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface AgentManagementProps {}
 
@@ -53,10 +54,11 @@ const AgentManagement: React.FC<AgentManagementProps> = () => {
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Agent Configuration</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Agent Monitoring</span>
               </div>
-              <EnhancedButton className="mt-6">
-                Configure Agent Management</EnhancedButton>
-            </div>
-          )}
+                              <Button>
+                Configure Agent Management
+              </Button>
+              </div>
+            )}
         </div>
       </ResponsiveCard>
     </div>

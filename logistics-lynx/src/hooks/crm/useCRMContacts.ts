@@ -59,3 +59,5 @@ export const useCRMContacts = () => {
     updateContact
   };
 };
+
+export default useCRMContacts;

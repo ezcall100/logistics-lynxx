@@ -5,6 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Shield, Users, Lock, AlertTriangle, Activity, Database, Key, FileText } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { Button } from '@/components/ui/button';
 
 interface SecurityOverview {
   company_id: string;
@@ -179,8 +180,9 @@ const SecurityDashboard: React.FC = () => {
             Monitor RLS policies, audit logs, and security status across all companies
           </p>
         </div>
-        <EnhancedButton onClick={loadSecurityData} variant="outline">
-          <Activity className="h-4 w-4 mr-2" />
+        <Button>
+                 
+              <Activity className="h-4 w-4 mr-2" /></Button>
           Refresh
       </div>
 

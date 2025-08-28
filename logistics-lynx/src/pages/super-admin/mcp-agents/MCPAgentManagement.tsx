@@ -1,290 +1,501 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, CheckCircle, Clock, Settings, Search, Filter, Upload, Plus, Edit, Trash2, Eye, RefreshCw, Sun, Moon } from 'lucide-react';
+import { 
+  Bot, 
+  Play, 
+  Pause, 
+  Settings, 
+  Activity, 
+  Zap, 
+  Database, 
+  Network, 
+  Shield, 
+  BarChart3, 
+  Plus,
+  Edit,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Cpu,
+  MemoryStick
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTheme } from '../../../components/layout/EnhancedLayout';
+import { EnhancedCard, EnhancedTable } from '../../../components/ui/EnhancedUIComponents';
+interface MCPAgent {
+  id: string;
+  name: string;
+  type: 'autonomous' | 'assistant' | 'monitor' | 'processor';
+  status: 'active' | 'inactive' | 'error' | 'maintenance';
+  cpu: number;
+  memory: number;
+  uptime: string;
+  lastActivity: string;
+  tasksCompleted: number;
+  errorRate: number;
+  apiEndpoint: string;
+  version: string;
+  capabilities: string[];
+}
 
 const MCPAgentManagement: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode } = useTheme();
+  const [agents, setAgents] = useState<MCPAgent[]>([]);
+  const [selectedAgent, setSelectedAgent] = useState<MCPAgent | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error'>('disconnected');
 
   // Mock data for demonstration
-  const mockData = [
-    { id: 1, name: 'Item 1', status: 'active', value: 100, date: '2024-01-15' },
-    { id: 2, name: 'Item 2', status: 'inactive', value: 200, date: '2024-01-16' },
-    { id: 3, name: 'Item 3', status: 'active', value: 150, date: '2024-01-17' },
-    { id: 4, name: 'Item 4', status: 'pending', value: 300, date: '2024-01-18' },
-    { id: 5, name: 'Item 5', status: 'active', value: 250, date: '2024-01-19' },
-  ];
-
   useEffect(() => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setData(mockData);
+    const mockAgents: MCPAgent[] = [
+      {
+        id: '1',
+        name: 'Autonomous Route Optimizer',
+        type: 'autonomous',
+        status: 'active',
+        cpu: 45,
+        memory: 67,
+        uptime: '7d 12h 34m',
+        lastActivity: '2 minutes ago',
+        tasksCompleted: 1247,
+        errorRate: 0.2,
+        apiEndpoint: 'http://localhost:3001/api/agents/route-optimizer',
+        version: '2.1.4',
+        capabilities: ['route-optimization', 'traffic-analysis', 'fuel-efficiency']
+      },
+      {
+        id: '2',
+        name: 'Load Balancing Assistant',
+        type: 'assistant',
+        status: 'active',
+        cpu: 23,
+        memory: 34,
+        uptime: '3d 8h 15m',
+        lastActivity: '5 minutes ago',
+        tasksCompleted: 892,
+        errorRate: 0.1,
+        apiEndpoint: 'http://localhost:3001/api/agents/load-balancer',
+        version: '1.8.2',
+        capabilities: ['load-balancing', 'capacity-planning', 'demand-forecasting']
+      },
+      {
+        id: '3',
+        name: 'System Health Monitor',
+        type: 'monitor',
+        status: 'active',
+        cpu: 12,
+        memory: 28,
+        uptime: '15d 4h 22m',
+        lastActivity: '1 minute ago',
+        tasksCompleted: 2156,
+        errorRate: 0.0,
+        apiEndpoint: 'http://localhost:3001/api/agents/health-monitor',
+        version: '3.0.1',
+        capabilities: ['health-monitoring', 'alerting', 'performance-tracking']
+      },
+      {
+        id: '4',
+        name: 'Data Processor',
+        type: 'processor',
+        status: 'error',
+        cpu: 89,
+        memory: 95,
+        uptime: '1d 2h 45m',
+        lastActivity: '15 minutes ago',
+        tasksCompleted: 456,
+        errorRate: 12.5,
+        apiEndpoint: 'http://localhost:3001/api/agents/data-processor',
+        version: '1.5.3',
+        capabilities: ['data-processing', 'etl', 'analytics']
+      }
+    ];
+
+    setAgents(mockAgents);
       setIsLoading(false);
-    }, 1000);
+    
+    // Test API connection
+    testAPIConnection();
   }, []);
 
-  const filteredData = data.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = selectedFilter === 'all' || item.status === selectedFilter;
-    return matchesSearch && matchesFilter;
-  });
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'active': return 'text-green-600 bg-green-100';
-      case 'inactive': return 'text-red-600 bg-red-100';
-      case 'pending': return 'text-yellow-600 bg-yellow-100';
-      default: return 'text-gray-600 bg-gray-100';
+  const testAPIConnection = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/health', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        setApiStatus('connected');
+      } else {
+        setApiStatus('error');
+      }
+    } catch (error) {
+      console.error('MCP API connection failed:', error);
+      setApiStatus('disconnected');
     }
   };
 
-  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+  const refreshAgents = () => {
+    console.log('Refreshing agents...');
+    // Implement refresh logic here
+  };
+
+  const addNewAgent = () => {
+    console.log('Adding new agent...');
+    // Implement add agent logic here
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      case 'inactive': return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'error': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'maintenance': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'active': return <CheckCircle className="w-4 h-4" />;
+      case 'inactive': return <Pause className="w-4 h-4" />;
+      case 'error': return <AlertCircle className="w-4 h-4" />;
+      case 'maintenance': return <Settings className="w-4 h-4" />;
+      default: return <Clock className="w-4 h-4" />;
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'autonomous': return <Bot className="w-5 h-5 text-blue-600" />;
+      case 'assistant': return <Zap className="w-5 h-5 text-purple-600" />;
+      case 'monitor': return <Activity className="w-5 h-5 text-green-600" />;
+      case 'processor': return <Database className="w-5 h-5 text-orange-600" />;
+      default: return <Bot className="w-5 h-5 text-gray-600" />;
+    }
+  };
+
+  const handleAgentAction = async (agentId: string, action: 'start' | 'stop' | 'restart' | 'configure') => {
+    try {
+      const agent = agents.find(a => a.id === agentId);
+      if (!agent) return;
+
+      const response = await fetch(`http://localhost:3001/api/agents/${agentId}/${action}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Update agent status locally
+        setAgents(prev => prev.map(agent => 
+          agent.id === agentId 
+            ? { ...agent, status: action === 'stop' ? 'inactive' : 'active' }
+            : agent
+        ));
+      }
+    } catch (error) {
+      console.error(`Failed to ${action} agent:`, error);
+    }
+  };
+
+  const columns = [
+    {
+      key: 'name',
+      title: 'Agent Name',
+      render: (agent: MCPAgent) => (
+        <div className="flex items-center space-x-3">
+          {getTypeIcon(agent.type)}
+          <div>
+            <div className="font-semibold text-slate-800 dark:text-slate-100">
+              {agent.name}
+            </div>
+            <div className="text-sm text-slate-500 dark:text-slate-400">
+              v{agent.version}
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'status',
+      title: 'Status',
+      render: (agent: MCPAgent) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(agent.status)}`}>
+          {getStatusIcon(agent.status)}
+          <span className="ml-1 capitalize">{agent.status}</span>
+        </span>
+      )
+    },
+    {
+      key: 'performance',
+      title: 'Performance',
+      render: (agent: MCPAgent) => (
+        <div className="space-y-1">
+          <div className="flex items-center space-x-2">
+            <Cpu className="w-3 h-3 text-blue-500" />
+            <span className="text-sm">{agent.cpu}%</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <MemoryStick className="w-3 h-3 text-green-500" />
+            <span className="text-sm">{agent.memory}%</span>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'uptime',
+      title: 'Uptime',
+      render: (agent: MCPAgent) => (
+        <div className="text-sm text-slate-600 dark:text-slate-400">
+          {agent.uptime}
+        </div>
+      )
+    },
+    {
+      key: 'tasks',
+      title: 'Tasks',
+      render: (agent: MCPAgent) => (
+        <div className="text-sm">
+          <div className="font-medium text-slate-800 dark:text-slate-100">
+            {agent.tasksCompleted.toLocaleString()}
+          </div>
+          <div className="text-slate-500 dark:text-slate-400">
+            {agent.errorRate}% error rate
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'actions',
+      title: 'Actions',
+      render: (agent: MCPAgent) => (
+        <div className="flex space-x-2">
+          <Button
+            onClick={() => handleAgentAction(agent.id, 'start')}
+            disabled={agent.status === 'active'}
+          >
+            <Play className="w-4 h-4" />
+          </Button>
+          <Button
+            onClick={() => handleAgentAction(agent.id, 'stop')}
+            disabled={agent.status === 'inactive'}
+          >
+            <Pause className="w-4 h-4" />
+          </Button>
+          <Button
+            onClick={() => handleAgentAction(agent.id, 'configure')}
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
+        </div>
+      )
+    }
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100'} p-6`}>
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                MCP Agent Management
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              🤖 MCP Agent Management
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Manage and monitor all MCP autonomous agents
+            <p className="text-gray-600 dark:text-gray-400 mt-2">
+              Manage and monitor your AI agents and autonomous systems
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-700'} shadow-lg`}
-              >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-                <RefreshCw className="w-4 h-4" />
-                <span>Refresh</span>
-              </button>
+            <div className={`flex items-center space-x-2 px-3 py-2 rounded-lg ${
+              apiStatus === 'connected' 
+                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                : apiStatus === 'error'
+                ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+            }`}>
+              <Network className="w-4 h-4" />
+              <span className="text-sm font-medium">
+                API: {apiStatus === 'connected' ? 'Connected' : apiStatus === 'error' ? 'Error' : 'Disconnected'}
+              </span>
             </div>
+            <Button onClick={refreshAgents}>
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
+            <Button onClick={addNewAgent}>
+              <Plus className="w-4 h-4" />
+              Add Agent
+            </Button>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className={`rounded-xl shadow-lg p-6 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <EnhancedCard>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Total Items</p>
-                <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{data.length}</p>
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Total Agents</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">{agents.length}</p>
               </div>
-              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'}`}>
-                <BarChart3 className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-              </div>
+              <Bot className="w-8 h-8 text-blue-600" />
             </div>
-          </div>
+          </EnhancedCard>
 
-          <div className={`rounded-xl shadow-lg p-6 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+          <EnhancedCard>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm font-medium ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Active</p>
-                <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {data.filter(item => item.status === 'active').length}
+                <p className="text-sm font-medium text-green-600 dark:text-green-400">Active Agents</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {agents.filter(a => a.status === 'active').length}
                 </p>
               </div>
-              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-green-900' : 'bg-green-100'}`}>
-                <CheckCircle className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-              </div>
+              <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-          </div>
+          </EnhancedCard>
 
-          <div className={`rounded-xl shadow-lg p-6 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+          <EnhancedCard>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm font-medium ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>Pending</p>
-                <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {data.filter(item => item.status === 'pending').length}
+                <p className="text-sm font-medium text-orange-600 dark:text-orange-400">Total Tasks</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {agents.reduce((sum, agent) => sum + agent.tasksCompleted, 0).toLocaleString()}
                 </p>
               </div>
-              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-yellow-900' : 'bg-yellow-100'}`}>
-                <Clock className={`w-6 h-6 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`} />
-              </div>
+              <BarChart3 className="w-8 h-8 text-orange-600" />
             </div>
-          </div>
+          </EnhancedCard>
 
-          <div className={`rounded-xl shadow-lg p-6 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+          <EnhancedCard>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm font-medium ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>Total Value</p>
-                <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  ${totalValue.toLocaleString()}
+                <p className="text-sm font-medium text-red-600 dark:text-red-400">Error Rate</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {(agents.reduce((sum, agent) => sum + agent.errorRate, 0) / agents.length).toFixed(1)}%
                 </p>
               </div>
-              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-purple-900' : 'bg-purple-100'}`}>
-                <TrendingUp className={`w-6 h-6 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
-              </div>
+              <AlertCircle className="w-8 h-8 text-red-600" />
             </div>
-          </div>
+          </EnhancedCard>
         </div>
 
-        {/* Search and Filters */}
-        <div className={`rounded-xl shadow-lg p-6 border mb-8 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`} />
-                <input
-                  type="text"
-                  placeholder="Search items..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
-                />
+        {/* Agents Table */}
+        <EnhancedCard>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Agent Overview
+              </h2>
+              <div className="flex space-x-2">
+                <Button>
+                  <Edit className="w-4 h-4" />
+                  Configure
+                </Button>
+                <Button>
+                  <Shield className="w-4 h-4" />
+                  Security
+                </Button>
               </div>
             </div>
-            <div className="flex gap-4">
-              <select
-                value={selectedFilter}
-                onChange={(e) => setSelectedFilter(e.target.value)}
-                className={`px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="pending">Pending</option>
-              </select>
-              <button className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
-                <Filter className="w-4 h-4" />
-                <span>More Filters</span>
-              </button>
-            </div>
+            
+            <EnhancedTable
+              data={agents}
+              columns={columns}
+              mode={isDarkMode ? 'dark' : 'light'}
+            />
           </div>
+        </EnhancedCard>
+
+        {/* Agent Details Modal */}
+        {selectedAgent && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Agent Details: {selectedAgent.name}
+                  </h3>
+                  <Button onClick={() => setSelectedAgent(null)}>
+                    ×
+                  </Button>
         </div>
 
-        {/* Main Content */}
-        <div className={`rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          <div className={`p-6 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Data Overview</h2>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Type
+                      </label>
+                      <div className="flex items-center space-x-2">
+                        {getTypeIcon(selectedAgent.type)}
+                        <span className="capitalize">{selectedAgent.type}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Status
+                      </label>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(selectedAgent.status)}`}>
+                        {getStatusIcon(selectedAgent.status)}
+                        <span className="ml-1 capitalize">{selectedAgent.status}</span>
+                      </span>
+                    </div>
           </div>
           
-          {isLoading ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Loading data...</p>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      API Endpoint
+                    </label>
+                    <code className="block p-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm">
+                      {selectedAgent.apiEndpoint}
+                    </code>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                  <tr>
-                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      ID
-                    </th>
-                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Name
-                    </th>
-                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Status
-                    </th>
-                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Value
-                    </th>
-                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Date
-                    </th>
-                    <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className={`divide-y ${isDarkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                  {filteredData.map((item) => (
-                    <tr key={item.id} className={`hover:bg-opacity-50 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        #{item.id}
-                      </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {item.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(item.status)}`}>
-                          {item.status}
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Capabilities
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedAgent.capabilities.map((capability, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 rounded-full text-xs"
+                        >
+                          {capability}
                         </span>
-                      </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        ${item.value.toLocaleString()}
-                      </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                        {item.date}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex items-center space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900">
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button className="text-green-600 hover:text-green-900">
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button className="text-red-600 hover:text-red-900">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      ))}
             </div>
-          )}
         </div>
 
-        {/* Quick Actions */}
-        <div className={`mt-8 rounded-xl shadow-lg p-6 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quick Actions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-opacity-50 transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-              <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'}`}>
-                <Plus className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <div className="flex justify-end space-x-3">
+                    <Button onClick={() => setSelectedAgent(null)}>
+                      Close
+                    </Button>
+                    <Button>
+                      <Settings className="w-4 h-4" />
+                      Configure
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <div className="text-left">
-                <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create New</p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>Add a new item</p>
-              </div>
-            </button>
-            
-            <button className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-opacity-50 transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-              <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-green-900' : 'bg-green-100'}`}>
-                <Upload className={`w-5 h-5 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-              </div>
-              <div className="text-left">
-                <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Import Data</p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>Bulk import items</p>
-              </div>
-            </button>
-            
-            <button className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-opacity-50 transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-              <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-purple-900' : 'bg-purple-100'}`}>
-                <BarChart3 className={`w-5 h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
-              </div>
-              <div className="text-left">
-                <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Generate Report</p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>Create detailed report</p>
-              </div>
-            </button>
-            
-            <button className={`flex items-center space-x-3 p-4 border rounded-lg hover:bg-opacity-50 transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-              <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-orange-900' : 'bg-orange-100'}`}>
-                <Settings className={`w-5 h-5 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`} />
-              </div>
-              <div className="text-left">
-                <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Configure</p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>Settings & preferences</p>
-              </div>
-            </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

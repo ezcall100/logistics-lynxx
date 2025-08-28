@@ -59,3 +59,5 @@ export const useCRMOpportunities = () => {
     updateOpportunity
   };
 };
+
+export default useCRMOpportunities;

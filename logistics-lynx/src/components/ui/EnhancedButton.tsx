@@ -1,7 +1,8 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { Button } from '@/components/ui/button';
 
-interface EnhancedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'success' | 'danger' | 'neutral' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;

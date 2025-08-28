@@ -73,3 +73,5 @@ export const useTestingTasks = () => {
     getCompletedTasks
   };
 };
+
+export default useTestingTasks;

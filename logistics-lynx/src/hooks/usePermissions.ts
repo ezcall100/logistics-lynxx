@@ -122,3 +122,5 @@ export const useCanAccessRoute = (route: string) => {
 
   return hasRequiredRole && hasRequiredPermissions;
 };
+
+export default usePermissions;

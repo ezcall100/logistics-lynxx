@@ -338,3 +338,5 @@ export const useDriverActions = () => {
     roadsideAssistance,
   };
 };
+
+export default useDriverActions;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { Button } from '@/components/ui/button';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -23,8 +23,9 @@ const MobileSettings = () => {
             Configure mobile app behavior and preferences
           </p>
         </div>
-        <EnhancedButton className="bg-blue-600 hover:bg-blue-700">
+        <Button>
           Save Settings
+        </Button>
       </div>
 
       <div className="grid gap-6">

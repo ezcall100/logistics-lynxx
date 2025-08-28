@@ -5,7 +5,6 @@ import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';
 import { executeFabAction } from '../FabActions';
 
-
 // Theme Context
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -403,3 +402,5 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
 // Export individual components for flexibility
 export { EnhancedHeader } from './EnhancedHeader';
 export { EnhancedSidebar } from './EnhancedSidebar';
+
+export default useTheme;

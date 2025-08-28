@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Bot, Settings, Play, Pause, RotateCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface AutonomousAgentProps {
   agentId: string;
@@ -83,7 +84,9 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
             </h1>
           </div>
           <div className="flex space-x-2">
-            <EnhancedButton variant="outline" onClick={() => handleAgentAction('all', 'restart')}>
+            <Button>
+                handleAgentAction('all', 'restart')}
+              </Button>></Button>
               <RotateCcw className="h-4 w-4 mr-2" />
               Restart All
               <Settings className="h-4 w-4 mr-2" />

@@ -69,3 +69,5 @@ export const useCRMCompanies = () => {
     deleteCompany
   };
 };
+
+export default useCRMCompanies;

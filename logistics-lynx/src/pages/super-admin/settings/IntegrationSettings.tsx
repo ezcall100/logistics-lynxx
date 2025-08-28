@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Input } from '../../../components/ui/input.tsx';
+import { Button } from '@/components/ui/button';
 // Custom Label component
 const Label = ({ children, htmlFor, className = '' }: { children: React.ReactNode; htmlFor?: string; className?: string }) => (
   <label htmlFor={htmlFor} className={`block text-sm font-medium text-gray-700 mb-2 ${className}`}>
@@ -83,15 +84,13 @@ const IntegrationSettings = () => {
             Configure external integrations and API connections for your TMS platform
           </p>
         </div>
-        <EnhancedButton 
-          onClick={handleSave} 
-          disabled={isLoading}
+        <Button>
+                onClick={handleSave} 
+              </Button>disabled={isLoading}
           className="bg-blue-600 hover:bg-blue-700"
-        >
-          {isLoading ? 'Saving...' : 'Save Changes'}
-      </div>
-
-      <div className="grid gap-6">
+        >{isLoading ? 'Saving...' : 'Save Changes'}<Button>
+                 
+              </Button><div className="grid gap-6">
         {/* API Configuration */}
         <ResponsiveCard>
           <div className="mb-4">

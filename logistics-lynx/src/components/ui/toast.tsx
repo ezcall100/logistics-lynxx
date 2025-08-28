@@ -64,3 +64,5 @@ export const useToast = () => {
   
   return { toast };
 };
+
+export default useToast;
