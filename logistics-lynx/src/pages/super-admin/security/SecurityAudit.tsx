@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, CheckCircle, XCircle, Lock, Users, Database, Activity, RefreshCw, Download, Target } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, XCircle, Activity, RefreshCw, Download, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   EnhancedCard, 
@@ -51,7 +51,7 @@ interface ComplianceCheck {
 const SecurityAudit: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([]);
   const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
   const [complianceChecks, setComplianceChecks] = useState<ComplianceCheck[]>([]);
@@ -573,8 +573,7 @@ const SecurityAudit: React.FC = () => {
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
               </select>
-              <Button mode={mode}
-              >
+              <Button>
                 Export
               </Button>
             </div>
@@ -598,8 +597,7 @@ const SecurityAudit: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Security Vulnerabilities
               </h2>
-              <Button mode={mode}
-              >
+              <Button>
                 View All
               </Button>
             </div>
@@ -620,8 +618,7 @@ const SecurityAudit: React.FC = () => {
               <h2 className={`text-xl font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Compliance Checks
               </h2>
-              <Button mode={mode}
-              >
+              <Button>
                 View All
               </Button>
             </div>
