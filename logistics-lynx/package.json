@@ -63,6 +63,8 @@
     "mcp:rebuild:prod": "node scripts/mcp-rebuild-superadmin.mjs --env=prod",
     "mcp:rebuild:simple": "node scripts/mcp-rebuild-superadmin-simple.mjs",
     "mcp:rebuild:simple:prod": "node scripts/mcp-rebuild-superadmin-simple.mjs --env=prod",
+    "deploy:global": "node scripts/global-transport-deployment.mjs",
+    "deploy:transport": "node scripts/global-transport-deployment.mjs",
     "prepare": "husky"
   },
   "dependencies": {
