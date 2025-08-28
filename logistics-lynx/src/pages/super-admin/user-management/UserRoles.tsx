@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Upload, Eye, Download, Trash2 } from 'lucide-react';
+import AddRoleForm from './forms/AddRoleForm';
+import EditRoleForm from './forms/EditRoleForm';
+import ViewRoleForm from './forms/ViewRoleForm';
 
 interface Role {
   id: string;
@@ -20,6 +23,8 @@ const UserRoles: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roles, setRoles] = useState<Role[]>([]);
+  const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
+  const [selectedRoleId, setSelectedRoleId] = useState<string>('');
 
   console.log('🔑 UserRoles component is rendering!');
 
@@ -91,6 +96,41 @@ const UserRoles: React.FC = () => {
     }, 1000);
   }, []);
 
+  // CRUD Handlers
+  const handleAddRole = (roleData: Role) => {
+    setRoles(prev => [...prev, roleData]);
+    setViewMode('list');
+  };
+
+  const handleEditRole = (roleData: Role) => {
+    setRoles(prev => prev.map(role => role.id === roleData.id ? roleData : role));
+    setViewMode('list');
+  };
+
+  const handleDeleteRole = (roleId: string) => {
+    setRoles(prev => prev.filter(role => role.id !== roleId));
+    setViewMode('list');
+  };
+
+  const handleViewRole = (roleId: string) => {
+    setSelectedRoleId(roleId);
+    setViewMode('view');
+  };
+
+  const handleEditRoleClick = (roleId: string) => {
+    setSelectedRoleId(roleId);
+    setViewMode('edit');
+  };
+
+  const handleAddRoleClick = () => {
+    setViewMode('add');
+  };
+
+  const handleBackToList = () => {
+    setViewMode('list');
+    setSelectedRoleId('');
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -159,7 +199,10 @@ const UserRoles: React.FC = () => {
               <Upload className="w-4 h-4 inline mr-2" />
               Import
             </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button 
+              onClick={handleAddRoleClick}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
               <Plus className="w-4 h-4 inline mr-2" />
               Add Role
             </button>
@@ -260,13 +303,22 @@ const UserRoles: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                        <button 
+                          onClick={() => handleViewRole(role.id)}
+                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                        <button 
+                          onClick={() => handleEditRoleClick(role.id)}
+                          className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                        >
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                        <button 
+                          onClick={() => handleDeleteRole(role.id)}
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -306,6 +358,32 @@ const UserRoles: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Form Components */}
+      {viewMode === 'add' && (
+        <AddRoleForm
+          onSave={handleAddRole}
+          onCancel={handleBackToList}
+        />
+      )}
+
+      {viewMode === 'edit' && selectedRoleId && (
+        <EditRoleForm
+          roleId={selectedRoleId}
+          onSave={handleEditRole}
+          onCancel={handleBackToList}
+          onDelete={handleDeleteRole}
+        />
+      )}
+
+      {viewMode === 'view' && selectedRoleId && (
+        <ViewRoleForm
+          roleId={selectedRoleId}
+          onEdit={handleEditRoleClick}
+          onDelete={handleDeleteRole}
+          onBack={handleBackToList}
+        />
+      )}
     </div>
   );
 };

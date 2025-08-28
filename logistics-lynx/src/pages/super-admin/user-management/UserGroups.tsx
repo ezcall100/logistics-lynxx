@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Upload, Eye, Users, Download, Trash2, Lock } from 'lucide-react';
+import AddGroupForm from './forms/AddGroupForm';
+import EditGroupForm from './forms/EditGroupForm';
+import ViewGroupForm from './forms/ViewGroupForm';
 
 interface UserGroup {
   id: string;
@@ -23,6 +26,8 @@ const UserGroups: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [groups, setGroups] = useState<UserGroup[]>([]);
+  const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
+  const [selectedGroupId, setSelectedGroupId] = useState<string>('');
 
   console.log('👥 UserGroups component is rendering!');
 
@@ -106,6 +111,41 @@ const UserGroups: React.FC = () => {
     }, 1000);
   }, []);
 
+  // CRUD Handlers
+  const handleAddGroup = (groupData: UserGroup) => {
+    setGroups(prev => [...prev, groupData]);
+    setViewMode('list');
+  };
+
+  const handleEditGroup = (groupData: UserGroup) => {
+    setGroups(prev => prev.map(group => group.id === groupData.id ? groupData : group));
+    setViewMode('list');
+  };
+
+  const handleDeleteGroup = (groupId: string) => {
+    setGroups(prev => prev.filter(group => group.id !== groupId));
+    setViewMode('list');
+  };
+
+  const handleViewGroup = (groupId: string) => {
+    setSelectedGroupId(groupId);
+    setViewMode('view');
+  };
+
+  const handleEditGroupClick = (groupId: string) => {
+    setSelectedGroupId(groupId);
+    setViewMode('edit');
+  };
+
+  const handleAddGroupClick = () => {
+    setViewMode('add');
+  };
+
+  const handleBackToList = () => {
+    setViewMode('list');
+    setSelectedGroupId('');
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -174,7 +214,10 @@ const UserGroups: React.FC = () => {
               <Upload className="w-4 h-4 inline mr-2" />
               Import
             </button>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button 
+              onClick={handleAddGroupClick}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
               <Plus className="w-4 h-4 inline mr-2" />
               Add Group
             </button>
@@ -289,13 +332,22 @@ const UserGroups: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                        <button 
+                          onClick={() => handleViewGroup(group.id)}
+                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                        <button 
+                          onClick={() => handleEditGroupClick(group.id)}
+                          className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                        >
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                        <button 
+                          onClick={() => handleDeleteGroup(group.id)}
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -335,6 +387,32 @@ const UserGroups: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Form Components */}
+      {viewMode === 'add' && (
+        <AddGroupForm
+          onSave={handleAddGroup}
+          onCancel={handleBackToList}
+        />
+      )}
+
+      {viewMode === 'edit' && selectedGroupId && (
+        <EditGroupForm
+          groupId={selectedGroupId}
+          onSave={handleEditGroup}
+          onCancel={handleBackToList}
+          onDelete={handleDeleteGroup}
+        />
+      )}
+
+      {viewMode === 'view' && selectedGroupId && (
+        <ViewGroupForm
+          groupId={selectedGroupId}
+          onEdit={handleEditGroupClick}
+          onDelete={handleDeleteGroup}
+          onBack={handleBackToList}
+        />
+      )}
     </div>
   );
 };
