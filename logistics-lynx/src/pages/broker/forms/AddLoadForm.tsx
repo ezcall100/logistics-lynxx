@@ -70,31 +70,31 @@ const AddLoadForm: React.FC = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.loadNumber.trim()) {
-      newErrors.loadNumber = 'Load number is required';
+      newErrors['loadNumber'] = 'Load number is required';
     }
     if (!formData.origin.trim()) {
-      newErrors.origin = 'Origin is required';
+      newErrors['origin'] = 'Origin is required';
     }
     if (!formData.destination.trim()) {
-      newErrors.destination = 'Destination is required';
+      newErrors['destination'] = 'Destination is required';
     }
     if (!formData.pickupDate) {
-      newErrors.pickupDate = 'Pickup date is required';
+      newErrors['pickupDate'] = 'Pickup date is required';
     }
     if (!formData.deliveryDate) {
-      newErrors.deliveryDate = 'Delivery date is required';
+      newErrors['deliveryDate'] = 'Delivery date is required';
     }
     if (!formData.equipmentType) {
-      newErrors.equipmentType = 'Equipment type is required';
+      newErrors['equipmentType'] = 'Equipment type is required';
     }
     if (formData.weight <= 0) {
-      newErrors.weight = 'Weight must be greater than 0';
+      newErrors['weight'] = 'Weight must be greater than 0';
     }
     if (formData.rate <= 0) {
-      newErrors.rate = 'Rate must be greater than 0';
+      newErrors['rate'] = 'Rate must be greater than 0';
     }
     if (!formData.shipperName.trim()) {
-      newErrors.shipperName = 'Shipper name is required';
+      newErrors['shipperName'] = 'Shipper name is required';
     }
 
     setErrors(newErrors);
@@ -179,9 +179,9 @@ const AddLoadForm: React.FC = () => {
                 type="text"
                 value={formData.loadNumber}
                 onChange={(e) => handleInputChange('loadNumber', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.loadNumber ? 'border-red-500' : 'border-gray-300'
-                }`}
+                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                   errors['loadNumber'] ? 'border-red-500' : 'border-gray-300'
+                 }`}
                 placeholder="Enter load number"
               />
               {errors.loadNumber && (

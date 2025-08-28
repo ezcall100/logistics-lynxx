@@ -147,7 +147,9 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({ onSave, onCancel }) => {
     }
     if (acc[permission.category]) {
       if (acc[permission.category]) {
-        acc[permission.category].push(permission);
+        if (acc[permission.category]) {
+          acc[permission.category].push(permission);
+        }
       }
     }
     return acc;
