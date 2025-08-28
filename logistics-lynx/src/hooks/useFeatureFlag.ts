@@ -9,7 +9,7 @@ interface FeatureFlag {
 
 export const useFeatureFlag = (flagName: string): boolean => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [loading] = useState(true);
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     // Mock feature flag implementation
@@ -37,6 +37,7 @@ export const useFeatureFlag = (flagName: string): boolean => {
 
 export const useFeatureFlags = (): { flags: FeatureFlag[]; loading: boolean } => {
   const [flags, setFlags] = useState<FeatureFlag[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Mock feature flags data

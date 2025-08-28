@@ -101,11 +101,7 @@ const SecuritySettings: React.FC = () => {
   const [mode] = useState<'light' | 'dark'>('light');
   // const [, setSaving] = useState(false);
   // const [, setLoading] = useState(false);
-  const [showIPModal, setShowIPModal] = useState(false);
-
-
-
-  // const [showIPModal, setShowIPModal] = useState(false);
+  const [, setShowIPModal] = useState(false);
   // const [showCertificateModal, setShowCertificateModal] = useState(false);
   const [config] = useState<SecurityConfig>({
     authentication: {

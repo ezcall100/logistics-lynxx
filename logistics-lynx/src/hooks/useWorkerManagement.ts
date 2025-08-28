@@ -415,10 +415,10 @@ export const useWorkerManagement = (workerType: string) => {
   };
 
   const stats = {
-    executive: mockWorkers.executive.length,
-    employee: mockWorkers.employee.length,
-    drivers: mockWorkers.drivers.length,
-    agents: mockWorkers.agents.length,
+    executive: mockWorkers['executive']?.length || 0,
+    employee: mockWorkers['employee']?.length || 0,
+    drivers: mockWorkers['drivers']?.length || 0,
+    agents: mockWorkers['agents']?.length || 0,
     active: Object.values(mockWorkers).flat().filter(w => w.status === 'active').length,
     inactive: Object.values(mockWorkers).flat().filter(w => w.status === 'inactive').length,
     onLeave: Object.values(mockWorkers).flat().filter(w => w.status === 'on_leave').length,

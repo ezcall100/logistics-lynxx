@@ -198,7 +198,7 @@ export const useFinancialsManagement = () => {
   return {
     stats,
     isLoading,
-    error,
+    // error,
     refreshStats
   };
 };

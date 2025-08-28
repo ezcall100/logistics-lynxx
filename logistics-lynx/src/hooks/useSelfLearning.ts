@@ -54,13 +54,16 @@ export const useSelfLearning = () => {
           };
         }
 
-        performanceByType[log.decision_type].total++;
-        performanceByType[log.decision_type].decisions.push(log);
-        performanceByType[log.decision_type].avgConfidence += log.confidence_score;
-        
-        // Assume decisions with confidence > 0.8 that weren't flagged for review are successful
-        if (log.confidence_score > 0.8 && !log.flagged_for_review) {
-          performanceByType[log.decision_type].successful++;
+        const performanceData = performanceByType[log.decision_type];
+        if (performanceData) {
+          performanceData.total++;
+          performanceData.decisions.push(log);
+          performanceData.avgConfidence += log.confidence_score;
+          
+          // Assume decisions with confidence > 0.8 that weren't flagged for review are successful
+          if (log.confidence_score > 0.8 && !log.flagged_for_review) {
+            performanceData.successful++;
+          }
         }
       });
 
@@ -174,6 +177,7 @@ export const useSelfLearning = () => {
         description: "Self-learning cycle encountered an error",
         variant: "destructive",
       });
+      return [];
     }
   }, [learningActive, toast, analyzePerfomanceData, adjustThresholds]);
 
