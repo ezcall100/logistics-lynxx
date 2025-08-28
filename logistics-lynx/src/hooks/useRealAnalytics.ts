@@ -10,7 +10,7 @@ import { useSystemHealthData } from './analytics/useSystemHealthData';
 import { useRoleMetricsData } from './analytics/useRoleMetricsData';
 import { useAnalyticsHelpers } from './analytics/useAnalyticsHelpers';
 
-export const useRealAnalytics = (timeRange: string = '24h', selectedRole: string = 'all') => {
+export const useRealAnalytics = (timeRange: string = '24h', _selectedRole: string = 'all') => {
   const [analyticsData, setAnalyticsData] = useState<RealAnalyticsData>({
     aiLearning: null,
     userBehavior: null,

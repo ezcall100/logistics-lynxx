@@ -4,7 +4,7 @@ import { AlertTriangle, Clock, Edit, Upload, CheckCircle, X, Settings, Eye, Acti
 import { Button } from '@/components/ui/button';
 
 const DatabaseManagement: React.FC = () => {
-  const [, setIsRefreshing] = useState(false);
+  // const [, setIsRefreshing] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<number | null>(null);
 
   const [databases] = useState([
@@ -219,26 +219,21 @@ const DatabaseManagement: React.FC = () => {
                   
                   <div className="flex space-x-2">
                     <Button>
-                 
-              <Edit className="w-4 h-4 mr-2" /></Button>
-                      <Button>
-                Edit
-              </Button><Button>
-                 
-              <Download className="w-4 h-4 mr-2" /></Button>
-                      <Button>
-                Backup
-              </Button><Button>
-                 
-              <Upload className="w-4 h-4 mr-2" /></Button>
-                      <Button>
-                Restore
-              </Button><Button>
-                 
-              <Shield className="w-4 h-4 mr-2" /></Button>
-                      <Button>
-                Security
-              </Button>
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                    <Button>
+                      <Download className="w-4 h-4 mr-2" />
+                      Backup
+                    </Button>
+                    <Button>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Restore
+                    </Button>
+                    <Button>
+                      <Shield className="w-4 h-4 mr-2" />
+                      Security
+                    </Button>
                   </div>
                 </div>
               )}
@@ -280,8 +275,10 @@ const DatabaseManagement: React.FC = () => {
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             Security Status
           </h3>
+          <Button variant="outline" size="sm">
             <Shield className="w-4 h-4 mr-2" />
             Security Settings
+          </Button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

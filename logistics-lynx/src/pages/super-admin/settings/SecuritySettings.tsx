@@ -99,9 +99,9 @@ const SecuritySettings: React.FC = () => {
   // const [saving, setSaving] = useState(false);
 
   const [mode] = useState<'light' | 'dark'>('light');
-  const [, setSaving] = useState(false);
-  const [, setLoading] = useState(false);
-  const [showIPModal, setShowIPModal] = useState(false);
+  // const [, setSaving] = useState(false);
+  // const [, setLoading] = useState(false);
+  // const [showIPModal, setShowIPModal] = useState(false);
 
 
 

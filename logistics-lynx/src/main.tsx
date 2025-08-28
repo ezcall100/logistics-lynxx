@@ -38,5 +38,5 @@ try {
   }
 } catch (error) {
   console.error('❌ Main.tsx: Error rendering React app:', error);
-  console.error('❌ Main.tsx: Error stack:', error.stack);
+  console.error('❌ Main.tsx: Error stack:', (error as Error).stack);
 }

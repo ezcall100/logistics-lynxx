@@ -14,9 +14,9 @@ class FeatureFlagManager {
     const flagIndex = this.flags.findIndex(f => f.key === feature);
     
     if (flagIndex !== -1) {
-      this.flags[flagIndex] = { key: feature, enabled, tenants };
+      this.flags[flagIndex] = { key: feature, enabled, tenants: tenants || [] };
     } else {
-      this.flags.push({ key: feature, enabled, tenants });
+      this.flags.push({ key: feature, enabled, tenants: tenants || [] });
     }
   }
 

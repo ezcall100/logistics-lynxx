@@ -73,10 +73,10 @@ export async function getTaskStatus(taskId: string) {
     if (task) {
       if (task.status === 'completed') {
         return { status: 'completed', result: task.result };
-      } else if (task.status === 'failed') {
-        throw new Error(`Task failed: ${task.error_message}`);
-      } else {
-        return { status: task.status, progress: task.progress || 0 };
+      } else if (task && typeof task === 'object' && 'status' in task && task.status === 'failed') {
+        throw new Error(`Task failed: ${(task as any).error_message}`);
+      } else if (task && typeof task === 'object' && 'status' in task) {
+        return { status: (task as any).status, progress: (task as any).progress || 0 };
       }
     }
     
@@ -91,8 +91,8 @@ export async function getTaskResult(taskId: string) {
     const tasks = await agentManager.getAgentTasks('all');
     const task = tasks.find((t: any) => t.id === taskId);
     
-    if (task && task.status === 'completed') {
-      return task.result;
+    if (task && typeof task === 'object' && 'status' in task && task.status === 'completed') {
+      return (task as any).result;
     }
     
     throw new Error('Task not found or not completed');
@@ -117,7 +117,7 @@ export async function executeBatchTasks(tasks: Array<{ agentType: string; taskTy
   for (const task of tasks) {
     try {
       const result = await createTask(task.agentType, task.taskType, task.payload, task.priority);
-      results.push({ taskId: result.taskId || 'unknown', status: 'created' });
+      results.push({ taskId: typeof result === 'string' ? result : (result.taskId || 'unknown'), status: 'created' });
     } catch (error) {
       results.push({ taskId: 'unknown', status: 'failed', error: error instanceof Error ? error.message : 'Unknown error' });
     }

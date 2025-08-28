@@ -4,7 +4,7 @@ import { AlertTriangle, Clock, CheckCircle, X, Settings, Eye, TrendingUp, Trendi
 import { Button } from '@/components/ui/button';
 
 const ServerMonitoring: React.FC = () => {
-  const [, setIsRefreshing] = useState(false);
+  // const [, setIsRefreshing] = useState(false);
   const [selectedServer, setSelectedServer] = useState<number | null>(null);
 
   const [servers] = useState([

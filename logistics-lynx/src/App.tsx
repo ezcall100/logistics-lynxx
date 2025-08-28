@@ -23,9 +23,9 @@ const UserOnboarding = lazy(() => import('./pages/super-admin/user-management/Us
 
 // ✅ System Administration - Working Components Only
 const Configuration = lazy(() => import('./pages/super-admin/system-administration/Configuration'));
-// const DatabaseManagement = lazy(() => import('./pages/super-admin/system-administration/DatabaseManagement')); // Has JSX errors
+const DatabaseManagement = lazy(() => import('./pages/super-admin/system-administration/DatabaseManagement'));
 const APIManagement = lazy(() => import('./pages/super-admin/system-administration/APIManagement'));
-// const ServerMonitoring = lazy(() => import('./pages/super-admin/system-administration/ServerMonitoring')); // Has JSX errors
+const ServerMonitoring = lazy(() => import('./pages/super-admin/system-administration/ServerMonitoring'));
 const DeploymentManagement = lazy(() => import('./pages/super-admin/system-administration/DeploymentManagement'));
 const BackupRecovery = lazy(() => import('./pages/super-admin/system-administration/BackupRecovery'));
 const SecuritySettings = lazy(() => import('./pages/super-admin/system-administration/SecuritySettings'));
@@ -119,18 +119,18 @@ const ReleaseManagement = lazy(() => import('./pages/super-admin/development-dev
 // ✅ Settings - Working Components Only
 const SettingsOverview = lazy(() => import('./pages/super-admin/settings/SettingsOverview'));
 const ProfileSettings = lazy(() => import('./pages/super-admin/settings/ProfileSettings'));
-// const SystemSettings = lazy(() => import('./pages/super-admin/settings/SystemSettings')); // Has JSX errors
+const SystemSettings = lazy(() => import('./pages/super-admin/settings/SystemSettings'));
 const UserPreferences = lazy(() => import('./pages/super-admin/settings/UserPreferences'));
 const SecuritySettingsPage = lazy(() => import('./pages/super-admin/settings/SecuritySettings'));
 
 // ✅ Profile - Working Components Only
 const ProfileOverview = lazy(() => import('./pages/super-admin/profile/ProfileOverview'));
 const PersonalInformation = lazy(() => import('./pages/super-admin/profile/PersonalInformation'));
-// const AvatarMedia = lazy(() => import('./pages/super-admin/profile/AvatarMedia')); // Has JSX errors
+const AvatarMedia = lazy(() => import('./pages/super-admin/profile/AvatarMedia'));
 const UserPreferencesProfile = lazy(() => import('./pages/super-admin/profile/UserPreferences'));
 const ActivityHistory = lazy(() => import('./pages/super-admin/profile/ActivityHistory'));
-// const ActiveSessions = lazy(() => import('./pages/super-admin/profile/ActiveSessions')); // Has JSX errors
-// const AccountVerification = lazy(() => import('./pages/super-admin/profile/AccountVerification')); // Has JSX errors
+const ActiveSessions = lazy(() => import('./pages/super-admin/profile/ActiveSessions'));
+const AccountVerification = lazy(() => import('./pages/super-admin/profile/AccountVerification'));
 const AccountDeletion = lazy(() => import('./pages/super-admin/profile/AccountDeletion'));
 
 // ✅ FAB Actions - Working Components Only
@@ -181,9 +181,9 @@ function App() {
             <Route path="users/onboarding" element={<UserOnboarding />} />
             
             {/* System Administration - Working Routes Only */}
-            {/* <Route path="system/database" element={<DatabaseManagement />} /> */} {/* Has JSX errors */}
+            <Route path="system/database" element={<DatabaseManagement />} />
             <Route path="system/api" element={<APIManagement />} />
-            {/* <Route path="system/monitoring" element={<ServerMonitoring />} /> */} {/* Has JSX errors */}
+            <Route path="system/monitoring" element={<ServerMonitoring />} />
             <Route path="system/deployment" element={<DeploymentManagement />} />
             <Route path="system/config" element={<Configuration />} />
             <Route path="system/backup" element={<BackupRecovery />} />
@@ -278,18 +278,18 @@ function App() {
             {/* Settings - Working Routes Only */}
             <Route path="settings" element={<SettingsOverview />} />
             <Route path="settings/profile" element={<ProfileSettings />} />
-            {/* <Route path="settings/system" element={<SystemSettings />} /> */} {/* Has JSX errors */}
+            <Route path="settings/system" element={<SystemSettings />} />
             <Route path="settings/preferences" element={<UserPreferences />} />
             <Route path="settings/security" element={<SecuritySettingsPage />} />
             
             {/* Profile - Working Routes Only */}
             <Route path="profile" element={<ProfileOverview />} />
             <Route path="profile/personal" element={<PersonalInformation />} />
-            {/* <Route path="profile/avatar" element={<AvatarMedia />} /> */} {/* Has JSX errors */}
+            <Route path="profile/avatar" element={<AvatarMedia />} />
             <Route path="profile/preferences" element={<UserPreferencesProfile />} />
             <Route path="profile/activity" element={<ActivityHistory />} />
-            {/* <Route path="profile/sessions" element={<ActiveSessions />} /> */} {/* Has JSX errors */}
-            {/* <Route path="profile/verification" element={<AccountVerification />} /> */} {/* Has JSX errors */}
+            <Route path="profile/sessions" element={<ActiveSessions />} />
+            <Route path="profile/verification" element={<AccountVerification />} />
             <Route path="profile/delete" element={<AccountDeletion />} />
             
             {/* FAB Actions - Working Routes Only */}

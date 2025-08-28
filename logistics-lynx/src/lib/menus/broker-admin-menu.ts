@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { 
-  Settings, Database, Shield, Bell, Network, Users, Clock, CheckCircle, AlertTriangle, Eye, Lock, LayoutDashboard, Package, Plus, UserCheck, Truck, DollarSign, ClipboardList, PackageSearch, PackagePlus, Handshake, Building, Building2, MapPin, Heart, BarChart3, Mail, UserPlus, FolderOpen, Calendar, Target, Receipt, FileText, ShoppingCart, Calculator, Activity, Banknote, Zap, Gauge, CreditCard, Route, Phone, MessageSquare, Wrench, Upload, PieChart, Brain, Globe, Book, TrendingUp, TrendingDown, Timer, Users2, BarChart, Warehouse, HelpCircle, Lightning, Layers, FileCheck, Bot, MapRoute, Fuel, Star, Search, GraduationCap, ArrowDownCircle, ArrowUpDown
+  Settings, Database, Shield, Bell, Network, Users, Clock, CheckCircle, AlertTriangle, Eye, Lock, Package, Plus, UserCheck, Truck, DollarSign, Building2, MapPin, BarChart3, Mail, FolderOpen, Calendar, Target, Receipt, FileText, ShoppingCart, Calculator, Activity, Banknote, Zap, Gauge, CreditCard, Route, Phone, MessageSquare, Wrench, Upload, PieChart, Brain, Globe, Book, TrendingUp, TrendingDown, Timer, Users2, BarChart, Warehouse, HelpCircle, Layers, FileCheck, Bot, Fuel, Star, Search, GraduationCap, ArrowDownCircle, ArrowUpDown
 } from 'lucide-react';
 
 export interface MenuSection {
@@ -46,7 +46,7 @@ export const BROKER_ADMIN_MENU: MenuSection = {
         // Main Dashboard & Creation
         { title: "Quote Dashboard", icon: BarChart3, path: "/broker-admin/quotes" },
         { title: "Create Quote", icon: Plus, path: "/broker-admin/quotes/create" },
-        { title: "Quick Quote", icon: Lightning, path: "/broker-admin/quotes/quick" },
+        { title: "Quick Quote", icon: Zap, path: "/broker-admin/quotes/quick" },
         { title: "All Quotes", icon: Layers, path: "/broker-admin/quotes/all" },
         
         // Quote Management & Pricing
@@ -72,7 +72,7 @@ export const BROKER_ADMIN_MENU: MenuSection = {
             { title: "Rate Calculator", icon: Calculator, path: "/broker-admin/quotes/calculator" },
             { title: "Customer Rates", icon: Users, path: "/broker-admin/quotes/customer-rates" },
             { title: "Carrier Rates", icon: Truck, path: "/broker-admin/quotes/carrier-rates" },
-            { title: "Lane Pricing", icon: MapRoute, path: "/broker-admin/quotes/lanes" },
+            { title: "Lane Pricing", icon: Route, path: "/broker-admin/quotes/lanes" },
             { title: "Market Intelligence", icon: TrendingUp, path: "/broker-admin/quotes/market-intel" }
           ]
         },
@@ -138,7 +138,7 @@ export const BROKER_ADMIN_MENU: MenuSection = {
             { title: "Dispatch Center", icon: Users2, path: "/broker-admin/shipments/dispatch" },
             { title: "Load Assignment", icon: UserCheck, path: "/broker-admin/shipments/assign" },
             { title: "Carrier Matching", icon: Bot, path: "/broker-admin/shipments/carrier-match" },
-            { title: "Route Optimization", icon: MapRoute, path: "/broker-admin/shipments/routes" },
+            { title: "Route Optimization", icon: Route, path: "/broker-admin/shipments/routes" },
             { title: "Multi-Stop Loads", icon: Route, path: "/broker-admin/shipments/multi-stop" },
             { title: "LTL Consolidation", icon: Package, path: "/broker-admin/shipments/ltl" },
             { title: "Emergency Dispatch", icon: Bell, path: "/broker-admin/shipments/emergency" }
@@ -197,7 +197,7 @@ export const BROKER_ADMIN_MENU: MenuSection = {
             { title: "Performance Dashboard", icon: Gauge, path: "/broker-admin/shipments/performance" },
             { title: "On-Time Delivery", icon: Timer, path: "/broker-admin/shipments/otd" },
             { title: "Carrier Performance", icon: Star, path: "/broker-admin/shipments/carrier-performance" },
-            { title: "Lane Analysis", icon: MapRoute, path: "/broker-admin/shipments/lane-analysis" },
+            { title: "Lane Analysis", icon: Route, path: "/broker-admin/shipments/lane-analysis" },
             { title: "Volume Reports", icon: BarChart, path: "/broker-admin/shipments/volume" },
             { title: "Revenue Reports", icon: TrendingUp, path: "/broker-admin/shipments/revenue" },
             { title: "Custom Reports", icon: FileText, path: "/broker-admin/shipments/custom-reports" }

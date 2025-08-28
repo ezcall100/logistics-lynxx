@@ -33,7 +33,7 @@ const EditLoadForm: React.FC<EditLoadFormProps> = ({ loadId, onSave, onCancel, o
   const [formData, setFormData] = useState<LoadData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState<Partial<LoadData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const equipmentTypes = [
     'Dry Van',
@@ -102,41 +102,42 @@ const EditLoadForm: React.FC<EditLoadFormProps> = ({ loadId, onSave, onCancel, o
     
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     }
   };
 
   const validateForm = (): boolean => {
     if (!formData) return false;
 
-    const newErrors: Partial<LoadData> = {};
+    const newErrors: Record<string, string> = {};
 
     if (!formData.loadNumber.trim()) {
-      newErrors.loadNumber = 'Load number is required';
+      newErrors['loadNumber'] = 'Load number is required';
     }
     if (!formData.origin.trim()) {
-      newErrors.origin = 'Origin is required';
+      newErrors['origin'] = 'Origin is required';
     }
     if (!formData.destination.trim()) {
-      newErrors.destination = 'Destination is required';
+      newErrors['destination'] = 'Destination is required';
     }
     if (!formData.pickupDate) {
-      newErrors.pickupDate = 'Pickup date is required';
+      newErrors['pickupDate'] = 'Pickup date is required';
     }
     if (!formData.deliveryDate) {
-      newErrors.deliveryDate = 'Delivery date is required';
+      newErrors['deliveryDate'] = 'Delivery date is required';
     }
     if (!formData.equipmentType) {
-      newErrors.equipmentType = 'Equipment type is required';
+      newErrors['equipmentType'] = 'Equipment type is required';
     }
     if (formData.weight <= 0) {
-      newErrors.weight = 'Weight must be greater than 0';
+      newErrors['weight'] = 'Weight must be greater than 0';
     }
     if (formData.rate <= 0) {
-      newErrors.rate = 'Rate must be greater than 0';
+      newErrors['rate'] = 'Rate must be greater than 0';
     }
     if (!formData.shipperName.trim()) {
       newErrors.shipperName = 'Shipper name is required';

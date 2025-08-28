@@ -184,9 +184,9 @@ const AddLoadForm: React.FC = () => {
                  }`}
                 placeholder="Enter load number"
               />
-              {errors.loadNumber && (
-                <p className="mt-1 text-sm text-red-600">{errors.loadNumber}</p>
-              )}
+                             {errors['loadNumber'] && (
+                 <p className="mt-1 text-sm text-red-600">{errors['loadNumber']}</p>
+               )}
             </div>
 
             <div>
@@ -196,18 +196,18 @@ const AddLoadForm: React.FC = () => {
               <select
                 value={formData.equipmentType}
                 onChange={(e) => handleInputChange('equipmentType', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.equipmentType ? 'border-red-500' : 'border-gray-300'
-                }`}
+                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                   errors['equipmentType'] ? 'border-red-500' : 'border-gray-300'
+                 }`}
               >
                 <option value="">Select equipment type</option>
                 {equipmentTypes.map(type => (
                   <option key={type} value={type}>{type}</option>
                 ))}
               </select>
-              {errors.equipmentType && (
-                <p className="mt-1 text-sm text-red-600">{errors.equipmentType}</p>
-              )}
+                             {errors['equipmentType'] && (
+                 <p className="mt-1 text-sm text-red-600">{errors['equipmentType']}</p>
+               )}
             </div>
           </div>
 
@@ -224,13 +224,13 @@ const AddLoadForm: React.FC = () => {
                   value={formData.origin}
                   onChange={(e) => handleInputChange('origin', e.target.value)}
                   className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.origin ? 'border-red-500' : 'border-gray-300'
+                    errors['origin'] ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter origin city"
                 />
               </div>
-              {errors.origin && (
-                <p className="mt-1 text-sm text-red-600">{errors.origin}</p>
+              {errors['origin'] && (
+                <p className="mt-1 text-sm text-red-600">{errors['origin']}</p>
               )}
             </div>
 
@@ -245,7 +245,7 @@ const AddLoadForm: React.FC = () => {
                   value={formData.destination}
                   onChange={(e) => handleInputChange('destination', e.target.value)}
                   className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.destination ? 'border-red-500' : 'border-gray-300'
+                    errors['destination'] ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter destination city"
                 />

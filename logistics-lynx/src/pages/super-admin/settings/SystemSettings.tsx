@@ -248,7 +248,8 @@ const SystemSettings: React.FC = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className={`text-3xl font-bold ${stableStyles.textPrimary[mode]}`}>
-              System </h1>
+              System Settings
+            </h1>
             <p className={`text-lg ${stableStyles.textSecondary[mode]} mt-2`}>
               Configure system-wide settings and preferences
             </p>
@@ -299,7 +300,7 @@ const SystemSettings: React.FC = () => {
         {activeTab === 'general' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
-              General System
+              General System Settings
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -457,7 +458,7 @@ const SystemSettings: React.FC = () => {
           <EnhancedCard mode={mode} elevated>
             <div className="flex items-center justify-between mb-4">
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
-                Configuration
+                Database Configuration
               </h3>
               <Button
                 variant="secondary"
@@ -899,10 +900,10 @@ const SystemSettings: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Email Notifications</h4>
-                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      notifications via email
-                    </p>
+                                      <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Email Notifications</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Send notifications via email
+                  </p>
                   </div>
                   <input
                     type="checkbox"
@@ -916,10 +917,10 @@ const SystemSettings: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>SMS Notifications</h4>
-                    <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      notifications via SMS
-                    </p>
+                                      <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>SMS Notifications</h4>
+                  <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
+                    Send notifications via SMS
+                  </p>
                   </div>
                   <input
                     type="checkbox"
@@ -935,7 +936,7 @@ const SystemSettings: React.FC = () => {
                   <div>
                     <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>Push Notifications</h4>
                     <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                      push notifications
+                      Send push notifications
                     </p>
                   </div>
                   <input

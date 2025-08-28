@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import { Settings, Shield, Bell, Users, CheckCircle } from 'lucide-react';
+import { 
+  Settings, Shield, Bell, Users, CheckCircle, LayoutDashboard, UserPlus, Star, BarChart3, Globe, Target, Search, Mail, FileText, TrendingUp, PieChart, Activity, DollarSign, Calculator, Building2, Route, Handshake, Package, BrainCircuit, Truck, MapPin, Zap, Award, Phone, Calendar, BookOpen, UserCheck, MessageSquare
+} from 'lucide-react';
 
 export const AGENTS_MENU: MenuSection = {
   items: [

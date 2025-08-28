@@ -90,7 +90,7 @@ export interface FinancialsStats {
 }
 
 export const useFinancialsManagement = () => {
-  const [stats, setStats] = useState<FinancialsStats>({
+  const [stats] = useState<FinancialsStats>({
     overview: {
       totalRevenue: 847500,
       outstandingInvoices: 45600,
@@ -178,7 +178,7 @@ export const useFinancialsManagement = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Simulate data loading

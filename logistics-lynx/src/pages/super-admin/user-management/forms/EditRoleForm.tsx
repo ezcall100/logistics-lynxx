@@ -217,11 +217,9 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
     if (!acc[permission.category]) {
       acc[permission.category] = [];
     }
-    if (acc[permission.category]) {
-      if (acc[permission.category]) {
+          if (acc[permission.category]) {
         acc[permission.category].push(permission);
       }
-    }
     return acc;
   }, {} as Record<string, typeof permissions>);
 

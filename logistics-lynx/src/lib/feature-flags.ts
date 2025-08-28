@@ -83,7 +83,7 @@ class FeatureFlagService {
     }
     
     // Mark region as unhealthy if failure threshold exceeded
-    if (this.failureCount[regionId] >= this.config.failoverThreshold) {
+    if (this.failureCount[regionId] && this.failureCount[regionId] >= this.config.failoverThreshold) {
       const region = this.regions.find(r => r.id === regionId);
       if (region) {
         region.isHealthy = false;
@@ -107,7 +107,12 @@ class FeatureFlagService {
     if (!region) return false;
     
     try {
-      const response = await fetch(`${region.url}/health`, { timeout: 5000 });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const response = await fetch(`${region.url}/health`, { 
+        signal: controller.signal 
+      });
+      clearTimeout(timeoutId);
       const isHealthy = response.ok;
       
       if (isHealthy && this.failureCount[regionId] !== undefined) {

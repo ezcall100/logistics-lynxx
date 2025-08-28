@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { LucideIcon } from 'lucide-react';
-import {  } from 'lucide-react';
+import { Phone, MessageSquare, FileText, Share2, Mail } from 'lucide-react';
 
 interface NavItem {
   title: string;
