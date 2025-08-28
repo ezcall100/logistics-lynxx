@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Camera, Save, Key, Trash2, RotateCcw, Settings, Shield, Bell, Eye } from 'lucide-react';
+import { User, Camera, Settings, Shield, Bell, Eye } from 'lucide-react';
 import { 
   EnhancedCard, 
   Button, 
@@ -52,15 +52,12 @@ interface UserProfile {
 
 const ProfileSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
-
-  const [saving, setSaving] = useState(false);
-
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
 
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const [profile, setProfile] = useState<UserProfile>({
+  const [profile] = useState<UserProfile>({
     id: '1',
     firstName: 'John',
     lastName: 'Doe',
@@ -113,26 +110,9 @@ const ProfileSettings: React.FC = () => {
     setFormData(profile);
   }, [profile]);
 
-  const handleSave = async () => {
-    setSaving(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setProfile(formData);
-    setSaving(false);
-  };
 
-  const handlePasswordChange = async () => {
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    setSaving(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setShowPasswordModal(false);
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    setSaving(false);
-  };
+
+
 
   const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
