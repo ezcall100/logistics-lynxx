@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 
 const AgentMonitor: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
-  const [agentStatus, setAgentStatus] = useState({
+  const [, setData] = useState<any>(null);
+  const [agentStatus] = useState({
     isRunning: true,
     lastActivity: new Date(),
     performance: { cpu: 25, memory: 60, tasksCompleted: 0, successRate: 95 }
@@ -29,7 +29,7 @@ const AgentMonitor: React.FC = () => {
   };
 
   const handleAgentAction = async (action: 'start' | 'stop' | 'restart') => {
-    console.log(`Agent ${item.autonomousAgent} action: ${action}`);
+    console.log(`Agent action: ${action}`);
     // Implement autonomous agent control
   };
 

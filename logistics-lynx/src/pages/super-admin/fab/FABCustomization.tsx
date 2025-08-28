@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Button } from '@/components/ui/button';
 const FABCustomization = () => {
-  const [customization, setCustomization] = useState({
+  const [customization] = useState({
     theme: 'blue',
     position: 'bottom-right',
     size: 'medium',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit, Eye, Trash2, Package, MapPin, Calendar, DollarSign, Truck, RefreshCw } from 'lucide-react';
+import { Plus, Search, Edit, Eye, Trash2, Package, MapPin, Calendar, Truck, RefreshCw } from 'lucide-react';
 import AddLoadForm from './forms/AddLoadForm';
 import EditLoadForm from './forms/EditLoadForm';
 import ViewLoadForm from './forms/ViewLoadForm';

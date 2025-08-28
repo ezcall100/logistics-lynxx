@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,12 +13,12 @@ import {
   Cpu,
   HardDrive,
   Network,
-  Clock,
+
   CheckCircle,
-  AlertTriangle,
-  Play,
-  Pause,
-  RotateCcw,
+
+
+
+
   TrendingUp,
   TrendingDown
 } from 'lucide-react';
@@ -29,7 +29,7 @@ import { AutomationRuleEngine } from '@/components/mcp/AutomationRuleEngine';
 
 export default function Phase2OrchestrationPage() {
   const [activeTab, setActiveTab] = useState('overview');
-  const [systemStatus, setSystemStatus] = useState<'operational' | 'degraded' | 'critical'>('operational');
+  const [systemStatus] = useState<'operational' | 'degraded' | 'critical'>('operational');
 
   // Mock system metrics
   const systemMetrics = {

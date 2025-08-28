@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { AlertTriangle, Clock, CheckCircle, X, RefreshCw, Settings, Eye, TrendingUp, TrendingDown, Cpu, Server, HardDrive, Network } from 'lucide-react';
+import { AlertTriangle, Clock, CheckCircle, X, Settings, Eye, TrendingUp, TrendingDown, Cpu, Server, HardDrive, Network } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const ServerMonitoring: React.FC = () => {

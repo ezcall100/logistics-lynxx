@@ -95,9 +95,9 @@ const SecurityAudit: React.FC = () => {
     } as const;
 
     return (
-      <EnhancedBadge variant={variants[status as keyof typeof variants] || 'default'}>
+      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${variants[status as keyof typeof variants] || variants.default}`}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
-      </EnhancedBadge>
+      </span>
     );
   };
 
@@ -183,7 +183,7 @@ const SecurityAudit: React.FC = () => {
         <ResponsiveCard>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Security Checks</h2>
           <div className="space-y-4">
-            {auditItems.map((item, index) => (
+            {auditItems.map((item, i) => (
               <div key={item.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">

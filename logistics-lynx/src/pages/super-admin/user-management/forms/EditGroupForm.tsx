@@ -237,7 +237,9 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
       acc[permission.category] = [];
     }
     if (acc[permission.category]) {
-      acc[permission.category].push(permission);
+      if (acc[permission.category]) {
+        acc[permission.category].push(permission);
+      }
     }
     return acc;
   }, {} as Record<string, typeof permissions>);

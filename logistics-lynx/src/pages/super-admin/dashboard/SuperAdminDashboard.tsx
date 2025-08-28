@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, CheckCircle, Clock, Settings, Search, Filter, Upload, Plus, Edit, Trash2, Eye, RefreshCw, Sun, Moon } from 'lucide-react';
 
+interface DashboardItem {
+  id: number;
+  name: string;
+  status: string;
+  value: number;
+  date: string;
+}
+
 const SuperAdminDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<DashboardItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Mock data for demonstration
-  const mockData = [
+  const mockData: DashboardItem[] = [
     { id: 1, name: 'Item 1', status: 'active', value: 100, date: '2024-01-15' },
     { id: 2, name: 'Item 2', status: 'inactive', value: 200, date: '2024-01-16' },
     { id: 3, name: 'Item 3', status: 'active', value: 150, date: '2024-01-17' },
@@ -32,7 +40,7 @@ const SuperAdminDashboard: React.FC = () => {
     return matchesSearch && matchesFilter;
   });
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'text-green-600 bg-green-100';
       case 'inactive': return 'text-red-600 bg-red-100';

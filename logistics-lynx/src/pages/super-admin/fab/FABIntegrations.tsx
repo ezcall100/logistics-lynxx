@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Button } from '@/components/ui/button';
 const FABIntegrations = () => {
-  const [integrations, setIntegrations] = useState([
+  const [integrations] = useState([
     {
       id: 1,
       name: 'Slack',

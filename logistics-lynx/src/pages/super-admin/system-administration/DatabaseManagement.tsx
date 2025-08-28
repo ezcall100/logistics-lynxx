@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { AlertTriangle, Clock, Plus, Edit, Upload, CheckCircle, X, RefreshCw, Settings, Eye, Activity, Users, Download, Shield, TrendingUp, TrendingDown, Database } from 'lucide-react';
+import { AlertTriangle, Clock, Edit, Upload, CheckCircle, X, Settings, Eye, Activity, Users, Download, Shield, TrendingUp, TrendingDown, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const DatabaseManagement: React.FC = () => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [, setIsRefreshing] = useState(false);
   const [selectedDatabase, setSelectedDatabase] = useState<number | null>(null);
 
   const [databases] = useState([
@@ -72,12 +72,12 @@ const DatabaseManagement: React.FC = () => {
     }
   };
 
-  const refreshData = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
-  };
+  // const refreshData = () => {
+  //   setIsRefreshing(true);
+  //   setTimeout(() => {
+  //     setIsRefreshing(false);
+  //   }, 1000);
+  // };
 
   return (
     <div className="space-y-6">

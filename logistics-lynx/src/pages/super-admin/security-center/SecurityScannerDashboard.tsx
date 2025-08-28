@@ -581,8 +581,8 @@ const SecurityScannerDashboard: React.FC = () => {
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {findingsData.map((entry) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                              {findingsData.map((entry, i) => (
+                        <Cell key={`cell-${i}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip />

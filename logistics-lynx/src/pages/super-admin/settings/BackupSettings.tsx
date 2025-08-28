@@ -289,8 +289,8 @@ const BackupSettings = () => {
                 { date: '2024-01-14 02:00:00', status: 'completed', size: '2.1 GB' },
                 { date: '2024-01-13 02:00:00', status: 'completed', size: '2.0 GB' },
                 { date: '2024-01-12 02:00:00', status: 'failed', size: '0 GB' }
-              ].map((backup) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                              ].map((backup, i) => (
+                <div key={`backup-${i}`} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
                     <p className="font-medium">{backup.date}</p>
                     <p className="text-sm text-gray-600">{backup.size}</p>

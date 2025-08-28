@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Button } from '@/components/ui/button';
 const FABActions = () => {
-  const [actions, setActions] = useState([
+  const [actions] = useState([
     {
       id: 1,
       name: 'Create Order',

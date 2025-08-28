@@ -99,8 +99,8 @@ const MobileSync = () => {
                 { name: 'Samsung Galaxy S24', user: 'Jane Smith', status: 'syncing', lastSync: 'in progress', dataSize: '1.8 MB' },
                 { name: 'iPad Pro', user: 'Mike Johnson', status: 'pending', lastSync: '2 hours ago', dataSize: '4.1 MB' },
                 { name: 'Google Pixel 8', user: 'Sarah Wilson', status: 'synced', lastSync: '5 minutes ago', dataSize: '3.2 MB' }
-              ].map((device) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                              ].map((device, i) => (
+                <div key={`sync-${i}`} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
                       <span className="text-xl">📱</span>
@@ -145,8 +145,8 @@ const MobileSync = () => {
                 { time: '12 minutes ago', action: 'User preferences sync', device: 'iPad Pro', status: 'success', dataSize: '89 KB' },
                 { time: '1 hour ago', action: 'Full data sync', device: 'Google Pixel 8', status: 'success', dataSize: '15.2 MB' },
                 { time: '2 hours ago', action: 'Sync failed', device: 'iPad Pro', status: 'error', dataSize: '0 KB' }
-              ].map((entry) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                              ].map((entry, i) => (
+                <div key={`history-${i}`} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                       entry.status === 'success' ? 'bg-green-100' : 'bg-red-100'

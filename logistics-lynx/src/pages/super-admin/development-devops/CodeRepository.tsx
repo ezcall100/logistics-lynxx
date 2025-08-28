@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { GitBranch, Code } from 'lucide-react';
+import { GitBranch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CodeRepository: React.FC = () => {

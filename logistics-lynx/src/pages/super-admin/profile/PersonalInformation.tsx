@@ -27,9 +27,9 @@ const PersonalInformation = () => {
     }
   });
 
-  const handleSave = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  };
+  // const handleSave = async () => {
+  //   await new Promise(resolve => setTimeout(resolve, 1000));
+  // };
 
   return (
     <div className="space-y-6 p-6">

@@ -256,19 +256,17 @@ const SystemSettings: React.FC = () => {
           <div className="flex space-x-3">
             <Button
               variant="secondary"
-              icon={<RefreshCw className="w-4 h-4" />}
-              mode={mode}
               onClick={() => window.location.reload()}
             >
+              <RefreshCw className="w-4 h-4 mr-2" />
               Reset
             </Button>
             <Button
-              variant="primary"
-              icon={<Save className="w-4 h-4" />}
-              mode={mode}
+              variant="default"
               onClick={handleSave}
-              loading={saving}
+              disabled={saving}
             >
+              <Save className="w-4 h-4 mr-2" />
               Save Changes
             </Button>
           </div>
@@ -463,11 +461,10 @@ const SystemSettings: React.FC = () => {
               </h3>
               <Button
                 variant="secondary"
-                icon={<RefreshCw className="w-4 h-4" />}
-                mode={mode}
                 onClick={() => handleTestConnection('')}
-                loading={loading}
+                disabled={loading}
               >
+                <RefreshCw className="w-4 h-4 mr-2" />
                 Test Connection
               </Button>
             </div>
@@ -686,11 +683,10 @@ const SystemSettings: React.FC = () => {
               </h3>
               <Button
                 variant="secondary"
-                icon={<Mail className="w-4 h-4" />}
-                mode={mode}
                 onClick={() => handleTestConnection('Email')}
-                loading={loading}
+                disabled={loading}
               >
+                <Mail className="w-4 h-4 mr-2" />
                 Test Connection
               </Button>
             </div>

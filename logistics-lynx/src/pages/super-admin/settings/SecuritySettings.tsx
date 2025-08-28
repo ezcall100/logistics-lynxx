@@ -99,6 +99,9 @@ const SecuritySettings: React.FC = () => {
   // const [saving, setSaving] = useState(false);
 
   const [mode] = useState<'light' | 'dark'>('light');
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showIPModal, setShowIPModal] = useState(false);
 
 
 
@@ -1010,7 +1013,7 @@ const SecuritySettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Recent Security Events
               </h3>
-                <Button mode={mode}
+                <Button
               >
                 Export Logs
               </Button>

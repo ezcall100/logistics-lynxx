@@ -55,7 +55,7 @@ interface Alert {
 
 const AnalyticsDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [selectedTimeframe, setSelectedTimeframe] = useState('30d');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -329,7 +329,7 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'name',
       title: 'KPI Name',
       sortable: true,
-      render: (value: string, row: KPIMetric) => (
+      render: (_value: string, row: KPIMetric) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.name}
@@ -344,7 +344,7 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'value',
       title: 'Current Value',
       sortable: true,
-      render: (value: number, row: KPIMetric) => (
+      render: (_value: number, row: KPIMetric) => (
         <div>
           <div className={`text-lg font-bold ${stableStyles.textPrimary[mode]}`}>
             {formatValue(row.value, row.unit)}
@@ -359,7 +359,7 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'change',
       title: 'Change',
       sortable: true,
-      render: (value: number, row: KPIMetric) => (
+      render: (_value: number, row: KPIMetric) => (
         <div className="flex items-center space-x-2">
           {getChangeIcon(row.changeType)}
           <span className={`font-medium ${getChangeColor(row.changeType)}`}>
@@ -371,7 +371,7 @@ const AnalyticsDashboard: React.FC = () => {
     {
       key: 'progress',
       title: 'Progress',
-      render: (value: any, row: KPIMetric) => (
+      render: (_value: any, row: KPIMetric) => (
         <div>
           <EnhancedProgress
             value={(row.value / row.target) * 100}
@@ -389,9 +389,9 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'lastUpdated',
       title: 'Last Updated',
       sortable: true,
-      render: (value: string) => (
+      render: (_value: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {new Date(value).toLocaleString()}
+          {new Date(_value).toLocaleString()}
         </div>
       )
     }
@@ -402,7 +402,7 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'name',
       title: 'Report Name',
       sortable: true,
-      render: (value: string, row: Report) => (
+      render: (_value: string, row: Report) => (
         <div>
           <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
             {row.name}
@@ -417,15 +417,15 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'status',
       title: 'Status',
       sortable: true,
-      render: (value: string) => getStatusBadge(value)
+      render: (_value: string) => getStatusBadge(_value)
     },
     {
       key: 'format',
       title: 'Format',
       sortable: true,
-      render: (value: string) => (
+      render: (_value: string) => (
         <div className={`text-sm font-medium ${stableStyles.textPrimary[mode]}`}>
-          {value.toUpperCase()}
+          {_value.toUpperCase()}
         </div>
       )
     },
@@ -433,9 +433,9 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'size',
       title: 'Size',
       sortable: true,
-      render: (value: string) => (
+      render: (_value: string) => (
         <div className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-          {value}
+          {_value}
         </div>
       )
     },
@@ -456,7 +456,7 @@ const AnalyticsDashboard: React.FC = () => {
       key: 'title',
       title: 'Alert',
       sortable: true,
-      render: (value: string, row: Alert) => (
+      render: (_value: string, row: Alert) => (
         <div className="flex items-center space-x-3">
           {getAlertIcon(row.type)}
           <div>

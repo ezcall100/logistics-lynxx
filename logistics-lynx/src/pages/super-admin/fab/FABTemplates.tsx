@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Button } from '@/components/ui/button';
 const FABTemplates = () => {
-  const [templates, setTemplates] = useState([
+  const [templates] = useState([
     {
       id: 1,
       name: 'E-commerce Template',

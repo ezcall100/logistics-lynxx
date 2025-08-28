@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 const AccountDeletion = () => {
   const [deletionStep, setDeletionStep] = useState<'warning' | 'confirmation' | 'processing'>('warning');
   const [confirmationText, setConfirmationText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
 
   const accountData = {
     email: 'john.doe@tms-enterprise.com',

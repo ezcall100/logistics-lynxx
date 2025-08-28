@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Button } from '@/components/ui/button';
 const FABAnalytics = () => {
-  const [analytics, setAnalytics] = useState({
+  const [analytics] = useState({
     totalClicks: 1247,
     successRate: 89,
     avgResponseTime: 2.3,
@@ -80,11 +80,11 @@ const FABAnalytics = () => {
           </div>
           <div>
             <div className="space-y-4">
-              {analytics.topActions.map((action) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                              {analytics.topActions.map((action, i) => (
+                <div key={`analytics-${i}`} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 font-bold">{index + 1}</span>
+                                              <span className="text-blue-600 font-bold">{i + 1}</span>
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">{action.name}</h4>

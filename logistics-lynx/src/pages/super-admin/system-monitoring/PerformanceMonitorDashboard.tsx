@@ -44,9 +44,9 @@ interface SystemMetrics {
 }
 
 const PerformanceMonitorDashboard: React.FC = () => {
-  const [confidenceData, setConfidenceData] = useState<ConfidenceData[]>([]);
-  const [retryHeatmapData, setRetryHeatmapData] = useState<RetryHeatmapData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setConfidenceData] = useState<ConfidenceData[]>([]);
+  const [, setRetryHeatmapData] = useState<RetryHeatmapData[]>([]);
+  const [, setIsLoading] = useState(false);
   const [selectedTimeframe] = useState('24h');
   const [monitoringActive, setMonitoringActive] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);

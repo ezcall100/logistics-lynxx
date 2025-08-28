@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/auth/useAuth';
+
 import { InviteStatusCard } from '@/components/invites/InviteStatusCard';
 import { Plus, Search, Users } from 'lucide-react';
 

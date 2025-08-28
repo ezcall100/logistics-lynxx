@@ -19,8 +19,8 @@ interface AutonomousAgentProps {
 
 const AutonomousAgentManager: React.FC = () => {
   const [agents, setAgents] = useState<AutonomousAgentProps[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [, setIsLoading] = useState(true);
+  const [, setSelectedAgent] = useState<string | null>(null);
 
   useEffect(() => {
     // Simulate loading autonomous agents

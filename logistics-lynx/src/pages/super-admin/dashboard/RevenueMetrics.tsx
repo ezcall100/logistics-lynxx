@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, TrendingUp, TrendingDown, BarChart3, PieChart, LineChart, Target, RefreshCw, Download, Eye, Settings, HelpCircle, Pi, Users, User, ShoppingCart, Receipt } from 'lucide-react';
+import { DollarSign, TrendingUp, TrendingDown, BarChart3, PieChart, LineChart, Target, Download, Settings, HelpCircle, Users, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   EnhancedCard,
@@ -55,7 +55,7 @@ interface RevenueForecast {
 const RevenueMetrics: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
 
@@ -325,7 +325,7 @@ const RevenueMetrics: React.FC = () => {
       key: 'customer',
       title: 'Customer',
       sortable: true,
-      render: (value: string, row: RevenueTransaction) => (
+      render: (_value: string, row: RevenueTransaction) => (
         <div className={`font-medium ${stableStyles.textPrimary[mode]}`}>
           {row.customer}
         </div>
@@ -335,7 +335,7 @@ const RevenueMetrics: React.FC = () => {
       key: 'amount',
       title: 'Amount',
       sortable: true,
-      render: (value: number, row: RevenueTransaction) => (
+      render: (_value: number, row: RevenueTransaction) => (
         <div className={`font-semibold ${stableStyles.textPrimary[mode]}`}>
           {formatCurrency(row.amount, row.currency)}
         </div>
@@ -380,7 +380,7 @@ const RevenueMetrics: React.FC = () => {
     {
       key: 'actions',
       title: 'Actions',
-      render: (value: any, row: RevenueTransaction) => (
+      render: (_value: any, _row: RevenueTransaction) => (
         <div className="flex items-center space-x-2">
             <Button>
               View

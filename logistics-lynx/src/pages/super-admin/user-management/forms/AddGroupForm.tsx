@@ -164,9 +164,9 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
     if (!acc[permission.category]) {
       acc[permission.category] = [];
     }
-    if (acc[permission.category]) {
-      acc[permission.category].push(permission);
-    }
+          if (acc[permission.category]) {
+        acc[permission.category].push(permission);
+      }
     return acc;
   }, {} as Record<string, typeof permissions>);
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { Input } from '@/components/ui/input';
+
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -27,9 +27,9 @@ const UserPreferences = () => {
     }
   });
 
-  const handleSave = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  };
+  // const handleSave = async () => {
+  //   await new Promise(resolve => setTimeout(resolve, 1000));
+  // };
 
   return (
     <div className="space-y-6 p-6">

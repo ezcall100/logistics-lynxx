@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MenuSection } from '@/lib/types/menu';
-  import { Settings, Code, Shield, Users, Clock, CheckCircle } from 'lucide-react';
+import { 
+  Settings, Code, Shield, Users, Clock, CheckCircle, LayoutDashboard, Heart, Mail, UserPlus, Contact, FolderOpen, Calendar, Target,
+  Ticket, UserCheck, ShieldAlert, HelpCircle, Bug, Package, Plus, Truck, Building2, Receipt, FileText, Upload, DollarSign, TrendingUp, RotateCcw, CreditCard,
+  Calculator, Landmark, Banknote, BarChart3, PiggyBank, Scale, BookOpen, Cpu, Store, Zap, MapPin
+} from 'lucide-react';
 
 export const SUPER_ADMIN_MENU: MenuSection = {
   items: [

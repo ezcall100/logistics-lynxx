@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MenuSection } from '@/lib/types/menu';
-import { Settings, Code, Shield, Network, Users, Clock, CheckCircle, AlertTriangle, Eye } from 'lucide-react';
+import { 
+  Settings, Code, Shield, Network, Users, Clock, CheckCircle, AlertTriangle, Eye,
+  LayoutDashboard, Package, Plus, UserCheck, Truck, DollarSign, ClipboardList,
+  PackageSearch, PackagePlus, Handshake, Building, Building2, MapPin, Heart,
+  BarChart3, Mail, UserPlus, Contact, FolderOpen, Calendar, Target, Receipt,
+  FileText, Repeat, ShoppingCart, Calculator, Activity, BookOpen, Banknote,
+  PlayCircle, Scale, Crown, UserCircle, ShieldCheck, Zap, Gauge, Banknote as BanknoteIcon,
+  CreditCard, Route, Phone, MessageSquare, FileText as FileTextIcon, Share2
+} from 'lucide-react';
 
 export const SHIPPER_ADMIN_MENU: MenuSection = {
   items: [
@@ -78,7 +86,7 @@ export const SHIPPER_ADMIN_MENU: MenuSection = {
         { title: "Transactions", icon: Activity, path: "/shipper-admin/financials/transactions" },
         { title: "Reconciliation", icon: CheckCircle, path: "/shipper-admin/financials/reconciliation" },
         { title: "Chart of Accounts", icon: BookOpen, path: "/shipper-admin/financials/chart-accounts" },
-        { title: "Payroll", icon: Banknote, path: "/shipper-admin/financials/payroll" },
+        { title: "Payroll", icon: BanknoteIcon, path: "/shipper-admin/financials/payroll" },
         { title: "Run Payroll", icon: PlayCircle, path: "/shipper-admin/financials/run-payroll" },
         { title: "Employees", icon: Users, path: "/shipper-admin/financials/employees" },
         { title: "Timesheets", icon: Clock, path: "/shipper-admin/financials/timesheets" },
@@ -146,7 +154,7 @@ export const SHIPPER_ADMIN_MENU: MenuSection = {
         { title: "API", icon: Code, path: "/shipper-admin/marketplace/api" },
         { title: "EDI", icon: Zap, path: "/shipper-admin/marketplace/edi" },
         { title: "ELDs", icon: Gauge, path: "/shipper-admin/marketplace/elds" },
-        { title: "Factoring", icon: Banknote, path: "/shipper-admin/marketplace/factoring" },
+        { title: "Factoring", icon: BanknoteIcon, path: "/shipper-admin/marketplace/factoring" },
         { title: "Fuel Cards", icon: CreditCard, path: "/shipper-admin/marketplace/fuel-cards" },
         { title: "Load Board", icon: PackageSearch, path: "/shipper-admin/marketplace/load-board" },
         { title: "Mileage", icon: Route, path: "/shipper-admin/marketplace/mileage" },
