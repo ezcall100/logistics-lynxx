@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, MapPin, Calendar, DollarSign, Truck, Save, X, Edit, Trash2 } from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Truck, Save, X, Edit, Trash2 } from 'lucide-react';
 
 interface LoadData {
   id: string;
@@ -133,10 +133,10 @@ const EditLoadForm: React.FC<EditLoadFormProps> = ({ loadId, onSave, onCancel, o
       newErrors.equipmentType = 'Equipment type is required';
     }
     if (formData.weight <= 0) {
-      newErrors.weight = 'Weight must be greater than 0';
+      newErrors['weight'] = 'Weight must be greater than 0';
     }
     if (formData.rate <= 0) {
-      newErrors.rate = 'Rate must be greater than 0';
+      newErrors['rate'] = 'Rate must be greater than 0';
     }
     if (!formData.shipperName.trim()) {
       newErrors.shipperName = 'Shipper name is required';

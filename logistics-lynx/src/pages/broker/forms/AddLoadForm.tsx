@@ -37,7 +37,7 @@ const AddLoadForm: React.FC = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Partial<LoadFormData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const equipmentTypes = [
     'Dry Van',
@@ -58,15 +58,16 @@ const AddLoadForm: React.FC = () => {
     
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     }
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<LoadFormData> = {};
+    const newErrors: Record<string, string> = {};
 
     if (!formData.loadNumber.trim()) {
       newErrors.loadNumber = 'Load number is required';

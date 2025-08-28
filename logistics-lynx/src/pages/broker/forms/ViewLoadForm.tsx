@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, MapPin, Calendar, DollarSign, Truck, Eye, Edit, Trash2, ArrowLeft, Phone, Mail, Clock, User } from 'lucide-react';
+import { Package, MapPin, Calendar, DollarSign, Truck, Eye, Edit, Trash2, ArrowLeft, Phone, Mail, User } from 'lucide-react';
 
 interface LoadData {
   id: string;
@@ -64,7 +64,7 @@ const ViewLoadForm: React.FC<ViewLoadFormProps> = ({ loadId, onEdit, onDelete, o
     driverPhone: '(555) 987-6543',
     estimatedArrival: '2024-01-20T08:00:00Z',
     actualPickup: '2024-01-20T09:15:00Z',
-    actualDelivery: null
+    actualDelivery: ''
   };
 
   useEffect(() => {

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import { Settings, Shield, Bell, Users, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { 
+  Settings, Shield, Bell, Users, Clock, CheckCircle, AlertTriangle, LayoutDashboard, Briefcase, Package, FileText, Route, Activity, DollarSign, BarChart3, TrendingUp, Calculator, CircleDollarSign, Receipt, Landmark, LineChart, Target, Truck, Wrench, Fuel, MapPin, Heart, Star, ClipboardList, PieChart, Building, Gavel, HandCoins, CreditCard, PiggyBank, MessageSquare, Mail, Phone, BookOpen, Award, Building2, Scale, Calendar
+} from 'lucide-react';
 
 export const OWNER_OPERATOR_MENU: MenuSection = {
   items: [

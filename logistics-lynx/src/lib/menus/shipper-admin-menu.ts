@@ -2,13 +2,13 @@
 
 import { MenuSection } from '@/lib/types/menu';
 import { 
-  Settings, Code, Shield, Network, Users, Clock, CheckCircle, AlertTriangle, Eye,
+  Settings, Code, Network, Users, Clock, CheckCircle, AlertTriangle, Eye,
   LayoutDashboard, Package, Plus, UserCheck, Truck, DollarSign, ClipboardList,
   PackageSearch, PackagePlus, Handshake, Building, Building2, MapPin, Heart,
   BarChart3, Mail, UserPlus, Contact, FolderOpen, Calendar, Target, Receipt,
   FileText, Repeat, ShoppingCart, Calculator, Activity, BookOpen, Banknote,
   PlayCircle, Scale, Crown, UserCircle, ShieldCheck, Zap, Gauge, Banknote as BanknoteIcon,
-  CreditCard, Route, Phone, MessageSquare, FileText as FileTextIcon, Share2
+  CreditCard, Route, Upload, TrendingUp, TrendingDown, Landmark, LineChart, Key, Layers, FileEdit, ClipboardX, X, Store
 } from 'lucide-react';
 
 export const SHIPPER_ADMIN_MENU: MenuSection = {

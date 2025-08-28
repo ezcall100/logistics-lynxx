@@ -1,4 +1,6 @@
-import { Settings, Bell, Users, CheckCircle, Eye } from 'lucide-react';
+import { 
+  Settings, Bell, Users, CheckCircle, Eye, Home, BarChart3, TrendingUp, Truck, Package, MapPin, Plus, Calendar, DollarSign, TrendingDown, FileBarChart
+} from 'lucide-react';
 
 import type { MenuItem } from '@/types/menu';
 

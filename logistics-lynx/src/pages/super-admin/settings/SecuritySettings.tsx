@@ -107,7 +107,7 @@ const SecuritySettings: React.FC = () => {
 
   // const [showIPModal, setShowIPModal] = useState(false);
   // const [showCertificateModal, setShowCertificateModal] = useState(false);
-  const [config, setConfig] = useState<SecurityConfig>({
+  const [config] = useState<SecurityConfig>({
     authentication: {
       twoFactorEnabled: true,
       twoFactorMethod: 'authenticator',
@@ -226,21 +226,21 @@ const SecuritySettings: React.FC = () => {
     setSecurityEvents(mockEvents);
   }, []);
 
-  const handleSave = async () => {
-    setSaving(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setConfig(formData);
-    setSaving(false);
-  };
+  // const handleSave = async () => {
+  //   setSaving(true);
+  //   // Simulate API call
+  //   await new Promise(resolve => setTimeout(resolve, 2000));
+  //   setConfig(formData);
+  //   setSaving(false);
+  // };
 
-  const handleTestSecurity = async () => {
-    setLoading(true);
-    // Simulate security test
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setLoading(false);
-    alert('Security configuration test completed successfully!');
-  };
+  //   // const handleTestSecurity = async () => {
+  //   setLoading(true);
+  //   // Simulate security test
+  //   await new Promise(resolve => setTimeout(resolve, 1500));
+  //   setLoading(false);
+  //   alert('Security configuration test completed successfully!');
+  // };
 
   const tabs = [
     { id: 'authentication', label: 'Authentication', icon: Lock },
@@ -319,8 +319,8 @@ const SecuritySettings: React.FC = () => {
         {/* Tabs */}
         <EnhancedCard mode={mode}>
           <div className="flex space-x-1 border-b">
-            {tabs.map((tab, index) => {
-              const Icon = tab.icon;
+            {tabs.map((tab) => {
+              // const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}

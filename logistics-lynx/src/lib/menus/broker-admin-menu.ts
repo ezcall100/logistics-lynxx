@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Settings, Database, Shield, Bell, Network, Users, Clock, CheckCircle, AlertTriangle, Eye, Lock } from 'lucide-react';
+import { 
+  Settings, Database, Shield, Bell, Network, Users, Clock, CheckCircle, AlertTriangle, Eye, Lock, LayoutDashboard, Package, Plus, UserCheck, Truck, DollarSign, ClipboardList, PackageSearch, PackagePlus, Handshake, Building, Building2, MapPin, Heart, BarChart3, Mail, UserPlus, FolderOpen, Calendar, Target, Receipt, FileText, ShoppingCart, Calculator, Activity, Banknote, Zap, Gauge, CreditCard, Route, Phone, MessageSquare, Wrench, Upload, PieChart, Brain, Globe, Book, TrendingUp, TrendingDown, Timer, Users2, BarChart, Warehouse, HelpCircle, Lightning, Layers, FileCheck, Bot, MapRoute, Fuel, Star, Search, GraduationCap, ArrowDownCircle, ArrowUpDown
+} from 'lucide-react';
 
 export interface MenuSection {
   items: MenuItem[];

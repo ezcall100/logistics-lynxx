@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 const AgentMonitor: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [, setData] = useState<any>(null);
+  // const [, setData] = useState<any>(null);
   const [agentStatus] = useState({
     isRunning: true,
     lastActivity: new Date(),

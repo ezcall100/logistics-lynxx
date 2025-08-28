@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MenuSection } from '@/lib/types/menu';
-import { Settings, Shield, Bell, Users, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { 
+  Settings, Shield, Bell, Users, Clock, CheckCircle, AlertTriangle, LayoutDashboard, ClipboardList, UserCheck, Activity, FileText, Calendar, Coffee, TrendingUp, MessageSquare, Mail, Phone, Briefcase, Package, BookOpen, Award, Target, BarChart3, Heart, DollarSign, CreditCard, Wrench, Upload, PieChart
+} from 'lucide-react';
 
 export const EMPLOYEE_MENU: MenuSection = {
   items: [
