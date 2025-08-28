@@ -16,6 +16,9 @@ export * from './input';
 export { default as Breadcrumbs } from './Breadcrumbs';
 
 // Basic UI Components
+export { Button, buttonVariants } from './button';
+export { Badge, badgeVariants } from './badge';
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card';
 export { Switch } from './switch';
 export { Separator } from './separator';
 export { Label } from './label';
@@ -42,3 +45,13 @@ export {
   SelectItem, 
   SelectValue 
 } from './select';
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from './table';

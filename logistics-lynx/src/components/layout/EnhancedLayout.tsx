@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { EnhancedHeader } from './EnhancedHeader';
 import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';
-import { executeFabAction } from '../FabActions';
+// Temporarily commented out to fix dependency issues
+// import { executeFabAction } from '../FabActions';
 
 // Theme Context
 interface ThemeContextType {
@@ -172,7 +173,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="AI Agent Assistant"
                   onClick={async () => {
                     console.log('AI Agent clicked');
-                    await executeFabAction('assistant', 'Hello, I need assistance with the TMS system.');
+                    // Temporarily disabled: await executeFabAction('assistant', 'Hello, I need assistance with the TMS system.');
+                    alert('AI Agent feature temporarily disabled');
                     setFabOpen(false);
                   }}
                 >
@@ -204,7 +206,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Phone Call"
                   onClick={async () => {
                     console.log('Phone Call clicked');
-                    await executeFabAction('phoneCall', '+1234567890');
+                    // Temporarily disabled: await executeFabAction('phoneCall', '+1234567890');
+                    alert('Phone Call feature temporarily disabled');
                     setFabOpen(false);
                   }}
                 >
@@ -226,7 +229,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Send Message"
                   onClick={async () => {
                     console.log('Message clicked');
-                    await executeFabAction('message', 'support@company.com', 'Need assistance with TMS system', 'email');
+                    // Temporarily disabled: await executeFabAction('message', 'support@company.com', 'Need assistance with TMS system', 'email');
+                    alert('Message feature temporarily disabled');
                     setFabOpen(false);
                   }}
                 >
@@ -270,7 +274,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Quick Actions"
                   onClick={async () => {
                     console.log('Quick Actions clicked');
-                    await executeFabAction('quickAction', 'status_check', { check_all: true });
+                    // Temporarily disabled: await executeFabAction('quickAction', 'status_check', { check_all: true });
+                    alert('Quick Actions feature temporarily disabled');
                     setFabOpen(false);
                   }}
                 >
@@ -292,7 +297,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   title="Emergency Support"
                   onClick={async () => {
                     console.log('Emergency Support clicked');
-                    await executeFabAction('emergencySupport', 'System issue requiring immediate attention', 'high');
+                    // Temporarily disabled: await executeFabAction('emergencySupport', 'System issue requiring immediate attention', 'high');
+                    alert('Emergency Support feature temporarily disabled');
                     setFabOpen(false);
                   }}
                 >

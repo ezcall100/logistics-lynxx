@@ -152,4 +152,4 @@ export const PackageIcon = (props: Omit<EnhancedIconProps, 'name'>) => (
   <EnhancedIcon name="Package" {...props} />
 );
 
-export default getIconComponent;
+export default EnhancedIcon;

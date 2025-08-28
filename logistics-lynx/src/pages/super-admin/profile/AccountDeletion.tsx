@@ -205,13 +205,17 @@ const AccountDeletion = () => {
           <ResponsiveCard>
             <div className="pt-6">
               <div className="flex gap-3">
-                <Button>
-                onClick={handleStartDeletion}
-              </Button>className="bg-red-600 hover:bg-red-700"
-                >Start Account Deletion
-                  Cancel<Button>
-                 
-              </Button></div>
+                <Button
+                  onClick={handleStartDeletion}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  Start Account Deletion
+                </Button>
+                <Button variant="outline">
+                  Cancel
+                </Button>
+              </div>
+            </div>
           </ResponsiveCard>
         )}
 
@@ -237,12 +241,16 @@ const AccountDeletion = () => {
                 />
               </div>
               <div className="flex gap-3">
+                <Button
                   onClick={handleConfirmDeletion}
                   disabled={confirmationText !== 'DELETE'}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   Permanently Delete Account
+                </Button>
+                <Button variant="outline">
                   Cancel
+                </Button>
               </div>
             </div>
           </ResponsiveCard>
@@ -314,8 +322,12 @@ const AccountDeletion = () => {
               </div>
             </div>
             <div className="mt-4 flex gap-3">
+              <Button variant="outline">
                 Export Data
+              </Button>
+              <Button variant="outline">
                 Contact Support
+              </Button>
             </div>
           </div>
         </ResponsiveCard>

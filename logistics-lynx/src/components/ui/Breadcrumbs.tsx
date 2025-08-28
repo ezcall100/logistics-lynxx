@@ -94,7 +94,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ className = '' }) => {
   };
   
   // Build breadcrumb items
-  const breadcrumbItems = segments.map((segment) => {
+  const breadcrumbItems = segments.map((segment, index) => {
     const path = `/super-admin/${segments.slice(0, index + 1).join('/')}`;
     const isLast = index === segments.length - 1;
     
