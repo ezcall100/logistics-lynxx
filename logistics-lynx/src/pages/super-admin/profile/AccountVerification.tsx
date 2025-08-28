@@ -84,14 +84,16 @@ const AccountVerification = () => {
                   {verificationStatus.email.verified ? 'Verified' : 'Unverified'}
                 </span>
                 {!verificationStatus.email.verified && (
-                  <Button>
-                size="sm"
-              </Button>onClick={handleResendEmail}
+                  <Button
+                    size="sm"
+                    onClick={handleResendEmail}
                     disabled={isResendingEmail}
-                  >{isResendingEmail ? 'Sending...' : 'Resend Email'}
-                )}<Button>
-                 
-              </Button></div>
+                  >
+                    {isResendingEmail ? 'Sending...' : 'Resend Email'}
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </ResponsiveCard>
 
@@ -124,11 +126,13 @@ const AccountVerification = () => {
                   {verificationStatus.phone.verified ? 'Verified' : 'Unverified'}
                 </span>
                 {!verificationStatus.phone.verified && (
+                  <Button
                     size="sm"
                     onClick={handleSendSMS}
                     disabled={isSendingSMS}
                   >
                     {isSendingSMS ? 'Sending...' : 'Send SMS Code'}
+                  </Button>
                 )}
               </div>
             </div>
@@ -142,8 +146,10 @@ const AccountVerification = () => {
                     maxLength={6}
                     className="w-32"
                   />
+                  <Button size="sm">
                     Verify
-                </div></Button>
+                  </Button>
+                </div>
               </div>
             )}
           </div>
@@ -178,7 +184,9 @@ const AccountVerification = () => {
                   {verificationStatus.identity.verified ? 'Verified' : 'Unverified'}
                 </span>
                 {!verificationStatus.identity.verified && (
+                  <Button size="sm">
                     Upload Document
+                  </Button>
                 )}
               </div>
             </div>

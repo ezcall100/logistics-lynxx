@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Archive } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalBackupProps {}
-
-const PortalBackup: React.FC<PortalBackupProps> = () => {
+const PortalBackup: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

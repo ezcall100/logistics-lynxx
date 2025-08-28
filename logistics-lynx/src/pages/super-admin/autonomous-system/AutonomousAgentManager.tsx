@@ -17,9 +17,7 @@ interface AutonomousAgentProps {
   };
 }
 
-interface AutonomousAgentManagerProps {}
-
-const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
+const AutonomousAgentManager: React.FC = () => {
   const [agents, setAgents] = useState<AutonomousAgentProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
@@ -84,13 +82,14 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
             </h1>
           </div>
           <div className="flex space-x-2">
-            <Button>
-                handleAgentAction('all', 'restart')}
-              </Button>></Button>
+            <Button onClick={() => handleAgentAction('all', 'restart')}>
               <RotateCcw className="h-4 w-4 mr-2" />
               Restart All
+            </Button>
+            <Button>
               <Settings className="h-4 w-4 mr-2" />
               Agent Settings
+            </Button>
           </div>
         </div>
         <p className="text-gray-600">
@@ -143,6 +142,7 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
 
                 {/* Agent Controls */}
                 <div className="flex space-x-2 pt-2">
+                  <Button
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'start')}
@@ -150,6 +150,8 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
                   >
                     <Play className="h-3 w-3 mr-1" />
                     Start
+                  </Button>
+                  <Button
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'stop')}
@@ -157,12 +159,15 @@ const AutonomousAgentManager: React.FC<AutonomousAgentManagerProps> = () => {
                   >
                     <Pause className="h-3 w-3 mr-1" />
                     Stop
+                  </Button>
+                  <Button
                     size="sm" 
                     variant="outline"
                     onClick={() => handleAgentAction(agent.agentId, 'restart')}
                   >
                     <RotateCcw className="h-3 w-3 mr-1" />
                     Restart
+                  </Button>
                 </div>
               </div>
             </div>

@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalAnalyticsProps {}
-
-const PortalAnalytics: React.FC<PortalAnalyticsProps> = () => {
+const PortalAnalytics: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

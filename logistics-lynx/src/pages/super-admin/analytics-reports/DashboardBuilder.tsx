@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Layout } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface DashboardBuilderProps {}
-
-const DashboardBuilder: React.FC<DashboardBuilderProps> = () => {
+const DashboardBuilder: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

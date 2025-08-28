@@ -111,15 +111,15 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Role name is required';
+      newErrors['name'] = 'Role name is required';
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors['description'] = 'Description is required';
     }
 
     if (formData.permissions.length === 0) {
-      newErrors.permissions = 'At least one permission is required';
+      newErrors['permissions'] = 'At least one permission is required';
     }
 
     setErrors(newErrors);
@@ -161,7 +161,7 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
       
       const updatedRole: RoleData = {
         ...formData,
-        updatedAt: new Date().toISOString().split('T')[0]
+        updatedAt: new Date().toISOString().split('T')[0] || ''
       };
 
       onSave(updatedRole);
@@ -217,7 +217,9 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
     if (!acc[permission.category]) {
       acc[permission.category] = [];
     }
-    acc[permission.category].push(permission);
+    if (acc[permission.category]) {
+      acc[permission.category].push(permission);
+    }
     return acc;
   }, {} as Record<string, typeof permissions>);
 
@@ -275,13 +277,13 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['name'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter role name"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                )}
+                                 {errors['name'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['name']}</p>
+                 )}
               </div>
 
               <div>
@@ -310,13 +312,13 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={3}
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                     errors['description'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                 placeholder="Enter role description"
               />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-              )}
+                             {errors['description'] && (
+                 <p className="mt-1 text-sm text-red-600">{errors['description']}</p>
+               )}
             </div>
           </div>
 
@@ -410,8 +412,8 @@ const EditRoleForm: React.FC<EditRoleFormProps> = ({ roleId, onSave, onCancel, o
               <Users className="w-5 h-5 mr-2" />
               Permissions *
             </h3>
-            {errors.permissions && (
-              <p className="mb-4 text-sm text-red-600">{errors.permissions}</p>
+            {errors['permissions'] && (
+              <p className="mb-4 text-sm text-red-600">{errors['permissions']}</p>
             )}
             
             <div className="space-y-6">

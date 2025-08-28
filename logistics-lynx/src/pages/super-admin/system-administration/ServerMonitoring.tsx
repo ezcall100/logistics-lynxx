@@ -4,7 +4,7 @@ import { AlertTriangle, Clock, CheckCircle, X, RefreshCw, Settings, Eye, Trendin
 import { Button } from '@/components/ui/button';
 
 const ServerMonitoring: React.FC = () => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [, setIsRefreshing] = useState(false);
   const [selectedServer, setSelectedServer] = useState<number | null>(null);
 
   const [servers] = useState([
@@ -72,12 +72,12 @@ const ServerMonitoring: React.FC = () => {
     }
   };
 
-  const refreshData = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
-  };
+  // const refreshData = () => {
+  //   setIsRefreshing(true);
+  //   setTimeout(() => {
+  //     setIsRefreshing(false);
+  //   }, 1000);
+  // };
 
   return (
     <div className="space-y-6">
@@ -91,12 +91,10 @@ const ServerMonitoring: React.FC = () => {
             Real-time monitoring of system infrastructure and performance metrics
           </p>
         </div>
-        <Button><Button>
-                variant="primary"
-              </Button>>
-          Refresh<Button>
-                 
-              </Button></div>
+        <Button variant="default">
+          Refresh
+        </Button>
+      </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -139,21 +137,23 @@ const ServerMonitoring: React.FC = () => {
           <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
             Server Status
           </h2>
+          <Button variant="outline" size="sm">
             <Settings className="w-4 h-4 mr-2" />
             Configure Alerts
+          </Button>
         </div>
 
         <div className="space-y-4">
           {servers.map((server) => (
             <div key={server.id}>
-              <Button>
+              <div
                 className={`p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
-              </Button>selectedServer === server.id
+                  selectedServer === server.id
                     ? 'border-blue-300 bg-blue-50 dark:border-blue-600 dark:bg-blue-900/20'
                     : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                 }`}
-                onClick={() =>setSelectedServer(selectedServer === server.id ? null : server.id)}
-              ></Button>
+                onClick={() => setSelectedServer(selectedServer === server.id ? null : server.id)}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
@@ -173,7 +173,7 @@ const ServerMonitoring: React.FC = () => {
                   </div>
                   <Eye className="w-4 h-4 text-slate-400" />
                 </div>
-             <Button> </Button>
+              </div>
 
               {selectedServer === server.id && (
                 <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">

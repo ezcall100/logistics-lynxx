@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface DataExportProps {}
-
-const DataExport: React.FC<DataExportProps> = () => {
+const DataExport: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

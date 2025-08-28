@@ -4,9 +4,7 @@ import { Activity, Bot, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
 import { Button } from '@/components/ui/button';
 
-interface AgentMonitorProps {}
-
-const AgentMonitor: React.FC<AgentMonitorProps> = () => {
+const AgentMonitor: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [agentStatus, setAgentStatus] = useState({
@@ -47,17 +45,20 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
             </h1>
           </div>
           <div className="flex space-x-2">
-            <Button>
-                variant="outline" 
-              </Button>onClick={() =>handleFabAction('quickAction', { action: 'refresh', page: 'agent-monitor' })}
+            <Button
+              variant="outline" 
+              onClick={() => handleFabAction('quickAction', { action: 'refresh', page: 'agent-monitor' })}
             >
               Refresh
+            </Button>
+            <Button
               variant="default"
               onClick={() => handleFabAction('assistant', 'Help me with Agent Monitor')}
             >
-              AI Assistant<Button>
-                 
-              </Button></div>
+              AI Assistant
+            </Button>
+          </div>
+        </div>
         <p className="text-gray-600">
           Real-time monitoring of all autonomous agents
         </p>
@@ -99,6 +100,7 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
           </div>
           
           <div className="flex space-x-2 mt-4">
+            <Button
               size="sm" 
               variant="outline"
               onClick={() => handleAgentAction('start')}
@@ -106,6 +108,8 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
             >
               <Play className="h-3 w-3 mr-1" />
               Start Agent
+            </Button>
+            <Button
               size="sm" 
               variant="outline"
               onClick={() => handleAgentAction('stop')}
@@ -113,12 +117,15 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
             >
               <Pause className="h-3 w-3 mr-1" />
               Stop Agent
+            </Button>
+            <Button
               size="sm" 
               variant="outline"
               onClick={() => handleAgentAction('restart')}
             >
               <RotateCcw className="h-3 w-3 mr-1" />
               Restart Agent
+            </Button>
           </div>
         </div>
       </ResponsiveCard>
@@ -159,26 +166,32 @@ const AgentMonitor: React.FC<AgentMonitorProps> = () => {
               <div className="border-t pt-6">
                 <h4 className="text-md font-semibold text-gray-900 mb-4">Portal Features</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <Button
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
                     onClick={() => handleFabAction('dispatch', { type: 'agent-monitor_configure', payload: { action: 'configure' } })}
                   >
                     <Settings className="h-5 w-5 mb-1" />
                     Configure
+                  </Button>
+                  <Button
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
                     onClick={() => handleFabAction('assistant', 'Help me understand Agent Monitor')}
                   >
                     <Bot className="h-5 w-5 mb-1" />
                     AI Help
+                  </Button>
+                  <Button
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
                     onClick={() => handleFabAction('quickAction', { action: 'export', page: 'agent-monitor' })}
                   >
                     <Activity className="h-5 w-5 mb-1" />
                     Monitor
+                  </Button>
                 </div>
-              </div></Button>
+              </div>
             </div>
           )}
         </div>

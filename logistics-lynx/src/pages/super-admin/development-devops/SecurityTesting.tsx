@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { ShieldCheck, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface SecurityTestingProps {}
-
-const SecurityTesting: React.FC<SecurityTestingProps> = () => {
+const SecurityTesting: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

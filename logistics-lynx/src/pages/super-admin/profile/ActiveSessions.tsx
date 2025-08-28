@@ -74,13 +74,16 @@ const ActiveSessions = () => {
             Manage your active login sessions across devices
           </p>
         </div>
-        <Button>
-                variant="outline" 
-              </Button>onClick={handleTerminateAllOtherSessions}
+        <Button
+          variant="outline" 
+          onClick={handleTerminateAllOtherSessions}
           className="text-red-600 border-red-300 hover:bg-red-50"
-        >Terminate All Other Sessions<Button>
-                 
-              </Button><div className="grid gap-6">
+        >
+          Terminate All Other Sessions
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* Session Summary */}
         <ResponsiveCard>
           <div className="mb-4">
@@ -161,12 +164,14 @@ const ActiveSessions = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     {!session.isCurrent && (
+                      <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleTerminateSession(session.id)}
                         className="text-red-600 border-red-300 hover:bg-red-50"
                       >
                         Terminate
+                      </Button>
                     )}
                   </div>
                 </div>

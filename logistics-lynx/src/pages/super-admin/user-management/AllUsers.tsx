@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Download, Upload, Edit, Trash2, Eye, Search, Filter, RefreshCw, UserPlus, Shield, Activity } from 'lucide-react';
+import { Download, Upload, Edit, Trash2, Eye, Search, RefreshCw, UserPlus, Shield, Activity } from 'lucide-react';
 
 interface User {
   id: string;
@@ -33,7 +33,7 @@ const AllUsers: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [showAddUser, setShowAddUser] = useState(false);
+  const [, setShowAddUser] = useState(false);
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
   // Enhanced mock data with MCP agent integration

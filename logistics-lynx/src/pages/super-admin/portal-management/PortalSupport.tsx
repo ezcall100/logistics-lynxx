@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalSupportProps {}
-
-const PortalSupport: React.FC<PortalSupportProps> = () => {
+const PortalSupport: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

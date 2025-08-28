@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface FinancialReportsProps {}
-
-const FinancialReports: React.FC<FinancialReportsProps> = () => {
+const FinancialReports: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

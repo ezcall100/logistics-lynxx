@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PerformanceTestingProps {}
-
-const PerformanceTesting: React.FC<PerformanceTestingProps> = () => {
+const PerformanceTesting: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

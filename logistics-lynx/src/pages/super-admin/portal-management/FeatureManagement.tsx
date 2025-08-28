@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface FeatureManagementProps {}
-
-const FeatureManagement: React.FC<FeatureManagementProps> = () => {
+const FeatureManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

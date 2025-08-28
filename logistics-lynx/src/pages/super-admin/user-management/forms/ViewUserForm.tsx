@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Edit, Trash2, User, Mail, Phone, Building, Shield, Calendar, Activity, ArrowLeft } from 'lucide-react';
+import { X, Edit, Trash2, User, Building, Shield, Calendar, Activity, ArrowLeft } from 'lucide-react';
 
 interface ViewUserFormProps {
   userId: string;

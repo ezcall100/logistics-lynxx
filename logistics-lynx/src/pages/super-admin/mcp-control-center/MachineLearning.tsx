@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface MachineLearningProps {}
-
-const MachineLearning: React.FC<MachineLearningProps> = () => {
+const MachineLearning: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

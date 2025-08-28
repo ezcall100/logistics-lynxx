@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { TestTube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface TestingSuiteProps {}
-
-const TestingSuite: React.FC<TestingSuiteProps> = () => {
+const TestingSuite: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Save, RefreshCw, Download, Trash2, Plus, Users, Clock, CheckCircle, AlertTriangle, Lock } from 'lucide-react';
+import { Shield, Save, RefreshCw, Trash2, Plus, Users, Clock, CheckCircle, AlertTriangle, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   EnhancedCard, 
@@ -93,12 +93,12 @@ interface SecurityEvent {
 }
 
 const SecuritySettings: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
 
-  const [saving, setSaving] = useState(false);
+  // const [saving, setSaving] = useState(false);
 
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [mode] = useState<'light' | 'dark'>('light');
 
 
 

@@ -394,11 +394,15 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
           {/* Navigation */}
           <div className="flex justify-between pt-6">
-            <Button>
-                 
-              <ArrowLeft className="h-4 w-4 mr-2" /></Button>
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              disabled={currentStep === 0}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
               Back
-            
+            </Button>
+            <Button
               onClick={handleNext}
               disabled={!canProceed() || isLoading}
             >
@@ -418,6 +422,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </>
               )}
+            </Button>
           </div>
         </div>
       </ResponsiveCard>
@@ -425,4 +430,4 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   );
 };
 
-export default handleBack;
+export default OnboardingWizard;

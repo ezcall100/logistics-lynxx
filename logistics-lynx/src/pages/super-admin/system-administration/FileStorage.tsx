@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Folder } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface FileStorageProps {}
-
-const FileStorage: React.FC<FileStorageProps> = () => {
+const FileStorage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

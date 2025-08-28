@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface DeploymentManagementProps {}
-
-const DeploymentManagement: React.FC<DeploymentManagementProps> = () => {
+const DeploymentManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

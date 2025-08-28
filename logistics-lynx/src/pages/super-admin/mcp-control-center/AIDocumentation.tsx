@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Book } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AIDocumentationProps {}
-
-const AIDocumentation: React.FC<AIDocumentationProps> = () => {
+const AIDocumentation: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

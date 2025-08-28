@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface MarketingToolsProps {}
-
-const MarketingTools: React.FC<MarketingToolsProps> = () => {
+const MarketingTools: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

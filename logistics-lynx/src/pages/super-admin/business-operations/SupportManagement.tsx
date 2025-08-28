@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface SupportManagementProps {}
-
-const SupportManagement: React.FC<SupportManagementProps> = () => {
+const SupportManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

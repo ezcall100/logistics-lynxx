@@ -8,6 +8,8 @@ import {
   EnhancedModal,
   stableStyles
 } from '@/components/ui/ResponsiveCard';
+import { EnhancedButton } from '@/components/ui/EnhancedButton';
+import { 
   Search, 
   Filter, 
   Settings, 
@@ -88,12 +90,24 @@ const CustomUIComponentsDemo: React.FC = () => {
       <ResponsiveCard>
         <h3 className="text-lg font-semibold mb-4">Enhanced Buttons</h3>
         <div className="flex flex-wrap gap-4">
+          <EnhancedButton variant="default">
             Primary Button
+          </EnhancedButton>
+          <EnhancedButton variant="neutral">
             Secondary Button
+          </EnhancedButton>
+          <EnhancedButton variant="success">
             Success Button
+          </EnhancedButton>
+          <EnhancedButton variant="danger">
             Danger Button
+          </EnhancedButton>
+          <EnhancedButton variant="outline">
             Outline Button
+          </EnhancedButton>
+          <EnhancedButton variant="ghost">
             Ghost Button
+          </EnhancedButton>
         </div>
       </ResponsiveCard>
 
@@ -162,14 +176,18 @@ const CustomUIComponentsDemo: React.FC = () => {
             />
           </div>
           <div className="flex gap-2">
+            <EnhancedButton
               variant="outline" 
               onClick={() => setProgress(Math.max(0, progress - 10))}
             >
               -10%
+            </EnhancedButton>
+            <EnhancedButton
               variant="outline" 
               onClick={() => setProgress(Math.min(100, progress + 10))}
             >
               +10%
+            </EnhancedButton>
           </div>
         </div>
       </ResponsiveCard>
@@ -186,14 +204,18 @@ const CustomUIComponentsDemo: React.FC = () => {
             This is an example of the Enhanced Modal component with custom styling.
           </p>
           <div className="flex gap-3">
+            <EnhancedButton
               variant="primary" 
               onClick={() => setIsModalOpen(false)}
             >
               Close
+            </EnhancedButton>
+            <EnhancedButton
               variant="outline" 
               onClick={() => setIsModalOpen(false)}
             >
               Cancel
+            </EnhancedButton>
           </div>
         </div>
       </EnhancedModal>

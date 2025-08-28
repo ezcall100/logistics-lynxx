@@ -178,9 +178,9 @@ const AvatarMedia = () => {
             <div className="mt-4">
               <Button>
                 View All Media
-              </Button><Button>
-                 
-              </Button></div>
+              </Button>
+            </div>
+          </div>
         </ResponsiveCard>
       </div>
     </div>

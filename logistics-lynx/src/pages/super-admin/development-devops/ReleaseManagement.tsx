@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface ReleaseManagementProps {}
-
-const ReleaseManagement: React.FC<ReleaseManagementProps> = () => {
+const ReleaseManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

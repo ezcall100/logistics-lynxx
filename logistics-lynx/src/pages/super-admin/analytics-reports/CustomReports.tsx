@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { PieChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface CustomReportsProps {}
-
-const CustomReports: React.FC<CustomReportsProps> = () => {
+const CustomReports: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

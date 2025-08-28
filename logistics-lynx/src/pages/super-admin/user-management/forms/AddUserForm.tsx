@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, User, Mail, Phone, Building, Shield } from 'lucide-react';
+import { X, Save, User, Mail, Building, Shield } from 'lucide-react';
 
 interface AddUserFormProps {
   onSave: (userData: UserData) => void;
@@ -67,29 +67,29 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+      newErrors['firstName'] = 'First name is required';
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+      newErrors['lastName'] = 'Last name is required';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors['email'] = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors['email'] = 'Email is invalid';
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors['phone'] = 'Phone number is required';
     }
 
     if (!formData.role) {
-      newErrors.role = 'Role is required';
+      newErrors['role'] = 'Role is required';
     }
 
     if (!formData.department) {
-      newErrors.department = 'Department is required';
+      newErrors['department'] = 'Department is required';
     }
 
     setErrors(newErrors);
@@ -174,13 +174,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['firstName'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter first name"
                 />
-                {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
-                )}
+                                 {errors['firstName'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['firstName']}</p>
+                 )}
               </div>
 
               <div>
@@ -192,13 +192,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['lastName'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter last name"
                 />
-                {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
-                )}
+                                 {errors['lastName'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['lastName']}</p>
+                 )}
               </div>
             </div>
           </div>
@@ -219,13 +219,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['email'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter email address"
                 />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                )}
+                                 {errors['email'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['email']}</p>
+                 )}
               </div>
 
               <div>
@@ -237,13 +237,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['phone'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter phone number"
                 />
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                )}
+                                 {errors['phone'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['phone']}</p>
+                 )}
               </div>
             </div>
           </div>
@@ -263,7 +263,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                   value={formData.role}
                   onChange={(e) => handleInputChange('role', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.role ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['role'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                 >
                   <option value="">Select a role</option>
@@ -273,9 +273,9 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                     </option>
                   ))}
                 </select>
-                {errors.role && (
-                  <p className="mt-1 text-sm text-red-600">{errors.role}</p>
-                )}
+                                 {errors['role'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['role']}</p>
+                 )}
               </div>
 
               <div>
@@ -286,7 +286,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                   value={formData.department}
                   onChange={(e) => handleInputChange('department', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.department ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['department'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                 >
                   <option value="">Select a department</option>
@@ -296,9 +296,9 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ onSave, onCancel }) => {
                     </option>
                   ))}
                 </select>
-                {errors.department && (
-                  <p className="mt-1 text-sm text-red-600">{errors.department}</p>
-                )}
+                                 {errors['department'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['department']}</p>
+                 )}
               </div>
             </div>
           </div>

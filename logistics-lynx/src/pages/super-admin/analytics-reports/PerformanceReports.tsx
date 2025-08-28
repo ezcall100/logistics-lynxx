@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PerformanceReportsProps {}
-
-const PerformanceReports: React.FC<PerformanceReportsProps> = () => {
+const PerformanceReports: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface ConfigurationProps {}
-
-const Configuration: React.FC<ConfigurationProps> = () => {
+const Configuration: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

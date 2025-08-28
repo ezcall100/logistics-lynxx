@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Cog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface OperationalReportsProps {}
-
-const OperationalReports: React.FC<OperationalReportsProps> = () => {
+const OperationalReports: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

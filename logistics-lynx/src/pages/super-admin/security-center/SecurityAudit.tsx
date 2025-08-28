@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Button } from '@/components/ui/button';
 import { Shield, AlertTriangle, CheckCircle, Clock, Eye } from 'lucide-react';
-interface SecurityAuditProps {}
-
 interface AuditItem {
   id: string;
   title: string;
@@ -13,7 +11,7 @@ interface AuditItem {
   severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
-const SecurityAudit: React.FC<SecurityAuditProps> = () => {
+const SecurityAudit: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [auditItems, setAuditItems] = useState<AuditItem[]>([]);
 
@@ -147,8 +145,10 @@ const SecurityAudit: React.FC<SecurityAuditProps> = () => {
         <ResponsiveCard>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Audit Summary</h2>
+            <Button>
               <Shield className="w-4 h-4 mr-2" />
               Run New Audit
+            </Button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -201,15 +201,15 @@ const SecurityAudit: React.FC<SecurityAuditProps> = () => {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button>
-                View Details
-              </Button><Button>
-                {item.status === 'failed' && (
-              </Button><Button>
-                Fix Issue
-              </Button><Button>
-                )}
-              </Button></div>
+                    <Button size="sm" variant="outline">
+                      View Details
+                    </Button>
+                    {item.status === 'failed' && (
+                      <Button size="sm" variant="outline">
+                        Fix Issue
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

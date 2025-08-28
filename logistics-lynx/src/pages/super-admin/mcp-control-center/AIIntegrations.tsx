@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Plug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AIIntegrationsProps {}
-
-const AIIntegrations: React.FC<AIIntegrationsProps> = () => {
+const AIIntegrations: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

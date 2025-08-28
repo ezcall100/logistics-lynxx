@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Progress } from '../../../components/ui/progress';
 import { Shield, AlertTriangle, CheckCircle, XCircle, Activity, BarChart3, FileText, RefreshCw, Download, Search } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Button } from '@/components/ui/button';
 
 interface SecurityScan {
@@ -65,7 +65,7 @@ interface SecurityMetrics {
 }
 
 const SecurityScannerDashboard: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [selectedTimeframe] = useState('24h');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
@@ -237,52 +237,52 @@ const SecurityScannerDashboard: React.FC = () => {
     setSecurityMetrics(mockMetrics);
   };
 
-  const startNewScan = async (scanType: string) => {
-    try {
-      // Simulate MCP API call: POST /agent/scan
-      console.log(`Starting ${scanType} scan...`);
-      await loadSecurityData();
-    } catch (error) {
-      console.error('Error starting scan:', error);
-    }
-  };
+  // const startNewScan = async (scanType: string) => {
+  //   try {
+  //     // Simulate MCP API call: POST /agent/scan
+  //     console.log(`Starting ${scanType} scan...`);
+  //     await loadSecurityData();
+  //   } catch (error) {
+  //     console.error('Error starting scan:', error);
+  //   }
+  // };
 
-  const exportSecurityReport = () => {
-    const report = {
-      timestamp: new Date().toISOString(),
-      metrics: securityMetrics,
-      scans: securityScans,
-      findings: securityFindings,
-      auditLogs: agentAuditLogs
-    };
+  // const exportSecurityReport = () => {
+  //   const report = {
+  //     timestamp: new Date().toISOString(),
+  //     metrics: securityMetrics,
+  //     scans: securityScans,
+  //     findings: securityFindings,
+  //     auditLogs: agentAuditLogs
+  //   };
     
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `security-report-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  //   const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = `security-report-${new Date().toISOString().split('T')[0]}.json`;
+  //   a.click();
+  //   URL.revokeObjectURL(url);
+  // };
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
-    }
-  };
+  // const getSeverityColor = (severity: string) => {
+  //   switch (severity) {
+  //     case 'critical': return 'bg-red-500';
+  //     case 'high': return 'bg-orange-500';
+  //     case 'medium': return 'bg-yellow-500';
+  //     case 'low': return 'bg-green-500';
+  //     default: return 'bg-gray-500';
+  //   }
+  // };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed': return 'bg-green-100 text-green-800';
-      case 'running': return 'bg-blue-100 text-blue-800';
-      case 'failed': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
+  // const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case 'completed': return 'bg-green-100 text-green-800';
+  //     case 'running': return 'bg-blue-100 text-blue-800';
+  //     case 'failed': return 'bg-red-100 text-red-800';
+  //     default: return 'bg-gray-100 text-gray-800';
+  //   }
+  // };
 
   // Chart data
   const findingsData = [
@@ -317,16 +317,19 @@ const SecurityScannerDashboard: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button>
-                variant="outline"
-              </Button>size="sm"
-            onClick={() =>setAutoRefresh(!autoRefresh)}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setAutoRefresh(!autoRefresh)}
             className={autoRefresh ? 'bg-green-50 border-green-200' : ''}
-          ></Button>
+          >
             <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
             {autoRefresh ? 'Auto' : 'Manual'}
+          </Button>
+          <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
             Export
+          </Button>
         </div>
       </div>
 
@@ -405,10 +408,14 @@ const SecurityScannerDashboard: React.FC = () => {
                   <p className="text-slate-600 dark:text-slate-400">Active and completed security scans</p>
                 </div>
                 <div className="flex space-x-2">
+                  <Button variant="outline" size="sm">
                     <Search className="h-4 w-4 mr-2" />
                     Vulnerability Scan
+                  </Button>
+                  <Button variant="outline" size="sm">
                     <FileText className="h-4 w-4 mr-2" />
                     Compliance Scan
+                  </Button>
                 </div>
               </div>
             </div>

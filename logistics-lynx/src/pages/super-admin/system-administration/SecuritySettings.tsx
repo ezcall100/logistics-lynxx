@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { ShieldCheck, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface SecuritySettingsProps {}
-
-const SecuritySettings: React.FC<SecuritySettingsProps> = () => {
+const SecuritySettings: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

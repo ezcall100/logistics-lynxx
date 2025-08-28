@@ -38,10 +38,10 @@ const AccountDeletion = () => {
     console.log('Account deletion completed');
   };
 
-  const handleCancel = () => {
-    setDeletionStep('warning');
-    setConfirmationText('');
-  };
+  // const handleCancel = () => {
+  //   setDeletionStep('warning');
+  //   setConfirmationText('');
+  // };
 
   return (
     <div className="space-y-6 p-6">

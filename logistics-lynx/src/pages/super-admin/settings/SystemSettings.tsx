@@ -254,21 +254,23 @@ const SystemSettings: React.FC = () => {
             </p>
           </div>
           <div className="flex space-x-3">
+            <Button
               variant="secondary"
-              
               icon={<RefreshCw className="w-4 h-4" />}
               mode={mode}
               onClick={() => window.location.reload()}
             >
               Reset
+            </Button>
+            <Button
               variant="primary"
-              
               icon={<Save className="w-4 h-4" />}
               mode={mode}
               onClick={handleSave}
               loading={saving}
             >
               Save Changes
+            </Button>
           </div>
         </div>
 
@@ -299,7 +301,8 @@ const SystemSettings: React.FC = () => {
         {activeTab === 'general' && (
           <EnhancedCard mode={mode} elevated>
             <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]} mb-4`}>
-              General System </h3>
+              General System
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
@@ -458,14 +461,15 @@ const SystemSettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Configuration
               </h3>
+              <Button
                 variant="secondary"
-                
                 icon={<RefreshCw className="w-4 h-4" />}
                 mode={mode}
                 onClick={() => handleTestConnection('')}
                 loading={loading}
               >
                 Test Connection
+              </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -680,14 +684,15 @@ const SystemSettings: React.FC = () => {
               <h3 className={`text-lg font-semibold ${stableStyles.textPrimary[mode]}`}>
                 Email Configuration
               </h3>
+              <Button
                 variant="secondary"
-                
                 icon={<Mail className="w-4 h-4" />}
                 mode={mode}
                 onClick={() => handleTestConnection('Email')}
                 loading={loading}
               >
                 Test Connection
+              </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -1049,7 +1054,8 @@ const SystemSettings: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                  Access </label>
+                  Access Key
+                </label>
                 <EnhancedInput
                   value={formData.storage.accessKey}
                   onChange={(e) => setFormData({
@@ -1061,7 +1067,8 @@ const SystemSettings: React.FC = () => {
               </div>
               <div>
                 <label className={`block text-sm font-medium ${stableStyles.textPrimary[mode]} mb-2`}>
-                  Secret </label>
+                  Secret Key
+                </label>
                 <EnhancedInput
                   type="password"
                   value={formData.storage.secretKey}
@@ -1092,7 +1099,8 @@ const SystemSettings: React.FC = () => {
                 <div>
                   <h4 className={`font-medium ${stableStyles.textPrimary[mode]}`}>CDN Enabled</h4>
                   <p className={`text-sm ${stableStyles.textSecondary[mode]}`}>
-                    Enable Content Delivery </p>
+                    Enable Content Delivery Network
+                  </p>
                 </div>
                 <input
                   type="checkbox"

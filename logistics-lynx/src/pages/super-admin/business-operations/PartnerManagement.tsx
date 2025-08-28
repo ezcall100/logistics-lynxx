@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Handshake } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PartnerManagementProps {}
-
-const PartnerManagement: React.FC<PartnerManagementProps> = () => {
+const PartnerManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

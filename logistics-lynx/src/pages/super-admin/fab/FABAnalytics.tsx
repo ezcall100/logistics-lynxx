@@ -25,10 +25,11 @@ const FABAnalytics = () => {
           </p>
         </div>
         <Button>
-                Export Data
-              </Button><Button>
-                 
-              </Button><div className="grid gap-6">
+          Export Data
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* Key Metrics */}
         <ResponsiveCard>
           <div className="mb-4">

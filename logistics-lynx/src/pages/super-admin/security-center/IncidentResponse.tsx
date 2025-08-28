@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { AlertOctagon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface IncidentResponseProps {}
-
-const IncidentResponse: React.FC<IncidentResponseProps> = () => {
+const IncidentResponse: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

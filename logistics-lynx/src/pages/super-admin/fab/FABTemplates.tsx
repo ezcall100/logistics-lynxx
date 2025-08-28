@@ -39,10 +39,11 @@ const FABTemplates = () => {
           </p>
         </div>
         <Button>
-                Create Template
-              </Button><Button>
-                 
-              </Button><div className="grid gap-6">
+          Create Template
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* Available Templates */}
         <ResponsiveCard>
           <div className="mb-4">
@@ -77,7 +78,9 @@ const FABTemplates = () => {
                     </div>
                     <div className="flex items-center space-x-2 ml-4">
                       <span className="text-sm text-gray-600">{template.usage} uses</span>
+                      <Button variant="outline" size="sm">
                         Use Template
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -165,7 +168,9 @@ const FABTemplates = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">{template.usage} uses</span>
+                    <Button variant="outline" size="sm">
                       Apply
+                    </Button>
                   </div>
                 </div>
               ))}

@@ -4,9 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Bot, Activity, Settings, Play, Pause, RotateCcw } from 'lucide-react';
 import { executeFabAction } from '../../../components/FabActions';
 
-interface AutonomousControlProps {}
-
-const AutonomousControl: React.FC<AutonomousControlProps> = () => {
+const AutonomousControl: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [agentStatus] = useState({
     isRunning: true,

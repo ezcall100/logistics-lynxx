@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface BillingManagementProps {}
-
-const BillingManagement: React.FC<BillingManagementProps> = () => {
+const BillingManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

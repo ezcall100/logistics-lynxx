@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AIMonitoringProps {}
-
-const AIMonitoring: React.FC<AIMonitoringProps> = () => {
+const AIMonitoring: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

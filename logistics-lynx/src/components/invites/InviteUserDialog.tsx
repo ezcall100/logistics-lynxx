@@ -283,15 +283,17 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
           </div>
 
           <DialogFooter>
-            <Button>
-                type="button"
-              </Button><Button>
-                variant="outline"
-              </Button>onClick={handleCancel}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancel}
               disabled={isLoading}
-            >Cancel<Button>
-                 
-              </Button><>
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Sending...
                 </>
@@ -301,6 +303,7 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
                   Send Invitation
                 </>
               )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -308,4 +311,4 @@ export const InviteUserDialog: React.FC<InviteUserDialogProps> = ({
   );
 };
 
-export default handleCancel;
+export default InviteUserDialog;

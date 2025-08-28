@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalBillingProps {}
-
-const PortalBilling: React.FC<PortalBillingProps> = () => {
+const PortalBilling: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -92,15 +92,13 @@ const DatabaseManagement: React.FC = () => {
           </p>
         </div>
         <div className="flex space-x-2">
-          <Button><Button>
-                variant="secondary"
-              </Button>>
-            Refresh<Button>
-                variant="primary"
-              </Button>>
-            Add Database<Button>
-                 
-              </Button></div>
+          <Button variant="secondary">
+            Refresh
+          </Button>
+          <Button variant="default">
+            Add Database
+          </Button>
+        </div>
       </div>
 
       {/* Overview Cards */}
@@ -144,8 +142,10 @@ const DatabaseManagement: React.FC = () => {
           <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
             Database Status
           </h2>
+          <Button variant="outline" size="sm">
             <Settings className="w-4 h-4 mr-2" />
             Configure
+          </Button>
         </div>
 
         <div className="space-y-4">

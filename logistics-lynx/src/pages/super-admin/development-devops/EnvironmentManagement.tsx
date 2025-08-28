@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface EnvironmentManagementProps {}
-
-const EnvironmentManagement: React.FC<EnvironmentManagementProps> = () => {
+const EnvironmentManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

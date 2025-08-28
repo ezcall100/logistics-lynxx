@@ -47,14 +47,11 @@ const PerformanceMonitorDashboard: React.FC = () => {
   const [confidenceData, setConfidenceData] = useState<ConfidenceData[]>([]);
   const [retryHeatmapData, setRetryHeatmapData] = useState<RetryHeatmapData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoading] = useState(false);
   const [selectedTimeframe] = useState('24h');
   const [monitoringActive, setMonitoringActive] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetric[]>([]);
   const [latencyData, setLatencyData] = useState<LatencyData[]>([]);
-  const [confidenceData] = useState<ConfidenceData[]>([]);
-  const [retryHeatmapData] = useState<RetryHeatmapData[]>([]);
 
   const [systemMetrics, setSystemMetrics] = useState<SystemMetrics>({
     cpu: 0,

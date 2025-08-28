@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AutomationRulesProps {}
-
-const AutomationRules: React.FC<AutomationRulesProps> = () => {
+const AutomationRules: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

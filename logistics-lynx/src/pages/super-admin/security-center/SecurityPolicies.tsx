@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { FileCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface SecurityPoliciesProps {}
-
-const SecurityPolicies: React.FC<SecurityPoliciesProps> = () => {
+const SecurityPolicies: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

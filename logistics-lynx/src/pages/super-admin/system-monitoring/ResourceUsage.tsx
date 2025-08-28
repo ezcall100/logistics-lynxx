@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface ResourceUsageProps {}
-
-const ResourceUsage: React.FC<ResourceUsageProps> = () => {
+const ResourceUsage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { GitBranch, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface CodeRepositoryProps {}
-
-const CodeRepository: React.FC<CodeRepositoryProps> = () => {
+const CodeRepository: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { GitCommit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface CICDPipelineProps {}
-
-const CICDPipeline: React.FC<CICDPipelineProps> = () => {
+const CICDPipeline: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

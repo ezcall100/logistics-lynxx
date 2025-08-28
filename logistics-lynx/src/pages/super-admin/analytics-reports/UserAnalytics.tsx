@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface UserAnalyticsProps {}
-
-const UserAnalytics: React.FC<UserAnalyticsProps> = () => {
+const UserAnalytics: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

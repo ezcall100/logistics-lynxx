@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface DataProtectionProps {}
-
-const DataProtection: React.FC<DataProtectionProps> = () => {
+const DataProtection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

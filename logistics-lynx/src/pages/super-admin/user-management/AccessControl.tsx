@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AccessControlProps {}
-
-const AccessControl: React.FC<AccessControlProps> = () => {
+const AccessControl: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

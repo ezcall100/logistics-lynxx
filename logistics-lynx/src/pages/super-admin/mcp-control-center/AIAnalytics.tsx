@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AIAnalyticsProps {}
-
-const AIAnalytics: React.FC<AIAnalyticsProps> = () => {
+const AIAnalytics: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

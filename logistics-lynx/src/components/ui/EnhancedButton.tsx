@@ -9,6 +9,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
+const EnhancedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'default', size = 'md', isLoading = false, children, disabled, ...props }, ref) => {
     const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
     
@@ -55,4 +56,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   }
 );
 
+EnhancedButton.displayName = 'EnhancedButton';
 
+export default EnhancedButton;

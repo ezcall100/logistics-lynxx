@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface ScheduledReportsProps {}
-
-const ScheduledReports: React.FC<ScheduledReportsProps> = () => {
+const ScheduledReports: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

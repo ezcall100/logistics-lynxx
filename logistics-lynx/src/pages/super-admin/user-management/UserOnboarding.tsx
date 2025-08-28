@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface UserOnboardingProps {}
-
-const UserOnboarding: React.FC<UserOnboardingProps> = () => {
+const UserOnboarding: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

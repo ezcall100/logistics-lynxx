@@ -48,10 +48,11 @@ const FABIntegrations = () => {
           </p>
         </div>
         <Button>
-                Add Integration
-              </Button><Button>
-                 
-              </Button><div className="grid gap-6">
+          Add Integration
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* Connected Integrations */}
         <ResponsiveCard>
           <div className="mb-4">
@@ -83,8 +84,12 @@ const FABIntegrations = () => {
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                       Connected
                     </span>
+                    <Button variant="outline" size="sm">
                       Configure
+                    </Button>
+                    <Button variant="outline" size="sm">
                       Disconnect
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -118,7 +123,9 @@ const FABIntegrations = () => {
                       <p className="text-sm text-gray-600">{integration.description}</p>
                     </div>
                   </div>
+                  <Button variant="outline" size="sm">
                     Connect
+                  </Button>
                 </div>
               ))}
               
@@ -132,7 +139,9 @@ const FABIntegrations = () => {
                     <p className="text-sm text-gray-600">Track FAB usage analytics</p>
                   </div>
                 </div>
+                <Button variant="outline" size="sm">
                   Connect
+                </Button>
               </div>
               
               <div className="p-4 border rounded-lg hover:bg-gray-50">
@@ -145,7 +154,9 @@ const FABIntegrations = () => {
                     <p className="text-sm text-gray-600">Send SMS notifications</p>
                   </div>
                 </div>
+                <Button variant="outline" size="sm">
                   Connect
+                </Button>
               </div>
             </div>
           </div>

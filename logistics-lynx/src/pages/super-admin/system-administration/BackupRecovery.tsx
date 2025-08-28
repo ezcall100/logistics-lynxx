@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { HardDrive } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface BackupRecoveryProps {}
-
-const BackupRecovery: React.FC<BackupRecoveryProps> = () => {
+const BackupRecovery: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

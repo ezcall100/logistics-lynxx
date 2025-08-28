@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface LegalComplianceProps {}
-
-const LegalCompliance: React.FC<LegalComplianceProps> = () => {
+const LegalCompliance: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface CustomerManagementProps {}
-
-const CustomerManagement: React.FC<CustomerManagementProps> = () => {
+const CustomerManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

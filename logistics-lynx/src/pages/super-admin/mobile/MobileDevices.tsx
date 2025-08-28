@@ -64,10 +64,11 @@ const MobileDevices = () => {
           </p>
         </div>
         <Button>
-                Add Device
-              </Button><Button>
-                 
-              </Button><div className="grid gap-6">
+          Add Device
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* Device Statistics */}
         <ResponsiveCard>
           <div className="mb-4">
@@ -141,7 +142,9 @@ const MobileDevices = () => {
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
                         {device.status}
                       </span>
+                      <Button variant="outline" size="sm">
                         Manage
+                      </Button>
                     </div>
                   </div>
                   

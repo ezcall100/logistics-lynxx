@@ -47,8 +47,8 @@ export interface PerformanceMetrics {
 export class ConfidenceLogger {
   private static instance: ConfidenceLogger;
   private isEnabled: boolean = true;
-  private confidenceThreshold: number = 0.4;
-  private maxRetries: number = 3;
+  // private confidenceThreshold: number = 0.4;
+  // private maxRetries: number = 3;
 
   private constructor() {}
 
@@ -152,13 +152,13 @@ export class ConfidenceLogger {
   // ========================
   // Configuration
   // ========================
-  setConfidenceThreshold(threshold: number): void {
-    this.confidenceThreshold = Math.max(0, Math.min(1, threshold));
-  }
+  // setConfidenceThreshold(threshold: number): void {
+  //   this.confidenceThreshold = Math.max(0, Math.min(1, threshold));
+  // }
 
-  setMaxRetries(maxRetries: number): void {
-    this.maxRetries = Math.max(0, maxRetries);
-  }
+  // setMaxRetries(maxRetries: number): void {
+  //   this.maxRetries = Math.max(0, maxRetries);
+  // }
 
   enable(): void {
     this.isEnabled = true;

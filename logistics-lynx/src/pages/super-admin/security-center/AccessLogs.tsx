@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AccessLogsProps {}
-
-const AccessLogs: React.FC<AccessLogsProps> = () => {
+const AccessLogs: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

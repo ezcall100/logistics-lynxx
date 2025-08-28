@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AIModelsProps {}
-
-const AIModels: React.FC<AIModelsProps> = () => {
+const AIModels: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

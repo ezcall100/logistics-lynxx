@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface AlertManagementProps {}
-
-const AlertManagement: React.FC<AlertManagementProps> = () => {
+const AlertManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

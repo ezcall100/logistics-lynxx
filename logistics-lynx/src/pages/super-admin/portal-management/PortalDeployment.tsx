@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalDeploymentProps {}
-
-const PortalDeployment: React.FC<PortalDeploymentProps> = () => {
+const PortalDeployment: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface UserPermissionsProps {}
-
-const UserPermissions: React.FC<UserPermissionsProps> = () => {
+const UserPermissions: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

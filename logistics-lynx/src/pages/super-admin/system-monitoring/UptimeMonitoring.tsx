@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface UptimeMonitoringProps {}
-
-const UptimeMonitoring: React.FC<UptimeMonitoringProps> = () => {
+const UptimeMonitoring: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

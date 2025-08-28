@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ResponsiveCard from '@/components/ui/ResponsiveCard';
-import { Wifi, Network } from 'lucide-react';
+import { Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface NetworkMonitoringProps {}
-
-const NetworkMonitoring: React.FC<NetworkMonitoringProps> = () => {
+const NetworkMonitoring: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

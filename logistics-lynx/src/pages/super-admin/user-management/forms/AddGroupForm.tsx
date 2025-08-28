@@ -94,19 +94,19 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Group name is required';
+      newErrors['name'] = 'Group name is required';
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors['description'] = 'Description is required';
     }
 
     if (formData.maxMembers < 1) {
-      newErrors.maxMembers = 'Maximum members must be at least 1';
+      newErrors['maxMembers'] = 'Maximum members must be at least 1';
     }
 
     if (formData.maxMembers > 1000) {
-      newErrors.maxMembers = 'Maximum members cannot exceed 1000';
+      newErrors['maxMembers'] = 'Maximum members cannot exceed 1000';
     }
 
     setErrors(newErrors);
@@ -115,7 +115,7 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
 
   const handleInputChange = (field: string, value: string | number | boolean | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
+    if (errors[field as keyof typeof errors]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
@@ -146,8 +146,8 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
         ...formData,
         id: `group_${Date.now()}`,
         memberCount: 0,
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString().split('T')[0] || '',
+        updatedAt: new Date().toISOString().split('T')[0] || '',
         createdBy: 'Current User',
         members: []
       };
@@ -164,7 +164,9 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
     if (!acc[permission.category]) {
       acc[permission.category] = [];
     }
-    acc[permission.category].push(permission);
+    if (acc[permission.category]) {
+      acc[permission.category].push(permission);
+    }
     return acc;
   }, {} as Record<string, typeof permissions>);
 
@@ -201,14 +203,14 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                  placeholder="Enter group name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                )}
+                                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                     errors['name'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                   placeholder="Enter group name"
+                 />
+                 {errors['name'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['name']}</p>
+                 )}
               </div>
 
               <div>
@@ -237,14 +239,14 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={3}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                placeholder="Enter group description"
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-              )}
+                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                   errors['description'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                 placeholder="Enter group description"
+               />
+               {errors['description'] && (
+                 <p className="mt-1 text-sm text-red-600">{errors['description']}</p>
+               )}
             </div>
           </div>
 
@@ -265,14 +267,14 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ onSave, onCancel }) => {
                   max="1000"
                   value={formData.maxMembers}
                   onChange={(e) => handleInputChange('maxMembers', parseInt(e.target.value))}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.maxMembers ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                  placeholder="Enter maximum members"
-                />
-                {errors.maxMembers && (
-                  <p className="mt-1 text-sm text-red-600">{errors.maxMembers}</p>
-                )}
+                                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                     errors['maxMembers'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                   placeholder="Enter maximum members"
+                 />
+                 {errors['maxMembers'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['maxMembers']}</p>
+                 )}
               </div>
 
               <div>

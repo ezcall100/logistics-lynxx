@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface HealthChecksProps {}
-
-const HealthChecks: React.FC<HealthChecksProps> = () => {
+const HealthChecks: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

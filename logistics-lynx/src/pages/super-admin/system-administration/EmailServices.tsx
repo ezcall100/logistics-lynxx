@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface EmailServicesProps {}
-
-const EmailServices: React.FC<EmailServicesProps> = () => {
+const EmailServices: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

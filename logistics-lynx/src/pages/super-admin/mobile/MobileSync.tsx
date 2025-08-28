@@ -22,10 +22,11 @@ const MobileSync = () => {
           </p>
         </div>
         <Button>
-                Force Sync
-              </Button><Button>
-                 
-              </Button><div className="grid gap-6">
+          Force Sync
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* Sync Status Overview */}
         <ResponsiveCard>
           <div className="mb-4">

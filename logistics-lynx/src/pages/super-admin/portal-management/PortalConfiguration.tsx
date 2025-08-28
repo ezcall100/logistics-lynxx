@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalConfigurationProps {}
-
-const PortalConfiguration: React.FC<PortalConfigurationProps> = () => {
+const PortalConfiguration: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

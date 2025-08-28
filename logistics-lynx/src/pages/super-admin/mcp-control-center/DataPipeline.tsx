@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { GitBranch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface DataPipelineProps {}
-
-const DataPipeline: React.FC<DataPipelineProps> = () => {
+const DataPipeline: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

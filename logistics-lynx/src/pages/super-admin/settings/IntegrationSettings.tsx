@@ -84,13 +84,16 @@ const IntegrationSettings = () => {
             Configure external integrations and API connections for your TMS platform
           </p>
         </div>
-        <Button>
-                onClick={handleSave} 
-              </Button>disabled={isLoading}
+        <Button
+          onClick={handleSave} 
+          disabled={isLoading}
           className="bg-blue-600 hover:bg-blue-700"
-        >{isLoading ? 'Saving...' : 'Save Changes'}<Button>
-                 
-              </Button><div className="grid gap-6">
+        >
+          {isLoading ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
         {/* API Configuration */}
         <ResponsiveCard>
           <div className="mb-4">
@@ -166,11 +169,13 @@ const IntegrationSettings = () => {
               />
             </div>
             
+            <Button
               variant="outline"
               onClick={handleTestConnection}
               disabled={isLoading}
             >
               Test API Connection
+            </Button>
           </div>
         </ResponsiveCard>
 
@@ -234,11 +239,13 @@ const IntegrationSettings = () => {
               </div>
             </div>
             
+            <Button
               variant="outline"
               onClick={handleTestConnection}
               disabled={isLoading}
             >
               Test Webhook
+            </Button>
           </div>
         </ResponsiveCard>
 
@@ -289,7 +296,9 @@ const IntegrationSettings = () => {
                 {['stripe', 'twilio', 'sendgrid', 'slack', 'zapier', 'hubspot'].map((provider) => (
                   <div key={provider} className="flex items-center justify-between p-3 border rounded-lg">
                     <span className="capitalize font-medium">{provider}</span>
+                    <Button variant="outline" size="sm">
                       Configure
+                    </Button>
                   </div>
                 ))}
               </div>

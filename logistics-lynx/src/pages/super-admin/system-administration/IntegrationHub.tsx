@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Plug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface IntegrationHubProps {}
-
-const IntegrationHub: React.FC<IntegrationHubProps> = () => {
+const IntegrationHub: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

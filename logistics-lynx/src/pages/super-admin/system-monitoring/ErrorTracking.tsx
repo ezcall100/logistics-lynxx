@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface ErrorTrackingProps {}
-
-const ErrorTracking: React.FC<ErrorTrackingProps> = () => {
+const ErrorTracking: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

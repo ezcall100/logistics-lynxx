@@ -126,19 +126,19 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Group name is required';
+      newErrors['name'] = 'Group name is required';
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors['description'] = 'Description is required';
     }
 
     if (formData.maxMembers < 1) {
-      newErrors.maxMembers = 'Maximum members must be at least 1';
+      newErrors['maxMembers'] = 'Maximum members must be at least 1';
     }
 
     if (formData.maxMembers > 1000) {
-      newErrors.maxMembers = 'Maximum members cannot exceed 1000';
+      newErrors['maxMembers'] = 'Maximum members cannot exceed 1000';
     }
 
     setErrors(newErrors);
@@ -180,7 +180,7 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
       
       const updatedGroup: GroupData = {
         ...formData,
-        updatedAt: new Date().toISOString().split('T')[0]
+        updatedAt: new Date().toISOString().split('T')[0] || ''
       };
 
       onSave(updatedGroup);
@@ -236,7 +236,9 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
     if (!acc[permission.category]) {
       acc[permission.category] = [];
     }
-    acc[permission.category].push(permission);
+    if (acc[permission.category]) {
+      acc[permission.category].push(permission);
+    }
     return acc;
   }, {} as Record<string, typeof permissions>);
 
@@ -294,13 +296,13 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['name'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter group name"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                )}
+                                 {errors['name'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['name']}</p>
+                 )}
               </div>
 
               <div>
@@ -330,13 +332,13 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={3}
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                     errors['description'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                 placeholder="Enter group description"
               />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-              )}
+                             {errors['description'] && (
+                 <p className="mt-1 text-sm text-red-600">{errors['description']}</p>
+               )}
             </div>
           </div>
 
@@ -358,13 +360,13 @@ const EditGroupForm: React.FC<EditGroupFormProps> = ({ groupId, onSave, onCancel
                   value={formData.maxMembers}
                   onChange={(e) => handleInputChange('maxMembers', parseInt(e.target.value))}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.maxMembers ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                         errors['maxMembers'] ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="Enter maximum members"
                 />
-                {errors.maxMembers && (
-                  <p className="mt-1 text-sm text-red-600">{errors.maxMembers}</p>
-                )}
+                                 {errors['maxMembers'] && (
+                   <p className="mt-1 text-sm text-red-600">{errors['maxMembers']}</p>
+                 )}
               </div>
 
               <div>

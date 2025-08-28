@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface PortalSecurityProps {}
-
-const PortalSecurity: React.FC<PortalSecurityProps> = () => {
+const PortalSecurity: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

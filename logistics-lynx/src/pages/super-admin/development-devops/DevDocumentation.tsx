@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { FileCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface DevDocumentationProps {}
-
-const DevDocumentation: React.FC<DevDocumentationProps> = () => {
+const DevDocumentation: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

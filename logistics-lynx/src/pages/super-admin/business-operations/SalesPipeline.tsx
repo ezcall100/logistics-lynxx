@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface SalesPipelineProps {}
-
-const SalesPipeline: React.FC<SalesPipelineProps> = () => {
+const SalesPipeline: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

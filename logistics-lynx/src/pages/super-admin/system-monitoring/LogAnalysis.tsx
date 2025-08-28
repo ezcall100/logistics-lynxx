@@ -3,9 +3,7 @@ import ResponsiveCard from '@/components/ui/ResponsiveCard';
 import { ScrollText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface LogAnalysisProps {}
-
-const LogAnalysis: React.FC<LogAnalysisProps> = () => {
+const LogAnalysis: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
