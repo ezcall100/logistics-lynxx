@@ -9,11 +9,11 @@ function getArg(flag: string, def = "") {
 }
 
 const args: Args = {
-  m: getArg("-m","POST"),
-  u: getArg("-u"),
-  k: getArg("-k","ops-n8n"),
-  s: getArg("-s", process.env['TRANSBOT_HMAC_SECRET'] || ""),
-  d: getArg("-d",""),
+  m: getArg("-m","POST") || "POST",
+  u: getArg("-u") || "",
+  k: getArg("-k","ops-n8n") || "ops-n8n",
+  s: getArg("-s", process.env['TRANSBOT_HMAC_SECRET'] || "") || "",
+  d: getArg("-d")
 };
 if (!args.u || !args.s) {
   console.error("usage: -m POST -u <url> -k <keyId> -s <secret> -d '{json}'");

@@ -1,5 +1,5 @@
-import { HealthCheckRunner } from '../autonomous-system/HealthCheckRunner';
-import { LogManager } from '../autonomous-system/LogManager';
+import { HealthCheckRunner } from '../autonomous-system/HealthCheckRunner.js';
+import { LogManager } from '../autonomous-system/LogManager.js';
 
 const logManager = new LogManager();
 

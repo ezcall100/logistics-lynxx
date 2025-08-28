@@ -36,9 +36,9 @@ async function dbPing(timeoutMs = 1500): Promise<{ ok: boolean; reason?: string 
 
 function validateSupabaseCredentials(): { ok: boolean; reason?: string } {
   try {
-    const url = process.env.SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const anonKey = process.env.SUPABASE_ANON_KEY;
+    const url = process.env['SUPABASE_URL'];
+    const serviceKey = process.env['SUPABASE_SERVICE_ROLE_KEY'];
+    const anonKey = process.env['SUPABASE_ANON_KEY'];
     
     if (!url) return { ok: false, reason: "SUPABASE_URL not configured" };
     if (!serviceKey) return { ok: false, reason: "SUPABASE_SERVICE_ROLE_KEY not configured" };
@@ -93,7 +93,7 @@ const server = http.createServer(async (req, res) => {
         ok: true, 
         ts: new Date().toISOString(),
         version: "1.0.0",
-        environment: process.env.NODE_ENV || "development"
+        environment: process.env['NODE_ENV'] || "development"
       }));
       return;
     }

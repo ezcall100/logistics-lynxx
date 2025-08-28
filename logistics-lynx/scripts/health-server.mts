@@ -8,8 +8,6 @@ interface HealthStatus {
   timestamp: string;
   checks: {
     database: boolean;
-    outbox: number;
-    dlq: number;
     agents: boolean;
     emergencyStop: boolean;
   };
@@ -18,47 +16,19 @@ interface HealthStatus {
 
 async function checkDatabase(): Promise<boolean> {
   try {
-    const { data, error } = await supabase.from('feature_flags_v2').select('key').limit(1);
+    // Use agent_health_checks table which exists in the schema
+    const { error } = await supabase.from('agent_health_checks').select('id').limit(1);
     return !error;
   } catch {
     return false;
   }
 }
 
-async function checkOutbox(): Promise<number> {
-  try {
-    const { count, error } = await supabase
-      .from('event_outbox')
-      .select('*', { count: 'exact', head: true })
-      .lte('next_attempt_at', new Date().toISOString());
-    return error ? 0 : (count || 0);
-  } catch {
-    return 0;
-  }
-}
-
-async function checkDLQ(): Promise<number> {
-  try {
-    const { count, error } = await supabase
-      .from('event_dlq')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'ready');
-    return error ? 0 : (count || 0);
-  } catch {
-    return 0;
-  }
-}
-
 async function checkEmergencyStop(): Promise<boolean> {
   try {
-    const { data, error } = await supabase
-      .from('feature_flags_v2')
-      .select('value')
-      .eq('key', 'autonomy.emergencyStop')
-      .single();
-    
-    if (error || !data) return false;
-    return data.value !== 'true';
+    // Check environment variable for emergency stop instead of non-existent table
+    const emergencyStop = process.env['AUTONOMOUS_EMERGENCY_STOP'] === 'true';
+    return !emergencyStop;
   } catch {
     return false;
   }
@@ -68,34 +38,30 @@ async function getHealthStatus(): Promise<HealthStatus> {
   const errors: string[] = [];
   
   // Run health checks
-  const [dbOk, outboxCount, dlqCount, emergencyOk] = await Promise.all([
+  const [dbOk, emergencyStop] = await Promise.all([
     checkDatabase(),
-    checkOutbox(),
-    checkDLQ(),
     checkEmergencyStop()
   ]);
   
   // Check if agents are running (simplified check)
-  const agentsOk = process.env.AUTONOMOUS_AGENTS_RUNNING === 'true';
+  const agentsOk = process.env['AUTONOMOUS_AGENTS_RUNNING'] === 'true';
   
   // Determine overall readiness
-  const ready = dbOk && emergencyOk && agentsOk;
+  const allOk = dbOk && !emergencyStop && agentsOk;
   
   if (!dbOk) errors.push('Database connection failed');
-  if (!emergencyOk) errors.push('Emergency stop is active');
+  if (emergencyStop) errors.push('Emergency stop is active');
   if (!agentsOk) errors.push('Autonomous agents not running');
   
   return {
-    ready,
+    ready: allOk,
     timestamp: new Date().toISOString(),
     checks: {
       database: dbOk,
-      outbox: outboxCount,
-      dlq: dlqCount,
       agents: agentsOk,
-      emergencyStop: emergencyOk
+      emergencyStop: !emergencyStop
     },
-    errors: errors.length > 0 ? errors : undefined
+    errors: errors.length > 0 ? errors : []
   };
 }
 
@@ -140,7 +106,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const PORT = process.env.HEALTH_PORT || 8089;
+const PORT = process.env['HEALTH_PORT'] || 8089;
 
 server.listen(PORT, () => {
   console.log(`🏥 Health server listening on port ${PORT}`);

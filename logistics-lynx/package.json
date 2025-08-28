@@ -59,6 +59,10 @@
     "mcp:server": "node server/mcp-server.js",
     "mcp:dev": "node server/mcp-server.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run mcp:server\"",
+    "mcp:rebuild": "node scripts/mcp-rebuild-superadmin.mjs",
+    "mcp:rebuild:prod": "node scripts/mcp-rebuild-superadmin.mjs --env=prod",
+    "mcp:rebuild:simple": "node scripts/mcp-rebuild-superadmin-simple.mjs",
+    "mcp:rebuild:simple:prod": "node scripts/mcp-rebuild-superadmin-simple.mjs --env=prod",
     "prepare": "husky"
   },
   "dependencies": {

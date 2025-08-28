@@ -207,6 +207,193 @@ app.get('/api/mcp/users', (req, res) => {
   }
 });
 
+// Get user by ID
+app.get('/api/mcp/users/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const mockUsers = {
+      '1': {
+        id: '1',
+        email: 'admin@transbot.com',
+        name: 'System Administrator',
+        role: 'super_admin',
+        permissions: ['*'],
+        features: ['*'],
+        status: 'active',
+        company: 'TransBot Inc',
+        department: 'IT',
+        last_login: new Date().toISOString(),
+        created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+        two_factor_enabled: true,
+        login_count: 156
+      },
+      '2': {
+        id: '2',
+        email: 'manager@transbot.com',
+        name: 'Operations Manager',
+        role: 'manager',
+        permissions: ['users:read', 'metrics:read', 'reports:read'],
+        features: ['dashboard', 'users', 'reports'],
+        status: 'active',
+        company: 'TransBot Inc',
+        department: 'Operations',
+        last_login: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+        two_factor_enabled: false,
+        login_count: 89
+      }
+    };
+
+    const user = mockUsers[id];
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found',
+        message: `User with ID ${id} not found`,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    res.json({
+      success: true,
+      data: user,
+      message: 'User retrieved successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve user',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Users export
+app.get('/api/mcp/users/export', (req, res) => {
+  try {
+    const mockUsers = [
+      {
+        id: '1',
+        email: 'admin@transbot.com',
+        name: 'System Administrator',
+        role: 'super_admin',
+        status: 'active',
+        company: 'TransBot Inc',
+        department: 'IT',
+        last_login: new Date().toISOString(),
+        created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: '2',
+        email: 'manager@transbot.com',
+        name: 'Operations Manager',
+        role: 'manager',
+        status: 'active',
+        company: 'TransBot Inc',
+        department: 'Operations',
+        last_login: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
+      }
+    ];
+    
+    res.json({
+      success: true,
+      data: mockUsers,
+      message: 'Users exported successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to export users',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Create user
+app.post('/api/mcp/users', (req, res) => {
+  try {
+    const userData = req.body;
+    
+    const newUser = {
+      id: Date.now().toString(),
+      email: userData.email,
+      name: userData.name,
+      role: userData.role || 'user',
+      permissions: userData.permissions || [],
+      features: userData.features || [],
+      status: 'active',
+      company: 'TransBot Inc',
+      department: 'General',
+      last_login: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      two_factor_enabled: false,
+      login_count: 0
+    };
+
+    res.status(201).json({
+      success: true,
+      data: newUser,
+      message: 'User created successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create user',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Update user
+app.patch('/api/mcp/users/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    
+    // Simulate user update
+    const updatedUser = {
+      id,
+      email: 'admin@transbot.com',
+      name: updates.name || 'System Administrator',
+      role: 'super_admin',
+      permissions: updates.permissions || ['*'],
+      features: ['*'],
+      status: 'active',
+      company: 'TransBot Inc',
+      department: 'IT',
+      last_login: new Date().toISOString(),
+      created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      updated_at: new Date().toISOString(),
+      two_factor_enabled: true,
+      login_count: 156
+    };
+
+    res.json({
+      success: true,
+      data: updatedUser,
+      message: 'User updated successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update user',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Agents list
 app.get('/api/mcp/agents', (req, res) => {
   try {
@@ -259,6 +446,251 @@ app.get('/api/mcp/agents', (req, res) => {
   }
 });
 
+// Get agent by ID
+app.get('/api/mcp/agents/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const mockAgents = {
+      'agent-1': {
+        id: 'agent-1',
+        name: 'Data Processing Agent',
+        type: 'data_processor',
+        status: 'online',
+        capabilities: ['data_processing', 'file_upload', 'ocr'],
+        last_heartbeat: new Date().toISOString(),
+        version: '2.1.4',
+        desired_concurrency: 5,
+        current_concurrency: 3,
+        location: 'us-east-1',
+        metadata: { region: 'us-east-1', instance_type: 't3.medium' },
+        created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      'agent-2': {
+        id: 'agent-2',
+        name: 'AI Assistant Agent',
+        type: 'ai_assistant',
+        status: 'online',
+        capabilities: ['conversation', 'task_execution', 'learning'],
+        last_heartbeat: new Date().toISOString(),
+        version: '2.1.4',
+        desired_concurrency: 10,
+        current_concurrency: 8,
+        location: 'us-west-2',
+        metadata: { region: 'us-west-2', instance_type: 't3.large' },
+        created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    };
+
+    const agent = mockAgents[id];
+    if (!agent) {
+      return res.status(404).json({
+        success: false,
+        error: 'Agent not found',
+        message: `Agent with ID ${id} not found`,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    res.json({
+      success: true,
+      data: agent,
+      message: 'Agent retrieved successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve agent',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Update agent
+app.patch('/api/mcp/agents/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    
+    // Simulate agent update
+    const updatedAgent = {
+      id,
+      name: 'Data Processing Agent',
+      type: 'data_processor',
+      status: updates.status || 'online',
+      capabilities: ['data_processing', 'file_upload', 'ocr'],
+      last_heartbeat: new Date().toISOString(),
+      version: '2.1.4',
+      desired_concurrency: updates.desired_concurrency || 5,
+      current_concurrency: 3,
+      location: 'us-east-1',
+      metadata: { region: 'us-east-1', instance_type: 't3.medium' },
+      created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    res.json({
+      success: true,
+      data: updatedAgent,
+      message: 'Agent updated successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update agent',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Restart agent
+app.post('/api/mcp/agents/:id/restart', (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    res.json({
+      success: true,
+      data: { message: `Agent ${id} restart initiated` },
+      message: 'Agent restart command received',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to restart agent',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Upgrade agent
+app.post('/api/mcp/agents/:id/upgrade', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { version } = req.body;
+    
+    res.json({
+      success: true,
+      data: { message: `Agent ${id} upgrade to version ${version || 'latest'} initiated` },
+      message: 'Agent upgrade command received',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to upgrade agent',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Workflows list
+app.get('/api/mcp/workflows', (req, res) => {
+  try {
+    const mockWorkflows = [
+      {
+        id: 'workflow-1',
+        name: 'Document Processing Pipeline',
+        description: 'Automated document processing and OCR workflow',
+        status: 'active',
+        version: '1.2.0',
+        steps: [
+          { id: 'step-1', name: 'Upload', type: 'upload', status: 'completed' },
+          { id: 'step-2', name: 'OCR', type: 'ocr', status: 'running' },
+          { id: 'step-3', name: 'Validation', type: 'validation', status: 'pending' }
+        ],
+        created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+        execution_count: 45,
+        success_rate: 0.98
+      },
+      {
+        id: 'workflow-2',
+        name: 'Customer Support Automation',
+        description: 'Automated customer support ticket processing',
+        status: 'active',
+        version: '1.1.5',
+        steps: [
+          { id: 'step-1', name: 'Ticket Creation', type: 'create', status: 'completed' },
+          { id: 'step-2', name: 'Classification', type: 'classify', status: 'completed' },
+          { id: 'step-3', name: 'Response', type: 'respond', status: 'running' }
+        ],
+        created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+        execution_count: 123,
+        success_rate: 0.95
+      }
+    ];
+    
+    res.json({
+      success: true,
+      data: mockWorkflows,
+      message: 'Workflows retrieved successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve workflows',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Tasks list
+app.get('/api/mcp/tasks', (req, res) => {
+  try {
+    const mockTasks = [
+      {
+        id: 'task-1',
+        type: 'document_processing',
+        status: 'running',
+        payload: { document_id: 'doc-123', priority: 'high' },
+        created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+        created_by: 'system',
+        agent_id: 'agent-1',
+        priority: 1,
+        progress: 65,
+        estimated_completion: new Date(Date.now() + 15 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'task-2',
+        type: 'customer_support',
+        status: 'queued',
+        payload: { ticket_id: 'ticket-456', category: 'billing' },
+        created_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        created_by: 'user-1',
+        agent_id: 'agent-2',
+        priority: 2,
+        progress: 0,
+        estimated_completion: null
+      }
+    ];
+    
+    res.json({
+      success: true,
+      data: mockTasks,
+      message: 'Tasks retrieved successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve tasks',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Tasks create
 app.post('/api/mcp/tasks', (req, res) => {
   try {
@@ -275,7 +707,7 @@ app.post('/api/mcp/tasks', (req, res) => {
       priority
     };
     
-    res.json({
+    res.status(201).json({
       success: true,
       data: task,
       message: 'Task created successfully',
@@ -285,6 +717,48 @@ app.post('/api/mcp/tasks', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to create task',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Assistant conversations
+app.get('/api/mcp/assistant/conversations', (req, res) => {
+  try {
+    const mockConversations = [
+      {
+        id: 'conv-1',
+        user_id: 'user-1',
+        title: 'Document Processing Help',
+        status: 'active',
+        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+        message_count: 8,
+        last_message: 'How can I help you with document processing?'
+      },
+      {
+        id: 'conv-2',
+        user_id: 'user-2',
+        title: 'System Configuration',
+        status: 'completed',
+        created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+        message_count: 15,
+        last_message: 'Configuration completed successfully.'
+      }
+    ];
+    
+    res.json({
+      success: true,
+      data: mockConversations,
+      message: 'Conversations retrieved successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve conversations',
       message: error.message,
       timestamp: new Date().toISOString()
     });
@@ -321,6 +795,47 @@ app.post('/api/mcp/assistant/invoke', (req, res) => {
       timestamp: new Date().toISOString()
     });
   }
+});
+
+// Docs upload (POST only - GET should return 405)
+app.post('/api/mcp/docs/upload', (req, res) => {
+  try {
+    const { file, metadata } = req.body;
+    
+    const uploadResult = {
+      id: `doc-${Date.now()}`,
+      filename: metadata?.filename || 'document.pdf',
+      size: metadata?.size || 1024,
+      status: 'uploaded',
+      created_at: new Date().toISOString(),
+      processing_status: 'pending',
+      ocr_status: 'pending'
+    };
+    
+    res.status(201).json({
+      success: true,
+      data: uploadResult,
+      message: 'Document uploaded successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to upload document',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Docs upload (GET should return 405 Method Not Allowed)
+app.get('/api/mcp/docs/upload', (req, res) => {
+  res.status(405).json({
+    success: false,
+    error: 'Method not allowed',
+    message: 'GET method is not allowed for document upload. Use POST instead.',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Settings get
@@ -372,6 +887,28 @@ app.get('/api/mcp/settings', (req, res) => {
   }
 });
 
+// Settings update
+app.patch('/api/mcp/settings', (req, res) => {
+  try {
+    const updatedSettings = req.body;
+    // In a real application, you would validate and save these settings to your data store
+    // For this mock server, we'll just return the updated settings
+    res.json({
+      success: true,
+      data: updatedSettings,
+      message: 'Settings updated successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update settings',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Logs list
 app.get('/api/mcp/logs', (req, res) => {
   try {
@@ -399,6 +936,39 @@ app.get('/api/mcp/logs', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to retrieve logs',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Logs export
+app.get('/api/mcp/logs/export', (req, res) => {
+  try {
+    const mockLogs = [
+      {
+        id: `log-${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        service: 'mcp-server',
+        user_id: 'system',
+        message: 'MCP server started successfully',
+        metadata: { port: PORT, environment: process.env.NODE_ENV || 'development' },
+        trace_id: `trace-${Date.now()}`,
+        span_id: `span-${Date.now()}`
+      }
+    ];
+    
+    res.json({
+      success: true,
+      data: mockLogs,
+      message: 'Logs exported successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to export logs',
       message: error.message,
       timestamp: new Date().toISOString()
     });

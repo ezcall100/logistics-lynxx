@@ -46,23 +46,23 @@ function signDlqBody(options: SignOptions): void {
   };
 
   if (idempotencyKey) {
-    payload.idempotency_key = idempotencyKey;
+    payload['idempotency_key'] = idempotencyKey;
   }
 
   if (dryRun) {
-    payload.dry_run = true;
+    payload['dry_run'] = true;
   }
 
   if (force) {
-    payload.force = true;
+    payload['force'] = true;
   }
 
   if (dlqIds && dlqIds.length > 0) {
-    payload.dlq_ids = dlqIds;
+    payload['dlq_ids'] = dlqIds;
   }
 
   if (errorType) {
-    payload.error_type = errorType;
+    payload['error_type'] = errorType;
   }
 
   const payloadString = JSON.stringify(payload);
@@ -118,17 +118,17 @@ function parseArgs(): SignOptions {
     switch (arg) {
       case '--company-id':
       case '-c':
-        options.companyId = nextArg;
+        options.companyId = nextArg || '';
         i++;
         break;
       case '--max':
       case '-m':
-        options.max = parseInt(nextArg);
+        options.max = parseInt(nextArg || '0');
         i++;
         break;
       case '--idempotency-key':
       case '-k':
-        options.idempotencyKey = nextArg;
+        options.idempotencyKey = nextArg || '';
         i++;
         break;
       case '--dry-run':
@@ -140,17 +140,17 @@ function parseArgs(): SignOptions {
         options.force = true;
         break;
       case '--dlq-ids':
-        options.dlqIds = nextArg.split(',');
+        options.dlqIds = nextArg?.split(',') || [];
         i++;
         break;
       case '--error-type':
       case '-e':
-        options.errorType = nextArg;
+        options.errorType = nextArg || '';
         i++;
         break;
       case '--secret':
       case '-s':
-        options.secret = nextArg;
+        options.secret = nextArg || '';
         i++;
         break;
       case '--verbose':
@@ -173,7 +173,7 @@ function parseArgs(): SignOptions {
   }
 
   if (!options.secret) {
-    options.secret = process.env['TRANSBOT_HMAC_SECRET'];
+    options.secret = process.env['TRANSBOT_HMAC_SECRET'] || '';
     if (!options.secret) {
       console.error('❌ Error: --secret or TRANSBOT_HMAC_SECRET environment variable is required');
       showHelp();

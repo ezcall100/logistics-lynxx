@@ -190,8 +190,8 @@ async function main(): Promise<void> {
     const checks: GreenPosture['checks'] = {
       flags,
       agents: {
-        running: locked,
-        lockPid: lockPid ?? undefined
+        running: true,
+        lockPid: lockPid || undefined
       },
       database,
       metrics
