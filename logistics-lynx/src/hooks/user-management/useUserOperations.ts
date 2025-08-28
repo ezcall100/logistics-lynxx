@@ -2,7 +2,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import type { User } from '@/types/user';
+
 
 interface CreateUserData {
   name: string;

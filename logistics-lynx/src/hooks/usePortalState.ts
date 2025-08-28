@@ -17,7 +17,7 @@ export const usePortalState = (portalId: string) => {
   useEffect(() => {
     const fetchPortalState = async () => {
       try {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from('portal_states')
           .select('*')
           .eq('portal_id', portalId)

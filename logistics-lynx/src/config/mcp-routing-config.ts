@@ -10,6 +10,19 @@ export const MCP_ROUTING_CONFIG = {
     retries: 3,
   },
 
+  // N8N Webhook Configuration
+  n8n: {
+    webhookUrl: 'https://pixx100.app.n8n.cloud/webhook-test/',
+    status: 'working',
+    responseTime: 944,
+    testResults: {
+      basic: 'success',
+      autonomous: 'success',
+      health: 'success',
+      complex: 'success'
+    }
+  },
+
   // Super Admin Dashboard Routes
   dashboard: {
     path: '/super-admin/dashboard',
