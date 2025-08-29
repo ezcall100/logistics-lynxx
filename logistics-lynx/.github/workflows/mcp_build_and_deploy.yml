@@ -10,7 +10,7 @@ jobs:
       SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
-      ENFORCE_IA:        ${{ vars.ENFORCE_IA || 'true' }}
+      ENFORCE_IA:        ${{ vars.ENFORCE_IA }}
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
@@ -22,7 +22,7 @@ jobs:
       - name: Build gates
         run: |
           bash scripts/mcp-self-heal.sh
-          if [ "${ENFORCE_IA}" = "true" ]; then
+          if [ "${ENFORCE_IA:-true}" = "true" ]; then
             npm run mcp:verify:ia
           else
             echo "⚠ ENFORCE_IA=false — skipping IA guard by commander order."
