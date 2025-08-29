@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Search, Bell, User, Settings, LogOut, ChevronDown, Truck, Shield, Brain, Zap, Activity, Sparkles, Command, Bot, Cpu, Network } from 'lucide-react';
-import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, Search, Bell, User, Settings, LogOut, ChevronDown, Shield, Brain, Activity } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '../ui/button';
 
 interface HeaderProps {
   onSidebarToggle?: () => void;
@@ -27,16 +25,8 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   const { logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState(3);
-  const location = useLocation();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Searching for:', searchQuery);
-    // Implement search functionality
-  };
+  const [notifications] = useState(3);
 
   const quickActions = [
     { name: 'AI Assistant', icon: Brain, action: () => navigate('/super-admin/dashboard') },
@@ -106,13 +96,13 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
 
             {/* AI Agents Status */}
             <div className="flex items-center space-x-2 px-3 py-1.5 bg-[color:var(--brand-1)]/10 border border-[color:var(--brand-1)]/20 rounded-full">
-              <Bot className="h-3 w-3 text-[color:var(--brand-1)]" />
+              <Brain className="h-3 w-3 text-[color:var(--brand-1)]" />
               <span className="text-xs font-medium text-[color:var(--brand-1)]">12 AI Agents Active</span>
             </div>
 
             {/* Network Status */}
             <div className="flex items-center space-x-2 px-3 py-1.5 bg-[color:var(--brand-2)]/10 border border-[color:var(--brand-2)]/20 rounded-full">
-              <Network className="h-3 w-3 text-[color:var(--brand-2)]" />
+              <Activity className="h-3 w-3 text-[color:var(--brand-2)]" />
               <span className="text-xs font-medium text-[color:var(--brand-2)]">2.4 GB/s</span>
             </div>
           </div>
