@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ThemeProvider } from './providers/ThemeProvider';
 
 // ✅ Core components
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
@@ -152,7 +153,8 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <Suspense fallback={<div style={{ 
+        <ThemeProvider>
+          <Suspense fallback={<div style={{ 
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
