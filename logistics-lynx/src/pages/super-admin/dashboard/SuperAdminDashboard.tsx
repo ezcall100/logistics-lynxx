@@ -365,11 +365,7 @@ const SuperAdminDashboard: React.FC = () => {
     }
   };
 
-  const getHealthColor = (health: number) => {
-    if (health >= 90) return 'text-green-600';
-    if (health >= 70) return 'text-yellow-600';
-    return 'text-red-600';
-  };
+
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
