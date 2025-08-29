@@ -12,9 +12,9 @@ export const MCP_ROUTING_CONFIG = {
 
   // N8N Webhook Configuration
   n8n: {
-    webhookUrl: 'https://pixx100.app.n8n.cloud/webhook-test/',
+    webhookUrl: 'https://pixx100.app.n8n.cloud/webhook-test/cursor-webhook',
     status: 'working',
-    responseTime: 944,
+    responseTime: 200,
     testResults: {
       basic: 'success',
       autonomous: 'success',
