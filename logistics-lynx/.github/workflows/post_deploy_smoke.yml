@@ -1,0 +1,89 @@
+name: Post Deploy Smoke (Tasks)
+on: 
+  workflow_dispatch:
+  push:
+    branches: [main, feature/001-public-website-scaffold]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Start MCP API server
+        run: npm run mcp:server:3001 &
+        
+      - name: Wait for API
+        run: |
+          API_BASE="${API_BASE:-http://localhost:3001/api/mcp}"
+          for i in {1..30}; do
+            if curl -s "$API_BASE/system/health" > /dev/null; then
+              echo "API is ready"
+              break
+            fi
+            echo "Waiting for API... ($i/30)"
+            sleep 2
+          done
+          
+      - name: Run Task Management Smoke Tests
+        run: |
+          set -e
+          API_BASE="${API_BASE:-http://localhost:3001/api/mcp}"
+          echo "=== Task Management Smoke Tests ==="
+          echo "Using API_BASE: $API_BASE"
+          
+          # 1) Create a task
+          echo "Creating task..."
+          NEW=$(curl -s -X POST "$API_BASE/tasks" \
+            -H "Content-Type: application/json" \
+            -d '{"type":"quick_ping","priority":1,"payload":{"test":"smoke"}}')
+          echo "Task created: $NEW"
+          
+          # 2) Extract ID and validate
+          ID=$(echo "$NEW" | jq -r .data.id)
+          echo "Task ID: $ID"
+          test "$ID" != "null" || (echo "Failed to get task ID" && exit 1)
+          
+          # 3) Check task details
+          echo "Checking task details..."
+          DETAILS=$(curl -s "$API_BASE/tasks/$ID")
+          echo "Task details: $DETAILS"
+          
+          # 4) List tasks
+          echo "Listing tasks..."
+          LIST=$(curl -s "$API_BASE/tasks")
+          echo "Task list: $LIST"
+          
+          # 5) Test cancel/retry flows
+          echo "Testing cancel flow..."
+          CANCEL=$(curl -s -X POST "$API_BASE/tasks/$ID/cancel")
+          echo "Cancel result: $CANCEL"
+          
+          echo "Testing retry flow..."
+          RETRY=$(curl -s -X POST "$API_BASE/tasks/$ID/retry")
+          echo "Retry result: $RETRY"
+          
+          # 6) Test assistant invoke
+          echo "Testing assistant invoke..."
+          ASSISTANT=$(curl -s -X POST "$API_BASE/assistant/invoke" \
+            -H "Content-Type: application/json" \
+            -d '{"message":"test","context":{"scope":"smoke-test"}}')
+          echo "Assistant result: $ASSISTANT"
+          
+          echo "=== All smoke tests passed ==="
+          
+      - name: Cleanup
+        if: always()
+        run: |
+          echo "Cleaning up..."
+          pkill -f "mcp-server" || true

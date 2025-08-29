@@ -691,21 +691,85 @@ app.get('/api/mcp/tasks', (req, res) => {
   }
 });
 
-// Tasks create
+// Tasks create with production features
 app.post('/api/mcp/tasks', (req, res) => {
   try {
-    const { type, payload, priority = 1, agent_id } = req.body;
+    const { type, payload, priority = 3, agent_id, idempotency_key, correlation_id } = req.body;
+    
+    // Rate limiting check (simple in-memory for demo)
+    const clientIP = req.ip || req.connection.remoteAddress;
+    const rateLimitKey = `rate_limit:${clientIP}`;
+    const currentRequests = (global.rateLimitStore && global.rateLimitStore[rateLimitKey]) || 0;
+    
+    if (currentRequests > 100) { // 100 requests per minute
+      return res.status(429).json({
+        success: false,
+        error: 'Rate limit exceeded',
+        message: 'Too many requests, please try again later',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    // Update rate limit counter
+    if (!global.rateLimitStore) global.rateLimitStore = {};
+    global.rateLimitStore[rateLimitKey] = currentRequests + 1;
+    setTimeout(() => {
+      if (global.rateLimitStore[rateLimitKey]) {
+        global.rateLimitStore[rateLimitKey] = Math.max(0, global.rateLimitStore[rateLimitKey] - 1);
+      }
+    }, 60000); // Reset after 1 minute
+    
+    // Idempotency check
+    if (idempotency_key) {
+      const existingTask = global.idempotencyStore && global.idempotencyStore[idempotency_key];
+      if (existingTask) {
+        return res.status(200).json({
+          success: true,
+          data: existingTask,
+          message: 'Task already exists (idempotency)',
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
     
     const task = {
-      id: `task-${Date.now()}`,
+      id: `task-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type,
       status: 'queued',
       payload,
       created_at: new Date().toISOString(),
       created_by: 'system',
       agent_id,
-      priority
+      priority,
+      retries: 0,
+      max_retries: 3,
+      idempotency_key,
+      correlation_id,
+      scheduled_at: null,
+      started_at: null,
+      finished_at: null,
+      error: null
     };
+    
+    // Store for idempotency
+    if (idempotency_key) {
+      if (!global.idempotencyStore) global.idempotencyStore = {};
+      global.idempotencyStore[idempotency_key] = task;
+    }
+    
+    // Emit webhook event
+    if (process.env.WEBHOOK_URL) {
+      fetch(process.env.WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'TASK_CREATED',
+          task_id: task.id,
+          correlation_id,
+          timestamp: new Date().toISOString()
+        })
+      }).catch(console.error);
+    }
     
     res.status(201).json({
       success: true,
