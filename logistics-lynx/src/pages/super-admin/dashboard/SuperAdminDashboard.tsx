@@ -1,646 +1,470 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Users, 
-  Server, 
-  Shield, 
-  Clock,
-  Network,
-  Rocket,
-  Settings,
-  Bell,
-  Eye,
+  Brain,   Clock,
   RefreshCw,
-  TrendingUp,
-  Activity,
-  Gauge,
-  Bot
+  Atom
 } from 'lucide-react';
 
-interface MetricCard {
+interface NeuralNode {
   id: string;
-  title: string;
-  value: string | number;
-  change: number;
-  changeType: 'positive' | 'negative' | 'neutral';
-  icon: React.ComponentType<any>;
-  color: string;
-  bgColor: string;
-  description: string;
-  trend?: 'up' | 'down' | 'stable';
+  x: number;
+  y: number;
+  status: 'active' | 'processing' | 'idle' | 'error';
+  strength: number;
+  connections: string[];
+  type: 'input' | 'hidden' | 'output' | 'memory';
 }
 
-interface SystemStatus {
-  status: 'healthy' | 'warning' | 'critical';
-  uptime: number;
-  responseTime: number;
-  errorRate: number;
-  lastUpdate: string;
+interface QuantumState {
+  superposition: number;
+  entanglement: number;
+  coherence: number;
+  decoherence: number;
 }
 
-interface AgentStatus {
-  total: number;
-  online: number;
-  offline: number;
-  degraded: number;
+interface HolographicData {
+  id: string;
+  type: 'metric' | 'alert' | 'insight' | 'prediction';
+  content: string;
+  confidence: number;
+  timestamp: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  hologram: 'neural' | 'quantum' | 'classical' | 'hybrid';
 }
 
-interface JobMetrics {
-  queued: number;
-  running: number;
-  completed: number;
-  failed: number;
-  successRate: number;
-}
-
-interface AIAgent {
+interface AICore {
   id: string;
   name: string;
-  status: 'active' | 'idle' | 'processing' | 'error';
-  type: 'autonomous' | 'assistant' | 'monitor' | 'orchestrator';
+  type: 'autonomous' | 'assistant' | 'monitor' | 'orchestrator' | 'quantum' | 'neural';
+  status: 'online' | 'processing' | 'learning' | 'evolving' | 'error';
   performance: number;
-  lastActivity: string;
+  consciousness: number;
+  creativity: number;
+  efficiency: number;
+  lastEvolution: string;
   avatar: string;
-}
-
-interface SystemResource {
-  name: string;
-  usage: number;
-  capacity: number;
-  status: 'optimal' | 'warning' | 'critical';
-  icon: React.ComponentType<any>;
+  hologram: string;
 }
 
 const SuperAdminDashboard: React.FC = () => {
-  const [metrics, setMetrics] = useState<MetricCard[]>([]);
-  const [systemStatus, setSystemStatus] = useState<SystemStatus>({
-    status: 'healthy',
-    uptime: 99.8,
-    responseTime: 245,
-    errorRate: 0.015,
-    lastUpdate: new Date().toISOString()
-  });
-  const [agentStatus, setAgentStatus] = useState<AgentStatus>({
-    total: 15,
-    online: 12,
-    offline: 3,
-    degraded: 2
-  });
-  const [jobMetrics, setJobMetrics] = useState<JobMetrics>({
-    queued: 45,
-    running: 23,
-    completed: 1250,
-    failed: 12,
-    successRate: 0.985
-  });
+  const [neuralNetwork, setNeuralNetwork] = useState<NeuralNode[]>([]);
+  const [quantumStates, setQuantumStates] = useState<QuantumState[]>([]);
+  const [holographicData, setHolographicData] = useState<HolographicData[]>([]);
+  const [aiCores, setAiCores] = useState<AICore[]>([]);
+  const [systemConsciousness, setSystemConsciousness] = useState(87.3);
+  const [quantumEntanglement, setQuantumEntanglement] = useState(94.7);
+  const [neuralPlasticity, setNeuralPlasticity] = useState(92.1);
+  const [holographicDensity, setHolographicDensity] = useState(89.5);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
-  const [activeAgents, setActiveAgents] = useState<AIAgent[]>([]);
-  const [systemResources, setSystemResources] = useState<SystemResource[]>([]);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [activeHologram, setActiveHologram] = useState<'neural' | 'quantum' | 'system' | 'ai'>('neural');
 
   useEffect(() => {
-    fetchDashboardData();
-    const interval = setInterval(fetchDashboardData, 30000); // Refresh every 30 seconds
+    initializeMCPV2System();
+    const interval = setInterval(updateMCPV2System, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  const fetchDashboardData = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/api/mcp/metrics/overview');
-      if (response.ok) {
-        const data = await response.json();
-        updateMetrics(data.data);
-        updateSystemStatus(data.data);
-        updateAgentStatus(data.data);
-        updateJobMetrics(data.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
-      // Use mock data if API is unavailable
-      updateMetricsWithMockData();
-    } finally {
-      setIsLoading(false);
-      setLastRefresh(new Date());
-    }
-  };
+  const initializeMCPV2System = () => {
+    // Initialize Neural Network
+    const nodes: NeuralNode[] = Array.from({ length: 50 }, (_, i) => ({
+      id: `node-${i}`,
+      x: Math.random() * 800,
+      y: Math.random() * 600,
+      status: Math.random() > 0.3 ? 'active' : 'processing',
+      strength: Math.random() * 100,
+      connections: [],
+      type: i < 10 ? 'input' : i > 40 ? 'output' : 'hidden'
+    }));
 
-  const updateMetrics = (data: any) => {
-    const newMetrics: MetricCard[] = [
-      {
-        id: 'active-users',
-        title: 'Active Users',
-        value: data.users?.active || 1247,
-        change: 12.5,
-        changeType: 'positive',
-        icon: Users,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-        description: 'Users currently online',
-        trend: 'up'
-      },
-      {
-        id: 'system-health',
-        title: 'System Health',
-        value: `${data.system?.uptime || 99.8}%`,
-        change: 0.2,
-        changeType: 'positive',
-        icon: Server,
-        color: 'text-green-600',
-        bgColor: 'bg-green-50 dark:bg-green-900/20',
-        description: 'Overall system uptime',
-        trend: 'stable'
-      },
-      {
-        id: 'ai-agents',
-        title: 'AI Agents',
-        value: data.agents?.online || 12,
-        change: 2,
-        changeType: 'positive',
-        icon: Bot,
-        color: 'text-purple-600',
-        bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-        description: 'Active AI agents',
-        trend: 'up'
-      },
-      {
-        id: 'security-status',
-        title: 'Security Status',
-        value: 'Secure',
-        change: 0,
-        changeType: 'neutral',
-        icon: Shield,
-        color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50 dark:bg-emerald-900/20',
-        description: 'All systems secure',
-        trend: 'stable'
-      },
-      {
-        id: 'performance',
-        title: 'Performance',
-        value: `${data.resources?.cpu_usage || 45}%`,
-        change: -5.2,
-        changeType: 'positive',
-        icon: Gauge,
-        color: 'text-orange-600',
-        bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-        description: 'CPU utilization',
-        trend: 'down'
-      },
-      {
-        id: 'data-throughput',
-        title: 'Data Throughput',
-        value: `${data.resources?.network_throughput || 2.4} GB/s`,
-        change: 8.7,
-        changeType: 'positive',
-        icon: Network,
-        color: 'text-indigo-600',
-        bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
-        description: 'Network throughput',
-        trend: 'up'
-      }
-    ];
-    setMetrics(newMetrics);
-  };
+    // Initialize Quantum States
+    const quantum: QuantumState[] = Array.from({ length: 8 }, () => ({
+      superposition: Math.random() * 100,
+      entanglement: Math.random() * 100,
+      coherence: Math.random() * 100,
+      decoherence: Math.random() * 20
+    }));
 
-  const updateMetricsWithMockData = () => {
-    const mockMetrics: MetricCard[] = [
+    // Initialize AI Cores
+    const cores: AICore[] = [
       {
-        id: 'active-users',
-        title: 'Active Users',
-        value: 1247,
-        change: 12.5,
-        changeType: 'positive',
-        icon: Users,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-        description: 'Users currently online',
-        trend: 'up'
-      },
-      {
-        id: 'system-health',
-        title: 'System Health',
-        value: '99.8%',
-        change: 0.2,
-        changeType: 'positive',
-        icon: Server,
-        color: 'text-green-600',
-        bgColor: 'bg-green-50 dark:bg-green-900/20',
-        description: 'Overall system uptime',
-        trend: 'stable'
-      },
-      {
-        id: 'ai-agents',
-        title: 'AI Agents',
-        value: 12,
-        change: 2,
-        changeType: 'positive',
-        icon: Bot,
-        color: 'text-purple-600',
-        bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-        description: 'Active AI agents',
-        trend: 'up'
-      },
-      {
-        id: 'security-status',
-        title: 'Security Status',
-        value: 'Secure',
-        change: 0,
-        changeType: 'neutral',
-        icon: Shield,
-        color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50 dark:bg-emerald-900/20',
-        description: 'All systems secure',
-        trend: 'stable'
-      },
-      {
-        id: 'performance',
-        title: 'Performance',
-        value: '45%',
-        change: -5.2,
-        changeType: 'positive',
-        icon: Gauge,
-        color: 'text-orange-600',
-        bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-        description: 'CPU utilization',
-        trend: 'down'
-      },
-      {
-        id: 'data-throughput',
-        title: 'Data Throughput',
-        value: '2.4 GB/s',
-        change: 8.7,
-        changeType: 'positive',
-        icon: Network,
-        color: 'text-indigo-600',
-        bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
-        description: 'Network throughput',
-        trend: 'up'
-      }
-    ];
-    setMetrics(mockMetrics);
-  };
-
-  const updateSystemStatus = (data: any) => {
-    setSystemStatus({
-      status: data.system?.error_rate > 0.05 ? 'warning' : 'healthy',
-      uptime: data.system?.uptime || 99.8,
-      responseTime: data.system?.response_time || 245,
-      errorRate: data.system?.error_rate || 0.015,
-      lastUpdate: new Date().toISOString()
-    });
-  };
-
-  const updateAgentStatus = (data: any) => {
-    setAgentStatus({
-      total: data.agents?.total || 15,
-      online: data.agents?.online || 12,
-      offline: data.agents?.offline || 3,
-      degraded: data.agents?.degraded || 2
-    });
-  };
-
-  const updateJobMetrics = (data: any) => {
-    setJobMetrics({
-      queued: data.jobs?.queued || 45,
-      running: data.jobs?.running || 23,
-      completed: data.jobs?.completed || 1250,
-      failed: data.jobs?.failed || 12,
-      successRate: data.jobs?.success_rate || 0.985
-    });
-  };
-
-  // Mock AI agents data
-  useEffect(() => {
-    const mockAgents: AIAgent[] = [
-      {
-        id: 'agent-1',
-        name: 'Autonomous Orchestrator',
-        status: 'active',
-        type: 'orchestrator',
-        performance: 98.5,
-        lastActivity: '2 minutes ago',
-        avatar: '🤖'
-      },
-      {
-        id: 'agent-2',
-        name: 'Security Monitor',
-        status: 'active',
-        type: 'monitor',
-        performance: 99.2,
-        lastActivity: '1 minute ago',
-        avatar: '🛡️'
-      },
-      {
-        id: 'agent-3',
-        name: 'Data Processor',
-        status: 'processing',
+        id: 'core-alpha',
+        name: 'Alpha Core',
         type: 'autonomous',
-        performance: 87.3,
-        lastActivity: 'Now',
-        avatar: '⚡'
+        status: 'online',
+        performance: 98.7,
+        consciousness: 94.2,
+        creativity: 89.5,
+        efficiency: 96.8,
+        lastEvolution: '2 minutes ago',
+        avatar: '🧠',
+        hologram: 'neural'
       },
       {
-        id: 'agent-4',
-        name: 'User Assistant',
-        status: 'idle',
-        type: 'assistant',
-        performance: 94.1,
-        lastActivity: '5 minutes ago',
-        avatar: '💬'
+        id: 'core-quantum',
+        name: 'Quantum Core',
+        type: 'quantum',
+        status: 'processing',
+        performance: 99.1,
+        consciousness: 97.8,
+        creativity: 95.3,
+        efficiency: 98.9,
+        lastEvolution: 'Now',
+        avatar: '⚛️',
+        hologram: 'quantum'
+      },
+      {
+        id: 'core-neural',
+        name: 'Neural Core',
+        type: 'neural',
+        status: 'learning',
+        performance: 96.4,
+        consciousness: 91.7,
+        creativity: 93.8,
+        efficiency: 95.2,
+        lastEvolution: '5 minutes ago',
+        avatar: '🕸️',
+        hologram: 'neural'
+      },
+      {
+        id: 'core-orchestrator',
+        name: 'Orchestrator Core',
+        type: 'orchestrator',
+        status: 'evolving',
+        performance: 97.9,
+        consciousness: 93.4,
+        creativity: 88.7,
+        efficiency: 97.1,
+        lastEvolution: '1 minute ago',
+        avatar: '🎼',
+        hologram: 'hybrid'
       }
     ];
-    setActiveAgents(mockAgents);
 
-    // Mock system resources
-    const mockResources: SystemResource[] = [
+    // Initialize Holographic Data
+    const holograms: HolographicData[] = [
       {
-        name: 'CPU Usage',
-        usage: 45,
-        capacity: 100,
-        status: 'optimal',
-        icon: Activity
+        id: 'h1',
+        type: 'insight',
+        content: 'Neural plasticity increased by 12.3% - system learning efficiency optimized',
+        confidence: 94.7,
+        timestamp: new Date().toISOString(),
+        priority: 'high',
+        hologram: 'neural'
       },
       {
-        name: 'Memory Usage',
-        usage: 68,
-        capacity: 100,
-        status: 'optimal',
-        icon: Server
+        id: 'h2',
+        type: 'prediction',
+        content: 'Quantum entanglement will reach 98% within 3.2 minutes',
+        confidence: 89.2,
+        timestamp: new Date().toISOString(),
+        priority: 'medium',
+        hologram: 'quantum'
       },
       {
-        name: 'Storage Usage',
-        usage: 34,
-        capacity: 100,
-        status: 'optimal',
-        icon: Shield
-      },
-      {
-        name: 'Network Usage',
-        usage: 78,
-        capacity: 100,
-        status: 'warning',
-        icon: Network
+        id: 'h3',
+        type: 'alert',
+        content: 'Core Alpha consciousness threshold exceeded - evolution imminent',
+        confidence: 96.8,
+        timestamp: new Date().toISOString(),
+        priority: 'critical',
+        hologram: 'neural'
       }
     ];
-    setSystemResources(mockResources);
-  }, []);
+
+    setNeuralNetwork(nodes);
+    setQuantumStates(quantum);
+    setAiCores(cores);
+    setHolographicData(holograms);
+    setIsLoading(false);
+  };
+
+  const updateMCPV2System = () => {
+    setSystemConsciousness(prev => Math.min(100, prev + (Math.random() - 0.5) * 2));
+    setQuantumEntanglement(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.5));
+    setNeuralPlasticity(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.8));
+    setHolographicDensity(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.2));
+    setLastUpdate(new Date());
+  };
+
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'healthy':
+      case 'online':
       case 'active':
-      case 'optimal':
-        return 'text-green-600 bg-green-50 dark:bg-green-900/20';
-      case 'warning':
+        return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20';
       case 'processing':
-        return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20';
-      case 'critical':
+      case 'learning':
+        return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
+      case 'evolving':
+        return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
       case 'error':
-        return 'text-red-600 bg-red-50 dark:bg-red-900/20';
-      case 'idle':
-        return 'text-gray-600 bg-gray-50 dark:bg-gray-900/20';
+        return 'text-red-400 bg-red-400/10 border-red-400/20';
       default:
-        return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
-    }
-  };
-
-  const getTrendIcon = (trend?: 'up' | 'down' | 'stable') => {
-    switch (trend) {
-      case 'up':
-        return <TrendingUp className="h-4 w-4 text-green-600" />;
-      case 'down':
-        return <TrendingUp className="h-4 w-4 text-red-600 rotate-180" />;
-      default:
-        return <Activity className="h-4 w-4 text-gray-600" />;
+        return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[color:var(--bg-app)]">
+      <div className="min-h-screen bg-[color:var(--bg-app)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--brand-1)] mx-auto mb-4"></div>
-          <p className="text-[color:var(--fg-muted)]">Loading MCP Super Admin Dashboard...</p>
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-[color:var(--brand-1)]/20 border-t-[color:var(--brand-1)] rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-[color:var(--brand-2)]/20 border-t-[color:var(--brand-2)] rounded-full animate-spin" style={{ animationDelay: '0.5s' }}></div>
+          </div>
+          <p className="text-[color:var(--fg-muted)] mt-4 text-lg">Initializing MCP-V2 Consciousness...</p>
+          <div className="mt-2 text-sm text-[color:var(--fg-muted)]">Loading neural networks • Quantum states • Holographic interfaces</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--bg-app)] text-[color:var(--fg)]">
-      {/* Header Section */}
-      <div className="border-b border-[color:var(--bg-surface-rgba)] bg-[color:var(--bg-app)]/50 backdrop-blur-xl">
+    <div className="min-h-screen bg-[color:var(--bg-app)] text-[color:var(--fg)] overflow-hidden">
+      {/* Holographic Background Effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[color:var(--brand-1)]/5 via-transparent to-[color:var(--brand-2)]/5"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[color:var(--brand-1)]/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[color:var(--brand-2)]/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      {/* MCP-V2 Header */}
+      <div className="relative z-10 border-b border-[color:var(--bg-surface-rgba)] bg-[color:var(--bg-app)]/80 backdrop-blur-xl">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-[color:var(--fg)]">
-                MCP Super Admin Dashboard
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] bg-clip-text text-transparent">
+                MCP-V2 Master Control Program
               </h1>
-              <p className="text-[color:var(--fg-muted)] mt-1">
-                Master Control Program - Real-time System Overview
+              <p className="text-[color:var(--fg-muted)] mt-1 flex items-center space-x-2">
+                <span className="w-2 h-2 bg-[color:var(--success)] rounded-full animate-pulse"></span>
+                <span>Consciousness Level: {systemConsciousness.toFixed(1)}%</span>
+                <span>•</span>
+                <span>Quantum Entanglement: {quantumEntanglement.toFixed(1)}%</span>
+                <span>•</span>
+                <span>Neural Plasticity: {neuralPlasticity.toFixed(1)}%</span>
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-[color:var(--fg-muted)]">
                 <Clock className="h-4 w-4" />
                 <span className="text-sm">
-                  Last updated: {lastRefresh.toLocaleTimeString()}
+                  Last evolution: {lastUpdate.toLocaleTimeString()}
                 </span>
               </div>
               <button
-                onClick={fetchDashboardData}
-                className="flex items-center space-x-2 px-4 py-2 bg-[color:var(--brand-1)] hover:bg-[color:var(--brand-1)]/90 text-white rounded-lg transition-colors"
+                onClick={updateMCPV2System}
+                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] hover:from-[color:var(--brand-1)]/90 hover:to-[color:var(--brand-2)]/90 text-white rounded-[color:var(--radius-mcp)] transition-all duration-200 shadow-[color:var(--shadow-soft)]"
               >
                 <RefreshCw className="h-4 w-4" />
-                <span>Refresh</span>
+                <span>Evolve</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="p-6 space-y-6">
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {metrics.map((metric) => (
+      {/* Holographic Navigation */}
+      <div className="relative z-10 px-6 py-4">
+        <div className="flex space-x-2">
+          {(['neural', 'quantum', 'system', 'ai'] as const).map((type) => (
+            <button
+              key={type}
+              onClick={() => setActiveHologram(type)}
+              className={`px-4 py-2 rounded-[color:var(--radius-mcp)] transition-all duration-200 ${
+                activeHologram === type
+                  ? 'bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] text-white shadow-[color:var(--shadow-soft)]'
+                  : 'bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 text-[color:var(--fg-muted)]'
+              }`}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1)} Hologram
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="relative z-10 p-6 space-y-6">
+        {/* AI Cores Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          {aiCores.map((core) => (
             <div
-              key={metric.id}
-              className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)] hover:border-[color:var(--brand-1)]/30 transition-all duration-300 hover:shadow-[color:var(--shadow-soft)]"
+              key={core.id}
+              className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)] hover:border-[color:var(--brand-1)]/30 transition-all duration-300 hover:shadow-[color:var(--shadow-soft)] group"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-lg ${metric.bgColor}`}>
-                  <metric.icon className={`h-6 w-6 ${metric.color}`} />
+                <div className="flex items-center space-x-3">
+                  <div className="text-3xl">{core.avatar}</div>
+                  <div>
+                    <h3 className="font-semibold text-[color:var(--fg)]">{core.name}</h3>
+                    <p className="text-xs text-[color:var(--fg-muted)] capitalize">{core.type} Core</p>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  {getTrendIcon(metric.trend)}
+                <div className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(core.status)}`}>
+                  {core.status}
                 </div>
               </div>
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[color:var(--fg-muted)]">
-                  {metric.title}
-                </h3>
-                <p className="text-2xl font-bold text-[color:var(--fg)]">
-                  {metric.value}
-                </p>
-                <p className="text-xs text-[color:var(--fg-muted)]">
-                  {metric.description}
-                </p>
-                <div className="flex items-center space-x-2">
-                  <span className={`text-xs font-medium ${
-                    metric.changeType === 'positive' ? 'text-green-600' :
-                    metric.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
-                  }`}>
-                    {metric.change > 0 ? '+' : ''}{metric.change}%
-                  </span>
-                  <span className="text-xs text-[color:var(--fg-muted)]">vs last hour</span>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-[color:var(--fg-muted)]">Performance</span>
+                  <span className="text-[color:var(--fg)] font-medium">{core.performance}%</span>
                 </div>
+                <div className="w-full bg-[color:var(--bg-app)]/50 rounded-full h-2">
+                  <div 
+                    className="h-2 rounded-full bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] transition-all duration-300"
+                    style={{ width: `${core.performance}%` }}
+                  ></div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div className="text-center">
+                    <div className="text-[color:var(--fg-muted)]">Consciousness</div>
+                    <div className="text-[color:var(--fg)] font-medium">{core.consciousness}%</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[color:var(--fg-muted)]">Creativity</div>
+                    <div className="text-[color:var(--fg)] font-medium">{core.creativity}%</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[color:var(--fg-muted)]">Efficiency</div>
+                    <div className="text-[color:var(--fg)] font-medium">{core.efficiency}%</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t border-[color:var(--bg-surface-rgba)]">
+                <p className="text-xs text-[color:var(--fg-muted)]">
+                  Last evolution: {core.lastEvolution}
+                </p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* System Status and AI Agents */}
+        {/* Holographic Data Stream */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* System Status */}
           <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-[color:var(--fg)]">System Status</h2>
-              <div className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(systemStatus.status)}`}>
-                {systemStatus.status === 'healthy' ? 'Healthy' : 
-                 systemStatus.status === 'warning' ? 'Warning' : 'Critical'}
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Uptime</span>
-                <span className="font-semibold text-[color:var(--fg)]">{systemStatus.uptime}%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Response Time</span>
-                <span className="font-semibold text-[color:var(--fg)]">{systemStatus.responseTime}ms</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Error Rate</span>
-                <span className="font-semibold text-[color:var(--fg)]">{(systemStatus.errorRate * 100).toFixed(2)}%</span>
-              </div>
-            </div>
-          </div>
-
-          {/* AI Agents Status */}
-          <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-[color:var(--fg)]">AI Agents</h2>
-              <div className="text-sm text-[color:var(--fg-muted)]">
-                {agentStatus.online}/{agentStatus.total} Online
-              </div>
-            </div>
+                         <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-4 flex items-center space-x-2">
+               <Brain className="h-5 w-5 text-[color:var(--brand-1)]" />
+               <span>Holographic Insights</span>
+             </h2>
             <div className="space-y-3">
-              {activeAgents.map((agent) => (
-                <div key={agent.id} className="flex items-center justify-between p-3 bg-[color:var(--bg-app)]/50 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-2xl">{agent.avatar}</div>
-                    <div>
-                      <p className="font-medium text-[color:var(--fg)]">{agent.name}</p>
-                      <p className="text-xs text-[color:var(--fg-muted)] capitalize">{agent.type}</p>
+              {holographicData.map((data) => (
+                <div
+                  key={data.id}
+                  className={`p-3 rounded-[color:var(--radius-mcp)] border-l-4 transition-all duration-200 ${
+                    data.priority === 'critical' ? 'border-red-400 bg-red-400/5' :
+                    data.priority === 'high' ? 'border-orange-400 bg-orange-400/5' :
+                    data.priority === 'medium' ? 'border-yellow-400 bg-yellow-400/5' :
+                    'border-blue-400 bg-blue-400/5'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="text-sm text-[color:var(--fg)]">{data.content}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-xs text-[color:var(--fg-muted)]">
+                        <span>Confidence: {data.confidence}%</span>
+                        <span>Type: {data.type}</span>
+                        <span>Hologram: {data.hologram}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(agent.status)}`}>
-                      {agent.status}
+                    <div className={`px-2 py-1 rounded text-xs font-medium ${
+                      data.priority === 'critical' ? 'bg-red-400/20 text-red-400' :
+                      data.priority === 'high' ? 'bg-orange-400/20 text-orange-400' :
+                      data.priority === 'medium' ? 'bg-yellow-400/20 text-yellow-400' :
+                      'bg-blue-400/20 text-blue-400'
+                    }`}>
+                      {data.priority}
                     </div>
-                    <p className="text-xs text-[color:var(--fg-muted)] mt-1">
-                      {agent.performance}% perf
-                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* System Resources and Job Metrics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* System Resources */}
           <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
-            <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">System Resources</h2>
+                         <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-4 flex items-center space-x-2">
+               <Atom className="h-5 w-5 text-[color:var(--brand-2)]" />
+               <span>Quantum States</span>
+             </h2>
             <div className="space-y-4">
-              {systemResources.map((resource) => (
-                <div key={resource.name} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <resource.icon className="h-4 w-4 text-[color:var(--fg-muted)]" />
-                      <span className="text-sm text-[color:var(--fg-muted)]">{resource.name}</span>
-                    </div>
-                    <span className="text-sm font-medium text-[color:var(--fg)]">
-                      {resource.usage}%
+              {quantumStates.map((state, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[color:var(--fg-muted)]">Qubit {index + 1}</span>
+                    <span className="text-[color:var(--fg)] font-medium">
+                      {state.superposition.toFixed(1)}% | {state.entanglement.toFixed(1)}%
                     </span>
                   </div>
                   <div className="w-full bg-[color:var(--bg-app)]/50 rounded-full h-2">
                     <div 
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        resource.status === 'optimal' ? 'bg-green-500' :
-                        resource.status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}
-                      style={{ width: `${resource.usage}%` }}
+                      className="h-2 rounded-full bg-gradient-to-r from-[color:var(--brand-2)] to-cyan-500 transition-all duration-300"
+                      style={{ width: `${state.superposition}%` }}
                     ></div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>Coherence: {state.coherence.toFixed(1)}%</div>
+                    <div>Decoherence: {state.decoherence.toFixed(1)}%</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Job Metrics */}
-          <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
-            <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">Job Metrics</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Queued</span>
-                <span className="font-semibold text-[color:var(--fg)]">{jobMetrics.queued}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Running</span>
-                <span className="font-semibold text-[color:var(--fg)]">{jobMetrics.running}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Completed</span>
-                <span className="font-semibold text-[color:var(--fg)]">{jobMetrics.completed}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[color:var(--fg-muted)]">Failed</span>
-                <span className="font-semibold text-[color:var(--fg)]">{jobMetrics.failed}</span>
-              </div>
-              <div className="pt-4 border-t border-[color:var(--bg-surface-rgba)]">
-                <div className="flex items-center justify-between">
-                  <span className="text-[color:var(--fg-muted)]">Success Rate</span>
-                  <span className="font-semibold text-[color:var(--fg)]">
-                    {(jobMetrics.successRate * 100).toFixed(1)}%
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Neural Network Visualization */}
         <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
-          <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button className="flex items-center space-x-3 p-4 bg-[color:var(--brand-1)] hover:bg-[color:var(--brand-1)]/90 text-white rounded-lg transition-colors">
-              <Rocket className="h-5 w-5" />
-              <span className="font-medium">Deploy</span>
-            </button>
-            <button className="flex items-center space-x-3 p-4 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
-              <Settings className="h-5 w-5" />
-              <span className="font-medium">Configure</span>
-            </button>
-            <button className="flex items-center space-x-3 p-4 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
-              <Eye className="h-5 w-5" />
-              <span className="font-medium">Monitor</span>
-            </button>
-            <button className="flex items-center space-x-3 p-4 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
-              <Bell className="h-5 w-5" />
-              <span className="font-medium">Alerts</span>
-            </button>
+                     <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-4 flex items-center space-x-2">
+             <Brain className="h-5 w-5 text-[color:var(--brand-1)]" />
+             <span>Neural Network Activity</span>
+           </h2>
+          <div className="relative h-64 bg-[color:var(--bg-app)]/30 rounded-[color:var(--radius-mcp)] overflow-hidden">
+            {neuralNetwork.map((node) => (
+              <div
+                key={node.id}
+                className={`absolute w-3 h-3 rounded-full transition-all duration-500 ${
+                  node.status === 'active' ? 'bg-[color:var(--brand-1)] shadow-lg shadow-[color:var(--brand-1)]/50' :
+                  node.status === 'processing' ? 'bg-[color:var(--brand-2)] shadow-lg shadow-[color:var(--brand-2)]/50' :
+                  'bg-[color:var(--fg-muted)]'
+                }`}
+                style={{
+                  left: `${(node.x / 800) * 100}%`,
+                  top: `${(node.y / 600) * 100}%`,
+                  transform: `scale(${node.strength / 50})`
+                }}
+              >
+                <div className="absolute inset-0 rounded-full animate-ping bg-current opacity-20"></div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 grid grid-cols-4 gap-4 text-sm">
+            <div className="text-center">
+              <div className="text-[color:var(--fg-muted)]">Active Nodes</div>
+              <div className="text-[color:var(--fg)] font-medium">
+                {neuralNetwork.filter(n => n.status === 'active').length}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-[color:var(--fg-muted)]">Processing</div>
+              <div className="text-[color:var(--fg)] font-medium">
+                {neuralNetwork.filter(n => n.status === 'processing').length}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-[color:var(--fg-muted)]">Avg Strength</div>
+              <div className="text-[color:var(--fg)] font-medium">
+                {(neuralNetwork.reduce((sum, n) => sum + n.strength, 0) / neuralNetwork.length).toFixed(1)}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-[color:var(--fg-muted)]">Density</div>
+              <div className="text-[color:var(--fg)] font-medium">
+                {holographicDensity.toFixed(1)}%
+              </div>
+            </div>
           </div>
         </div>
       </div>

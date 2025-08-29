@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
   Download,
-  Upload,
   Edit,
   Trash2,
   Eye,
-  Search,
   RefreshCw,
   UserPlus,
   Shield,
-  Activity,
   Users,
-  Filter,
-  MoreHorizontal,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
   CheckCircle,
-  XCircle,
-  Clock,
-  AlertTriangle
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -462,7 +451,7 @@ const AllUsers: React.FC = () => {
     }
   };
 
-  const handleDeleteConfirm = async (reason?: string) => {
+  const handleDeleteConfirm = async () => {
     if (deletingUser) {
       try {
         setUsers(prev => prev.filter(user => user.id !== deletingUser.id));
