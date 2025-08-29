@@ -62,6 +62,14 @@ interface AIAgent {
   avatar: string;
 }
 
+interface SystemResource {
+  name: string;
+  usage: number;
+  capacity: number;
+  status: 'optimal' | 'warning' | 'critical';
+  icon: React.ComponentType<any>;
+}
+
 const SuperAdminDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<MetricCard[]>([]);
   const [systemStatus, setSystemStatus] = useState<SystemStatus>({
@@ -87,6 +95,7 @@ const SuperAdminDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [activeAgents, setActiveAgents] = useState<AIAgent[]>([]);
+  const [systemResources, setSystemResources] = useState<SystemResource[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -340,12 +349,46 @@ const SuperAdminDashboard: React.FC = () => {
       }
     ];
     setActiveAgents(mockAgents);
+
+    // Mock system resources
+    const mockResources: SystemResource[] = [
+      {
+        name: 'CPU Usage',
+        usage: 45,
+        capacity: 100,
+        status: 'optimal',
+        icon: Activity
+      },
+      {
+        name: 'Memory Usage',
+        usage: 68,
+        capacity: 100,
+        status: 'optimal',
+        icon: Server
+      },
+      {
+        name: 'Storage Usage',
+        usage: 34,
+        capacity: 100,
+        status: 'optimal',
+        icon: Shield
+      },
+      {
+        name: 'Network Usage',
+        usage: 78,
+        capacity: 100,
+        status: 'warning',
+        icon: Network
+      }
+    ];
+    setSystemResources(mockResources);
   }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy':
       case 'active':
+      case 'optimal':
         return 'text-green-600 bg-green-50 dark:bg-green-900/20';
       case 'warning':
       case 'processing':
@@ -515,8 +558,37 @@ const SuperAdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Job Metrics and Performance */}
+        {/* System Resources and Job Metrics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* System Resources */}
+          <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
+            <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">System Resources</h2>
+            <div className="space-y-4">
+              {systemResources.map((resource) => (
+                <div key={resource.name} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <resource.icon className="h-4 w-4 text-[color:var(--fg-muted)]" />
+                      <span className="text-sm text-[color:var(--fg-muted)]">{resource.name}</span>
+                    </div>
+                    <span className="text-sm font-medium text-[color:var(--fg)]">
+                      {resource.usage}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-[color:var(--bg-app)]/50 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        resource.status === 'optimal' ? 'bg-green-500' :
+                        resource.status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${resource.usage}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Job Metrics */}
           <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
             <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">Job Metrics</h2>
@@ -547,28 +619,28 @@ const SuperAdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Quick Actions */}
-          <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
-            <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">Quick Actions</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <button className="flex items-center space-x-2 p-3 bg-[color:var(--brand-1)] hover:bg-[color:var(--brand-1)]/90 text-white rounded-lg transition-colors">
-                <Rocket className="h-4 w-4" />
-                <span className="text-sm">Deploy</span>
-              </button>
-              <button className="flex items-center space-x-2 p-3 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
-                <Settings className="h-4 w-4" />
-                <span className="text-sm">Configure</span>
-              </button>
-              <button className="flex items-center space-x-2 p-3 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
-                <Eye className="h-4 w-4" />
-                <span className="text-sm">Monitor</span>
-              </button>
-              <button className="flex items-center space-x-2 p-3 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
-                <Bell className="h-4 w-4" />
-                <span className="text-sm">Alerts</span>
-              </button>
-            </div>
+        {/* Quick Actions */}
+        <div className="bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl rounded-[color:var(--radius-mcp)] p-6 border border-[color:var(--bg-surface-rgba)]">
+          <h2 className="text-lg font-semibold text-[color:var(--fg)] mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button className="flex items-center space-x-3 p-4 bg-[color:var(--brand-1)] hover:bg-[color:var(--brand-1)]/90 text-white rounded-lg transition-colors">
+              <Rocket className="h-5 w-5" />
+              <span className="font-medium">Deploy</span>
+            </button>
+            <button className="flex items-center space-x-3 p-4 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
+              <Settings className="h-5 w-5" />
+              <span className="font-medium">Configure</span>
+            </button>
+            <button className="flex items-center space-x-3 p-4 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
+              <Eye className="h-5 w-5" />
+              <span className="font-medium">Monitor</span>
+            </button>
+            <button className="flex items-center space-x-3 p-4 bg-[color:var(--bg-app)] hover:bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-lg transition-colors">
+              <Bell className="h-5 w-5" />
+              <span className="font-medium">Alerts</span>
+            </button>
           </div>
         </div>
       </div>

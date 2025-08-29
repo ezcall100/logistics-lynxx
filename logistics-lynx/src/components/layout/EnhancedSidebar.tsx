@@ -43,6 +43,15 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
   // Enhanced navigation items with ALL original menus restored
   const navigationItems: MenuItem[] = [
     {
+      id: 'home',
+      title: 'Home',
+      icon: 'Home',
+      path: '',
+      badge: 'Main',
+      description: 'Main dashboard and overview',
+      priority: 'high'
+    },
+    {
       id: 'dashboard',
       title: 'Dashboard',
       icon: 'LayoutDashboard',
@@ -312,32 +321,32 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       fixed left-0 top-16 h-full z-30 transition-all duration-300 ease-in-out
       ${isOpen ? 'w-80' : 'w-0'}
     `}>
-      <div className="h-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-slate-700/50 overflow-hidden">
+      <div className="h-full bg-[color:var(--bg-app)]/95 backdrop-blur-xl border-r border-[color:var(--bg-surface-rgba)] overflow-hidden">
         {/* Enhanced Sidebar Header */}
-        <div className="p-4 border-b border-gray-200/50 dark:border-slate-700/50">
+        <div className="p-4 border-b border-[color:var(--bg-surface-rgba)]">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-              <Brain className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
-              Navigation
+            <h2 className="text-lg font-semibold text-[color:var(--fg)] flex items-center">
+              <Brain className="h-5 w-5 mr-2 text-[color:var(--brand-1)]" />
+              MCP Navigation
             </h2>
             <button
               onClick={onToggle}
-              className="p-1 rounded-lg hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-colors duration-200"
+              className="p-1 rounded-[color:var(--radius-mcp)] hover:bg-[color:var(--bg-surface-rgba)] transition-colors duration-200"
               aria-label="Toggle sidebar"
             >
-              <ChevronRight className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <ChevronRight className="h-4 w-4 text-[color:var(--fg-muted)]" />
             </button>
           </div>
           
           {/* Enhanced Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[color:var(--fg-muted)]" />
             <input
               type="text"
-              placeholder="Search navigation..."
+              placeholder="Search MCP systems..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-100/50 dark:bg-slate-700/50 border border-gray-200/50 dark:border-slate-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="w-full pl-10 pr-4 py-2 bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] rounded-[color:var(--radius-mcp)] text-[color:var(--fg)] placeholder-[color:var(--fg-muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-1)] focus:border-transparent text-sm"
             />
           </div>
         </div>
@@ -358,29 +367,29 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
                       }
                     }}
             className={`
-                      w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 group
+                      w-full flex items-center justify-between px-3 py-2.5 rounded-[color:var(--radius-mcp)] transition-all duration-200 group
                       ${item.children ? 'cursor-pointer' : 'cursor-pointer'}
-                      ${location.pathname.includes(item.path || '') && !item.children ? 'bg-blue-600 text-white shadow-lg' : 'hover:bg-gray-100/50 dark:hover:bg-slate-700/50'}
+                      ${location.pathname.includes(item.path || '') && !item.children ? 'bg-[color:var(--brand-1)] text-white shadow-[color:var(--shadow-soft)]' : 'hover:bg-[color:var(--bg-surface-rgba)]'}
             `}
           >
                       <div className="flex items-center space-x-3">
                       <div className="relative">
               <EnhancedIcon
                 name={item.icon}
-                          className={`h-5 w-5 transition-colors duration-200 ${location.pathname.includes(item.path || '') && !item.children ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'}`}
+                          className={`h-5 w-5 transition-colors duration-200 ${location.pathname.includes(item.path || '') && !item.children ? 'text-white' : 'text-[color:var(--fg-muted)] group-hover:text-[color:var(--brand-1)]'}`}
                         />
                   {item.badge && (
-                          <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                          <span className="absolute -top-1 -right-1 w-4 h-4 bg-[color:var(--brand-1)] text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
                       {item.badge}
                     </span>
                   )}
                 </div>
                       <div className="text-left">
-                        <span className={`text-sm font-medium transition-colors duration-200 ${location.pathname.includes(item.path || '') && !item.children ? 'text-white' : 'text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400'}`}>
+                        <span className={`text-sm font-medium transition-colors duration-200 ${location.pathname.includes(item.path || '') && !item.children ? 'text-white' : 'text-[color:var(--fg)] group-hover:text-[color:var(--brand-1)]'}`}>
                           {item.title}
                         </span>
                 {item.description && (
-                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-32">
+                          <p className="text-xs text-[color:var(--fg-muted)] truncate max-w-32">
                     {item.description}
                   </p>
                 )}
@@ -389,7 +398,7 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
                     
                     {item.children && (
             <ChevronRight 
-                        className={`h-4 w-4 transition-transform duration-200 ${expandedMenus[item.id] ? 'rotate-90' : ''} ${location.pathname.includes(item.path || '') && !item.children ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
+                        className={`h-4 w-4 transition-transform duration-200 ${expandedMenus[item.id] ? 'rotate-90' : ''} ${location.pathname.includes(item.path || '') && !item.children ? 'text-white' : 'text-[color:var(--fg-muted)]'}`}
             />
           )}
         </button>
@@ -408,15 +417,15 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
                           key={child.id}
                           to={child.path || '#'}
           className={({ isActive }) => `
-                            flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 group
-                            ${isActive ? 'bg-blue-600 text-white shadow-lg' : 'hover:bg-gray-100/50 dark:hover:bg-slate-700/50'}
+                            flex items-center space-x-3 px-3 py-2 rounded-[color:var(--radius-mcp)] transition-all duration-200 group
+                            ${isActive ? 'bg-[color:var(--brand-1)] text-white shadow-[color:var(--shadow-soft)]' : 'hover:bg-[color:var(--bg-surface-rgba)]'}
                           `}
                         >
             <EnhancedIcon
                             name={child.icon} 
-                            className={`h-4 w-4 transition-colors duration-200 ${location.pathname.includes(child.path || '') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'}`}
+                            className={`h-4 w-4 transition-colors duration-200 ${location.pathname.includes(child.path || '') ? 'text-white' : 'text-[color:var(--fg-muted)] group-hover:text-[color:var(--brand-1)]'}`}
                           />
-                          <span className={`text-sm transition-colors duration-200 ${location.pathname.includes(child.path || '') ? 'text-white' : 'text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400'}`}>
+                          <span className={`text-sm transition-colors duration-200 ${location.pathname.includes(child.path || '') ? 'text-white' : 'text-[color:var(--fg)] group-hover:text-[color:var(--brand-1)]'}`}>
                             {child.title}
                     </span>
                         </NavLink>
@@ -429,19 +438,19 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       </div>
 
         {/* Enhanced Sidebar Footer */}
-        <div className="p-4 border-t border-gray-200/50 dark:border-slate-700/50">
+        <div className="p-4 border-t border-[color:var(--bg-surface-rgba)]">
           <div className="space-y-3">
             {/* Quick Actions */}
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+              <h3 className="text-xs font-semibold text-[color:var(--fg-muted)] uppercase tracking-wider">
                 Quick Actions
               </h3>
               <div className="grid grid-cols-2 gap-2">
-                <button className="p-2 bg-blue-100/50 dark:bg-blue-900/20 hover:bg-blue-200/50 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg transition-colors duration-200">
+                <button className="p-2 bg-[color:var(--brand-1)]/10 hover:bg-[color:var(--brand-1)]/20 text-[color:var(--brand-1)] rounded-[color:var(--radius-mcp)] transition-colors duration-200">
                   <Zap className="h-4 w-4 mx-auto mb-1" />
                   <span className="text-xs font-medium">Quick Start</span>
                 </button>
-                <button className="p-2 bg-green-100/50 dark:bg-green-900/20 hover:bg-green-200/50 dark:hover:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg transition-colors duration-200">
+                <button className="p-2 bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 text-[color:var(--fg)] rounded-[color:var(--radius-mcp)] transition-colors duration-200">
                   <Settings className="h-4 w-4 mx-auto mb-1" />
                   <span className="text-xs font-medium">Settings</span>
                 </button>
@@ -450,22 +459,22 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
 
             {/* System Status */}
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+              <h3 className="text-xs font-semibold text-[color:var(--fg-muted)] uppercase tracking-wider">
                 System Status
               </h3>
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-500 dark:text-gray-400">System</span>
+                  <span className="text-[color:var(--fg-muted)]">System</span>
                   <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-green-600 dark:text-green-400 font-medium">Online</span>
+                    <div className="w-2 h-2 bg-[color:var(--success)] rounded-full animate-pulse"></div>
+                    <span className="text-[color:var(--success)] font-medium">Online</span>
           </div>
         </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-500 dark:text-gray-400">MCP Agents</span>
+                  <span className="text-[color:var(--fg-muted)]">MCP Agents</span>
                   <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    <span className="text-blue-600 dark:text-blue-400 font-medium">24 Active</span>
+                    <div className="w-2 h-2 bg-[color:var(--brand-1)] rounded-full animate-pulse"></div>
+                    <span className="text-[color:var(--brand-1)] font-medium">24 Active</span>
               </div>
                 </div>
               </div>

@@ -167,8 +167,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
               </div>
             </div>
 
-            {/* Page Content with Enhanced Styling - Added proper spacing */}
-            <div className="p-6 pt-6">
+            {/* Page Content with Enhanced Styling - Proper spacing without overlap */}
+            <div className="p-6">
               <div className="opacity-0 animate-pulse" style={{ animation: 'fadeIn 0.3s ease-in-out forwards' }}>
                 {children}
               </div>
