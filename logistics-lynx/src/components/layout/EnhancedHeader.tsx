@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Search, Bell, User, Settings, LogOut, ChevronDown, Truck, Shield, Brain, Zap, Activity } from 'lucide-react';
+import { Menu, X, Search, Bell, User, Settings, LogOut, ChevronDown, Truck, Shield, Brain, Zap, Activity, Sparkles, Command, Bot, Cpu, Network } from 'lucide-react';
 import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '../ui/button';
@@ -39,14 +39,14 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
   };
 
   const quickActions = [
-    { name: 'New Load', icon: 'Truck', action: () => navigate('/super-admin/dashboard') },
-    { name: 'Analytics', icon: 'BarChart3', action: () => navigate('/super-admin/analytics/business') },
-    { name: 'Settings', icon: 'Settings', action: () => navigate('/super-admin/settings') },
-    { name: 'Support', icon: 'HelpCircle', action: () => navigate('/super-admin/business/support') }
+    { name: 'AI Assistant', icon: Brain, action: () => navigate('/super-admin/dashboard') },
+    { name: 'System Monitor', icon: Activity, action: () => navigate('/super-admin/monitoring/performance') },
+    { name: 'Settings', icon: Settings, action: () => navigate('/super-admin/settings') },
+    { name: 'Security', icon: Shield, action: () => navigate('/super-admin/security/audit') }
   ];
 
   return (
-    <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-700/50 sticky top-0 z-50">
+    <header className="bg-[color:var(--bg-app)]/90 backdrop-blur-xl border-b border-[color:var(--bg-surface-rgba)] sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left Section */}
@@ -54,27 +54,29 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
             {/* Desktop Sidebar Toggle Button */}
             <button
               onClick={onSidebarToggle}
-              className="hidden lg:block p-2 rounded-lg transition-all duration-200 group bg-gray-100/50 dark:bg-slate-700/50 hover:bg-gray-200/50 dark:hover:bg-slate-600/50 border border-gray-200/50 dark:border-slate-600/50"
+              className="hidden lg:block p-2 rounded-[color:var(--radius-mcp)] transition-all duration-200 group bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 border border-[color:var(--bg-surface-rgba)]"
             >
-              <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200" />
+              <Menu className="h-5 w-5 text-[color:var(--fg-muted)] group-hover:text-[color:var(--brand-1)] transition-colors duration-200" />
             </button>
 
-            {/* Enhanced Logo - Removed duplicate toggle */}
+            {/* Enhanced Logo with MCP-V2 Design */}
             <Link to="/super-admin/dashboard" className="flex items-center space-x-3 group">
               <div className="relative">
                 <div className="relative">
-                  <Truck className="h-8 w-8 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-hover:text-blue-700 dark:group-hover:text-blue-300" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <div className="w-8 h-8 bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] rounded-[color:var(--radius-mcp)] flex items-center justify-center">
+                    <Brain className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[color:var(--success)] rounded-full animate-pulse"></div>
                 </div>
-                <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-[color:var(--brand-2)] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
               </div>
               <div className="hidden sm:block">
-                <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
-                  TransBot AI
+                <span className="text-xl font-bold text-[color:var(--fg)] group-hover:text-[color:var(--brand-1)] transition-colors duration-200">
+                  MCP Super Admin
                 </span>
                 <div className="flex items-center space-x-1 mt-1">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Enterprise</span>
+                  <div className="w-2 h-2 bg-[color:var(--success)] rounded-full animate-pulse"></div>
+                  <span className="text-xs text-[color:var(--fg-muted)] font-medium">Master Control Program</span>
                 </div>
               </div>
             </Link>
@@ -82,11 +84,11 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
             {/* Enhanced Search Bar */}
             <div className="hidden md:flex items-center space-x-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[color:var(--fg-muted)]" />
                 <input
                   type="text"
-                  placeholder="Search anything..."
-                  className="pl-10 pr-4 py-2 w-64 bg-gray-100/50 dark:bg-slate-700/50 border border-gray-200/50 dark:border-slate-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Search MCP systems..."
+                  className="pl-10 pr-4 py-2 w-64 bg-[color:var(--bg-surface-rgba)] border border-[color:var(--bg-surface-rgba)] rounded-[color:var(--radius-mcp)] text-[color:var(--fg)] placeholder-[color:var(--fg-muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-1)] focus:border-transparent transition-all duration-200"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -97,114 +99,99 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
           {/* Center Section - Enhanced Status Indicators */}
           <div className="hidden lg:flex items-center space-x-6">
             {/* System Status */}
-            <div className="flex items-center space-x-2 px-3 py-1.5 bg-green-100/50 dark:bg-green-900/20 border border-green-200/50 dark:border-green-800/30 rounded-full">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-medium text-green-700 dark:text-green-400">System Online</span>
+            <div className="flex items-center space-x-2 px-3 py-1.5 bg-[color:var(--success)]/10 border border-[color:var(--success)]/20 rounded-full">
+              <div className="w-2 h-2 bg-[color:var(--success)] rounded-full animate-pulse"></div>
+              <span className="text-xs font-medium text-[color:var(--success)]">System Healthy</span>
             </div>
 
-            {/* MCP Status */}
-            <div className="flex items-center space-x-2 px-3 py-1.5 bg-blue-100/50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-800/30 rounded-full">
-              <Brain className="h-3 w-3 text-blue-600 dark:text-blue-400" />
-              <span className="text-xs font-medium text-blue-700 dark:text-blue-400">MCP Active</span>
+            {/* AI Agents Status */}
+            <div className="flex items-center space-x-2 px-3 py-1.5 bg-[color:var(--brand-1)]/10 border border-[color:var(--brand-1)]/20 rounded-full">
+              <Bot className="h-3 w-3 text-[color:var(--brand-1)]" />
+              <span className="text-xs font-medium text-[color:var(--brand-1)]">12 AI Agents Active</span>
             </div>
 
-            {/* Performance Indicator */}
-            <div className="flex items-center space-x-2 px-3 py-1.5 bg-green-100/50 dark:bg-green-900/20 border border-green-200/50 dark:border-green-800/30 rounded-full">
-              <Activity className="h-3 w-3 text-green-600 dark:text-green-400" />
-              <span className="text-xs font-medium text-green-700 dark:text-green-400">98.5%</span>
+            {/* Network Status */}
+            <div className="flex items-center space-x-2 px-3 py-1.5 bg-[color:var(--brand-2)]/10 border border-[color:var(--brand-2)]/20 rounded-full">
+              <Network className="h-3 w-3 text-[color:var(--brand-2)]" />
+              <span className="text-xs font-medium text-[color:var(--brand-2)]">2.4 GB/s</span>
             </div>
           </div>
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Enhanced Notifications */}
+            {/* Quick Actions */}
+            <div className="hidden lg:flex items-center space-x-2">
+              {quickActions.map((action, index) => (
+                <button
+                  key={action.name}
+                  onClick={action.action}
+                  className="p-2 rounded-[color:var(--radius-mcp)] bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 border border-[color:var(--bg-surface-rgba)] transition-all duration-200 group"
+                  title={action.name}
+                >
+                  <action.icon className="h-4 w-4 text-[color:var(--fg-muted)] group-hover:text-[color:var(--brand-1)] transition-colors duration-200" />
+                </button>
+              ))}
+            </div>
+
+            {/* Notifications */}
             <div className="relative">
-              <button className="p-2 rounded-lg transition-all duration-200 group bg-gray-100/50 dark:bg-slate-700/50 hover:bg-gray-200/50 dark:hover:bg-slate-600/50 border border-gray-200/50 dark:border-slate-600/50 relative">
-                <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200" />
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 rounded-[color:var(--radius-mcp)] bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 border border-[color:var(--bg-surface-rgba)] transition-all duration-200 relative"
+              >
+                <Bell className="h-5 w-5 text-[color:var(--fg-muted)]" />
                 {notifications > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-[color:var(--critical)] text-white text-xs rounded-full flex items-center justify-center">
                     {notifications}
                   </span>
                 )}
               </button>
             </div>
 
-            {/* Enhanced User Menu */}
+            {/* User Menu */}
             <div className="relative">
               <button
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                className="flex items-center space-x-3 p-2 rounded-lg transition-all duration-200 group bg-gray-100/50 dark:bg-slate-700/50 hover:bg-gray-200/50 dark:hover:bg-slate-600/50 border border-gray-200/50 dark:border-slate-600/50"
+                className="flex items-center space-x-2 p-2 rounded-[color:var(--radius-mcp)] bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 border border-[color:var(--bg-surface-rgba)] transition-all duration-200"
               >
-                <div className="relative">
-                  {user?.avatar ? (
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-white" />
-                    </div>
-                  )}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-slate-800"></div>
+                <div className="w-8 h-8 bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] rounded-full flex items-center justify-center">
+                  <User className="h-4 w-4 text-white" />
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name || 'User'}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{user?.role || 'Admin'}</p>
+                  <p className="text-sm font-medium text-[color:var(--fg)]">{user?.name || 'Super Admin'}</p>
+                  <p className="text-xs text-[color:var(--fg-muted)]">{user?.role || 'super_admin'}</p>
                 </div>
-                <ChevronDown className={`h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className="h-4 w-4 text-[color:var(--fg-muted)]" />
               </button>
 
-              {/* Enhanced User Dropdown */}
+              {/* User Dropdown */}
               {isUserDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 shadow-xl rounded-xl z-50">
-                  <div className="p-4 border-b border-gray-200/50 dark:border-slate-700/50">
-                    <div className="flex items-center space-x-3">
-                      {user?.avatar ? (
-                        <img
-                          src={user.avatar}
-                          alt={user.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                          <User className="h-5 w-5 text-white" />
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white">{user?.name || 'User'}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email || 'user@example.com'}</p>
-                        <div className="flex items-center space-x-1 mt-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-xs text-green-600 dark:text-green-400 font-medium">Online</span>
-                        </div>
-                      </div>
-                    </div>
+                <div className="absolute right-0 mt-2 w-56 bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl border border-[color:var(--bg-surface-rgba)] rounded-[color:var(--radius-mcp)] shadow-[color:var(--shadow-soft)] z-50">
+                  <div className="p-4 border-b border-[color:var(--bg-surface-rgba)]">
+                    <p className="text-sm font-medium text-[color:var(--fg)]">{user?.name || 'Super Admin'}</p>
+                    <p className="text-xs text-[color:var(--fg-muted)]">{user?.email || 'admin@transbot.ai'}</p>
                   </div>
-                  
                   <div className="p-2">
-                    <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
-                      <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-900 dark:text-white">Profile</span>
+                    <button
+                      onClick={() => navigate('/super-admin/profile')}
+                      className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-[color:var(--fg)] hover:bg-[color:var(--bg-app)] rounded-[color:var(--radius-mcp)] transition-colors"
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Profile</span>
                     </button>
-                    <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
-                      <Settings className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-900 dark:text-white">Settings</span>
+                    <button
+                      onClick={() => navigate('/super-admin/settings')}
+                      className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-[color:var(--fg)] hover:bg-[color:var(--bg-app)] rounded-[color:var(--radius-mcp)] transition-colors"
+                    >
+                      <Settings className="h-4 w-4" />
+                      <span>Settings</span>
                     </button>
-                    <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-colors duration-200">
-                      <Shield className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-900 dark:text-white">Security</span>
-                    </button>
-                  </div>
-                  
-                  <div className="p-2 border-t border-gray-200/50 dark:border-slate-700/50">
                     <button
                       onClick={logout}
-                      className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left hover:bg-red-50/50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors duration-200"
+                      className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-[color:var(--critical)] hover:bg-[color:var(--bg-app)] rounded-[color:var(--radius-mcp)] transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
-                      <span className="text-sm font-medium">Sign Out</span>
+                      <span>Sign Out</span>
                     </button>
                   </div>
                 </div>
@@ -213,55 +200,35 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => {
-                setIsMenuOpen(!isMenuOpen);
-                onSidebarToggle?.(); // Also toggle sidebar on mobile
-              }}
-              className="lg:hidden p-2 rounded-lg transition-all duration-200 group bg-gray-100/50 dark:bg-slate-700/50 hover:bg-gray-200/50 dark:hover:bg-slate-600/50 border border-gray-200/50 dark:border-slate-600/50"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 rounded-[color:var(--radius-mcp)] bg-[color:var(--bg-surface-rgba)] hover:bg-[color:var(--bg-surface-rgba)]/80 border border-[color:var(--bg-surface-rgba)] transition-all duration-200"
             >
-              {isMenuOpen ? (
-                <X className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200" />
-              ) : (
-                <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200" />
-              )}
+              <Menu className="h-5 w-5 text-[color:var(--fg-muted)]" />
             </button>
           </div>
         </div>
-
-        {/* Mobile Search Bar */}
-        {isSearchOpen && (
-          <div className="pb-4 md:hidden">
-            <form onSubmit={handleSearch} className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search anything..."
-                className="w-full pl-10 pr-4 py-2 bg-gray-100/50 dark:bg-slate-700/50 border border-gray-200/50 dark:border-slate-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </form>
-          </div>
-        )}
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="lg:hidden pb-4 border-t border-gray-200/50 dark:border-slate-700/50">
-            <div className="pt-4 space-y-2">
-              {quickActions.map((action) => (
-                <button
-                  key={action.name}
-                  onClick={action.action}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left hover:bg-gray-100/50 dark:hover:bg-slate-700/50 transition-colors duration-200"
-                >
-                  <EnhancedIcon name={action.icon} className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-900 dark:text-white">{action.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="lg:hidden bg-[color:var(--bg-surface-rgba)] backdrop-blur-xl border-t border-[color:var(--bg-surface-rgba)]">
+          <div className="px-4 py-2 space-y-1">
+            {quickActions.map((action) => (
+              <button
+                key={action.name}
+                onClick={() => {
+                  action.action();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-[color:var(--fg)] hover:bg-[color:var(--bg-app)] rounded-[color:var(--radius-mcp)] transition-colors"
+              >
+                <action.icon className="h-4 w-4" />
+                <span>{action.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

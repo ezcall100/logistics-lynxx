@@ -2,10 +2,8 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { EnhancedHeader } from './EnhancedHeader';
 import { EnhancedSidebar } from './EnhancedSidebar';
 import Breadcrumbs from '../ui/Breadcrumbs';
-import { Plus, Settings, Bell, Search, User, LogOut, Moon, Sun, Menu, X } from 'lucide-react';
+import { Plus, Settings, Bell, Search, User, LogOut, Moon, Sun, Menu, X, Sparkles, Command, Brain } from 'lucide-react';
 import { Button } from '../ui/button';
-// Temporarily commented out to fix dependency issues
-// import { executeFabAction } from '../FabActions';
 
 // Theme Context
 interface ThemeContextType {
@@ -103,34 +101,34 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
     toggleTheme
   };
 
-  // Enhanced FAB Actions
+  // Enhanced FAB Actions with MCP-V2 theme
   const fabActions = [
     {
-      id: 'quick-action',
-      icon: Plus,
-      label: 'Quick Action',
-      action: () => console.log('Quick action triggered'),
-      color: 'bg-blue-600 hover:bg-blue-700'
+      id: 'ai-assistant',
+      icon: Brain,
+      label: 'AI Assistant',
+      action: () => console.log('AI Assistant triggered'),
+      color: 'bg-[color:var(--brand-1)] hover:bg-[color:var(--brand-1)]/90'
     },
     {
-      id: 'settings',
-      icon: Settings,
-      label: 'Settings',
-      action: () => console.log('Settings opened'),
-      color: 'bg-gray-600 hover:bg-gray-700'
+      id: 'quick-command',
+      icon: Command,
+      label: 'Quick Command',
+      action: () => console.log('Quick Command opened'),
+      color: 'bg-[color:var(--brand-2)] hover:bg-[color:var(--brand-2)]/90'
     },
     {
-      id: 'notifications',
-      icon: Bell,
-      label: 'Notifications',
-      action: () => console.log('Notifications opened'),
-      color: 'bg-orange-600 hover:bg-orange-700'
+      id: 'system-magic',
+      icon: Sparkles,
+      label: 'System Magic',
+      action: () => console.log('System Magic activated'),
+      color: 'bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)]'
     }
   ];
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
-      <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
+      <div className="min-h-screen bg-[color:var(--bg-app)] text-[color:var(--fg)] transition-colors duration-300">
         {/* Enhanced Header */}
         <EnhancedHeader
           onSidebarToggle={toggleSidebar}
@@ -163,9 +161,9 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
             ${sidebarOpen ? 'lg:ml-80' : 'lg:ml-0'}
           `}>
             {/* Enhanced Breadcrumbs - Fixed spacing to prevent overlap */}
-            <div className="sticky top-16 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-700/50 shadow-sm">
+            <div className="sticky top-16 z-30 bg-[color:var(--bg-app)]/90 backdrop-blur-xl border-b border-[color:var(--bg-surface-rgba)] shadow-sm">
               <div className="px-8 py-4">
-                <Breadcrumbs className="text-sm font-medium text-gray-500 dark:text-gray-400" />
+                <Breadcrumbs className="text-sm font-medium text-[color:var(--fg-muted)]" />
               </div>
             </div>
 
@@ -178,7 +176,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
           </main>
         </div>
 
-        {/* Enhanced Floating Action Button */}
+        {/* Enhanced Floating Action Button with MCP-V2 Design */}
         <div className="fixed bottom-6 right-6 z-50">
           {/* FAB Actions */}
           <div className={`flex flex-col items-end space-y-3 transition-all duration-300 ${fabOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
@@ -191,12 +189,12 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
                   animation: 'slideInRight 0.3s ease-in-out forwards'
                 }}
               >
-                <span className="text-sm font-medium text-gray-900 dark:text-white bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200/50 dark:border-slate-700/50">
+                <span className="text-sm font-medium text-[color:var(--fg)] bg-[color:var(--bg-surface-rgba)] backdrop-blur-sm px-3 py-1 rounded-full border border-[color:var(--bg-surface-rgba)] shadow-[color:var(--shadow-soft)]">
                   {action.label}
                 </span>
                 <button
                   onClick={action.action}
-                  className={`w-12 h-12 ${action.color} text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 flex items-center justify-center`}
+                  className={`w-12 h-12 ${action.color} text-white rounded-full shadow-[color:var(--shadow-soft)] hover:shadow-lg transition-all duration-200 transform hover:scale-110 flex items-center justify-center`}
                 >
                   <action.icon className="h-5 w-5" />
                 </button>
@@ -207,7 +205,7 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
           {/* Main FAB */}
           <button
             onClick={() => setFabOpen(!fabOpen)}
-            className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 z-50 flex items-center justify-center"
+            className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-[color:var(--brand-1)] to-[color:var(--brand-2)] hover:from-[color:var(--brand-1)]/90 hover:to-[color:var(--brand-2)]/90 text-white rounded-full shadow-[color:var(--shadow-soft)] hover:shadow-lg transition-all duration-200 transform hover:scale-110 z-50 flex items-center justify-center"
           >
             {fabOpen ? (
               <X className="h-6 w-6 transition-transform duration-200 rotate-90" />
@@ -221,21 +219,21 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
         <div className="fixed bottom-6 left-6 z-50">
           <button
             onClick={toggleTheme}
-            className="w-12 h-12 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 text-gray-900 dark:text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 flex items-center justify-center"
+            className="w-12 h-12 bg-[color:var(--bg-surface-rgba)] backdrop-blur-sm border border-[color:var(--bg-surface-rgba)] text-[color:var(--fg)] rounded-full shadow-[color:var(--shadow-soft)] hover:shadow-lg transition-all duration-200 transform hover:scale-110 flex items-center justify-center"
           >
             {isDarkMode ? (
               <Sun className="h-5 w-5 text-yellow-500" />
             ) : (
-              <Moon className="h-5 w-5 text-blue-600" />
+              <Moon className="h-5 w-5 text-[color:var(--brand-1)]" />
             )}
           </button>
         </div>
 
         {/* Enhanced Loading States */}
-        <div className="fixed inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" id="global-loading">
+        <div className="fixed inset-0 bg-[color:var(--bg-app)]/80 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" id="global-loading">
           <div className="text-center">
-            <div className="animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 h-12 w-12 mx-auto mb-4"></div>
-            <p className="text-gray-900 dark:text-white font-medium">Loading...</p>
+            <div className="animate-spin rounded-full border-2 border-[color:var(--bg-surface-rgba)] border-t-[color:var(--brand-1)] h-12 w-12 mx-auto mb-4"></div>
+            <p className="text-[color:var(--fg)] font-medium">Loading...</p>
           </div>
         </div>
 
