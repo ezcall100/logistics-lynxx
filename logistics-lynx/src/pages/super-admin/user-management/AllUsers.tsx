@@ -1,11 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Upload, Edit, Trash2, Eye, Search, RefreshCw, UserPlus, Shield, Activity } from 'lucide-react';
+import {
+  Download,
+  Upload,
+  Edit,
+  Trash2,
+  Eye,
+  Search,
+  RefreshCw,
+  UserPlus,
+  Shield,
+  Activity,
+  Users,
+  Filter,
+  MoreHorizontal,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertTriangle
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataTable } from '@/components/ui/DataTable';
+import { FormDialog } from '@/components/ui/FormDialog';
+import { ConfirmDeleteDialog } from '@/components/ui/ConfirmDeleteDialog';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: 'admin' | 'manager' | 'user' | 'viewer';
   status: 'active' | 'inactive' | 'pending' | 'suspended';
   company: string;
   department: string;
@@ -27,13 +55,13 @@ interface User {
 
 const AllUsers: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [statusFilter, setStatusFilter] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [, setShowAddUser] = useState(false);
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [showEditUser, setShowEditUser] = useState(false);
+  const [showDeleteUser, setShowDeleteUser] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [deletingUser, setDeletingUser] = useState<User | null>(null);
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
   // Enhanced mock data with MCP agent integration
@@ -147,6 +175,72 @@ const AllUsers: React.FC = () => {
       mcpAgentId: 'agent-admin-005',
       agentStatus: 'offline',
       confidenceScore: 0.0
+    },
+    {
+      id: '6',
+      name: 'Emily Davis',
+      email: 'emily.davis@company.com',
+      role: 'viewer',
+      status: 'active',
+      company: 'Tech Corp',
+      department: 'Support',
+      lastLogin: '2024-01-15 12:00:00',
+      createdAt: '2023-11-15',
+      phone: '+1 (555) 678-9012',
+      location: 'Denver, CO',
+      permissions: ['read'],
+      subscription: 'free',
+      verified: true,
+      twoFactorEnabled: false,
+      loginCount: 67,
+      lastActivity: '2024-01-15 12:00:00',
+      mcpAgentId: 'agent-viewer-006',
+      agentStatus: 'online',
+      confidenceScore: 0.91
+    },
+    {
+      id: '7',
+      name: 'Alex Chen',
+      email: 'alex.chen@company.com',
+      role: 'manager',
+      status: 'active',
+      company: 'Tech Corp',
+      department: 'Engineering',
+      lastLogin: '2024-01-15 15:20:00',
+      createdAt: '2023-07-01',
+      phone: '+1 (555) 789-0123',
+      location: 'Boston, MA',
+      permissions: ['read', 'write', 'manage'],
+      subscription: 'premium',
+      verified: true,
+      twoFactorEnabled: true,
+      loginCount: 189,
+      lastActivity: '2024-01-15 15:20:00',
+      mcpAgentId: 'agent-manager-007',
+      agentStatus: 'online',
+      confidenceScore: 0.88
+    },
+    {
+      id: '8',
+      name: 'Lisa Rodriguez',
+      email: 'lisa.rodriguez@company.com',
+      role: 'user',
+      status: 'pending',
+      company: 'Tech Corp',
+      department: 'Marketing',
+      lastLogin: 'Never',
+      createdAt: '2024-01-12',
+      phone: '+1 (555) 890-1234',
+      location: 'Miami, FL',
+      permissions: ['read'],
+      subscription: 'basic',
+      verified: false,
+      twoFactorEnabled: false,
+      loginCount: 0,
+      lastActivity: 'Never',
+      mcpAgentId: 'agent-user-008',
+      agentStatus: 'offline',
+      confidenceScore: 0.0
     }
   ];
 
@@ -154,7 +248,6 @@ const AllUsers: React.FC = () => {
     // Simulate MCP connection check
     const checkMcpConnection = async () => {
       try {
-        // Simulate API call to MCP server
         await new Promise(resolve => setTimeout(resolve, 500));
         setMcpStatus('connected');
       } catch (error) {
@@ -165,10 +258,8 @@ const AllUsers: React.FC = () => {
     // Simulate API call for users
     const loadUsers = async () => {
       try {
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         setUsers(mockUsers);
-        setFilteredUsers(mockUsers);
         setLoading(false);
       } catch (error) {
         console.error('Failed to load users:', error);
@@ -180,110 +271,251 @@ const AllUsers: React.FC = () => {
     loadUsers();
   }, []);
 
-  // Filter users based on search and filters
-  useEffect(() => {
-    let filtered = users;
+  // DataTable columns configuration
+  const userColumns = [
+    { key: 'name', label: 'Full Name', sortable: true },
+    { key: 'email', label: 'Email Address', sortable: true },
+    { key: 'role', label: 'Role', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+    { key: 'department', label: 'Department', sortable: true },
+    { key: 'lastLogin', label: 'Last Login', sortable: true },
+    { key: 'createdAt', label: 'Created', sortable: true },
+    { key: 'actions', label: 'Actions', sortable: false }
+  ];
 
-    if (searchQuery) {
-      filtered = filtered.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.company.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  // Transform data for DataTable with custom renderers
+  const tableData = users.map(user => ({
+    ...user,
+    role: (
+      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+        user.role === 'admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+        user.role === 'manager' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+        user.role === 'user' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+      }`}>
+        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+      </span>
+    ),
+    status: (
+      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+        user.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+        user.status === 'inactive' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
+        user.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      }`}>
+        {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+      </span>
+    ),
+    actions: (
+      <div className="flex items-center space-x-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleEditUser(user)}
+          className="h-8 w-8 p-0"
+        >
+          <Eye className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleEditUser(user)}
+          className="h-8 w-8 p-0"
+        >
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleDeleteUser(user)}
+          className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    )
+  }));
+
+  // Form fields for Add/Edit User
+  const userFormFields = [
+    {
+      name: 'name',
+      label: 'Full Name',
+      type: 'text' as const,
+      required: true,
+      placeholder: 'Enter full name',
+      validation: { min: 2, max: 50 }
+    },
+    {
+      name: 'email',
+      label: 'Email Address',
+      type: 'email' as const,
+      required: true,
+      placeholder: 'user@company.com',
+      validation: {
+        pattern: '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$',
+        message: 'Please enter a valid email address'
+      }
+    },
+    {
+      name: 'role',
+      label: 'Role',
+      type: 'select' as const,
+      required: true,
+      options: [
+        { value: 'admin', label: 'Administrator' },
+        { value: 'manager', label: 'Manager' },
+        { value: 'user', label: 'User' },
+        { value: 'viewer', label: 'Viewer' }
+      ]
+    },
+    {
+      name: 'department',
+      label: 'Department',
+      type: 'select' as const,
+      required: false,
+      options: [
+        { value: 'engineering', label: 'Engineering' },
+        { value: 'marketing', label: 'Marketing' },
+        { value: 'sales', label: 'Sales' },
+        { value: 'support', label: 'Support' },
+        { value: 'hr', label: 'Human Resources' },
+        { value: 'finance', label: 'Finance' }
+      ]
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'select' as const,
+      required: true,
+      options: [
+        { value: 'active', label: 'Active' },
+        { value: 'inactive', label: 'Inactive' },
+        { value: 'pending', label: 'Pending' },
+        { value: 'suspended', label: 'Suspended' }
+      ]
+    },
+    {
+      name: 'phone',
+      label: 'Phone Number',
+      type: 'text' as const,
+      required: false,
+      placeholder: '+1 (555) 123-4567'
+    },
+    {
+      name: 'location',
+      label: 'Location',
+      type: 'text' as const,
+      required: false,
+      placeholder: 'City, State'
+    },
+    {
+      name: 'avatar',
+      label: 'Profile Picture',
+      type: 'file' as const,
+      required: false
     }
+  ];
 
-    if (statusFilter) {
-      filtered = filtered.filter(user => user.status === statusFilter);
-    }
+  const handleAddUser = () => {
+    setEditingUser(null);
+    setShowAddUser(true);
+  };
 
-    if (roleFilter) {
-      filtered = filtered.filter(user => user.role === roleFilter);
-    }
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setShowEditUser(true);
+  };
 
-    setFilteredUsers(filtered);
-  }, [users, searchQuery, statusFilter, roleFilter]);
+  const handleDeleteUser = (user: User) => {
+    setDeletingUser(user);
+    setShowDeleteUser(true);
+  };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'active':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</span>;
-      case 'inactive':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Inactive</span>;
-      case 'pending':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Pending</span>;
-      case 'suspended':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Suspended</span>;
-      default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Unknown</span>;
+  const handleSubmitUser = async (data: any) => {
+    try {
+      if (editingUser) {
+        // Update existing user
+        setUsers(prev => prev.map(user =>
+          user.id === editingUser.id ? { ...user, ...data } : user
+        ));
+      } else {
+        // Add new user
+        const newUser: User = {
+          id: Date.now().toString(),
+          ...data,
+          company: 'Tech Corp',
+          permissions: ['read'],
+          subscription: 'basic',
+          verified: false,
+          twoFactorEnabled: false,
+          loginCount: 0,
+          lastActivity: 'Never',
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+        setUsers(prev => [...prev, newUser]);
+      }
+      setShowAddUser(false);
+      setShowEditUser(false);
+    } catch (error) {
+      console.error('Failed to save user:', error);
     }
   };
 
-  const getRoleBadge = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Admin</span>;
-      case 'manager':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Manager</span>;
-      case 'user':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">User</span>;
-      default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">{role}</span>;
+  const handleDeleteConfirm = async (reason?: string) => {
+    if (deletingUser) {
+      try {
+        setUsers(prev => prev.filter(user => user.id !== deletingUser.id));
+        setShowDeleteUser(false);
+        setDeletingUser(null);
+      } catch (error) {
+        console.error('Failed to delete user:', error);
+      }
     }
   };
 
-  const getAgentStatusBadge = (status?: string) => {
-    switch (status) {
-      case 'online':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Online</span>;
-      case 'busy':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Busy</span>;
-      case 'offline':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Offline</span>;
-      default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">N/A</span>;
-    }
-  };
-
-  const getConfidenceScoreColor = (score?: number) => {
-    if (!score) return 'text-gray-400';
-    if (score >= 0.8) return 'text-green-600 dark:text-green-400';
-    if (score >= 0.6) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
-  };
-
-  const handleSelectUser = (userId: string) => {
-    setSelectedUsers(prev => 
-      prev.includes(userId) 
-        ? prev.filter(id => id !== userId)
-        : [...prev, userId]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedUsers.length === filteredUsers.length) {
+  const handleBulkDelete = async () => {
+    try {
+      setUsers(prev => prev.filter(user => !selectedUsers.includes(user.id)));
       setSelectedUsers([]);
-    } else {
-      setSelectedUsers(filteredUsers.map(user => user.id));
+    } catch (error) {
+      console.error('Failed to delete users:', error);
     }
   };
 
-  const handleRefresh = async () => {
-    setLoading(true);
-    // Simulate refresh
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLoading(false);
+  const handleExport = () => {
+    const csvContent = [
+      ['Name', 'Email', 'Role', 'Status', 'Department', 'Last Login', 'Created'],
+      ...users.map(user => [
+        user.name,
+        user.email,
+        user.role,
+        user.status,
+        user.department,
+        user.lastLogin,
+        user.createdAt
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'users-export.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <div className="max-w-7xl mx-auto p-6">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-8"></div>
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
             <div className="space-y-4">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div key={i} className="h-16 bg-gray-200 rounded"></div>
               ))}
             </div>
           </div>
@@ -293,281 +525,175 @@ const AllUsers: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              User Management
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-              Manage all users across the platform with MCP agent integration
-            </p>
-            <div className="flex items-center mt-2 space-x-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+
+        {/* Enhanced Header with SectionHeader */}
+        <SectionHeader
+          title="All Users"
+          subtitle={`${users.length} users managed across the platform`}
+          icon={<Users className="h-6 w-6" />}
+          action={
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full ${
-                  mcpStatus === 'connected' ? 'bg-green-500' : 
-                  mcpStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
-                }`}></div>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  MCP Status: {mcpStatus.charAt(0).toUpperCase() + mcpStatus.slice(1)}
+                <div className={`w-2 h-2 rounded-full ${mcpStatus === 'connected' ? 'bg-green-500' : mcpStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  MCP {mcpStatus === 'connected' ? 'Connected' : mcpStatus === 'connecting' ? 'Connecting...' : 'Disconnected'}
                 </span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Activity className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {filteredUsers.length} users found
-                </span>
+              <Button variant="outline" size="sm" onClick={handleExport}>
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+              <Button onClick={handleAddUser}>
+                <UserPlus className="h-4 w-4 mr-2" />
+                Add User
+              </Button>
+            </div>
+          }
+        />
+
+        {/* User Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Users className="h-4 w-4 mr-2" />
+                Total Users
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{users.length}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                Across all departments
               </div>
-            </div>
-          </div>
-          <div className="flex space-x-3">
-            <button 
-              onClick={handleRefresh}
-              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
-              <RefreshCw className="w-4 h-4 inline mr-2" />
-              Refresh
-            </button>
-            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-              <Download className="w-4 h-4 inline mr-2" />
-              Export
-            </button>
-            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-              <Upload className="w-4 h-4 inline mr-2" />
-              Import
-            </button>
-            <button 
-              onClick={() => setShowAddUser(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <UserPlus className="w-4 h-4 inline mr-2" />
-              Add User
-            </button>
-          </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Active Users
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {users.filter(u => u.status === 'active').length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                Currently active
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Clock className="h-4 w-4 mr-2" />
+                Pending Users
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-yellow-600">
+                {users.filter(u => u.status === 'pending').length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                Awaiting approval
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Shield className="h-4 w-4 mr-2" />
+                Administrators
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {users.filter(u => u.role === 'admin').length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                System administrators
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Search and Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search users by name, email, company..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-              />
-            </div>
-            <div className="flex gap-2">
-              <select 
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              >
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="pending">Pending</option>
-                <option value="suspended">Suspended</option>
-              </select>
-              <select 
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              >
-                <option value="">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="manager">Manager</option>
-                <option value="user">User</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Bulk Actions */}
-        {selectedUsers.length > 0 && (
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        {/* Users DataTable */}
+        <Card>
+          <CardHeader>
             <div className="flex items-center justify-between">
-              <span className="text-blue-800 dark:text-blue-200">
-                {selectedUsers.length} user(s) selected
-              </span>
-              <div className="flex space-x-2">
-                <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                  <Shield className="w-4 h-4 inline mr-1" />
-                  Update Permissions
-                </button>
-                <button className="px-3 py-1 text-sm bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors">
-                  <Edit className="w-4 h-4 inline mr-1" />
-                  Bulk Edit
-                </button>
-                <button className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
-                  <Trash2 className="w-4 h-4 inline mr-1" />
-                  Delete Selected
-                </button>
+              <CardTitle>User Management</CardTitle>
+              <div className="flex items-center space-x-2">
+                {selectedUsers.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleBulkDelete}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Selected ({selectedUsers.length})
+                  </Button>
+                )}
+                <Button variant="outline" size="sm">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh
+                </Button>
               </div>
             </div>
-          </div>
-        )}
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              data={tableData}
+              columns={userColumns}
+              title=""
+              searchable={true}
+              filterable={true}
+              sortable={true}
+              pagination={true}
+              bulkActions={true}
+              onEdit={handleEditUser}
+              onDelete={handleDeleteUser}
+              onView={(user) => handleEditUser(user)}
+            />
+          </CardContent>
+        </Card>
 
-        {/* Users Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-6 py-3 text-left">
-                    <input
-                      type="checkbox"
-                      checked={selectedUsers.length === filteredUsers.length && filteredUsers.length > 0}
-                      onChange={handleSelectAll}
-                      className="rounded border-gray-300 dark:border-gray-600"
-                    />
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Role
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    MCP Agent
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Company
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Last Login
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={() => handleSelectUser(user.id)}
-                        className="rounded border-gray-300 dark:border-gray-600"
-                      />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                          {user.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {user.name}
-                          </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {user.email}
-                          </div>
-                          <div className="text-xs text-gray-400 dark:text-gray-500">
-                            ID: {user.id}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {getRoleBadge(user.role)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {getStatusBadge(user.status)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="space-y-1">
-                        {getAgentStatusBadge(user.agentStatus)}
-                        {user.confidenceScore !== undefined && (
-                          <div className={`text-xs ${getConfidenceScoreColor(user.confidenceScore)}`}>
-                            Confidence: {(user.confidenceScore * 100).toFixed(0)}%
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white">{user.company}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">{user.department}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" title="View Details">
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" title="Edit User">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" title="Delete User">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        {/* Add User FormDialog */}
+        <FormDialog
+          isOpen={showAddUser}
+          onClose={() => setShowAddUser(false)}
+          title="Add New User"
+          fields={userFormFields}
+          onSubmit={handleSubmitUser}
+          submitLabel="Create User"
+        />
 
-        {/* Pagination */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700 dark:text-gray-300">
-              Showing 1 to {filteredUsers.length} of {filteredUsers.length} users
-            </div>
-            <div className="flex space-x-2">
-              <button className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600">
-                Previous
-              </button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600">
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Edit User FormDialog */}
+        <FormDialog
+          isOpen={showEditUser}
+          onClose={() => setShowEditUser(false)}
+          title="Edit User"
+          fields={userFormFields}
+          onSubmit={handleSubmitUser}
+          submitLabel="Update User"
+          initialData={editingUser || undefined}
+        />
 
-        {/* MCP Agent Status Summary */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">MCP Agent Status Summary</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {users.filter(u => u.agentStatus === 'online').length}
-              </div>
-              <div className="text-sm text-green-600 dark:text-green-400">Online Agents</div>
-            </div>
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                {users.filter(u => u.agentStatus === 'busy').length}
-              </div>
-              <div className="text-sm text-yellow-600 dark:text-yellow-400">Busy Agents</div>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
-                {users.filter(u => u.agentStatus === 'offline').length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Offline Agents</div>
-            </div>
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {users.filter(u => u.confidenceScore && u.confidenceScore >= 0.8).length}
-              </div>
-              <div className="text-sm text-blue-600 dark:text-blue-400">High Confidence</div>
-            </div>
-          </div>
-        </div>
+        {/* Delete User ConfirmDeleteDialog */}
+        <ConfirmDeleteDialog
+          isOpen={showDeleteUser}
+          onClose={() => setShowDeleteUser(false)}
+          onConfirm={handleDeleteConfirm}
+          title="Delete User"
+          message="Are you sure you want to delete this user? This action cannot be undone."
+          itemName={deletingUser?.name || ''}
+          requireReason={true}
+        />
       </div>
     </div>
   );

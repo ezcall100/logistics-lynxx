@@ -24,12 +24,17 @@ import {
   DollarSign,
   Receipt,
   GitBranch,
-  Headphones
+  Headphones,
+  AlertTriangle,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MetricCard } from '@/components/ui/MetricCard';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { DataTable } from '@/components/ui/DataTable';
 
 interface SystemMetrics {
   systemHealth: number;
@@ -97,16 +102,6 @@ interface QuickAction {
   category: 'system' | 'security' | 'users' | 'analytics' | 'deployment' | 'support';
   action: string;
   status: 'available' | 'busy' | 'disabled';
-}
-
-interface DashboardWidget {
-  id: string;
-  title: string;
-  type: 'metric' | 'chart' | 'list' | 'status' | 'action';
-  size: 'small' | 'medium' | 'large';
-  position: { x: number; y: number };
-  data: any;
-  config: any;
 }
 
 const SuperAdminDashboard: React.FC = () => {
@@ -392,34 +387,44 @@ const SuperAdminDashboard: React.FC = () => {
     }).format(amount);
   };
 
+  // DataTable columns for MCP Agents
+  const agentColumns = [
+    { key: 'name', label: 'Agent Name', sortable: true },
+    { key: 'type', label: 'Type', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+    { key: 'confidenceScore', label: 'Confidence', sortable: true },
+    { key: 'responseTime', label: 'Response Time', sortable: true },
+    { key: 'lastActivity', label: 'Last Activity', sortable: true }
+  ];
+
+  // DataTable columns for System Alerts
+  const alertColumns = [
+    { key: 'title', label: 'Alert Title', sortable: true },
+    { key: 'type', label: 'Type', sortable: true },
+    { key: 'severity', label: 'Severity', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+    { key: 'timestamp', label: 'Timestamp', sortable: true },
+    { key: 'category', label: 'Category', sortable: true }
+  ];
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto p-6">
           <div className="mb-8 text-center animate-pulse">
             <div className="h-12 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
             <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto"></div>
           </div>
           
-          <div className="p-6 space-y-6">
-            {[...Array(8)].map((_, i) => (
-              <div className="p-6 space-y-6">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-8 bg-gray-200 rounded w-1/2"></div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse"></div>
             ))}
           </div>
           
-          <div className="p-6 space-y-6">
-            {[...Array(3)].map((_, i) => (
-              <div className="p-6 space-y-6">
-                <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-                <div className="space-y-3">
-                  {[...Array(6)].map((_, j) => (
-                    <div key={j} className="h-12 bg-gray-200 rounded"></div>
-                  ))}
-                </div>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="h-96 bg-gray-200 rounded-lg animate-pulse"></div>
             ))}
           </div>
         </div>
@@ -429,361 +434,272 @@ const SuperAdminDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="p-6 space-y-6">
-        {/* Enhanced Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="text-center lg:text-left">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-                <Server className="h-7 w-7 mr-3 text-blue-600" />
-                Super Admin Dashboard
-              </h1>
-              <p className="text-lg text-gray-900 dark:text-white">
-                TransBot AI - Enterprise Control Center
-              </p>
-            </div>
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+        
+        {/* Enhanced Header with SectionHeader */}
+        <SectionHeader
+          title="Super Admin Dashboard"
+          subtitle="TransBot AI - Enterprise Control Center"
+          icon={<Server className="h-6 w-6" />}
+          action={
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <div className={`w-2 h-2 rounded-full ${mcpStatus === 'connected' ? 'bg-green-500' : mcpStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
-                <span className="text-sm text-gray-900 dark:text-white">
+                <span className="text-sm text-gray-600 dark:text-gray-300">
                   MCP {mcpStatus === 'connected' ? 'Connected' : mcpStatus === 'connecting' ? 'Connecting...' : 'Disconnected'}
                 </span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
-                  {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
-                </Button>
-                <Button variant="outline" size="sm">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Refresh
-                </Button>
-              </div>
+              <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
+                {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+              </Button>
+              <Button variant="outline" size="sm">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
             </div>
-          </div>
-        </div>
+          }
+        />
 
-        {/* Enhanced Metrics Overview */}
+        {/* Key Metrics with MetricCard */}
         {metrics && (
-        <div className="p-6 space-y-6">
-            <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                  <p className="text-sm font-medium text-blue-600">System Health</p>
-                  <p className={`text-3xl font-bold ${getHealthColor(metrics.systemHealth)}`}>
-                    {metrics.systemHealth}%
-                  </p>
-                </div>
-                <Activity className="h-8 w-8 text-blue-600" />
-              </div>
-              <div className="mt-2">
-                <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <MetricCard
+              title="System Health"
+              value={`${metrics.systemHealth}%`}
+              icon={<Activity className="h-8 w-8" />}
+              color="blue"
+            />
+            <MetricCard
+              title="Active Users"
+              value={metrics.activeUsers.toLocaleString()}
+              icon={<Users className="h-8 w-8" />}
+              color="green"
+            />
+            <MetricCard
+              title="MCP Agents"
+              value={metrics.mcpAgents.toString()}
+              icon={<Brain className="h-8 w-8" />}
+              color="purple"
+            />
+            <MetricCard
+              title="Revenue"
+              value={formatCurrency(metrics.revenue)}
+              icon={<DollarSign className="h-8 w-8" />}
+              color="orange"
+            />
+          </div>
+        )}
+
+        {/* Secondary Metrics */}
+        {metrics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <MetricCard
+              title="Response Time"
+              value={`${metrics.responseTime}ms`}
+              icon={<Zap className="h-8 w-8" />}
+              color="blue"
+            />
+            <MetricCard
+              title="Transactions"
+              value={metrics.transactions.toLocaleString()}
+              icon={<Receipt className="h-8 w-8" />}
+              color="green"
+            />
+            <MetricCard
+              title="Support Tickets"
+              value={metrics.supportTickets.toString()}
+              icon={<Headphones className="h-8 w-8" />}
+              color="red"
+            />
+            <MetricCard
+              title="Deployments"
+              value={metrics.deployments.toString()}
+              icon={<GitBranch className="h-8 w-8" />}
+              color="purple"
+            />
+          </div>
+        )}
+
+        {/* System Performance Cards */}
+        {metrics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <Cpu className="h-4 w-4 mr-2" />
+                  CPU Usage
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.cpuUsage}%</div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div 
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${metrics.systemHealth}%` }}
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${metrics.cpuUsage}%` }}
                   ></div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-green-600">Active Users</p>
-                  <p className="text-3xl font-bold text-green-600">{metrics.activeUsers.toLocaleString()}</p>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <Database className="h-4 w-4 mr-2" />
+                  Memory Usage
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.memoryUsage}%</div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div 
+                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${metrics.memoryUsage}%` }}
+                  ></div>
                 </div>
-                <Users className="h-8 w-8 text-green-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                +12% from last hour
-            </div>
-          </div>
+              </CardContent>
+            </Card>
 
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-purple-600">MCP Agents</p>
-                  <p className="text-3xl font-bold text-purple-600">{metrics.mcpAgents}</p>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <HardDrive className="h-4 w-4 mr-2" />
+                  Disk Usage
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.diskUsage}%</div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div 
+                    className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${metrics.diskUsage}%` }}
+                  ></div>
                 </div>
-                <Brain className="h-8 w-8 text-purple-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <CheckCircle className="h-4 w-4 mr-1" />
-                All operational
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                  <p className="text-sm font-medium text-orange-600">Revenue</p>
-                  <p className="text-3xl font-bold text-orange-600">{formatCurrency(metrics.revenue)}</p>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center">
+                  <Network className="h-4 w-4 mr-2" />
+                  Network Traffic
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{metrics.networkTraffic} MB/s</div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div 
+                    className="bg-purple-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: '75%' }}
+                  ></div>
                 </div>
-                <DollarSign className="h-8 w-8 text-orange-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                +8% from yesterday
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Additional Metrics Row */}
-        {metrics && (
-          <div className="p-6 space-y-6">
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-blue-600">Response Time</p>
-                  <p className="text-3xl font-bold text-blue-600">{metrics.responseTime}ms</p>
-                </div>
-                <Zap className="h-8 w-8 text-blue-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <TrendingDown className="h-4 w-4 mr-1" />
-                -5ms from last hour
-            </div>
-          </div>
-
-            <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                  <p className="text-sm font-medium text-green-600">Transactions</p>
-                  <p className="text-3xl font-bold text-green-600">{metrics.transactions.toLocaleString()}</p>
-                </div>
-                <Receipt className="h-8 w-8 text-green-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                +15% from last hour
-              </div>
-            </div>
-
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-red-600">Support Tickets</p>
-                  <p className="text-3xl font-bold text-red-600">{metrics.supportTickets}</p>
-                </div>
-                <Headphones className="h-8 w-8 text-red-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <TrendingDown className="h-4 w-4 mr-1" />
-                -3 from yesterday
-            </div>
-          </div>
-
-            <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                  <p className="text-sm font-medium text-purple-600">Deployments</p>
-                  <p className="text-3xl font-bold text-purple-600">{metrics.deployments}</p>
-                </div>
-                <GitBranch className="h-8 w-8 text-purple-600" />
-              </div>
-              <div className="mt-2 flex items-center text-sm text-green-600">
-                <CheckCircle className="h-4 w-4 mr-1" />
-                All successful
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
-        {/* Enhanced System Performance */}
-        {metrics && (
-          <div className="p-6 space-y-6">
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white">CPU Usage</h3>
-                <Cpu className="h-5 w-5 text-gray-900 dark:text-white" />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.cpuUsage}%</span>
-                <div className="w-16 h-16 relative">
-                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#3b82f6"
-                      strokeWidth="2"
-                      strokeDasharray={`${metrics.cpuUsage}, 100`}
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white">Memory Usage</h3>
-                <Database className="h-5 w-5 text-gray-900 dark:text-white" />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.memoryUsage}%</span>
-                <div className="w-16 h-16 relative">
-                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#10b981"
-                      strokeWidth="2"
-                      strokeDasharray={`${metrics.memoryUsage}, 100`}
-                    />
-                  </svg>
-            </div>
-          </div>
-        </div>
-
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white">Disk Usage</h3>
-                <HardDrive className="h-5 w-5 text-gray-900 dark:text-white" />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.diskUsage}%</span>
-                <div className="w-16 h-16 relative">
-                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#f59e0b"
-                      strokeWidth="2"
-                      strokeDasharray={`${metrics.diskUsage}, 100`}
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white">Network</h3>
-                <Network className="h-5 w-5 text-gray-900 dark:text-white" />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">{metrics.networkTraffic} MB/s</span>
-                <div className="w-16 h-16 relative">
-                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="#8b5cf6"
-                      strokeWidth="2"
-                      strokeDasharray="75, 100"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Enhanced Content Grid */}
-        <div className="p-6 space-y-6">
-          {/* MCP Agents Status */}
-          <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+        {/* MCP Agents Status with DataTable */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center">
                 <Brain className="h-5 w-5 mr-2 text-blue-600" />
                 MCP Agent Status
-              </h3>
+              </CardTitle>
               <Button variant="outline" size="sm">
                 <Eye className="h-4 w-4 mr-2" />
                 View All
               </Button>
             </div>
-            <div className="space-y-3">
-              {agents.map((agent) => (
-                <div className="p-6 space-y-6">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status)}`}></div>
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">{agent.name}</p>
-                      <p className="text-sm text-gray-900 dark:text-white">{agent.type}</p>
-                    </div>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              data={agents.map(agent => ({
+                ...agent,
+                confidenceScore: `${(agent.confidenceScore * 100).toFixed(0)}%`,
+                responseTime: `${agent.responseTime}ms`,
+                status: (
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-2 h-2 rounded-full ${getStatusColor(agent.status)}`}></div>
+                    <span className="capitalize">{agent.status}</span>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{(agent.confidenceScore * 100).toFixed(0)}%</p>
-                    <p className="text-xs text-gray-900 dark:text-white">{agent.responseTime}ms</p>
-                  </div>
-                </div>
-              ))}
-        </div>
-          </div>
-          
-          {/* System Alerts */}
-          <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                )
+              }))}
+              columns={agentColumns}
+              title=""
+              searchable={true}
+              filterable={true}
+              sortable={true}
+              pagination={true}
+              bulkActions={false}
+            />
+          </CardContent>
+        </Card>
+
+        {/* System Alerts with DataTable */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center">
                 <Bell className="h-5 w-5 mr-2 text-red-600" />
                 System Alerts
-              </h3>
+              </CardTitle>
               <Button variant="outline" size="sm">
                 <Settings className="h-4 w-4 mr-2" />
                 Configure
               </Button>
             </div>
-            <div className="space-y-3">
-              {alerts.map((alert) => (
-                <div className="p-6 space-y-6">
-                  <div className={`w-2 h-2 rounded-full mt-2 ${getStatusColor(alert.severity === 'critical' ? 'error' : alert.severity === 'high' ? 'error' : alert.severity === 'medium' ? 'busy' : 'online')}`}></div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium text-gray-900 dark:text-white">{alert.title}</p>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getAlertColor(alert.type)}`}>
-                        {alert.severity}
-                        </span>
-                    </div>
-                    <p className="text-sm text-gray-900 dark:text-white mt-1">{alert.message}</p>
-                    <p className="text-xs text-gray-900 dark:text-white mt-1">{alert.timestamp}</p>
-                  </div>
-                        </div>
-                  ))}
-            </div>
-        </div>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              data={alerts.map(alert => ({
+                ...alert,
+                type: (
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getAlertColor(alert.type)}`}>
+                    {alert.type}
+                  </span>
+                ),
+                severity: (
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    alert.severity === 'critical' ? 'bg-red-100 text-red-800' :
+                    alert.severity === 'high' ? 'bg-orange-100 text-orange-800' :
+                    alert.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {alert.severity}
+                  </span>
+                )
+              }))}
+              columns={alertColumns}
+              title=""
+              searchable={true}
+              filterable={true}
+              sortable={true}
+              pagination={true}
+              bulkActions={false}
+            />
+          </CardContent>
+        </Card>
 
-        {/* Quick Actions */}
-          <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+        {/* Quick Actions Grid */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center">
                 <Zap className="h-5 w-5 mr-2 text-yellow-600" />
                 Quick Actions
-              </h3>
+              </CardTitle>
               <Button variant="outline" size="sm">
                 <Settings className="h-4 w-4 mr-2" />
                 Customize
               </Button>
             </div>
-            <div className="p-6 space-y-6">
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {quickActions.map((action) => (
                 <Button
                   key={action.id}
-                  className={`h-20 ${action.color} hover:opacity-90 text-white rounded-xl shadow-lg`}
+                  className={`h-20 ${action.color} hover:opacity-90 text-white rounded-xl shadow-lg transition-all duration-200`}
                   disabled={action.status === 'disabled'}
                 >
                   <div className="text-center">
@@ -793,88 +709,61 @@ const SuperAdminDashboard: React.FC = () => {
                 </Button>
               ))}
             </div>
-              </div>
-              </div>
+          </CardContent>
+        </Card>
 
         {/* Performance Chart */}
-        <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-              <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
-              System Performance
-            </h3>
-            <div className="flex items-center space-x-2">
-              <select
-                value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
-                className="px-3 py-1 border border-gray-200/50 dark:border-slate-700/50 rounded-lg text-sm"
-              >
-                <option value="1h">Last Hour</option>
-                <option value="6h">Last 6 Hours</option>
-                <option value="24h">Last 24 Hours</option>
-                <option value="7d">Last 7 Days</option>
-              </select>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center">
+                <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
+                System Performance
+              </CardTitle>
+              <div className="flex items-center space-x-2">
+                <select
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(e.target.value)}
+                  className="px-3 py-1 border border-gray-200/50 dark:border-slate-700/50 rounded-lg text-sm bg-white dark:bg-slate-800"
+                >
+                  <option value="1h">Last Hour</option>
+                  <option value="6h">Last 6 Hours</option>
+                  <option value="24h">Last 24 Hours</option>
+                  <option value="7d">Last 7 Days</option>
+                </select>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className="h-64 flex items-end justify-between space-x-2">
-            {performanceData.map((data, index) => (
-              <div key={index} className="flex-1 flex flex-col items-center">
-                <div className="w-full bg-gray-200 rounded-t" style={{ height: `${(data.cpu / 100) * 200}px` }}>
-                  <div className="w-full bg-blue-500 rounded-t" style={{ height: '100%' }}></div>
-              </div>
-                <div className="w-full bg-gray-200 rounded-t mt-1" style={{ height: `${(data.memory / 100) * 200}px` }}>
-                  <div className="w-full bg-green-500 rounded-t" style={{ height: '100%' }}></div>
-              </div>
-                <p className="text-xs text-gray-900 dark:text-white mt-2">{data.timestamp}</p>
-              </div>
-            ))}
-              </div>
-          <div className="flex items-center justify-center space-x-6 mt-4 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-blue-500 rounded"></div>
-              <span>CPU</span>
-              </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded"></div>
-              <span>Memory</span>
-              </div>
-          </div>
-        </div>
-
-        {/* Enhanced Quick Actions Grid */}
-        <div className="p-6 space-y-6">
-          <Button className="h-20 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg transition-colors duration-200">
-            <div className="text-center">
-              <Activity className="h-8 w-8 mx-auto mb-2" />
-              <span className="text-sm font-medium">System Monitor</span>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64 flex items-end justify-between space-x-2">
+              {performanceData.map((data, index) => (
+                <div key={index} className="flex-1 flex flex-col items-center">
+                  <div className="w-full bg-gray-200 rounded-t" style={{ height: `${(data.cpu / 100) * 200}px` }}>
+                    <div className="w-full bg-blue-500 rounded-t" style={{ height: '100%' }}></div>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-t mt-1" style={{ height: `${(data.memory / 100) * 200}px` }}>
+                    <div className="w-full bg-green-500 rounded-t" style={{ height: '100%' }}></div>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-2">{data.timestamp}</p>
+                </div>
+              ))}
             </div>
-          </Button>
-          
-          <Button className="h-20 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg">
-            <div className="text-center">
-              <Shield className="h-8 w-8 mx-auto mb-2" />
-              <span className="text-sm font-medium">Security Center</span>
+            <div className="flex items-center justify-center space-x-6 mt-4 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                <span>CPU</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded"></div>
+                <span>Memory</span>
+              </div>
             </div>
-          </Button>
-          
-          <Button className="h-20 bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-lg">
-            <div className="text-center">
-              <Brain className="h-8 w-8 mx-auto mb-2" />
-              <span className="text-sm font-medium">MCP Agents</span>
-            </div>
-          </Button>
-          
-          <Button className="h-20 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-lg">
-            <div className="text-center">
-              <BarChart3 className="h-8 w-8 mx-auto mb-2" />
-              <span className="text-sm font-medium">Analytics</span>
-            </div>
-          </Button>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
