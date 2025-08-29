@@ -4,9 +4,6 @@ import {
   Users, 
   Brain, 
   Zap, 
-  TrendingUp, 
-  TrendingDown, 
-  CheckCircle, 
   Server,
   Database,
   Shield,
@@ -24,11 +21,7 @@ import {
   DollarSign,
   Receipt,
   GitBranch,
-  Headphones,
-  AlertTriangle,
-  Clock,
-  ArrowUpRight,
-  ArrowDownRight
+  Headphones
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
