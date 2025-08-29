@@ -52,6 +52,15 @@ export const EnhancedSidebar: React.FC<SidebarProps> = ({
       priority: 'high'
     },
     {
+      id: 'ui-playground',
+      title: 'UI Playground',
+      icon: 'Palette',
+      path: 'ui-playground',
+      badge: 'New',
+      description: 'Test and demonstrate enterprise UI components',
+      priority: 'high'
+    },
+    {
       id: 'users',
       title: 'User Management',
       icon: 'Users',

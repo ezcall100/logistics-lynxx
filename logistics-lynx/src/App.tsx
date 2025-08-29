@@ -11,6 +11,9 @@ const SuperAdmin = lazy(() => import('./components/SuperAdmin'));
 // ✅ Dashboard
 const SuperAdminDashboard = lazy(() => import('./pages/super-admin/dashboard/SuperAdminDashboard'));
 
+// ✅ UI Playground
+const UIPlayground = lazy(() => import('./pages/super-admin/UIPlayground'));
+
 // ✅ User Management - All Components Available
 const AllUsers = lazy(() => import('./pages/super-admin/user-management/AllUsers'));
 const UserRoles = lazy(() => import('./pages/super-admin/user-management/UserRoles'));
@@ -169,6 +172,9 @@ function App() {
             {/* Dashboard */}
             <Route index element={<SuperAdminDashboard />} />
             <Route path="dashboard" element={<SuperAdminDashboard />} />
+            
+            {/* UI Playground */}
+            <Route path="ui-playground" element={<UIPlayground />} />
             
             {/* User Management - Complete Routes Matching Sidebar */}
             <Route path="users" element={<AllUsers />} />
