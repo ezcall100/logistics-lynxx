@@ -543,11 +543,11 @@ const AllUsers: React.FC = () => {
               </div>
               <Button variant="outline" size="sm" onClick={handleExport}>
                 <Download className="h-4 w-4 mr-2" />
-                Export
+              Export
               </Button>
               <Button onClick={handleAddUser}>
                 <UserPlus className="h-4 w-4 mr-2" />
-                Add User
+              Add User
               </Button>
             </div>
           }
@@ -580,10 +580,10 @@ const AllUsers: React.FC = () => {
             <CardContent>
               <div className="text-2xl font-bold text-green-600">
                 {users.filter(u => u.status === 'active').length}
-              </div>
+                        </div>
               <div className="text-sm text-gray-600 dark:text-gray-300">
                 Currently active
-              </div>
+                          </div>
             </CardContent>
           </Card>
 
@@ -597,7 +597,7 @@ const AllUsers: React.FC = () => {
             <CardContent>
               <div className="text-2xl font-bold text-yellow-600">
                 {users.filter(u => u.status === 'pending').length}
-              </div>
+            </div>
               <div className="text-sm text-gray-600 dark:text-gray-300">
                 Awaiting approval
               </div>
@@ -620,7 +620,7 @@ const AllUsers: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+            </div>
 
         {/* Users DataTable */}
         <Card>
