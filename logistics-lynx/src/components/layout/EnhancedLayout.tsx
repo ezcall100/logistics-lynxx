@@ -161,8 +161,8 @@ export const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
             ${sidebarOpen ? 'lg:ml-80' : 'lg:ml-0'}
           `}>
             {/* Enhanced Breadcrumbs - Fixed spacing to prevent overlap */}
-            <div className="sticky top-16 z-30 bg-[color:var(--bg-app)]/90 backdrop-blur-xl border-b border-[color:var(--bg-surface-rgba)] shadow-sm">
-              <div className="px-8 py-4">
+            <div className="sticky top-20 z-30 bg-[color:var(--bg-app)]/90 backdrop-blur-xl border-b border-[color:var(--bg-surface-rgba)] shadow-sm">
+              <div className="px-8 py-6">
                 <Breadcrumbs className="text-sm font-medium text-[color:var(--fg-muted)]" />
               </div>
             </div>
