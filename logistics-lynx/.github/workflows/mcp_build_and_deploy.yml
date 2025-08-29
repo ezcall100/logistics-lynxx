@@ -21,11 +21,11 @@ jobs:
       - name: Build gates
         run: |
           bash scripts/mcp-self-heal.sh
-          ENFORCE_IA="${{ vars.ENFORCE_IA || 'true' }}"
-          if [ "$ENFORCE_IA" = "true" ]; then
-            npm run mcp:verify:ia
-          else
+          # IA guard check - default to true if not set
+          if [ "${{ vars.ENFORCE_IA }}" = "false" ]; then
             echo "⚠ ENFORCE_IA=false — skipping IA guard by commander order."
+          else
+            npm run mcp:verify:ia
           fi
           npm run typecheck
           npm run mcp:build
