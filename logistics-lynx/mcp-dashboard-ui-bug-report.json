@@ -1,0 +1,170 @@
+{
+  "timestamp": "2025-08-29T04:02:51.556Z",
+  "summary": {
+    "totalBugs": 81,
+    "bugsFixed": 116,
+    "bugsRemaining": -35,
+    "categories": {
+      "css": 75,
+      "layout": 5,
+      "components": 0,
+      "buttons": 1,
+      "cards": 0
+    }
+  },
+  "bugsFound": [
+    {
+      "category": "css",
+      "pattern": "className=\"[^\"]*bg-white[^\"]*\"",
+      "matches": 18,
+      "lines": [
+        505,
+        514,
+        567,
+        587,
+        601,
+        615,
+        634,
+        648,
+        662,
+        676,
+        695,
+        722,
+        749,
+        776,
+        808,
+        839,
+        870,
+        899
+      ]
+    },
+    {
+      "category": "css",
+      "pattern": "className=\"[^\"]*bg-gray-[0-9]+[^\"]*\"",
+      "matches": 11,
+      "lines": [
+        499,
+        506,
+        515,
+        518,
+        578,
+        821,
+        852,
+        925,
+        928
+      ]
+    },
+    {
+      "category": "css",
+      "pattern": "className=\"[^\"]*text-gray-[0-9]+[^\"]*\"",
+      "matches": 27,
+      "lines": [
+        536,
+        540,
+        547,
+        697,
+        701,
+        724,
+        728,
+        751,
+        755,
+        778,
+        782,
+        810,
+        825,
+        830,
+        841,
+        856,
+        861,
+        872,
+        901,
+        931
+      ]
+    },
+    {
+      "category": "css",
+      "pattern": "className=\"[^\"]*border-gray-[0-9]+[^\"]*\"",
+      "matches": 19,
+      "lines": [
+        505,
+        514,
+        567,
+        587,
+        601,
+        615,
+        634,
+        648,
+        662,
+        676,
+        695,
+        722,
+        749,
+        776,
+        808,
+        839,
+        870,
+        899,
+        909
+      ]
+    },
+    {
+      "category": "layout",
+      "pattern": "className=\"[^\"]*max-w-[0-9]+[^\"]*mx-auto[^\"]*\"",
+      "matches": 2,
+      "lines": [
+        497,
+        531
+      ]
+    },
+    {
+      "category": "layout",
+      "pattern": "className=\"[^\"]*space-y-[0-9]+[^\"]*\"",
+      "matches": 3,
+      "lines": [
+        516,
+        819,
+        850
+      ]
+    },
+    {
+      "category": "buttons",
+      "pattern": "className=\"[^\"]*hover:bg-blue-[0-9]+[^\"]*\"",
+      "matches": 1,
+      "lines": [
+        949
+      ]
+    }
+  ],
+  "fixesApplied": [
+    {
+      "type": "background",
+      "oldPattern": "bg-white",
+      "newPattern": "bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl",
+      "count": 18
+    },
+    {
+      "type": "border",
+      "oldPattern": "border-gray-[0-9]+",
+      "newPattern": "border-gray-200/50 dark:border-slate-700/50",
+      "count": 19
+    },
+    {
+      "type": "text",
+      "oldPattern": "text-gray-[0-9]+",
+      "newPattern": "text-gray-900 dark:text-white",
+      "count": 29
+    },
+    {
+      "type": "darkBackground",
+      "oldPattern": "dark:bg-gray-[0-9]+",
+      "newPattern": "dark:bg-slate-800/80",
+      "count": 1
+    },
+    {
+      "type": "darkText",
+      "oldPattern": "dark:text-gray-[0-9]+",
+      "newPattern": "dark:text-gray-400",
+      "count": 1
+    }
+  ]
+}

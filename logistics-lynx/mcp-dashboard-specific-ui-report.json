@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-08-29T04:06:22.929Z",
+  "bugsFound": [
+    {
+      "type": "breadcrumb_overlap",
+      "file": "src/components/layout/EnhancedHeader.tsx",
+      "pattern": "className=\"[^\"]*font-bold[^\"]*\"[^>]*>",
+      "matches": 2,
+      "description": "Breadcrumb styling may cause overlap"
+    }
+  ],
+  "fixesApplied": [
+    {
+      "type": "duplicate_navigation_toggle",
+      "file": "src/components/layout/EnhancedSidebar.tsx",
+      "description": "Removed interactive functionality from Navigation label",
+      "backup": "src/components/layout/EnhancedSidebar.tsx.backup"
+    },
+    {
+      "type": "breadcrumb_overlap",
+      "file": "src/components/layout/EnhancedHeader.tsx",
+      "description": "Fixed breadcrumb spacing and typography hierarchy",
+      "backup": "src/components/layout/EnhancedHeader.tsx.backup"
+    },
+    {
+      "type": "dashboard_layout",
+      "file": "src/pages/super-admin/dashboard/SuperAdminDashboard.tsx",
+      "description": "Improved dashboard layout structure and spacing",
+      "backup": "src/pages/super-admin/dashboard/SuperAdminDashboard.tsx.backup"
+    }
+  ],
+  "summary": {
+    "totalBugs": 1,
+    "totalFixes": 3,
+    "success": false
+  }
+}

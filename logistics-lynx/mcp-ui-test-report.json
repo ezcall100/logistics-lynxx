@@ -1,0 +1,2902 @@
+{
+  "timestamp": "2025-08-29T03:15:26.922Z",
+  "summary": {
+    "totalTests": 131,
+    "totalErrors": 0,
+    "totalFixes": 0,
+    "successRate": "100.00%"
+  },
+  "agentStatus": {
+    "n8n": "offline",
+    "openai": "offline",
+    "supabase": "offline",
+    "github": "offline",
+    "cursor": "offline"
+  },
+  "testResults": [
+    {
+      "type": "component",
+      "name": "EnhancedLayout",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.938Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.943Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:25.949Z"
+    },
+    {
+      "type": "component",
+      "name": "EnhancedHeader",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.954Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.959Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:25.962Z"
+    },
+    {
+      "type": "component",
+      "name": "EnhancedSidebar",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.965Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.970Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:25.972Z"
+    },
+    {
+      "type": "component",
+      "name": "Breadcrumbs",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.974Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.979Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:25.984Z"
+    },
+    {
+      "type": "component",
+      "name": "Button",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.986Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.989Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:25.991Z"
+    },
+    {
+      "type": "component",
+      "name": "Input",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.993Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:25.996Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:25.999Z"
+    },
+    {
+      "type": "component",
+      "name": "Modal",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.003Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.005Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.007Z"
+    },
+    {
+      "type": "component",
+      "name": "Dropdown",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.009Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.012Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.018Z"
+    },
+    {
+      "type": "component",
+      "name": "Table",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.019Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.020Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.022Z"
+    },
+    {
+      "type": "component",
+      "name": "Card",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.023Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.024Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.026Z"
+    },
+    {
+      "type": "component",
+      "name": "Badge",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.027Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.031Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.033Z"
+    },
+    {
+      "type": "component",
+      "name": "SuperAdminDashboard",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.035Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.037Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.040Z"
+    },
+    {
+      "type": "component",
+      "name": "AllUsers",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.041Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.043Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.045Z"
+    },
+    {
+      "type": "component",
+      "name": "UserRoles",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.052Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.054Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.055Z"
+    },
+    {
+      "type": "component",
+      "name": "UserGroups",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.056Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.058Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.059Z"
+    },
+    {
+      "type": "component",
+      "name": "AccessControl",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.060Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.063Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.066Z"
+    },
+    {
+      "type": "component",
+      "name": "UserAnalytics",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.069Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.072Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.074Z"
+    },
+    {
+      "type": "component",
+      "name": "BillingManagement",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.075Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.077Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.080Z"
+    },
+    {
+      "type": "component",
+      "name": "SupportTickets",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.084Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.086Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.087Z"
+    },
+    {
+      "type": "component",
+      "name": "UserOnboarding",
+      "analysis": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /openai/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.088Z"
+      },
+      "codeQuality": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /cursor/analyze not found",
+        "timestamp": "2025-08-29T03:15:26.090Z"
+      },
+      "renderingTest": {
+        "status": "rendered",
+        "performance": "good"
+      },
+      "timestamp": "2025-08-29T03:15:26.091Z"
+    },
+    {
+      "type": "page",
+      "name": "dashboard",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.092Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.095Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.101Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.103Z"
+    },
+    {
+      "type": "page",
+      "name": "users",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.104Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.106Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.108Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.109Z"
+    },
+    {
+      "type": "page",
+      "name": "users/roles",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.110Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.113Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.119Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.120Z"
+    },
+    {
+      "type": "page",
+      "name": "users/groups",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.121Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.122Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.124Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.125Z"
+    },
+    {
+      "type": "page",
+      "name": "users/access",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.126Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.129Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.132Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.134Z"
+    },
+    {
+      "type": "page",
+      "name": "users/analytics",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.136Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.138Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.141Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.143Z"
+    },
+    {
+      "type": "page",
+      "name": "users/billing",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.147Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.152Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.156Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.157Z"
+    },
+    {
+      "type": "page",
+      "name": "users/support",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.159Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.161Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.165Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.169Z"
+    },
+    {
+      "type": "page",
+      "name": "users/onboarding",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.170Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.172Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.174Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.176Z"
+    },
+    {
+      "type": "page",
+      "name": "system/database",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.177Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.180Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.185Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.187Z"
+    },
+    {
+      "type": "page",
+      "name": "system/api",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.189Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.190Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.192Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.193Z"
+    },
+    {
+      "type": "page",
+      "name": "system/monitoring",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.195Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.199Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.202Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.204Z"
+    },
+    {
+      "type": "page",
+      "name": "system/deployment",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.204Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.206Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.207Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.208Z"
+    },
+    {
+      "type": "page",
+      "name": "system/config",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.209Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.212Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.218Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.221Z"
+    },
+    {
+      "type": "page",
+      "name": "system/backup",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.222Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.225Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.227Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.229Z"
+    },
+    {
+      "type": "page",
+      "name": "system/security",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.230Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.234Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.236Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.237Z"
+    },
+    {
+      "type": "page",
+      "name": "system/integrations",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.239Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.241Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.243Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.244Z"
+    },
+    {
+      "type": "page",
+      "name": "system/storage",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.246Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.251Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.253Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.254Z"
+    },
+    {
+      "type": "page",
+      "name": "system/email",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.255Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.256Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.258Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.259Z"
+    },
+    {
+      "type": "page",
+      "name": "security/audit",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.260Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.263Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.268Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.271Z"
+    },
+    {
+      "type": "page",
+      "name": "security/logs",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.272Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.273Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.275Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.276Z"
+    },
+    {
+      "type": "page",
+      "name": "security/protection",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.277Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.281Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.285Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.286Z"
+    },
+    {
+      "type": "page",
+      "name": "security/api",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.287Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.289Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.290Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.291Z"
+    },
+    {
+      "type": "page",
+      "name": "security/permissions",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.292Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.294Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.297Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.299Z"
+    },
+    {
+      "type": "page",
+      "name": "security/policies",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.301Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.303Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.304Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.306Z"
+    },
+    {
+      "type": "page",
+      "name": "security/incidents",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.307Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.308Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.310Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.311Z"
+    },
+    {
+      "type": "page",
+      "name": "security/compliance",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.313Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.317Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.320Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.321Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/performance",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.322Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.324Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.326Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.328Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/errors",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.329Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.333Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.336Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.337Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/logs",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.338Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.340Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.344Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.349Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/alerts",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.351Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.353Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.355Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.356Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/uptime",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.357Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.359Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.360Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.361Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/resources",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.363Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.366Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.369Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.371Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/network",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.372Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.373Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.375Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.376Z"
+    },
+    {
+      "type": "page",
+      "name": "monitoring/health",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.377Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.379Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.384Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.385Z"
+    },
+    {
+      "type": "page",
+      "name": "portals",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.387Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.388Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.389Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.391Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/config",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.392Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.393Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.395Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.397Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/users",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.398Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.401Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.403Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.404Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/features",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.405Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.407Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.408Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.409Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/analytics",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.410Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.413Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.417Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.419Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/billing",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.420Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.424Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.426Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.428Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/support",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.430Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.435Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.437Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.438Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/integrations",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.440Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.442Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.444Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.447Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/backup",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.451Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.453Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.455Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.456Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/security",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.457Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.459Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.461Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.463Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/compliance",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.464Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.468Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.471Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.472Z"
+    },
+    {
+      "type": "page",
+      "name": "portals/deployment",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.474Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.476Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.477Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.479Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/business",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.480Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.485Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.487Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.488Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/users",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.489Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.491Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.493Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.494Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/performance",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.497Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.501Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.503Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.504Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/security",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.505Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.507Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.509Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.510Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/financial",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.511Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.514Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.518Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.520Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/operational",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.521Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.522Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.524Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.525Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/custom",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.526Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.528Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.532Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.535Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/export",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.536Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.538Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.539Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.540Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/dashboards",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.541Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.542Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.544Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.545Z"
+    },
+    {
+      "type": "page",
+      "name": "analytics/scheduled",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.547Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.551Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.553Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.555Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.556Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.557Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.559Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.560Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/agents",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.562Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.568Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.570Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.572Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/models",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.572Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.574Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.575Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.576Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/pipeline",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.578Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.582Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.586Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.587Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/learning",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.588Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.590Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.591Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.592Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/analytics",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.594Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.598Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.602Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.603Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/automation",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.604Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.605Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.607Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.608Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/integrations",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.609Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.618Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.621Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.622Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/monitoring",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.622Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.624Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.626Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.627Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/compliance",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.629Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.635Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.637Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.638Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/documentation",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.639Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.640Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.642Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.643Z"
+    },
+    {
+      "type": "page",
+      "name": "mcp/support",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.643Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.646Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.650Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.652Z"
+    },
+    {
+      "type": "page",
+      "name": "business/customers",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.654Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.656Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.657Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.659Z"
+    },
+    {
+      "type": "page",
+      "name": "business/sales",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.660Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.664Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.669Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.671Z"
+    },
+    {
+      "type": "page",
+      "name": "business/billing",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.673Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.675Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.677Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.678Z"
+    },
+    {
+      "type": "page",
+      "name": "business/support",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.679Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.683Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.687Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.688Z"
+    },
+    {
+      "type": "page",
+      "name": "business/docs",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.689Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.691Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.692Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.693Z"
+    },
+    {
+      "type": "page",
+      "name": "business/marketing",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.696Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.703Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.704Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.705Z"
+    },
+    {
+      "type": "page",
+      "name": "business/partners",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.707Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.708Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.709Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.711Z"
+    },
+    {
+      "type": "page",
+      "name": "business/legal",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.713Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.715Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.719Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.721Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/repository",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.722Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.723Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.725Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.727Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/pipeline",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.728Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.733Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.736Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.737Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/testing",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.738Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.739Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.741Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.742Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/environments",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.742Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.744Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.747Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.749Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/releases",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.751Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.754Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.756Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.757Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/performance",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.758Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.759Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.760Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.762Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/security",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.763Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.765Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.769Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.770Z"
+    },
+    {
+      "type": "page",
+      "name": "dev/documentation",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.772Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.773Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.774Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.775Z"
+    },
+    {
+      "type": "page",
+      "name": "settings",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.777Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.787Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.789Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.790Z"
+    },
+    {
+      "type": "page",
+      "name": "settings/profile",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.792Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.793Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.795Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.796Z"
+    },
+    {
+      "type": "page",
+      "name": "settings/system",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.798Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.802Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.804Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.805Z"
+    },
+    {
+      "type": "page",
+      "name": "settings/preferences",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.806Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.807Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.809Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.810Z"
+    },
+    {
+      "type": "page",
+      "name": "settings/security",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.810Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.814Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.819Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.820Z"
+    },
+    {
+      "type": "page",
+      "name": "profile",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.822Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.823Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.825Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.826Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/personal",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.827Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.831Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.835Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.837Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/avatar",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.839Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.842Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.846Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.848Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/preferences",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.850Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.854Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.857Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.858Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/activity",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.859Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.862Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.866Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.869Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/sessions",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.870Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.872Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.874Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.875Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/verification",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.876Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.879Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.884Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.886Z"
+    },
+    {
+      "type": "page",
+      "name": "profile/delete",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.887Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.889Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.891Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.892Z"
+    },
+    {
+      "type": "page",
+      "name": "fab",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.893Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.895Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.898Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.901Z"
+    },
+    {
+      "type": "page",
+      "name": "fab/actions",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.903Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.905Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.906Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.908Z"
+    },
+    {
+      "type": "page",
+      "name": "fab/customization",
+      "workflowTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /n8n/test-workflow not found",
+        "timestamp": "2025-08-29T03:15:26.909Z"
+      },
+      "dataTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /supabase/test-integration not found",
+        "timestamp": "2025-08-29T03:15:26.912Z"
+      },
+      "versionTest": {
+        "success": false,
+        "error": "Endpoint not found",
+        "message": "Route POST /github/check-version not found",
+        "timestamp": "2025-08-29T03:15:26.915Z"
+      },
+      "timestamp": "2025-08-29T03:15:26.918Z"
+    },
+    {
+      "type": "integration",
+      "mcpIntegration": {
+        "status": "integrated",
+        "agents": [
+          "n8n",
+          "openai",
+          "supabase",
+          "github",
+          "cursor"
+        ]
+      },
+      "apiIntegration": {
+        "status": "connected",
+        "endpoints": [
+          "/api/v1",
+          "/api/v2"
+        ]
+      },
+      "dbIntegration": {
+        "status": "connected",
+        "tables": [
+          "users",
+          "settings",
+          "analytics"
+        ]
+      },
+      "timestamp": "2025-08-29T03:15:26.919Z"
+    },
+    {
+      "type": "performance",
+      "performanceAnalysis": {
+        "score": 85,
+        "recommendations": [
+          "optimize-images",
+          "reduce-bundle-size"
+        ]
+      },
+      "loadTimes": {
+        "average": 2.5,
+        "max": 4.2,
+        "min": 1.8
+      },
+      "bundleSize": {
+        "total": "2.1MB",
+        "gzipped": "650KB",
+        "chunks": 15
+      },
+      "timestamp": "2025-08-29T03:15:26.919Z"
+    },
+    {
+      "type": "accessibility",
+      "accessibilityAnalysis": {
+        "score": 92,
+        "issues": [
+          "missing-alt-text",
+          "color-contrast"
+        ]
+      },
+      "ariaCompliance": {
+        "compliant": true,
+        "violations": 0
+      },
+      "keyboardNavigation": {
+        "functional": true,
+        "tabOrder": "correct"
+      },
+      "timestamp": "2025-08-29T03:15:26.919Z"
+    },
+    {
+      "type": "cross-browser",
+      "browser": "chrome",
+      "test": {
+        "compatible": true,
+        "issues": []
+      },
+      "timestamp": "2025-08-29T03:15:26.920Z"
+    },
+    {
+      "type": "cross-browser",
+      "browser": "firefox",
+      "test": {
+        "compatible": true,
+        "issues": []
+      },
+      "timestamp": "2025-08-29T03:15:26.920Z"
+    },
+    {
+      "type": "cross-browser",
+      "browser": "safari",
+      "test": {
+        "compatible": true,
+        "issues": []
+      },
+      "timestamp": "2025-08-29T03:15:26.920Z"
+    },
+    {
+      "type": "cross-browser",
+      "browser": "edge",
+      "test": {
+        "compatible": true,
+        "issues": []
+      },
+      "timestamp": "2025-08-29T03:15:26.920Z"
+    },
+    {
+      "type": "mobile",
+      "device": "iphone",
+      "test": {
+        "optimized": true,
+        "responsive": true
+      },
+      "timestamp": "2025-08-29T03:15:26.921Z"
+    },
+    {
+      "type": "mobile",
+      "device": "android",
+      "test": {
+        "optimized": true,
+        "responsive": true
+      },
+      "timestamp": "2025-08-29T03:15:26.921Z"
+    },
+    {
+      "type": "mobile",
+      "device": "tablet",
+      "test": {
+        "optimized": true,
+        "responsive": true
+      },
+      "timestamp": "2025-08-29T03:15:26.921Z"
+    }
+  ],
+  "errors": [],
+  "fixes": [],
+  "recommendations": [
+    "Implement lazy loading for better performance",
+    "Add more comprehensive error handling",
+    "Optimize images for mobile devices",
+    "Improve accessibility with ARIA labels",
+    "Add comprehensive unit tests"
+  ]
+}

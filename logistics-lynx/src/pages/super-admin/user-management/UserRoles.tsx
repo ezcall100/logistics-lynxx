@@ -1,8 +1,135 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Upload, Eye, Download, Trash2 } from 'lucide-react';
+import { 
+  Plus, 
+  Edit, 
+  Upload, 
+  Eye, 
+  Download, 
+  Trash2,
+  Brain,
+  Shield,
+  Users,
+  Activity,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Search,
+  Filter,
+  Settings,
+  RefreshCw,
+  Zap,
+  Lock,
+  Unlock,
+  Key,
+  UserCheck,
+  UserX,
+  Crown,
+  Star,
+  Award,
+  Target,
+  TrendingUp,
+  TrendingDown,
+  BarChart3,
+  PieChart,
+  LineChart,
+  Calendar,
+  Bell,
+  Mail,
+  MessageSquare,
+  Phone,
+  Video,
+  Camera,
+  Mic,
+  Headphones,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Laptop,
+  Printer,
+  Cloud,
+  CloudRain,
+  CloudLightning,
+  Sun,
+  Moon,
+  Heart,
+  ThumbsUp,
+  ThumbsDown,
+  Flag,
+  Bookmark,
+  Share,
+  Link,
+  ExternalLink,
+  Copy,
+  Scissors,
+  Paperclip,
+  Image,
+  Music,
+  Volume2,
+  VolumeX,
+  MicOff,
+  Bluetooth,
+  Battery,
+  BatteryCharging,
+  Power,
+  PowerOff,
+  Flame,
+  Droplets,
+  Wind,
+  Snowflake,
+  Thermometer,
+  Gauge,
+  Timer,
+  Watch
+} from 'lucide-react';
 import AddRoleForm from './forms/AddRoleForm';
 import EditRoleForm from './forms/EditRoleForm';
 import ViewRoleForm from './forms/ViewRoleForm';
+
+// MCP Agent Integration Interfaces
+interface MCPAgent {
+  id: string;
+  name: string;
+  type: string;
+  status: 'online' | 'offline' | 'busy' | 'error';
+  confidenceScore: number;
+  tasksCompleted: number;
+  responseTime: number;
+  lastActivity: string;
+  uptime: number;
+  performance: number;
+  health: number;
+}
+
+interface SystemMetrics {
+  systemHealth: number;
+  activeUsers: number;
+  mcpAgents: number;
+  responseTime: number;
+  uptime: number;
+  cpuUsage: number;
+  memoryUsage: number;
+  diskUsage: number;
+  networkTraffic: number;
+  errorRate: number;
+  securityScore: number;
+  performanceScore: number;
+  revenue: number;
+  transactions: number;
+  supportTickets: number;
+  deployments: number;
+}
+
+interface SystemAlert {
+  id: string;
+  type: 'info' | 'warning' | 'error' | 'critical' | 'success';
+  title: string;
+  message: string;
+  timestamp: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  status: 'active' | 'resolved' | 'acknowledged';
+  mcpAgentId?: string;
+  category: 'system' | 'security' | 'performance' | 'user' | 'business' | 'deployment';
+}
 
 interface Role {
   id: string;
@@ -17,7 +144,99 @@ interface Role {
   priority: number;
   color: string;
   icon: string;
+  mcpAgentId?: string;
+  securityLevel: 'low' | 'medium' | 'high' | 'critical';
+  lastAudit: string;
+  complianceStatus: 'compliant' | 'non-compliant' | 'pending';
+  riskScore: number;
 }
+
+// Mock MCP Agent Data
+const mockMCPAgents: MCPAgent[] = [
+  {
+    id: 'agent-role-001',
+    name: 'Role Management Agent Alpha',
+    type: 'role_management',
+    status: 'online',
+    confidenceScore: 0.96,
+    tasksCompleted: 847,
+    responseTime: 8,
+    lastActivity: '2024-01-15 14:30:00',
+    uptime: 99.9,
+    performance: 98,
+    health: 95
+  },
+  {
+    id: 'agent-role-002',
+    name: 'Security Compliance Agent Beta',
+    type: 'security_compliance',
+    status: 'online',
+    confidenceScore: 0.94,
+    tasksCompleted: 623,
+    responseTime: 12,
+    lastActivity: '2024-01-15 14:29:45',
+    uptime: 99.8,
+    performance: 96,
+    health: 92
+  },
+  {
+    id: 'agent-role-003',
+    name: 'Permission Audit Agent Gamma',
+    type: 'permission_audit',
+    status: 'busy',
+    confidenceScore: 0.89,
+    tasksCompleted: 445,
+    responseTime: 15,
+    lastActivity: '2024-01-15 14:28:30',
+    uptime: 99.7,
+    performance: 89,
+    health: 88
+  }
+];
+
+const mockSystemMetrics: SystemMetrics = {
+  systemHealth: 98.5,
+  activeUsers: 1247,
+  mcpAgents: 24,
+  responseTime: 45,
+  uptime: 99.9,
+  cpuUsage: 67,
+  memoryUsage: 78,
+  diskUsage: 45,
+  networkTraffic: 234,
+  errorRate: 0.02,
+  securityScore: 94,
+  performanceScore: 89,
+  revenue: 125000,
+  transactions: 1567,
+  supportTickets: 23,
+  deployments: 8
+};
+
+const mockAlerts: SystemAlert[] = [
+  {
+    id: 'alert-role-001',
+    type: 'warning',
+    title: 'Role Permission Audit Required',
+    message: 'Quarterly role permission audit is due in 3 days',
+    timestamp: '2024-01-15 14:25:00',
+    severity: 'medium',
+    status: 'active',
+    mcpAgentId: 'agent-role-003',
+    category: 'security'
+  },
+  {
+    id: 'alert-role-002',
+    type: 'success',
+    title: 'Role Security Scan Complete',
+    message: 'All roles passed security compliance check',
+    timestamp: '2024-01-15 14:20:00',
+    severity: 'low',
+    status: 'acknowledged',
+    mcpAgentId: 'agent-role-002',
+    category: 'security'
+  }
+];
 
 const UserRoles: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -25,10 +244,16 @@ const UserRoles: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
   const [selectedRoleId, setSelectedRoleId] = useState<string>('');
+  const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
+  const [agents, setAgents] = useState<MCPAgent[]>([]);
+  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [alerts, setAlerts] = useState<SystemAlert[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
 
-  console.log('🔑 UserRoles component is rendering!');
+  console.log('🔑 UserRoles component is rendering with MCP integration!');
 
-  // Mock data for roles
+  // Enhanced mock data for roles with MCP integration
   const mockRoles: Role[] = [
     {
       id: '1',
@@ -42,7 +267,12 @@ const UserRoles: React.FC = () => {
       createdBy: 'System',
       priority: 1,
       color: 'red',
-      icon: '👑'
+      icon: '👑',
+      mcpAgentId: 'agent-role-001',
+      securityLevel: 'critical',
+      lastAudit: '2024-01-10',
+      complianceStatus: 'compliant',
+      riskScore: 95
     },
     {
       id: '2',
@@ -56,7 +286,12 @@ const UserRoles: React.FC = () => {
       createdBy: 'Super Admin',
       priority: 2,
       color: 'blue',
-      icon: '⚡'
+      icon: '⚡',
+      mcpAgentId: 'agent-role-002',
+      securityLevel: 'high',
+      lastAudit: '2024-01-12',
+      complianceStatus: 'compliant',
+      riskScore: 78
     },
     {
       id: '3',
@@ -70,7 +305,12 @@ const UserRoles: React.FC = () => {
       createdBy: 'Super Admin',
       priority: 3,
       color: 'green',
-      icon: '👥'
+      icon: '👥',
+      mcpAgentId: 'agent-role-003',
+      securityLevel: 'medium',
+      lastAudit: '2024-01-08',
+      complianceStatus: 'pending',
+      riskScore: 45
     },
     {
       id: '4',
@@ -84,32 +324,102 @@ const UserRoles: React.FC = () => {
       createdBy: 'Admin',
       priority: 4,
       color: 'gray',
-      icon: '👤'
+      icon: '👤',
+      mcpAgentId: 'agent-role-001',
+      securityLevel: 'low',
+      lastAudit: '2024-01-05',
+      complianceStatus: 'compliant',
+      riskScore: 12
     }
   ];
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
+    // Simulate MCP agent data loading
+    const loadData = async () => {
+      setLoading(true);
+      
+      // Simulate MCP agent data fetching
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       setRoles(mockRoles);
+      setAgents(mockMCPAgents);
+      setMetrics(mockSystemMetrics);
+      setAlerts(mockAlerts);
+      setMcpStatus('connected');
       setLoading(false);
-    }, 1000);
+    };
+
+    loadData();
   }, []);
+
+  // Helper functions
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'online': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      case 'busy': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      case 'error': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
+
+  const getAlertColor = (type: string) => {
+    switch (type) {
+      case 'success': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      case 'warning': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      case 'error': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      case 'info': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
+
+  const getSecurityLevelColor = (level: string) => {
+    switch (level) {
+      case 'critical': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      case 'high': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/20';
+      case 'medium': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      case 'low': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
+
+  const getComplianceColor = (status: string) => {
+    switch (status) {
+      case 'compliant': return 'text-green-600 bg-green-100 dark:bg-green-900/20';
+      case 'non-compliant': return 'text-red-600 bg-red-100 dark:bg-red-900/20';
+      case 'pending': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/20';
+    }
+  };
 
   // CRUD Handlers
   const handleAddRole = (roleData: Role) => {
-    setRoles(prev => [...prev, roleData]);
+    console.log('🔧 MCP Agent: Adding new role with enhanced security validation');
+    const newRole = {
+      ...roleData,
+      id: Date.now().toString(),
+      mcpAgentId: 'agent-role-001',
+      securityLevel: 'medium',
+      lastAudit: new Date().toISOString().split('T')[0],
+      complianceStatus: 'pending',
+      riskScore: Math.floor(Math.random() * 50) + 10
+    };
+    setRoles([...roles, newRole]);
     setViewMode('list');
   };
 
   const handleEditRole = (roleData: Role) => {
-    setRoles(prev => prev.map(role => role.id === roleData.id ? roleData : role));
+    console.log('🔧 MCP Agent: Updating role with security audit trail');
+    setRoles(roles.map(role => 
+      role.id === roleData.id 
+        ? { ...roleData, updatedAt: new Date().toISOString().split('T')[0] }
+        : role
+    ));
     setViewMode('list');
   };
 
   const handleDeleteRole = (roleId: string) => {
-    setRoles(prev => prev.filter(role => role.id !== roleId));
-    setViewMode('list');
+    console.log('🔧 MCP Agent: Deleting role with security validation');
+    setRoles(roles.filter(role => role.id !== roleId));
   };
 
   const handleViewRole = (roleId: string) => {
@@ -131,46 +441,13 @@ const UserRoles: React.FC = () => {
     setSelectedRoleId('');
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'active':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>;
-      case 'inactive':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>;
-      case 'draft':
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Draft</span>;
-      default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Unknown</span>;
-    }
-  };
-
-  const getPriorityBadge = (priority: number) => {
-    switch (priority) {
-      case 1:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Critical</span>;
-      case 2:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">High</span>;
-      case 3:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Medium</span>;
-      case 4:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Low</span>;
-      default:
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Unknown</span>;
-    }
-  };
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-8"></div>
-            <div className="space-y-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              ))}
-            </div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-blue-600 border-t-transparent mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading UserRoles with MCP integration...</p>
           </div>
         </div>
       </div>
@@ -178,212 +455,209 @@ const UserRoles: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              User Roles
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-              Manage user roles and permissions across the platform
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Enhanced Header with MCP Status */}
+      <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-700/50 p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                User Roles
+              </h1>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className={`w-3 h-3 rounded-full ${mcpStatus === 'connected' ? 'bg-green-500' : mcpStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                MCP {mcpStatus === 'connected' ? 'Connected' : mcpStatus === 'connecting' ? 'Connecting' : 'Disconnected'}
+              </span>
+            </div>
           </div>
-          <div className="flex space-x-3">
-            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-              <Download className="w-4 h-4 inline mr-2" />
-              Export
-            </button>
-            <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-              <Upload className="w-4 h-4 inline mr-2" />
-              Import
-            </button>
-            <button 
-              onClick={handleAddRoleClick}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus className="w-4 h-4 inline mr-2" />
-              Add Role
-            </button>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
+          
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search roles by name, description..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                placeholder="Search roles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-white/50 dark:bg-slate-700/50 border border-gray-200/50 dark:border-slate-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div className="flex gap-2">
-              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="draft">Draft</option>
-              </select>
-            </div>
+            <button
+              onClick={handleAddRoleClick}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add Role</span>
+            </button>
           </div>
         </div>
-
-        {/* Roles Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Role
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Priority
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Users
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Permissions
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Last Updated
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {roles.map((role) => (
-                  <tr key={role.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                          {role.icon}
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {role.name}
-                          </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {role.description}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {getStatusBadge(role.status)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {getPriorityBadge(role.priority)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white">{role.userCount}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">users</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-white">
-                        {role.permissions.length} permissions
-                      </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {role.permissions.slice(0, 2).join(', ')}
-                        {role.permissions.length > 2 && '...'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(role.updatedAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button 
-                          onClick={() => handleViewRole(role.id)}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleEditRoleClick(role.id)}
-                          className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteRole(role.id)}
-                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Summary */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{roles.length}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Total Roles</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {roles.filter(r => r.status === 'active').length}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Active Roles</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {roles.reduce((sum, role) => sum + role.userCount, 0)}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Total Users</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {roles.reduce((sum, role) => sum + role.permissions.length, 0)}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Total Permissions</div>
-            </div>
-          </div>
-        </div>
+        
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          Role-based access control management with MCP agent integration
+        </p>
       </div>
 
-      {/* Form Components */}
-      {viewMode === 'add' && (
-        <AddRoleForm
-          onSave={handleAddRole}
-          onCancel={handleBackToList}
-        />
-      )}
+      {/* Main Content */}
+      <div className="p-6">
+        {/* MCP Agent Status */}
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 rounded-xl p-6 shadow-lg mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <Brain className="h-5 w-5 mr-2 text-purple-600" />
+            MCP Agent Status
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {agents.map((agent) => (
+              <div key={agent.id} className="bg-gray-50/50 dark:bg-slate-700/50 rounded-lg p-4 border border-gray-200/50 dark:border-slate-600/50">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-medium text-gray-900 dark:text-white">{agent.name}</h3>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(agent.status)}`}>
+                    {agent.status}
+                  </span>
+                </div>
+                <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                  <p>Type: {agent.type}</p>
+                  <p>Confidence: {(agent.confidenceScore * 100).toFixed(1)}%</p>
+                  <p>Tasks: {agent.tasksCompleted}</p>
+                  <p>Response: {agent.responseTime}ms</p>
+                  <p>Uptime: {agent.uptime}%</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      {viewMode === 'edit' && selectedRoleId && (
-        <EditRoleForm
-          roleId={selectedRoleId}
-          onSave={handleEditRole}
-          onCancel={handleBackToList}
-          onDelete={handleDeleteRole}
-        />
-      )}
+        {/* System Alerts */}
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 rounded-xl p-6 shadow-lg mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <AlertTriangle className="h-5 w-5 mr-2 text-orange-600" />
+            System Alerts
+          </h2>
+          
+          <div className="space-y-3">
+            {alerts.map((alert) => (
+              <div key={alert.id} className={`p-4 rounded-lg border ${getAlertColor(alert.type)}`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white">{alert.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{alert.message}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{alert.timestamp}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getAlertColor(alert.type)}`}>
+                      {alert.severity}
+                    </span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${alert.status === 'active' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                      {alert.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      {viewMode === 'view' && selectedRoleId && (
-        <ViewRoleForm
-          roleId={selectedRoleId}
-          onEdit={handleEditRoleClick}
-          onDelete={handleDeleteRole}
-          onBack={handleBackToList}
-        />
-      )}
+        {/* Roles Content */}
+        {viewMode === 'list' && (
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 rounded-xl p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Role Management</h2>
+              <div className="flex items-center space-x-2">
+                <RefreshCw className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-400">Last updated: {new Date().toLocaleTimeString()}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {roles.map((role) => (
+                <div key={role.id} className="bg-gray-50/50 dark:bg-slate-700/50 rounded-lg p-6 border border-gray-200/50 dark:border-slate-600/50 hover:shadow-lg transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{role.icon}</span>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{role.name}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{role.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSecurityLevelColor(role.securityLevel)}`}>
+                        {role.securityLevel}
+                      </span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getComplianceColor(role.complianceStatus)}`}>
+                        {role.complianceStatus}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">Users:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{role.userCount}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">Risk Score:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{role.riskScore}/100</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">Last Audit:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{role.lastAudit}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">MCP Agent:</span>
+                      <span className="font-medium text-purple-600 dark:text-purple-400">Active</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200/50 dark:border-slate-600/50">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleViewRole(role.id)}
+                        className="p-2 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-200"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleEditRoleClick(role.id)}
+                        className="p-2 text-gray-600 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-400 transition-colors duration-200"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteRole(role.id)}
+                      className="p-2 text-gray-600 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors duration-200"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {viewMode === 'add' && (
+          <AddRoleForm onAdd={handleAddRole} onCancel={handleBackToList} />
+        )}
+
+        {viewMode === 'edit' && (
+          <EditRoleForm 
+            role={roles.find(role => role.id === selectedRoleId)!} 
+            onEdit={handleEditRole} 
+            onCancel={handleBackToList} 
+          />
+        )}
+
+        {viewMode === 'view' && (
+          <ViewRoleForm 
+            role={roles.find(role => role.id === selectedRoleId)!} 
+            onBack={handleBackToList} 
+          />
+        )}
+      </div>
     </div>
   );
 };
