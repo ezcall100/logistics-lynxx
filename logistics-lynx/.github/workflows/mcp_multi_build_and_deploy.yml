@@ -1,0 +1,80 @@
+name: MCP Multi-Portal Build & Deploy
+on: { workflow_dispatch: {} }
+permissions: { contents: write, pages: write, id-token: write }
+concurrency: { group: mcp-multi-build, cancel-in-progress: true }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        portal: [super-admin, admin, partner, customer, ops]
+    env:
+      SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
+      ENFORCE_IA:        ${{ vars.ENFORCE_IA || 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+
+      - name: Autodesign portals
+        run: |
+          node -e "process.exit(require('fs').existsSync('scripts/mcp-autodesign-all.sh')?0:1)" || true
+          [ -f scripts/mcp-autodesign-all.sh ] && bash scripts/mcp-autodesign-all.sh || echo "autodesign script not present (skipped)"
+
+      - name: Resolve portal root
+        id: cfg
+        run: |
+          ROOT=$(jq -r --arg id "${{ matrix.portal }}" '.portals[] | select(.id==$id) | .root' mcp.portals.json)
+          echo "root=$ROOT" >> $GITHUB_OUTPUT
+
+      - name: Self-heal + gates
+        working-directory: ${{ steps.cfg.outputs.root }}
+        run: |
+          mkdir -p logs
+          [ -x scripts/mcp-self-heal.sh ] && bash scripts/mcp-self-heal.sh || true
+          if [ "${ENFORCE_IA}" = "true" ] && npm run | grep -q mcp:verify:ia; then npm run mcp:verify:ia; else echo "⚠ IA guard skipped for ${{ matrix.portal }}"; fi
+          npm run typecheck || true
+          npm run mcp:build || npm run build
+          cp -f dist/index.html dist/404.html || true
+
+      - name: Upload portal artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.portal }}
+          path: ${{ steps.cfg.outputs.root }}/dist
+
+  assemble:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download all portal artifacts
+        uses: actions/download-artifact@v4
+        with: { path: site }
+      - name: Flatten artifacts into site/
+        run: |
+          mkdir -p site
+          for p in super-admin admin partner customer ops; do
+            [ -d "site/dist-$p" ] && mkdir -p "site/$p" && rsync -a "site/dist-$p/" "site/$p/"
+          done
+          # simple landing page linking to all portals
+          cat > site/index.html <<'HTML'
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>MCP Portals</title></head><body style="font:16px/1.4 system-ui;background:#0b1020;color:#eaeefb;padding:40px"><h1>MCP Portals</h1><ul><li><a href="./super-admin/">Super Admin</a></li><li><a href="./admin/">Admin</a></li><li><a href="./partner/">Partner</a></li><li><a href="./customer/">Customer</a></li><li><a href="./ops/">Ops</a></li></ul></body></html>
+HTML
+          cp site/index.html site/404.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: assemble
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4

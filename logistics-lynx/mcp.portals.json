@@ -1,0 +1,9 @@
+{
+  "portals": [
+    { "id": "super-admin", "root": "apps/super-admin" },
+    { "id": "admin",       "root": "apps/admin" },
+    { "id": "partner",     "root": "apps/partner" },
+    { "id": "customer",    "root": "apps/customer" },
+    { "id": "ops",         "root": "apps/ops" }
+  ]
+}
