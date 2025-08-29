@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate, NavLink } from 'react-router-dom';
-import { ChevronRight, Search, Truck, Sun, Moon, Bell, HardDrive, CheckCircle, Eye, Brain, Shield, Users, Server, BarChart3, Settings, Zap, User, Smartphone, Menu } from 'lucide-react';
-import { EnhancedIcon, IconSets } from '../ui/EnhancedIcon';
+import { useLocation, useNavigate, NavLink } from 'react-router-dom';
+import { ChevronRight, Search, Brain, Settings, Zap } from 'lucide-react';
+import { EnhancedIcon } from '../ui/EnhancedIcon';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -30,14 +30,10 @@ interface MenuItem {
 
 export const EnhancedSidebar: React.FC<SidebarProps> = ({
   isOpen,
-  onToggle,
-  isDarkMode,
-  onThemeToggle,
-  user
+  onToggle
 }) => {
   const [expandedMenus, setExpandedMenus] = useState<{[key: string]: boolean}>({});
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeMenu, setActiveMenu] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
   
