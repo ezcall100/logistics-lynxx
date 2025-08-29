@@ -1,0 +1,8 @@
+:root{
+  --bg-app:hsl(222 40% 6%);--bg-surface-rgba:rgba(255,255,255,.06);
+  --fg:hsl(0 0% 98%);--fg-muted:hsl(0 0% 72%);
+  --brand-1:hsl(221 83% 53%);--brand-2:hsl(258 90% 66%);
+  --success:hsl(142 72% 45%);--warning:hsl(38 92% 50%);--critical:hsl(0 84% 60%);
+  --radius-mcp:16px;--shadow-soft:0 10px 30px rgba(0,0,0,.25);
+}
+[data-theme="mcp-v2"]{color-scheme:dark;}

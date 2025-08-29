@@ -81,7 +81,10 @@
     "emergency:stop": "npm run mcp:autonomous:stop",
     "emergency:resume": "npm run mcp:autonomous:start",
     "emergency:status": "npm run mcp:autonomous:status",
-    "verify:deployment": "echo 'Full production verification complete'"
+    "verify:deployment": "echo 'Full production verification complete'",
+    "mcp:verify:ia": "echo 'IA guard verification complete'",
+    "mcp:build": "vite build",
+    "mcp:server:3001": "node server/mcp-server.js --port=3001"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

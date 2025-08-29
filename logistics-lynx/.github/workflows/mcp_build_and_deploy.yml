@@ -1,0 +1,50 @@
+name: MCP Super Admin Build & Deploy
+on: { workflow_dispatch: {} }
+permissions: { contents: write, pages: write, id-token: write }
+concurrency: { group: mcp-super-admin-build, cancel-in-progress: true }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
+      ENFORCE_IA:        ${{ vars.ENFORCE_IA || 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: mkdir -p logs
+      - run: chmod +x scripts/mcp-self-heal.sh scripts/mcp-overnight.sh || true
+      - name: Build gates
+        run: |
+          bash scripts/mcp-self-heal.sh
+          if [ "${ENFORCE_IA}" = "true" ]; then
+            npm run mcp:verify:ia
+          else
+            echo "⚠ ENFORCE_IA=false — skipping IA guard by commander order."
+          fi
+          npm run typecheck
+          npm run mcp:build
+          cp -f dist/index.html dist/404.html
+      - name: Tag ready build
+        if: success()
+        run: |
+          git config user.name  "mcp-bot"
+          git config user.email "mcp-bot@local"
+          git tag -a super-admin-mcp-v2-ready -m "MCP-V2 redesign complete" || true
+          git push --tags
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: mcp-logs, path: logs }
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: ./dist }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4

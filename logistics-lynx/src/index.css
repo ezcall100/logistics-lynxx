@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "@/styles/tokens_v2.css";
 
 @layer base {
   :root {
