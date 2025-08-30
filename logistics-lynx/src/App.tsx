@@ -56,13 +56,13 @@ import FinancialTracking from './pages/owner-operator/FinancialTracking';
 import OwnerOperatorAnalytics from './pages/owner-operator/OwnerOperatorAnalytics';
 
 // Modules
-import CRMModule from './modules/crm/CRMModule';
-import LoadBoardModule from './modules/loadboard/LoadBoardModule';
-import RatesModule from './modules/rates/RatesModule';
-import FinancialsModule from './modules/financials/FinancialsModule';
-import OnboardingModule from './modules/onboarding/OnboardingModule';
-import MarketplaceModule from './modules/marketplace/MarketplaceModule';
-import DirectoryModule from './modules/directory/DirectoryModule';
+import CRMModule from './pages/modules/CRMModule';
+import LoadBoardModule from './pages/modules/LoadBoardModule';
+import RatesModule from './pages/modules/RatesModule';
+import FinancialsModule from './pages/modules/FinancialsModule';
+import OnboardingModule from './pages/modules/OnboardingModule';
+import MarketplaceModule from './pages/modules/MarketplaceModule';
+import DirectoryModule from './pages/modules/DirectoryModule';
 import FactoringModule from './pages/modules/FactoringModule';
 
 // Landing Page
