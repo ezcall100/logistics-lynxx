@@ -30,24 +30,7 @@ interface MCPAgent {
   health: number;
 }
 
-interface SystemMetrics {
-  systemHealth: number;
-  activeUsers: number;
-  mcpAgents: number;
-  responseTime: number;
-  uptime: number;
-  cpuUsage: number;
-  memoryUsage: number;
-  diskUsage: number;
-  networkTraffic: number;
-  errorRate: number;
-  securityScore: number;
-  performanceScore: number;
-  revenue: number;
-  transactions: number;
-  supportTickets: number;
-  deployments: number;
-}
+
 
 interface SystemAlert {
   id: string;
@@ -129,24 +112,7 @@ const mockMCPAgents: MCPAgent[] = [
   }
 ];
 
-const mockSystemMetrics: SystemMetrics = {
-  systemHealth: 98.5,
-  activeUsers: 1247,
-  mcpAgents: 24,
-  responseTime: 45,
-  uptime: 99.9,
-  cpuUsage: 67,
-  memoryUsage: 78,
-  diskUsage: 45,
-  networkTraffic: 234,
-  errorRate: 0.02,
-  securityScore: 94,
-  performanceScore: 89,
-  revenue: 125000,
-  transactions: 1567,
-  supportTickets: 23,
-  deployments: 8
-};
+
 
 const mockAlerts: SystemAlert[] = [
   {
@@ -352,7 +318,7 @@ const UserGroups: React.FC = () => {
   };
 
   // CRUD Handlers
-  const handleAddGroup = (groupData: UserGroup) => {
+  const handleAddGroup = (groupData: any) => {
     console.log('🔧 MCP Agent: Adding new group with enhanced collaboration monitoring');
     const newGroup: UserGroup = {
       ...groupData,
@@ -369,7 +335,7 @@ const UserGroups: React.FC = () => {
     setViewMode('list');
   };
 
-  const handleEditGroup = (groupData: UserGroup) => {
+  const handleEditGroup = (groupData: any) => {
     console.log('🔧 MCP Agent: Updating group with collaboration analytics');
     setGroups(groups.map(group => 
       group.id === groupData.id 

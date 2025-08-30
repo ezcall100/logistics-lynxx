@@ -1,20 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AppShell } from './components/layout/AppShell';
-import SuperAdminDashboard from './pages/super-admin/dashboard/SuperAdminDashboard';
-import BrokerPortal from './pages/broker/BrokerPortal';
-import OwnerOperatorPortal from './pages/owner-operator/OwnerOperatorPortal';
-import DriverPortal from './pages/driver/DriverPortal';
-import ShipperPortal from './pages/shipper/ShipperPortal';
-import CarrierPortal from './pages/carrier/CarrierPortal';
+// import { AppShell } from './components/layout/AppShell';
+// import SuperAdminDashboard from './pages/super-admin/dashboard/SuperAdminDashboard';
+// import BrokerPortal from './pages/broker/BrokerPortal';
+// import OwnerOperatorPortal from './pages/owner-operator/OwnerOperatorPortal';
+// import DriverPortal from './pages/driver/DriverPortal';
+// import ShipperPortal from './pages/shipper/ShipperPortal';
+// import CarrierPortal from './pages/carrier/CarrierPortal';
 import LoginPage from './pages/auth/LoginPage';
-import SignupPage from './pages/auth/SignupPage';
-import CRMModule from './modules/crm/CRMModule';
-import LoadBoardModule from './modules/loadboard/LoadBoardModule';
-import RatesModule from './modules/rates/RatesModule';
-import FinancialsModule from './modules/financials/FinancialsModule';
-import OnboardingModule from './modules/onboarding/OnboardingModule';
-import MarketplaceModule from './modules/marketplace/MarketplaceModule';
-import DirectoryModule from './modules/directory/DirectoryModule';
+// import SignupPage from './pages/auth/SignupPage';
+// import CRMModule from './modules/crm/CRMModule';
+// import LoadBoardModule from './modules/loadboard/LoadBoardModule';
+// import RatesModule from './modules/rates/RatesModule';
+// import FinancialsModule from './modules/financials/FinancialsModule';
+// import OnboardingModule from './modules/onboarding/OnboardingModule';
+// import MarketplaceModule from './modules/marketplace/MarketplaceModule';
+// import DirectoryModule from './modules/directory/DirectoryModule';
 import './index.css';
 
 function App() {
@@ -24,88 +24,86 @@ function App() {
         <Routes>
           {/* Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" element={<LoginPage />} />
+          
+          {/* Temporarily comment out other routes to isolate the issue */}
+          {/* <Route path="/signup" element={<SignupPage />} /> */}
           
           {/* Protected Routes with AppShell */}
-          <Route path="/" element={
+          {/* <Route path="/super-admin" element={
             <AppShell>
               <SuperAdminDashboard />
             </AppShell>
-          } />
-          <Route path="/super-admin" element={
+          } /> */}
+          {/* <Route path="/super-admin/dashboard" element={
             <AppShell>
               <SuperAdminDashboard />
             </AppShell>
-          } />
-          <Route path="/super-admin/dashboard" element={
-            <AppShell>
-              <SuperAdminDashboard />
-            </AppShell>
-          } />
+          } /> */}
           
           {/* Portal Routes */}
-          <Route path="/broker/*" element={
+          {/* <Route path="/broker/*" element={
             <AppShell>
               <BrokerPortal />
             </AppShell>
-          } />
-          <Route path="/owner-operator/*" element={
+          } /> */}
+          {/* <Route path="/owner-operator/*" element={
             <AppShell>
               <OwnerOperatorPortal />
             </AppShell>
-          } />
-          <Route path="/driver/*" element={
+          } /> */}
+          {/* <Route path="/driver/*" element={
             <AppShell>
               <DriverPortal />
             </AppShell>
-          } />
-          <Route path="/shipper/*" element={
+          } /> */}
+          {/* <Route path="/shipper/*" element={
             <AppShell>
               <ShipperPortal />
             </AppShell>
-          } />
-          <Route path="/carrier/*" element={
+          } /> */}
+          {/* <Route path="/carrier/*" element={
             <AppShell>
               <CarrierPortal />
             </AppShell>
-          } />
+          } /> */}
           
           {/* Cross-Portal Module Routes */}
-          <Route path="/crm/*" element={
+          {/* <Route path="/crm/*" element={
             <AppShell>
               <CRMModule />
             </AppShell>
-          } />
-          <Route path="/loadboard/*" element={
+          } /> */}
+          {/* <Route path="/loadboard/*" element={
             <AppShell>
               <LoadBoardModule />
             </AppShell>
-          } />
-          <Route path="/rates/*" element={
+          } /> */}
+          {/* <Route path="/rates/*" element={
             <AppShell>
               <RatesModule />
             </AppShell>
-          } />
-          <Route path="/financials/*" element={
+          } /> */}
+          {/* <Route path="/financials/*" element={
             <AppShell>
               <FinancialsModule />
             </AppShell>
-          } />
-          <Route path="/onboarding/*" element={
+          } /> */}
+          {/* <Route path="/onboarding/*" element={
             <AppShell>
               <OnboardingModule />
             </AppShell>
-          } />
-          <Route path="/marketplace/*" element={
+          } /> */}
+          {/* <Route path="/marketplace/*" element={
             <AppShell>
               <MarketplaceModule />
             </AppShell>
-          } />
-          <Route path="/directory/*" element={
+          } /> */}
+          {/* <Route path="/directory/*" element={
             <AppShell>
               <DirectoryModule />
             </AppShell>
-          } />
+          } /> */}
         </Routes>
       </div>
     </Router>
