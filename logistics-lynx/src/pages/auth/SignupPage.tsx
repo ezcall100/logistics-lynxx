@@ -331,7 +331,7 @@ const SignupPage: React.FC = () => {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2">
               Trans Bot AI
             </h1>
-            <p className="text-xl text-gray-300">MCP-V2 Portal Ecosystem</p>
+            <p className="text-xl text-gray-300">Trans Bot AI</p>
           </div>
 
           {/* Progress Bar */}

@@ -1,7 +1,7 @@
 {
   "name": "mcp-v2-portal-ecosystem",
   "version": "2.0.0",
-  "description": "Trans Bot AI - MCP-v2 Portal Ecosystem with redesigned UI/UX and cross-portal modules",
+  "description": "Trans Bot AI - Comprehensive logistics portal ecosystem with redesigned UI/UX and cross-portal modules",
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
