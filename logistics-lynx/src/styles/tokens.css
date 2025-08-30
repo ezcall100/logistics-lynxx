@@ -1,0 +1,263 @@
+/* MCP-v2 Design Tokens - CSS Custom Properties */
+
+:root {
+  /* Colors - Brand */
+  --color-brand-primary-50: #eff6ff;
+  --color-brand-primary-100: #dbeafe;
+  --color-brand-primary-200: #bfdbfe;
+  --color-brand-primary-300: #93c5fd;
+  --color-brand-primary-400: #60a5fa;
+  --color-brand-primary-500: #3b82f6;
+  --color-brand-primary-600: #2563eb;
+  --color-brand-primary-700: #1d4ed8;
+  --color-brand-primary-800: #1e40af;
+  --color-brand-primary-900: #1e3a8a;
+  --color-brand-primary-950: #172554;
+
+  --color-brand-secondary-50: #faf5ff;
+  --color-brand-secondary-100: #f3e8ff;
+  --color-brand-secondary-200: #e9d5ff;
+  --color-brand-secondary-300: #d8b4fe;
+  --color-brand-secondary-400: #c084fc;
+  --color-brand-secondary-500: #a855f7;
+  --color-brand-secondary-600: #9333ea;
+  --color-brand-secondary-700: #7c3aed;
+  --color-brand-secondary-800: #6b21a8;
+  --color-brand-secondary-900: #581c87;
+  --color-brand-secondary-950: #3b0764;
+
+  --color-brand-accent-50: #ecfdf5;
+  --color-brand-accent-100: #d1fae5;
+  --color-brand-accent-200: #a7f3d0;
+  --color-brand-accent-300: #6ee7b7;
+  --color-brand-accent-400: #34d399;
+  --color-brand-accent-500: #10b981;
+  --color-brand-accent-600: #059669;
+  --color-brand-accent-700: #047857;
+  --color-brand-accent-800: #065f46;
+  --color-brand-accent-900: #064e3b;
+  --color-brand-accent-950: #022c22;
+
+  /* Colors - Background */
+  --color-bg-canvas: #0f172a;
+  --color-bg-elevated: #1e293b;
+  --color-bg-soft: #334155;
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  --color-bg-backdrop: rgba(15, 23, 42, 0.8);
+
+  /* Colors - Text */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+  --color-text-disabled: #64748b;
+  --color-text-inverse: #0f172a;
+
+  /* Colors - Border */
+  --color-border-default: #334155;
+  --color-border-hover: #475569;
+  --color-border-focus: #3b82f6;
+  --color-border-error: #ef4444;
+  --color-border-success: #10b981;
+  --color-border-warning: #f59e0b;
+
+  /* Colors - State */
+  --color-state-success-bg: #ecfdf5;
+  --color-state-success-text: #065f46;
+  --color-state-success-border: #10b981;
+
+  --color-state-warning-bg: #fffbeb;
+  --color-state-warning-text: #92400e;
+  --color-state-warning-border: #f59e0b;
+
+  --color-state-error-bg: #fef2f2;
+  --color-state-error-text: #991b1b;
+  --color-state-error-border: #ef4444;
+
+  --color-state-info-bg: #eff6ff;
+  --color-state-info-text: #1e40af;
+  --color-state-info-border: #3b82f6;
+
+  /* Colors - Portal Specific */
+  --color-portal-super-admin-primary: #8b5cf6;
+  --color-portal-super-admin-secondary: #a855f7;
+
+  --color-portal-broker-primary: #3b82f6;
+  --color-portal-broker-secondary: #2563eb;
+
+  --color-portal-carrier-primary: #ef4444;
+  --color-portal-carrier-secondary: #dc2626;
+
+  --color-portal-shipper-primary: #6366f1;
+  --color-portal-shipper-secondary: #4f46e5;
+
+  --color-portal-owner-operator-primary: #10b981;
+  --color-portal-owner-operator-secondary: #059669;
+
+  --color-portal-driver-primary: #f59e0b;
+  --color-portal-driver-secondary: #d97706;
+
+  /* Typography - Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+
+  /* Typography - Font Families */
+  --font-family-sans: Inter, system-ui, sans-serif;
+  --font-family-mono: JetBrains Mono, monospace;
+
+  /* Typography - Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Typography - Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Typography - Roles */
+  --font-size-display: 3rem;
+  --font-weight-display: 700;
+  --line-height-display: 1.2;
+
+  --font-size-h1: 2.25rem;
+  --font-weight-h1: 700;
+  --line-height-h1: 1.3;
+
+  --font-size-h2: 1.875rem;
+  --font-weight-h2: 600;
+  --line-height-h2: 1.4;
+
+  --font-size-h3: 1.5rem;
+  --font-weight-h3: 600;
+  --line-height-h3: 1.4;
+
+  --font-size-h4: 1.25rem;
+  --font-weight-h4: 600;
+  --line-height-h4: 1.5;
+
+  --font-size-h5: 1.125rem;
+  --font-weight-h5: 600;
+  --line-height-h5: 1.5;
+
+  --font-size-h6: 1rem;
+  --font-weight-h6: 600;
+  --line-height-h6: 1.5;
+
+  --font-size-body: 1rem;
+  --font-weight-body: 400;
+  --line-height-body: 1.6;
+
+  --font-size-meta: 0.875rem;
+  --font-weight-meta: 400;
+  --line-height-meta: 1.5;
+
+  --font-size-mono: 0.875rem;
+  --font-weight-mono: 400;
+  --line-height-mono: 1.5;
+
+  /* Spacing - 4pt Scale */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+  --spacing-40: 10rem;
+  --spacing-48: 12rem;
+  --spacing-56: 14rem;
+  --spacing-64: 16rem;
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.5);
+  --shadow-portal: 0 0 0 1px rgba(59, 130, 246, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  /* Motion - Duration */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-reduced: 50ms;
+
+  /* Motion - Easing */
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+
+  /* Motion - Spring */
+  --easing-spring-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --easing-spring-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Z-Index */
+  --z-hide: -1;
+  --z-auto: auto;
+  --z-base: 0;
+  --z-docked: 10;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-banner: 1200;
+  --z-overlay: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-skip-link: 1600;
+  --z-toast: 1700;
+  --z-tooltip: 1800;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 50ms;
+    --duration-normal: 50ms;
+    --duration-slow: 50ms;
+    --duration-reduced: 50ms;
+  }
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-default: #ffffff;
+    --color-border-hover: #ffffff;
+    --color-border-focus: #ffffff;
+  }
+}

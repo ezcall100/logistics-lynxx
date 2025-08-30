@@ -1,25 +1,23 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "noEmit": false,
-    "allowImportingTsExtensions": false,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2022",
-    "types": ["node"]
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "autonomous",
-    "monitoring",
-    "agents",
-    "deploy",
-    "database",
-    "test",
-    "n8n",
-    "server",
-    "scripts"
-  ],
-  "exclude": ["src", "node_modules", "dist"]
+    "vite.config.ts",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "scripts/**/*"
+  ]
 }
 

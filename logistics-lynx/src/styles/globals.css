@@ -1,0 +1,310 @@
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-bg-canvas text-text-primary font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Typography Scale */
+  h1 {
+    @apply text-h1 font-bold;
+  }
+  
+  h2 {
+    @apply text-h2 font-semibold;
+  }
+  
+  h3 {
+    @apply text-h3 font-semibold;
+  }
+  
+  h4 {
+    @apply text-h4 font-semibold;
+  }
+  
+  h5 {
+    @apply text-h5 font-semibold;
+  }
+  
+  h6 {
+    @apply text-h6 font-semibold;
+  }
+  
+  p {
+    @apply text-body;
+  }
+  
+  /* Focus Styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-border-focus ring-offset-2 ring-offset-bg-canvas;
+  }
+  
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Component Styles */
+@layer components {
+  /* Button Base */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-normal;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-canvas;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
+    @apply active:scale-[0.98];
+  }
+  
+  /* Card Base */
+  .card {
+    @apply bg-bg-elevated border border-border-default rounded-lg shadow-sm;
+  }
+  
+  .card-header {
+    @apply px-6 py-4 border-b border-border-default;
+  }
+  
+  .card-content {
+    @apply px-6 py-4;
+  }
+  
+  .card-footer {
+    @apply px-6 py-4 border-t border-border-default;
+  }
+  
+  /* Form Elements */
+  .form-input {
+    @apply w-full px-3 py-2 bg-bg-elevated border border-border-default rounded-md;
+    @apply text-text-primary placeholder:text-text-tertiary;
+    @apply focus:border-border-focus focus:ring-1 focus:ring-border-focus;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply transition-colors duration-normal;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-text-primary mb-2;
+  }
+  
+  .form-error {
+    @apply text-sm text-state-error-text mt-1;
+  }
+  
+  .form-help {
+    @apply text-sm text-text-tertiary mt-1;
+  }
+  
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply bg-brand-primary-100 text-brand-primary-800;
+  }
+  
+  .badge-secondary {
+    @apply bg-brand-secondary-100 text-brand-secondary-800;
+  }
+  
+  .badge-success {
+    @apply bg-state-success-bg text-state-success-text;
+  }
+  
+  .badge-warning {
+    @apply bg-state-warning-bg text-state-warning-text;
+  }
+  
+  .badge-error {
+    @apply bg-state-error-bg text-state-error-text;
+  }
+  
+  .badge-info {
+    @apply bg-state-info-bg text-state-info-text;
+  }
+  
+  /* Status Indicators */
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+  
+  .status-dot-success {
+    @apply bg-state-success-border;
+  }
+  
+  .status-dot-warning {
+    @apply bg-state-warning-border;
+  }
+  
+  .status-dot-error {
+    @apply bg-state-error-border;
+  }
+  
+  .status-dot-info {
+    @apply bg-state-info-border;
+  }
+  
+  /* Loading States */
+  .loading-spinner {
+    @apply animate-spin;
+  }
+  
+  .loading-skeleton {
+    @apply animate-pulse bg-bg-soft rounded;
+  }
+  
+  /* Portal Specific Styles */
+  .portal-super-admin {
+    --color-brand-primary-500: var(--color-portal-super-admin-primary);
+    --color-brand-primary-600: var(--color-portal-super-admin-secondary);
+  }
+  
+  .portal-broker {
+    --color-brand-primary-500: var(--color-portal-broker-primary);
+    --color-brand-primary-600: var(--color-portal-broker-secondary);
+  }
+  
+  .portal-carrier {
+    --color-brand-primary-500: var(--color-portal-carrier-primary);
+    --color-brand-primary-600: var(--color-portal-carrier-secondary);
+  }
+  
+  .portal-shipper {
+    --color-brand-primary-500: var(--color-portal-shipper-primary);
+    --color-brand-primary-600: var(--color-portal-shipper-secondary);
+  }
+  
+  .portal-owner-operator {
+    --color-brand-primary-500: var(--color-portal-owner-operator-primary);
+    --color-brand-primary-600: var(--color-portal-owner-operator-secondary);
+  }
+  
+  .portal-driver {
+    --color-brand-primary-500: var(--color-portal-driver-primary);
+    --color-brand-primary-600: var(--color-portal-driver-secondary);
+  }
+}
+
+/* Utility Styles */
+@layer utilities {
+  /* Text Utilities */
+  .text-display {
+    @apply text-display;
+  }
+  
+  .text-h1 {
+    @apply text-h1;
+  }
+  
+  .text-h2 {
+    @apply text-h2;
+  }
+  
+  .text-h3 {
+    @apply text-h3;
+  }
+  
+  .text-h4 {
+    @apply text-h4;
+  }
+  
+  .text-h5 {
+    @apply text-h5;
+  }
+  
+  .text-h6 {
+    @apply text-h6;
+  }
+  
+  .text-body {
+    @apply text-body;
+  }
+  
+  .text-meta {
+    @apply text-meta;
+  }
+  
+  .text-mono {
+    @apply text-mono;
+  }
+  
+  /* Spacing Utilities */
+  .space-4pt {
+    @apply space-y-1;
+  }
+  
+  .space-8pt {
+    @apply space-y-2;
+  }
+  
+  .space-12pt {
+    @apply space-y-3;
+  }
+  
+  .space-16pt {
+    @apply space-y-4;
+  }
+  
+  .space-20pt {
+    @apply space-y-5;
+  }
+  
+  .space-24pt {
+    @apply space-y-6;
+  }
+  
+  /* Motion Utilities */
+  .transition-fast {
+    @apply transition-all duration-fast;
+  }
+  
+  .transition-normal {
+    @apply transition-all duration-normal;
+  }
+  
+  .transition-slow {
+    @apply transition-all duration-slow;
+  }
+  
+  .ease-spring {
+    @apply ease-spring-smooth;
+  }
+  
+  .ease-bounce {
+    @apply ease-spring-bounce;
+  }
+  
+  /* Accessibility Utilities */
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  }
+  
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-border-focus focus:ring-offset-2 focus:ring-offset-bg-canvas;
+  }
+  
+  /* Print Styles */
+  @media print {
+    .no-print {
+      @apply hidden;
+    }
+    
+    .print-only {
+      @apply block;
+    }
+  }
+}

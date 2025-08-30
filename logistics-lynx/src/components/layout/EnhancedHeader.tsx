@@ -17,8 +17,6 @@ interface HeaderProps {
 
 export const EnhancedHeader: React.FC<HeaderProps> = ({
   onSidebarToggle,
-  sidebarOpen = true,
-  isDarkMode = false,
   user
 }) => {
   const navigate = useNavigate();
@@ -111,7 +109,7 @@ export const EnhancedHeader: React.FC<HeaderProps> = ({
           <div className="flex items-center space-x-4">
             {/* Quick Actions */}
             <div className="hidden lg:flex items-center space-x-2">
-              {quickActions.map((action, index) => (
+              {quickActions.map((action) => (
                 <button
                   key={action.name}
                   onClick={action.action}
