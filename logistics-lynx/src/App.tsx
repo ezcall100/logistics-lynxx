@@ -63,6 +63,7 @@ import FinancialsModule from './modules/financials/FinancialsModule';
 import OnboardingModule from './modules/onboarding/OnboardingModule';
 import MarketplaceModule from './modules/marketplace/MarketplaceModule';
 import DirectoryModule from './modules/directory/DirectoryModule';
+import FactoringModule from './modules/factoring/FactoringModule';
 
 // Landing Page
 import LandingPage from './pages/landing/LandingPage';

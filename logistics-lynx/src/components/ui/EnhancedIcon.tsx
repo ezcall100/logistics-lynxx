@@ -1,14 +1,9 @@
 import React from 'react';
-import { CheckCircle, AlertTriangle, Eye } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import * as HeroIcons from '@heroicons/react/24/outline';
-import * as TablerIcons from '@tabler/icons-react';
-import { IconProps } from '@tabler/icons-react';
 
-// Enhanced Icon Component with multiple icon libraries
+// Enhanced Icon Component with Lucide icons only
 interface EnhancedIconProps {
   name: string;
-  library?: 'lucide' | 'heroicons' | 'tabler';
   size?: number;
   className?: string;
   color?: string;
@@ -19,7 +14,6 @@ interface EnhancedIconProps {
 
 export const EnhancedIcon: React.FC<EnhancedIconProps> = ({
   name,
-  library = 'lucide',
   size = 24,
   className = '',
   color,
@@ -29,23 +23,13 @@ export const EnhancedIcon: React.FC<EnhancedIconProps> = ({
 }) => {
   const getIconComponent = () => {
     const iconName = name.charAt(0).toUpperCase() + name.slice(1);
-    
-    switch (library) {
-      case 'lucide':
-        return (LucideIcons as any)[iconName];
-      case 'heroicons':
-        return (HeroIcons as any)[iconName];
-      case 'tabler':
-        return (TablerIcons as any)[iconName];
-      default:
-        return (LucideIcons as any)[iconName];
-    }
+    return (LucideIcons as any)[iconName];
   };
 
   const IconComponent = getIconComponent();
   
   if (!IconComponent) {
-    console.warn(`Icon "${name}" not found in ${library} library`);
+    console.warn(`Icon "${name}" not found in Lucide library`);
     return <div className="w-6 h-6 bg-gray-300 rounded" />;
   }
 
@@ -70,52 +54,52 @@ export const EnhancedIcon: React.FC<EnhancedIconProps> = ({
 export const IconSets = {
   // Navigation Icons
   navigation: {
-    dashboard: { name: 'LayoutDashboard', library: 'lucide' },
-    users: { name: 'Users', library: 'lucide' },
-    settings: { name: 'Settings', library: 'lucide' },
-    analytics: { name: 'BarChart3', library: 'lucide' },
-    security: { name: 'Shield', library: 'lucide' },
-    monitoring: { name: 'Activity', library: 'lucide' },
-    system: { name: 'Server', library: 'lucide' },
-    business: { name: 'Briefcase', library: 'lucide' },
-    devops: { name: 'Code', library: 'lucide' }
+    dashboard: { name: 'LayoutDashboard' },
+    users: { name: 'Users' },
+    settings: { name: 'Settings' },
+    analytics: { name: 'BarChart3' },
+    security: { name: 'Shield' },
+    monitoring: { name: 'Activity' },
+    system: { name: 'Server' },
+    business: { name: 'Briefcase' },
+    devops: { name: 'Code' }
   },
   
   // Action Icons
   actions: {
-    add: { name: 'Plus', library: 'lucide' },
-    edit: { name: 'Edit', library: 'lucide' },
-    delete: { name: 'Trash2', library: 'lucide' },
-    view: { name: 'Eye', library: 'lucide' },
-    download: { name: 'Download', library: 'lucide' },
-    upload: { name: 'Upload', library: 'lucide' },
-    search: { name: 'Search', library: 'lucide' },
-    filter: { name: 'Filter', library: 'lucide' },
-    refresh: { name: 'RefreshCw', library: 'lucide' },
-    save: { name: 'Save', library: 'lucide' }
+    add: { name: 'Plus' },
+    edit: { name: 'Edit' },
+    delete: { name: 'Trash2' },
+    view: { name: 'Eye' },
+    download: { name: 'Download' },
+    upload: { name: 'Upload' },
+    search: { name: 'Search' },
+    filter: { name: 'Filter' },
+    refresh: { name: 'RefreshCw' },
+    save: { name: 'Save' }
   },
   
   // Status Icons
   status: {
-    success: { name: 'CheckCircle', library: 'lucide' },
-    error: { name: 'XCircle', library: 'lucide' },
-    warning: { name: 'AlertTriangle', library: 'lucide' },
-    info: { name: 'Info', library: 'lucide' },
-    loading: { name: 'Loader2', library: 'lucide' },
-    offline: { name: 'WifiOff', library: 'lucide' },
-    online: { name: 'Wifi', library: 'lucide' }
+    success: { name: 'CheckCircle' },
+    error: { name: 'XCircle' },
+    warning: { name: 'AlertTriangle' },
+    info: { name: 'Info' },
+    loading: { name: 'Loader2' },
+    offline: { name: 'WifiOff' },
+    online: { name: 'Wifi' }
   },
   
   // TMS Specific Icons
   tms: {
-    truck: { name: 'Truck', library: 'lucide' },
-    package: { name: 'Package', library: 'lucide' },
-    route: { name: 'Route', library: 'lucide' },
-    map: { name: 'MapPin', library: 'lucide' },
-    delivery: { name: 'Truck', library: 'lucide' },
-    warehouse: { name: 'Building2', library: 'lucide' },
-    shipping: { name: 'Ship', library: 'lucide' },
-    logistics: { name: 'Globe', library: 'lucide' }
+    truck: { name: 'Truck' },
+    package: { name: 'Package' },
+    route: { name: 'Route' },
+    map: { name: 'MapPin' },
+    delivery: { name: 'Truck' },
+    warehouse: { name: 'Building2' },
+    shipping: { name: 'Ship' },
+    logistics: { name: 'Globe' }
   }
 };
 

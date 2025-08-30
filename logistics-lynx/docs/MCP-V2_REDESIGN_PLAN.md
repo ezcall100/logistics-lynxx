@@ -93,6 +93,7 @@ This document outlines the complete ground-up redesign of the **Trans Bot AI MCP
 - `/onboarding/*` - Unified onboarding flows
 - `/marketplace/*` - Apps & integrations discovery
 - `/directory/*` - Global company directory
+- `/factoring/*` - Factoring services portal
 
 ### Global Features
 - **Global Search**: Entity scoping, portal filtering, time ranges
@@ -461,6 +462,27 @@ dir_companies, dir_contacts, dir_docs, dir_lanes, dir_equipment, dir_scores, dir
 - Rates (lane intelligence)
 - All portals (directory access)
 
+### 5.8 Factoring Portal — `/factoring/*`
+**Purpose**: Dedicated financial operations for factoring services
+
+#### MVP Features:
+- **Submissions**: Upload invoices, POD, rate cons
+- **Status Tracking**: Pending, approved, funded, rejected (with reason)
+- **Reserve/Fee**: Calculations, schedules, payouts
+- **Advances**: Request/cap, same-day vs ACH
+- **Analytics**: Outstanding, funded %, avg fee, partner performance
+- **Partners**: List of factoring companies with terms & ratings
+
+#### Data Model:
+```sql
+fact_cases, fact_docs, fact_reserves, fact_fees, fact_payouts, fact_partners, fact_analytics
+```
+
+#### Integrations:
+- Financials (settlements)
+- CRM (customers/vendors)
+- Directory (factoring companies)
+
 ## 6. Build System & Code Quality
 
 ### TypeScript Configuration
@@ -623,6 +645,7 @@ dir_companies, dir_contacts, dir_docs, dir_lanes, dir_equipment, dir_scores, dir
 - [ ] `/modules/onboarding`
 - [ ] `/modules/marketplace`
 - [ ] `/modules/directory`
+- [ ] `/modules/factoring`
 
 ### Documentation
 - [ ] `/docs/ia.md` - Information Architecture
