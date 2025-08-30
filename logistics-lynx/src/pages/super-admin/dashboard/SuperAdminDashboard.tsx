@@ -485,12 +485,12 @@ const SuperAdminDashboard: React.FC = () => {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Transactions</span>
                     <span className="text-white font-medium">{portal.transactions.toLocaleString()}</span>
-                  </div>
+              </div>
                   {portal.revenue > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Revenue</span>
                       <span className="text-white font-medium">{formatCurrency(portal.revenue)}</span>
-                    </div>
+              </div>
                   )}
             </div>
           </div>
