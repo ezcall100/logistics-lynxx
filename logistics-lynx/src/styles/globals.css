@@ -3,6 +3,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Basic CSS Reset (since preflight is disabled) */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
 /* Base Styles */
 @layer base {
   * {
@@ -201,47 +217,6 @@
 
 /* Utility Styles */
 @layer utilities {
-  /* Text Utilities */
-  .text-display {
-    @apply text-display;
-  }
-  
-  .text-h1 {
-    @apply text-h1;
-  }
-  
-  .text-h2 {
-    @apply text-h2;
-  }
-  
-  .text-h3 {
-    @apply text-h3;
-  }
-  
-  .text-h4 {
-    @apply text-h4;
-  }
-  
-  .text-h5 {
-    @apply text-h5;
-  }
-  
-  .text-h6 {
-    @apply text-h6;
-  }
-  
-  .text-body {
-    @apply text-body;
-  }
-  
-  .text-meta {
-    @apply text-meta;
-  }
-  
-  .text-mono {
-    @apply text-mono;
-  }
-  
   /* Spacing Utilities */
   .space-4pt {
     @apply space-y-1;
