@@ -6,7 +6,7 @@
 /* Base Styles */
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border-default;
   }
   
   body {
