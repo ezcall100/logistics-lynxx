@@ -2,57 +2,51 @@ import React, { useState } from 'react';
 import { 
   MessageSquare, 
   Phone, 
-  Mail, 
   Send, 
-  Plus,
-  Search,
-  User,
-  Clock
+  User, 
+  Clock,
+  AlertCircle,
+  CheckCircle
 } from 'lucide-react';
 
 interface Message {
   id: string;
-  from: string;
-  subject: string;
+  sender: string;
   content: string;
   timestamp: string;
-  status: 'unread' | 'read';
-  type: 'message' | 'alert' | 'update';
+  type: 'incoming' | 'outgoing';
+  status: 'sent' | 'delivered' | 'read';
 }
 
 const CommunicationTools: React.FC = () => {
   const [messages] = useState<Message[]>([
     {
       id: '1',
-      from: 'Dispatch',
-      subject: 'Route Update',
-      content: 'Your route has been updated. Please check the new navigation.',
-      timestamp: '10:30 AM',
-      status: 'unread',
-      type: 'update'
+      sender: 'Dispatch',
+      content: 'How is the delivery going? Any issues?',
+      timestamp: '2:30 PM',
+      type: 'incoming',
+      status: 'read'
     },
     {
       id: '2',
-      from: 'Fleet Manager',
-      subject: 'Maintenance Reminder',
-      content: 'Your truck is due for maintenance next week.',
-      timestamp: '09:15 AM',
-      status: 'read',
-      type: 'alert'
+      sender: 'You',
+      content: 'All good, should arrive on time',
+      timestamp: '2:32 PM',
+      type: 'outgoing',
+      status: 'delivered'
     },
     {
       id: '3',
-      from: 'Customer Service',
-      subject: 'Delivery Confirmation',
-      content: 'Please confirm delivery of load #1042.',
-      timestamp: '08:45 AM',
-      status: 'read',
-      type: 'message'
+      sender: 'Dispatch',
+      content: 'Great! Keep us updated if anything changes',
+      timestamp: '2:35 PM',
+      type: 'incoming',
+      status: 'read'
     }
   ]);
 
   const [newMessage, setNewMessage] = useState('');
-  const [selectedContact, setSelectedContact] = useState('Dispatch');
 
   return (
     <div className="p-6 space-y-6">
@@ -60,186 +54,161 @@ const CommunicationTools: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Communication Tools</h1>
-          <p className="text-gray-600">Stay connected with dispatch and team members</p>
+          <p className="text-gray-600">Stay connected with dispatch and team</p>
         </div>
         <div className="flex gap-2">
           <button className="btn-outline flex items-center gap-2">
             <Phone className="w-4 h-4" />
             Call Dispatch
           </button>
-          <button className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            New Message
-          </button>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
           <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
             <Phone className="w-6 h-6 text-blue-600" />
           </div>
-          <h3 className="font-medium text-gray-900 mb-1">Emergency Call</h3>
-          <p className="text-sm text-gray-600">24/7 support line</p>
+          <h3 className="font-medium text-gray-900 mb-1">Call Dispatch</h3>
+          <p className="text-sm text-gray-600 mb-4">Direct phone call to dispatch</p>
+          <button className="btn-primary w-full">Call Now</button>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
           <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
             <MessageSquare className="w-6 h-6 text-green-600" />
           </div>
-          <h3 className="font-medium text-gray-900 mb-1">Text Dispatch</h3>
-          <p className="text-sm text-gray-600">Quick updates</p>
+          <h3 className="font-medium text-gray-900 mb-1">Send Update</h3>
+          <p className="text-sm text-gray-600 mb-4">Quick status update to dispatch</p>
+          <button className="btn-outline w-full">Send Update</button>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
           <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <Mail className="w-6 h-6 text-purple-600" />
+            <AlertCircle className="w-6 h-6 text-purple-600" />
           </div>
-          <h3 className="font-medium text-gray-900 mb-1">Email Support</h3>
-          <p className="text-sm text-gray-600">Detailed reports</p>
-        </div>
-        <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
-          <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <User className="w-6 h-6 text-orange-600" />
-          </div>
-          <h3 className="font-medium text-gray-900 mb-1">Voice Chat</h3>
-          <p className="text-sm text-gray-600">Real-time communication</p>
+          <h3 className="font-medium text-gray-900 mb-1">Report Issue</h3>
+          <p className="text-sm text-gray-600 mb-4">Report problems or delays</p>
+          <button className="btn-outline w-full">Report Issue</button>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Messages</h3>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search messages..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="divide-y divide-gray-200">
+      {/* Messages Section */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Messages</h3>
+        <div className="space-y-4 mb-6">
           {messages.map((message) => (
-            <div key={message.id} className={`p-4 hover:bg-gray-50 ${message.status === 'unread' ? 'bg-blue-50' : ''}`}>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-gray-900">{message.from}</span>
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      message.type === 'alert' ? 'text-red-600 bg-red-50' :
-                      message.type === 'update' ? 'text-blue-600 bg-blue-50' :
-                      'text-gray-600 bg-gray-50'
-                    }`}>
-                      {message.type}
-                    </span>
-                    {message.status === 'unread' && (
-                      <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-                    )}
+            <div key={message.id} className={`flex ${message.type === 'outgoing' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-xs lg:max-w-md p-3 rounded-lg ${
+                message.type === 'outgoing' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-900'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-medium">{message.sender}</span>
+                  <span className="text-xs opacity-75">{message.timestamp}</span>
+                </div>
+                <p className="text-sm">{message.content}</p>
+                {message.type === 'outgoing' && (
+                  <div className="flex items-center gap-1 mt-1">
+                    {message.status === 'sent' && <CheckCircle className="w-3 h-3 opacity-75" />}
+                    {message.status === 'delivered' && <CheckCircle className="w-3 h-3 opacity-75" />}
+                    {message.status === 'read' && <CheckCircle className="w-3 h-3" />}
                   </div>
-                  <h4 className="font-medium text-gray-900 mb-1">{message.subject}</h4>
-                  <p className="text-sm text-gray-600">{message.content}</p>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Clock className="w-4 h-4" />
-                  {message.timestamp}
-                </div>
+                )}
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Send Message */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Send Message</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
-            <select
-              value={selectedContact}
-              onChange={(e) => setSelectedContact(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="Dispatch">Dispatch</option>
-              <option value="Fleet Manager">Fleet Manager</option>
-              <option value="Customer Service">Customer Service</option>
-              <option value="Emergency">Emergency</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-            <textarea
+        {/* Send Message Form */}
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Type your message here..."
+              placeholder="Type your message..."
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-          </div>
-          <div className="flex justify-end">
             <button className="btn-primary flex items-center gap-2">
               <Send className="w-4 h-4" />
-              Send Message
+              Send
             </button>
           </div>
         </div>
       </div>
 
-      {/* Contact List */}
+      {/* Quick Contacts */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Contacts</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
               <User className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Dispatch</p>
-              <p className="text-sm text-gray-600">Available 24/7</p>
+              <h4 className="font-medium text-gray-900">Dispatch</h4>
+              <p className="text-sm text-gray-600">Main dispatch line</p>
             </div>
-            <button className="ml-auto btn-outline">
-              <Phone className="w-4 h-4" />
-            </button>
+            <button className="ml-auto btn-outline text-sm">Call</button>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
               <User className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Fleet Manager</p>
-              <p className="text-sm text-gray-600">Mon-Fri 8AM-6PM</p>
+              <h4 className="font-medium text-gray-900">Emergency</h4>
+              <p className="text-sm text-gray-600">24/7 emergency line</p>
             </div>
-            <button className="ml-auto btn-outline">
-              <Phone className="w-4 h-4" />
-            </button>
+            <button className="ml-auto btn-outline text-sm">Call</button>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
               <User className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Customer Service</p>
-              <p className="text-sm text-gray-600">Mon-Fri 9AM-5PM</p>
+              <h4 className="font-medium text-gray-900">Fleet Manager</h4>
+              <p className="text-sm text-gray-600">Fleet operations</p>
             </div>
-            <button className="ml-auto btn-outline">
-              <Phone className="w-4 h-4" />
-            </button>
+            <button className="ml-auto btn-outline text-sm">Call</button>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-red-600" />
+          <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+              <User className="w-5 h-5 text-orange-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Emergency</p>
-              <p className="text-sm text-gray-600">24/7 Hotline</p>
+              <h4 className="font-medium text-gray-900">Safety Team</h4>
+              <p className="text-sm text-gray-600">Safety and compliance</p>
             </div>
-            <button className="ml-auto btn-outline">
-              <Phone className="w-4 h-4" />
-            </button>
+            <button className="ml-auto btn-outline text-sm">Call</button>
           </div>
+        </div>
+      </div>
+
+      {/* Status Updates */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Status Updates</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-center">
+            <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
+            <p className="font-medium text-gray-900">On Time</p>
+            <p className="text-sm text-gray-600">Delivery on schedule</p>
+          </button>
+          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-center">
+            <Clock className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+            <p className="font-medium text-gray-900">Delayed</p>
+            <p className="text-sm text-gray-600">Running behind schedule</p>
+          </button>
+          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-center">
+            <AlertCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
+            <p className="font-medium text-gray-900">Issue</p>
+            <p className="text-sm text-gray-600">Problem encountered</p>
+          </button>
+          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 text-center">
+            <MessageSquare className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+            <p className="font-medium text-gray-900">Custom</p>
+            <p className="text-sm text-gray-600">Send custom message</p>
+          </button>
         </div>
       </div>
     </div>

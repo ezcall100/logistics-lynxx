@@ -4,20 +4,22 @@ import {
   TrendingUp, 
   TrendingDown, 
   BarChart3, 
-  PieChart,
+  Calendar,
   Download,
   Plus,
-  Calendar,
-  Receipt,
-  CreditCard,
-  Banknote
+  Filter
 } from 'lucide-react';
 
 interface FinancialData {
-  category: string;
-  amount: number;
-  percentage: number;
-  trend: 'up' | 'down' | 'stable';
+  totalRevenue: number;
+  totalExpenses: number;
+  netProfit: number;
+  profitMargin: number;
+  monthlyGrowth: number;
+  fuelExpenses: number;
+  maintenanceExpenses: number;
+  insuranceExpenses: number;
+  otherExpenses: number;
 }
 
 interface Transaction {
@@ -27,54 +29,66 @@ interface Transaction {
   amount: number;
   type: 'income' | 'expense';
   category: string;
-  status: 'completed' | 'pending' | 'failed';
+  status: 'completed' | 'pending' | 'cancelled';
 }
 
 const FinancialTracking: React.FC = () => {
-  const [financialData] = useState<FinancialData[]>([
-    { category: 'Revenue', amount: 28470, percentage: 100, trend: 'up' },
-    { category: 'Fuel Costs', amount: 8540, percentage: 30, trend: 'down' },
-    { category: 'Maintenance', amount: 1250, percentage: 4.4, trend: 'stable' },
-    { category: 'Insurance', amount: 890, percentage: 3.1, trend: 'up' },
-    { category: 'Tolls & Permits', amount: 670, percentage: 2.4, trend: 'down' },
-    { category: 'Other Expenses', amount: 6400, percentage: 22.5, trend: 'stable' }
-  ]);
+  const [financialData] = useState<FinancialData>({
+    totalRevenue: 45000,
+    totalExpenses: 28000,
+    netProfit: 17000,
+    profitMargin: 37.8,
+    monthlyGrowth: 12.5,
+    fuelExpenses: 12000,
+    maintenanceExpenses: 8000,
+    insuranceExpenses: 2000,
+    otherExpenses: 6000
+  });
 
   const [transactions] = useState<Transaction[]>([
     {
       id: '1',
-      date: '2024-01-15',
-      description: 'Load #1042 Payment',
-      amount: 1250,
+      date: '2024-01-20',
+      description: 'Load #1042 - LA to Phoenix',
+      amount: 2500,
       type: 'income',
-      category: 'Freight Revenue',
+      category: 'Freight',
       status: 'completed'
     },
     {
       id: '2',
-      date: '2024-01-14',
-      description: 'Fuel Purchase - Pilot',
-      amount: -420,
+      date: '2024-01-19',
+      description: 'Fuel purchase - Pilot Travel Center',
+      amount: -450,
       type: 'expense',
       category: 'Fuel',
       status: 'completed'
     },
     {
       id: '3',
-      date: '2024-01-13',
-      description: 'Oil Change Service',
-      amount: -180,
+      date: '2024-01-18',
+      description: 'Tire replacement',
+      amount: -800,
       type: 'expense',
       category: 'Maintenance',
       status: 'completed'
     },
     {
       id: '4',
-      date: '2024-01-12',
-      description: 'Load #1041 Payment',
-      amount: 980,
+      date: '2024-01-17',
+      description: 'Load #1041 - Phoenix to LA',
+      amount: 2200,
       type: 'income',
-      category: 'Freight Revenue',
+      category: 'Freight',
+      status: 'completed'
+    },
+    {
+      id: '5',
+      date: '2024-01-16',
+      description: 'Insurance premium',
+      amount: -500,
+      type: 'expense',
+      category: 'Insurance',
       status: 'completed'
     }
   ]);
@@ -85,16 +99,16 @@ const FinancialTracking: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Financial Tracking</h1>
-          <p className="text-gray-600">Monitor your business finances and cash flow</p>
+          <p className="text-gray-600">Monitor your income, expenses, and profitability</p>
         </div>
         <div className="flex gap-2">
           <button className="btn-outline flex items-center gap-2">
-            <Download className="w-4 h-4" />
-            Export Report
+            <Filter className="w-4 h-4" />
+            Filter
           </button>
-          <button className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add Transaction
+          <button className="btn-outline flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            Export
           </button>
         </div>
       </div>
@@ -108,9 +122,9 @@ const FinancialTracking: React.FC = () => {
             </div>
             <TrendingUp className="w-5 h-5 text-green-500" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900">${28470}</h3>
+          <h3 className="text-2xl font-bold text-gray-900">${financialData.totalRevenue.toLocaleString()}</h3>
           <p className="text-gray-600">Total Revenue</p>
-          <p className="text-sm text-green-600 mt-1">+18% vs last month</p>
+          <p className="text-sm text-green-600 mt-1">+{financialData.monthlyGrowth}% vs last month</p>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200">
           <div className="flex items-center justify-between mb-4">
@@ -119,20 +133,20 @@ const FinancialTracking: React.FC = () => {
             </div>
             <TrendingDown className="w-5 h-5 text-red-500" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900">${18750}</h3>
+          <h3 className="text-2xl font-bold text-gray-900">${financialData.totalExpenses.toLocaleString()}</h3>
           <p className="text-gray-600">Total Expenses</p>
-          <p className="text-sm text-red-600 mt-1">+8% vs last month</p>
+          <p className="text-sm text-red-600 mt-1">+8.2% vs last month</p>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-blue-600" />
+              <TrendingUp className="w-6 h-6 text-blue-600" />
             </div>
             <TrendingUp className="w-5 h-5 text-green-500" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900">${9720}</h3>
+          <h3 className="text-2xl font-bold text-gray-900">${financialData.netProfit.toLocaleString()}</h3>
           <p className="text-gray-600">Net Profit</p>
-          <p className="text-sm text-green-600 mt-1">+28% vs last month</p>
+          <p className="text-sm text-green-600 mt-1">+{financialData.profitMargin}% margin</p>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200">
           <div className="flex items-center justify-between mb-4">
@@ -141,51 +155,59 @@ const FinancialTracking: React.FC = () => {
             </div>
             <TrendingUp className="w-5 h-5 text-green-500" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900">34%</h3>
+          <h3 className="text-2xl font-bold text-gray-900">{financialData.profitMargin}%</h3>
           <p className="text-gray-600">Profit Margin</p>
-          <p className="text-sm text-green-600 mt-1">+2% vs last month</p>
+          <p className="text-sm text-green-600 mt-1">+2.1% vs last month</p>
         </div>
       </div>
 
       {/* Expense Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Expense Breakdown</h3>
-          <div className="space-y-4">
-            {financialData.slice(1).map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${
-                    item.trend === 'up' ? 'bg-red-500' :
-                    item.trend === 'down' ? 'bg-green-500' : 'bg-gray-500'
-                  }`}></div>
-                  <div>
-                    <p className="font-medium text-gray-900">{item.category}</p>
-                    <p className="text-sm text-gray-600">{item.percentage}% of revenue</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold text-gray-900">${item.amount.toLocaleString()}</p>
-                  <p className={`text-sm ${
-                    item.trend === 'up' ? 'text-red-600' :
-                    item.trend === 'down' ? 'text-green-600' : 'text-gray-600'
-                  }`}>
-                    {item.trend === 'up' ? '↗' : item.trend === 'down' ? '↘' : '→'} {item.trend}
-                  </p>
-                </div>
-              </div>
-            ))}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Expense Breakdown</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="p-4 bg-red-50 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <DollarSign className="w-5 h-5 text-red-600" />
+              <h4 className="font-medium text-red-900">Fuel Expenses</h4>
+            </div>
+            <div className="text-2xl font-bold text-red-900">${financialData.fuelExpenses.toLocaleString()}</div>
+            <p className="text-sm text-red-700">42.9% of total expenses</p>
+          </div>
+          <div className="p-4 bg-orange-50 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <BarChart3 className="w-5 h-5 text-orange-600" />
+              <h4 className="font-medium text-orange-900">Maintenance</h4>
+            </div>
+            <div className="text-2xl font-bold text-orange-900">${financialData.maintenanceExpenses.toLocaleString()}</div>
+            <p className="text-sm text-orange-700">28.6% of total expenses</p>
+          </div>
+          <div className="p-4 bg-blue-50 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <Calendar className="w-5 h-5 text-blue-600" />
+              <h4 className="font-medium text-blue-900">Insurance</h4>
+            </div>
+            <div className="text-2xl font-bold text-blue-900">${financialData.insuranceExpenses.toLocaleString()}</div>
+            <p className="text-sm text-blue-700">7.1% of total expenses</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <Plus className="w-5 h-5 text-gray-600" />
+              <h4 className="font-medium text-gray-900">Other Expenses</h4>
+            </div>
+            <div className="text-2xl font-bold text-gray-900">${financialData.otherExpenses.toLocaleString()}</div>
+            <p className="text-sm text-gray-700">21.4% of total expenses</p>
           </div>
         </div>
+      </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue vs Expenses</h3>
-          <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <PieChart className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500">Chart visualization</p>
-              <p className="text-sm text-gray-400">Revenue vs Expenses breakdown</p>
-            </div>
+      {/* Revenue vs Expenses Chart */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue vs Expenses</h3>
+        <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+          <div className="text-center">
+            <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">Revenue vs expenses chart will be displayed here</p>
+            <p className="text-sm text-gray-500">Monthly comparison and trends</p>
           </div>
         </div>
       </div>
@@ -195,45 +217,58 @@ const FinancialTracking: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Recent Transactions</h3>
           <button className="btn-outline flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            View All
+            <Plus className="w-4 h-4" />
+            Add Transaction
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-medium text-gray-900">Date</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-900">Description</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-900">Category</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-900">Amount</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-900">Status</th>
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Amount
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {transactions.map((transaction) => (
-                <tr key={transaction.id} className="border-b border-gray-100">
-                  <td className="py-3 px-4">
-                    <p className="text-sm text-gray-900">
-                      {new Date(transaction.date).toLocaleDateString()}
-                    </p>
+                <tr key={transaction.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {transaction.date}
                   </td>
-                  <td className="py-3 px-4">
-                    <p className="font-medium text-gray-900">{transaction.description}</p>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{transaction.description}</div>
                   </td>
-                  <td className="py-3 px-4">
-                    <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      transaction.category === 'Freight' ? 'text-blue-600 bg-blue-50' :
+                      transaction.category === 'Fuel' ? 'text-red-600 bg-red-50' :
+                      transaction.category === 'Maintenance' ? 'text-orange-600 bg-orange-50' :
+                      'text-gray-600 bg-gray-50'
+                    }`}>
                       {transaction.category}
                     </span>
                   </td>
-                  <td className="py-3 px-4">
-                    <span className={`font-semibold ${
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <span className={`font-medium ${
                       transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
                     }`}>
-                      {transaction.type === 'income' ? '+' : ''}${transaction.amount.toLocaleString()}
+                      {transaction.type === 'income' ? '+' : ''}${Math.abs(transaction.amount).toLocaleString()}
                     </span>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       transaction.status === 'completed' ? 'text-green-600 bg-green-50' :
                       transaction.status === 'pending' ? 'text-yellow-600 bg-yellow-50' :
@@ -253,27 +288,27 @@ const FinancialTracking: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
           <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <Receipt className="w-6 h-6 text-blue-600" />
+            <BarChart3 className="w-6 h-6 text-blue-600" />
           </div>
-          <h3 className="font-medium text-gray-900 mb-1">Invoice Management</h3>
-          <p className="text-sm text-gray-600 mb-4">Create and track invoices for your loads</p>
-          <button className="btn-outline w-full">Manage Invoices</button>
+          <h3 className="font-medium text-gray-900 mb-1">Generate Report</h3>
+          <p className="text-sm text-gray-600 mb-4">Create detailed financial reports</p>
+          <button className="btn-outline w-full">Generate Report</button>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
           <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <CreditCard className="w-6 h-6 text-green-600" />
+            <TrendingUp className="w-6 h-6 text-green-600" />
           </div>
-          <h3 className="font-medium text-gray-900 mb-1">Expense Tracking</h3>
-          <p className="text-sm text-gray-600 mb-4">Track fuel, maintenance, and other expenses</p>
-          <button className="btn-outline w-full">Track Expenses</button>
+          <h3 className="font-medium text-gray-900 mb-1">Tax Preparation</h3>
+          <p className="text-sm text-gray-600 mb-4">Export data for tax filing</p>
+          <button className="btn-outline w-full">Export for Taxes</button>
         </div>
         <div className="bg-white rounded-lg p-6 border border-gray-200 text-center">
           <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <Banknote className="w-6 h-6 text-purple-600" />
+            <Calendar className="w-6 h-6 text-purple-600" />
           </div>
-          <h3 className="font-medium text-gray-900 mb-1">Cash Flow Analysis</h3>
-          <p className="text-sm text-gray-600 mb-4">Analyze your cash flow patterns and trends</p>
-          <button className="btn-outline w-full">View Analysis</button>
+          <h3 className="font-medium text-gray-900 mb-1">Budget Planning</h3>
+          <p className="text-sm text-gray-600 mb-4">Plan your monthly budget</p>
+          <button className="btn-outline w-full">Plan Budget</button>
         </div>
       </div>
 
@@ -282,35 +317,51 @@ const FinancialTracking: React.FC = () => {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Financial Insights</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-green-600 mt-0.5" />
-              <div>
-                <p className="font-medium text-green-900">Strong Revenue Growth</p>
-                <p className="text-sm text-green-700">Your revenue increased by 18% this month compared to last month.</p>
+            <div className="p-4 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <TrendingUp className="w-5 h-5 text-green-600" />
+                <h4 className="font-medium text-green-900">Positive Trends</h4>
               </div>
+              <ul className="text-sm text-green-700 space-y-1">
+                <li>• Revenue increased by 12.5% this month</li>
+                <li>• Profit margin improved by 2.1%</li>
+                <li>• Fuel efficiency improved by 8%</li>
+              </ul>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-              <DollarSign className="w-5 h-5 text-blue-600 mt-0.5" />
-              <div>
-                <p className="font-medium text-blue-900">Healthy Profit Margin</p>
-                <p className="text-sm text-blue-700">Your 34% profit margin is above industry average of 28%.</p>
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <BarChart3 className="w-5 h-5 text-blue-600" />
+                <h4 className="font-medium text-blue-900">Optimization Opportunities</h4>
               </div>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• Consider fuel cards for better rates</li>
+                <li>• Schedule preventive maintenance</li>
+                <li>• Negotiate better insurance rates</li>
+              </ul>
             </div>
           </div>
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
-              <TrendingDown className="w-5 h-5 text-yellow-600 mt-0.5" />
-              <div>
-                <p className="font-medium text-yellow-900">Fuel Cost Management</p>
-                <p className="text-sm text-yellow-700">Consider fuel-efficient routes to reduce your 30% fuel expense.</p>
+            <div className="p-4 bg-yellow-50 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <TrendingDown className="w-5 h-5 text-yellow-600" />
+                <h4 className="font-medium text-yellow-900">Areas of Concern</h4>
               </div>
+              <ul className="text-sm text-yellow-700 space-y-1">
+                <li>• Maintenance costs increased by 15%</li>
+                <li>• Fuel prices up 8% this month</li>
+                <li>• Insurance costs rising</li>
+              </ul>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
-              <BarChart3 className="w-5 h-5 text-purple-600 mt-0.5" />
-              <div>
-                <p className="font-medium text-purple-900">Expense Optimization</p>
-                <p className="text-sm text-purple-700">Your expenses are well-managed with only 8% increase this month.</p>
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <DollarSign className="w-5 h-5 text-purple-600" />
+                <h4 className="font-medium text-purple-900">Cash Flow</h4>
               </div>
+              <ul className="text-sm text-purple-700 space-y-1">
+                <li>• Positive cash flow maintained</li>
+                <li>• Emergency fund: $8,500</li>
+                <li>• Next major expense: $2,000</li>
+              </ul>
             </div>
           </div>
         </div>

@@ -146,8 +146,9 @@ const App: React.FC = () => {
           <Route path="/modules/rates" element={<RatesModule />} />
           <Route path="/modules/financials" element={<FinancialsModule />} />
           <Route path="/modules/onboarding" element={<OnboardingModule />} />
-          <Route path="/modules/marketplace" element={<MarketplaceModule />} />
-          <Route path="/modules/directory" element={<DirectoryModule />} />
+                                                                         <Route path="/modules/marketplace" element={<MarketplaceModule />} />
+                        <Route path="/modules/directory" element={<DirectoryModule />} />
+                        <Route path="/modules/factoring" element={<FactoringModule />} />
           
           {/* Default redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
