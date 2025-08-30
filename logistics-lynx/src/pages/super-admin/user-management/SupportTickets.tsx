@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Headphones, 
   Search, 
-  Filter, 
   Plus, 
-  RefreshCw, 
   MessageSquare, 
   Clock, 
   CheckCircle, 
@@ -19,8 +17,6 @@ import {
   Archive,
   Download,
   TrendingUp,
-  Users,
-  Activity,
   Brain,
   Zap
 } from 'lucide-react';
@@ -86,8 +82,8 @@ const SupportTickets: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
+  const [categoryFilter] = useState('');
+  const [selectedTickets] = useState<string[]>([]);
   const [timeRange, setTimeRange] = useState('7d');
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
@@ -595,7 +591,7 @@ const SupportTickets: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <div className="flex-shrink-0">
                           {ticket.aiAutomation && (
-                            <Zap className="h-4 w-4 text-yellow-500" title="AI Automated" />
+                            <Zap className="h-4 w-4 text-yellow-500" />
                           )}
                         </div>
                         <div>

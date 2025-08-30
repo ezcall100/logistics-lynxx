@@ -5,19 +5,15 @@ import {
   CreditCard, 
   DollarSign, 
   TrendingUp, 
-  TrendingDown, 
   Calendar,
   Download,
   RefreshCw,
   Filter,
-  Search,
   AlertTriangle,
   CheckCircle,
   Clock,
   User,
-  Building,
   Receipt,
-  Wallet,
   Shield,
   Brain,
   Cpu,
@@ -67,7 +63,7 @@ const BillingManagement: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [billingData, setBillingData] = useState<BillingData | null>(null);
   const [timeRange, setTimeRange] = useState('30d');
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const [selectedFilter] = useState('all');
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
   // Enhanced mock data with MCP agent integration

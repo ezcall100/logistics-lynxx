@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   GraduationCap, 
   Users, 
-  TrendingUp, 
   Clock, 
   CheckCircle, 
   AlertCircle, 
@@ -18,7 +17,6 @@ import {
   Zap,
   Activity,
   Download,
-  RefreshCw,
   Settings,
   Search
 } from 'lucide-react';
@@ -586,7 +584,7 @@ const UserOnboarding: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <div className="flex-shrink-0">
                           {user.aiAssisted && (
-                            <Zap className="h-4 w-4 text-yellow-500" title="AI Assisted" />
+                            <Zap className="h-4 w-4 text-yellow-500" />
                           )}
                         </div>
                         <div>

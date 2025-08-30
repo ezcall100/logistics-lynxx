@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom';
 import { 
   Truck, 
   ArrowRight, 
-  CheckCircle, 
   Zap, 
   Shield, 
   BarChart3,
   Users,
   Globe,
-  Clock,
-  TrendingUp
+  Clock
 } from 'lucide-react';
 
 const WebsiteHome: React.FC = () => {

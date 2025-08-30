@@ -15,11 +15,8 @@ import {
   RefreshCw,
   Filter,
   Search,
-  PieChart,
-  LineChart,
   Target,
   Zap,
-  Shield,
   Brain,
   Cpu
 } from 'lucide-react';
@@ -55,7 +52,7 @@ const UserAnalytics: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [timeRange, setTimeRange] = useState('7d');
-  const [selectedMetric, setSelectedMetric] = useState('overview');
+  const [selectedMetric] = useState('overview');
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
   // Enhanced mock data with MCP agent integration

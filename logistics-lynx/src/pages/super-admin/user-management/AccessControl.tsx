@@ -15,21 +15,13 @@ import {
   Edit,
   Trash2,
   Download,
-  RefreshCw,
-  Settings,
   Activity,
   Brain,
   Zap,
   Eye,
-  EyeOff,
   Wifi,
-  WifiOff,
   MapPin,
-  Calendar,
-  TrendingUp,
-  AlertCircle,
-  ShieldCheck,
-  ShieldX
+  ShieldCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -98,13 +90,13 @@ const AccessControl: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [rules, setRules] = useState<AccessRule[]>([]);
   const [filteredRules, setFilteredRules] = useState<AccessRule[]>([]);
-  const [events, setEvents] = useState<SecurityEvent[]>([]);
+  const [events] = useState<SecurityEvent[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<SecurityEvent[]>([]);
   const [metrics, setMetrics] = useState<AccessMetrics | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [timeRange, setTimeRange] = useState('7d');
+  const [searchQuery] = useState('');
+  const [typeFilter] = useState('');
+  const [statusFilter] = useState('');
+  const [timeRange] = useState('7d');
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
   // Enhanced mock data with MCP agent integration
@@ -611,7 +603,7 @@ const AccessControl: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <div className="flex-shrink-0">
                           {rule.aiGenerated && (
-                            <Zap className="h-4 w-4 text-yellow-500" title="AI Generated" />
+                            <Zap className="h-4 w-4 text-yellow-500" />
                           )}
                         </div>
                         <div>
@@ -720,7 +712,7 @@ const AccessControl: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <div className="flex-shrink-0">
                           {event.aiAnalyzed && (
-                            <Zap className="h-4 w-4 text-yellow-500" title="AI Analyzed" />
+                            <Zap className="h-4 w-4 text-yellow-500" />
                           )}
                         </div>
                         <div>

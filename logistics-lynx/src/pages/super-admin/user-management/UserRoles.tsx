@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, 
   Edit, 
-  Upload, 
   Eye, 
-  Download, 
   Trash2,
   Brain,
   Shield,
@@ -16,7 +14,6 @@ import {
   Search,
   Filter,
   Settings,
-  RefreshCw,
   Zap,
   Lock,
   Unlock,
@@ -30,8 +27,6 @@ import {
   TrendingUp,
   TrendingDown,
   BarChart3,
-  PieChart,
-  LineChart,
   Calendar,
   Bell,
   Mail,
@@ -240,16 +235,16 @@ const mockAlerts: SystemAlert[] = [
 
 const UserRoles: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [roles, setRoles] = useState<Role[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
   const [selectedRoleId, setSelectedRoleId] = useState<string>('');
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
   const [agents, setAgents] = useState<MCPAgent[]>([]);
-  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [metrics] = useState<SystemMetrics | null>(null);
   const [alerts, setAlerts] = useState<SystemAlert[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStatus] = useState('all');
 
   console.log('🔑 UserRoles component is rendering with MCP integration!');
 
@@ -343,7 +338,7 @@ const UserRoles: React.FC = () => {
       
       setRoles(mockRoles);
       setAgents(mockMCPAgents);
-      setMetrics(mockSystemMetrics);
+      // setMetrics(mockSystemMetrics);
       setAlerts(mockAlerts);
       setMcpStatus('connected');
       setLoading(false);
@@ -566,7 +561,7 @@ const UserRoles: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Role Management</h2>
               <div className="flex items-center space-x-2">
-                <RefreshCw className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm text-gray-600 dark:text-gray-400">Last updated: {new Date().toLocaleTimeString()}</span>
               </div>
             </div>
