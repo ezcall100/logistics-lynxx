@@ -2,7 +2,214 @@
 
 ## Executive Summary
 
-This document outlines the complete ground-up redesign of the **Trans Bot AI MCP-V2 Portal Ecosystem**, implementing a revolutionary new UI/UX system with mandatory cross-portal modules (CRM, Load Board, Rates, Financials, Onboarding, Marketplace, Directory). This is **NOT** a theme recolor - it's a complete architectural rebuild for the Trans Bot AI logistics platform.
+This document outlines the complete ground-up redesign of the **Trans Bot AI MCP-V2 Portal Ecosystem**, implementing a revolutionary new UI/UX system with mandatory cross-portal modules (CRM, Load Board, Rates, Financials, Onboarding, Marketplace, Directory, Factoring) and a comprehensive **Trans Bot AI Website**. This is **NOT** a theme recolor - it's a complete architectural rebuild for the Trans Bot AI logistics platform.
+
+## Website Design: MCP-V2 Website Foundation
+
+### MCP OPERATOR DIRECTIVE — MCP-v2 WEBSITE DESIGN FOR TRANS BOT AI
+
+**From:** Commander  
+**To:** MCP (all agents)  
+**Priority:** High — Website redesign foundation  
+**Company:** Trans Bot AI  
+**Goal:** Deliver the Trans Bot AI website under MCP-v2: modern UI/UX, secure Sign up/Login flows, 5–8 Main pages, and 50+ Subpages, fully responsive, accessible, fast, and easy to scale.
+
+### 0) Non-Negotiables
+
+- **Not a template/recolor** → brand-new layouts, components, spacing, typography, iconography, motion, interactions
+- **Authentication included** (Sign up, Login, Reset/MFA/Verify)
+- **Accessibility:** WCAG 2.2 AA (keyboard paths, focus states, contrast, reduced motion)
+- **Performance budgets:** LCP ≤ 2.5s, CLS ≤ 0.1, TTI ≤ 3.5s (mid-tier mobile)
+- **Responsive:** desktop / tablet / mobile (document breakpoints)
+- **Design tokens first** (colors/space/type/shadows/motion)
+- **SEO-ready:** semantic HTML, OG/Twitter cards, sitemap.xml, robots.txt, canonical URLs
+
+### 1) Top-Level Information Architecture (8 Main Pages)
+
+**Target:** 8 main pages in the global header (meets 5–8 requirement):
+
+1. **Introduction (Home / Welcome)** — Hero, value prop, quick CTAs, product snapshots, social proof, trust badges
+2. **Features** — Modular feature groups: CRM, Load Board, Rates, Financials, Onboarding, Marketplace, Directory, Factoring, EDI, AI Agents
+3. **Integrations** — App connectors (TMS/ERP/Accounting/Telematics/Maps/Payments), API surface, webhooks
+4. **Plans** — Pricing/proration, enterprise contact, feature matrix, FAQs inline, compliance notes
+5. **Resources** — User Guide, API Docs, FAQ, Announcements/Changelog, Case Studies, Whitepapers
+6. **Support** — Support Center, Support Policy (SLA), ticket portal, live chat, system status
+7. **Company** — About, Leadership, Careers, Partners, Press/Media, Compliance & Trust, Legal (TOS/Privacy/DPA)
+8. **Portals** — Single entry to Carrier, Shipper, Broker, Driver, Owner-Operator, Super Admin (with "Sign in" CTA)
+
+**Header CTAs:** "Get Started", "Sign in"  
+**Footer:** product links, portals, resources, company, legal, socials, newsletter signup
+
+### 2) Authentication (Sign in / Login)
+
+- **Sign Up (Stepper):** account → company details → role (Carrier/Broker/Shipper/Driver/Owner-Op) → verify email → finish
+- **Login:** email+password + SSO (Google/Microsoft), "remember me", lockout & rate-limit
+- **Forgot / Reset Password, MFA (TOTP/SMS), Email Verification**
+- **Post-login routing:** send users directly to the correct Portal dashboard
+
+### 3) Design System (MCP-v2)
+
+- **Brand:** Trans Bot AI (deep navy/blue core, subtle gradients, glassmorphism accents, accessible contrast)
+- **Typography:** Inter or SF Pro; type scale 12–48; roles (display/h1–h6/body/meta/mono)
+- **Components:** hero, tabs, card grids, comparison tables, testimonial sliders, blog cards, code blocks, alert banners, FAQ accordion, search, stepper, breadcrumbs, table, drawer, modal
+- **Layouts:** Marketing shell (site) + AppShell (portals)
+- **Motion:** 150–220ms standards; reduced-motion fallbacks (≤50ms, opacity/scale)
+- **Iconography:** Lucide 20/24 grid; token-driven color
+
+### 4) Content Hubs → 50+ Subpages Plan
+
+#### A) Introduction (Home)
+- Welcome
+- Why Trans Bot AI
+- How it works
+- Trust & Security
+- Customer Logos & Quotes
+- CTA Landing Variants (3 industry LPs)
+
+#### B) Features
+- CRM
+- Load Board
+- Rates & Pricing
+- Financials (AR/AP/Settlements)
+- Onboarding (Carrier / Shipper / Broker)
+- Marketplace
+- Directory (Shippers/Brokers/Carriers/Vendors)
+- Factoring
+- EDI & Documents
+- AI Agents & Automation
+- Mobile App (Driver)
+- Super Admin Console
+
+#### C) Integrations
+- Integration Catalog (grid + filters)
+- API & Webhooks overview
+- Accounting: (QuickBooks/Xero/Netsuite)
+- Maps/Telematics: (Google Maps, HERE, Samsara/Geotab)
+- Comms: (Twilio/SendGrid)
+- Storage: (S3/Cloudflare)
+- Payments: (Stripe/Plaid)
+- CI/CD & GitHub
+- Supabase & n8n
+- "Build your own" guide
+
+#### D) Plans (Pricing)
+- Pricing Overview
+- Feature Matrix (per plan)
+- Volume & Enterprise
+- Billing & Invoicing
+- Trials / Promotions
+- Procurement & Security Questionnaire (download)
+- FAQs for Pricing
+
+#### E) Resources
+- User Guide (Index)
+- Getting Started (setup checklist)
+- Data Import (CSV/API)
+- Module Guides: CRM / Load Board / Rates / Financials / Onboarding / Marketplace / Directory / Factoring / EDI / AI Agents
+- Portal Guides: Carrier / Shipper / Broker / Driver / Owner-Op / Super Admin
+- Admin Settings (RBAC, branding, tokens)
+- Analytics & Reports
+- API Docs
+  - Auth
+  - Entities & CRUD
+  - Webhooks & Events
+  - SDK snippets
+- FAQ (global)
+- Announcements / Changelog
+- Case Studies (3+)
+- Blog (listing + posts)
+- Templates & Checklists (downloadables)
+
+#### F) Support
+- Support Center (searchable)
+- Support Policy (SLA)
+  - Severity levels (S0–S3), response & resolution targets
+  - Hours, holidays, languages
+  - Escalation path
+- Open a Ticket
+- Live Chat
+- System Status + History
+- Report a Security Issue (responsible disclosure)
+
+#### G) Company
+- About
+- Leadership
+- Careers (listing + role pages)
+- Partners & Certifications
+- Press & Media (kit, coverage)
+- Compliance & Trust (SOC/HIPAA/ISO placeholders)
+- Legal: Terms of Service, Privacy, DPA, Cookies
+
+#### H) Portals
+- Portals Overview
+- Carrier Portal
+- Shipper Portal
+- Broker Portal
+- Driver Portal
+- Owner-Operator Portal
+- Super Admin
+- Mobile Apps (iOS/Android)
+- Sign in (entry)
+
+**Total:** 50+ subpages (initially ~60)
+
+### 5) Announcements & Welcome Strategy
+
+- **Welcome module** on Home + first-run experience (product tour, "What's New")
+- **Announcements / Changelog hub** with categories: Product, Integrations, Security, Docs
+- **Inline "New" badges** on nav items; dismissible release notes; RSS/Atom feed
+
+### 6) Support Policy (SLA) — Summary (site-visible)
+
+- **S0 Critical:** platform down/security — response ≤ 30 min, hourly updates
+- **S1 Major:** core feature broken — response ≤ 2 hrs, updates every 4 hrs
+- **S2 Minor:** partial impairment — response ≤ 8 hrs
+- **S3 General:** questions/feature requests — response ≤ 1 business day
+- **Channels:** ticket, chat, email; Status page live; escalation to on-call
+- **Regional hours + holiday calendar** (page)
+
+### 7) Page Flow & Navigation
+
+- **Global Header:** Introduction, Features, Integrations, Plans, Resources, Support, Company, Portals + CTAs ("Get Started", "Sign in")
+- **Search:** Cmd/Ctrl-K quick switch across docs, features, blog, support
+- **Breadcrumbs** on deep pages; contextual side nav within hubs; SEO breadcrumbs
+- **Footer:** condensed sitemap, legal, socials, newsletter subscription
+
+### 8) Technical & Authoring Foundation
+
+- **Routing & URLs:** kebab-case paths, e.g. `/features/load-board`, `/resources/user-guide/financials`
+- **Templates:** Marketing page, Feature detail, Integration detail, Doc page, Blog post, Changelog, Pricing, Careers role, Legal
+- **CMS Mode:** MDX/Markdown for docs/blog/changelog; image CDNs; versioned docs
+- **i18n:** key scaffolding; locale routing `/en`, `/es` (placeholder)
+- **Analytics & Experiments:** first-party analytics, events spec, privacy mode; A/B hooks on hero/pricing CTAs
+- **Security:** CSP headers, CSRF, rate-limit auth endpoints, bot-protection on forms, minimal PII in logs
+
+### 9) Rollout Plan
+
+- **Phase 1 — Foundations:** tokens, brand kit, core components, templates
+- **Phase 2 — Core Pages:** Introduction, Features, Integrations, Plans, Portals, Sign in/Login
+- **Phase 3 — Subpages:** Features deep-dives, Integrations, Resources (User Guide/API/FAQ/Announcements), Support & Policy, Company, Careers, Legal
+- **Phase 4 — QA/Perf:** a11y audits, Lighthouse targets, SEO checks, link checker, visual regression
+- **Phase 5 — Launch:** feature-flag rollout, telemetry watch, hotfix lane, sitemap & search submit
+
+### 10) Deliverables
+
+- `/design/mcp-v2/tokens.json` + brand guidelines
+- `/packages/ui` (marketing + docs components, versioned)
+- `/apps/website` (8 mains + 50+ subpages scaffolded)
+- `/apps/auth` (Sign up, Login, Reset, MFA, Verify)
+- `/docs/website-ia.md` (full site map + route table)
+- `/docs/website-design.md` (wireframes, comps, motion, accessibility notes)
+- `/docs/support-policy.md` (SLA), `/docs/announcements-process.md`
+
+### 11) Definition of Done
+
+- Visual diff shows new layouts/components (not token recolor)
+- Zero TypeScript + runtime console errors
+- Performance budgets met on mobile
+- axe a11y suite passes (keyboard order verified)
+- SEO checks pass (OpenGraph, sitemaps, structured data on key pages)
+- Docs complete (IA, design rationale, support policy, changelog process)
 
 ## 0. Non-Negotiables
 
@@ -574,19 +781,46 @@ fact_cases, fact_docs, fact_reserves, fact_fees, fact_payouts, fact_partners, fa
 - [ ] Onboarding Module development
 - [ ] Marketplace Module development
 - [ ] Directory Module development
+- [ ] Factoring Module development
 
-### Phase 5 – QA & Performance (Weeks 19-20)
+### Phase 5 – Website Foundation (Weeks 21-24)
+- [ ] Trans Bot AI Website development
+  - [ ] Introduction (Home / Welcome)
+  - [ ] Features hub with 13 feature pages
+  - [ ] Integrations catalog with 10+ integration pages
+  - [ ] Plans & Pricing with feature matrix
+  - [ ] Resources hub with 20+ documentation pages
+  - [ ] Support Center with SLA and ticket system
+  - [ ] Company pages (About, Careers, Legal)
+  - [ ] Portals overview and entry points
+- [ ] Authentication System development
+  - [ ] Sign up stepper (account → company → role → verify)
+  - [ ] Login with SSO (Google/Microsoft)
+  - [ ] Password reset and MFA
+  - [ ] Email verification
+- [ ] Marketing Components development
+  - [ ] Hero sections and CTAs
+  - [ ] Feature cards and comparison tables
+  - [ ] Testimonial sliders and social proof
+  - [ ] Blog and changelog components
+  - [ ] FAQ accordion and search
+  - [ ] Pricing tables and feature matrices
+
+### Phase 6 – QA & Performance (Weeks 25-26)
 - [ ] Accessibility audits
 - [ ] Lighthouse performance testing
 - [ ] Visual regression testing
 - [ ] User acceptance testing
 - [ ] Cross-browser testing
+- [ ] SEO optimization (sitemaps, meta tags, structured data)
+- [ ] Analytics and A/B testing setup
 
-### Phase 6 – Launch (Week 21)
+### Phase 7 – Launch (Week 27)
 - [ ] Feature-flagged rollout
 - [ ] Telemetry monitoring
 - [ ] Hotfix path activation
 - [ ] User training and documentation
+- [ ] Website launch with full content
 
 ## 9. Definition of Done (Enforced)
 
@@ -647,6 +881,29 @@ fact_cases, fact_docs, fact_reserves, fact_fees, fact_payouts, fact_partners, fa
 - [ ] `/modules/directory`
 - [ ] `/modules/factoring`
 
+### Website & Marketing
+- [ ] `/apps/website` - Trans Bot AI Website (8 main pages + 50+ subpages)
+  - [ ] Introduction (Home / Welcome)
+  - [ ] Features hub (13 feature pages)
+  - [ ] Integrations catalog (10+ integration pages)
+  - [ ] Plans & Pricing with feature matrix
+  - [ ] Resources hub (20+ documentation pages)
+  - [ ] Support Center with SLA and ticket system
+  - [ ] Company pages (About, Careers, Legal)
+  - [ ] Portals overview and entry points
+- [ ] `/apps/auth` - Authentication System
+  - [ ] Sign up stepper (account → company → role → verify)
+  - [ ] Login with SSO (Google/Microsoft)
+  - [ ] Password reset and MFA
+  - [ ] Email verification
+- [ ] `/packages/ui` - Marketing Components
+  - [ ] Hero sections and CTAs
+  - [ ] Feature cards and comparison tables
+  - [ ] Testimonial sliders and social proof
+  - [ ] Blog and changelog components
+  - [ ] FAQ accordion and search
+  - [ ] Pricing tables and feature matrices
+
 ### Documentation
 - [ ] `/docs/ia.md` - Information Architecture
 - [ ] `/docs/a11y.md` - Accessibility Guidelines
@@ -654,6 +911,10 @@ fact_cases, fact_docs, fact_reserves, fact_fees, fact_payouts, fact_partners, fa
 - [ ] `/docs/qa-checklist.md` - QA Checklists
 - [ ] `/docs/module-specs/` - Module Specifications
 - [ ] `/docs/CHANGELOG.md` - Change Log
+- [ ] `/docs/website-ia.md` - Website Information Architecture
+- [ ] `/docs/website-design.md` - Website Design System
+- [ ] `/docs/support-policy.md` - Support Policy (SLA)
+- [ ] `/docs/announcements-process.md` - Announcements Process
 
 ### Monitoring
 - [ ] Telemetry dashboards in Super Admin
