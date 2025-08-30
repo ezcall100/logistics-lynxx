@@ -91,6 +91,8 @@ This document outlines the complete ground-up redesign of the **Trans Bot AI MCP
 - `/rates/*` - Pricing engine
 - `/financials/*` - Accounting system
 - `/onboarding/*` - Unified onboarding flows
+- `/marketplace/*` - Apps & integrations discovery
+- `/directory/*` - Global company directory
 
 ### Global Features
 - **Global Search**: Entity scoping, portal filtering, time ranges
@@ -710,6 +712,6 @@ dir_companies, dir_contacts, dir_docs, dir_lanes, dir_equipment, dir_scores, dir
 3. **Implement CRM module** foundation
 4. **Establish cross-portal** integration patterns
 
-This MCP-v2 redesign represents a complete transformation of the portal ecosystem, establishing a solid foundation for scalable, maintainable, and user-centric logistics management. The focus on cross-portal modules ensures seamless integration while maintaining portal-specific functionality.
+This **Trans Bot AI MCP-v2** redesign represents a complete transformation of the portal ecosystem, establishing a solid foundation for scalable, maintainable, and user-centric logistics management. The focus on cross-portal modules (CRM, Load Board, Rates, Financials, Onboarding, Marketplace, Directory) ensures seamless integration while maintaining portal-specific functionality.
 
 **Execute now. Think first. Build systematically.**
