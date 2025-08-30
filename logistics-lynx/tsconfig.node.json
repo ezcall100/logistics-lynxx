@@ -11,13 +11,28 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
   },
   "include": [
     "vite.config.ts",
+    "scripts/**/*.ts",
+    "scripts/**/*.mts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "storybook-static",
     "tailwind.config.js",
     "postcss.config.js",
-    "scripts/**/*"
+    "scripts/**/*.js",
+    "scripts/**/*.mjs",
+    "scripts/**/*.sh",
+    "scripts/**/*.ps1",
+    "scripts/**/*.bat",
+    "scripts/**/*.sql"
   ]
 }
 
