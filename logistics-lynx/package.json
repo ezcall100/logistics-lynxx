@@ -4,7 +4,9 @@
   "description": "Trans Bot AI - MCP-v2 Portal Ecosystem with redesigned UI/UX and cross-portal modules",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
+    "dev:mcp": "node server/mcp-server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:mcp\"",
     "build": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",

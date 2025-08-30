@@ -2,84 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, 
   Edit, 
-  Upload, 
   Eye, 
   Users, 
-  Download, 
   Trash2, 
   Lock,
   Brain,
-  Shield,
-  Activity,
   AlertTriangle,
-  CheckCircle,
-  Clock,
   Search,
-  Filter,
-  Settings,
-  RefreshCw,
-  Zap,
-  Unlock,
-  Key,
-  UserCheck,
-  UserX,
-  Crown,
-  Star,
-  Award,
-  Target,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  PieChart,
-  LineChart,
-  Calendar,
-  Bell,
-  Mail,
-  MessageSquare,
-  Phone,
-  Video,
-  Camera,
-  Mic,
-  Headphones,
-  Monitor,
-  Smartphone,
-  Tablet,
-  Laptop,
-  Printer,
-  Cloud,
-  CloudRain,
-  CloudLightning,
-  Sun,
-  Moon,
-  Heart,
-  ThumbsUp,
-  ThumbsDown,
-  Flag,
-  Bookmark,
-  Share,
-  Link,
-  ExternalLink,
-  Copy,
-  Scissors,
-  Paperclip,
-  Image,
-  Music,
-  Volume2,
-  VolumeX,
-  MicOff,
-  Bluetooth,
-  Battery,
-  BatteryCharging,
-  Power,
-  PowerOff,
-  Flame,
-  Droplets,
-  Wind,
-  Snowflake,
-  Thermometer,
-  Gauge,
-  Timer,
-  Watch
+  RefreshCw
 } from 'lucide-react';
 import AddGroupForm from './forms/AddGroupForm';
 import EditGroupForm from './forms/EditGroupForm';
@@ -245,16 +175,13 @@ const mockAlerts: SystemAlert[] = [
 
 const UserGroups: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [groups, setGroups] = useState<UserGroup[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');
   const [mcpStatus, setMcpStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
   const [agents, setAgents] = useState<MCPAgent[]>([]);
-  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [alerts, setAlerts] = useState<SystemAlert[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
 
   console.log('👥 UserGroups component is rendering with MCP integration!');
 
@@ -368,7 +295,6 @@ const UserGroups: React.FC = () => {
       
       setGroups(mockGroups);
       setAgents(mockMCPAgents);
-      setMetrics(mockSystemMetrics);
       setAlerts(mockAlerts);
       setMcpStatus('connected');
       setLoading(false);
@@ -428,11 +354,11 @@ const UserGroups: React.FC = () => {
   // CRUD Handlers
   const handleAddGroup = (groupData: UserGroup) => {
     console.log('🔧 MCP Agent: Adding new group with enhanced collaboration monitoring');
-    const newGroup = {
+    const newGroup: UserGroup = {
       ...groupData,
       id: Date.now().toString(),
       mcpAgentId: 'agent-group-001',
-      securityLevel: 'medium',
+      securityLevel: 'medium' as const,
       lastAudit: new Date().toISOString().split('T')[0],
       complianceStatus: 'pending',
       riskScore: Math.floor(Math.random() * 50) + 10,
@@ -683,20 +609,23 @@ const UserGroups: React.FC = () => {
         )}
 
         {viewMode === 'add' && (
-          <AddGroupForm onAdd={handleAddGroup} onCancel={handleBackToList} />
+          <AddGroupForm onSave={handleAddGroup} onCancel={handleBackToList} />
         )}
 
         {viewMode === 'edit' && (
-          <EditGroupForm 
-            group={groups.find(group => group.id === selectedGroupId)!} 
-            onEdit={handleEditGroup} 
-            onCancel={handleBackToList} 
+                    <EditGroupForm 
+            groupId={selectedGroupId}
+            onSave={handleEditGroup} 
+            onCancel={handleBackToList}
+            onDelete={handleDeleteGroup}
           />
         )}
 
         {viewMode === 'view' && (
-          <ViewGroupForm 
-            group={groups.find(group => group.id === selectedGroupId)!} 
+                    <ViewGroupForm 
+            groupId={selectedGroupId}
+            onEdit={handleEditGroupClick}
+            onDelete={handleDeleteGroup}
             onBack={handleBackToList} 
           />
         )}
