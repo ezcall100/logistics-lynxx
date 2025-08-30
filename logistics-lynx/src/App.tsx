@@ -5,7 +5,7 @@ import { PageHeader } from './components/layout/PageHeader';
 import { Button } from './components/ui/Button';
 import { EmptyState } from './components/ui/EmptyState';
 import { Plus, Users, Truck, Package, DollarSign, Settings } from 'lucide-react';
-import './styles/globals.css';
+import './index.css';
 
 // Demo components for showcasing the design system
 const DashboardDemo = () => (
