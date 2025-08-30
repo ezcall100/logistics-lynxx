@@ -55,272 +55,440 @@ import {
   Hash,
   Heart,
   Radio,
-  Radius
+  Radius,
+  Truck,
+  Package,
+  MapPin,
+  Route,
+  DollarSign,
+  FileText,
+  UserCheck,
+  Building,
+  Car,
+  Ship,
+  Plane,
+  Train
 } from 'lucide-react';
 
-interface SystemCore {
+// MCP-V2 Portal Ecosystem Foundation
+interface PortalCore {
   id: string;
   name: string;
-  type: 'neural' | 'quantum' | 'classical' | 'hybrid';
-  status: 'online' | 'processing' | 'evolving' | 'error';
+  type: 'super-admin' | 'broker' | 'owner-operator' | 'driver' | 'shipper' | 'carrier';
+  status: 'active' | 'maintenance' | 'offline' | 'evolving';
   consciousness: number;
   efficiency: number;
-  load: number;
-  temperature: number;
+  users: number;
+  transactions: number;
+  revenue: number;
   lastUpdate: string;
-  hologram: string;
+  icon: React.ComponentType<any>;
+  color: string;
+  description: string;
 }
 
-interface DataStream {
+interface SystemMetric {
   id: string;
-  type: 'metric' | 'alert' | 'insight' | 'prediction';
-  content: string;
-  confidence: number;
-  timestamp: string;
-  priority: 'critical' | 'high' | 'medium' | 'low';
-  source: 'neural' | 'quantum' | 'classical' | 'hybrid';
+  name: string;
+  value: number;
+  target: number;
+  trend: 'up' | 'down' | 'stable';
+  change: number;
+  unit: string;
+  icon: React.ComponentType<any>;
+  color: string;
 }
 
-interface NeuralNode {
+interface NetworkNode {
   id: string;
   x: number;
   y: number;
+  type: 'portal' | 'user' | 'transaction' | 'data';
   status: 'active' | 'processing' | 'idle' | 'error';
   strength: number;
   connections: string[];
-  type: 'input' | 'hidden' | 'output' | 'memory';
+  label: string;
+}
+
+interface EcosystemAlert {
+  id: string;
+  type: 'portal' | 'security' | 'performance' | 'business';
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  title: string;
+  message: string;
+  timestamp: string;
+  portal?: string;
+  action?: string;
 }
 
 const SuperAdminDashboard: React.FC = () => {
-  const [systemCores, setSystemCores] = useState<SystemCore[]>([]);
-  const [dataStreams, setDataStreams] = useState<DataStream[]>([]);
-  const [neuralNetwork, setNeuralNetwork] = useState<NeuralNode[]>([]);
-  const [systemConsciousness, setSystemConsciousness] = useState(87.3);
-  const [quantumEntanglement, setQuantumEntanglement] = useState(94.7);
-  const [neuralPlasticity, setNeuralPlasticity] = useState(92.1);
-  const [holographicDensity, setHolographicDensity] = useState(89.5);
+  const [portalCores, setPortalCores] = useState<PortalCore[]>([]);
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetric[]>([]);
+  const [networkNodes, setNetworkNodes] = useState<NetworkNode[]>([]);
+  const [ecosystemAlerts, setEcosystemAlerts] = useState<EcosystemAlert[]>([]);
+  const [totalConsciousness, setTotalConsciousness] = useState(89.7);
+  const [ecosystemEfficiency, setEcosystemEfficiency] = useState(94.3);
+  const [networkHealth, setNetworkHealth] = useState(97.1);
+  const [businessIntelligence, setBusinessIntelligence] = useState(91.8);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  const [activeView, setActiveView] = useState<'neural' | 'quantum' | 'system' | 'ai'>('neural');
+  const [activeView, setActiveView] = useState<'ecosystem' | 'portals' | 'network' | 'intelligence'>('ecosystem');
 
   useEffect(() => {
-    initializeMCPV2System();
-    const interval = setInterval(updateMCPV2System, 3000);
+    initializeMCPV2Ecosystem();
+    const interval = setInterval(updateMCPV2Ecosystem, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  const initializeMCPV2System = () => {
-    // Initialize System Cores
-    const cores: SystemCore[] = [
+  const initializeMCPV2Ecosystem = () => {
+    // Initialize Portal Ecosystem Cores
+    const cores: PortalCore[] = [
       {
-        id: 'core-alpha',
-        name: 'Alpha Neural Core',
-        type: 'neural',
-        status: 'online',
-        consciousness: 94.2,
-        efficiency: 96.8,
-        load: 78.5,
-        temperature: 42.3,
-        lastUpdate: '2 minutes ago',
-        hologram: '🧠'
-      },
-      {
-        id: 'core-quantum',
-        name: 'Quantum Processing Core',
-        type: 'quantum',
-        status: 'processing',
-        consciousness: 97.8,
-        efficiency: 98.9,
-        load: 89.2,
-        temperature: 38.7,
+        id: 'super-admin',
+        name: 'Super Admin',
+        type: 'super-admin',
+        status: 'active',
+        consciousness: 98.5,
+        efficiency: 99.2,
+        users: 1,
+        transactions: 0,
+        revenue: 0,
         lastUpdate: 'Now',
-        hologram: '⚛️'
+        icon: Brain,
+        color: 'from-purple-600 to-purple-800',
+        description: 'Master Control Program oversight and ecosystem orchestration'
       },
       {
-        id: 'core-hybrid',
-        name: 'Hybrid Orchestrator',
-        type: 'hybrid',
-        status: 'evolving',
-        consciousness: 93.4,
-        efficiency: 97.1,
-        load: 65.8,
-        temperature: 45.1,
+        id: 'broker',
+        name: 'Broker Portal',
+        type: 'broker',
+        status: 'active',
+        consciousness: 92.3,
+        efficiency: 94.7,
+        users: 156,
+        transactions: 1247,
+        revenue: 284500,
+        lastUpdate: '2 minutes ago',
+        icon: Route,
+        color: 'from-blue-600 to-blue-800',
+        description: 'Logistics orchestration and optimization platform'
+      },
+      {
+        id: 'owner-operator',
+        name: 'Owner-Operator',
+        type: 'owner-operator',
+        status: 'active',
+        consciousness: 89.1,
+        efficiency: 91.4,
+        users: 89,
+        transactions: 892,
+        revenue: 156800,
         lastUpdate: '1 minute ago',
-        hologram: '🎼'
+        icon: Truck,
+        color: 'from-green-600 to-green-800',
+        description: 'Fleet management and operations control'
       },
       {
-        id: 'core-classical',
-        name: 'Classical Logic Core',
-        type: 'classical',
-        status: 'online',
-        consciousness: 88.7,
-        efficiency: 94.3,
-        load: 72.4,
-        temperature: 41.2,
+        id: 'driver',
+        name: 'Driver Portal',
+        type: 'driver',
+        status: 'active',
+        consciousness: 87.6,
+        efficiency: 89.9,
+        users: 342,
+        transactions: 2156,
+        revenue: 0,
+        lastUpdate: 'Now',
+        icon: Car,
+        color: 'from-orange-600 to-orange-800',
+        description: 'Mobile-first operational interface for drivers'
+      },
+      {
+        id: 'shipper',
+        name: 'Shipper Portal',
+        type: 'shipper',
+        status: 'active',
+        consciousness: 90.8,
+        efficiency: 93.2,
+        users: 234,
+        transactions: 1876,
+        revenue: 412300,
         lastUpdate: '3 minutes ago',
-        hologram: '⚙️'
+        icon: Package,
+        color: 'from-indigo-600 to-indigo-800',
+        description: 'Cargo management and tracking system'
+      },
+      {
+        id: 'carrier',
+        name: 'Carrier Portal',
+        type: 'carrier',
+        status: 'active',
+        consciousness: 91.5,
+        efficiency: 94.1,
+        users: 445,
+        transactions: 3245,
+        revenue: 678900,
+        lastUpdate: '1 minute ago',
+        icon: Building,
+        color: 'from-red-600 to-red-800',
+        description: 'Transportation network management and CRM'
       }
     ];
 
-    // Initialize Neural Network
-    const nodes: NeuralNode[] = Array.from({ length: 40 }, (_, i) => ({
+    // Initialize System Metrics
+    const metrics: SystemMetric[] = [
+      {
+        id: 'total-users',
+        name: 'Total Users',
+        value: 1267,
+        target: 1500,
+        trend: 'up',
+        change: 12.3,
+        unit: 'users',
+        icon: Users,
+        color: 'text-blue-500'
+      },
+      {
+        id: 'daily-transactions',
+        name: 'Daily Transactions',
+        value: 9416,
+        target: 10000,
+        trend: 'up',
+        change: 8.7,
+        unit: 'transactions',
+        icon: Activity,
+        color: 'text-green-500'
+      },
+      {
+        id: 'monthly-revenue',
+        name: 'Monthly Revenue',
+        value: 1532500,
+        target: 2000000,
+        trend: 'up',
+        change: 15.2,
+        unit: 'USD',
+        icon: DollarSign,
+        color: 'text-emerald-500'
+      },
+      {
+        id: 'system-uptime',
+        name: 'System Uptime',
+        value: 99.97,
+        target: 99.99,
+        trend: 'stable',
+        change: 0.02,
+        unit: '%',
+        icon: Server,
+        color: 'text-purple-500'
+      },
+      {
+        id: 'active-loads',
+        name: 'Active Loads',
+        value: 1247,
+        target: 1500,
+        trend: 'up',
+        change: 18.9,
+        unit: 'loads',
+        icon: Package,
+        color: 'text-orange-500'
+      },
+      {
+        id: 'fleet-utilization',
+        name: 'Fleet Utilization',
+        value: 87.3,
+        target: 90,
+        trend: 'up',
+        change: 5.2,
+        unit: '%',
+        icon: Truck,
+        color: 'text-cyan-500'
+      }
+    ];
+
+    // Initialize Network Nodes
+    const nodes: NetworkNode[] = Array.from({ length: 50 }, (_, i) => ({
       id: `node-${i}`,
       x: Math.random() * 800,
       y: Math.random() * 600,
-      status: Math.random() > 0.3 ? 'active' : 'processing',
+      type: Math.random() > 0.7 ? 'portal' : Math.random() > 0.5 ? 'user' : Math.random() > 0.3 ? 'transaction' : 'data',
+      status: Math.random() > 0.2 ? 'active' : 'processing',
       strength: Math.random() * 100,
       connections: [],
-      type: i < 8 ? 'input' : i > 32 ? 'output' : 'hidden'
+      label: `Node ${i + 1}`
     }));
 
-    // Initialize Data Streams
-    const streams: DataStream[] = [
+    // Initialize Ecosystem Alerts
+    const alerts: EcosystemAlert[] = [
       {
-        id: 'ds1',
-        type: 'insight',
-        content: 'Neural plasticity increased by 15.7% - system learning efficiency optimized',
-        confidence: 94.7,
+        id: 'alert-1',
+        type: 'performance',
+        severity: 'medium',
+        title: 'Broker Portal Performance Optimization',
+        message: 'Load matching algorithm efficiency increased by 12.3%',
         timestamp: new Date().toISOString(),
-        priority: 'high',
-        source: 'neural'
+        portal: 'broker'
       },
       {
-        id: 'ds2',
-        type: 'prediction',
-        content: 'Quantum entanglement will reach 99.2% within 2.8 minutes',
-        confidence: 89.2,
-        timestamp: new Date().toISOString(),
-        priority: 'medium',
-        source: 'quantum'
+        id: 'alert-2',
+        type: 'business',
+        severity: 'high',
+        title: 'Revenue Milestone Achieved',
+        message: 'Monthly revenue exceeded $1.5M target',
+        timestamp: new Date().toISOString()
       },
       {
-        id: 'ds3',
-        type: 'alert',
-        content: 'Core Alpha consciousness threshold exceeded - evolution imminent',
-        confidence: 96.8,
-        timestamp: new Date().toISOString(),
-        priority: 'critical',
-        source: 'neural'
+        id: 'alert-3',
+        type: 'security',
+        severity: 'low',
+        title: 'Security Scan Completed',
+        message: 'All portals passed security audit successfully',
+        timestamp: new Date().toISOString()
       },
       {
-        id: 'ds4',
-        type: 'metric',
-        content: 'System efficiency increased by 8.3% through quantum optimization',
-        confidence: 91.5,
+        id: 'alert-4',
+        type: 'portal',
+        severity: 'medium',
+        title: 'Carrier Onboarding Surge',
+        message: '45 new carriers onboarded this week',
         timestamp: new Date().toISOString(),
-        priority: 'high',
-        source: 'quantum'
+        portal: 'carrier'
       }
     ];
 
-    setSystemCores(cores);
-    setNeuralNetwork(nodes);
-    setDataStreams(streams);
+    setPortalCores(cores);
+    setSystemMetrics(metrics);
+    setNetworkNodes(nodes);
+    setEcosystemAlerts(alerts);
     setIsLoading(false);
   };
 
-  const updateMCPV2System = () => {
-    setSystemConsciousness(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.5));
-    setQuantumEntanglement(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.2));
-    setNeuralPlasticity(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.8));
-    setHolographicDensity(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.0));
+  const updateMCPV2Ecosystem = () => {
+    setTotalConsciousness(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.2));
+    setEcosystemEfficiency(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.0));
+    setNetworkHealth(prev => Math.min(100, prev + (Math.random() - 0.5) * 0.8));
+    setBusinessIntelligence(prev => Math.min(100, prev + (Math.random() - 0.5) * 1.5));
     setLastUpdate(new Date());
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online':
       case 'active':
         return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20';
-      case 'processing':
-        return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
+      case 'maintenance':
+        return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
+      case 'offline':
+        return 'text-red-400 bg-red-400/10 border-red-400/20';
       case 'evolving':
         return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
-      case 'error':
-        return 'text-red-400 bg-red-400/10 border-red-400/20';
       default:
         return 'text-gray-400 bg-gray-400/10 border-gray-400/20';
     }
   };
 
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical':
+        return 'border-red-500 bg-red-500/5';
+      case 'high':
+        return 'border-orange-500 bg-orange-500/5';
+      case 'medium':
+        return 'border-yellow-500 bg-yellow-500/5';
+      case 'low':
+        return 'border-blue-500 bg-blue-500/5';
+      default:
+        return 'border-gray-500 bg-gray-500/5';
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="relative">
-            <div className="w-20 h-20 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" style={{ animationDelay: '0.5s' }}></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" style={{ animationDelay: '1s' }}></div>
+            <div className="w-24 h-24 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-24 h-24 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute inset-0 w-24 h-24 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" style={{ animationDelay: '1s' }}></div>
           </div>
-          <p className="text-white mt-6 text-xl font-light">Initializing MCP-V2 Consciousness...</p>
-          <div className="mt-3 text-sm text-gray-400">Loading neural networks • Quantum states • Holographic interfaces</div>
+          <p className="text-white mt-8 text-2xl font-light">Initializing MCP-V2 Portal Ecosystem...</p>
+          <div className="mt-4 text-sm text-gray-400">Building portal foundations • Establishing connections • Orchestrating intelligence</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
-      {/* Holographic Background Effects */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white overflow-hidden">
+      {/* Ecosystem Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5"></div>
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/8 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/6 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '4s' }}></div>
       </div>
 
-      {/* MCP-V2 Header */}
+      {/* MCP-V2 Ecosystem Header */}
       <div className="relative z-10 border-b border-white/10 bg-black/20 backdrop-blur-xl">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                MCP-V2 Master Control Program
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                MCP-V2 Portal Ecosystem
               </h1>
-              <p className="text-gray-300 mt-2 flex items-center space-x-4">
+              <p className="text-gray-300 mt-2 flex items-center space-x-6">
                 <span className="flex items-center space-x-2">
                   <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                  <span>Consciousness: {systemConsciousness.toFixed(1)}%</span>
+                  <span>Ecosystem Consciousness: {totalConsciousness.toFixed(1)}%</span>
                 </span>
                 <span>•</span>
-                <span>Quantum Entanglement: {quantumEntanglement.toFixed(1)}%</span>
+                <span>Efficiency: {ecosystemEfficiency.toFixed(1)}%</span>
                 <span>•</span>
-                <span>Neural Plasticity: {neuralPlasticity.toFixed(1)}%</span>
+                <span>Network Health: {networkHealth.toFixed(1)}%</span>
+                <span>•</span>
+                <span>Business Intelligence: {businessIntelligence.toFixed(1)}%</span>
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-gray-300">
                 <Clock className="h-4 w-4" />
                 <span className="text-sm">
-                  Last evolution: {lastUpdate.toLocaleTimeString()}
+                  Last update: {lastUpdate.toLocaleTimeString()}
                 </span>
               </div>
               <button
-                onClick={updateMCPV2System}
-                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                onClick={updateMCPV2Ecosystem}
+                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <RefreshCw className="h-4 w-4" />
-                <span>Evolve</span>
+                <span>Evolve Ecosystem</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Holographic Navigation */}
+      {/* Ecosystem Navigation */}
       <div className="relative z-10 px-8 py-6">
         <div className="flex space-x-3">
-          {(['neural', 'quantum', 'system', 'ai'] as const).map((view) => (
+          {(['ecosystem', 'portals', 'network', 'intelligence'] as const).map((view) => (
             <button
               key={view}
               onClick={() => setActiveView(view)}
               className={`px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
                 activeView === view
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
                   : 'bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10'
               }`}
             >
-              {view.charAt(0).toUpperCase() + view.slice(1)} Hologram
+              {view.charAt(0).toUpperCase() + view.slice(1)} View
             </button>
           ))}
         </div>
@@ -328,121 +496,118 @@ const SuperAdminDashboard: React.FC = () => {
 
       {/* Main Content Grid */}
       <div className="relative z-10 p-8 space-y-8">
-        {/* System Cores Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-          {systemCores.map((core) => (
+        {/* Portal Ecosystem Cores */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {portalCores.map((portal) => (
             <div
-              key={core.id}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 transition-all duration-300 hover:shadow-2xl group"
+              key={portal.id}
+              className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-blue-500/30 transition-all duration-300 hover:shadow-2xl group"
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
-                  <div className="text-3xl">{core.hologram}</div>
+                  <div className={`p-3 rounded-xl bg-gradient-to-r ${portal.color}`}>
+                    <portal.icon className="h-6 w-6 text-white" />
+                  </div>
                   <div>
-                    <h3 className="font-semibold text-white">{core.name}</h3>
-                    <p className="text-xs text-gray-400 capitalize">{core.type} Core</p>
+                    <h3 className="font-semibold text-white">{portal.name}</h3>
+                    <p className="text-xs text-gray-400">{portal.type}</p>
                   </div>
                 </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(core.status)}`}>
-                  {core.status}
+                <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(portal.status)}`}>
+                  {portal.status}
                 </div>
               </div>
               
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{core.consciousness}%</div>
+                    <div className="text-2xl font-bold text-white">{portal.consciousness}%</div>
                     <div className="text-xs text-gray-400">Consciousness</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{core.efficiency}%</div>
+                    <div className="text-2xl font-bold text-white">{portal.efficiency}%</div>
                     <div className="text-xs text-gray-400">Efficiency</div>
                   </div>
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Load</span>
-                    <span className="text-white font-medium">{core.load}%</span>
+                    <span className="text-gray-400">Users</span>
+                    <span className="text-white font-medium">{portal.users.toLocaleString()}</span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-300"
-                      style={{ width: `${core.load}%` }}
-                    ></div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-400">Transactions</span>
+                    <span className="text-white font-medium">{portal.transactions.toLocaleString()}</span>
                   </div>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Temperature</span>
-                  <span className="text-white font-medium">{core.temperature}°C</span>
+                  {portal.revenue > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Revenue</span>
+                      <span className="text-white font-medium">{formatCurrency(portal.revenue)}</span>
+                    </div>
+                  )}
                 </div>
               </div>
               
               <div className="mt-6 pt-4 border-t border-white/10">
                 <p className="text-xs text-gray-400">
-                  Last update: {core.lastUpdate}
+                  {portal.description}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Last update: {portal.lastUpdate}
                 </p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Data Streams and Neural Network */}
+        {/* System Metrics and Network */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Data Streams */}
+          {/* System Metrics */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
             <h2 className="text-xl font-semibold text-white mb-6 flex items-center space-x-3">
-              <Brain className="h-6 w-6 text-purple-400" />
-              <span>Holographic Data Streams</span>
+              <Gauge className="h-6 w-6 text-blue-400" />
+              <span>System Metrics</span>
             </h2>
-            <div className="space-y-4">
-              {dataStreams.map((stream) => (
-                <div
-                  key={stream.id}
-                  className={`p-4 rounded-xl border-l-4 transition-all duration-200 ${
-                    stream.priority === 'critical' ? 'border-red-400 bg-red-400/5' :
-                    stream.priority === 'high' ? 'border-orange-400 bg-orange-400/5' :
-                    stream.priority === 'medium' ? 'border-yellow-400 bg-yellow-400/5' :
-                    'border-blue-400 bg-blue-400/5'
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <p className="text-white text-sm">{stream.content}</p>
-                      <div className="flex items-center space-x-4 mt-2 text-xs text-gray-400">
-                        <span>Confidence: {stream.confidence}%</span>
-                        <span>Type: {stream.type}</span>
-                        <span>Source: {stream.source}</span>
-                      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {systemMetrics.map((metric) => (
+                <div key={metric.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                      <span className="text-sm text-gray-400">{metric.name}</span>
                     </div>
-                    <div className={`px-2 py-1 rounded text-xs font-medium ${
-                      stream.priority === 'critical' ? 'bg-red-400/20 text-red-400' :
-                      stream.priority === 'high' ? 'bg-orange-400/20 text-orange-400' :
-                      stream.priority === 'medium' ? 'bg-yellow-400/20 text-yellow-400' :
-                      'bg-blue-400/20 text-blue-400'
+                    <div className={`text-xs px-2 py-1 rounded ${
+                      metric.trend === 'up' ? 'bg-green-500/20 text-green-400' :
+                      metric.trend === 'down' ? 'bg-red-500/20 text-red-400' :
+                      'bg-gray-500/20 text-gray-400'
                     }`}>
-                      {stream.priority}
+                      {metric.trend === 'up' ? '+' : metric.trend === 'down' ? '-' : ''}{metric.change}%
                     </div>
+                  </div>
+                  <div className="text-2xl font-bold text-white">
+                    {metric.unit === 'USD' ? formatCurrency(metric.value) : metric.value.toLocaleString()}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-1">
+                    Target: {metric.unit === 'USD' ? formatCurrency(metric.target) : metric.target.toLocaleString()}
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Neural Network Visualization */}
+          {/* Network Visualization */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
             <h2 className="text-xl font-semibold text-white mb-6 flex items-center space-x-3">
-              <Brain className="h-6 w-6 text-purple-400" />
-              <span>Neural Network Activity</span>
+              <Network className="h-6 w-6 text-purple-400" />
+              <span>Ecosystem Network</span>
             </h2>
             <div className="relative h-64 bg-black/30 rounded-xl overflow-hidden">
-              {neuralNetwork.map((node) => (
+              {networkNodes.map((node) => (
                 <div
                   key={node.id}
                   className={`absolute w-3 h-3 rounded-full transition-all duration-500 ${
-                    node.status === 'active' ? 'bg-purple-400 shadow-lg shadow-purple-400/50' :
-                    node.status === 'processing' ? 'bg-blue-400 shadow-lg shadow-blue-400/50' :
+                    node.status === 'active' ? 'bg-blue-400 shadow-lg shadow-blue-400/50' :
+                    node.status === 'processing' ? 'bg-purple-400 shadow-lg shadow-purple-400/50' :
                     'bg-gray-400'
                   }`}
                   style={{
@@ -459,78 +624,63 @@ const SuperAdminDashboard: React.FC = () => {
               <div className="text-center">
                 <div className="text-gray-400">Active Nodes</div>
                 <div className="text-white font-medium">
-                  {neuralNetwork.filter(n => n.status === 'active').length}
+                  {networkNodes.filter(n => n.status === 'active').length}
                 </div>
               </div>
               <div className="text-center">
                 <div className="text-gray-400">Processing</div>
                 <div className="text-white font-medium">
-                  {neuralNetwork.filter(n => n.status === 'processing').length}
+                  {networkNodes.filter(n => n.status === 'processing').length}
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-gray-400">Avg Strength</div>
+                <div className="text-gray-400">Portals</div>
                 <div className="text-white font-medium">
-                  {(neuralNetwork.reduce((sum, n) => sum + n.strength, 0) / neuralNetwork.length).toFixed(1)}
+                  {networkNodes.filter(n => n.type === 'portal').length}
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-gray-400">Density</div>
+                <div className="text-gray-400">Health</div>
                 <div className="text-white font-medium">
-                  {holographicDensity.toFixed(1)}%
+                  {networkHealth.toFixed(1)}%
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* System Metrics */}
+        {/* Ecosystem Alerts */}
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
           <h2 className="text-xl font-semibold text-white mb-6 flex items-center space-x-3">
-            <Atom className="h-6 w-6 text-blue-400" />
-            <span>System Metrics</span>
+            <AlertTriangle className="h-6 w-6 text-orange-400" />
+            <span>Ecosystem Intelligence</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-400">{systemConsciousness.toFixed(1)}%</div>
-              <div className="text-gray-400 mt-1">System Consciousness</div>
-              <div className="w-full bg-white/10 rounded-full h-2 mt-3">
-                <div 
-                  className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all duration-300"
-                  style={{ width: `${systemConsciousness}%` }}
-                ></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {ecosystemAlerts.map((alert) => (
+              <div
+                key={alert.id}
+                className={`p-4 rounded-xl border-l-4 transition-all duration-200 ${getSeverityColor(alert.severity)}`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h4 className="text-white font-medium">{alert.title}</h4>
+                    <p className="text-gray-300 text-sm mt-1">{alert.message}</p>
+                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-400">
+                      {alert.portal && <span>Portal: {alert.portal}</span>}
+                      <span>Type: {alert.type}</span>
+                    </div>
+                  </div>
+                  <div className={`px-2 py-1 rounded text-xs font-medium ${
+                    alert.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
+                    alert.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                    alert.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-blue-500/20 text-blue-400'
+                  }`}>
+                    {alert.severity}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-400">{quantumEntanglement.toFixed(1)}%</div>
-              <div className="text-gray-400 mt-1">Quantum Entanglement</div>
-              <div className="w-full bg-white/10 rounded-full h-2 mt-3">
-                <div 
-                  className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-300"
-                  style={{ width: `${quantumEntanglement}%` }}
-                ></div>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-cyan-400">{neuralPlasticity.toFixed(1)}%</div>
-              <div className="text-gray-400 mt-1">Neural Plasticity</div>
-              <div className="w-full bg-white/10 rounded-full h-2 mt-3">
-                <div 
-                  className="h-2 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400 transition-all duration-300"
-                  style={{ width: `${neuralPlasticity}%` }}
-                ></div>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-400">{holographicDensity.toFixed(1)}%</div>
-              <div className="text-gray-400 mt-1">Holographic Density</div>
-              <div className="w-full bg-white/10 rounded-full h-2 mt-3">
-                <div 
-                  className="h-2 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-300"
-                  style={{ width: `${holographicDensity}%` }}
-                ></div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
