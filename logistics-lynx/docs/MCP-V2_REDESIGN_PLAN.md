@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document outlines the complete ground-up redesign of the MCP-V2 Portal Ecosystem, implementing a revolutionary new UI/UX system with mandatory cross-portal modules (CRM, Load Board, Rates, Financials, Onboarding). This is **NOT** a theme recolor - it's a complete architectural rebuild.
+This document outlines the complete ground-up redesign of the **Trans Bot AI MCP-V2 Portal Ecosystem**, implementing a revolutionary new UI/UX system with mandatory cross-portal modules (CRM, Load Board, Rates, Financials, Onboarding, Marketplace, Directory). This is **NOT** a theme recolor - it's a complete architectural rebuild for the Trans Bot AI logistics platform.
 
 ## 0. Non-Negotiables
 
@@ -100,7 +100,7 @@ This document outlines the complete ground-up redesign of the MCP-V2 Portal Ecos
 ## 4. Portal Ecosystem — Redesign Scope & MVP Pages
 
 ### A) Super Admin Portal 🧠
-**Purpose**: Master Control Program oversight and ecosystem orchestration
+**Purpose**: Trans Bot AI Master Control Program oversight and ecosystem orchestration
 
 #### MVP Pages:
 1. **System Health Dashboard**
@@ -141,7 +141,7 @@ This document outlines the complete ground-up redesign of the MCP-V2 Portal Ecos
    - Security monitoring dashboard
 
 ### B) Broker Portal 🛣️
-**Purpose**: Logistics orchestration and optimization platform
+**Purpose**: Trans Bot AI logistics orchestration and optimization platform
 
 #### MVP Pages:
 1. **Operations Center**
@@ -327,6 +327,7 @@ crm_accounts, crm_contacts, crm_leads, crm_deals, crm_activities, crm_tags, crm_
 - Onboarding (auto-create account on approval)
 - Financials (customer/vendor link)
 - Load Board (attach deals to awarded loads)
+- Directory (company profiles)
 
 ### 5.2 Load Board Module — `/loadboard/*`
 **Purpose**: Centralized marketplace for posting, bidding, matching, and assigning loads
@@ -347,6 +348,7 @@ loads, load_posts, load_bids, load_awards, load_status_events, load_requirements
 - CRM (contact context)
 - Financials (auto-invoice on delivered/POD)
 - Driver app (stops)
+- Directory (targeted postings)
 
 ### 5.3 Rates & Pricing Module — `/rates/*`
 **Purpose**: Central engine for spot/contract pricing and lane strategy
@@ -367,6 +369,7 @@ rate_lanes, rate_tariffs, rate_quotes, rate_rules, rate_adjustments, rate_versio
 - Broker quotes
 - Carrier bids
 - Financials (rate → invoice)
+- Directory (lane intelligence)
 
 ### 5.4 Financials (Accounting System) — `/financials/*`
 **Purpose**: Full AR/AP, settlements, and ledgers for logistics
@@ -388,6 +391,7 @@ fin_invoices, fin_invoice_lines, fin_payments, fin_bills, fin_bill_lines, fin_ve
 - Rates (source price)
 - CRM (customer/vendor)
 - Onboarding (W-9/ACH)
+- Marketplace (app billing)
 
 ### 5.5 Onboarding & Compliance Module — `/onboarding/*`
 **Purpose**: Unified onboarding with three flows: Carrier, Shipper, Broker
@@ -412,6 +416,48 @@ onb_applications, onb_steps, onb_documents, onb_checks, onb_agreements, onb_bank
 - Financials (vendor/customer creation)
 - Access control (roles on approval)
 - Load Board (unlock posting/bidding)
+- Directory (company profiles)
+
+### 5.6 Marketplace Module — `/marketplace/*`
+**Purpose**: Discover → install → configure apps & integrations
+
+#### MVP Features:
+- **Catalog**: Listings, categories, search, screenshots, permissions
+- **Install Flow**: OAuth/keys, scopes, environment (dev/stage/prod), config UI
+- **Management**: Enable/disable, versioning, changelogs, tenant-scoped settings
+- **Observability**: Per-app logs, events, retries, webhooks status
+- **Billing**: Plan, usage, invoices (hooks to Financials)
+
+#### Data Model:
+```sql
+mp_apps, mp_app_versions, mp_installs, mp_scopes, mp_events, mp_logs, mp_settings, mp_webhooks
+```
+
+#### Integrations:
+- Financials (billing and invoicing)
+- Super Admin (app management)
+- All portals (app availability)
+
+### 5.7 Directory Module — `/directory/*`
+**Purpose**: Global directory for Shippers, Brokers, Carriers, and others (facilities, vendors)
+
+#### MVP Features:
+- **Entities**: Company profiles, contacts, lanes, equipment, compliance status, ratings
+- **Search/Filters**: Geography (map + radius), equipment, lanes, score, compliance flags
+- **Profiles**: Company overview, documents (COI, W-9, authority), performance KPIs, lanes coverage
+- **Actions**: Invite to onboard, add to CRM, start quote, share lane, blocklist
+
+#### Data Model:
+```sql
+dir_companies, dir_contacts, dir_docs, dir_lanes, dir_equipment, dir_scores, dir_flags
+```
+
+#### Integrations:
+- Onboarding (invite)
+- CRM (link/create)
+- Load Board (targeted postings)
+- Rates (lane intelligence)
+- All portals (directory access)
 
 ## 6. Build System & Code Quality
 
@@ -496,12 +542,14 @@ onb_applications, onb_steps, onb_documents, onb_checks, onb_agreements, onb_bank
 - [ ] Driver Portal redesign
 - [ ] Owner-Operator Portal redesign
 
-### Phase 4 – Cross-Portal Modules (Weeks 13-18)
+### Phase 4 – Cross-Portal Modules (Weeks 13-20)
 - [ ] CRM Module development
 - [ ] Load Board Module development
 - [ ] Rates Module development
 - [ ] Financials Module development
 - [ ] Onboarding Module development
+- [ ] Marketplace Module development
+- [ ] Directory Module development
 
 ### Phase 5 – QA & Performance (Weeks 19-20)
 - [ ] Accessibility audits
@@ -571,6 +619,8 @@ onb_applications, onb_steps, onb_documents, onb_checks, onb_agreements, onb_bank
 - [ ] `/modules/rates`
 - [ ] `/modules/financials`
 - [ ] `/modules/onboarding`
+- [ ] `/modules/marketplace`
+- [ ] `/modules/directory`
 
 ### Documentation
 - [ ] `/docs/ia.md` - Information Architecture
