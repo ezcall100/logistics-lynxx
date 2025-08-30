@@ -63,10 +63,18 @@ import FinancialsModule from './modules/financials/FinancialsModule';
 import OnboardingModule from './modules/onboarding/OnboardingModule';
 import MarketplaceModule from './modules/marketplace/MarketplaceModule';
 import DirectoryModule from './modules/directory/DirectoryModule';
-import FactoringModule from './modules/factoring/FactoringModule';
+import FactoringModule from './pages/modules/FactoringModule';
 
 // Landing Page
 import LandingPage from './pages/landing/LandingPage';
+
+// Website Components
+import WebsiteHome from './pages/website/WebsiteHome';
+import WebsiteFeatures from './pages/website/WebsiteFeatures';
+import WebsitePlans from './pages/website/WebsitePlans';
+
+// Advanced Auth
+import AdvancedSignupPage from './pages/auth/AdvancedSignupPage';
 
 const App: React.FC = () => {
   return (
@@ -79,6 +87,12 @@ const App: React.FC = () => {
           {/* Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/signup" element={<AdvancedSignupPage />} />
+          
+          {/* Website Routes */}
+          <Route path="/website" element={<WebsiteHome />} />
+          <Route path="/website/features" element={<WebsiteFeatures />} />
+          <Route path="/website/plans" element={<WebsitePlans />} />
           
           {/* Super Admin Portal */}
           <Route path="/super-admin" element={<SuperAdminDashboard />} />
@@ -146,9 +160,12 @@ const App: React.FC = () => {
           <Route path="/modules/rates" element={<RatesModule />} />
           <Route path="/modules/financials" element={<FinancialsModule />} />
           <Route path="/modules/onboarding" element={<OnboardingModule />} />
-                                                                         <Route path="/modules/marketplace" element={<MarketplaceModule />} />
-                        <Route path="/modules/directory" element={<DirectoryModule />} />
-                        <Route path="/modules/factoring" element={<FactoringModule />} />
+          <Route path="/modules/marketplace" element={<MarketplaceModule />} />
+          <Route path="/modules/directory" element={<DirectoryModule />} />
+          <Route path="/modules/factoring" element={<FactoringModule />} />
+          
+          {/* Advanced Auth Routes */}
+          <Route path="/auth/advanced-signup" element={<AdvancedSignupPage />} />
           
           {/* Default redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
