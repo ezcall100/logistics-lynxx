@@ -410,7 +410,7 @@ const SuperAdminDashboard: React.FC = () => {
                   Last update: {lastUpdate.toLocaleTimeString()}
                 </span>
               </div>
-              <button
+              <button 
                 onClick={updateMCPV2Ecosystem}
                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
               >
@@ -420,7 +420,7 @@ const SuperAdminDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+              </div>
 
       {/* Ecosystem Navigation */}
       <div className="relative z-10 px-8 py-6">
@@ -438,8 +438,8 @@ const SuperAdminDashboard: React.FC = () => {
               {view.charAt(0).toUpperCase() + view.slice(1)} View
             </button>
           ))}
-        </div>
-      </div>
+            </div>
+          </div>
 
       {/* Main Content Grid */}
       <div className="relative z-10 p-8 space-y-8">
@@ -455,14 +455,14 @@ const SuperAdminDashboard: React.FC = () => {
                   <div className={`p-3 rounded-xl bg-gradient-to-r ${portal.color}`}>
                     <portal.icon className="h-6 w-6 text-white" />
                   </div>
-                  <div>
+              <div>
                     <h3 className="font-semibold text-white">{portal.name}</h3>
                     <p className="text-xs text-gray-400">{portal.type}</p>
                   </div>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(portal.status)}`}>
                   {portal.status}
-                </div>
+              </div>
               </div>
               
               <div className="space-y-4">
@@ -474,9 +474,9 @@ const SuperAdminDashboard: React.FC = () => {
                   <div className="text-center">
                     <div className="text-2xl font-bold text-white">{portal.efficiency}%</div>
                     <div className="text-xs text-gray-400">Efficiency</div>
-                  </div>
-                </div>
-                
+            </div>
+          </div>
+
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Users</span>
@@ -492,9 +492,9 @@ const SuperAdminDashboard: React.FC = () => {
                       <span className="text-white font-medium">{formatCurrency(portal.revenue)}</span>
                     </div>
                   )}
-                </div>
-              </div>
-              
+            </div>
+          </div>
+
               <div className="mt-6 pt-4 border-t border-white/10">
                 <p className="text-xs text-gray-400">
                   {portal.description}
@@ -536,8 +536,8 @@ const SuperAdminDashboard: React.FC = () => {
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
                     Target: {metric.unit === 'USD' ? formatCurrency(metric.target) : metric.target.toLocaleString()}
-                  </div>
-                </div>
+              </div>
+            </div>
               ))}
             </div>
           </div>
@@ -564,15 +564,15 @@ const SuperAdminDashboard: React.FC = () => {
                   }}
                 >
                   <div className="absolute inset-0 rounded-full animate-ping bg-current opacity-20"></div>
-                </div>
-              ))}
+                        </div>
+                  ))}
             </div>
             <div className="mt-6 grid grid-cols-4 gap-4 text-sm">
               <div className="text-center">
                 <div className="text-gray-400">Active Nodes</div>
                 <div className="text-white font-medium">
                   {networkNodes.filter(n => n.status === 'active').length}
-                </div>
+        </div>
               </div>
               <div className="text-center">
                 <div className="text-gray-400">Processing</div>
@@ -616,7 +616,7 @@ const SuperAdminDashboard: React.FC = () => {
                       {alert.portal && <span>Portal: {alert.portal}</span>}
                       <span>Type: {alert.type}</span>
                     </div>
-                  </div>
+              </div>
                   <div className={`px-2 py-1 rounded text-xs font-medium ${
                     alert.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
                     alert.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
@@ -624,8 +624,8 @@ const SuperAdminDashboard: React.FC = () => {
                     'bg-blue-500/20 text-blue-400'
                   }`}>
                     {alert.severity}
-                  </div>
-                </div>
+              </div>
+              </div>
               </div>
             ))}
           </div>
